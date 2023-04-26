@@ -22,7 +22,7 @@ public abstract class Controller {
     protected Parent load(String view){
         final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/" + view + ".fxml"));
         loader.setControllerFactory(c -> this);
-        //TODO: will be implemented after lecture 05
+        //will be implemented after lecture 05
         //loader.setResourcess(resources);
         try{
             return loader.load();
