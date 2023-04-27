@@ -46,6 +46,7 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
+        final de.uniks.kamimon.kgm.MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         controller = new DummyController();
         initAndRender(controller);
     }

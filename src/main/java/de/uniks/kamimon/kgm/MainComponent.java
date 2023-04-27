@@ -13,7 +13,7 @@ public interface MainComponent {
     //LoginService loginService();
     LoginController loginController();
 
-    //controller not implemented y
+    //controller not implemented yet
     //LobbyController lobbyController();
 
     @Component.Builder
