@@ -30,5 +30,38 @@ public class App extends Application {
         final Scene scene = new Scene(new Label("Loading..."));
         stage.setScene(scene);
         stage.show();
+
+        if(controller != null){
+            initAndRender(controller);
+            return;
+        }
+    }
+    @Override
+    public void stop() throws Exception{
+        cleanup();
+    }
+    public void show(Controller controller){
+        cleanup();
+        this.controller = controller;
+        initAndRender(controller);
+    }
+
+    private void initAndRender(Controller controller) {
+        controller.init();
+        //sets the firs knot in the scene tree
+        stage.getScene().setRoot(controller.render());
+    }
+
+
+    /**
+     * This method destroys the current controller
+     * Is called, when the app is closed
+     */
+    private void cleanup() {
+
+        if(controller != null){
+            controller.destroy();
+            controller = null;
+        }
     }
 }
