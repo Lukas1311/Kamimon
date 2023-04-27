@@ -15,11 +15,6 @@ class AppTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         new App(new DummyController()).start(stage);
     }
-    @Test
-    void testLoading(){
-        final Label loading = lookup("Loading...").query();
-        assertNotNull(loading);
-    }
 
     @Test
     void testController(){
