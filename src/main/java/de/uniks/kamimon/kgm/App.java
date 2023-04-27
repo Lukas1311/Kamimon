@@ -47,7 +47,14 @@ public class App extends Application {
             return;
         }
         final de.uniks.kamimon.kgm.MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
+        //code after loginController is implemented
+        //controller = component.loginController();
+
+        //delete after loginController is implemented
+        //also delete Dummy.fxml
         controller = new DummyController();
+
+
         initAndRender(controller);
     }
 
