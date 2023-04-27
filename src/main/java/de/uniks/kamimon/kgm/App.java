@@ -45,6 +45,7 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
+        //there will be more code
     }
 
     private void setAppIcon(Stage stage){
