@@ -1,6 +1,7 @@
 package de.uniks.kamimon.kgm;
 
 import de.uniks.kamimon.kgm.controller.Controller;
+import de.uniks.kamimon.kgm.controller.DummyController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -45,7 +46,8 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
-        //there will be more code
+        controller = new DummyController();
+        initAndRender(controller);
     }
 
     private void setAppIcon(Stage stage){
