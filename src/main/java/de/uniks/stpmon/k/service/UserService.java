@@ -1,4 +1,4 @@
 package de.uniks.stpmon.k.service;
 
-public class UserApiService {
+public class UserService {
 }

@@ -14,8 +14,11 @@ public class MainModule {
     @Singleton
     ObjectMapper mapper(){
         return new ObjectMapper()
-                .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY) //needed for error messages
+                //needed for error messages
+                .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+                //not all properties must be loaded from server
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT); //null values are not written into json
+                //null values are not written into json
+                .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
     }
 }
