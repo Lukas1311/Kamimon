@@ -1,4 +1,4 @@
-package de.uniks.kamimon.kgm.controller;
+package de.uniks.stpmon.k.controller;
 
 import javafx.scene.Parent;
 

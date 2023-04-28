@@ -1,7 +1,7 @@
-package de.uniks.kamimon.kgm;
+package de.uniks.stpmon.k;
 
-import de.uniks.kamimon.kgm.controller.Controller;
-import de.uniks.kamimon.kgm.controller.DummyController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.DummyController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -46,7 +46,7 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
-        final de.uniks.kamimon.kgm.MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
+        final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         //code after loginController is implemented
         //controller = component.loginController();
 
