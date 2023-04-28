@@ -1,4 +1,4 @@
-package de.uniks.kamimon.kgm;
+package de.uniks.stpmon.k;
 
 import dagger.Module;
 @Module

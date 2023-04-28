@@ -1,6 +1,6 @@
-package de.uniks.kamimon.kgm.controller;
+package de.uniks.stpmon.k.controller;
 
-import de.uniks.kamimon.kgm.Main;
+import de.uniks.stpmon.k.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
