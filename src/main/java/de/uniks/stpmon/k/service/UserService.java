@@ -16,5 +16,6 @@ public class UserService {
 
     public Observable<User> setUsername(String username){
         //Auth Service is needed to get id of user
+        return null;
     }
 }
