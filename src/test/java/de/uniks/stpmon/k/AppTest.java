@@ -1,14 +1,10 @@
-package de.uniks.kamimon.kgm;
+package de.uniks.stpmon.k;
 
-import de.uniks.kamimon.kgm.controller.Controller;
-import de.uniks.kamimon.kgm.controller.DummyController;
-import javafx.scene.control.Label;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.DummyController;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest extends ApplicationTest {
     @Override

@@ -1,8 +1,8 @@
-package de.uniks.kamimon.kgm;
+package de.uniks.stpmon.k;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import de.uniks.kamimon.kgm.controller.LoginController;
+import de.uniks.stpmon.k.controller.LoginController;
 
 import javax.inject.Singleton;
 
