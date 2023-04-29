@@ -32,17 +32,23 @@
                   </Circle>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+            <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="messageButton" mnemonicParsing="false" onAction="#openChat" text="Button">
+                  <Button fx:id="messageButton" mnemonicParsing="false" onAction="#openChat" style="-fx-background-color: transparent; -fx-border-color: black;" text="🗨">
                      <HBox.margin>
-                        <Insets left="15.0" />
+                        <Insets />
                      </HBox.margin>
+                     <font>
+                        <Font size="25.0" />
+                     </font>
                   </Button>
-                  <Button fx:id="removeFriendButton" mnemonicParsing="false" onAction="#removeFriend" text="Button">
+                  <Button fx:id="removeFriendButton" mnemonicParsing="false" onAction="#removeFriend" style="-fx-background-color: transparent; -fx-border-color: black;" text="❌" textFill="RED">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
+                     <font>
+                        <Font size="25.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>
