@@ -29,6 +29,11 @@ public class RegionListController extends Controller{
     @Override
     public Parent render(){
         final Parent parent = super.render();
+        generateRegions();
+        return parent;
+    }
+
+    private void generateRegions() {
         regions.getChildren().clear();
         for(final Region region: regionsList) {
             final RegionController regionController = new RegionController(app, region);
@@ -40,6 +45,5 @@ public class RegionListController extends Controller{
                 throw new RuntimeException(e);
             }
         }
-        return parent;
     }
 }
