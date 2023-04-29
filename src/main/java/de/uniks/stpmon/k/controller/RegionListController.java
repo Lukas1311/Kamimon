@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
+import javafx.scene.Parent;
+
 import javax.inject.Inject;
 
 public class RegionListController extends Controller{
@@ -7,5 +9,12 @@ public class RegionListController extends Controller{
     @Inject
     public RegionListController(){
 
+
+    }
+
+    @Override
+    public Parent render(){
+        final Parent parent = super.render();
+        return parent;
     }
 }
