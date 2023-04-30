@@ -61,12 +61,12 @@ public class LoginController extends Controller{
         if (isInvalid.get()) {
             return;
         }
-        authService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
+        disposables.add(authService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
             System.out.println(lr);
             System.out.println(tokenStorage.getToken());
         }, error -> {
             System.out.println(error);
-        });
+        }));
     }
 
     public void register() {
