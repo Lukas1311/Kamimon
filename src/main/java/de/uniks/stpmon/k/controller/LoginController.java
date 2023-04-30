@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.Controller;
-// TODO: implement TokenStorage
-// import de.uniks.stpmon.k.service.TokenStorage;
+import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -31,12 +31,10 @@ public class LoginController extends Controller{
     @FXML
     public RadioButton englishButton;
 
-    // TODO: loginService
-    // @Inject
-    // LoginService loginService;
-    // TODO: implement TokenStorage
-    // @Inject
-    // TokenStorage tokenStorage;
+    @Inject
+    AuthenticationService authService;
+    @Inject
+    TokenStorage tokenStorage;
 
     private BooleanBinding isInvalid;
 
