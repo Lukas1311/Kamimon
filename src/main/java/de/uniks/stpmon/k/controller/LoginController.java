@@ -58,16 +58,15 @@ public class LoginController extends Controller{
     }
 
     public void login() {
-        // TODO: login function implementation
-        // if (isInvalid.get()) {
-        //     return;
-        // }
-        // disposables.add(loginService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
-        //     System.out.println(lr);
-        //     System.out.println(tokenStorage.getToken());
-        // }, error -> {
-        //     System.out.println(error);
-        // }));
+        if (isInvalid.get()) {
+            return;
+        }
+        authService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
+            System.out.println(lr);
+            System.out.println(tokenStorage.getToken());
+        }, error -> {
+            System.out.println(error);
+        });
     }
 
     public void register() {
