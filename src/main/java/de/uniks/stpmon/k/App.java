@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.DummyController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
