@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.DummyController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -48,13 +47,7 @@ public class App extends Application {
         }
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         //code after loginController is implemented
-        //controller = component.loginController();
-
-        //delete after loginController is implemented
-        //also delete Dummy.fxml
-        controller = new DummyController();
-
-
+        controller = component.loginController();
         initAndRender(controller);
     }
 
