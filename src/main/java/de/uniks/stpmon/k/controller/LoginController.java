@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -32,9 +33,8 @@ public class LoginController extends Controller{
     // TODO: loginService
     // @Inject
     // LoginService loginService;
-    // TODO: tokenStorage
-    // @Inject
-    // TokenStorage tokenStorage;
+    @Inject
+    TokenStorage tokenStorage;
 
     private BooleanBinding isInvalid;
 
@@ -58,15 +58,16 @@ public class LoginController extends Controller{
     }
 
     public void login() {
-        if (isInvalid.get()) {
-            return;
-        }
-        loginService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
-            System.out.println(lr);
-            System.out.println(tokenStorage.getToken());
-        }, error -> {
-            System.out.println(error);
-        });
+        // TODO: login function implementation
+        // if (isInvalid.get()) {
+        //     return;
+        // }
+        // disposables.add(loginService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
+        //     System.out.println(lr);
+        //     System.out.println(tokenStorage.getToken());
+        // }, error -> {
+        //     System.out.println(error);
+        // }));
     }
 
     public void register() {
