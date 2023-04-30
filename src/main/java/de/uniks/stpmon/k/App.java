@@ -48,12 +48,12 @@ public class App extends Application {
         }
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         //code after loginController is implemented
-        //controller = component.loginController();
+        controller = component.loginController();
 
-        //delete after loginController is implemented
-        //also delete Dummy.fxml
-        controller = new DummyController();
-
+        // TODO: delete after testing loginController
+        // delete after loginController is implemented
+        // also delete Dummy.fxml
+        // controller = new DummyController();
 
         initAndRender(controller);
     }
