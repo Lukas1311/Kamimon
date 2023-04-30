@@ -34,7 +34,7 @@
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></Button>
-            <Button mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="Register" textAlignment="JUSTIFY" />
+            <Button mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="Register" textAlignment="JUSTIFY" />
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
                <children>
                   <RadioButton contentDisplay="CENTER" mnemonicParsing="false" text="German">
