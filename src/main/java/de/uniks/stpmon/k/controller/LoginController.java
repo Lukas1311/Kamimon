@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
@@ -23,6 +24,10 @@ public class LoginController extends Controller{
     public Button loginButton;
     @FXML
     public Button registerButton;
+    @FXML
+    public RadioButton germanButton;
+    @FXML
+    public RadioButton englishButton;
 
     // TODO: loginService
     // @Inject
