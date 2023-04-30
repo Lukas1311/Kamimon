@@ -9,11 +9,11 @@ import javax.inject.Singleton;
 @Component(modules = {MainModule.class, HttpModule.class, PrefModule.class})
 @Singleton
 public interface MainComponent {
-    // Service not implemented yet
+    //TODO: LoginService not implemented yet
     //LoginService loginService();
     LoginController loginController();
 
-    //controller not implemented yet
+    //TODO: LobbyController not implemented yet
     //LobbyController lobbyController();
 
     @Component.Builder
