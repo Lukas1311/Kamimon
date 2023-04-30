@@ -30,19 +30,19 @@
                   <Insets left="20.0" right="20.0" />
                </VBox.margin></PasswordField>
                 <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="Stay Logged In" />
-                <Button defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="Login" textAlignment="JUSTIFY">
+                <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="Login" textAlignment="JUSTIFY">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></Button>
-            <Button mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="Register" textAlignment="JUSTIFY" />
+            <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="Register" textAlignment="JUSTIFY" />
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
                <children>
-                  <RadioButton contentDisplay="CENTER" mnemonicParsing="false" text="German">
+                  <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" text="German">
                      <padding>
                         <Insets right="5.0" />
                      </padding>
                   </RadioButton>
-                  <RadioButton contentDisplay="CENTER" mnemonicParsing="false" text="English">
+                  <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" text="English">
                      <padding>
                         <Insets left="5.0" />
                      </padding>
