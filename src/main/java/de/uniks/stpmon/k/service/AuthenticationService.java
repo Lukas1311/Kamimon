@@ -1,8 +1,11 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.rest.AuthenticationApiService;
-
 import javax.inject.Inject;
+
+import de.uniks.stpmon.k.dto.LoginDto;
+import de.uniks.stpmon.k.dto.LoginResult;
+import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import io.reactivex.rxjava3.core.Observable;
 
 public class AuthenticationService  {
     private final TokenStorage tokenStorage;
@@ -15,9 +18,9 @@ public class AuthenticationService  {
     }
 
     public Observable<LoginResult> login(String username, String password) {
-        return authApiService.login(new LoginDto(username, password)),map(lr -> {
+        return authApiService.login(new LoginDto(username, password)).map(lr -> {
             tokenStorage.setToken(lr.accessToken());
             return lr;
-        })
+        });
     }
 }
