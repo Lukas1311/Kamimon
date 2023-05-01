@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.TokenStorage;
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -59,7 +58,7 @@ public class LoginController extends Controller{
         loginButton.disableProperty().bind(isInvalid);
 
         // disables all focused input fields so you can see the input text placeholders
-        Platform.runLater(() -> parent.requestFocus());
+        FX_SCHEDULER.scheduleDirect(() -> parent.requestFocus());
         return parent;
     }
 
