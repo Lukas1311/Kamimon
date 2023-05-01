@@ -1,17 +1,21 @@
 package de.uniks.stpmon.k.service;
 
-import com.sun.javafx.css.parser.Token;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class TokenStorage {
-    @Inject
-    public TokenStorage(){
 
-    }
+    private String token;
+
+    @Inject
+    public TokenStorage(){}
+
     public String getToken(){
-        return null;
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
