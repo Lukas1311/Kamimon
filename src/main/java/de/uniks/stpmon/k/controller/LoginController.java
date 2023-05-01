@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class LoginController extends Controller{
 
@@ -64,8 +65,9 @@ public class LoginController extends Controller{
             return;
         }
         disposables.add(authService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
-            System.out.println(lr);
-            System.out.println(tokenStorage.getToken());
+            errorLabel.setText("Login successful");
+            errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+            app.show(new DummyController());
         }, error -> {
             String errorText = "error";
             // TODO: refactor to method
@@ -95,5 +97,6 @@ public class LoginController extends Controller{
 
     public void register() {
         // TODO: register function
+        app.show(new DummyController());
     }
 }
