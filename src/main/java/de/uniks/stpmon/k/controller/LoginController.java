@@ -52,7 +52,8 @@ public class LoginController extends Controller{
         isInvalid = usernameInput
             .textProperty()
             .isEmpty()
-            .or(passwordInput.textProperty().length().lessThan(8));
+            .or(passwordInput.textProperty().length().lessThan(8))
+            .or(passwordInput.textProperty().length().greaterThan(32));
         loginButton.disableProperty().bind(isInvalid);
 
         return parent;
