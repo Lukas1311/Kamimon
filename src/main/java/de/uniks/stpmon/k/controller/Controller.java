@@ -2,21 +2,33 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.Main;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 public abstract class Controller {
+
     @Inject
     protected App app;
+
+    protected final CompositeDisposable disposables = new CompositeDisposable();
+
     public void init(){
 
     }
 
     public void destroy(){
+        disposables.dispose();
+    }
 
+    public void onDestroy(Runnable action) {
+        disposables.add(Disposable.fromRunnable(action));
     }
 
     public Parent render(){
