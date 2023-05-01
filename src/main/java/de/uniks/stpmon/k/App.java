@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.service.AuthenticationService;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -46,7 +47,9 @@ public class App extends Application {
             return;
         }
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
-        //code after loginController is implemented
+        final AuthenticationService authService = component.authenticationService();
+        // TODO: check rememberMe
+
         controller = component.loginController();
         initAndRender(controller);
     }
