@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 
@@ -65,7 +66,29 @@ public class LoginController extends Controller{
             System.out.println(lr);
             System.out.println(tokenStorage.getToken());
         }, error -> {
-            System.out.println(error);
+            String errorText = "error";
+            // TODO: refactor to method
+            // this can be refactored to an own method in near future
+            // cause register and refresh use it too
+            if (error instanceof HttpException) {
+                HttpException exception = (HttpException) error;
+
+                switch (exception.code()) {
+                    case 400:
+                        errorText = "Validation failed";
+                        break;
+                    case 401:
+                        errorText = "Invalid username or password";
+                        break;
+                    case 429:
+                        errorText = "Rate limit reached";
+                        break;
+                    default: break;
+                }
+            }
+            errorLabel.setText(errorText);
+            errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
+            System.out.println("look here for the error: " + error);
         }));
     }
 
