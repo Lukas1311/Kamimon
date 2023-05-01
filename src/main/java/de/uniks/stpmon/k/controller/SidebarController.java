@@ -14,6 +14,8 @@ public class SidebarController extends Controller {
     @FXML
     public Button home;
     @FXML
+    public Button logoutButton;
+    @FXML
     public VBox vBox;
 
     public SidebarController() {
@@ -21,6 +23,9 @@ public class SidebarController extends Controller {
 
     public Parent render() {
         final Parent parent = super.render();
+
+        logoutButton.setOnAction(e -> logout());
+
         return parent;
     }
 
@@ -31,5 +36,9 @@ public class SidebarController extends Controller {
     }
 
     public void backtoLobby() {
+    }
+
+    public void logout() {
+        
     }
 }
