@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.rest.RegionApiService;
 
-import javax.swing.plaf.synth.Region;
 import java.util.List;
 
 public class RegionService {

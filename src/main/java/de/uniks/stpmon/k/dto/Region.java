@@ -4,6 +4,6 @@ public record Region(
         String createdAt,
         String updatedAt,
         String _id,
-        String name,
+        String name
         ) {
 }

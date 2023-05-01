@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.App;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
 
 import javax.inject.Inject;
 import java.io.IOException;
