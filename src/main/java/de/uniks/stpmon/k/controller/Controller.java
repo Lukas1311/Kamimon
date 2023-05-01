@@ -7,6 +7,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 import javax.inject.Inject;

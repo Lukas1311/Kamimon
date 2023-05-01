@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="720.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatController">
+    <HBox prefHeight="50.0" prefWidth="370.0">
+        <VBox alignment="CENTER_LEFT" prefWidth="185.0">
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#leaveChat" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="25.0" right="5.0" top="5.0" />
+                </VBox.margin>
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+        </VBox>
+        <VBox alignment="CENTER_RIGHT" prefWidth="185.0">
+            <Button mnemonicParsing="false" onAction="#openSettings" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: trans; -fx-border-color: black;" text="⚙">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="25.0" top="5.0" />
+                </VBox.margin>
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+        </VBox>
+    </HBox>
+    <VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="350.0" style="-fx-border-color: black;">
+        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="600.0" prefWidth="370.0">
+            <VBox fx:id="messageArea" fillWidth="false" prefHeight="600.0" prefWidth="370.0">
+                <VBox alignment="CENTER_LEFT" style="-fx-border-color: black; -fx-border-radius: 10;">
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hey ;)">
+                        <VBox.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </VBox.margin>
+                    </Text>
+                </VBox>
+                <VBox alignment="CENTER_LEFT" style="-fx-border-color: black; -fx-border-radius: 10;">
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wann geht's los?">
+                        <VBox.margin>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </VBox.margin>
+                    </Text>
+                    <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                    </VBox.margin>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+    <VBox prefHeight="120.0" prefWidth="370.0">
+        <HBox alignment="CENTER" prefHeight="75.0" prefWidth="370.0">
+            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="268.0" promptText="Nachricht eingeben...">
+                <HBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </HBox.margin>
+                <font>
+                    <Font size="15.0" />
+                </font>
+            </TextField>
+            <Button fx:id="sendButton" mnemonicParsing="false" onAction="#sendMessage" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #426ff5;" text="&gt;" textFill="WHITE">
+                <font>
+                    <Font size="24.0" />
+                </font>
+                <HBox.margin>
+                    <Insets bottom="10.0" right="10.0" top="10.0" />
+                </HBox.margin>
+            </Button>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="53.0" prefWidth="370.0">
+            <ChoiceBox fx:id="regionPicker" prefHeight="25.0" prefWidth="330.0">
+                <HBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </HBox.margin>
+            </ChoiceBox>
+        </HBox>
+    </VBox>
+</VBox>
