@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.dto.Region;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
+import java.util.List;
+
 public interface RegionApiService {
     @GET("regions")
     Observable<List<Region>> getRegions();
