@@ -21,7 +21,7 @@ public class RegionController extends Controller{
     public Parent render(){
         final Parent parent = super.render();
         //TODO: I need the Model to get the name of the region. I set the Label of the Button with the Id just to look if it works.
-        regionButton.setText(null);
+        regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
             app.show(new IngameController(app));
         });
