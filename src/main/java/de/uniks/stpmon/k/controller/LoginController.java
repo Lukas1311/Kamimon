@@ -4,15 +4,13 @@ import de.uniks.stpmon.k.controller.Controller;
 // TODO: implement TokenStorage
 // import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import javax.inject.Inject;
+import javax.swing.*;
 
 public class LoginController extends Controller{
 
@@ -30,6 +28,8 @@ public class LoginController extends Controller{
     public RadioButton germanButton;
     @FXML
     public RadioButton englishButton;
+    @FXML
+    public CheckBox mask;
 
     // TODO: loginService
     // @Inject
@@ -74,5 +74,11 @@ public class LoginController extends Controller{
 
     public void register() {
         // TODO: register function
+    }
+
+    public void showPassword() {
+        //TODO: The Application must be finished so I can test this funcion!
+        SimpleBooleanProperty showPassword = null;
+        showPassword.bind(mask.selectedProperty());
     }
 }
