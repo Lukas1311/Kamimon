@@ -9,4 +9,8 @@ import retrofit2.http.POST;
 public interface AuthenticationApiService {
     @POST("auth/login")
     Observable<LoginResult> login(@Body LoginDto dto);
+
+    // Logs out the current user by invalidating the refresh token.
+    @POST("auth/logout")
+    Observable<LoginResult> logout();
 }
