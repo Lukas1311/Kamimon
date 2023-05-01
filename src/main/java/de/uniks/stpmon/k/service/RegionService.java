@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.rest.RegionApiService;
-
+import de.uniks.stpmon.k.dto.Region;
 import java.util.List;
 
 public class RegionService {
