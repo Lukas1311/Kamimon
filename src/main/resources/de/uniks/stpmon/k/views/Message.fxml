@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MessageController">
-    <HBox alignment="CENTER_LEFT" style="-fx-border-color: black; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MessageController">
+    <HBox fx:id="textBox" alignment="CENTER_LEFT" style="-fx-border-color: black; -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
         <VBox.margin>
-            <Insets left="10.0" right="10.0" top="10.0"/>
+            <Insets />
         </VBox.margin>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TestMessage123">
+        <Text fx:id="bodyText" strokeType="OUTSIDE" strokeWidth="0.0">
             <HBox.margin>
-                <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </HBox.margin>
-            <font>
-                <Font size="18.0"/>
-            </font>
         </Text>
     </HBox>
     <HBox VBox.vgrow="ALWAYS">
         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0"/>
+            <Insets />
         </VBox.margin>
         <VBox HBox.hgrow="ALWAYS">
             <Text fx:id="senderName" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
                 <VBox.margin>
-                    <Insets left="10.0"/>
+                    <Insets left="10.0" />
                 </VBox.margin>
+            <font>
+               <Font size="10.0" />
+            </font>
             </Text>
         </VBox>
         <VBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
             <Text fx:id="sendTime" strokeType="OUTSIDE" strokeWidth="0.0" text="12:00">
                 <VBox.margin>
-                    <Insets right="10.0"/>
+                    <Insets right="10.0" />
                 </VBox.margin>
+            <font>
+               <Font size="10.0" />
+            </font>
             </Text>
         </VBox>
     </HBox>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </VBox>
