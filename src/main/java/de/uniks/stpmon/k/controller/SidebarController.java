@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+
 public class SidebarController extends Controller {
 
     @FXML

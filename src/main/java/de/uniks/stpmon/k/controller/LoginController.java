@@ -57,6 +57,8 @@ public class LoginController extends Controller{
             .or(usernameInput.textProperty().length().greaterThan(32));
         loginButton.disableProperty().bind(isInvalid);
 
+        // disables all focused input fields so you can see the input text placeholders
+        FX_SCHEDULER.scheduleDirect(() -> parent.requestFocus());
         return parent;
     }
 
