@@ -25,8 +25,6 @@ public class SidebarController extends Controller {
     @Inject
     AuthenticationService authService;
     @Inject
-    Provider<LoginController> loginControllerProvider;
-
     public SidebarController() {
     }
 
@@ -53,7 +51,7 @@ public class SidebarController extends Controller {
             .observeOn(FX_SCHEDULER)
             .subscribe(res -> {
                 System.out.println(res);
-                app.show(loginControllerProvider.get());
+                app.show(new LoginController());
             })
         );
     }
