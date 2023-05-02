@@ -3,6 +3,7 @@ package de.uniks.stpmon.k;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
 import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.TokenStorage;
@@ -54,5 +55,12 @@ public class HttpModule {
     @Singleton
     UserApiService userApi(Retrofit retrofit){
         return retrofit.create(UserApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    //Here was a merge conflict
+    RegionApiService regionApi(Retrofit retrofit) {
+        return retrofit.create(RegionApiService.class);
     }
 }

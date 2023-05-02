@@ -57,6 +57,8 @@ public class LoginController extends Controller{
             .or(usernameInput.textProperty().length().greaterThan(32));
         loginButton.disableProperty().bind(isInvalid);
 
+        // disables all focused input fields so you can see the input text placeholders
+        FX_SCHEDULER.scheduleDirect(() -> parent.requestFocus());
         return parent;
     }
 
@@ -64,10 +66,13 @@ public class LoginController extends Controller{
         if (isInvalid.get()) {
             return;
         }
-        disposables.add(authService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
-            errorLabel.setText("Login successful");
-            errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
-            app.show(new DummyController());
+        disposables.add(authService
+            .login(usernameInput.getText(), passwordInput.getText())
+            .observeOn(FX_SCHEDULER)
+            .subscribe(lr -> {
+                errorLabel.setText("Login successful");
+                errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                app.show(new DummyController());
         }, error -> {
             String errorText = "error";
             // TODO: refactor to method
