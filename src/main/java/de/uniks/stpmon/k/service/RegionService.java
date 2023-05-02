@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.dto.Region;
+import io.reactivex.rxjava3.core.Observable;
+
 import java.util.List;
 
 public class RegionService {
@@ -11,12 +13,11 @@ public class RegionService {
         this.regionApiService = regionApiService;
     }
 
-    public List<Region> getRegions() {
-        return (List<Region>) regionApiService.getRegions();
+    public Observable<List<Region>> getRegions() {
+        return regionApiService.getRegions();
     }
 
-    public Region getRegion(int id) {
-        return null;
-        //TODO: return regionApiService.getRegion(String.valueOf(id));
+    public Observable<Region> getRegion(String id) {
+        return regionApiService.getRegion(id);
     }
 }
