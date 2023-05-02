@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.dto.ErrorResponse;
 import de.uniks.stpmon.k.dto.RefreshDto;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
 import io.reactivex.rxjava3.core.Observable;
+import retrofit2.Response;
 
 public class AuthenticationService  {
     private final TokenStorage tokenStorage;
@@ -27,7 +28,7 @@ public class AuthenticationService  {
         });
     }
 
-    public Observable<ErrorResponse> logout() {
+    public Observable<Response<ErrorResponse>> logout() {
         return authApiService.logout().map(res -> {
             return res;
         });
