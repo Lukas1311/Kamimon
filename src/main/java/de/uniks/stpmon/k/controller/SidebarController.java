@@ -5,6 +5,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
+import javax.inject.Inject;
+
 public class SidebarController extends Controller {
 
     @FXML
@@ -16,6 +18,7 @@ public class SidebarController extends Controller {
     @FXML
     public VBox vBox;
 
+    @Inject
     public SidebarController() {
     }
 
