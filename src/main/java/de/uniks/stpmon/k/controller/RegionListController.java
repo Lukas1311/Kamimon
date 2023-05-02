@@ -7,7 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,6 @@ public class RegionListController extends Controller{
     @FXML
     private AnchorPane regions;
 
-    //is needed for dagger
     @Inject
     public RegionListController(App app, List<Region> regionsList){
         this.app = app;
