@@ -4,8 +4,10 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -14,6 +16,7 @@ import javafx.scene.control.TextField;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
+import javax.swing.*;
 import javax.inject.Provider;
 
 public class LoginController extends Controller{
@@ -32,6 +35,8 @@ public class LoginController extends Controller{
     public RadioButton germanButton;
     @FXML
     public RadioButton englishButton;
+    @FXML
+    public CheckBox mask;
 
     @Inject
     AuthenticationService authService;
@@ -98,5 +103,11 @@ public class LoginController extends Controller{
     public void register() {
         // TODO: register function
         app.show(new DummyController());
+    }
+
+    public void showPassword() {
+        //TODO: The Application must be finished so I can test this function!
+        SimpleBooleanProperty showPassword = null;
+        showPassword.bind(mask.selectedProperty());
     }
 }
