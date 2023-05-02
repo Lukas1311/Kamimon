@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import de.uniks.stpmon.k.dto.LoginDto;
 import de.uniks.stpmon.k.dto.LoginResult;
+import de.uniks.stpmon.k.dto.ErrorResponse;
 import de.uniks.stpmon.k.dto.RefreshDto;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -23,6 +24,12 @@ public class AuthenticationService  {
         return authApiService.login(new LoginDto(username, password)).map(lr -> {
             tokenStorage.setToken(lr.accessToken());
             return lr;
+        });
+    }
+
+    public Observable<ErrorResponse> logout() {
+        return authApiService.logout().map(res -> {
+            return res;
         });
     }
 
