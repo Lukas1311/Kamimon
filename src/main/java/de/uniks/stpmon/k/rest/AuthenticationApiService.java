@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.rest;
 
+import de.uniks.stpmon.k.dto.ErrorResponse;
 import de.uniks.stpmon.k.dto.LoginDto;
 import de.uniks.stpmon.k.dto.LoginResult;
 import de.uniks.stpmon.k.dto.RefreshDto;
@@ -14,7 +15,7 @@ public interface AuthenticationApiService {
 
     // Logs out the current user by invalidating the refresh token.
     @POST("auth/logout")
-    Observable<LoginResult> logout();
+    Observable<ErrorResponse> logout();
 
     // Log in with a refresh token.
     @POST("auth/refresh")
