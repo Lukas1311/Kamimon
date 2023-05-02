@@ -64,10 +64,13 @@ public class LoginController extends Controller{
         if (isInvalid.get()) {
             return;
         }
-        disposables.add(authService.login(usernameInput.getText(), passwordInput.getText()).subscribe(lr -> {
-            errorLabel.setText("Login successful");
-            errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
-            app.show(new DummyController());
+        disposables.add(authService
+            .login(usernameInput.getText(), passwordInput.getText())
+            .observeOn(FX_SCHEDULER)
+            .subscribe(lr -> {
+                errorLabel.setText("Login successful");
+                errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                app.show(new DummyController());
         }, error -> {
             String errorText = "error";
             // TODO: refactor to method
