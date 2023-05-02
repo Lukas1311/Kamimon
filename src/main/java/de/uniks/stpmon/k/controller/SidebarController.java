@@ -26,7 +26,8 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
-
+    
+    @Inject
     public SidebarController() {
     }
 
