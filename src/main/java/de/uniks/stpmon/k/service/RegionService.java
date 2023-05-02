@@ -7,18 +7,15 @@ import java.util.List;
 public class RegionService {
     private final RegionApiService regionApiService;
 
-    //I wait of the UserModel!
-    //private final User user;
-
     public RegionService(RegionApiService regionApiService) {
         this.regionApiService = regionApiService;
     }
 
     public List<Region> getRegions() {
-        return null;
+        return (List<Region>) regionApiService.getRegions();
     }
 
-    public Region getRegion(int id) {
+    public Region getRegion(String id) {
         return null;
     }
 }
