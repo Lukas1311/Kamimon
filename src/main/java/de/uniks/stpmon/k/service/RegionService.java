@@ -15,7 +15,8 @@ public class RegionService {
         return (List<Region>) regionApiService.getRegions();
     }
 
-    public Region getRegion(String id) {
+    public Region getRegion(int id) {
         return null;
+        //TODO: return regionApiService.getRegion(String.valueOf(id));
     }
 }
