@@ -31,7 +31,7 @@ public class FriendListController extends Controller {
     private final List<FriendController> friendControllers = new ArrayList<>();
 
     private final ArrayList<String> friends = new ArrayList<>();
-    private final User user = new User("", "", "0", "Alice", "online", "", friends);
+    private final User user = new User("0", "Alice", "online", "", friends);
 
 
     public FriendListController() {
