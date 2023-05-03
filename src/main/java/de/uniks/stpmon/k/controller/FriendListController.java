@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -44,7 +45,7 @@ public class FriendListController extends Controller {
 
     @Override
     public void init() {
-        disposables.add(userApiService.getUsers().subscribe(this.friends::setAll));
+        disposables.add(userApiService.getUsers().observeOn(FX_SCHEDULER).subscribe(friends::setAll));
     }
 
     @Override
@@ -58,14 +59,19 @@ public class FriendListController extends Controller {
 
         searchButton.setOnAction(e -> searchForFriend());
 
+        searchFriend.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                searchForFriend();
+            }
+        });
+
         return parent;
     }
 
     @FXML
     private void searchForFriend() {
         String name = searchFriend.getText();
-        disposables.add(userService.searchFriend(name).subscribe(this.friends::setAll));
-        System.out.println(friends);
+        disposables.add(userService.searchFriend(name).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
     }
 
     @Override

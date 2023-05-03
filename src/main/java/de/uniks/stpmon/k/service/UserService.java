@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public Observable<List<User>> searchFriend(String name) {
-        return userApiService.getUsers().map(e -> e.stream().filter(f -> f.name().startsWith(name)).toList());
+        return userApiService.getUsers().map(e -> e.stream().filter(f ->  f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
 
 }
