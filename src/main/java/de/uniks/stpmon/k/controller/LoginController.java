@@ -14,6 +14,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
@@ -48,6 +49,7 @@ public class LoginController extends Controller{
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
+    private String errorText;
 
     // is needed for dagger
     @Inject
@@ -59,6 +61,7 @@ public class LoginController extends Controller{
     public Parent render() {
         final Parent parent = super.render();
 
+        errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
         passwordTooShort = passwordInput.textProperty().length().lessThan(8);
         usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
@@ -84,20 +87,25 @@ public class LoginController extends Controller{
     }
 
     public void login() {
+        // unbind text property so text can be set manually with setText()
+        errorLabel.textProperty().unbind();
+        errorText = "error";
         if (isInvalid.get()) {
             return;
         }
-        System.out.println(netAvailability.isInternetAvailable());
-        errorLabel.textProperty().unbind();
+        if(!netAvailability.isInternetAvailable()) {
+            errorText = "No internet connection";
+            errorLabel.setText(errorText);
+            return;
+        }
         disposables.add(authService
             .login(usernameInput.getText(), passwordInput.getText())
             .observeOn(FX_SCHEDULER)
             .subscribe(lr -> {
                 errorLabel.setText("Login successful");
-                errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                errorLabel.setTextFill(Color.GREEN);
                 app.show(hybridController);
         }, error -> {
-            String errorText = "error";
             // TODO: refactor to method
             // this can be refactored to an own method in near future
             // cause register and refresh use it too
@@ -118,7 +126,6 @@ public class LoginController extends Controller{
                 }
             }
             errorLabel.setText(errorText);
-            errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
             System.out.println("look here for the error: " + error);
         }));
     }
