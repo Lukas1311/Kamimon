@@ -82,6 +82,7 @@ public class LoginController extends Controller{
         if (isInvalid.get()) {
             return;
         }
+        errorLabel.textProperty().unbind();
         disposables.add(authService
             .login(usernameInput.getText(), passwordInput.getText())
             .observeOn(FX_SCHEDULER)
