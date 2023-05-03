@@ -23,12 +23,13 @@ public class AuthenticationService  {
     public Observable<LoginResult> login(String username, String password) {
         return authApiService.login(new LoginDto(username, password)).map(lr -> {
             tokenStorage.setToken(lr.accessToken());
-            //Add User
+            //Add User to UserStorage
             User user = new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends());
             userStorage.setUser(user);
             return lr;
         });
     }
+
 
     public Observable<Response<ErrorResponse>> logout() {
         return authApiService.logout().map(res -> {

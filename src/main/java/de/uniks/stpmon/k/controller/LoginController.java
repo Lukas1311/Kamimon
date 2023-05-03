@@ -1,10 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.Controller;
+
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
+import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -18,7 +19,6 @@ import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class LoginController extends Controller{
 
@@ -45,13 +45,15 @@ public class LoginController extends Controller{
     NetworkAvailability netAvailability;
     @Inject
     HybridController hybridController;
+    @Inject
+    UserService userService;
 
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private String errorText;
 
-    // is needed for dagger
+
     @Inject
     public LoginController() {
 
@@ -78,11 +80,11 @@ public class LoginController extends Controller{
             .isEmpty()
             .or(passwordTooShort)
             .or(usernameTooLong);
-
         loginButton.disableProperty().bind(isInvalid);
+        registerButton.disableProperty().bind(isInvalid);
 
-        // disables all focused input fields so you can see the input text placeholders
-        FX_SCHEDULER.scheduleDirect(() -> parent.requestFocus());
+        // disables all focused input fields, so you can see the input text placeholders
+        FX_SCHEDULER.scheduleDirect(parent::requestFocus);
         return parent;
     }
 
@@ -98,40 +100,57 @@ public class LoginController extends Controller{
             errorLabel.setText(errorText);
             return;
         }
-        disposables.add(authService
-            .login(usernameInput.getText(), passwordInput.getText())
-            .observeOn(FX_SCHEDULER)
-            .subscribe(lr -> {
-                errorLabel.setText("Login successful");
-                errorLabel.setTextFill(Color.GREEN);
-                app.show(hybridController);
-        }, error -> {
-            // TODO: refactor to method
-            // this can be refactored to an own method in near future
-            // cause register and refresh use it too
-            if (error instanceof HttpException) {
-                HttpException exception = (HttpException) error;
-
-                switch (exception.code()) {
-                    case 400:
-                        errorText = "Validation failed";
-                        break;
-                    case 401:
-                        errorText = "Invalid username or password";
-                        break;
-                    case 429:
-                        errorText = "Rate limit reached";
-                        break;
-                    default: break;
-                }
-            }
-            errorLabel.setText(errorText);
-            System.out.println("look here for the error: " + error);
-        }));
+        loginWithCredentials(usernameInput.getText(), passwordInput.getText());
     }
 
     public void register() {
-        // TODO: register function
-        app.show(new DummyController());
+        if (isInvalid.get()) {
+            return;
+        }
+        disposables.add(userService
+                .addUser(usernameInput.getText(), passwordInput.getText())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(user -> {
+                    errorLabel.setText("Registration successful");
+                    errorLabel.setTextFill(Color.GREEN);
+                    //Login
+                    loginWithCredentials(user.name(), passwordInput.getText());
+                }, error -> {
+                    errorText = getErrorMessage(error);
+                    errorLabel.setText(errorText);
+                    System.out.println("look here for the error: " + error);
+                }));
+    }
+
+    private void loginWithCredentials(String username, String password){
+        disposables.add(authService
+                .login(username, password)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(lr -> {
+                    errorLabel.setText("Login successful");
+                    errorLabel.setTextFill(Color.GREEN);
+                    app.show(hybridController);
+                }, error -> {
+                    errorText = getErrorMessage(error);
+                    errorLabel.setText(errorText);
+                    System.out.println("look here for the error: " + error);
+                }));
+
+    }
+
+    private String getErrorMessage(Throwable error){
+        errorText = "error";
+        if (error instanceof HttpException exception) {
+
+            switch (exception.code()) {
+                case 400 -> errorText = "Validation failed";
+                case 401 -> errorText = "Invalid username or password";
+                case 409 -> errorText = "Username was already taken";
+                case 429 -> errorText = "Rate limit reached";
+                default -> {
+                }
+            }
+        }
+        return errorText;
     }
 }
