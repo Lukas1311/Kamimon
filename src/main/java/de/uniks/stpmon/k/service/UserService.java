@@ -10,31 +10,35 @@ import javax.inject.Inject;
 
 public class UserService {
 
-    private User user;
-    @Inject
+    private final UserStorage userStorage;
     private final UserApiService userApiService;
 
     @Inject
-    public UserService(User user, UserApiService userApiService){
-        this.user = user;
+    public UserService(UserApiService userApiService, UserStorage userStorage){
         this.userApiService = userApiService;
+        this.userStorage = userStorage;
     }
 
     public Observable<User> setUsername(String username){
-        this.user = new User(user._id(), username, user.status(), user.avatar(), user.friends());
-        UpdateUserDto dto = new UpdateUserDto(this.user.name(), null, null, null, null);
-        return userApiService.updateUser(this.user._id(), dto);
+        //TODO: Wait for ServerResponse before changing the username in UserStorage (new Username could be invalid)
+        User oldUser = userStorage.getUser();
+        User newUser = new User(oldUser._id(), username, oldUser.status(), oldUser.avatar(), oldUser.friends());
+        userStorage.setUser(newUser);
+        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, null, null, null);
+        return userApiService.updateUser(oldUser._id(), dto);
     }
 
     public Observable<User> setPassword(String password){
-        UpdateUserDto dto = new UpdateUserDto(this.user.name(), null, null, null, password);
-        return userApiService.updateUser(this.user._id(), dto);
+        User oldUser = userStorage.getUser();
+        UpdateUserDto dto = new UpdateUserDto(null, null, null, null, password);
+        return userApiService.updateUser(oldUser._id(), dto);
     }
 
     public Observable<User> setAvatar(String avatar){
-        this.user = new User(user._id(), user.name(), user.status(), avatar, user.friends());
-        UpdateUserDto dto = new UpdateUserDto(this.user.name(), null, avatar, null, null);
-        return userApiService.updateUser(this.user._id(), dto);
+        User oldUser = userStorage.getUser();
+        User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
+        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
+        return userApiService.updateUser(oldUser._id(), dto);
     }
 
 }
