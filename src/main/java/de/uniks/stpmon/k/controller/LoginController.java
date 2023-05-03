@@ -84,15 +84,12 @@ public class LoginController extends Controller{
                     errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText());
-                    app.show(new DummyController());
                 }, error -> {
                     String errorText = getErrorMessage(error);
                     errorLabel.setText(errorText);
                     errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
                     System.out.println("look here for the error: " + error);
                 }));
-
-        app.show(new DummyController());
     }
 
     private void loginWithCredentials(String username, String password){
