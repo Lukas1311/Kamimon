@@ -8,5 +8,6 @@
       <Button fx:id="chat" mnemonicParsing="false" onAction="#openChat" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="C" />
       <Button fx:id="friends" mnemonicParsing="false" onAction="#openFriends" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="F" />
       <Button fx:id="home" mnemonicParsing="false" onAction="#backtoLobby" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="H" />
+      <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="L" />
    </children>
 </VBox>

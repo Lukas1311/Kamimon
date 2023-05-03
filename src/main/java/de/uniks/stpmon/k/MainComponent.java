@@ -3,6 +3,7 @@ package de.uniks.stpmon.k;
 import dagger.BindsInstance;
 import dagger.Component;
 import de.uniks.stpmon.k.controller.LoginController;
+import de.uniks.stpmon.k.controller.SidebarController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 
 import javax.inject.Singleton;
@@ -12,6 +13,7 @@ import javax.inject.Singleton;
 public interface MainComponent {
     AuthenticationService authenticationService();
     LoginController loginController();
+    SidebarController sidebarController();
 
     //TODO: LobbyController not implemented yet
     //LobbyController lobbyController();
