@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
@@ -17,6 +18,12 @@ public class UserService {
     public UserService(UserApiService userApiService, UserStorage userStorage){
         this.userApiService = userApiService;
         this.userStorage = userStorage;
+    }
+
+    public Observable<User> addUser(String username, String password){
+        return userApiService.addUser(
+                new CreateUserDto(username, null, password)
+        );
     }
 
     public Observable<User> setUsername(String username){

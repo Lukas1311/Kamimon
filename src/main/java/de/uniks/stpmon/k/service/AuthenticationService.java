@@ -30,6 +30,7 @@ public class AuthenticationService  {
         });
     }
 
+
     public Observable<Response<ErrorResponse>> logout() {
         return authApiService.logout().map(res -> {
             return res;
