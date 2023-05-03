@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 
 public class SidebarController extends Controller {
@@ -22,6 +23,9 @@ public class SidebarController extends Controller {
     public Button logoutButton;
     @FXML
     public VBox vBox;
+    @Inject
+    @Singleton
+    HybridController hybridController;
 
     @Inject
     AuthenticationService authService;
@@ -44,6 +48,7 @@ public class SidebarController extends Controller {
     }
 
     public void openFriends() {
+        hybridController.openSidebar("friends");
     }
 
     public void backtoLobby() {
