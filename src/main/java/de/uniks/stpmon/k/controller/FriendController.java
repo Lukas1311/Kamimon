@@ -26,9 +26,6 @@ public class FriendController extends Controller {
 
     private final User user;
 
-    public FriendController() {
-        this(new User("", "", "0", "Dummy", "offline", "", new ArrayList<>()));
-    }
 
     public FriendController(User user) {
         this.user = user;

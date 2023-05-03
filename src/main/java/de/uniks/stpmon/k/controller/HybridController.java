@@ -8,7 +8,9 @@ import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class HybridController extends Controller {
     @FXML
     public HBox hBox;
@@ -18,6 +20,8 @@ public class HybridController extends Controller {
     public StackPane stackPane;
     @Inject
     Provider<SidebarController> sidebarController;
+    @Inject
+    FriendListController friendListController;
 
     @Inject
     public HybridController() {
@@ -27,11 +31,20 @@ public class HybridController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         pane.getChildren().add(sidebarController.get().render());
+        //TODO: switch to LobbyController
         stackPane.getChildren().add(new LoginController().render());
         return parent;
     }
 
-    public void openChat() {
+    public void openSidebar(String string) {
+        if ("friends".equals(string)) {
+            if(stackPane.getChildren().size() > 1) {
+                stackPane.getChildren().remove(1);
+            }
+            else {
+                stackPane.getChildren().add(friendListController.render());
+            }
+        }
     }
 
 }
