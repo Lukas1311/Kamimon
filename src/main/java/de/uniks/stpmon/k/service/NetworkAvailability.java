@@ -1,12 +1,13 @@
 package de.uniks.stpmon.k.service;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
+import java.net.UnknownHostException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import de.uniks.stpmon.k.Main;
 
 @Singleton
 public class NetworkAvailability {
@@ -17,24 +18,11 @@ public class NetworkAvailability {
 
     public boolean isInternetAvailable() {
         try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface ni = interfaces.nextElement();
-                System.out.println(ni);
-                if (!ni.isUp() || ni.isLoopback() | ni.isVirtual()) {
-                    continue;
-                }
-                Enumeration<InetAddress> addresses = ni.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress address = addresses.nextElement();
-                    if (!address.isLinkLocalAddress() && !address.isLoopbackAddress() && !address.isMulticastAddress()) {
-                        System.out.println(address);
-                        return true;
-                    }
-                }
-            }
+            InetAddress address = InetAddress.getByName(Main.API_DOMAIN);
+            return address.isReachable(5000);
+        } catch (UnknownHostException e) {
             return false;
-        } catch (SocketException e) {
+        } catch (IOException e) {
             return false;
         }
     }
