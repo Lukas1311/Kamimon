@@ -91,8 +91,6 @@ public class LoginController extends Controller{
     }
 
     public void validateLoginAndRegistration() {
-        // unbind before doing a new bind
-        errorLabel.textProperty().unbind();
         errorText = new SimpleStringProperty("");
         errorLabel.textProperty().bind(errorText);
         if (isInvalid.get()) {
@@ -120,7 +118,7 @@ public class LoginController extends Controller{
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText());
                 }, error -> {
-                    getErrorMessage(error);
+                    errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
                 }));
     }
@@ -134,22 +132,21 @@ public class LoginController extends Controller{
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridController);
                 }, error -> {
-                    getErrorMessage(error);
+                    errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
                 }));
     }
 
-    private void getErrorMessage(Throwable error){
-        if (error instanceof HttpException exception) {
-
-            switch (exception.code()) {
-                case 400 -> errorText.set("Validation failed");
-                case 401 -> errorText.set("Invalid username or password");
-                case 409 -> errorText.set("Username was already taken");
-                case 429 -> errorText.set("Rate limit reached");
-                default -> {
-                }
-            }
+    private String getErrorMessage(Throwable error){
+        if (!(error instanceof HttpException exception)) {
+            return errorText.get();
         }
+        return switch (exception.code()) {
+            case 400 -> "Validation failed";
+            case 401 -> "Invalid username or password";
+            case 409 -> "Username was already taken";
+            case 429 -> "Rate limit reached";
+            default  -> "error";
+        };
     }
 }
