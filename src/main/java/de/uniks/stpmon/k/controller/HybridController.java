@@ -8,7 +8,9 @@ import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class HybridController extends Controller {
     @FXML
     public HBox hBox;
@@ -18,6 +20,8 @@ public class HybridController extends Controller {
     public StackPane stackPane;
     @Inject
     Provider<SidebarController> sidebarController;
+    @Inject
+    FriendListController friendListController;
 
     @Inject
     public HybridController() {
@@ -31,7 +35,10 @@ public class HybridController extends Controller {
         return parent;
     }
 
-    public void openChat() {
+    public void openSidebar(String string) {
+        if ("friends".equals(string)) {
+            stackPane.getChildren().add(friendListController.render());
+        }
     }
 
 }
