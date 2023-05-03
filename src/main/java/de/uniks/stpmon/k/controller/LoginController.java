@@ -39,6 +39,8 @@ public class LoginController extends Controller{
     AuthenticationService authService;
     @Inject
     TokenStorage tokenStorage;
+    @Inject
+    HybridController hybridController;
 
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
@@ -89,7 +91,7 @@ public class LoginController extends Controller{
             .subscribe(lr -> {
                 errorLabel.setText("Login successful");
                 errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
-                app.show(new DummyController());
+                app.show(hybridController);
         }, error -> {
             String errorText = "error";
             // TODO: refactor to method
