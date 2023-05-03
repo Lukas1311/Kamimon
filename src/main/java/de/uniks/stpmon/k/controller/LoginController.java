@@ -69,19 +69,7 @@ public class LoginController extends Controller{
         if (isInvalid.get()) {
             return;
         }
-        disposables.add(authService
-                .login(usernameInput.getText(), passwordInput.getText())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(lr -> {
-                    errorLabel.setText("Login successful");
-                    errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
-                    app.show(new DummyController());
-                }, error -> {
-                    String errorText = getErrorMessage(error);
-                    errorLabel.setText(errorText);
-                    errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
-                    System.out.println("look here for the error: " + error);
-                }));
+        loginWithCredentials(usernameInput.getText(), passwordInput.getText());
     }
 
     public void register() {
@@ -94,6 +82,8 @@ public class LoginController extends Controller{
                 .subscribe(user -> {
                     errorLabel.setText("Registration successful");
                     errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                    //Login
+                    loginWithCredentials(user.name(), passwordInput.getText());
                     app.show(new DummyController());
                 }, error -> {
                     String errorText = getErrorMessage(error);
@@ -105,11 +95,25 @@ public class LoginController extends Controller{
         app.show(new DummyController());
     }
 
+    private void loginWithCredentials(String username, String password){
+        disposables.add(authService
+                .login(username, password)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(lr -> {
+                    errorLabel.setText("Login successful");
+                    errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                    app.show(new DummyController());
+                }, error -> {
+                    String errorText = getErrorMessage(error);
+                    errorLabel.setText(errorText);
+                    errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
+                    System.out.println("look here for the error: " + error);
+                }));
+
+    }
+
     private String getErrorMessage(Throwable error){
         String errorText = "error";
-        // TODO: refactor to method
-        // this can be refactored to an own method in near future
-        // cause register and refresh use it too
         if (error instanceof HttpException exception) {
 
             switch (exception.code()) {
