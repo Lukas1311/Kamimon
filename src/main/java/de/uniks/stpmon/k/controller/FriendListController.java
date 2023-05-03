@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;
+import de.uniks.stpmon.k.service.UserService;
+import de.uniks.stpmon.k.service.UserStorage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,33 +25,24 @@ public class FriendListController extends Controller {
     @FXML
     public Button searchButton;
 
-//    @Inject
-//    UserApiService userApiService;
+    @Inject
+    UserApiService userApiService;
 
-//    private final ObservableList<User> friends = FXCollections.observableArrayList();
+    @Inject
+    UserService userService;
 
-    private final List<FriendController> friendControllers = new ArrayList<>();
-
-    private final ArrayList<String> friends = new ArrayList<>();
-    private final User user = new User("0", "Alice", "online", "", friends);
+    private final ObservableList<User> friends = FXCollections.observableArrayList();
 
 
+    @Inject
     public FriendListController() {
-        friends.add("Dummy1");
-        friends.add("Dummy2");
-        friends.add("Dummy3");
-        friends.add("Dummy4");
     }
 
-//    public FriendListController(User user) {
-//        this.user = user;
-//    }
 
-
-//    @Override
-//    public void init() {
-//        disposable.add(userApiService.getUsers().subscribe(this.friends::setAll));
-//    }
+    @Override
+    public void init() {
+        disposables.add(userApiService.getUsers().subscribe(this.friends::setAll));
+    }
 
     @Override
     public Parent render() {
@@ -58,13 +51,6 @@ public class FriendListController extends Controller {
 //        final ListView<User> friends = new ListView<>(this.friends);
 
 
-        for (String user : user.friends()) {
-            final FriendController friendController = new FriendController();
-            friendControllers.add(friendController);
-            friendList.getChildren().add(friendController.render());
-            friendController.init();
-        }
-
         searchButton.setOnAction(e -> searchForFriend());
 
         return parent;
@@ -72,13 +58,12 @@ public class FriendListController extends Controller {
 
     @FXML
     private void searchForFriend() {
-        //TODO: create search function
+        String name = searchFriend.getText();
+        disposables.add(userService.searchFriend(name).subscribe());
     }
 
     @Override
     public void destroy() {
-        for (final FriendController i : friendControllers) {
-            i.destroy();
-        }
+
     }
 }
