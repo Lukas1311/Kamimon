@@ -7,6 +7,8 @@ import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -51,7 +53,7 @@ public class LoginController extends Controller{
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
-    private String errorText;
+    private StringProperty errorText;
 
 
     @Inject
@@ -88,36 +90,35 @@ public class LoginController extends Controller{
         return parent;
     }
 
-    public void login() {
-        // unbind text property so text can be set manually with setText()
-        errorLabel.textProperty().unbind();
-        errorText = "error";
+    public void validateLoginAndRegistration() {
+        errorText = new SimpleStringProperty("error");
+        errorLabel.textProperty().bind(errorText);
         if (isInvalid.get()) {
             return;
         }
         if(!netAvailability.isInternetAvailable()) {
-            errorText = "No internet connection";
-            errorLabel.setText(errorText);
+            errorText.set("No internet connection");
             return;
         }
+    }
+
+    public void login() {
+        validateLoginAndRegistration();
         loginWithCredentials(usernameInput.getText(), passwordInput.getText());
     }
 
     public void register() {
-        if (isInvalid.get()) {
-            return;
-        }
+        validateLoginAndRegistration();
         disposables.add(userService
                 .addUser(usernameInput.getText(), passwordInput.getText())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    errorLabel.setText("Registration successful");
+                    errorText.set("Registration successful");
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText());
                 }, error -> {
-                    errorText = getErrorMessage(error);
-                    errorLabel.setText(errorText);
+                    getErrorMessage(error);
                     System.out.println("look here for the error: " + error);
                 }));
     }
@@ -131,26 +132,23 @@ public class LoginController extends Controller{
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridController);
                 }, error -> {
-                    errorText = getErrorMessage(error);
-                    errorLabel.setText(errorText);
+                    getErrorMessage(error);
                     System.out.println("look here for the error: " + error);
                 }));
-
     }
 
-    private String getErrorMessage(Throwable error){
-        errorText = "error";
+    private void getErrorMessage(Throwable error){
+        errorText.set("error");
         if (error instanceof HttpException exception) {
 
             switch (exception.code()) {
-                case 400 -> errorText = "Validation failed";
-                case 401 -> errorText = "Invalid username or password";
-                case 409 -> errorText = "Username was already taken";
-                case 429 -> errorText = "Rate limit reached";
+                case 400 -> errorText.set("Validation failed");
+                case 401 -> errorText.set("Invalid username or password");
+                case 409 -> errorText.set("Username was already taken");
+                case 429 -> errorText.set("Rate limit reached");
                 default -> {
                 }
             }
         }
-        return errorText;
     }
 }
