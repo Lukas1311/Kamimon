@@ -2,9 +2,13 @@ package de.uniks.stpmon.k.controller;
 
 
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
+import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -12,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
@@ -38,11 +44,16 @@ public class LoginController extends Controller{
     @Inject
     TokenStorage tokenStorage;
     @Inject
+    NetworkAvailability netAvailability;
+    @Inject
     HybridController hybridController;
     @Inject
     UserService userService;
 
     private BooleanBinding isInvalid;
+    private BooleanBinding passwordTooShort;
+    private BooleanBinding usernameTooLong;
+    private StringProperty errorText;
 
 
     @Inject
@@ -54,11 +65,23 @@ public class LoginController extends Controller{
     public Parent render() {
         final Parent parent = super.render();
 
+        errorLabel.setFont(new Font(10.0));
+        errorLabel.setTextFill(Color.RED);
+        passwordTooShort = passwordInput.textProperty().length().lessThan(8);
+        usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
+        errorLabel.textProperty().bind(
+            Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
+                .then("Password too short.")
+                .otherwise(Bindings.when(usernameTooLong)
+                    .then("Username too long.")
+                    .otherwise("")
+                )
+        );
         isInvalid = usernameInput
-                .textProperty()
-                .isEmpty()
-                .or(passwordInput.textProperty().length().lessThan(8))
-                .or(usernameInput.textProperty().length().greaterThan(32));
+            .textProperty()
+            .isEmpty()
+            .or(passwordTooShort)
+            .or(usernameTooLong);
         loginButton.disableProperty().bind(isInvalid);
         registerButton.disableProperty().bind(isInvalid);
 
@@ -67,29 +90,35 @@ public class LoginController extends Controller{
         return parent;
     }
 
-    public void login() {
+    public void validateLoginAndRegistration() {
+        errorText = new SimpleStringProperty("");
+        errorLabel.textProperty().bind(errorText);
         if (isInvalid.get()) {
             return;
         }
+        if(!netAvailability.isInternetAvailable()) {
+            errorText.set("No internet connection");
+            return;
+        }
+    }
+
+    public void login() {
+        validateLoginAndRegistration();
         loginWithCredentials(usernameInput.getText(), passwordInput.getText());
     }
 
     public void register() {
-        if (isInvalid.get()) {
-            return;
-        }
+        validateLoginAndRegistration();
         disposables.add(userService
                 .addUser(usernameInput.getText(), passwordInput.getText())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    errorLabel.setText("Registration successful");
-                    errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                    errorText.set("Registration successful");
+                    errorLabel.setTextFill(Color.GREEN);
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText());
                 }, error -> {
-                    String errorText = getErrorMessage(error);
-                    errorLabel.setText(errorText);
-                    errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
+                    errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
                 }));
     }
@@ -99,31 +128,25 @@ public class LoginController extends Controller{
                 .login(username, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
-                    errorLabel.setText("Login successful");
-                    errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
+                    errorText.set("Login successful");
+                    errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridController);
                 }, error -> {
-                    String errorText = getErrorMessage(error);
-                    errorLabel.setText(errorText);
-                    errorLabel.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");
+                    errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
                 }));
-
     }
 
     private String getErrorMessage(Throwable error){
-        String errorText = "error";
-        if (error instanceof HttpException exception) {
-
-            switch (exception.code()) {
-                case 400 -> errorText = "Validation failed";
-                case 401 -> errorText = "Invalid username or password";
-                case 409 -> errorText = "Username was already taken";
-                case 429 -> errorText = "Rate limit reached";
-                default -> {
-                }
-            }
+        if (!(error instanceof HttpException exception)) {
+            return errorText.get();
         }
-        return errorText;
+        return switch (exception.code()) {
+            case 400 -> "Validation failed";
+            case 401 -> "Invalid username or password";
+            case 409 -> "Username was already taken";
+            case 429 -> "Rate limit reached";
+            default  -> "error";
+        };
     }
 }

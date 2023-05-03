@@ -38,7 +38,7 @@ public class HttpModule {
     @Singleton
     Retrofit retrofit(OkHttpClient client, ObjectMapper mapper){
         return new Retrofit.Builder()
-                .baseUrl(Main.API_URL + "/")
+                .baseUrl(Main.API_URL.endsWith("/") ? Main.API_URL : Main.API_URL + "/")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(mapper)) //connection dagger & retrofit
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
