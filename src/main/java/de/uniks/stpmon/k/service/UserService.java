@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class UserService {
 
@@ -45,6 +46,10 @@ public class UserService {
         User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
         return userApiService.updateUser(oldUser._id(), dto);
+    }
+
+    public Observable<List<User>> searchFriend(String name) {
+        return userApiService.getUsers().map(e -> e.stream().filter(f ->  f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
 
 }

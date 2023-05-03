@@ -38,6 +38,8 @@ public class LoginController extends Controller{
     @Inject
     TokenStorage tokenStorage;
     @Inject
+    HybridController hybridController;
+    @Inject
     UserService userService;
 
     private BooleanBinding isInvalid;
@@ -99,7 +101,7 @@ public class LoginController extends Controller{
                 .subscribe(lr -> {
                     errorLabel.setText("Login successful");
                     errorLabel.setStyle("-fx-text-fill: green; -fx-font-size: 10px;");
-                    app.show(new DummyController());
+                    app.show(hybridController);
                 }, error -> {
                     String errorText = getErrorMessage(error);
                     errorLabel.setText(errorText);
