@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.TokenStorage;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
@@ -39,6 +41,8 @@ public class LoginController extends Controller{
     TokenStorage tokenStorage;
 
     private BooleanBinding isInvalid;
+    private BooleanBinding passwordTooShort;
+    private BooleanBinding usernameTooLong;
 
     // is needed for dagger
     @Inject
@@ -50,11 +54,23 @@ public class LoginController extends Controller{
     public Parent render() {
         final Parent parent = super.render();
 
+        errorLabel.setTextFill(Color.RED);
+        passwordTooShort = passwordInput.textProperty().length().lessThan(8);
+        usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
+        errorLabel.textProperty().bind(
+            Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
+                .then("Password too short.")
+                .otherwise(Bindings.when(usernameTooLong)
+                    .then("Username too long.")
+                    .otherwise("")
+                )
+        );
         isInvalid = usernameInput
             .textProperty()
             .isEmpty()
-            .or(passwordInput.textProperty().length().lessThan(8))
-            .or(usernameInput.textProperty().length().greaterThan(32));
+            .or(passwordTooShort)
+            .or(usernameTooLong);
+
         loginButton.disableProperty().bind(isInvalid);
 
         return parent;
