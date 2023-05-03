@@ -20,8 +20,7 @@ public class NetworkAvailability {
         try {
             InetAddress address = InetAddress.getByName(Main.API_DOMAIN);
             return address.isReachable(5000);
-        } catch (UnknownHostException e) {
-            return false;
+        // UnknownHostException is IOException
         } catch (IOException e) {
             return false;
         }
