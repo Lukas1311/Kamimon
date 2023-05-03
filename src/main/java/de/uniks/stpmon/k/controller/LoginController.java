@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -39,6 +40,8 @@ public class LoginController extends Controller{
     AuthenticationService authService;
     @Inject
     TokenStorage tokenStorage;
+    @Inject
+    NetworkAvailability netAvailability;
     @Inject
     HybridController hybridController;
 
@@ -84,6 +87,7 @@ public class LoginController extends Controller{
         if (isInvalid.get()) {
             return;
         }
+        System.out.println(netAvailability.isInternetAvailable());
         errorLabel.textProperty().unbind();
         disposables.add(authService
             .login(usernameInput.getText(), passwordInput.getText())
