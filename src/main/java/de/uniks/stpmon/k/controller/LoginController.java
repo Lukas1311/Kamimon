@@ -42,7 +42,7 @@ public class LoginController extends Controller{
 
     private BooleanBinding isInvalid;
 
-    // is needed for dagger
+
     @Inject
     public LoginController() {
 
@@ -58,6 +58,7 @@ public class LoginController extends Controller{
                 .or(passwordInput.textProperty().length().lessThan(8))
                 .or(usernameInput.textProperty().length().greaterThan(32));
         loginButton.disableProperty().bind(isInvalid);
+        registerButton.disableProperty().bind(isInvalid);
 
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
