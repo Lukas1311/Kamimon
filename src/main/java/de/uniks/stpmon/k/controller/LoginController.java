@@ -93,7 +93,7 @@ public class LoginController extends Controller{
     public void validateLoginAndRegistration() {
         // unbind before doing a new bind
         errorLabel.textProperty().unbind();
-        errorText = new SimpleStringProperty("error");
+        errorText = new SimpleStringProperty("");
         errorLabel.textProperty().bind(errorText);
         if (isInvalid.get()) {
             return;
