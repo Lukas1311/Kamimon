@@ -31,13 +31,19 @@ public class HybridController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         pane.getChildren().add(sidebarController.get().render());
+        //TODO: switch to LobbyController
         stackPane.getChildren().add(new LoginController().render());
         return parent;
     }
 
     public void openSidebar(String string) {
         if ("friends".equals(string)) {
-            stackPane.getChildren().add(friendListController.render());
+            if(stackPane.getChildren().size() > 1) {
+                stackPane.getChildren().remove(1);
+            }
+            else {
+                stackPane.getChildren().add(friendListController.render());
+            }
         }
     }
 
