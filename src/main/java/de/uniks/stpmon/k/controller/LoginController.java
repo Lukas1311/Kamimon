@@ -91,6 +91,8 @@ public class LoginController extends Controller{
     }
 
     public void validateLoginAndRegistration() {
+        // unbind before doing a new bind
+        errorLabel.textProperty().unbind();
         errorText = new SimpleStringProperty("error");
         errorLabel.textProperty().bind(errorText);
         if (isInvalid.get()) {
@@ -128,7 +130,7 @@ public class LoginController extends Controller{
                 .login(username, password)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
-                    errorLabel.setText("Login successful");
+                    errorText.set("Login successful");
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridController);
                 }, error -> {
@@ -138,7 +140,6 @@ public class LoginController extends Controller{
     }
 
     private void getErrorMessage(Throwable error){
-        errorText.set("error");
         if (error instanceof HttpException exception) {
 
             switch (exception.code()) {
