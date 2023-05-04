@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
@@ -49,7 +50,19 @@ public class UserService {
     }
 
     public Observable<List<User>> searchFriend(String name) {
-        return userApiService.getUsers().map(e -> e.stream().filter(f ->  f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
+        final User user = userStorage.getUser();
+        return userApiService.getUsers().map(e -> e.stream().filter(f ->  f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())).toList());
     }
 
+    public Observable<List<User>> addFriend(User friend) {
+        final User user = userStorage.getUser();
+        ArrayList<String> friendList = new ArrayList<>(user.friends());
+        friendList.add(friend._id());
+        UpdateUserDto dto = new UpdateUserDto(null, null, null, friendList, null);
+        return userApiService.updateUser(user._id(), dto).map(e -> userApiService.getUsers(e.friends())).concatMap(f -> f);
+    }
+
+    public Observable<List<User>> getFriends() {
+        return userApiService.getUsers(userStorage.getUser().friends());
+    }
 }
