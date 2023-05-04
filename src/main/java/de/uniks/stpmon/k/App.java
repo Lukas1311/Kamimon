@@ -46,12 +46,19 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
+        
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         final AuthenticationService authService = component.authenticationService();
-        // TODO: check rememberMe
 
-        controller = component.loginController();
-        initAndRender(controller);
+        if (authService.isRememberMe()) {
+            authService.refresh().subscribe(lr -> {
+                show(component.hybridController());
+            }, err -> {
+                show(component.loginController());
+            });
+        } else {
+            show(component.loginController());
+        }
     }
 
     private void setAppIcon(Stage stage){
