@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.views.RegionCell;
@@ -19,12 +18,12 @@ import java.util.List;
 
 
 public class RegionListController extends Controller{
-    private final ObservableList<Region> regionsList = FXCollections.observableArrayList();
+    private final ObservableList<Region> regions = FXCollections.observableArrayList();
     private final List<RegionController> controllers = new ArrayList<>();
     @Inject
     RegionApiService regionApiService;
     @FXML
-    private AnchorPane regionsBar;
+    private AnchorPane regionsList;
 
     @Inject
     public RegionListController(){
@@ -33,14 +32,14 @@ public class RegionListController extends Controller{
 
     @Override
     public void init() {
-        disposables.add(regionApiService.getRegions().observeOn(FX_SCHEDULER).subscribe(regionsList::setAll));
+        disposables.add(regionApiService.getRegions().observeOn(FX_SCHEDULER).subscribe(regions::setAll));
     }
 
     @Override
     public Parent render(){
         final Parent parent = super.render();
-        final ListView<Region> regions = new ListView<>(this.regionsList);
-        regionsBar.getChildren().add(regions);
+        final ListView<Region> regions = new ListView<>(this.regions);
+        regionsList.getChildren().add(regions);
         VBox.setVgrow(regions, Priority.ALWAYS);
         regions.setCellFactory(e -> new RegionCell());
         return parent;
