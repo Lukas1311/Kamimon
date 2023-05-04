@@ -11,15 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegionListController extends Controller{
-    private final App app;
     private final List<Region> regionsList;
     private final List<RegionController> controllers = new ArrayList<>();
     @FXML
     private AnchorPane regions;
 
     @Inject
-    public RegionListController(App app, List<Region> regionsList){
-        this.app = app;
+    public RegionListController(List<Region> regionsList){
         this.regionsList = regionsList;
 
     }
@@ -34,7 +32,7 @@ public class RegionListController extends Controller{
     private void generateRegions() {
         regions.getChildren().clear();
         for(final Region region: regionsList) {
-            final RegionController regionController = new RegionController(app, region);
+            final RegionController regionController = new RegionController(region);
             controllers.add(regionController);
             regionController.init();
             try {

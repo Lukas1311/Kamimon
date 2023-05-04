@@ -8,12 +8,10 @@ import javafx.scene.control.Button;
 
 public class RegionController extends Controller{
     private final Region region;
-    private final App app;
     @FXML
     private Button regionButton;
 
-    public RegionController(App app, Region region){
-        this.app = app;
+    public RegionController(Region region){
         this.region = region;
     }
 
@@ -22,7 +20,7 @@ public class RegionController extends Controller{
         final Parent parent = super.render();
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
-            app.show(new IngameController(app));
+            app.show(new IngameController());
         });
         return parent;
     }
