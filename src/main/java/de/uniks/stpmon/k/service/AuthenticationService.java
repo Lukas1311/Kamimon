@@ -14,7 +14,6 @@ public class AuthenticationService  {
     private final AuthenticationApiService authApiService;
     private final UserStorage userStorage;
     private final Preferences preferences;
-    // TODO: add preferences
 
     @Inject
     public AuthenticationService(TokenStorage tokenStorage, AuthenticationApiService authApiService, UserStorage userStorage, Preferences preferences) {
@@ -43,14 +42,12 @@ public class AuthenticationService  {
         });
     }
 
-    // TODO: implement isRememberMe
     public boolean isRememberMe() {
-        return false;
+        return preferences.get("refreshToken", null) != null;
     }
 
     public Observable<LoginResult> refresh() {
-        // TODO: add refresh token from preferences
-        return authApiService.refresh(new RefreshDto(null) ).map(lr -> {
+        return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).map(lr -> {
             tokenStorage.setToken(lr.accessToken());
             return lr;
         });
