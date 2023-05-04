@@ -7,10 +7,12 @@ import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,6 +24,8 @@ import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
+import javax.swing.*;
+import javax.inject.Provider;
 
 public class LoginController extends Controller{
 
@@ -41,6 +45,8 @@ public class LoginController extends Controller{
     public RadioButton germanButton;
     @FXML
     public RadioButton englishButton;
+    @FXML
+    public CheckBox mask;
 
     @Inject
     AuthenticationService authService;
@@ -152,5 +158,11 @@ public class LoginController extends Controller{
             case 429 -> "Rate limit reached";
             default  -> "error";
         };
+    }
+
+    public void showPassword() {
+        //TODO: The Application must be finished so I can test this function!
+        SimpleBooleanProperty showPassword = null;
+        showPassword.bind(mask.selectedProperty());
     }
 }

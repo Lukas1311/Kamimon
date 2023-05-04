@@ -3,4 +3,4 @@
 <?import javafx.scene.control.Button?>
 
 
-<Button fx:id="region" mnemonicParsing="false" text="Button" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" />
+<Button fx:id="regionButton" mnemonicParsing="false" text="Button" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.RegionController" />
