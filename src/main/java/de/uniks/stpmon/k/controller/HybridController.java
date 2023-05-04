@@ -22,6 +22,8 @@ public class HybridController extends Controller {
     Provider<SidebarController> sidebarController;
     @Inject
     FriendListController friendListController;
+    @Inject
+    Provider<LobbyController> lobbyController;
 
     @Inject
     public HybridController() {
@@ -31,8 +33,7 @@ public class HybridController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         pane.getChildren().add(sidebarController.get().render());
-        //TODO: switch to LobbyController
-        stackPane.getChildren().add(new LoginController().render());
+        stackPane.getChildren().add(lobbyController.get().render());
         return parent;
     }
 
@@ -47,4 +48,10 @@ public class HybridController extends Controller {
         }
     }
 
+    public void openStackpane(String string) {
+        if ("ingame".equals(string)) {
+            stackPane.getChildren().remove(0);
+            stackPane.getChildren().add(new IngameController().render());
+        }
+    }
 }

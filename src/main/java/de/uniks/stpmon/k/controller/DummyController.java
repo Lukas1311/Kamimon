@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import javafx.fxml.FXML;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;
@@ -14,7 +13,6 @@ public class DummyController extends Controller {
 
     @Override
     public Parent render() {
-        final Parent parent = super.render();
-        return parent;
+        return super.render();
     }
 }
