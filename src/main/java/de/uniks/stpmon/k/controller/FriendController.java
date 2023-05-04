@@ -1,16 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
-import javax.inject.Inject;
 
 public class FriendController extends Controller {
 
@@ -24,7 +21,6 @@ public class FriendController extends Controller {
     public Button messageButton;
     @FXML
     public Button removeFriendButton;
-
 
     private final FriendListController friendListController;
 
@@ -65,7 +61,6 @@ public class FriendController extends Controller {
 
     @FXML
     public void openChat() {
-
     }
 
     @FXML

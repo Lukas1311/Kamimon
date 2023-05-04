@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.FriendCell;
 import javafx.collections.FXCollections;
@@ -14,11 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class FriendListController extends Controller {
@@ -40,6 +37,11 @@ public class FriendListController extends Controller {
 
     @Inject
     public FriendListController() {
+    }
+
+    @Override
+    public void init() {
+        disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
     }
 
     @Override
@@ -74,7 +76,6 @@ public class FriendListController extends Controller {
 
     @Override
     public void destroy() {
-
     }
 
     public void handleFriend(Boolean newFriend, User user) {
