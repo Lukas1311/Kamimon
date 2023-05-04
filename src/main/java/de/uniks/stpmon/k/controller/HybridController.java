@@ -54,9 +54,13 @@ public class HybridController extends Controller {
                 break;
             case "ingame":
                 sidebarController.get().setPause(true);
+                sidebarController.get().setLobby(true);
                 stackPane.getChildren().removeAll(stackPane.getChildren());
                 stackPane.getChildren().add(new IngameController().render());
                 break;
+            case "lobby":
+                stackPane.getChildren().removeAll(stackPane.getChildren());
+                stackPane.getChildren().add(lobbyController.get().render());
             default:
                 break;
         }

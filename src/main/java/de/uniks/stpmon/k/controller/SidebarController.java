@@ -33,7 +33,7 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
-    
+
     @Inject
     public SidebarController() {
     }
@@ -41,36 +41,47 @@ public class SidebarController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         pause.setVisible(false);
+        home.setVisible(false);
         logoutButton.setOnAction(e -> logout());
 
         return parent;
+    }
+
+
+    public void logout() {
+        disposables.add(authService
+                .logout()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(res -> {
+                    System.out.println(res);
+                    app.show(loginControllerProvider.get());
+                })
+        );
+    }
+
+    public void setLobby(boolean b) {
+        home.setVisible(b);
     }
 
     public void openChat() {
     }
 
     public void openFriends() {
+
         hybridController.openSidebar("friends");
     }
 
     public void backtoLobby() {
+        hybridController.openSidebar("lobby");
     }
 
-    public void logout() {
-        disposables.add(authService
-            .logout()
-            .observeOn(FX_SCHEDULER)
-            .subscribe(res -> {
-                System.out.println(res);
-                app.show(loginControllerProvider.get());
-            })
-        );
+    public void toPause() {
+        hybridController.openSidebar("pause");
     }
 
     public void setPause(boolean b) {
         pause.setVisible(b);
     }
-    public void toPause() {
-        hybridController.openSidebar("pause");
-    }
+
+
 }
