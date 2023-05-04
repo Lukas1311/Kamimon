@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
-import io.reactivex.rxjava3.core.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
