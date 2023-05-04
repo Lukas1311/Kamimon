@@ -46,7 +46,6 @@ public class FriendListController extends Controller {
 
     @Override
     public Parent render() {
-        init();
         final Parent parent = super.render();
 
         final ListView<User> friends = new ListView<>(this.friends);
