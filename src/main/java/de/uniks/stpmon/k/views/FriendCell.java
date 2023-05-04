@@ -8,9 +8,11 @@ import javafx.scene.control.ListCell;
 public class FriendCell extends ListCell<User> {
 
     private final FriendListController friendListController;
+    private final Boolean isNewFriend;
 
-    public FriendCell(FriendListController friendListController) {
+    public FriendCell(FriendListController friendListController, Boolean isNewFriend) {
         this.friendListController = friendListController;
+        this.isNewFriend = isNewFriend;
     }
 
     @Override
@@ -19,7 +21,7 @@ public class FriendCell extends ListCell<User> {
         if (empty || item == null) {
             setGraphic(null);
         } else {
-            final FriendController friendController = new FriendController(item, true, friendListController);
+            final FriendController friendController = new FriendController(item, isNewFriend, friendListController);
             setGraphic(friendController.render());
         }
     }

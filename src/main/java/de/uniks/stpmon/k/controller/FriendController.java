@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -69,8 +70,6 @@ public class FriendController extends Controller {
 
     @FXML
     public void handleFriend() {
-        if (newFriend) {
-            friendListController.userService.addFriend(user);
-        }
+        friendListController.handleFriend(newFriend, user);
     }
 }

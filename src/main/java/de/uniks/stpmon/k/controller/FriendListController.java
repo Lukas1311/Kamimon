@@ -27,10 +27,8 @@ public class FriendListController extends Controller {
     public TextField searchFriend;
     @FXML
     public Button searchButton;
+
     @FXML
-    public VBox otherUser;
-    @FXML
-    public VBox currentFriendBox;
     public VBox friendList;
 
     @Inject
@@ -48,15 +46,14 @@ public class FriendListController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-//        final ListView<User> friends = new ListView<>(this.friends);
-//        friendList.getChildren().add(friends);
-//        friendList.getChildren().add(new Line());
-
+        final ListView<User> friends = new ListView<>(this.friends);
+        friendList.getChildren().add(friends);
+        friends.setCellFactory(e -> new FriendCell(this, false));
 
         final ListView<User> users = new ListView<>(this.users);
-        otherUser.getChildren().add(users);
+        friendList.getChildren().add(users);
         VBox.setVgrow(users, Priority.ALWAYS);
-        users.setCellFactory(e -> new FriendCell(this));
+        users.setCellFactory(e -> new FriendCell(this, true));
 
         searchButton.setOnAction(e -> searchForFriend());
 
@@ -78,5 +75,11 @@ public class FriendListController extends Controller {
     @Override
     public void destroy() {
 
+    }
+
+    public void handleFriend(Boolean newFriend, User user) {
+        if (newFriend) {
+            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
+        }
     }
 }
