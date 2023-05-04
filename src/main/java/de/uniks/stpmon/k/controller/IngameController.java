@@ -5,10 +5,8 @@ import javafx.scene.Parent;
 
 public class IngameController extends Controller{
 
-    private final App app;
 
-    public IngameController(App app){
-        this.app = app;
+    public IngameController(){
     }
 
     @Override
