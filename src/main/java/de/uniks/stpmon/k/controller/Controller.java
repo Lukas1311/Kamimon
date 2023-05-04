@@ -2,8 +2,11 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.Main;
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -16,6 +19,8 @@ public abstract class Controller {
 
     @Inject
     protected App app;
+
+    public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
     protected final CompositeDisposable disposables = new CompositeDisposable();
 
