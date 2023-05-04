@@ -6,7 +6,10 @@
 <?import javafx.scene.text.*?>
 
 <VBox alignment="TOP_CENTER" maxWidth="370.0" prefHeight="720.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendListController">
-    <VBox fx:id="friendList" VBox.vgrow="ALWAYS" />
+    <VBox fx:id="friendList" VBox.vgrow="ALWAYS">
+        <VBox fx:id="currentFriendBox" VBox.vgrow="SOMETIMES" />
+        <VBox fx:id="otherUser" VBox.vgrow="ALWAYS" />
+    </VBox>
     <VBox alignment="BOTTOM_CENTER" fillWidth="false" VBox.vgrow="NEVER">
         <HBox alignment="BOTTOM_CENTER" fillHeight="false" prefHeight="28.0" prefWidth="351.0" style="-fx-border-color: black;">
             <TextField fx:id="searchFriend" prefHeight="38.0" prefWidth="300.0" promptText="Search for a friend" HBox.hgrow="ALWAYS" />

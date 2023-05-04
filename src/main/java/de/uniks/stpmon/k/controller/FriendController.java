@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
 
 public class FriendController extends Controller {
 
@@ -24,11 +24,17 @@ public class FriendController extends Controller {
     @FXML
     public Button removeFriendButton;
 
+
+    private final FriendListController friendListController;
+
     private final User user;
+    private final boolean newFriend;
 
 
-    public FriendController(User user) {
+    public FriendController(User user, Boolean newFriend, FriendListController friendListController) {
         this.user = user;
+        this.newFriend = newFriend;
+        this.friendListController = friendListController;
     }
 
     @Override
@@ -36,6 +42,11 @@ public class FriendController extends Controller {
         final Parent parent = super.render();
 
         userName.setText(user.name());
+
+        if (newFriend) {
+            removeFriendButton.setText("+");
+            removeFriendButton.setStyle("-fx-text-fill: green");
+        }
 
         if (user.status().equals("offline")) {
             userStatus.setFill(Color.RED);
@@ -46,16 +57,20 @@ public class FriendController extends Controller {
 
         messageButton.setOnAction(e -> openChat());
 
-        removeFriendButton.setOnAction(e -> removeFriend());
+        removeFriendButton.setOnAction(e -> handleFriend());
 
         return parent;
     }
 
+    @FXML
     public void openChat() {
 
     }
 
-    public void removeFriend() {
-
+    @FXML
+    public void handleFriend() {
+        if (newFriend) {
+            friendListController.userService.addFriend(user);
+        }
     }
 }

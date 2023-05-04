@@ -46,4 +46,7 @@ public class UserService {
         return userApiService.getUsers().map(e -> e.stream().filter(f ->  f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
 
+    public void addFriend(User user) {
+        System.out.println("Test");
+    }
 }
