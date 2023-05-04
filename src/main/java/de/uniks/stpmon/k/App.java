@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -33,7 +35,7 @@ public class App extends Application {
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
-        final Scene scene = new Scene(new Label("Loading..."));
+        final Scene scene = new Scene(new Label("Loading"));
         stage.setScene(scene);
         stage.show();
 
