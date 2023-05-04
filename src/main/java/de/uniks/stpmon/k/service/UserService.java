@@ -74,7 +74,7 @@ public class UserService {
         return userApiService.updateUser(user._id(), dto).map(e -> {
             userStorage.setUser(e);
             if (e.friends().isEmpty()) {
-                return Observable.<List<User>>empty();
+                return Observable.<List<User>>fromSupplier(ArrayList::new);
             }
             return userApiService.getUsers(e.friends());
         }).concatMap(f -> f);
@@ -82,7 +82,7 @@ public class UserService {
 
     public Observable<List<User>> getFriends() {
         if (userStorage.getUser().friends().isEmpty()) {
-            return Observable.empty();
+            return Observable.fromSupplier(ArrayList::new);
         }
         return userApiService.getUsers(userStorage.getUser().friends());
     }
