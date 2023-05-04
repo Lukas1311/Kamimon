@@ -49,8 +49,15 @@ public class HybridController extends Controller {
                 }
                 break;
             case "pause":
-                stackPane.getChildren().removeAll(stackPane.getChildren());
-                stackPane.getChildren().add(pauseController.render());
+                boolean containsPause = stackPane.getChildren().stream()
+                        .anyMatch(node -> node.getId() != null && node.getId().equals("pause"));
+                if (containsPause) {
+                    stackPane.getChildren().removeAll(stackPane.getChildren());
+                    stackPane.getChildren().add(new IngameController().render());
+                } else {
+                    stackPane.getChildren().removeAll(stackPane.getChildren());
+                    stackPane.getChildren().add(pauseController.render());
+                }
                 break;
             case "ingame":
                 sidebarController.get().setPause(true);
@@ -59,6 +66,8 @@ public class HybridController extends Controller {
                 stackPane.getChildren().add(new IngameController().render());
                 break;
             case "lobby":
+                sidebarController.get().setPause(false);
+                sidebarController.get().setLobby(false);
                 stackPane.getChildren().removeAll(stackPane.getChildren());
                 stackPane.getChildren().add(lobbyController.get().render());
             default:
