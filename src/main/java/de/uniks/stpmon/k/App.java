@@ -52,10 +52,8 @@ public class App extends Application {
         final AuthenticationService authService = component.authenticationService();
         // TODO: check rememberMe
 
-        controller = component.loadingScreenController();
+        controller = component.loginController();
         initAndRender(controller);
-        /*controller = component.loginController();
-        initAndRender(controller);*/
     }
 
     private void setAppIcon(Stage stage){
