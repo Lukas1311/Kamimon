@@ -58,14 +58,18 @@ public class UserService {
     public Observable<List<User>> addFriend(User friend) {
         final User user = userStorage.getUser();
         HashSet<String> friendList = new HashSet<>(user.friends());
-        friendList.add(friend._id());
+        if(!friendList.add(friend._id())) {
+            return Observable.empty();
+        }
         return updateFriendList(user, friendList);
     }
 
     public Observable<List<User>> removeFriend(User friend) {
         final User user = userStorage.getUser();
         HashSet<String> friendList = new HashSet<>(user.friends());
-        friendList.remove(friend._id());
+        if(!friendList.remove(friend._id())) {
+            return Observable.empty();
+        }
         return updateFriendList(user, friendList);
     }
 
