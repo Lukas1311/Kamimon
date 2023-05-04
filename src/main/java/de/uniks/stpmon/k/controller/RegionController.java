@@ -13,8 +13,11 @@ public class RegionController extends Controller{
     @FXML
     private Button regionButton;
 
-    public RegionController(Region region){
+    private final App app;
+
+    public RegionController(Region region, App app){
         this.region = region;
+        this.app = app;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class RegionListController extends Controller{
         final ListView<Region> regions = new ListView<>(this.regions);
         regionList.getChildren().add(regions);
         VBox.setVgrow(regions, Priority.ALWAYS);
-        regions.setCellFactory(e -> new RegionCell());
+        regions.setCellFactory(e -> new RegionCell(app));
         return parent;
     }
 }
