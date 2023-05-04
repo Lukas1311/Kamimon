@@ -46,6 +46,7 @@ public class FriendListController extends Controller {
 
     @Override
     public Parent render() {
+        init();
         final Parent parent = super.render();
 
         final ListView<User> friends = new ListView<>(this.friends);
@@ -81,6 +82,8 @@ public class FriendListController extends Controller {
     public void handleFriend(Boolean newFriend, User user) {
         if (newFriend) {
             disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
+        } else {
+            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
         }
     }
 }

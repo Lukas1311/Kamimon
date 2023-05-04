@@ -30,8 +30,8 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         //initial window size
-        stage.setWidth(640);
-        stage.setHeight(480);
+        stage.setWidth(1280);
+        stage.setHeight(720);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen

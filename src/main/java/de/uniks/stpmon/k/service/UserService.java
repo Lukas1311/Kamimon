@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class UserService {
@@ -56,13 +57,33 @@ public class UserService {
 
     public Observable<List<User>> addFriend(User friend) {
         final User user = userStorage.getUser();
-        ArrayList<String> friendList = new ArrayList<>(user.friends());
+        HashSet<String> friendList = new HashSet<>(user.friends());
         friendList.add(friend._id());
-        UpdateUserDto dto = new UpdateUserDto(null, null, null, friendList, null);
-        return userApiService.updateUser(user._id(), dto).map(e -> userApiService.getUsers(e.friends())).concatMap(f -> f);
+        return updateFriendList(user, friendList);
+    }
+
+    public Observable<List<User>> removeFriend(User friend) {
+        final User user = userStorage.getUser();
+        HashSet<String> friendList = new HashSet<>(user.friends());
+        friendList.remove(friend._id());
+        return updateFriendList(user, friendList);
+    }
+
+    private Observable<List<User>> updateFriendList(User user, HashSet<String> friendList) {
+        UpdateUserDto dto = new UpdateUserDto(null, null, null, new ArrayList<>(friendList), null);
+        return userApiService.updateUser(user._id(), dto).map(e -> {
+            userStorage.setUser(e);
+            if (e.friends().isEmpty()) {
+                return Observable.<List<User>>empty();
+            }
+            return userApiService.getUsers(e.friends());
+        }).concatMap(f -> f);
     }
 
     public Observable<List<User>> getFriends() {
+        if (userStorage.getUser().friends().isEmpty()) {
+            return Observable.empty();
+        }
         return userApiService.getUsers(userStorage.getUser().friends());
     }
 }
