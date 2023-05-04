@@ -24,6 +24,8 @@ public class HybridController extends Controller {
     FriendListController friendListController;
     @Inject
     Provider<LobbyController> lobbyController;
+    @Inject
+    PauseController pauseController;
 
     @Inject
     public HybridController() {
@@ -38,20 +40,26 @@ public class HybridController extends Controller {
     }
 
     public void openSidebar(String string) {
-        if ("friends".equals(string)) {
-            if(stackPane.getChildren().size() > 1) {
-                stackPane.getChildren().remove(1);
-            }
-            else {
-                stackPane.getChildren().add(friendListController.render());
-            }
+        switch (string) {
+            case "friends":
+                if (stackPane.getChildren().size() > 1) {
+                    stackPane.getChildren().remove(1);
+                } else {
+                    stackPane.getChildren().add(friendListController.render());
+                }
+                break;
+            case "pause":
+                stackPane.getChildren().removeAll(stackPane.getChildren());
+                stackPane.getChildren().add(pauseController.render());
+                break;
+            case "ingame":
+                sidebarController.get().setPause(true);
+                stackPane.getChildren().removeAll(stackPane.getChildren());
+                stackPane.getChildren().add(new IngameController().render());
+                break;
+            default:
+                break;
         }
-    }
 
-    public void openStackpane(String string) {
-        if ("ingame".equals(string)) {
-            stackPane.getChildren().remove(0);
-            stackPane.getChildren().add(new IngameController().render());
-        }
     }
 }
