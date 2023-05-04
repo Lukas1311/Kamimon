@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-
+@Singleton
 public class SidebarController extends Controller {
 
     @FXML
@@ -23,6 +23,8 @@ public class SidebarController extends Controller {
     public Button logoutButton;
     @FXML
     public VBox vBox;
+    @FXML
+    public Button pause;
     @Inject
     @Singleton
     HybridController hybridController;
@@ -38,7 +40,7 @@ public class SidebarController extends Controller {
 
     public Parent render() {
         final Parent parent = super.render();
-
+        pause.setVisible(false);
         logoutButton.setOnAction(e -> logout());
 
         return parent;
@@ -63,5 +65,12 @@ public class SidebarController extends Controller {
                 app.show(loginControllerProvider.get());
             })
         );
+    }
+
+    public void setPause(boolean b) {
+        pause.setVisible(b);
+    }
+    public void toPause() {
+        hybridController.openSidebar("pause");
     }
 }
