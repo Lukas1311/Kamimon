@@ -23,7 +23,7 @@ public class RegionListController extends Controller{
     @Inject
     RegionApiService regionApiService;
     @FXML
-    private AnchorPane regionsList;
+    private AnchorPane regionList;
 
     @Inject
     public RegionListController(){
@@ -39,7 +39,7 @@ public class RegionListController extends Controller{
     public Parent render(){
         final Parent parent = super.render();
         final ListView<Region> regions = new ListView<>(this.regions);
-        regionsList.getChildren().add(regions);
+        regionList.getChildren().add(regions);
         VBox.setVgrow(regions, Priority.ALWAYS);
         regions.setCellFactory(e -> new RegionCell());
         return parent;

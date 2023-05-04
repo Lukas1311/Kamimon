@@ -12,8 +12,6 @@ public class RegionController extends Controller{
     private final Region region;
     @FXML
     private Button regionButton;
-    @Inject
-    IngameController ingameController;
 
     public RegionController(Region region){
         this.region = region;
@@ -25,7 +23,6 @@ public class RegionController extends Controller{
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
             app.show(new IngameController());
-            app.show(ingameController);
         });
         return parent;
     }
