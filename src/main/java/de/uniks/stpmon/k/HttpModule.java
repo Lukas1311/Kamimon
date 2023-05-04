@@ -59,7 +59,6 @@ public class HttpModule {
 
     @Provides
     @Singleton
-    //Here was a merge conflict
     RegionApiService regionApi(Retrofit retrofit) {
         return retrofit.create(RegionApiService.class);
     }

@@ -10,24 +10,22 @@ import javax.inject.Inject;
 
 public class RegionController extends Controller{
     private final Region region;
-    private final App app;
     @FXML
     private Button regionButton;
-    @Inject
-    IngameController ingameController;
 
-    public RegionController(App app, Region region){
-        this.app = app;
+    private final App app;
+
+    public RegionController(Region region, App app){
         this.region = region;
+        this.app = app;
     }
 
     @Override
     public Parent render(){
         final Parent parent = super.render();
-        //TODO: I need the Model to get the name of the region. I set the Label of the Button with the Id just to look if it works.
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
-            app.show(ingameController);
+            app.show(new IngameController());
         });
         return parent;
     }
