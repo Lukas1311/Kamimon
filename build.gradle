@@ -13,6 +13,17 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes("Main-Class": "de.uniks.stpmon.k.Main")
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.9.2'
