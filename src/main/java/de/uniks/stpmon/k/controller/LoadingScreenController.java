@@ -5,10 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.web.WebView;
 
 import javax.inject.Inject;
-import java.net.URL;
+import java.util.Objects;
 
 public class LoadingScreenController extends Controller{
 
@@ -27,16 +26,20 @@ public class LoadingScreenController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        final Image imageKamimonLettering = new Image(LoadingScreenController.class.getResource("kamimonLettering.png").toString());
+        final Image imageKamimonLettering = loadImage("kamimonLettering.png");
         imageViewKamimonLettering.setImage(imageKamimonLettering);
 
-        final Image imageDeadBirdsSociety = new Image(LoadingScreenController.class.getResource("deadBirdsSocietyLogo.png").toString());
+        final Image imageDeadBirdsSociety = loadImage("deadBirdsSocietyLogo.png");
         imageViewDeadBirdsSociety.setImage(imageDeadBirdsSociety);
 
-        final Image imageKgmLogo = new Image(LoadingScreenController.class.getResource("kgmLogo.png").toString());
+        final Image imageKgmLogo = loadImage("kgmLogo.png");
         imageViewKgmLogo.setImage(imageKgmLogo);
 
 
         return parent;
+    }
+
+    private Image loadImage(String image){
+        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 }
