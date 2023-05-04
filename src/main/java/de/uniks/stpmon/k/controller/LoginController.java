@@ -110,6 +110,7 @@ public class LoginController extends Controller{
         loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected());
     }
 
+    // TODO: is almost the same like register method, i bet we can refactor this to one method
     private void loginWithCredentials(String username, String password, boolean rememberMe){
         disposables.add(authService
                 .login(username, password, rememberMe)
