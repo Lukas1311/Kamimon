@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 public class IngameController extends Controller{
 
-    private final App app;
 
     public IngameController() {
     }
