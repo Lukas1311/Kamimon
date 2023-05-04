@@ -2,6 +2,10 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.rest.RegionApiService;
+import io.reactivex.rxjava3.core.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
@@ -10,16 +14,23 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RegionListController extends Controller{
-    private final List<Region> regionsList;
+    private final ObservableList<Region> regionsList = FXCollections.observableArrayList();
     private final List<RegionController> controllers = new ArrayList<>();
+    private final RegionApiService regionApiService;
     @FXML
     private AnchorPane regions;
 
     @Inject
-    public RegionListController(List<Region> regionsList){
-        this.regionsList = regionsList;
+    public RegionListController(RegionApiService regionApiService){
+        this.regionApiService = regionApiService;
 
+    }
+
+    @Override
+    public void init() {
+        disposables.add(regionApiService.getRegions().subscribe(this.regionsList::setAll));
     }
 
     @Override
