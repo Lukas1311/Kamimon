@@ -9,9 +9,10 @@ public class TokenStorage {
     private String token;
 
     @Inject
-    public TokenStorage(){}
+    public TokenStorage() {
+    }
 
-    public String getToken(){
+    public String getToken() {
         return token;
     }
 

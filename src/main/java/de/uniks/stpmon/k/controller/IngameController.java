@@ -3,10 +3,13 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import javafx.scene.Parent;
 
+import javax.inject.Inject;
+
 public class IngameController extends Controller{
 
+    private final App app;
 
-    public IngameController(){
+    public IngameController() {
     }
 
     @Override
