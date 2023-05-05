@@ -157,7 +157,6 @@ public class LoginController extends Controller{
     }
 
     public void showPassword() {
-        //TODO: The Application must be finished so I can test this function!
         SimpleBooleanProperty showPassword = null;
         showPassword.bind(mask.selectedProperty());
     }
