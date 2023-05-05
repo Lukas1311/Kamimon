@@ -2,6 +2,7 @@ package de.uniks.stpmon.k;
 
 import dagger.BindsInstance;
 import dagger.Component;
+import de.uniks.stpmon.k.controller.HybridController;
 import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.SidebarController;
@@ -16,10 +17,11 @@ public interface MainComponent {
     NetworkAvailability networkAvailability();
     AuthenticationService authenticationService();
     LoginController loginController();
-    SidebarController sidebarController();
+    HybridController hybridController();
     LoadingScreenController loadingScreenController();
 
     //TODO: LobbyController not implemented yet
+    //hybridController replaces LobbyController right?
     //LobbyController lobbyController();
 
     @Component.Builder

@@ -18,6 +18,9 @@ public interface UserApiService {
     @GET("users")
     Observable<List<User>> getUsers();
 
+    @GET("users")
+    Observable<List<User>> getUsers(@Query("ids") List<String> ids);
+
     @GET("users/{id}")
     Observable<User> getUser(@Path("id") String id);
 

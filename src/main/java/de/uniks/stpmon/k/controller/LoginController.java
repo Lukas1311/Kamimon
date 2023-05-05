@@ -4,9 +4,11 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
+import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -20,6 +22,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import retrofit2.HttpException;
@@ -38,6 +46,8 @@ public class LoginController extends Controller implements Initializable {
     public Label errorLabel;
     @FXML
     public Button loginButton;
+    @FXML
+    public CheckBox rememberMe;
     @FXML
     public Button registerButton;
     @FXML
@@ -114,7 +124,22 @@ public class LoginController extends Controller implements Initializable {
 
     public void login() {
         validateLoginAndRegistration();
-        loginWithCredentials(usernameInput.getText(), passwordInput.getText());
+        loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected());
+    }
+
+    // TODO: is almost the same like register method, i bet we can refactor this to one method
+    private void loginWithCredentials(String username, String password, boolean rememberMe){
+        disposables.add(authService
+                .login(username, password, rememberMe)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(lr -> {
+                    errorText.set("Login successful");
+                    errorLabel.setTextFill(Color.GREEN);
+                    app.show(hybridController);
+                }, error -> {
+                    errorText.set(getErrorMessage(error));
+                    System.out.println("look here for the error: " + error);
+                }));
     }
 
     public void register() {
@@ -126,21 +151,7 @@ public class LoginController extends Controller implements Initializable {
                     errorText.set("Registration successful");
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
-                    loginWithCredentials(user.name(), passwordInput.getText());
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                    System.out.println("look here for the error: " + error);
-                }));
-    }
-
-    private void loginWithCredentials(String username, String password){
-        disposables.add(authService
-                .login(username, password)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(lr -> {
-                    errorText.set("Login successful");
-                    errorLabel.setTextFill(Color.GREEN);
-                    app.show(hybridController);
+                    loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected());
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);

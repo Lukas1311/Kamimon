@@ -30,8 +30,8 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         //initial window size
-        stage.setWidth(640);
-        stage.setHeight(480);
+        stage.setWidth(1280);
+        stage.setHeight(720);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
@@ -48,12 +48,19 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
+        
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         final AuthenticationService authService = component.authenticationService();
-        // TODO: check rememberMe
 
-        controller = component.loginController();
-        initAndRender(controller);
+        if (authService.isRememberMe()) {
+            authService.refresh().subscribe(lr -> {
+                show(component.hybridController());
+            }, err -> {
+                show(component.loginController());
+            });
+        } else {
+            show(component.loginController());
+        }
     }
 
     private void setAppIcon(Stage stage){
