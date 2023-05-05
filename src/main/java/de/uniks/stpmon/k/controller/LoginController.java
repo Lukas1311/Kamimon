@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.views.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -66,8 +65,6 @@ public class LoginController extends Controller implements Initializable {
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private StringProperty errorText;
-    @FXML
-    private Button actionButton = new Button("View");
 
     @Inject
     public LoginController() {
@@ -100,26 +97,7 @@ public class LoginController extends Controller implements Initializable {
 
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
-
-        //showPassword();
-
         return parent;
-    }
-
-    private void showPassword() {
-        // Erstellen des ImageView-Objekts für das Passwort Masken Icon
-        Image passwordMaskImage = new Image("password-mask.png");
-        ImageView passwordMaskImageView = new ImageView(passwordMaskImage);
-
-        // Erstellen eines HBox-Containers, um das Passwortfeld und das ImageView-Objekt zu platzieren
-        HBox passwordBox = new HBox();
-        passwordBox.getChildren().addAll(passwordInput, passwordMaskImageView);
-        passwordBox.setSpacing(10);
-
-        // Erstellen eines VBox-Containers, um das HBox-Objekt zu platzieren
-        VBox vbox = new VBox();
-        vbox.getChildren().add(passwordBox);
-        vbox.setPadding(new Insets(10));
     }
 
     public void validateLoginAndRegistration() {
