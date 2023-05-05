@@ -32,6 +32,16 @@ public class HybridController extends Controller {
     }
 
     @Override
+    public void init() {
+        sidebarController.get().init();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
         pane.getChildren().add(sidebarController.get().render());
