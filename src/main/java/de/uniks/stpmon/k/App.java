@@ -56,7 +56,7 @@ public class App extends Application {
         
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         final AuthenticationService authService = component.authenticationService();
-        httpClient = component.httpCLient();
+        httpClient = component.httpClient();
 
         if (authService.isRememberMe()) {
             disposables.add(authService
