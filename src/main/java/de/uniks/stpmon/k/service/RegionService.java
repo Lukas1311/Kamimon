@@ -6,9 +6,12 @@ import io.reactivex.rxjava3.core.Observable;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class RegionService {
     private final RegionApiService regionApiService;
 
+    @Inject
     public RegionService(RegionApiService regionApiService) {
         this.regionApiService = regionApiService;
     }
