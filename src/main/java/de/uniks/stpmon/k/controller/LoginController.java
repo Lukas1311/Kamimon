@@ -191,4 +191,5 @@ public class LoginController extends Controller {
         passwordInput.clear();
         passwordInput.setPromptText(password);
     }
+
 }
