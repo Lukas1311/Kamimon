@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
@@ -36,7 +37,7 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginController extends Controller implements Initializable {
+public class LoginController extends Controller {
 
     @FXML
     public TextField usernameInput;
@@ -55,10 +56,7 @@ public class LoginController extends Controller implements Initializable {
     @FXML
     public RadioButton englishButton;
     @FXML
-    private Label shownPassword;
-
-    @FXML
-    private ToggleButton toggleButton;
+    private Button showPassword;
 
     @Inject
     AuthenticationService authService;
@@ -75,6 +73,7 @@ public class LoginController extends Controller implements Initializable {
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private StringProperty errorText;
+    private String password;
 
     @Inject
     public LoginController() {
@@ -172,24 +171,15 @@ public class LoginController extends Controller implements Initializable {
     }
 
     @FXML
-    void toggleButton(ActionEvent event) {
-        if(toggleButton.isSelected()) {
-            shownPassword.setVisible(true);
-            shownPassword.textProperty().bind(Bindings.concat(passwordInput.getText()));
-            toggleButton.setText("Hide");
-        }else {
-            shownPassword.setVisible(false);
-            toggleButton.setText("Show");
-        }
-    }
-
-    @FXML
-    void passwordFieldKeyTyped(KeyEvent event) {
-        shownPassword.textProperty().bind(Bindings.concat(passwordInput.getText()));
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        shownPassword.setVisible(false);
+    void showPassword() {
+        showPassword.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            password = passwordInput.getText();
+            passwordInput.clear();
+            passwordInput.setPromptText(password);
+        });
+        showPassword.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+            passwordInput.setText(password);
+            passwordInput.setPromptText(password);
+        });
     }
 }
