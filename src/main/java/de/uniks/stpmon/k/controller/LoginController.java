@@ -6,13 +6,23 @@ import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -24,10 +34,10 @@ import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
-import javax.swing.*;
-import javax.inject.Provider;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class LoginController extends Controller{
+public class LoginController extends Controller {
 
     @FXML
     public TextField usernameInput;
@@ -45,8 +55,6 @@ public class LoginController extends Controller{
     public RadioButton germanButton;
     @FXML
     public RadioButton englishButton;
-    @FXML
-    public CheckBox mask;
 
     @Inject
     AuthenticationService authService;
@@ -63,7 +71,8 @@ public class LoginController extends Controller{
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private StringProperty errorText;
-
+    private String password;
+    private boolean isEmpty = false;
 
     @Inject
     public LoginController() {
@@ -160,9 +169,27 @@ public class LoginController extends Controller{
         };
     }
 
-    public void showPassword() {
-        //TODO: The Application must be finished so I can test this function!
-        SimpleBooleanProperty showPassword = null;
-        showPassword.bind(mask.selectedProperty());
+    @FXML
+    public void toggleReleased(MouseEvent mouseEvent) {
+        if(isEmpty){
+            passwordInput.setText("");
+        }else{
+            passwordInput.setText(password);
+        }
+        passwordInput.setPromptText("Password");
     }
+
+    @FXML
+    public void togglePressed(MouseEvent mouseEvent) {
+        password = passwordInput.getText();
+        if(password == null || password.isEmpty()) {
+            password = "Password";
+            isEmpty = true;
+        }else{
+            isEmpty = false;
+        }
+        passwordInput.clear();
+        passwordInput.setPromptText(password);
+    }
+
 }
