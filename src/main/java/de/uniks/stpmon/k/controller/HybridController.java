@@ -46,13 +46,17 @@ public class HybridController extends Controller {
     @Override
     public void destroy() {
         super.destroy();
+
+        // clean up controller
+        removeChildren(0);
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
         pane.getChildren().add(sidebarController.get().render());
-        stackPane.getChildren().add(lobbyController.get().render());
+
+        openSidebar("lobby");
         return parent;
     }
 
@@ -74,6 +78,7 @@ public class HybridController extends Controller {
         ObservableList<Node> children = stackPane.getChildren();
         Controller last = removeChildren(1);
 
+        // Check if the controller is a new controller
         if (last != controller) {
             controller.init();
             tabStack.push(controller);
@@ -99,34 +104,26 @@ public class HybridController extends Controller {
     public void openSidebar(String string) {
         switch (string) {
             case "friends":
-                if (stackPane.getChildren().size() > 1) {
-                    stackPane.getChildren().remove(1);
-                } else {
-                    stackPane.getChildren().add(friendListController.render());
-                }
+                openSecondary(friendListController);
                 break;
             case "pause":
                 boolean containsPause = stackPane.getChildren().stream()
                         .anyMatch(node -> node.getId() != null && node.getId().equals("pause"));
                 if (containsPause) {
-                    stackPane.getChildren().removeAll(stackPane.getChildren());
-                    stackPane.getChildren().add(new IngameController().render());
+                    openMain(ingameController);
                 } else {
-                    stackPane.getChildren().removeAll(stackPane.getChildren());
-                    stackPane.getChildren().add(pauseController.render());
+                    openMain(pauseController);
                 }
                 break;
             case "ingame":
                 sidebarController.get().setPause(true);
                 sidebarController.get().setLobby(true);
-                stackPane.getChildren().removeAll(stackPane.getChildren());
-                stackPane.getChildren().add(new IngameController().render());
+                openMain(ingameController);
                 break;
             case "lobby":
                 sidebarController.get().setPause(false);
                 sidebarController.get().setLobby(false);
-                stackPane.getChildren().removeAll(stackPane.getChildren());
-                stackPane.getChildren().add(lobbyController.get().render());
+                openMain(lobbyController);
             default:
                 break;
         }
