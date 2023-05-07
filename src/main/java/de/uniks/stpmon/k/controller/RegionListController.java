@@ -13,6 +13,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,9 @@ public class RegionListController extends Controller{
     RegionApiService regionApiService;
     @FXML
     private AnchorPane regionList;
+
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     @Inject
     public RegionListController(){
@@ -41,7 +46,7 @@ public class RegionListController extends Controller{
         final ListView<Region> regions = new ListView<>(this.regions);
         regionList.getChildren().add(regions);
         VBox.setVgrow(regions, Priority.ALWAYS);
-        regions.setCellFactory(e -> new RegionCell(app));
+        regions.setCellFactory(e -> new RegionCell(hybridControllerProvider));
         return parent;
     }
 }

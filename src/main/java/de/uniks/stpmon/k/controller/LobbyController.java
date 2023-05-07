@@ -29,8 +29,4 @@ public class LobbyController extends Controller {
 
         return parent;
     }
-
-    public void toIngame() {
-        hybridController.get().openStackpane("ingame");
-    }
 }

@@ -1,23 +1,22 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.Region;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 
-import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class RegionController extends Controller{
     private final Region region;
     @FXML
     private Button regionButton;
 
-    private final App app;
+    private final Provider<HybridController> hybridControllerProvider;
 
-    public RegionController(Region region, App app){
+    public RegionController(Region region, Provider<HybridController> hybridControllerProvider){
         this.region = region;
-        this.app = app;
+        this.hybridControllerProvider = hybridControllerProvider;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class RegionController extends Controller{
         final Parent parent = super.render();
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
-            app.show(new IngameController());
+            hybridControllerProvider.get().openStackpane("ingame");
         });
         return parent;
     }
