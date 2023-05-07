@@ -24,7 +24,7 @@ public class RegionController extends Controller{
         final Parent parent = super.render();
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
-            hybridControllerProvider.get().openStackpane("ingame");
+            hybridControllerProvider.get().openSidebar("ingame");
         });
         return parent;
     }

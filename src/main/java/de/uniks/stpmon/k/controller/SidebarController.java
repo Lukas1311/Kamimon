@@ -4,17 +4,18 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-
+@Singleton
 public class SidebarController extends Controller {
 
     @FXML
-    public Button chatButton;
+    public Button chat;
     @FXML
     public Button friends;
     @FXML
@@ -22,7 +23,9 @@ public class SidebarController extends Controller {
     @FXML
     public Button logoutButton;
     @FXML
-    public VBox vBox;
+    public Button pause;
+    @FXML
+    public GridPane grid;
     @Inject
     @Singleton
     HybridController hybridController;
@@ -31,41 +34,56 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
-    @Inject
-    Provider<ChatController> chatControllerProvider;
-    
+
     @Inject
     public SidebarController() {
     }
 
     public Parent render() {
         final Parent parent = super.render();
-
-        chatButton.setOnAction(e -> openChat());
+        grid.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
+        pause.setVisible(false);
+        home.setVisible(false);
         logoutButton.setOnAction(e -> logout());
 
         return parent;
     }
 
+
+    public void logout() {
+        disposables.add(authService
+                .logout()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(res -> {
+                    System.out.println(res);
+                    app.show(loginControllerProvider.get());
+                })
+        );
+    }
+
+    public void setLobby(boolean b) {
+        home.setVisible(b);
+    }
+
     public void openChat() {
-        app.show(chatControllerProvider.get());
     }
 
     public void openFriends() {
+
         hybridController.openSidebar("friends");
     }
 
     public void backtoLobby() {
+        hybridController.openSidebar("lobby");
     }
 
-    public void logout() {
-        disposables.add(authService
-            .logout()
-            .observeOn(FX_SCHEDULER)
-            .subscribe(res -> {
-                System.out.println(res);
-                app.show(loginControllerProvider.get());
-            })
-        );
+    public void toPause() {
+        hybridController.openSidebar("pause");
     }
+
+    public void setPause(boolean b) {
+        pause.setVisible(b);
+    }
+
+
 }

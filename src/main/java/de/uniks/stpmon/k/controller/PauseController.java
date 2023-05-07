@@ -1,21 +1,22 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.App;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
-public class IngameController extends Controller{
+public class PauseController extends Controller {
 
+    @FXML
+    public Pane pause;
 
     @Inject
-    public IngameController() {
+    public PauseController() {
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
         return parent;
     }
