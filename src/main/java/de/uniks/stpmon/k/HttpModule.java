@@ -5,6 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.rest.MessageApiService;
 import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.TokenStorage;
 import okhttp3.OkHttpClient;
@@ -61,5 +62,11 @@ public class HttpModule {
     @Singleton
     RegionApiService regionApi(Retrofit retrofit) {
         return retrofit.create(RegionApiService.class);
+    }
+
+    @Provides
+    @Singleton
+    MessageApiService messageApi(Retrofit retrofit) {
+        return retrofit.create(MessageApiService.class);
     }
 }

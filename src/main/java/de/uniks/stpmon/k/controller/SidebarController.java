@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 public class SidebarController extends Controller {
 
     @FXML
-    public Button chat;
+    public Button chatButton;
     @FXML
     public Button friends;
     @FXML
@@ -31,6 +31,8 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
+    @Inject
+    Provider<ChatController> chatControllerProvider;
     
     @Inject
     public SidebarController() {
@@ -39,12 +41,14 @@ public class SidebarController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        chatButton.setOnAction(e -> openChat());
         logoutButton.setOnAction(e -> logout());
 
         return parent;
     }
 
     public void openChat() {
+        app.show(chatControllerProvider.get());
     }
 
     public void openFriends() {
