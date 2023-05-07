@@ -1,49 +1,52 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.views.RegionCell;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
-import java.io.IOException;
+import javax.inject.Provider;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class RegionListController extends Controller{
-    private final App app;
-    private final List<Region> regionsList;
+    private final ObservableList<Region> regions = FXCollections.observableArrayList();
     private final List<RegionController> controllers = new ArrayList<>();
-    @FXML
-    private AnchorPane regions;
-
-    //is needed for dagger
     @Inject
-    public RegionListController(App app, List<Region> regionsList){
-        this.app = app;
-        this.regionsList = regionsList;
+    RegionApiService regionApiService;
+    @FXML
+    private AnchorPane regionList;
 
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
+
+    @Inject
+    public RegionListController(){
+
+    }
+
+    @Override
+    public void init() {
+        disposables.add(regionApiService.getRegions().observeOn(FX_SCHEDULER).subscribe(regions::setAll));
     }
 
     @Override
     public Parent render(){
         final Parent parent = super.render();
-        generateRegions();
+        final ListView<Region> regions = new ListView<>(this.regions);
+        regionList.getChildren().add(regions);
+        VBox.setVgrow(regions, Priority.ALWAYS);
+        regions.setCellFactory(e -> new RegionCell(hybridControllerProvider));
         return parent;
-    }
-
-    private void generateRegions() {
-        regions.getChildren().clear();
-        for(final Region region: regionsList) {
-            final RegionController regionController = new RegionController(app, region);
-            controllers.add(regionController);
-            regionController.init();
-            try {
-                regions.getChildren().add(regionController.render());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }

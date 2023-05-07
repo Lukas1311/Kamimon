@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.views.FriendCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,37 +13,35 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Singleton;
 
+@Singleton
 public class FriendListController extends Controller {
-    @FXML
-    public VBox friendList;
+
     @FXML
     public TextField searchFriend;
     @FXML
     public Button searchButton;
 
-    @Inject
-    UserApiService userApiService;
+    @FXML
+    public VBox friendList;
 
     @Inject
     UserService userService;
 
     private final ObservableList<User> friends = FXCollections.observableArrayList();
+    private final ObservableList<User> users = FXCollections.observableArrayList();
 
 
     @Inject
     public FriendListController() {
     }
 
-
     @Override
     public void init() {
-        disposables.add(userApiService.getUsers().observeOn(FX_SCHEDULER).subscribe(friends::setAll));
+        disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
     }
 
     @Override
@@ -54,8 +50,12 @@ public class FriendListController extends Controller {
 
         final ListView<User> friends = new ListView<>(this.friends);
         friendList.getChildren().add(friends);
-        VBox.setVgrow(friends, Priority.ALWAYS);
-        friends.setCellFactory(e -> new FriendCell());
+        friends.setCellFactory(e -> new FriendCell(this, false));
+
+        final ListView<User> users = new ListView<>(this.users);
+        friendList.getChildren().add(users);
+        VBox.setVgrow(users, Priority.ALWAYS);
+        users.setCellFactory(e -> new FriendCell(this, true));
 
         searchButton.setOnAction(e -> searchForFriend());
 
@@ -71,11 +71,24 @@ public class FriendListController extends Controller {
     @FXML
     private void searchForFriend() {
         String name = searchFriend.getText();
-        disposables.add(userService.searchFriend(name).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
+        disposables.add(userService.searchFriend(name).observeOn(FX_SCHEDULER).subscribe(this.users::setAll));
     }
 
     @Override
     public void destroy() {
+    }
 
+    public void handleFriend(Boolean newFriend, User user) {
+        if (newFriend) {
+            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe(col -> {
+                searchForFriend();
+                this.friends.setAll(col);
+            }));
+        } else {
+            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).subscribe(col -> {
+                searchForFriend();
+                this.friends.setAll(col);
+            }));
+        }
     }
 }

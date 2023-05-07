@@ -6,12 +6,25 @@ import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
@@ -21,8 +34,10 @@ import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class LoginController extends Controller{
+public class LoginController extends Controller {
 
     @FXML
     public TextField usernameInput;
@@ -32,6 +47,8 @@ public class LoginController extends Controller{
     public Label errorLabel;
     @FXML
     public Button loginButton;
+    @FXML
+    public CheckBox rememberMe;
     @FXML
     public Button registerButton;
     @FXML
@@ -54,7 +71,8 @@ public class LoginController extends Controller{
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private StringProperty errorText;
-
+    private String password;
+    private boolean isEmpty = false;
 
     @Inject
     public LoginController() {
@@ -104,7 +122,22 @@ public class LoginController extends Controller{
 
     public void login() {
         validateLoginAndRegistration();
-        loginWithCredentials(usernameInput.getText(), passwordInput.getText());
+        loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected());
+    }
+
+    // TODO: is almost the same like register method, i bet we can refactor this to one method
+    private void loginWithCredentials(String username, String password, boolean rememberMe){
+        disposables.add(authService
+                .login(username, password, rememberMe)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(lr -> {
+                    errorText.set("Login successful");
+                    errorLabel.setTextFill(Color.GREEN);
+                    app.show(hybridController);
+                }, error -> {
+                    errorText.set(getErrorMessage(error));
+                    System.out.println("look here for the error: " + error);
+                }));
     }
 
     public void register() {
@@ -116,21 +149,7 @@ public class LoginController extends Controller{
                     errorText.set("Registration successful");
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
-                    loginWithCredentials(user.name(), passwordInput.getText());
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                    System.out.println("look here for the error: " + error);
-                }));
-    }
-
-    private void loginWithCredentials(String username, String password){
-        disposables.add(authService
-                .login(username, password)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(lr -> {
-                    errorText.set("Login successful");
-                    errorLabel.setTextFill(Color.GREEN);
-                    app.show(hybridController);
+                    loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected());
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
@@ -149,4 +168,28 @@ public class LoginController extends Controller{
             default  -> "error";
         };
     }
+
+    @FXML
+    public void toggleReleased(MouseEvent mouseEvent) {
+        if(isEmpty){
+            passwordInput.setText("");
+        }else{
+            passwordInput.setText(password);
+        }
+        passwordInput.setPromptText("Password");
+    }
+
+    @FXML
+    public void togglePressed(MouseEvent mouseEvent) {
+        password = passwordInput.getText();
+        if(password == null || password.isEmpty()) {
+            password = "Password";
+            isEmpty = true;
+        }else{
+            isEmpty = false;
+        }
+        passwordInput.clear();
+        passwordInput.setPromptText(password);
+    }
+
 }

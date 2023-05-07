@@ -4,8 +4,4 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LobbyController">
-   <children>
-      <Button fx:id="ingame" layoutX="228.0" layoutY="171.0" mnemonicParsing="false" onAction="#toIngame" prefHeight="59.0" prefWidth="144.0" text="INGAME" />
-   </children>
-</Pane>
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LobbyController" />

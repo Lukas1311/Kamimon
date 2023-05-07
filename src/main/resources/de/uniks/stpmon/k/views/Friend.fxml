@@ -45,7 +45,7 @@
                         <Font size="25.0" />
                      </font>
                   </Button>
-                  <Button fx:id="removeFriendButton" mnemonicParsing="false" onAction="#removeFriend" style="-fx-background-color: transparent; -fx-border-color: black;" text="❌" textFill="RED">
+                  <Button fx:id="removeFriendButton" mnemonicParsing="false" onAction="#handleFriend" style="-fx-background-color: transparent; -fx-border-color: black;" text="❌" textFill="RED">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>

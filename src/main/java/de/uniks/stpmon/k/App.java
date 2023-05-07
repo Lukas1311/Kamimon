@@ -1,12 +1,16 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import okhttp3.OkHttpClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,6 +19,9 @@ import java.util.Objects;
 public class App extends Application {
     private Stage stage;
     private Controller controller;
+    protected final CompositeDisposable disposables = new CompositeDisposable();
+    private OkHttpClient httpClient;
+    
     public App(){
 
     }
@@ -28,12 +35,12 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         //initial window size
-        stage.setWidth(640);
-        stage.setHeight(480);
+        stage.setWidth(1280);
+        stage.setHeight(720);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
-        final Scene scene = new Scene(new Label("Loading..."));
+        final Scene scene = new Scene(new Label("Loading"));
         stage.setScene(scene);
         stage.show();
 
@@ -46,12 +53,22 @@ public class App extends Application {
             initAndRender(controller);
             return;
         }
+        
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         final AuthenticationService authService = component.authenticationService();
-        // TODO: check rememberMe
+        httpClient = component.httpClient();
 
-        controller = component.loginController();
-        initAndRender(controller);
+        if (authService.isRememberMe()) {
+            disposables.add(authService
+                .refresh()
+                .subscribe(lr -> {
+                    show(component.hybridController());
+                }, err -> {
+                    show(component.loginController());
+                }));
+        } else {
+            show(component.loginController());
+        }
     }
 
     private void setAppIcon(Stage stage){
@@ -77,7 +94,11 @@ public class App extends Application {
     @Override
     public void stop() throws Exception{
         cleanup();
+        disposables.dispose();
+        httpClient.dispatcher().executorService().shutdown();
+        httpClient.connectionPool().evictAll();
     }
+
     public void show(Controller controller){
         cleanup();
         this.controller = controller;
