@@ -5,7 +5,7 @@
 
 <VBox fx:id="vBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="60.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="50.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SidebarController">
    <children>
-      <Button fx:id="chat" mnemonicParsing="false" onAction="#openChat" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="C" />
+      <Button fx:id="chatButton" mnemonicParsing="false" onAction="#openChat" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="C" />
       <Button fx:id="friends" mnemonicParsing="false" onAction="#openFriends" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="F" />
       <Button fx:id="home" mnemonicParsing="false" onAction="#backtoLobby" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="H" />
       <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="50.0" style="-fx-border-color: #000000;" text="L" />
