@@ -4,10 +4,13 @@ import de.uniks.stpmon.k.App;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class IngameController extends Controller{
 
 
+    @Inject
     public IngameController() {
     }
 
