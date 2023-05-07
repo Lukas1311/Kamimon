@@ -55,8 +55,6 @@ public class LoginController extends Controller {
     public RadioButton germanButton;
     @FXML
     public RadioButton englishButton;
-    @FXML
-    private Button showPassword;
 
     @Inject
     AuthenticationService authService;
@@ -74,6 +72,7 @@ public class LoginController extends Controller {
     private BooleanBinding usernameTooLong;
     private StringProperty errorText;
     private String password;
+    private boolean isEmpty = false;
 
     @Inject
     public LoginController() {
@@ -171,15 +170,25 @@ public class LoginController extends Controller {
     }
 
     @FXML
-    void showPassword() {
-        showPassword.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            password = passwordInput.getText();
-            passwordInput.clear();
-            passwordInput.setPromptText(password);
-        });
-        showPassword.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+    public void toggleReleased(MouseEvent mouseEvent) {
+        if(isEmpty){
+            passwordInput.setText("");
+        }else{
             passwordInput.setText(password);
-            passwordInput.setPromptText(password);
-        });
+        }
+        passwordInput.setPromptText("Password");
+    }
+
+    @FXML
+    public void togglePressed(MouseEvent mouseEvent) {
+        password = passwordInput.getText();
+        if(password == null || password.isEmpty()) {
+            password = "Password";
+            isEmpty = true;
+        }else{
+            isEmpty = false;
+        }
+        passwordInput.clear();
+        passwordInput.setPromptText(password);
     }
 }
