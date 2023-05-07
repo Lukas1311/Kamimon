@@ -22,6 +22,9 @@ public interface GroupApiService {
     );
 
     @GET("groups")
+    Observable<ArrayList<Group>> getGroups();
+
+    @GET("groups")
     Observable<ArrayList<Group>> getGroups(
         @Query("members") ArrayList<String> members
     );
