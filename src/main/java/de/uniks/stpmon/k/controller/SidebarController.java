@@ -23,8 +23,6 @@ public class SidebarController extends Controller {
     @FXML
     public Button logoutButton;
     @FXML
-    public VBox vBox;
-    @FXML
     public Button pause;
     @FXML
     public GridPane grid;
