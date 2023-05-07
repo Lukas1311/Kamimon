@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -25,6 +26,8 @@ public class SidebarController extends Controller {
     public VBox vBox;
     @FXML
     public Button pause;
+    @FXML
+    public GridPane grid;
     @Inject
     @Singleton
     HybridController hybridController;
@@ -40,6 +43,7 @@ public class SidebarController extends Controller {
 
     public Parent render() {
         final Parent parent = super.render();
+        grid.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
         pause.setVisible(false);
         home.setVisible(false);
         logoutButton.setOnAction(e -> logout());
