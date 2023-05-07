@@ -25,8 +25,4 @@ public class LobbyController extends Controller {
         final Parent parent = super.render();
         return parent;
     }
-
-    public void toIngame() {
-        hybridController.get().openStackpane("ingame");
-    }
 }
