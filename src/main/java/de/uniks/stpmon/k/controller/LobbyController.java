@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+
+
 public class LobbyController extends Controller {
     @FXML
     public Button ingame;
@@ -15,6 +17,8 @@ public class LobbyController extends Controller {
     public Pane pane;
     @Inject
     Provider<HybridController> hybridController;
+    @Inject
+    RegionListController regionListController;
 
     @Inject
     LobbyController() {
@@ -23,6 +27,9 @@ public class LobbyController extends Controller {
     @Override
     public Parent render(){
         final Parent parent = super.render();
+
+        pane.getChildren().add(regionListController.render());
+
         return parent;
     }
 
