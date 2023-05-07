@@ -5,24 +5,21 @@ import dagger.Component;
 import de.uniks.stpmon.k.controller.HybridController;
 import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.controller.LoginController;
-import de.uniks.stpmon.k.controller.SidebarController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
+import okhttp3.OkHttpClient;
 
 import javax.inject.Singleton;
 
 @Component(modules = {MainModule.class, HttpModule.class, PrefModule.class})
 @Singleton
 public interface MainComponent {
+    OkHttpClient httpClient();
     NetworkAvailability networkAvailability();
     AuthenticationService authenticationService();
     LoginController loginController();
     HybridController hybridController();
     LoadingScreenController loadingScreenController();
-
-    //TODO: LobbyController not implemented yet
-    //hybridController replaces LobbyController right?
-    //LobbyController lobbyController();
 
     @Component.Builder
     interface Builder{
