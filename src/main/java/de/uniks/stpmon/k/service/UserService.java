@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -89,5 +90,9 @@ public class UserService {
             return Observable.fromSupplier(ArrayList::new);
         }
         return userApiService.getUsers(userStorage.getUser().friends());
+    }
+
+    public Observable<List<User>> filterFriends(String name) {
+        return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
 }
