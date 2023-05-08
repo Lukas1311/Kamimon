@@ -44,7 +44,7 @@ public class ClientEndpoint {
     public void onOpen(Session userSession) { this.userSession = userSession; }
 
     @OnClose
-    public void OnClose(Session userSession, CloseReason reason) { this.userSession = null; }
+    public void onClose(Session userSession, CloseReason reason) { this.userSession = null; }
 
     @OnMessage
     public void onMessage(String message) {
@@ -61,6 +61,18 @@ public class ClientEndpoint {
     public void removeMessageHandler(Consumer<String> msgHandler) { this.messageHandlers.remove(msgHandler); }
 
     public void sendMessage(String message) {
+        if (this.userSession == null) {
+            return;
+        }
+
+        try {
+            this.userSession.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void close() {
         if (this.userSession == null) {
             return;
         }
