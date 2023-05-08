@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -53,7 +52,11 @@ public class UserService {
 
     public Observable<List<User>> searchFriend(String name) {
         final User user = userStorage.getUser();
-        return userApiService.getUsers().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())).filter(g -> !user.friends().contains(g._id())).toList());
+        if (name.isEmpty()) {
+            return Observable.fromSupplier(ArrayList::new);
+        } else {
+            return userApiService.getUsers().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())).filter(g -> !user.friends().contains(g._id())).toList());
+        }
     }
 
     public Observable<List<User>> addFriend(User friend) {
