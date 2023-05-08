@@ -29,7 +29,6 @@ public class UserService {
     }
 
     public Observable<User> setUsername(String username) {
-        //TODO: Wait for ServerResponse before changing the username in UserStorage (new Username could be invalid)
         User oldUser = userStorage.getUser();
         User newUser = new User(oldUser._id(), username, oldUser.status(), oldUser.avatar(), oldUser.friends());
         userStorage.setUser(newUser);
@@ -46,6 +45,7 @@ public class UserService {
     public Observable<User> setAvatar(String avatar) {
         User oldUser = userStorage.getUser();
         User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
+        userStorage.setUser(newUser);
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
         return userApiService.updateUser(oldUser._id(), dto);
     }
