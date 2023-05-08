@@ -26,6 +26,8 @@ public class HttpModule {
             if(token == null){
                 return chain.proceed(chain.request());
             }
+            // TODO: remove at the end: token for debugging swagger api
+            System.out.println(token);
             final Request newRequest = chain
                     .request()
                     .newBuilder()
