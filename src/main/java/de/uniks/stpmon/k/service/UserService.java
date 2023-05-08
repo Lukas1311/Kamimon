@@ -52,7 +52,11 @@ public class UserService {
 
     public Observable<List<User>> searchFriend(String name) {
         final User user = userStorage.getUser();
-        return userApiService.getUsers().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())).filter(g -> !user.friends().contains(g._id())).toList());
+        if (name.isEmpty()) {
+            return Observable.fromSupplier(ArrayList::new);
+        } else {
+            return userApiService.getUsers().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())).filter(g -> !user.friends().contains(g._id())).toList());
+        }
     }
 
     public Observable<List<User>> addFriend(User friend) {
@@ -89,5 +93,9 @@ public class UserService {
             return Observable.fromSupplier(ArrayList::new);
         }
         return userApiService.getUsers(userStorage.getUser().friends());
+    }
+
+    public Observable<List<User>> filterFriends(String name) {
+        return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
 }
