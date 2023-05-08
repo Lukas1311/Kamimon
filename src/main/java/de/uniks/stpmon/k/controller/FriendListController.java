@@ -71,6 +71,7 @@ public class FriendListController extends Controller {
     @FXML
     private void searchForFriend() {
         String name = searchFriend.getText();
+        disposables.add(userService.filterFriends(name).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
         disposables.add(userService.searchFriend(name).observeOn(FX_SCHEDULER).subscribe(this.users::setAll));
     }
 
