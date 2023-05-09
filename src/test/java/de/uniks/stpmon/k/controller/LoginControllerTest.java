@@ -58,6 +58,7 @@ public class LoginControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         app.show(loginController);
+        stage.requestFocus();
     }
 
 
