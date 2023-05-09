@@ -57,8 +57,8 @@ public class App extends Application {
         final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         final AuthenticationService authService = component.authenticationService();
         httpClient = component.httpClient();
-
-        if (authService.isRememberMe()) {
+        show(component.loadingScreenController());
+        /*if (authService.isRememberMe()) {
             disposables.add(authService
                 .refresh()
                 .subscribe(lr -> {
@@ -68,7 +68,7 @@ public class App extends Application {
                 }));
         } else {
             show(component.loginController());
-        }
+        }*/
     }
 
     private void setAppIcon(Stage stage){
