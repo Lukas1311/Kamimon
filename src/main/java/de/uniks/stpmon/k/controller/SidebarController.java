@@ -34,6 +34,8 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
+    @Inject
+    Provider<ChatController> chatControlleProvider;
 
     @Inject
     public SidebarController() {
@@ -45,7 +47,7 @@ public class SidebarController extends Controller {
         pause.setVisible(false);
         home.setVisible(false);
         logoutButton.setOnAction(e -> logout());
-
+        chat.setOnAction(e -> openChat());
         return parent;
     }
 
@@ -66,6 +68,8 @@ public class SidebarController extends Controller {
     }
 
     public void openChat() {
+        // TODO: replace this with chat list view controller
+        app.show(chatControlleProvider.get());
     }
 
     public void openFriends() {
