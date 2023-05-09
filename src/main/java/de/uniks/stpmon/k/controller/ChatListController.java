@@ -1,20 +1,22 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class ChatListController extends Controller {
 
-    @Inject
-    public VBox chatList;
+    @FXML
+    VBox chatList;
     @Inject
     GroupService groupService;
 
