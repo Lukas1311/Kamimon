@@ -66,6 +66,7 @@ public class SidebarController extends Controller {
     }
 
     public void openChat() {
+        hybridController.openSidebar("chat");
     }
 
     public void openFriends() {

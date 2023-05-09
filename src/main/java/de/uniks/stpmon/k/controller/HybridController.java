@@ -31,6 +31,8 @@ public class HybridController extends Controller {
     PauseController pauseController;
     @Inject
     IngameController ingameController;
+    @Inject
+    ChatListController chatListController;
 
     private final Stack<Controller> tabStack = new Stack<>();
 
@@ -103,6 +105,9 @@ public class HybridController extends Controller {
 
     public void openSidebar(String string) {
         switch (string) {
+            case "chat":
+                openSecondary(chatListController);
+                break;
             case "friends":
                 openSecondary(friendListController);
                 break;
