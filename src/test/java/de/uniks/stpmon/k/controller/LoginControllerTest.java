@@ -5,15 +5,9 @@ import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-// import static org.mockito.Mockito.verify;
-// import static org.mockito.ArgumentMatchers.any;
-// import static org.mockito.ArgumentMatchers.eq;
-// import static org.mockito.Mockito.doNothing;
-// import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -71,14 +65,17 @@ public class LoginControllerTest extends ApplicationTest {
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
 
-        write("\tstring\t");
-        write("stringst\t\t\t");
-        // clickOn("#loginButton");
-        //clickOn("#loginButton")
+        // tab into username input field
+        write("\t");
+        // type username and tab into password field
+        write("string\t");
+        // type password
+        write("stringst");
+        // TODO: make sure to adjust count of tabs when Login fxml is changed
+        // tab 3 times to go on the login button -> is faster than click on button (no mouse movement)
+        write("\t\t\t");
         press(KeyCode.ENTER);
         release(KeyCode.ENTER);
-
-
 
         verify(app).show(mock);
     }
