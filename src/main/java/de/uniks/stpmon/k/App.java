@@ -17,16 +17,18 @@ import java.awt.*;
 import java.util.Objects;
 
 public class App extends Application {
-    private Stage stage;
-    private Controller controller;
-    protected final CompositeDisposable disposables = new CompositeDisposable();
+    private final MainComponent component;
     private OkHttpClient httpClient;
+    protected final CompositeDisposable disposables = new CompositeDisposable();
+
+    private Controller controller;
+    private Stage stage;
     
     public App(){
-
+        component = DaggerMainComponent.builder().mainApp(this).build();
     }
-    public App(Controller controller){
-        this.controller = controller;
+    public App(MainComponent component){
+        this.component = component;
     }
     public Stage getStage(){
         return stage;
@@ -49,12 +51,10 @@ public class App extends Application {
         //icon in the taskbar of the os
         setTaskbarIcon();
 
-        if(controller != null){
-            initAndRender(controller);
+        if(component == null){
             return;
         }
         
-        final MainComponent component = DaggerMainComponent.builder().mainApp(this).build();
         final AuthenticationService authService = component.authenticationService();
         httpClient = component.httpClient();
 
