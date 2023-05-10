@@ -11,22 +11,16 @@ import javax.inject.Inject;
 import java.util.List;
 
 public interface UserApiService {
-
     @POST("users")
     Observable<User> addUser(@Body CreateUserDto dto);
-
     @GET("users")
     Observable<List<User>> getUsers();
-
     @GET("users")
     Observable<List<User>> getUsers(@Query("ids") List<String> ids);
-
     @GET("users/{id}")
     Observable<User> getUser(@Path("id") String id);
-
     @PATCH("users/{id}")
     Observable<User> updateUser(@Path("id") String id, @Body UpdateUserDto dto);
-
     @DELETE("users/{id}")
     Observable<User> deleteUser(@Path("id") String id);
 }
