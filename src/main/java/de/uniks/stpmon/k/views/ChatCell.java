@@ -8,6 +8,11 @@ import javafx.scene.control.ListCell;
 
 public class ChatCell extends ListCell<Group> {
 
+    private final ChatListController chatListController;
+
+    public ChatCell(ChatListController chatListController) {
+        this.chatListController = chatListController;
+    }
 
 
     @Override
@@ -17,7 +22,7 @@ public class ChatCell extends ListCell<Group> {
             setGraphic(null);
             setText(null);
         } else {
-            final ChatEntryController chatEntryController = new ChatEntryController(item.name());
+            final ChatEntryController chatEntryController = new ChatEntryController(item, chatListController);
             setGraphic(chatEntryController.render());
         }
     }
