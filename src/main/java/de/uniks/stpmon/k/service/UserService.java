@@ -30,6 +30,9 @@ public class UserService {
 
     public Observable<User> setUsername(String username) {
         User oldUser = userStorage.getUser();
+        if (oldUser == null) {
+            return null;
+        }
         User newUser = new User(oldUser._id(), username, oldUser.status(), oldUser.avatar(), oldUser.friends());
         userStorage.setUser(newUser);
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, null, null, null);
@@ -38,12 +41,18 @@ public class UserService {
 
     public Observable<User> setPassword(String password) {
         User oldUser = userStorage.getUser();
+        if (oldUser == null) {
+            return null;
+        }
         UpdateUserDto dto = new UpdateUserDto(null, null, null, null, password);
         return userApiService.updateUser(oldUser._id(), dto);
     }
 
     public Observable<User> setAvatar(String avatar) {
         User oldUser = userStorage.getUser();
+        if (oldUser == null) {
+            return null;
+        }
         User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
         userStorage.setUser(newUser);
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
