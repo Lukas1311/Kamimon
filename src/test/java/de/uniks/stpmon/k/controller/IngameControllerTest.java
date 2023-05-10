@@ -1,7 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
+import javafx.scene.text.Text;
 import org.mockito.Mockito;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -48,5 +50,12 @@ public class IngameControllerTest extends ApplicationTest {
         app.start(stage);
         app.show(ingameController);
         stage.requestFocus();
+    }
+
+    @Test
+    void testShow() {
+        //ingameController.render();
+        Text text = lookup("#ingame").query();
+        assertEquals("INGAME", text.getText());
     }
 }
