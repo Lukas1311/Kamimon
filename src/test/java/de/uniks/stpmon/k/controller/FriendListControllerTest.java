@@ -21,12 +21,14 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
@@ -39,17 +41,20 @@ class FriendListControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
+    final ArrayList<User> friends = new ArrayList<>();
+    final ArrayList<User> users = new ArrayList<>();
+
     @InjectMocks
     FriendListController friendListController;
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-        when(userService.getFriends()).thenReturn(Observable.just(List.of(new User("1", "Peter", "online", null, null))));
-        when(userService.filterFriends(anyString())).thenReturn(Observable.just(List.of(new User("1", "Peter", "online", null, null))));
-        when(userService.searchFriend(anyString())).thenReturn(Observable.just(List.of(new User("1", "Peter", "online", null, null))));
+        friends.add(new User("1", "Peter", "online", null, null));
+        when(userService.getFriends()).thenReturn(Observable.just(friends));
+        when(userService.filterFriends(anyString())).thenReturn(Observable.just(friends));
+        when(userService.searchFriend(anyString())).thenReturn(Observable.just(friends));
         //when(userService.addFriend(any(User.class))).thenReturn(Observable.just(List.of(new User("1", "Peter", null, null, null))));
-        // when(userService.removeFriend(any(User.class))).thenReturn(Observable.just(List.of(new User("1", "Peter", null, null, null))));
         app.show(friendListController);
         stage.requestFocus();
     }
@@ -70,12 +75,26 @@ class FriendListControllerTest extends ApplicationTest {
 
         //when null then peter doesn't exist
         assertNotNull(friendList.lookup("#Peter"));
-
     }
 
     @Test
     void removeFriend() {
+        //get friendList
+        final ScrollPane scrollPane = lookup("#scrollPane").query();
+        final VBox userList = (VBox) scrollPane.getContent();
+        final ListView<?> listView = (ListView<?>) userList.getChildren().get(0);
 
+        assertNotNull(listView.lookup("#Peter"));
+
+        when(userService.removeFriend(any(User.class))).thenReturn(Observable.just(friends));
+
+        //remove friend from local list
+        friends.remove(0);
+        clickOn("#removeFriendButton");
+        verify(userService).removeFriend(any(User.class));
+
+        //peter is no longer in friends
+        assertNull(listView.lookup("#Peter"));
     }
 
     @Test
