@@ -75,10 +75,6 @@ public class FriendListController extends Controller {
         disposables.add(userService.searchFriend(name).observeOn(FX_SCHEDULER).subscribe(this.users::setAll));
     }
 
-    @Override
-    public void destroy() {
-    }
-
     public void handleFriend(Boolean newFriend, User user) {
         if (newFriend) {
             disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe(col -> {
