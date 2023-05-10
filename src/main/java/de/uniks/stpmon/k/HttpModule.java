@@ -73,10 +73,4 @@ public class HttpModule {
     MessageApiService messageApi(Retrofit retrofit) {
         return retrofit.create(MessageApiService.class);
     }
-
-    @Provides
-    @Singleton
-    GroupApiService groupApi(Retrofit retrofit) {
-        return retrofit.create(GroupApiService.class);
-    }
 }
