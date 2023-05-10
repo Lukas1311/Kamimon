@@ -34,6 +34,8 @@ import javafx.scene.text.Font;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -63,7 +65,7 @@ public class LoginController extends Controller {
     @Inject
     NetworkAvailability netAvailability;
     @Inject
-    HybridController hybridController;
+    Provider<HybridController> hybridControllerProvider;
     @Inject
     UserService userService;
 
@@ -133,7 +135,7 @@ public class LoginController extends Controller {
                 .subscribe(lr -> {
                     errorText.set("Login successful");
                     errorLabel.setTextFill(Color.GREEN);
-                    app.show(hybridController);
+                    app.show(hybridControllerProvider.get());
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
