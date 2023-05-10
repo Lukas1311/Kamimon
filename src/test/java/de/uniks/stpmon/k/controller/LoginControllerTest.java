@@ -15,9 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.api.FxAssert.verifyThat;
-
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.LoginResult;
@@ -32,7 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
+
 
 import javax.inject.Provider;
 import io.reactivex.rxjava3.core.Observable;
@@ -156,13 +156,14 @@ public class LoginControllerTest extends ApplicationTest {
         assertThat(pwdToggleButton).isFocused();
         press(KeyCode.ENTER);
         assertThat(pwdField.getPromptText()).isEqualTo("Password");
+        release(KeyCode.ENTER);
         // tab back to password field
         press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
         write("stringst");
         // click show password button and verify the show password
         write("\t");
-
         press(KeyCode.ENTER);
+        waitForFxEvents(); // not really necessary i guess
         // get password input field to verify the contents
         
         // check if prompt text matches the password that was written into password field before
