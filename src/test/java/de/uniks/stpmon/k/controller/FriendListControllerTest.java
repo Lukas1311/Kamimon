@@ -4,12 +4,9 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.Node;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,11 +18,9 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -50,11 +45,11 @@ class FriendListControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-        friends.add(new User("1", "Peter", "online", null, null));
+        friends.add(new User(null, "Peter", "online", null, null));
+        users.add(new User(null, "Alice", "online", null, null));
         when(userService.getFriends()).thenReturn(Observable.just(friends));
         when(userService.filterFriends(anyString())).thenReturn(Observable.just(friends));
         when(userService.searchFriend(anyString())).thenReturn(Observable.just(friends));
-        //when(userService.addFriend(any(User.class))).thenReturn(Observable.just(List.of(new User("1", "Peter", null, null, null))));
         app.show(friendListController);
         stage.requestFocus();
     }
@@ -99,6 +94,33 @@ class FriendListControllerTest extends ApplicationTest {
 
     @Test
     void addFriend() {
+        when(userService.searchFriend(anyString())).thenReturn(Observable.just(users));
 
+        //get friendList
+        final ScrollPane scrollPane = lookup("#scrollPane").query();
+        final VBox userList = (VBox) scrollPane.getContent();
+        final ListView<?> friendView = (ListView<?>) userList.getChildren().get(0);
+        final ListView<?> userView = (ListView<?>) userList.getChildren().get(1);
+
+        //"Alice" is not displayed before search
+        assertNull(userView.lookup("#Alice"));
+
+        //search in friendList for friend "Alice"
+        clickOn("#searchFriend");
+        write("Alice");
+
+        FxAssert.verifyThat("#searchFriend", hasText("Alice"));
+
+        clickOn("#searchButton");
+
+        when(userService.addFriend(any(User.class))).thenReturn(Observable.just(users));
+
+        //add "Alice" to friends
+        friends.add(users.get(0));
+        clickOn("#Alice #removeFriendButton");
+        verify(userService).addFriend(any(User.class));
+
+        //"Alice" is in friends
+        assertNotNull(friendView.lookup("#Alice"));
     }
 }
