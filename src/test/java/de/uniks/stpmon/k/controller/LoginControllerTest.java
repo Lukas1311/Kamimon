@@ -77,45 +77,17 @@ public class LoginControllerTest extends ApplicationTest {
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
 
-        Label label = lookup("#errorLabel").queryAs(Label.class);
-
-        // tab into username input field
-        write("\t");
-        // type username that is too long (> 32 chars)
-        write("string").press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        press(KeyCode.CONTROL).press(KeyCode.C).release(KeyCode.C).release(KeyCode.CONTROL).press(KeyCode.RIGHT);
-        for (int i = 0; i < 5; i++) {
-            // paste "string" 5 times
-            paste();
-        }
-        verifyThat(label, LabeledMatchers.hasText("Username too long."));
-        // delete username contents with (CTRL + A + BACKSPACE)
-        press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL).push(KeyCode.BACK_SPACE);
-        // clickOn("#usernameInput").doubleClickOn()
-        // type working username and tab into password field
-        write("string\t");
-        // type password that is too short (< 8 chars)
-        write("string");
-        verifyThat(label, LabeledMatchers.hasText("Password too short."));
-        // type missing parts to make working password complete
-        write("st");
-        // click show password button and verify the show password
-        write("\t");
-        Button pwdToggleButton = lookup("#toggleButton").queryButton();
-        assertThat(pwdToggleButton).isFocused();
-        // get password input field to verify the contents
-        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
-        clickOn(pwdToggleButton);
-        // check if prompt text matches the password that was written into password field before
-        assertThat(pwdField.getPromptText()).isEqualTo("stringst");
+        // write username and password
+        write("\tstring\t");
+        write("stringst");
         // TODO: make sure to adjust count of tabs when Login fxml is changed
         // tab 3 times to go on the login button -> is faster than click on button (no mouse movement)
-        write("\t\t");
+        write("\t\t\t");
         Button selectedButton = lookup("#loginButton").queryButton();
         assertThat(selectedButton).isFocused();
-        press(KeyCode.ENTER);
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
 
+        Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Login successful"));
         verify(app).show(mock);
     }
@@ -139,13 +111,55 @@ public class LoginControllerTest extends ApplicationTest {
         // Retrieve the currently selected button
         Button selectedButton = lookup("#registerButton").queryAs(Button.class);
         assertThat(selectedButton).isFocused();
-        press(KeyCode.ENTER);
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Registration successful"));
         // app stays in login controller after registration call, only afterwards it will login into hybridContoller
         verify(app).show(loginController);
+    }
+
+    @Test
+    void testPasswordTooShort() {
+        Label label = lookup("#errorLabel").queryAs(Label.class);
+
+        // tab into password input field
+        write("\t\t");
+        // type password that is too short (< 8 chars)
+        write("string");
+        verifyThat(label, LabeledMatchers.hasText("Password too short."));
+    }
+
+    @Test
+    void testUsernameTooLong() {
+        Label label = lookup("#errorLabel").queryAs(Label.class);
+
+        // tab into username input field
+        write("\t");
+        // type username that is too long (> 32 chars)
+        write("string").press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
+        press(KeyCode.CONTROL).press(KeyCode.C).release(KeyCode.C).release(KeyCode.CONTROL).press(KeyCode.RIGHT);
+        for (int i = 0; i < 5; i++) {
+            // paste "string" 5 times
+            paste();
+        }
+        verifyThat(label, LabeledMatchers.hasText("Username too long."));
+    }
+
+    @Test
+    void testShowPassword() {
+        // tab into password field
+        write("\t\t");
+        write("stringst");
+        // click show password button and verify the show password
+        write("\t");
+        Button pwdToggleButton = lookup("#toggleButton").queryButton();
+        assertThat(pwdToggleButton).isFocused();
+        // get password input field to verify the contents
+        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
+        clickOn(pwdToggleButton);
+        // check if prompt text matches the password that was written into password field before
+        assertThat(pwdField.getPromptText()).isEqualTo("stringst");
     }
 
     private void paste() {
