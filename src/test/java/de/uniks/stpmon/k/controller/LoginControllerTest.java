@@ -32,6 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 
 import javax.inject.Provider;
 import io.reactivex.rxjava3.core.Observable;
@@ -147,16 +148,23 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testShowPassword() {
+        Button pwdToggleButton = lookup("#toggleButton").queryButton();
+        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
         // tab into password field
-        write("\t\t");
+        // tab to the toggle button password field is empty
+        write("\t\t\t");
+        assertThat(pwdToggleButton).isFocused();
+        press(KeyCode.ENTER);
+        assertThat(pwdField.getPromptText()).isEqualTo("Password");
+        // tab back to password field
+        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
         write("stringst");
         // click show password button and verify the show password
         write("\t");
-        Button pwdToggleButton = lookup("#toggleButton").queryButton();
-        assertThat(pwdToggleButton).isFocused();
+
         press(KeyCode.ENTER);
         // get password input field to verify the contents
-        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
+        
         // check if prompt text matches the password that was written into password field before
         assertThat(pwdField.getPromptText()).isEqualTo("stringst");
         release(KeyCode.ENTER);
