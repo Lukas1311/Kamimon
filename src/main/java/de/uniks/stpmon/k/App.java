@@ -1,11 +1,9 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -57,15 +55,10 @@ public class App extends Application {
         
         final AuthenticationService authService = component.authenticationService();
         httpClient = component.httpClient();
-
         if (authService.isRememberMe()) {
             disposables.add(authService
                 .refresh()
-                .subscribe(lr -> {
-                    show(component.hybridController());
-                }, err -> {
-                    show(component.loginController());
-                }));
+                .subscribe(lr -> show(component.hybridController()), err -> show(component.loginController())));
         } else {
             show(component.loginController());
         }
