@@ -1,5 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.rest.GroupApiService;
@@ -9,8 +12,8 @@ import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.views.MessageCell;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -18,8 +21,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-
-import javax.inject.Inject;
 
 public class ChatController extends Controller {
     @FXML
@@ -41,6 +42,9 @@ public class ChatController extends Controller {
     GroupApiService groupApiService;
     @Inject
     UserStorage userStorage;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
+
 
     private StringProperty regionName;
     private StringProperty functionStatus;
@@ -74,6 +78,8 @@ public class ChatController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        backButton.setOnAction(e -> leaveChat());
 
         addRegionsToChoiceBox();
 
@@ -137,8 +143,8 @@ public class ChatController extends Controller {
         //TODO: create method openSettings
     }
 
-    @FXML
     public void leaveChat() {
-        //TODO: create method leaveChat
+        app.show(hybridControllerProvider.get());
+        hybridControllerProvider.get().openSidebar("chatList");
     }
 }
