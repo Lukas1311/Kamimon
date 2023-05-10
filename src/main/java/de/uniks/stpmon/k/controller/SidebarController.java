@@ -1,11 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.dto.Group;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -69,7 +72,10 @@ public class SidebarController extends Controller {
 
     public void openChat() {
         // TODO: replace this with chat list view controller
-        app.show(chatControlleProvider.get());
+        ChatController chat = chatControlleProvider.get();
+        Group dummyGroup = new Group(null, null, "6457a3ce4d233ed4626d20c0", "test", null);
+        chat.setGroup(dummyGroup);
+        app.show(chat);
     }
 
     public void openFriends() {
