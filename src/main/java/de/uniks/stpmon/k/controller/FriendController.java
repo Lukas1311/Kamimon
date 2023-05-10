@@ -38,6 +38,8 @@ public class FriendController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        parent.setId(user.name());
+
         userName.setText(user.name());
 
         if (newFriend) {

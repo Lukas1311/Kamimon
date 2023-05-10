@@ -68,11 +68,7 @@ public class SidebarController extends Controller {
     }
 
     public void openChat() {
-        // TODO: replace this with chat list view controller
-        ChatController chat = chatControlleProvider.get();
-        Group dummyGroup = new Group(null, null, "6457a3ce4d233ed4626d20c0", "test", null);
-        chat.setGroup(dummyGroup);
-        app.show(chat);
+        hybridController.openSidebar("chatList");
     }
 
     public void openFriends() {
