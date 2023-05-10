@@ -11,6 +11,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -169,7 +170,32 @@ class UserServiceTest {
 
     @Test
     void searchFriend() {
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(user);
 
+        //define mock
+        List<User> usersFromServer = new ArrayList<>();
+        //current user (that should not be shown)
+        usersFromServer.add(new User("0", "a", null, null, null));
+        // some other user
+        usersFromServer.add(new User("1", "a", null, null, null));
+        when(userApiService.getUsers()).thenReturn(Observable.just(usersFromServer));
+
+        //action
+        final List<User> users = userService.searchFriend("a").blockingFirst();
+
+        //check values
+        assertEquals(1, users.size());
+        assertEquals("1", users.get(0)._id());
+
+        //check mock
+        verify(userApiService).getUsers();
     }
 
     @Test

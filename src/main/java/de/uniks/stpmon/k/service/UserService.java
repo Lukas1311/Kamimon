@@ -88,7 +88,7 @@ public class UserService {
             return userApiService.getUsers()
                     .map(e -> e.stream()
                             .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
-                                    && !f._id().equals(user._id()))
+                                    && !f._id().equals(user._id())) //do not show the searching user
                             .filter(g -> !user.friends().contains(g._id())).toList());
         }
     }
