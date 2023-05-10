@@ -16,7 +16,6 @@ public class ChatEntryController  extends Controller {
     public Text chatName;
     @FXML
     public VBox chatEntry;
-    public Text chatLastMessage;
     @Inject
     @Singleton
     ChatListController chatListController;
