@@ -85,7 +85,11 @@ public class UserService {
         if (name.isEmpty()) {
             return Observable.fromSupplier(ArrayList::new);
         } else {
-            return userApiService.getUsers().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())).filter(g -> !user.friends().contains(g._id())).toList());
+            return userApiService.getUsers()
+                    .map(e -> e.stream()
+                            .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
+                                    && !f._id().equals(user._id()))
+                            .filter(g -> !user.friends().contains(g._id())).toList());
         }
     }
 

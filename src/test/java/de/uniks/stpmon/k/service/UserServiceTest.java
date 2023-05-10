@@ -131,11 +131,45 @@ class UserServiceTest {
 
     @Test
     void setAvatar() {
+        //test when oldUser is null
+        final Observable<User> nullUser = userService.setAvatar("picture2");
+        //check value
+        assertNull(nullUser);
 
+        //setting up user which will be updated
+        User oldUser = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(oldUser);
+
+        //define mock
+        final ArgumentCaptor<UpdateUserDto> captor = ArgumentCaptor.forClass(UpdateUserDto.class);
+        when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(Observable.just(
+                        new User(
+                                "0",
+                                "Test",
+                                "offline",
+                                "picture2",
+                                new ArrayList<>())
+                ));
+
+        //action
+        final User newUser = userService.setAvatar("picture2").blockingFirst();
+
+        //check values
+        assertEquals("picture2", newUser.avatar());
+
+        //check mock
+        verify(userApiService).updateUser(ArgumentMatchers.anyString(), captor.capture());
     }
 
     @Test
     void searchFriend() {
+
     }
 
     @Test
