@@ -8,11 +8,8 @@ import de.uniks.stpmon.k.dto.Message;
 import javafx.scene.control.ListCell;
 
 public class MessageCell extends ListCell<Message> {
-    // private final Provider<ChatController> chatControllerProvider;
-    // private final Message message;
 
     public MessageCell() {
-        // this.message = msg;
     }
 
     @Override

@@ -6,9 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
