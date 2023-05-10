@@ -14,6 +14,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -28,7 +30,10 @@ import de.uniks.stpmon.k.service.UserService;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
+
+
 import javax.inject.Provider;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -72,23 +77,18 @@ public class LoginControllerTest extends ApplicationTest {
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
 
-        // tab into username input field
-        write("\t");
-        // type username and tab into password field
-        write("string\t");
-        // type password
+        // write username and password
+        write("\tstring\t");
         write("stringst");
         // TODO: make sure to adjust count of tabs when Login fxml is changed
         // tab 3 times to go on the login button -> is faster than click on button (no mouse movement)
         write("\t\t\t");
-        Button selectedButton = lookup("#loginButton").queryAs(Button.class);
+        Button selectedButton = lookup("#loginButton").queryButton();
         assertThat(selectedButton).isFocused();
-        press(KeyCode.ENTER);
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Login successful"));
-
         verify(app).show(mock);
     }
 
@@ -111,12 +111,67 @@ public class LoginControllerTest extends ApplicationTest {
         // Retrieve the currently selected button
         Button selectedButton = lookup("#registerButton").queryAs(Button.class);
         assertThat(selectedButton).isFocused();
-        press(KeyCode.ENTER);
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Registration successful"));
         // app stays in login controller after registration call, only afterwards it will login into hybridContoller
         verify(app).show(loginController);
+    }
+
+    @Test
+    void testPasswordTooShort() {
+        Label label = lookup("#errorLabel").queryAs(Label.class);
+
+        // tab into password input field
+        write("\t\t");
+        // type password that is too short (< 8 chars)
+        write("string");
+        verifyThat(label, LabeledMatchers.hasText("Password too short."));
+    }
+
+    @Test
+    void testUsernameTooLong() {
+        Label label = lookup("#errorLabel").queryAs(Label.class);
+
+        // tab into username input field
+        write("\t");
+        // type username that is too long (> 32 chars)
+        write("string").press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
+        press(KeyCode.CONTROL).press(KeyCode.C).release(KeyCode.C).release(KeyCode.CONTROL).press(KeyCode.RIGHT);
+        for (int i = 0; i < 5; i++) {
+            // paste "string" 5 times
+            paste();
+        }
+        verifyThat(label, LabeledMatchers.hasText("Username too long."));
+    }
+
+    @Test
+    void testShowPassword() {
+        Button pwdToggleButton = lookup("#toggleButton").queryButton();
+        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
+        // tab into password field
+        // tab to the toggle button password field is empty
+        write("\t\t\t");
+        assertThat(pwdToggleButton).isFocused();
+        press(KeyCode.ENTER);
+        assertThat(pwdField.getPromptText()).isEqualTo("Password");
+        release(KeyCode.ENTER);
+        // tab back to password field
+        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
+        write("stringst");
+        // click show password button and verify the show password
+        write("\t");
+        press(KeyCode.ENTER);
+        waitForFxEvents(); // not really necessary i guess
+        // get password input field to verify the contents
+        
+        // check if prompt text matches the password that was written into password field before
+        assertThat(pwdField.getPromptText()).isEqualTo("stringst");
+        release(KeyCode.ENTER);
+    }
+
+    private void paste() {
+        press(KeyCode.CONTROL).press(KeyCode.V).release(KeyCode.V).release(KeyCode.CONTROL);
     }
 }
