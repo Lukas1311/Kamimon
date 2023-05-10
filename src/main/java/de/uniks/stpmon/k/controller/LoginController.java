@@ -6,24 +6,11 @@ import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -36,9 +23,6 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class LoginController extends Controller {
 
@@ -108,7 +92,7 @@ public class LoginController extends Controller {
         loginButton.disableProperty().bind(isInvalid);
         registerButton.disableProperty().bind(isInvalid);
 
-        // Shows Password on holding mouse button or holding enter
+        // shows Password on holding mouse button or holding enter
         toggleButton.armedProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue){
                 showPassword();
