@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<HBox alignment="CENTER" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="250.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatEntryController">
+<VBox fx:id="chatEntry" alignment="CENTER" maxHeight="-Infinity" maxWidth="370.0" prefHeight="100.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatEntryController">
    <children>
-      <Text fx:id="chatName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Text>
+      <Text fx:id="chatName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text fx:id="chatLastMessage" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
    </children>
-</HBox>
+</VBox>

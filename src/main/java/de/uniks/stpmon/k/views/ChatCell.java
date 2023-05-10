@@ -17,8 +17,8 @@ public class ChatCell extends ListCell<Group> {
             setGraphic(null);
             setText(null);
         } else {
-            final ChatEntryController chatEntryController = new ChatEntryController();
-            setText(item.name());
+            final ChatEntryController chatEntryController = new ChatEntryController(item.name());
+            setGraphic(chatEntryController.render());
         }
     }
 }

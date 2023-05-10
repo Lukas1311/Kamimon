@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
@@ -20,6 +21,9 @@ public class ChatListController extends Controller {
     VBox chatList;
     @Inject
     GroupService groupService;
+    @Inject
+    @Singleton
+    Provider<HybridController> hybridControllerProvider;
 
     private final ObservableList<Group> groups = FXCollections.observableArrayList();
     @Inject
@@ -41,6 +45,7 @@ public class ChatListController extends Controller {
         final Parent parent = super.render();
         final ListView<Group> groups = new ListView<>(this.groups);
         groups.setCellFactory(param -> new ChatCell());
+        chatList.prefWidthProperty().bind(hybridControllerProvider.get().stackPane.widthProperty().multiply(0.3));
         chatList.getChildren().add(groups);
         return parent;
     }
