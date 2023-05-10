@@ -96,8 +96,8 @@ public class ChatController extends Controller {
         sendButton.disableProperty().bind(messageField.textProperty().isEmpty());
         sendButton.setOnAction(click -> {
             // clear message field and send on button click
-            messageField.clear();
             sendMessage();
+            messageField.clear();
         });
 
         regionName = new SimpleStringProperty("");
@@ -131,8 +131,8 @@ public class ChatController extends Controller {
                 System.out.println(msg);
                 messageArea.getChildren().add(new MessageCell());
             }, error -> {
-                // TODO: this still receives a HTTP 400 and I don't know why
                 System.out.println("look here for the error: " + error);
+                System.out.println(error.getMessage());
             })
         );
 
