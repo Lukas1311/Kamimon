@@ -24,6 +24,8 @@ public class ChatListController extends Controller {
     @Inject
     @Singleton
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<ChatController> chatControllerProvider;
 
     private final ObservableList<Group> groups = FXCollections.observableArrayList();
     @Inject
@@ -44,11 +46,17 @@ public class ChatListController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         final ListView<Group> groups = new ListView<>(this.groups);
-        groups.setCellFactory(param -> new ChatCell());
+        // pass current chatListController (this) to make use of it in subclasses that cannot use inject
+        groups.setCellFactory(param -> new ChatCell(this));
         chatList.prefWidthProperty().bind(hybridControllerProvider.get().stackPane.widthProperty().multiply(0.3));
         chatList.getChildren().add(groups);
         return parent;
     }
 
-
+    // a method that is used by the chatEntryController to open a new chat (chatController)
+    public void openChat(Group group) {
+        ChatController chat = chatControllerProvider.get();
+        chat.setGroup(group);
+        app.show(chat);
+    }
 }
