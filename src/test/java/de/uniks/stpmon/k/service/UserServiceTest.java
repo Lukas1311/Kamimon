@@ -13,8 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +25,7 @@ class UserServiceTest {
     UserApiService userApiService;
     @InjectMocks
     UserService userService;
+
 
     @Test
     void addUser() {
@@ -59,7 +59,7 @@ class UserServiceTest {
         //test when oldUser is null
         final Observable<User> nullUser = userService.setUsername("Test2");
         //check value
-        assertNull(nullUser);
+        assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up user which will be updated
         User oldUser = new User(
@@ -96,8 +96,9 @@ class UserServiceTest {
     void setPassword() {
         //test when oldUser is null
         final Observable<User> nullUser = userService.setPassword("testtest2");
+
         //check value
-        assertNull(nullUser);
+        assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up user which will be updated
         User oldUser = new User(
@@ -135,7 +136,7 @@ class UserServiceTest {
         //test when oldUser is null
         final Observable<User> nullUser = userService.setAvatar("picture2");
         //check value
-        assertNull(nullUser);
+        assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up user which will be updated
         User oldUser = new User(
@@ -169,6 +170,15 @@ class UserServiceTest {
     }
 
     @Test
+    void searchFriendEmpty() {
+        //action
+        List<User> emptyList = userService.searchFriend("").blockingFirst();
+
+        //check values
+        assertTrue(emptyList.isEmpty());
+    }
+
+    @Test
     void searchFriend() {
         //setting up user which will be updated
         User user = new User(
@@ -199,18 +209,249 @@ class UserServiceTest {
     }
 
     @Test
-    void addFriend() {
+    void addFriendAlreadyInFriendList() {
+        User friend = new User(
+                "1",
+                "Test2",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add(friend._id());
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                friends);
+        userStorage.setUser(user);
+
+        //action
+        Observable<List<User>> updatedFriends = userService.addFriend(friend);
+
+        //check values
+        assertTrue(updatedFriends.isEmpty().blockingGet());
+
     }
 
     @Test
-    void removeFriend() {
+    void addNewFriend() {
+        User friend = new User(
+                "1",
+                "Test2",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add(friend._id());
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(user);
+
+        //define mocks
+        final ArgumentCaptor<UpdateUserDto> updateArgumentCaptor = ArgumentCaptor.forClass(UpdateUserDto.class);
+        @SuppressWarnings("unchecked") final ArgumentCaptor<List<String>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(Observable.just(
+                        new User(
+                                "0",
+                                "Test2",
+                                "offline",
+                                "picture",
+                                friends)
+                ));
+
+        ArrayList<User> userFriends = new ArrayList<>();
+        userFriends.add(friend);
+        when(userApiService.getUsers(ArgumentMatchers.any()))
+                .thenReturn(Observable.just(userFriends));
+
+        //action
+        List<User> updatedFriends = userService.addFriend(friend).blockingFirst();
+
+        //check values
+        assertEquals(1, updatedFriends.size());
+        assertEquals(friend, updatedFriends.get(0));
+
+        //check mock
+        verify(userApiService).updateUser(ArgumentMatchers.anyString(), updateArgumentCaptor.capture());
+        verify(userApiService).getUsers(listArgumentCaptor.capture());
+    }
+
+    @Test
+    void removeFriendNotInFriendList() {
+        User friend = new User(
+                "1",
+                "Test2",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(user);
+
+        //action
+        Observable<List<User>> updatedFriends = userService.removeFriend(friend);
+
+        //check values
+        assertTrue(updatedFriends.isEmpty().blockingGet());
+    }
+
+    @Test
+    void removeFriendFromFriendList() {
+        User friend = new User(
+                "1",
+                "Test2",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add(friend._id());
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                friends);
+        userStorage.setUser(user);
+
+        //define mocks
+        final ArgumentCaptor<UpdateUserDto> updateArgumentCaptor = ArgumentCaptor.forClass(UpdateUserDto.class);
+
+        when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(Observable.just(
+                        new User(
+                                "0",
+                                "Test2",
+                                "offline",
+                                "picture",
+                                new ArrayList<>())
+                ));
+
+        //action
+        List<User> updatedFriends = userService.removeFriend(friend).blockingFirst();
+
+        //check values
+        assertEquals(0, updatedFriends.size());
+
+        //check mock
+        verify(userApiService).updateUser(ArgumentMatchers.anyString(), updateArgumentCaptor.capture());
     }
 
     @Test
     void getFriends() {
+        User friend = new User(
+                "1",
+                "Test2",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add(friend._id());
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                friends);
+        userStorage.setUser(user);
+        ArrayList<User> friendsAsUser = new ArrayList<>();
+        friendsAsUser.add(friend);
+        //define mocks
+        @SuppressWarnings("unchecked") final ArgumentCaptor<List<String>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+
+        when(userApiService.getUsers(ArgumentMatchers.any()))
+                .thenReturn(Observable.just(friendsAsUser));
+
+        //action
+        List<User> friendlist = userService.getFriends().blockingFirst();
+
+        //check values
+        assertEquals(1, friendlist.size());
+        assertEquals("1", friendlist.get(0)._id());
+        //check mock
+        verify(userApiService).getUsers(listArgumentCaptor.capture());
+    }
+
+    @Test
+    void getEmptyFriends() {
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(user);
+
+        //action
+        List<User> userFriends = userService.getFriends().blockingFirst();
+
+        //check values
+        assertEquals(new ArrayList<>(), userFriends);
+
     }
 
     @Test
     void filterFriends() {
+        User friend1 = new User(
+                "1",
+                "Test2",
+                "offline",
+                "picture",
+                new ArrayList<>());
+
+        User friend2 = new User(
+                "1",
+                "est",
+                "offline",
+                "picture",
+                new ArrayList<>());
+
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add(friend1._id());
+        friends.add(friend2._id());
+        //setting up user which will be updated
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                friends);
+        userStorage.setUser(user);
+        ArrayList<User> friendsAsUser = new ArrayList<>();
+        friendsAsUser.add(friend1);
+        friendsAsUser.add(friend2);
+
+
+        @SuppressWarnings("unchecked") final ArgumentCaptor<List<String>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+
+        when(userApiService.getUsers(ArgumentMatchers.any()))
+                .thenReturn(Observable.just(friendsAsUser));
+
+
+        //action
+        List<User> friendlist = userService.filterFriends("T").blockingFirst();
+
+        //check values
+        assertEquals(1, friendlist.size());
+        assertEquals("1", friendlist.get(0)._id());
+
+
+        //check mock
+        verify(userApiService).getUsers(listArgumentCaptor.capture());
     }
 }
