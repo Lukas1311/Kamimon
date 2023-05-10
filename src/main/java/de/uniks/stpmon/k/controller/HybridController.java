@@ -105,7 +105,7 @@ public class HybridController extends Controller {
 
     public void openSidebar(String string) {
         switch (string) {
-            case "chat":
+            case "chatList":
                 openSecondary(chatListController);
                 break;
             case "friends":

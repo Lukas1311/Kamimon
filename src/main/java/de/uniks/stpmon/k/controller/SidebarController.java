@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -66,7 +65,7 @@ public class SidebarController extends Controller {
     }
 
     public void openChat() {
-        hybridController.openSidebar("chat");
+        hybridController.openSidebar("chatList");
     }
 
     public void openFriends() {
