@@ -93,6 +93,40 @@ class UserServiceTest {
 
     @Test
     void setPassword() {
+        //test when oldUser is null
+        final Observable<User> nullUser = userService.setPassword("testtest2");
+        //check value
+        assertNull(nullUser);
+
+        //setting up user which will be updated
+        User oldUser = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(oldUser);
+
+        //define mock
+        final ArgumentCaptor<UpdateUserDto> captor = ArgumentCaptor.forClass(UpdateUserDto.class);
+        when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(Observable.just(
+                        new User(
+                                "0",
+                                "Test",
+                                "offline",
+                                "picture",
+                                new ArrayList<>())
+                ));
+
+        //action
+        final User newUser = userService.setPassword("testtest2").blockingFirst();
+
+        //check values
+        assertEquals(oldUser, newUser);
+
+        //check mock
+        verify(userApiService).updateUser(ArgumentMatchers.anyString(), captor.capture());
     }
 
     @Test

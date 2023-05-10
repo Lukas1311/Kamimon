@@ -28,6 +28,13 @@ public class UserService {
         );
     }
 
+    /**
+     * This method changes the username of the user
+     *
+     * @param username: new username that should be set
+     * @return Observable<User> of the updated user,
+     * null if no user in UserStorage
+     */
     public Observable<User> setUsername(String username) {
         User oldUser = userStorage.getUser();
         if (oldUser == null) {
@@ -39,6 +46,13 @@ public class UserService {
         return userApiService.updateUser(oldUser._id(), dto);
     }
 
+    /**
+     * This method changes the password of the user
+     *
+     * @param password: new password that should be set
+     * @return Observable<User> of the updated user,
+     * null if no user in UserStorage
+     */
     public Observable<User> setPassword(String password) {
         User oldUser = userStorage.getUser();
         if (oldUser == null) {
@@ -48,6 +62,13 @@ public class UserService {
         return userApiService.updateUser(oldUser._id(), dto);
     }
 
+    /**
+     * This method changes the avatar of the user
+     *
+     * @param avatar: new avatar that should be set
+     * @return Observable<User> of the updated user,
+     * null if no user in UserStorage
+     */
     public Observable<User> setAvatar(String avatar) {
         User oldUser = userStorage.getUser();
         if (oldUser == null) {
