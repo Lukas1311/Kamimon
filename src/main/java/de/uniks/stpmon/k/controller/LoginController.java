@@ -108,8 +108,15 @@ public class LoginController extends Controller {
         loginButton.disableProperty().bind(isInvalid);
         registerButton.disableProperty().bind(isInvalid);
 
-        toggleButton.setOnKeyPressed(press -> { if (press.getCode() == KeyCode.ENTER) togglePressed(); });
-        toggleButton.setOnKeyReleased(release -> { if (release.getCode() == KeyCode.ENTER) toggleReleased(); });
+        // Shows Password on holding mouse button or holding enter
+        toggleButton.armedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue){
+                showPassword();
+            }else{
+                hidePassword();
+            }
+        });
+
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
         return parent;
@@ -176,8 +183,7 @@ public class LoginController extends Controller {
         };
     }
 
-    @FXML
-    public void toggleReleased() {
+    private void hidePassword() {
         if(isEmpty){
             passwordInput.setText("");
         }else{
@@ -186,8 +192,7 @@ public class LoginController extends Controller {
         passwordInput.setPromptText("Password");
     }
 
-    @FXML
-    public void togglePressed() {
+    private void showPassword() {
         password = passwordInput.getText();
         if(password == null || password.isEmpty()) {
             password = "Password";
@@ -198,5 +203,4 @@ public class LoginController extends Controller {
         passwordInput.clear();
         passwordInput.setPromptText(password);
     }
-
 }
