@@ -14,6 +14,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -30,9 +31,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 
 import javax.inject.Provider;
 import io.reactivex.rxjava3.core.Observable;
@@ -155,11 +154,12 @@ public class LoginControllerTest extends ApplicationTest {
         write("\t");
         Button pwdToggleButton = lookup("#toggleButton").queryButton();
         assertThat(pwdToggleButton).isFocused();
+        press(KeyCode.ENTER);
         // get password input field to verify the contents
         PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
-        clickOn(pwdToggleButton);
         // check if prompt text matches the password that was written into password field before
         assertThat(pwdField.getPromptText()).isEqualTo("stringst");
+        release(KeyCode.ENTER);
     }
 
     private void paste() {
