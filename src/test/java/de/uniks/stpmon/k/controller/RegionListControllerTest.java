@@ -55,5 +55,26 @@ public class RegionListControllerTest extends ApplicationTest {
         stage.requestFocus();
     }
 
+    @Test
+    void testShow() {
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridController.get()).thenReturn(mock);
 
+        AnchorPane anchorPane = lookup("#regionList").query();
+        ListView<?> listView = (ListView<?>) anchorPane.getChildren().get(0);
+        Button button = (Button) listView.lookup("#regionButton");
+        assertEquals("Test", button.getText());
+
+
+        //TODO: the button function test
+        /*
+        final IngameController ingameMock = Mockito.mock(IngameController.class);
+        when(ingameController.getClass()).thenReturn(ingameMock);
+
+        clickOn(button);
+        Text text = lookup("#ingame").query();
+        assertEquals("INGAME", text.getText());
+
+         */
+    }
 }
