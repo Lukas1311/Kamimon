@@ -2,18 +2,14 @@ package de.uniks.stpmon.k;
 
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.dto.ErrorResponse;
-import de.uniks.stpmon.k.dto.LoginDto;
-import de.uniks.stpmon.k.dto.LoginResult;
-import de.uniks.stpmon.k.dto.RefreshDto;
+import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.EventListener;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.prefs.Preferences;
 
 import static org.mockito.Mockito.mock;
@@ -72,6 +68,53 @@ public class TestModule {
     }
 
 
+    @Provides
+    static UserApiService userApiService() {
+        return new UserApiService() {
+            @Override
+            public Observable<User> addUser(CreateUserDto dto) {
+                return Observable.empty();
+            }
 
+            @Override
+            public Observable<List<User>> getUsers() {
+                return Observable.empty();
+            }
 
+            @Override
+            public Observable<List<User>> getUsers(List<String> ids) {
+                return Observable.empty();
+            }
+
+            @Override
+            public Observable<User> getUser(String id) {
+                return Observable.empty();
+            }
+
+            @Override
+            public Observable<User> updateUser(String id, UpdateUserDto dto) {
+                return Observable.empty();
+            }
+
+            @Override
+            public Observable<User> deleteUser(String id) {
+                return Observable.empty();
+            }
+        };
+    }
+
+    @Provides
+    static RegionApiService regionApiService() {
+        return new RegionApiService() {
+            @Override
+            public Observable<List<Region>> getRegions() {
+                return Observable.empty();
+            }
+
+            @Override
+            public Observable<Region> getRegion(String id) {
+                return Observable.empty();
+            }
+        };
+    }
 }

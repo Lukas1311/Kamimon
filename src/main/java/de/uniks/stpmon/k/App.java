@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import okhttp3.OkHttpClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,7 +15,6 @@ import java.util.Objects;
 
 public class App extends Application {
     private final MainComponent component;
-    private OkHttpClient httpClient;
     protected final CompositeDisposable disposables = new CompositeDisposable();
 
     private Controller controller;
@@ -54,7 +52,6 @@ public class App extends Application {
         }
         
         final AuthenticationService authService = component.authenticationService();
-        httpClient = component.httpClient();
         if (authService.isRememberMe()) {
             disposables.add(authService
                 .refresh()
@@ -88,8 +85,6 @@ public class App extends Application {
     public void stop() throws Exception{
         cleanup();
         disposables.dispose();
-        httpClient.dispatcher().executorService().shutdown();
-        httpClient.connectionPool().evictAll();
     }
 
     public void show(Controller controller){
