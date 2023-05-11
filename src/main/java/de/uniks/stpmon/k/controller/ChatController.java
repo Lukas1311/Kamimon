@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -47,8 +48,8 @@ public class ChatController extends Controller {
 
 
     private StringProperty regionName;
-    private StringProperty functionStatus;
     private ObservableList<Message> messages = FXCollections.observableArrayList();
+    private ListView<Message> messagesListView;
     private Group group;
 
     public Group getGroup() { return this.group; }
@@ -65,7 +66,6 @@ public class ChatController extends Controller {
             .getAllMessages(
                 "groups",
                 group._id()
-                // groupService.getOwnGroups().firstElement().blockingGet().get(0)._id()
             ).observeOn(FX_SCHEDULER)
             .subscribe(messages -> {
                 this.messages.setAll(messages);
@@ -84,10 +84,10 @@ public class ChatController extends Controller {
         addRegionsToChoiceBox();
 
         // the factory creates the initial message list in the chat ui
-        final ListView<Message> messages = new ListView<>(this.messages);
-        messages.setCellFactory(param -> new MessageCell());
-        messages.prefHeightProperty().bind(messageArea.heightProperty());
-        messages.prefWidthProperty().bind(messageArea.widthProperty());
+        messagesListView = new ListView<>(this.messages);
+        messagesListView.setCellFactory(param -> new MessageCell(userStorage.getUser()));
+        messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
+        messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
 
         // TODO: edit and delete single messages by chosing them and some listener stuff
         // messages.getSelectionModel().selectedItemProperty()... listener stuff
@@ -103,7 +103,7 @@ public class ChatController extends Controller {
         regionName = new SimpleStringProperty("");
         // bind regionName to selected choice box item
         regionName.bind(regionPicker.getSelectionModel().selectedItemProperty());
-        messageArea.getChildren().setAll(messages);
+        messageArea.getChildren().setAll(messagesListView);
 
         return parent;
     }
@@ -120,16 +120,16 @@ public class ChatController extends Controller {
 
     @FXML
     public void sendMessage() {
-        System.out.println("msg: " + messageField.getText() + ",region: " +  regionName.get());
         // TODO: remove afterwards (non-functional: visual testing only)
         // messageArea.getChildren().add(new MessageController(new Message(null, null, null, userStorage.getUser().name(), messageField.getText())).render());
         disposables.add(msgService
             .sendMessage(messageField.getText(), "groups", group._id())
             .observeOn(FX_SCHEDULER)
             .subscribe(msg -> {
-                functionStatus.set("Message sent");
-                System.out.println(msg);
-                messageArea.getChildren().add(new MessageCell());
+                System.out.println("Message sent: " + msg.body());
+                messages.add(msg);
+                messagesListView.scrollTo(msg);
+                // messageArea.getChildren().add(new MessageCell());
             }, error -> {
                 System.out.println("look here for the error: " + error);
                 System.out.println(error.getMessage());
