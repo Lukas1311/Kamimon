@@ -2,9 +2,11 @@ package de.uniks.stpmon.k;
 
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.dto.*;
+import de.uniks.stpmon.k.dto.ErrorResponse;
+import de.uniks.stpmon.k.dto.LoginDto;
+import de.uniks.stpmon.k.dto.LoginResult;
+import de.uniks.stpmon.k.dto.RefreshDto;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
-import de.uniks.stpmon.k.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
@@ -70,34 +72,6 @@ public class TestModule {
     }
 
 
-    @Provides
-    static MessageApiService messageApiService() {
-        return new MessageApiService() {
-            @Override
-            public Observable<Message> sendMessage(String namespace, String parent, CreateMessageDto msg) {
-                return null;
-            }
 
-            @Override
-            public Observable<ArrayList<Message>> getMessages(String namespace, String parent, String dateTimeAfter, String dateTimeBefore, Integer limit) {
-                return null;
-            }
-
-            @Override
-            public Observable<Message> getMessage(String namespace, String parent, String id) {
-                return null;
-            }
-
-            @Override
-            public Observable<Message> editMessage(String namespace, String parent, String id, UpdateMessageDto msg) {
-                return null;
-            }
-
-            @Override
-            public Observable<Message> deleteMessage(String namespace, String parent, String id) {
-                return null;
-            }
-        };
-    }
 
 }

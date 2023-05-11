@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k;
 
 import dagger.Module;
 import dagger.Provides;
