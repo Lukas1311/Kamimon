@@ -115,6 +115,9 @@ public class HybridController extends Controller {
             case "chatList":
                 openSecondary(chatListController);
                 break;
+            case "createChat":
+                openSecondary(createChatController);
+                break;
             case "friends":
                 openSecondary(friendListController);
                 break;

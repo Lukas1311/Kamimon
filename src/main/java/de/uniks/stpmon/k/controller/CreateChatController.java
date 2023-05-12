@@ -65,7 +65,6 @@ public class CreateChatController extends Controller {
         groupMembers.setCellFactory(e -> new GroupMemberCell(this));
 
 
-
         returnButton.setOnAction(e -> returnToChatList());
 
         groupNameField.setOnKeyPressed(e -> {
@@ -75,13 +74,11 @@ public class CreateChatController extends Controller {
         });
         createGroupButton.setOnAction(e -> createGroup());
 
-
         return parent;
     }
 
     public void returnToChatList() {
-        //TODO
-        //hybridControllerProvider.get().openSidebar("chatList");
+        hybridControllerProvider.get().openSidebar("chatList");
     }
 
     public void leaveGroup() {
