@@ -35,30 +35,32 @@ class HybridControllerTest extends ApplicationTest {
         assertEquals(hybridController.stackPane.getId(), stackPane.getId());
         Platform.runLater(() -> {
             // open ChatList, check if ID are equal
-            hybridController.openSidebar("chatList");
+            hybridController.sidebarController.get().openChat();
             assertEquals("chatList", hybridController.stackPane.getChildren().get(1).getId());
-
             /*
             // open FriendList, check if ID are equal
             hybridController.openSidebar("friends");
-            assertEquals("friendList", hybridController.stackPane.getChildren().get(1).getId()); */
+            assertEquals("friendList", hybridController.stackPane.getChildren().get(1).getId());
+             */
 
             // open Pause, check if ID are equal
-            hybridController.openSidebar("pause");
+            hybridController.sidebarController.get().toPause();
             assertEquals("pause", hybridController.stackPane.getChildren().get(0).getId());
 
             // clicking again Pause to go back to ingame, check if ID are equal
-            hybridController.openSidebar("pause");
+            hybridController.sidebarController.get().toPause();
             assertEquals("ingame", hybridController.stackPane.getChildren().get(0).getId());
 
-            // open Lobby, check if ID are equal
-            hybridController.openSidebar("lobby");
+            // Lobby, check if ID are equal
+            hybridController.sidebarController.get().backtoLobby();
             assertEquals("pane", hybridController.stackPane.getChildren().get(0).getId());
 
-            // open Ingame, check if ID are equal
+            // Ingame, check if ID are equal
             hybridController.openSidebar("ingame");
             assertEquals("ingame", hybridController.stackPane.getChildren().get(0).getId());
 
+            // Logout, check if app shows login
+            hybridController.sidebarController.get().logout();
         });
     }
 }
