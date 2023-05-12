@@ -20,35 +20,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class HybridControllerTest extends ApplicationTest {
 
-    @Mock
-    private Provider<SidebarController> sidebarController;
-    @Mock
-    private FriendListController friendListController;
-    @Mock
-    private Provider<LobbyController> lobbyController;
-    @Mock
-    private PauseController pauseController;
-    @Mock
-    private IngameController ingameController;
-    @Mock
-    private ChatListController chatListController;
+    private final App app = new App(null);
+    private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
+    private final HybridController hybridController = component.hybridController();
 
-    private final Pane pane = new Pane();
-
-    @Spy
-    App app = new App(null);
-
-    @InjectMocks
-    private HybridController hybridController;
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-        SidebarController sideMock = Mockito.mock(SidebarController.class);
-        when(sidebarController.get()).thenReturn(sideMock);
-        doNothing().when(app).show(sideMock);
-        hybridController.sidebarController = sidebarController;
-        hybridController.pane = pane;
         app.show(hybridController);
         stage.requestFocus();
     }
