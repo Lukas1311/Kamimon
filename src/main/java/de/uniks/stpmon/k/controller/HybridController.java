@@ -88,10 +88,6 @@ public class HybridController extends Controller {
         }
     }
 
-    private void openSecondary(Provider<? extends Controller> controller) {
-        openSecondary(controller.get());
-    }
-
     private Controller removeChildren(int startIndex) {
         Controller lastController = null;
         ObservableList<Node> children = stackPane.getChildren();
