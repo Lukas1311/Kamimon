@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.dto.Group;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -33,6 +34,12 @@ public class HybridController extends Controller {
     IngameController ingameController;
     @Inject
     ChatListController chatListController;
+
+    @Inject
+    CreateChatController createChatController;
+
+    @Inject
+    Provider<ChatController> chatControllerProvider;
 
     private final Stack<Controller> tabStack = new Stack<>();
 
@@ -132,6 +139,11 @@ public class HybridController extends Controller {
             default:
                 break;
         }
+    }
 
+    public void openChat(Group group) {
+        ChatController chatController = chatControllerProvider.get();
+        chatController.setGroup(group);
+        openSecondary(chatController);
     }
 }

@@ -55,8 +55,6 @@ public class ChatListController extends Controller {
 
     // a method that is used by the chatEntryController to open a new chat (chatController)
     public void openChat(Group group) {
-        ChatController chat = chatControllerProvider.get();
-        chat.setGroup(group);
-        app.show(chat);
+        hybridControllerProvider.get().openChat(group);
     }
 }
