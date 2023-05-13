@@ -28,8 +28,7 @@ import java.awt.image.SinglePixelPackedSampleModel;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -66,15 +65,8 @@ public class RegionListControllerTest extends ApplicationTest {
         assertEquals("Test", button.getText());
 
 
-        //TODO: the button function test
-        /*
-        final IngameController ingameMock = Mockito.mock(IngameController.class);
-        when(ingameController.getClass()).thenReturn(ingameMock);
+        hybridController.get().openSidebar("ingame");
+        verify(mock).openSidebar("ingame");
 
-        clickOn(button);
-        Text text = lookup("#ingame").query();
-        assertEquals("INGAME", text.getText());
-
-         */
     }
 }

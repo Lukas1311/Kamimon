@@ -40,13 +40,6 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void testShow() {
-        //ingameController.render();
-        Text text = lookup("#ingame").query();
-        assertEquals("INGAME", text.getText());
-    }
-
-    @Test
-    void testShow() {
         Text text = lookup("#ingame").query();
         assertEquals("INGAME", text.getText());
     }
