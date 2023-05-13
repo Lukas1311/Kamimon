@@ -1,10 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
+import java.util.HashMap;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
+import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
@@ -54,6 +57,7 @@ public class ChatController extends Controller {
     private ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
     private Group group;
+    private HashMap<String, String> groupMembers = new HashMap<>();
 
     public Group getGroup() { return this.group; }
     public void setGroup(Group group) { this.group = group; }
@@ -64,6 +68,17 @@ public class ChatController extends Controller {
 
     @Override
     public void init() { // get all messages in one chat
+        // populate a grou users hashmap with just one REST call to not run into rate limit
+        disposables.add(userService
+            .getUsers(group.members())
+            .observeOn(FX_SCHEDULER)
+            .subscribe(users -> {
+                for (User user : users) {
+                    groupMembers.put(user._id(), user.name());
+                }
+            },this::handleError
+            )
+        );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
             .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
@@ -79,7 +94,8 @@ public class ChatController extends Controller {
                     case "deleted" -> messages.removeIf(m -> m._id().equals(msg._id()));
                 }
             }, this::handleError
-            ));
+            )
+        );
     }
 
     @Override
@@ -92,7 +108,7 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService));
+        messagesListView.setCellFactory(param -> new MessageCell(userService, groupMembers));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
 
@@ -137,8 +153,6 @@ public class ChatController extends Controller {
 
     @FXML
     public void sendMessage() {
-        // TODO: remove afterwards (non-functional: visual testing only)
-        // messageArea.getChildren().add(new MessageController(new Message(null, null, null, userStorage.getUser().name(), messageField.getText())).render());
         disposables.add(msgService
             .sendMessage(messageField.getText(), "groups", group._id())
             .observeOn(FX_SCHEDULER)
@@ -150,7 +164,6 @@ public class ChatController extends Controller {
             },this::handleError
             )
         );
-
     }
 
     @FXML
