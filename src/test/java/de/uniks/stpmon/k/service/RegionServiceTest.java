@@ -50,4 +50,29 @@ class RegionServiceTest {
         verify(regionApiService).getRegions();
     }
 
+    @Test
+    void getRegion() {
+        Region region = new Region(
+                "a",
+                "1",
+                "1",
+                "Test"
+        );
+        ArrayList<String> regions = new ArrayList<>();
+        regions.add(region._id());
+
+
+        when(regionApiService.getRegion("1"))
+                .thenReturn(Observable.just(region));
+
+        //action
+        Region regionList = regionService.getRegion("1").blockingFirst();
+
+        //check values
+        assertEquals("Test", regionList.name());
+        assertEquals("1", regionList._id());
+        //check mock
+        verify(regionApiService).getRegion("1");
+    }
+
 }
