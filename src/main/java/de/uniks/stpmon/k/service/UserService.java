@@ -150,6 +150,10 @@ public class UserService {
         return userApiService.getUser(userId);
     }
 
+    public Observable<List<User>> getUsers(ArrayList<String> ids) {
+        return userApiService.getUsers(ids);
+    }
+
     public User getMe() {
         return this.userStorage.getUser();
     }
