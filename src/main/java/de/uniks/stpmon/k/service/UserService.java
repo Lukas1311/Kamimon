@@ -140,4 +140,17 @@ public class UserService {
     public Observable<List<User>> filterFriends(String name) {
         return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
+
+    /**
+     * gets a user and all its attributes by a given user id
+     * @param userId the id of a user object
+     * @return the user found by id
+     */
+    public Observable<User> getUserById(String userId) {
+        return userApiService.getUser(userId);
+    }
+
+    public User getMe() {
+        return this.userStorage.getUser();
+    }
 }
