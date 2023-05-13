@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import de.uniks.stpmon.k.controller.MessageController;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.UserStorage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,10 +43,10 @@ public class MessageCell extends ListCell<Message> {
     public Text sendTime;
 
 
-    private final User user;
+    private final UserService userService;
 
-    public MessageCell(User user) {
-        this.user = user;
+    public MessageCell(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -87,14 +88,13 @@ public class MessageCell extends ListCell<Message> {
             // setGraphic(messageBox);
 
             // TODO: create everything directly here (like above) or like this as alternative
-            final MessageController messageController = new MessageController(item, isOwnMessage(item), user);
+
+            final MessageController messageController = new MessageController(item, userService, userService.getMe());
             setGraphic(messageController.render());
         }
     }
 
-    private boolean isOwnMessage(Message msg) {
-        return msg.sender().equals(user._id());
-    }
+
 
     // private String convertDateTimeToTime(String dateTimeString) {
     //     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

@@ -1,13 +1,15 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.dto.Message;
+import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.service.UserService;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import de.uniks.stpmon.k.dto.Message;
-import de.uniks.stpmon.k.dto.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -27,35 +29,55 @@ public class MessageController extends Controller {
     public Text senderName;
     @FXML
     public Text sendTime;
+    
 
     private Message message;
-    private boolean isOwnMessage;
+    private UserService userService;
     private User me;
+    private String username;
 
-    public MessageController(Message msg, boolean isOwn, User user) {
+    public MessageController(Message msg, UserService userService, User me) {
         this.message = msg;
-        this.isOwnMessage = isOwn;
-        this.me = user;
+        this.userService = userService;
+        this.me = me;
+    }
+
+    @Override
+    public void init() {
+        // gets the current user data of the message like user and username
+        disposables.add(userService
+        .getUserById(message.sender())
+        .observeOn(FX_SCHEDULER)
+        .subscribe(usr -> {
+            this.username = usr.name();
+        }, error -> {
+            System.out.println("Look here for the error: " + error);
+            error.printStackTrace();
+        })
+    );
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
 
-        System.out.println(me._id());
-
         // bodyText.setText("Testnachricht");
 
-        //TODO: implement method that gets other users name e.g. with friends list
-        senderName.setText(isOwnMessage ? me.name() : message.sender());
+        senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
         // Set the alignment of the text based on the item's alignment property
-        messageBox.setAlignment(isOwnMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        messageBox.setAlignment(isOwnMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
 
         return parent;
     }
 
+    private boolean isOwnMessage() {
+        return this.message.sender().equals(me._id());
+    }
+
+    // TODO: add something like "today", "yesterday" and then the date like "May 13" 
+    // OR create seperators between messages when a day changed to another
     private String convertDateTimeToTime(String dateTimeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
