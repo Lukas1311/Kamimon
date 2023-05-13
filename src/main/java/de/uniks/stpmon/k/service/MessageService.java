@@ -83,7 +83,12 @@ public class MessageService {
 
     // TODO: not sure about the other methods yet
     public Observable<ArrayList<Message>> getAllMessages(String namespace, String parent) {
-        //TODO: is this needed?
-        return null;
+        return messageApiService.getMessages(
+            namespace,
+            parent,
+            null,
+            null,
+            100
+        );
     }
 }

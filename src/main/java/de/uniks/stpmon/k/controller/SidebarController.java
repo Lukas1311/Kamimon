@@ -1,11 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.dto.Group;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -34,6 +34,8 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
+    @Inject
+    Provider<ChatController> chatControlleProvider;
 
     @Inject
     public SidebarController() {
@@ -45,7 +47,7 @@ public class SidebarController extends Controller {
         pause.setVisible(false);
         home.setVisible(false);
         logoutButton.setOnAction(e -> logout());
-
+        chat.setOnAction(e -> openChat());
         return parent;
     }
 
@@ -66,6 +68,7 @@ public class SidebarController extends Controller {
     }
 
     public void openChat() {
+        hybridController.openSidebar("chatList");
     }
 
     public void openFriends() {
