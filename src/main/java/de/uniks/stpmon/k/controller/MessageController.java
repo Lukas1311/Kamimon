@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.service.UserService;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,43 +30,26 @@ public class MessageController extends Controller {
     public Text sendTime;
     
 
-    private Message message;
-    private UserService userService;
-    private User me;
-    private String username;
+    private final Message message;
+    private final String username;
+    private final User me;
 
-    public MessageController(Message msg, UserService userService, User me) {
+
+    public MessageController(Message msg, String senderUsername, User me) {
         this.message = msg;
-        this.userService = userService;
+        this.username = senderUsername;
         this.me = me;
-    }
-
-    @Override
-    public void init() {
-        // gets the current user data of the message like user and username
-        disposables.add(userService
-        .getUserById(message.sender())
-        .observeOn(FX_SCHEDULER)
-        .subscribe(usr -> {
-            this.username = usr.name();
-        }, error -> {
-            System.out.println("Look here for the error: " + error);
-            error.printStackTrace();
-        })
-    );
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
 
-        // bodyText.setText("Testnachricht");
-
-        senderName.setText(username);
+        senderName.setText(isOwnMessage() ? me.name() : username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
         // Set the alignment of the text based on the item's alignment property
-        messageBox.setAlignment(isOwnMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        textBox.setAlignment(isOwnMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
 
         return parent;
     }
