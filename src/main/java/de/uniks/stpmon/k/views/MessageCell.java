@@ -1,12 +1,16 @@
 package de.uniks.stpmon.k.views;
 
+import java.util.HashMap;
+
 import de.uniks.stpmon.k.controller.MessageController;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.service.UserService;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+
 
 public class MessageCell extends ListCell<Message> {
 
@@ -21,9 +25,11 @@ public class MessageCell extends ListCell<Message> {
 
 
     private final UserService userService;
+    private final HashMap<String, String> groupUsers;
 
-    public MessageCell(UserService userService) {
+    public MessageCell(UserService userService, HashMap<String, String> groupUsers) {
         this.userService = userService;
+        this.groupUsers = groupUsers;
     }
 
     @Override
@@ -33,7 +39,8 @@ public class MessageCell extends ListCell<Message> {
             setGraphic(null);
             setText(null);
         } else {
-            final MessageController messageController = new MessageController(item, userService, userService.getMe());
+            String sender = groupUsers.get(item.sender());
+            final MessageController messageController = new MessageController(item, sender, userService.getMe());
             setGraphic(messageController.render());
         }
     }
