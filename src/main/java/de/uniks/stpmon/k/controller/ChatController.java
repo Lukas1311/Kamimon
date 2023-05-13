@@ -8,7 +8,7 @@ import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.UserStorage;
+import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,10 +17,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -43,7 +43,7 @@ public class ChatController extends Controller {
     @Inject
     GroupApiService groupApiService;
     @Inject
-    UserStorage userStorage;
+    UserService userService;
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
@@ -66,7 +66,7 @@ public class ChatController extends Controller {
     public void init() { // get all messages in one chat
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-            .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll));
+            .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
             // only listen to messages in the current specific group
@@ -78,7 +78,8 @@ public class ChatController extends Controller {
                     case "updated" -> messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
                     case "deleted" -> messages.removeIf(m -> m._id().equals(msg._id()));
                 }
-            }));
+            }, this::handleError
+            ));
     }
 
     @Override
@@ -91,12 +92,16 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userStorage.getUser()));
+        messagesListView.setCellFactory(param -> new MessageCell(userService));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
 
-        // TODO: edit and delete single messages by chosing them and some listener stuff
+
+
+        // TODO: edit and delete single messages by chosing them and some listener stuff @basbaer
         // messages.getSelectionModel().selectedItemProperty()... listener stuff
+
+
 
         // disable button if field empty
         sendButton.disableProperty().bind(messageField.textProperty().isEmpty());
@@ -104,6 +109,12 @@ public class ChatController extends Controller {
             // clear message field and send on button click
             sendMessage();
             messageField.clear();
+        });
+        sendButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                sendMessage();
+                messageField.clear();
+            }
         });
 
         regionName = new SimpleStringProperty("");
@@ -136,10 +147,8 @@ public class ChatController extends Controller {
                 messages.add(msg);
                 messagesListView.scrollTo(msg);
                 // messageArea.getChildren().add(new MessageCell());
-            }, error -> {
-                System.out.println("look here for the error: " + error);
-                System.out.println(error.getMessage());
-            })
+            },this::handleError
+            )
         );
 
     }
@@ -152,5 +161,11 @@ public class ChatController extends Controller {
     public void leaveChat() {
         app.show(hybridControllerProvider.get());
         hybridControllerProvider.get().openSidebar("chatList");
+    }
+
+    // reusable handle error function for the onError of an Observable
+    private void handleError(Throwable error) {
+        System.out.println("Look here for the error: " + error);
+        error.printStackTrace();
     }
 }
