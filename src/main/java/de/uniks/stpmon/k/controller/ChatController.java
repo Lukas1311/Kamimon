@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.views.MessageCell;
+import de.uniks.stpmon.k.ws.EventListener;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -45,6 +46,8 @@ public class ChatController extends Controller {
     UserStorage userStorage;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    EventListener eventListener;
 
 
     private StringProperty regionName;
@@ -63,16 +66,19 @@ public class ChatController extends Controller {
     public void init() { // get all messages in one chat
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-            .getAllMessages(
-                "groups",
-                group._id()
-            ).observeOn(FX_SCHEDULER)
-            .subscribe(messages -> {
-                this.messages.setAll(messages);
-            }, error -> {
-                System.out.println("look here for the error: " + error);
-            })
-        );
+            .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll));
+        // with dispose the subscribed event is going to be unsubscribed
+        disposables.add(eventListener
+            // only listen to messages in the current specific group
+            .listen("groups.%s.messages.*".formatted(group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+                final Message msg = event.data();
+                switch (event.suffix()) {
+                    case "created" -> messages.add(msg);
+                    // checks and updates all messages that have been edited by a user
+                    case "updated" -> messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
+                    case "deleted" -> messages.removeIf(m -> m._id().equals(msg._id()));
+                }
+            }));
     }
 
     @Override
