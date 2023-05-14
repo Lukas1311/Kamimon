@@ -7,9 +7,20 @@ import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 @Module
 public class MainModule {
+
+
+    //needed for languages
+    @Provides
+    ResourceBundle bundle(Preferences preferences) {
+        final String locale = preferences.get("locale", Locale.getDefault().toLanguageTag());
+        return ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.forLanguageTag(locale));
+    }
     @Provides
     @Singleton
     ObjectMapper mapper(){
