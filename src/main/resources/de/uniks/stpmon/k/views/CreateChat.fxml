@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateChatController">
-    <HBox alignment="TOP_RIGHT" fillHeight="false" prefWidth="368.0">
+    <HBox fillHeight="false" prefWidth="368.0">
         <VBox fillWidth="false" prefWidth="185.0">
             <Button fx:id="returnButton" mnemonicParsing="false" onAction="#returnToChatList" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
                 <VBox.margin>
@@ -30,7 +30,7 @@
         </VBox>
     </HBox>
     <VBox maxHeight="1.7976931348623157E308" prefHeight="550.0" VBox.vgrow="ALWAYS">
-        <ScrollPane VBox.vgrow="ALWAYS">
+        <ScrollPane id="scrollPane" VBox.vgrow="ALWAYS">
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </VBox.margin>

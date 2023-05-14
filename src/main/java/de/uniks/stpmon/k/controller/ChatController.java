@@ -33,9 +33,12 @@ public class ChatController extends Controller {
     @FXML
     public Button sendButton;
     @FXML
+    public Button settingsButton;
+    @FXML
     public ChoiceBox<String> regionPicker;
     @FXML
     public Text groupName;
+
 
     @Inject
     MessageService msgService;
@@ -83,6 +86,8 @@ public class ChatController extends Controller {
         final Parent parent = super.render();
 
         backButton.setOnAction(e -> leaveChat());
+
+        settingsButton.setOnAction(e -> openSettings());
 
         if (group.members().size() > 2) {
             groupName.setText(group.name());
@@ -147,7 +152,8 @@ public class ChatController extends Controller {
 
     @FXML
     public void openSettings() {
-        //TODO: create method openSettings
+        app.show(hybridControllerProvider.get());
+        hybridControllerProvider.get().openSidebar("createChat");
     }
 
     public void leaveChat() {

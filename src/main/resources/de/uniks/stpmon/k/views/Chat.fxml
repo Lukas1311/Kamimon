@@ -24,7 +24,7 @@
             </font></Text>
       </VBox>
         <VBox alignment="CENTER_RIGHT" prefWidth="185.0">
-            <Button mnemonicParsing="false" onAction="#openSettings" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: trans; -fx-border-color: black;" text="⚙">
+            <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#openSettings" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: trans; -fx-border-color: black;" text="⚙">
                 <VBox.margin>
                     <Insets bottom="5.0" left="5.0" right="25.0" top="5.0" />
                 </VBox.margin>
