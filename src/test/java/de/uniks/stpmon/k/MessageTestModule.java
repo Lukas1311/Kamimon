@@ -7,16 +7,17 @@ import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
 import de.uniks.stpmon.k.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
+import org.mockito.Spy;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Module
 public class MessageTestModule {
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Provides
     static MessageApiService messageApiService() {
         return new MessageApiService() {

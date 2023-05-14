@@ -22,6 +22,10 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -38,6 +42,8 @@ public class IngameControllerTest extends ApplicationTest {
 
     @InjectMocks
     IngameController ingameController;
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Override
     public void start(Stage stage) throws Exception {

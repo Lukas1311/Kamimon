@@ -26,6 +26,8 @@ import javax.inject.Provider;
 
 import java.awt.image.SinglePixelPackedSampleModel;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -44,6 +46,8 @@ public class RegionListControllerTest extends ApplicationTest {
     RegionListController regionListController;
     @Spy
     App app = new App(null);
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Override
     public void start(Stage stage) throws Exception {
