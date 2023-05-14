@@ -108,7 +108,7 @@ public class TestModule {
         return new RegionApiService() {
             @Override
             public Observable<List<Region>> getRegions() {
-                return Observable.empty();
+                return Observable.just(List.of(new Region("", "", "1", "TestRegion")));
             }
 
             @Override

@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.TestComponent;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserStorage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -48,5 +49,14 @@ class HybridControllerTest extends ApplicationTest {
         type(KeyCode.ENTER);
         VBox chatList = lookup("#friendList").query();
         assertNotNull(chatList);
+    }
+
+    @Test
+    public void toIngame() {
+        StackPane stackPane = lookup("#stackPane").query();
+        write("\t\t\t\t");
+        type(KeyCode.ENTER);
+        VBox ingame = lookup("#ingame").query();
+        assertNotNull(ingame);
     }
 }
