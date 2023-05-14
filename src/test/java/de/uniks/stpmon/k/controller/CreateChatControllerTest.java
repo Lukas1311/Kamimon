@@ -47,8 +47,8 @@ class CreateChatControllerTest extends ApplicationTest {
     @InjectMocks
     CreateChatController createChatController;
 
-    final List<User> members = new ArrayList<>();
-    final List<User> friends = new ArrayList<>();
+    final ArrayList<User> members = new ArrayList<>();
+    final ArrayList<User> friends = new ArrayList<>();
     final List<String> memberNames = new ArrayList<>();
 
     @Override
