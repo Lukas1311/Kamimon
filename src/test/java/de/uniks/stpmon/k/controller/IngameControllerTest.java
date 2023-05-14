@@ -48,8 +48,7 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void testShow() {
-        Text text = lookup("#ingame").query();
-        assertEquals("INGAME", text.getText());
-
+        VBox ingame = lookup("#ingame").query();
+        assertNotNull(ingame);
     }
 }
