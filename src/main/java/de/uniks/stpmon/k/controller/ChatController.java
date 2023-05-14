@@ -96,13 +96,13 @@ public class ChatController extends Controller {
              // only listen to messages in the current specific group ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
                 final Message msg = event.data();
                 System.out.println(msg);
-                System.out.println(event.data());
                 switch (event.suffix()) {
                     case "created" -> this.messages.add(msg);
                     // checks and updates all messages that have been edited by a user
                     case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
                     case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
                 }
+                messagesListView.scrollTo(msg);
             }, this::handleError
             )
         );
@@ -116,10 +116,7 @@ public class ChatController extends Controller {
 
         settingsButton.setOnAction(e -> openSettings());
 
-        if (group.members().size() > 2) {
-            groupName.setText(group.name());
-        }
-
+        groupName.setText(group.name());
         addRegionsToChoiceBox();
 
         // the factory creates the initial message list in the chat ui
@@ -175,7 +172,6 @@ public class ChatController extends Controller {
             .observeOn(FX_SCHEDULER)
             .subscribe(msg -> {
                 System.out.println("Message sent: " + msg.body());
-                messages.add(msg);
                 messageField.clear();
                 messagesListView.scrollTo(msg);
             },this::handleError
