@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
 
 public abstract class Controller {
 
@@ -25,7 +24,7 @@ public abstract class Controller {
 
     public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
-    protected final CompositeDisposable disposables = new CompositeDisposable();
+    protected CompositeDisposable disposables = new CompositeDisposable();
 
     public void init(){
 
@@ -33,6 +32,7 @@ public abstract class Controller {
 
     public void destroy(){
         disposables.dispose();
+        disposables = new CompositeDisposable();
     }
 
     public void onDestroy(Runnable action) {
