@@ -7,19 +7,22 @@ import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class UserService {
 
-    private final UserStorage userStorage;
-    private final UserApiService userApiService;
+    @Inject
+    UserStorage userStorage;
+    @Inject
+    UserApiService userApiService;
+    @Inject
+    Provider<IFriendCache> friendCache;
 
     @Inject
-    public UserService(UserApiService userApiService, UserStorage userStorage) {
-        this.userApiService = userApiService;
-        this.userStorage = userStorage;
+    public UserService() {
     }
 
     public Observable<User> addUser(String username, String password) {
@@ -81,16 +84,21 @@ public class UserService {
     }
 
     public Observable<List<User>> searchFriend(String name) {
-        final User user = userStorage.getUser();
-        if (name.isEmpty()) {
-            return Observable.fromSupplier(ArrayList::new);
-        } else {
-            return userApiService.getUsers()
-                    .map(e -> e.stream()
+        return friendCache.get().getUsers()
+                .map((e) -> {
+                    if (name.isEmpty()) {
+                        return new ArrayList<User>();
+                    }
+                    return e;
+                })
+                .flatMap(old -> friendCache.get().getFriends().map((e) -> old))
+                .map(users -> {
+                    final User user = userStorage.getUser();
+                    return users.stream()
                             .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
                                     && !f._id().equals(user._id())) //do not show the searching user
-                            .filter(g -> !user.friends().contains(g._id())).toList());
-        }
+                            .filter(g -> !user.friends().contains(g._id())).toList();
+                });
     }
 
     public Observable<List<User>> addFriend(User friend) {
@@ -126,7 +134,7 @@ public class UserService {
                     if (e.friends().isEmpty()) {
                         return Observable.<List<User>>fromSupplier(ArrayList::new);
                     }
-                    return userApiService.getUsers(e.friends());
+                    return friendCache.get().updateFriends(e);
                 }).concatMap(f -> f);
     }
 
@@ -134,7 +142,7 @@ public class UserService {
         if (userStorage.getUser().friends().isEmpty()) {
             return Observable.fromSupplier(ArrayList::new);
         }
-        return userApiService.getUsers(userStorage.getUser().friends());
+        return friendCache.get().getFriends();
     }
 
     public Observable<List<User>> filterFriends(String name) {
