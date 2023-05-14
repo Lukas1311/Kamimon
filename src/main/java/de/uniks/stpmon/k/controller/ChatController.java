@@ -2,9 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import java.util.HashMap;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.rest.GroupApiService;
@@ -26,6 +23,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class ChatController extends Controller {
     @FXML
@@ -37,7 +38,12 @@ public class ChatController extends Controller {
     @FXML
     public Button sendButton;
     @FXML
+    public Button settingsButton;
+    @FXML
     public ChoiceBox<String> regionPicker;
+    @FXML
+    public Text groupName;
+
 
     @Inject
     MessageService msgService;
@@ -106,6 +112,12 @@ public class ChatController extends Controller {
 
         backButton.setOnAction(e -> leaveChat());
 
+        settingsButton.setOnAction(e -> openSettings());
+
+        if (group.members().size() > 2) {
+            groupName.setText(group.name());
+        }
+
         addRegionsToChoiceBox();
 
         // the factory creates the initial message list in the chat ui
@@ -171,7 +183,8 @@ public class ChatController extends Controller {
 
     @FXML
     public void openSettings() {
-        //TODO: create method openSettings
+        app.show(hybridControllerProvider.get());
+        hybridControllerProvider.get().openSidebar("createChat");
     }
 
     public void leaveChat() {
