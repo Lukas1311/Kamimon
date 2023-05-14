@@ -101,6 +101,9 @@ public class FriendListController extends Controller {
     }
 
     public void openChat(User friend) {
-        hybridControllerProvider.get().openChat(friends, friend);
+        if (!friends.contains(friend)) {
+            return;
+        }
+        hybridControllerProvider.get().openChat(friend);
     }
 }
