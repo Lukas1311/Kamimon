@@ -109,7 +109,7 @@ public class HybridController extends Controller {
                 break;
             case "pause":
                 boolean containsPause = stackPane.getChildren().stream()
-                        .anyMatch(node -> node.getId() != null && node.getId().equals("pause"));
+                        .anyMatch(node -> node.getId() != null && node.getId().equals("pauseScreen"));
                 if (containsPause) {
                     openMain(ingameController);
                 } else {
