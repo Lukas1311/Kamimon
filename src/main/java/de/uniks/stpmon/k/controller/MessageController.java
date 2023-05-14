@@ -32,30 +32,23 @@ public class MessageController extends Controller {
 
     private final Message message;
     private final String username;
-    private final User me;
-
 
     public MessageController(Message msg, String senderUsername, User me) {
         this.message = msg;
         this.username = senderUsername;
-        this.me = me;
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
 
-        senderName.setText(isOwnMessage() ? me.name() : username);
+        senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
         // Set the alignment of the text based on the item's alignment property
-        textBox.setAlignment(isOwnMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        // messageBox.setAlignment(isOwnMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
 
         return parent;
-    }
-
-    private boolean isOwnMessage() {
-        return this.message.sender().equals(me._id());
     }
 
     // TODO: add something like "today", "yesterday" and then the date like "May 13" 
