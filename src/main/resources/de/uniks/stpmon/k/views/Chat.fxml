@@ -20,7 +20,7 @@
             </Button>
         </VBox>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-          <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="TestPlayerName">
+          <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="">
             <font>
                <Font size="20.0" />
             </font></Text>
