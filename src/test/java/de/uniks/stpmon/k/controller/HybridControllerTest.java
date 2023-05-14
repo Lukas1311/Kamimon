@@ -37,10 +37,12 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void openChat() {
+        // pressing Chat Button and check if chatList is shown
         type(KeyCode.ENTER);
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
+        // pressing on a chat and check if chatScreen is shown
         clickOn("#TestGroup0");
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
@@ -49,6 +51,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void openFriends() {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
+        // pressing Friends Button and check if friendList is shown
         write("\t");
         type(KeyCode.ENTER);
         VBox chatList = lookup("#friendList").query();
@@ -57,6 +60,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void toIngame() {
+        // pressing Region button and check if ingame is shown
         write("\t\t\t\t");
         type(KeyCode.ENTER);
         VBox ingame = lookup("#ingame").query();
@@ -66,11 +70,13 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void Pause() {
         toIngame();
+        // pressing Pause button and check if pause is shown
         write("\t\t");
         type(KeyCode.ENTER);
         Pane pause = lookup("#pauseScreen").query();
         assertNotNull(pause);
 
+        // pressing Pause button again and check if ingame is shown
         type(KeyCode.ENTER);
         VBox ingame = lookup("#ingame").query();
         assertNotNull(ingame);
@@ -78,6 +84,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void toHome() {
+        // pressing home button and check if lobby is shown
         toIngame();
         write("\t\t\t");
         type(KeyCode.ENTER);
@@ -88,6 +95,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void
     logout() {
+        // pressing logout button and check if login is shown
         write("\t\t");
         type(KeyCode.ENTER);
     }
