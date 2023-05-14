@@ -95,10 +95,6 @@ public class HybridController extends Controller {
         }
     }
 
-    private void openSecondary(Provider<? extends Controller> controller) {
-        openSecondary(controller.get());
-    }
-
     private Controller removeChildren(int startIndex) {
         Controller lastController = null;
         ObservableList<Node> children = stackPane.getChildren();
@@ -123,7 +119,7 @@ public class HybridController extends Controller {
                 break;
             case "pause":
                 boolean containsPause = stackPane.getChildren().stream()
-                        .anyMatch(node -> node.getId() != null && node.getId().equals("pause"));
+                        .anyMatch(node -> node.getId() != null && node.getId().equals("pauseScreen"));
                 if (containsPause) {
                     openMain(ingameController);
                 } else {

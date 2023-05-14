@@ -43,6 +43,8 @@ public class ChatController extends Controller {
     public ChoiceBox<String> regionPicker;
     @FXML
     public Text groupName;
+    @FXML
+    public VBox chatScreen;
 
 
     @Inject
