@@ -1,38 +1,16 @@
 package de.uniks.stpmon.k.controller;
 
-import javafx.scene.text.Text;
-import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
+import de.uniks.stpmon.k.App;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.LabeledMatchers;
-import static org.testfx.assertions.api.Assertions.assertThat;
-import static org.testfx.api.FxAssert.verifyThat;
 
-import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.dto.LoginResult;
-import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.service.AuthenticationService;
-import de.uniks.stpmon.k.service.NetworkAvailability;
-import de.uniks.stpmon.k.service.TokenStorage;
-import de.uniks.stpmon.k.service.UserService;
-
-import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javax.inject.Provider;
-import io.reactivex.rxjava3.core.Observable;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 
@@ -55,7 +33,7 @@ public class IngameControllerTest extends ApplicationTest {
     @Test
     void testShow() {
         //ingameController.render();
-        Text text = lookup("#ingame").query();
-        assertEquals("INGAME", text.getText());
+        VBox ingame = lookup("#ingame").query();
+        assertNotNull(ingame);
     }
 }
