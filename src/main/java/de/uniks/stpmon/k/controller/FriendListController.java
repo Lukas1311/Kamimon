@@ -39,6 +39,8 @@ public class FriendListController extends Controller {
     GroupService groupService;
     @Inject
     Provider<ChatController> chatControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     private final ObservableList<User> friends = FXCollections.observableArrayList();
     private final ObservableList<User> users = FXCollections.observableArrayList();
@@ -99,31 +101,6 @@ public class FriendListController extends Controller {
     }
 
     public void openChat(User friend) {
-        // the user can only open the chat when the other user is a friend
-        if (!friends.contains(friend)) {
-            return;
-        }
-        System.out.println("name: " + friend.name() + ", id: " + friend._id());
-        ChatController chat = chatControllerProvider.get();
-        User me = userService.getMe(); // is non api call
-        ArrayList<String> oneOnOneChat = new ArrayList<>(List.of(friend._id(), me._id()));
-        // check if the friend and the user already have a group, if not create one
-        disposables.add(
-            groupService.getGroupsByMembers(oneOnOneChat)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(groups -> {
-                    // just take the first group
-                    if (groups.get(0) != null) {
-                        chat.setGroup(groups.get(0));
-                    } else {
-                        System.out.println("firstGroup is null");
-                        disposables.add(groupService.createGroup("%s + %s".formatted(friend.name(),me.name()), oneOnOneChat)
-                            .observeOn(FX_SCHEDULER)
-                            .subscribe(group -> chat.setGroup(group))
-                        );
-                    }
-                })
-        );
-        app.show(chat);
+        hybridControllerProvider.get().openChat(friends, friend);
     }
 }
