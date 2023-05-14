@@ -86,7 +86,7 @@ public class ChatController extends Controller {
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-            .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
+            .getAllMessages(resources.getString("groups"), group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
@@ -169,7 +169,7 @@ public class ChatController extends Controller {
             return;
         }
         disposables.add(msgService
-            .sendMessage(message, "groups", group._id())
+            .sendMessage(message, resources.getString("groups"), group._id())
             .observeOn(FX_SCHEDULER)
             .subscribe(msg -> {
                 System.out.println("Message sent: " + msg.body());
@@ -184,13 +184,13 @@ public class ChatController extends Controller {
     @FXML
     public void openSettings() {
         app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar("createChat");
+        hybridControllerProvider.get().openSidebar(resources.getString("createChat"));
     }
 
     public void leaveChat() {
         messages.clear();
         app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar("chatList");
+        hybridControllerProvider.get().openSidebar(resources.getString("chatList"));
     }
 
     // reusable handle error function for the onError of an Observable
