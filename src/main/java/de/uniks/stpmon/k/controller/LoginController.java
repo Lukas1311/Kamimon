@@ -144,6 +144,7 @@ public class LoginController extends Controller {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
                     errorText.set(resources.getString("login.successful"));
+                    // TODO: user.status should be set to online here
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridControllerProvider.get());
                 }, error -> {

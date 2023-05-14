@@ -64,12 +64,7 @@ public class ClientEndpoint {
         if (this.userSession == null) {
             return;
         }
-
-        try {
-            this.userSession.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.userSession.getAsyncRemote().sendText(message);
     }
 
     public void close() {
