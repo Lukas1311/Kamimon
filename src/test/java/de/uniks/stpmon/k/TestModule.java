@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.rest.UserApiService;
+import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
