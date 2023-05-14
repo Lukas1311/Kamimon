@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
@@ -17,6 +18,8 @@ import javax.inject.Singleton;
 @Singleton
 public class ChatListController extends Controller {
 
+    @FXML
+    public Button newChatButton;
     @FXML
     VBox chatList;
     @Inject
@@ -54,8 +57,10 @@ public class ChatListController extends Controller {
 
     // a method that is used by the chatEntryController to open a new chat (chatController)
     public void openChat(Group group) {
-        ChatController chat = chatControllerProvider.get();
-        chat.setGroup(group);
-        app.show(chat);
+        hybridControllerProvider.get().openChat(group);
+    }
+
+    public void createChat() {
+        hybridControllerProvider.get().openSidebar("createChat");
     }
 }

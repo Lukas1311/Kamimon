@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Module
 public class GroupTestModule {
@@ -154,7 +155,7 @@ public class GroupTestModule {
                             newName = groupToDelete.name();
                         }
 
-                        ArrayList<String> newMembers = group.members();
+                        List<String> newMembers = group.members();
                         if (newMembers == null) {
                             newMembers = groupToDelete.members();
                         }
