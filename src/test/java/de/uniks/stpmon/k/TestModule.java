@@ -77,12 +77,12 @@ public class TestModule {
             }
 
             @Override
-            public Observable<List<User>> getUsers() {
+            public Observable<ArrayList<User>> getUsers() {
                 return Observable.empty();
             }
 
             @Override
-            public Observable<List<User>> getUsers(List<String> ids) {
+            public Observable<ArrayList<User>> getUsers(ArrayList<String> ids) {
                 return Observable.empty();
             }
 

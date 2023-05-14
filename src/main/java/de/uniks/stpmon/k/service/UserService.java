@@ -7,9 +7,9 @@ import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class UserService {
 
@@ -80,7 +80,7 @@ public class UserService {
         return userApiService.updateUser(oldUser._id(), dto);
     }
 
-    public Observable<List<User>> searchFriend(String name) {
+    public Observable<ArrayList<User>> searchFriend(String name) {
         final User user = userStorage.getUser();
         if (name.isEmpty()) {
             return Observable.fromSupplier(ArrayList::new);
@@ -89,11 +89,11 @@ public class UserService {
                     .map(e -> e.stream()
                             .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
                                     && !f._id().equals(user._id())) //do not show the searching user
-                            .filter(g -> !user.friends().contains(g._id())).toList());
+                            .filter(g -> !user.friends().contains(g._id())).collect(Collectors.toCollection(ArrayList::new)));
         }
     }
 
-    public Observable<List<User>> addFriend(User friend) {
+    public Observable<ArrayList<User>> addFriend(User friend) {
         final User user = userStorage.getUser();
         HashSet<String> friendList = new HashSet<>(user.friends());
         if (!friendList.add(friend._id())) {
@@ -102,7 +102,7 @@ public class UserService {
         return updateFriendList(user, friendList);
     }
 
-    public Observable<List<User>> removeFriend(User friend) {
+    public Observable<ArrayList<User>> removeFriend(User friend) {
         final User user = userStorage.getUser();
         HashSet<String> friendList = new HashSet<>(user.friends());
         if (!friendList.remove(friend._id())) {
@@ -111,7 +111,7 @@ public class UserService {
         return updateFriendList(user, friendList);
     }
 
-    private Observable<List<User>> updateFriendList(User user, HashSet<String> friendList) {
+    private Observable<ArrayList<User>> updateFriendList(User user, HashSet<String> friendList) {
         UpdateUserDto dto = new UpdateUserDto(
                 null,
                 null,
@@ -124,21 +124,21 @@ public class UserService {
                     userStorage.setUser(e);
                     // is true, if last friend is removed
                     if (e.friends().isEmpty()) {
-                        return Observable.<List<User>>fromSupplier(ArrayList::new);
+                        return Observable.<ArrayList<User>>fromSupplier(ArrayList::new);
                     }
                     return userApiService.getUsers(e.friends());
                 }).concatMap(f -> f);
     }
 
-    public Observable<List<User>> getFriends() {
+    public Observable<ArrayList<User>> getFriends() {
         if (userStorage.getUser().friends().isEmpty()) {
             return Observable.fromSupplier(ArrayList::new);
         }
         return userApiService.getUsers(userStorage.getUser().friends());
     }
 
-    public Observable<List<User>> filterFriends(String name) {
-        return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
+    public Observable<ArrayList<User>> filterFriends(String name) {
+        return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).collect(Collectors.toCollection(ArrayList::new)));
     }
 
     /**
@@ -150,7 +150,7 @@ public class UserService {
         return userApiService.getUser(userId);
     }
 
-    public Observable<List<User>> getUsers(ArrayList<String> ids) {
+    public Observable<ArrayList<User>> getUsers(ArrayList<String> ids) {
         return userApiService.getUsers(ids);
     }
 

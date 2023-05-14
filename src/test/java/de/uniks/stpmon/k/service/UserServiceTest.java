@@ -172,7 +172,7 @@ class UserServiceTest {
     @Test
     void searchFriendEmpty() {
         //action
-        List<User> emptyList = userService.searchFriend("").blockingFirst();
+        ArrayList<User> emptyList = userService.searchFriend("").blockingFirst();
 
         //check values
         assertTrue(emptyList.isEmpty());
@@ -190,7 +190,7 @@ class UserServiceTest {
         userStorage.setUser(user);
 
         //define mock
-        List<User> usersFromServer = new ArrayList<>();
+        ArrayList<User> usersFromServer = new ArrayList<>();
         //current user (that should not be shown)
         usersFromServer.add(new User("0", "a", null, null, null));
         // some other user
@@ -198,7 +198,7 @@ class UserServiceTest {
         when(userApiService.getUsers()).thenReturn(Observable.just(usersFromServer));
 
         //action
-        final List<User> users = userService.searchFriend("a").blockingFirst();
+        final ArrayList<User> users = userService.searchFriend("a").blockingFirst();
 
         //check values
         assertEquals(1, users.size());
@@ -228,7 +228,7 @@ class UserServiceTest {
         userStorage.setUser(user);
 
         //action
-        Observable<List<User>> updatedFriends = userService.addFriend(friend);
+        Observable<ArrayList<User>> updatedFriends = userService.addFriend(friend);
 
         //check values
         assertTrue(updatedFriends.isEmpty().blockingGet());
@@ -256,7 +256,7 @@ class UserServiceTest {
 
         //define mocks
         final ArgumentCaptor<UpdateUserDto> updateArgumentCaptor = ArgumentCaptor.forClass(UpdateUserDto.class);
-        @SuppressWarnings("unchecked") final ArgumentCaptor<List<String>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        @SuppressWarnings("unchecked") final ArgumentCaptor<ArrayList<String>> listArgumentCaptor = ArgumentCaptor.forClass(ArrayList.class);
         when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(Observable.just(
                         new User(
@@ -273,7 +273,7 @@ class UserServiceTest {
                 .thenReturn(Observable.just(userFriends));
 
         //action
-        List<User> updatedFriends = userService.addFriend(friend).blockingFirst();
+        ArrayList<User> updatedFriends = userService.addFriend(friend).blockingFirst();
 
         //check values
         assertEquals(1, updatedFriends.size());
@@ -302,7 +302,7 @@ class UserServiceTest {
         userStorage.setUser(user);
 
         //action
-        Observable<List<User>> updatedFriends = userService.removeFriend(friend);
+        Observable<ArrayList<User>> updatedFriends = userService.removeFriend(friend);
 
         //check values
         assertTrue(updatedFriends.isEmpty().blockingGet());
@@ -341,7 +341,7 @@ class UserServiceTest {
                 ));
 
         //action
-        List<User> updatedFriends = userService.removeFriend(friend).blockingFirst();
+        ArrayList<User> updatedFriends = userService.removeFriend(friend).blockingFirst();
 
         //check values
         assertEquals(0, updatedFriends.size());
@@ -371,13 +371,13 @@ class UserServiceTest {
         ArrayList<User> friendsAsUser = new ArrayList<>();
         friendsAsUser.add(friend);
         //define mocks
-        @SuppressWarnings("unchecked") final ArgumentCaptor<List<String>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        @SuppressWarnings("unchecked") final ArgumentCaptor<ArrayList<String>> listArgumentCaptor = ArgumentCaptor.forClass(ArrayList.class);
 
         when(userApiService.getUsers(ArgumentMatchers.any()))
                 .thenReturn(Observable.just(friendsAsUser));
 
         //action
-        List<User> friendlist = userService.getFriends().blockingFirst();
+        ArrayList<User> friendlist = userService.getFriends().blockingFirst();
 
         //check values
         assertEquals(1, friendlist.size());
@@ -398,7 +398,7 @@ class UserServiceTest {
         userStorage.setUser(user);
 
         //action
-        List<User> userFriends = userService.getFriends().blockingFirst();
+        ArrayList<User> userFriends = userService.getFriends().blockingFirst();
 
         //check values
         assertEquals(new ArrayList<>(), userFriends);
@@ -437,14 +437,14 @@ class UserServiceTest {
         friendsAsUser.add(friend2);
 
 
-        @SuppressWarnings("unchecked") final ArgumentCaptor<List<String>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+        @SuppressWarnings("unchecked") final ArgumentCaptor<ArrayList<String>> listArgumentCaptor = ArgumentCaptor.forClass(ArrayList.class);
 
         when(userApiService.getUsers(ArgumentMatchers.any()))
                 .thenReturn(Observable.just(friendsAsUser));
 
 
         //action
-        List<User> friendlist = userService.filterFriends("T").blockingFirst();
+        ArrayList<User> friendlist = userService.filterFriends("T").blockingFirst();
 
         //check values
         assertEquals(1, friendlist.size());
