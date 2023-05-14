@@ -150,7 +150,7 @@ public class UserService {
         return userApiService.getUser(userId);
     }
 
-    public Observable<List<User>> getUsers(ArrayList<String> ids) {
+    public Observable<List<User>> getUsers(List<String> ids) {
         return userApiService.getUsers(ids);
     }
 
