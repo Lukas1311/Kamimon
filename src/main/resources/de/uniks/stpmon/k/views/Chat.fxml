@@ -43,7 +43,7 @@
     </VBox>
     <VBox prefHeight="120.0" prefWidth="370.0">
         <HBox alignment="CENTER" prefHeight="75.0" prefWidth="370.0">
-            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="268.0" promptText="Nachricht eingeben...">
+            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="268.0" promptText="%enter.message...">
                 <HBox.margin>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </HBox.margin>
