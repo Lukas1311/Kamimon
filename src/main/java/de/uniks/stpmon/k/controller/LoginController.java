@@ -25,6 +25,7 @@ import retrofit2.HttpException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -85,6 +86,10 @@ public class LoginController extends Controller {
         errorLabel.setTextFill(Color.RED);
         passwordTooShort = passwordInput.textProperty().length().lessThan(8);
         usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
+
+        boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
+        germanButton.setSelected(germanSelected);
+        englishButton.setSelected(!germanSelected);
         errorLabel.textProperty().bind(
             Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
                 .then(resources.getString("password.too.short."))
