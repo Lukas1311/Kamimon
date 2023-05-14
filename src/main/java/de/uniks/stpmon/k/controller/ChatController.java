@@ -1,8 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.rest.GroupApiService;
@@ -21,6 +18,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class ChatController extends Controller {
     @FXML
@@ -32,7 +33,12 @@ public class ChatController extends Controller {
     @FXML
     public Button sendButton;
     @FXML
+    public Button settingsButton;
+    @FXML
     public ChoiceBox<String> regionPicker;
+    @FXML
+    public Text groupName;
+
 
     @Inject
     MessageService msgService;
@@ -62,16 +68,16 @@ public class ChatController extends Controller {
     public void init() { // get all messages in one chat
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-            .getAllMessages(
-                "groups",
-                group._id()
-                // groupService.getOwnGroups().firstElement().blockingGet().get(0)._id()
-            ).observeOn(FX_SCHEDULER)
-            .subscribe(messages -> {
-                this.messages.setAll(messages);
-            }, error -> {
-                System.out.println("look here for the error: " + error);
-            })
+                .getAllMessages(
+                        "groups",
+                        group._id()
+                        // groupService.getOwnGroups().firstElement().blockingGet().get(0)._id()
+                ).observeOn(FX_SCHEDULER)
+                .subscribe(messages -> {
+                    this.messages.setAll(messages);
+                }, error -> {
+                    System.out.println("look here for the error: " + error);
+                })
         );
     }
 
@@ -80,6 +86,12 @@ public class ChatController extends Controller {
         final Parent parent = super.render();
 
         backButton.setOnAction(e -> leaveChat());
+
+        settingsButton.setOnAction(e -> openSettings());
+
+        if (group.members().size() > 2) {
+            groupName.setText(group.name());
+        }
 
         addRegionsToChoiceBox();
 
@@ -111,36 +123,37 @@ public class ChatController extends Controller {
     // TODO: this is just for testing remove afterwards or use it if you want
     public void addRegionsToChoiceBox() {
         regionService
-            .getRegions()
-            .subscribe(regions -> {
-                // add all region names to the choice box
-                regions.forEach(region -> regionPicker.getItems().add(region.name()));
-            });
+                .getRegions()
+                .subscribe(regions -> {
+                    // add all region names to the choice box
+                    regions.forEach(region -> regionPicker.getItems().add(region.name()));
+                });
     }
 
     @FXML
     public void sendMessage() {
-        System.out.println("msg: " + messageField.getText() + ",region: " +  regionName.get());
+        System.out.println("msg: " + messageField.getText() + ",region: " + regionName.get());
         // TODO: remove afterwards (non-functional: visual testing only)
         // messageArea.getChildren().add(new MessageController(new Message(null, null, null, userStorage.getUser().name(), messageField.getText())).render());
         disposables.add(msgService
-            .sendMessage(messageField.getText(), "groups", group._id())
-            .observeOn(FX_SCHEDULER)
-            .subscribe(msg -> {
-                functionStatus.set("Message sent");
-                System.out.println(msg);
-                messageArea.getChildren().add(new MessageCell());
-            }, error -> {
-                // TODO: this still receives a HTTP 400 and I don't know why
-                System.out.println("look here for the error: " + error);
-            })
+                .sendMessage(messageField.getText(), "groups", group._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(msg -> {
+                    functionStatus.set("Message sent");
+                    System.out.println(msg);
+                    messageArea.getChildren().add(new MessageCell());
+                }, error -> {
+                    // TODO: this still receives a HTTP 400 and I don't know why
+                    System.out.println("look here for the error: " + error);
+                })
         );
 
     }
 
     @FXML
     public void openSettings() {
-        //TODO: create method openSettings
+        app.show(hybridControllerProvider.get());
+        hybridControllerProvider.get().openSidebar("createChat");
     }
 
     public void leaveChat() {
