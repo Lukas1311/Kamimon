@@ -140,4 +140,8 @@ public class UserService {
     public Observable<List<User>> filterFriends(String name) {
         return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
+
+    public User getMe() {
+        return this.userStorage.getUser();
+    }
 }
