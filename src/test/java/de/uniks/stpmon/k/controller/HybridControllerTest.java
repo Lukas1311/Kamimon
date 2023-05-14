@@ -40,6 +40,10 @@ class HybridControllerTest extends ApplicationTest {
         type(KeyCode.ENTER);
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
+
+        clickOn("#TestGroup0");
+        VBox chatScreen = lookup("#chatScreen").query();
+        assertNotNull(chatScreen);
     }
 
     @Test

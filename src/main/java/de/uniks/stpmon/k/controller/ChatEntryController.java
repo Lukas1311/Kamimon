@@ -1,18 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.service.GroupService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 
-public class ChatEntryController  extends Controller {
+public class ChatEntryController extends Controller {
 
     @FXML
     public Text chatName;
@@ -33,7 +29,7 @@ public class ChatEntryController  extends Controller {
     }
 
     @Override
-        public void init() {
+    public void init() {
     }
 
     @Override
@@ -45,6 +41,7 @@ public class ChatEntryController  extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         chatName.setText(name);
+        chatEntry.setId(name);
         parent.setOnMouseClicked(e -> openChat());
 
         return parent;
