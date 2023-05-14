@@ -32,15 +32,13 @@
     <VBox maxHeight="1.7976931348623157E308" prefHeight="550.0" VBox.vgrow="ALWAYS">
         <ScrollPane id="scrollPane" VBox.vgrow="ALWAYS">
             <VBox.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </VBox.margin>
-            <content>
-                <VBox fx:id="groupMemberList">
-                    <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                    </padding>
-                </VBox>
-            </content>
+            <VBox fx:id="groupMemberList">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+            </VBox>
         </ScrollPane>
       <VBox.margin>
          <Insets />

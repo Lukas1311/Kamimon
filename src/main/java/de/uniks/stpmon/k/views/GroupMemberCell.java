@@ -2,8 +2,6 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.CreateChatController;
 import de.uniks.stpmon.k.dto.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 

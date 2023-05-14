@@ -64,7 +64,6 @@ public class CreateChatController extends Controller {
         VBox.setVgrow(groupMembers, Priority.ALWAYS);
         groupMembers.setCellFactory(e -> new GroupMemberCell(this));
 
-
         returnButton.setOnAction(e -> returnToChatList());
 
         groupNameField.setOnKeyPressed(e -> {
@@ -91,11 +90,7 @@ public class CreateChatController extends Controller {
             return;
         }
         final ArrayList<String> groupMemberNames = new ArrayList<>(groupMembers);
-        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames).observeOn(FX_SCHEDULER).subscribe(group -> {
-            hybridControllerProvider.get().openChat(group);
-        }, error -> {
-            System.out.println("look here for the error: " + error);
-        }));
+        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames).observeOn(FX_SCHEDULER).subscribe(hybridControllerProvider.get()::openChat));
     }
 
     public void handleGroup(User item) {
