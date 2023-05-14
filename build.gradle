@@ -73,11 +73,13 @@ dependencies {
     //https://mvnrepository.com/artifact/org.glassfish/javax.json
     implementation group: 'org.glassfish', name: 'javax.json', version: '1.1.4'
 
+    // DO NOT UPDATE VERSION. VERSION 2.x.x will break websocket !!!
     //https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-client
-    implementation group: 'org.glassfish.tyrus', name: 'tyrus-client', version: '1.1.5'
+    implementation group: 'org.glassfish.tyrus', name: 'tyrus-client', version: '1.20'
 
+    // DO NOT UPDATE VERSION. VERSION 2.x.x will break websocket !!!
     //https://mvnrepository.com/artifact/org.glassfish.tyrus/tyrus-container-grizzly-client
-    implementation group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-client', version: '1.1.5'
+    implementation group: 'org.glassfish.tyrus', name: 'tyrus-container-grizzly-client', version: '1.20'
 }
 
 javafx {
