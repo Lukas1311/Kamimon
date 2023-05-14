@@ -77,7 +77,7 @@ public class ChatController extends Controller {
     @Override
     public void init() { // get all messages in one chat
         messages.clear();
-        // populate a grou users hashmap with just one REST call to not run into rate limit
+        // populate a group users hashmap with just one REST call to not run into rate limit
         disposables.add(userService
             .getUsers(group.members())
             .observeOn(FX_SCHEDULER)

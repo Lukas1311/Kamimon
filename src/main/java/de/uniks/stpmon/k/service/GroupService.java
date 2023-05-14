@@ -33,7 +33,7 @@ public class GroupService {
     public Observable<ArrayList<Group>> getOwnGroups() {
         return groupApiService.getGroups();
     }
-
+    
     /**
      * returns one or more groups that have all the users given in the parameter inside
      * 
@@ -41,7 +41,7 @@ public class GroupService {
      * @return group/s with the exact members list
      */
     public Observable<ArrayList<Group>> getGroupsByMembers(ArrayList<String> members) {
-        return groupApiService.getGroups(members);
+        return groupApiService.getGroups(String.join(",", members));
     }
 
     /**

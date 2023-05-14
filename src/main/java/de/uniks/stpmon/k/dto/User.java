@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.dto;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public record User(

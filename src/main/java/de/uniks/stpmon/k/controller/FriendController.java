@@ -63,6 +63,7 @@ public class FriendController extends Controller {
 
     @FXML
     public void openChat() {
+        friendListController.openChat(user);
     }
 
     @FXML

@@ -91,7 +91,7 @@ public class GroupTestModule {
              * @return: matching groups of dummy groups
              */
             @Override
-            public Observable<ArrayList<Group>> getGroups(ArrayList<String> members) {
+            public Observable<ArrayList<Group>> getGroups(String members) {
                 ArrayList<Group> returnGroups = new ArrayList<>();
 
                 boolean allMembersIn;
@@ -99,7 +99,7 @@ public class GroupTestModule {
                 for (Group group : groups) {
                     allMembersIn = true;
                     //checks if all given members are in the group
-                    for (String memberId : members) {
+                    for (String memberId : members.split(",")) {
                         if (!group.members().contains(memberId)) {
                             allMembersIn = false;
                             break;
