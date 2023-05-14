@@ -17,16 +17,6 @@ import javafx.scene.text.Text;
 
 public class MessageCell extends ListCell<Message> {
 
-    @FXML
-    public HBox textBox;
-    @FXML
-    public Text bodyText;
-    @FXML
-    public Text senderName;
-    @FXML
-    public Text sendTime;
-
-
     private final UserService userService;
     private final HashMap<String, String> groupUsers;
     private final User me;
