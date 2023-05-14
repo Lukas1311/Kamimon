@@ -12,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
+import io.reactivex.rxjava3.core.Observable;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -154,33 +156,23 @@ public class HybridController extends Controller {
         openSecondary(chat);
     }
 
-    public void openChat(ObservableList<User> friends, User friend) {
+    public void openChat(User friend) {
         // the user can only open the chat when the other user is a friend
-        if (!friends.contains(friend)) {
-            return;
-        }
-        System.out.println("name: " + friend.name() + ", id: " + friend._id());
-        ChatController chat = chatControllerProvider.get();
-        System.out.println("current chat: " + chat);
         User me = userService.getMe(); // is non api call
         ArrayList<String> privateChatMembers = new ArrayList<>(List.of(friend._id(), me._id()));
         // check if the friend and the user already have a group, if not create one
         disposables.add(
             groupService.getGroupsByMembers(privateChatMembers)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(groups -> {
-                    // just take the first group
-                    if (groups.get(0) != null) {
-                        chat.setGroup(groups.get(0));
-                    } else {
-                        System.out.println("firstGroup is null");
-                        disposables.add(groupService.createGroup("%s + %s".formatted(friend.name(),me.name()), privateChatMembers)
-                            .observeOn(FX_SCHEDULER)
-                            .subscribe(group -> chat.setGroup(group))
-                        );
+                .<Group>flatMap(groups -> {
+                    if(!groups.isEmpty() && groups.get(0) != null){
+                        return Observable.just(groups.get(0));
                     }
+                    return groupService.createGroup("%s + %s".formatted(friend.name(),me.name()), privateChatMembers);
+                })
+                .observeOn(FX_SCHEDULER)
+                .subscribe(group -> {
+                    openChat(group);
                 })
         );
-        openSecondary(chat);
     }
 }
