@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.TestComponent;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserStorage;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -58,5 +59,27 @@ class HybridControllerTest extends ApplicationTest {
         type(KeyCode.ENTER);
         VBox ingame = lookup("#ingame").query();
         assertNotNull(ingame);
+    }
+
+    @Test
+    public void Pause() {
+        toIngame();
+        write("\t\t");
+        type(KeyCode.ENTER);
+        Pane pause = lookup("#pauseScreen").query();
+        assertNotNull(pause);
+
+        type(KeyCode.ENTER);
+        VBox ingame = lookup("#ingame").query();
+        assertNotNull(ingame);
+    }
+
+    @Test
+    public void toHome() {
+        toIngame();
+        write("\t\t\t");
+        type(KeyCode.ENTER);
+        Pane pane = lookup("#pane").query();
+        assertNotNull(pane);
     }
 }
