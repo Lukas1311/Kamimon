@@ -45,6 +45,7 @@ class HybridControllerTest extends ApplicationTest {
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
         type(KeyCode.ENTER);
+        sleep(500);
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
