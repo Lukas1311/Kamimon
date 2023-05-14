@@ -1,15 +1,15 @@
 package de.uniks.stpmon.k.service;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
-
-import javax.inject.Inject;
-
-import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.CreateGroupDto;
+import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.UpdateGroupDto;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GroupService {
 
@@ -21,7 +21,7 @@ public class GroupService {
     }
 
     // creates a new group: caller has to provide a list of members and a name for the group
-    public Observable<Group> createGroup(String name, ArrayList<String> members) {
+    public Observable<Group> createGroup(String name, List<String> members) {
         return groupApiService.createGroup(
             new CreateGroupDto(name, members)
         );
@@ -67,20 +67,20 @@ public class GroupService {
         );
     }
 
-    public Observable<Group> addMembers(Group group, ArrayList<String> newMembers) {
-        ArrayList<String> updatedMembers = group.members();
+    public Observable<Group> addMembers(Group group, List<String> newMembers) {
+        List<String> updatedMembers = group.members();
         updatedMembers.addAll(newMembers);
         return updateMembers(group, updatedMembers);
     }
 
-    public Observable<Group> removeMembers(Group group, ArrayList<String> membersToBeRemoved) {
-        ArrayList<String> updatedMembers = group.members();
+    public Observable<Group> removeMembers(Group group, List<String> membersToBeRemoved) {
+        List<String> updatedMembers = group.members();
         updatedMembers.removeAll(membersToBeRemoved);
         return updateMembers(group, updatedMembers);
     }
 
     // boiler plate function for add- and removeMembers
-    public Observable<Group> updateMembers(Group group, ArrayList<String> members) {
+    public Observable<Group> updateMembers(Group group, List<String> members) {
         // prevents any duplicate members in the array list
         // distinct() filters out any duplicates,
         // collect() recollects these distinct elements

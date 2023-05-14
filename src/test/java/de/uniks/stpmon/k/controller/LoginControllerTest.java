@@ -115,7 +115,7 @@ public class LoginControllerTest extends ApplicationTest {
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Registration successful"));
-        // app stays in login controller after registration call, only afterwards it will login into hybridContoller
+        // app stays in login controller after registration call, only afterwards it will login into hybridController
         verify(app).show(loginController);
     }
 
