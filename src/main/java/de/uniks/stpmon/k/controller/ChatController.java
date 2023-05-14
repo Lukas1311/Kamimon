@@ -7,13 +7,13 @@ import javax.inject.Provider;
 
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
-import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -68,30 +68,32 @@ public class ChatController extends Controller {
 
     @Override
     public void init() { // get all messages in one chat
+        messages.clear();
         // populate a grou users hashmap with just one REST call to not run into rate limit
         disposables.add(userService
             .getUsers(group.members())
             .observeOn(FX_SCHEDULER)
             .subscribe(users -> {
-                for (User user : users) {
-                    groupMembers.put(user._id(), user.name());
-                }
+                users.forEach(user -> groupMembers.put(user._id(), user.name()));
             },this::handleError
             )
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
             .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
+
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
-            // only listen to messages in the current specific group
-            .listen("groups.%s.messages.*".formatted(group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+            .listen("groups.%s.messages.*.*".formatted(group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+             // only listen to messages in the current specific group ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
                 final Message msg = event.data();
+                System.out.println(msg);
+                System.out.println(event.data());
                 switch (event.suffix()) {
-                    case "created" -> messages.add(msg);
+                    case "created" -> this.messages.add(msg);
                     // checks and updates all messages that have been edited by a user
-                    case "updated" -> messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
-                    case "deleted" -> messages.removeIf(m -> m._id().equals(msg._id()));
+                    case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
+                    case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
                 }
             }, this::handleError
             )
@@ -111,7 +113,8 @@ public class ChatController extends Controller {
         messagesListView.setCellFactory(param -> new MessageCell(userService, groupMembers));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
-
+        // scrolls to the bottom of the listview
+        messagesListView.scrollTo(1);
 
 
         // TODO: edit and delete single messages by chosing them and some listener stuff @basbaer
@@ -121,15 +124,10 @@ public class ChatController extends Controller {
 
         // disable button if field empty
         sendButton.disableProperty().bind(messageField.textProperty().isEmpty());
-        sendButton.setOnAction(click -> {
-            // clear message field and send on button click
-            sendMessage();
-            messageField.clear();
-        });
-        sendButton.setOnKeyPressed(event -> {
+        sendButton.setOnAction(click -> sendMessage());
+        messageField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 sendMessage();
-                messageField.clear();
             }
         });
 
@@ -143,24 +141,29 @@ public class ChatController extends Controller {
 
     // TODO: this is just for testing remove afterwards or use it if you want
     public void addRegionsToChoiceBox() {
-        regionService
+        disposables.add(regionService
             .getRegions()
             .subscribe(regions -> {
                 // add all region names to the choice box
                 regions.forEach(region -> regionPicker.getItems().add(region.name()));
-            });
+            })
+        );
     }
 
     @FXML
     public void sendMessage() {
+        String message = messageField.getText().trim();
+        if (message.isEmpty()) {
+            return;
+        }
         disposables.add(msgService
-            .sendMessage(messageField.getText(), "groups", group._id())
+            .sendMessage(message, "groups", group._id())
             .observeOn(FX_SCHEDULER)
             .subscribe(msg -> {
                 System.out.println("Message sent: " + msg.body());
                 messages.add(msg);
+                messageField.clear();
                 messagesListView.scrollTo(msg);
-                // messageArea.getChildren().add(new MessageCell());
             },this::handleError
             )
         );
@@ -172,6 +175,7 @@ public class ChatController extends Controller {
     }
 
     public void leaveChat() {
+        messages.clear();
         app.show(hybridControllerProvider.get());
         hybridControllerProvider.get().openSidebar("chatList");
     }
