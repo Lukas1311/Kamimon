@@ -88,7 +88,7 @@ public class ChatController extends Controller {
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-            .getAllMessages(resources.getString("groups"), group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
+            .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
@@ -171,7 +171,7 @@ public class ChatController extends Controller {
             return;
         }
         disposables.add(msgService
-            .sendMessage(message, resources.getString("groups"), group._id())
+            .sendMessage(message, "groups", group._id())
             .observeOn(FX_SCHEDULER)
             .subscribe(msg -> {
                 System.out.println("Message sent: " + msg.body());
