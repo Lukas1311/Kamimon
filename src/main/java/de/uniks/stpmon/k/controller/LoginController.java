@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -23,6 +24,8 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Locale;
+import java.util.prefs.Preferences;
 
 public class LoginController extends Controller {
 
@@ -55,6 +58,8 @@ public class LoginController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     UserService userService;
+    @Inject
+    Preferences preferences;
 
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
@@ -78,9 +83,9 @@ public class LoginController extends Controller {
         usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
         errorLabel.textProperty().bind(
             Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
-                .then("Password too short.")
+                .then(resources.getString("password too short."))
                 .otherwise(Bindings.when(usernameTooLong)
-                    .then("Username too long.")
+                    .then(resources.getString("username too long."))
                     .otherwise("")
                 )
         );
@@ -113,7 +118,7 @@ public class LoginController extends Controller {
             return;
         }
         if(!netAvailability.isInternetAvailable()) {
-            errorText.set("No internet connection");
+            errorText.set(resources.getString("no internet connection"));
             return;
         }
     }
@@ -129,7 +134,7 @@ public class LoginController extends Controller {
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
-                    errorText.set("Login successful");
+                    errorText.set(resources.getString("login successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridControllerProvider.get());
                 }, error -> {
@@ -144,7 +149,7 @@ public class LoginController extends Controller {
                 .addUser(usernameInput.getText(), passwordInput.getText())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    errorText.set("Registration successful");
+                    errorText.set(resources.getString("registration successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected());
@@ -159,11 +164,11 @@ public class LoginController extends Controller {
             return errorText.get();
         }
         return switch (exception.code()) {
-            case 400 -> "Validation failed";
-            case 401 -> "Invalid username or password";
-            case 409 -> "Username was already taken";
-            case 429 -> "Rate limit reached";
-            default  -> "error";
+            case 400 -> resources.getString("validation failed");
+            case 401 -> resources.getString("invalid username or password");
+            case 409 -> resources.getString("username was already taken");
+            case 429 -> resources.getString("rate limit reached");
+            default  -> resources.getString("error");
         };
     }
 
@@ -173,18 +178,30 @@ public class LoginController extends Controller {
         }else{
             passwordInput.setText(password);
         }
-        passwordInput.setPromptText("Password");
+        passwordInput.setPromptText(resources.getString("password"));
     }
 
     private void showPassword() {
         password = passwordInput.getText();
         if(password == null || password.isEmpty()) {
-            password = "Password";
+            password = resources.getString("password");
             isEmpty = true;
         }else{
             isEmpty = false;
         }
         passwordInput.clear();
         passwordInput.setPromptText(password);
+    }
+
+    public void setDe() {
+        setLanguage(Locale.GERMAN);
+    }
+
+    public void setEn() {
+        setLanguage(Locale.ENGLISH);
+    }
+
+    private void setLanguage(Locale locale) {
+        preferences.put("locale", locale.toLanguageTag());
     }
 }

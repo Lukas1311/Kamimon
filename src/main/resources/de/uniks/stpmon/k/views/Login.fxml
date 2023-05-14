@@ -21,29 +21,29 @@
                   <Font size="30.0" />
                </font>
             </Label>
-                <TextField fx:id="usernameInput" alignment="TOP_CENTER" opacity="0.6" promptText="%Username">
+                <TextField fx:id="usernameInput" alignment="TOP_CENTER" opacity="0.6" promptText="%username">
                <VBox.margin>
                   <Insets left="20.0" right="20.0" />
                </VBox.margin></TextField>
-                <PasswordField fx:id="passwordInput" alignment="CENTER"  opacity="0.6" promptText="%Password">
+                <PasswordField fx:id="passwordInput" alignment="CENTER"  opacity="0.6" promptText="%password">
                <VBox.margin>
                   <Insets left="20.0" right="20.0" />
                </VBox.margin></PasswordField>
-                <Button fx:id="toggleButton" mnemonicParsing="false" text="%Show" />
-                <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%Stay Logged In" />
-                <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="%Login" textAlignment="JUSTIFY">
+                <Button fx:id="toggleButton" mnemonicParsing="false" text="%show" />
+                <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay Logged In" />
+                <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="%login" textAlignment="JUSTIFY">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></Button>
-            <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="%Register" textAlignment="JUSTIFY" />
+            <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="%register" textAlignment="JUSTIFY" />
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
                <children>
-                  <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" text="%German">
-                     <padding>
+                  <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" text="%german" onAction="#setDe">
+                      <padding>
                         <Insets right="5.0" />
                      </padding>
                   </RadioButton>
-                  <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" text="%English">
+                  <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" text="%english" onAction="#setEn">
                      <padding>
                         <Insets left="5.0" />
                      </padding>

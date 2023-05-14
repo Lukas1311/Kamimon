@@ -18,7 +18,7 @@ public class MainModule {
     //needed for languages
     @Provides
     ResourceBundle bundle(Preferences preferences) {
-        final String locale = preferences.get("locale", Locale.getDefault().toLanguageTag());
+        final String locale = preferences.get("locale", Locale.ROOT.toLanguageTag());
         return ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.forLanguageTag(locale));
     }
     @Provides
