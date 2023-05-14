@@ -10,7 +10,11 @@ import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
-import java.util.*;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static org.mockito.Mockito.mock;
@@ -29,6 +33,7 @@ public class TestModule {
     }
 
     @Provides
+    @Singleton
     static EventListener eventListener() {
         return mock(EventListener.class);
     }

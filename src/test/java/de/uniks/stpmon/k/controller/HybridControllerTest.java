@@ -3,8 +3,11 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.DaggerTestComponent;
 import de.uniks.stpmon.k.TestComponent;
+import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserStorage;
+import de.uniks.stpmon.k.ws.EventListener;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -17,6 +20,8 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class HybridControllerTest extends ApplicationTest {
@@ -25,6 +30,7 @@ class HybridControllerTest extends ApplicationTest {
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final HybridController hybridController = component.hybridController();
     private final UserStorage userStorage = component.userStorage();
+    private final EventListener eventListener = component.eventListener();
 
 
     @Override
@@ -42,6 +48,7 @@ class HybridControllerTest extends ApplicationTest {
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
+        when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
         clickOn("#TestGroup0");
         VBox chatScreen = lookup("#chatScreen").query();
