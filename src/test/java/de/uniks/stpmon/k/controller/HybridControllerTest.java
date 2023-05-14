@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserStorage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ class HybridControllerTest extends ApplicationTest {
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final HybridController hybridController = component.hybridController();
-    UserStorage userStorage = component.userStorage();
+    private final UserStorage userStorage = component.userStorage();
 
 
     @Override
@@ -54,7 +53,6 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void toIngame() {
-        StackPane stackPane = lookup("#stackPane").query();
         write("\t\t\t\t");
         type(KeyCode.ENTER);
         VBox ingame = lookup("#ingame").query();
@@ -81,5 +79,12 @@ class HybridControllerTest extends ApplicationTest {
         type(KeyCode.ENTER);
         Pane pane = lookup("#pane").query();
         assertNotNull(pane);
+    }
+
+    @Test
+    public void
+    logout() {
+        write("\t\t");
+        type(KeyCode.ENTER);
     }
 }
