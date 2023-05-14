@@ -15,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -26,6 +28,8 @@ class ChatListControllerTest extends ApplicationTest {
     App app = new App(null);
     @Mock
     GroupService groupService;
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     final ArrayList<Group> groups = new ArrayList<>();
     @InjectMocks

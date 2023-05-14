@@ -7,13 +7,14 @@ import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.UpdateGroupDto;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
+import org.mockito.Spy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Module
 public class GroupTestModule {
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Provides
     static GroupApiService groupApiService() {
 
