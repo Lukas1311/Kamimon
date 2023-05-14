@@ -184,13 +184,13 @@ public class ChatController extends Controller {
     @FXML
     public void openSettings() {
         app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar(resources.getString("createChat"));
+        hybridControllerProvider.get().openSidebar("createChat");
     }
 
     public void leaveChat() {
         messages.clear();
         app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar(resources.getString("chatList"));
+        hybridControllerProvider.get().openSidebar("chatList");
     }
 
     // reusable handle error function for the onError of an Observable
