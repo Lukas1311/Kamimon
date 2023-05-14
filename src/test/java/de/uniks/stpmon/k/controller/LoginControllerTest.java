@@ -40,6 +40,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -55,18 +56,21 @@ public class LoginControllerTest extends ApplicationTest {
     @Mock
     UserService userService;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ENGLISH);
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Spy
     App app = new App(null);
 
     @InjectMocks
     LoginController loginController;
+    @Mock
+    Preferences preferences;
     
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(preferences.get(anyString(), anyString())).thenReturn("en");
         app.show(loginController);
         stage.requestFocus();
     }
