@@ -72,7 +72,6 @@ public class SidebarController extends Controller {
     }
 
     public void openFriends() {
-
         hybridController.openSidebar("friends");
     }
 
