@@ -25,6 +25,7 @@ import retrofit2.HttpException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 public class LoginController extends Controller {
@@ -60,6 +61,9 @@ public class LoginController extends Controller {
     UserService userService;
     @Inject
     Preferences preferences;
+    @Inject
+    Provider<ResourceBundle> resourceBundleProvider;
+
 
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
@@ -83,9 +87,9 @@ public class LoginController extends Controller {
         usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
         errorLabel.textProperty().bind(
             Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
-                .then(resources.getString("password too short."))
+                .then(resources.getString("password.too.short."))
                 .otherwise(Bindings.when(usernameTooLong)
-                    .then(resources.getString("username too long."))
+                    .then(resources.getString("username.too.long."))
                     .otherwise("")
                 )
         );
@@ -118,7 +122,7 @@ public class LoginController extends Controller {
             return;
         }
         if(!netAvailability.isInternetAvailable()) {
-            errorText.set(resources.getString("no internet connection"));
+            errorText.set(resources.getString("no.internet.connection"));
             return;
         }
     }
@@ -134,7 +138,7 @@ public class LoginController extends Controller {
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
-                    errorText.set(resources.getString("login successful"));
+                    errorText.set(resources.getString("login.successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridControllerProvider.get());
                 }, error -> {
@@ -149,7 +153,7 @@ public class LoginController extends Controller {
                 .addUser(usernameInput.getText(), passwordInput.getText())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    errorText.set(resources.getString("registration successful"));
+                    errorText.set(resources.getString("registration.successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected());
@@ -164,10 +168,10 @@ public class LoginController extends Controller {
             return errorText.get();
         }
         return switch (exception.code()) {
-            case 400 -> resources.getString("validation failed");
-            case 401 -> resources.getString("invalid username or password");
-            case 409 -> resources.getString("username was already taken");
-            case 429 -> resources.getString("rate limit reached");
+            case 400 -> resources.getString("validation.failed");
+            case 401 -> resources.getString("invalid.username.or.password");
+            case 409 -> resources.getString("username.was.already.taken");
+            case 429 -> resources.getString("rate.limit.reached");
             default  -> resources.getString("error");
         };
     }
@@ -203,5 +207,7 @@ public class LoginController extends Controller {
 
     private void setLanguage(Locale locale) {
         preferences.put("locale", locale.toLanguageTag());
+        resources = resourceBundleProvider.get();
+        app.show(this); //reloaded
     }
 }

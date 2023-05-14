@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ToggleGroup?>
 <BorderPane prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoginController">
     <center>
         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="292.0" prefWidth="191.0" spacing="5.0" style="-fx-border-color: black; -fx-border-radius: 5px;" styleClass="overlay-container">
@@ -30,7 +31,7 @@
                   <Insets left="20.0" right="20.0" />
                </VBox.margin></PasswordField>
                 <Button fx:id="toggleButton" mnemonicParsing="false" text="%show" />
-                <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay Logged In" />
+                <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay.logged.in" />
                 <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="%login" textAlignment="JUSTIFY">
                <opaqueInsets>
                   <Insets />
@@ -38,16 +39,19 @@
             <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="%register" textAlignment="JUSTIFY" />
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
                <children>
-                  <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" text="%german" onAction="#setDe">
-                      <padding>
-                        <Insets right="5.0" />
-                     </padding>
-                  </RadioButton>
-                  <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" text="%english" onAction="#setEn">
-                     <padding>
-                        <Insets left="5.0" />
-                     </padding>
-                  </RadioButton>
+                   <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" text="%german" onAction="#setDe">
+                       <toggleGroup>
+                           <ToggleGroup fx:id="lang" />
+                       </toggleGroup>
+                       <padding>
+                           <Insets right="5.0" />
+                       </padding>
+                   </RadioButton>
+                   <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" text="%english" onAction="#setEn" toggleGroup="$lang">
+                       <padding>
+                           <Insets left="5.0" />
+                       </padding>
+                   </RadioButton>
                </children>
                <VBox.margin>
                   <Insets left="20.0" right="20.0" />

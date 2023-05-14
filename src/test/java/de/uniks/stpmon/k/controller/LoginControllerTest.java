@@ -34,9 +34,12 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
 
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import io.reactivex.rxjava3.core.Observable;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -51,6 +54,8 @@ public class LoginControllerTest extends ApplicationTest {
     Provider<HybridController> hybridControllerProvider;
     @Mock
     UserService userService;
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ENGLISH);
 
     @Spy
     App app = new App(null);
