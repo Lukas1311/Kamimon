@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -51,6 +52,13 @@ public class ChatListController extends Controller {
         final ListView<Group> groups = new ListView<>(this.groups);
         // pass current chatListController (this) to make use of it in subclasses that cannot use inject
         groups.setCellFactory(param -> new ChatCell(this));
+        groups.setOnKeyReleased(event -> {
+            if (groups.getSelectionModel().isEmpty()
+                    || event.getCode() != KeyCode.ENTER) {
+                return;
+            }
+            openChat(groups.getSelectionModel().getSelectedItem());
+        });
         chatList.getChildren().add(groups);
         return parent;
     }
