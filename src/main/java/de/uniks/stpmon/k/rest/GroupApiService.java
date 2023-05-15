@@ -26,7 +26,7 @@ public interface GroupApiService {
 
     @GET("groups")
     Observable<ArrayList<Group>> getGroups(
-        @Query("members") ArrayList<String> members
+        @Query("members") String members
     );
 
     @GET("groups/{id}")

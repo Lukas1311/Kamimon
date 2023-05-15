@@ -23,6 +23,8 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
@@ -46,6 +48,8 @@ class CreateChatControllerTest extends ApplicationTest {
 
     @InjectMocks
     CreateChatController createChatController;
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     final List<User> members = new ArrayList<>();
     final List<User> friends = new ArrayList<>();

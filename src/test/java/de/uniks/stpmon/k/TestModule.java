@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ public class TestModule {
     }
 
     @Provides
+    @Singleton
     static EventListener eventListener() {
         return mock(EventListener.class);
     }
@@ -112,7 +114,7 @@ public class TestModule {
         return new RegionApiService() {
             @Override
             public Observable<List<Region>> getRegions() {
-                return Observable.empty();
+                return Observable.just(List.of(new Region("", "", "1", "TestRegion")));
             }
 
             @Override

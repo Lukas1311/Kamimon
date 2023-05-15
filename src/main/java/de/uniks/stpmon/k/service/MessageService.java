@@ -37,7 +37,7 @@ public class MessageService {
     /**
      * sends a message to the given id of a namespace
      * @param body is the content of the message
-     * @param namespace is on  of "global", "regions", "groups"
+     * @param namespace is one of "global", "regions", "groups"
      * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
      * @return the message sent
      */
@@ -52,7 +52,7 @@ public class MessageService {
     /**
      * edit a message with a new message body, should be used when an 'edit flag' is clicked/pressed
      * @param message the current message you are editing
-     * @param namespace is on  of "global", "regions", "groups"
+     * @param namespace is one of "global", "regions" or "groups"
      * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
      * @param newBody the new contents of your new message body
      * @return the updated new message
@@ -69,7 +69,7 @@ public class MessageService {
     /**
      * delete a message
      * @param message the message you want to delete, should be used when a 'delete flag' is clicked/pressed
-     * @param namespace is on  of "global", "regions", "groups"
+     * @param namespace is one of "global", "regions", "groups"
      * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
      * @return the deleted message
      */

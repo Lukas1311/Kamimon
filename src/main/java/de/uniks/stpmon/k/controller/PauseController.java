@@ -9,7 +9,7 @@ import javax.inject.Inject;
 public class PauseController extends Controller {
 
     @FXML
-    public Pane pause;
+    public Pane pauseScreen;
 
     @Inject
     public PauseController() {

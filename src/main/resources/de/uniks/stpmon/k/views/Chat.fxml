@@ -4,21 +4,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
-<VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatController">
+<VBox fx:id="chatScreen" alignment="CENTER" maxWidth="370.0" prefHeight="720.0" prefWidth="370.0"
+      style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.ChatController">
     <HBox prefHeight="50.0" prefWidth="370.0">
         <VBox alignment="CENTER_LEFT" prefWidth="185.0">
-            <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
+            <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0"
+                    style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="25.0" right="5.0" top="5.0" />
+                    <Insets bottom="5.0" left="25.0" right="5.0" top="5.0"/>
                 </VBox.margin>
                 <font>
-                    <Font size="18.0" />
+                    <Font size="18.0"/>
                 </font>
             </Button>
         </VBox>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-          <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="TestPlayerName">
+          <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="">
             <font>
                <Font size="20.0" />
             </font></Text>
@@ -41,7 +43,7 @@
     </VBox>
     <VBox prefHeight="120.0" prefWidth="370.0">
         <HBox alignment="CENTER" prefHeight="75.0" prefWidth="370.0">
-            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="268.0" promptText="Nachricht eingeben...">
+            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="268.0" promptText="%enter.message...">
                 <HBox.margin>
                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                 </HBox.margin>

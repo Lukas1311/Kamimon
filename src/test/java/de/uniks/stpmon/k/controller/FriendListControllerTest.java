@@ -19,6 +19,8 @@ import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,6 +39,8 @@ class FriendListControllerTest extends ApplicationTest {
 
     @Spy
     App app = new App(null);
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     final ArrayList<User> friends = new ArrayList<>();
     final ArrayList<User> users = new ArrayList<>();

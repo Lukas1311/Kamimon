@@ -1,6 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.service.GroupService;
+import de.uniks.stpmon.k.service.UserService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,9 +12,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
+import io.reactivex.rxjava3.core.Observable;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 @Singleton
@@ -34,12 +42,14 @@ public class HybridController extends Controller {
     IngameController ingameController;
     @Inject
     ChatListController chatListController;
-
     @Inject
     CreateChatController createChatController;
-
     @Inject
     Provider<ChatController> chatControllerProvider;
+    @Inject
+    UserService userService;
+    @Inject
+    GroupService groupService;
 
     private final Stack<Controller> tabStack = new Stack<>();
 
@@ -95,10 +105,6 @@ public class HybridController extends Controller {
         }
     }
 
-    private void openSecondary(Provider<? extends Controller> controller) {
-        openSecondary(controller.get());
-    }
-
     private Controller removeChildren(int startIndex) {
         Controller lastController = null;
         ObservableList<Node> children = stackPane.getChildren();
@@ -123,7 +129,7 @@ public class HybridController extends Controller {
                 break;
             case "pause":
                 boolean containsPause = stackPane.getChildren().stream()
-                        .anyMatch(node -> node.getId() != null && node.getId().equals("pause"));
+                        .anyMatch(node -> node.getId() != null && node.getId().equals("pauseScreen"));
                 if (containsPause) {
                     openMain(ingameController);
                 } else {
@@ -145,8 +151,28 @@ public class HybridController extends Controller {
     }
 
     public void openChat(Group group) {
-        ChatController chatController = chatControllerProvider.get();
-        chatController.setGroup(group);
-        openSecondary(chatController);
+        ChatController chat = chatControllerProvider.get();
+        chat.setGroup(group);
+        openSecondary(chat);
+    }
+
+    public void openChat(User friend) {
+        // the user can only open the chat when the other user is a friend
+        User me = userService.getMe(); // is non api call
+        ArrayList<String> privateChatMembers = new ArrayList<>(List.of(friend._id(), me._id()));
+        // check if the friend and the user already have a group, if not create one
+        disposables.add(
+            groupService.getGroupsByMembers(privateChatMembers)
+                .<Group>flatMap(groups -> {
+                    if(!groups.isEmpty() && groups.get(0) != null){
+                        return Observable.just(groups.get(0));
+                    }
+                    return groupService.createGroup("%s + %s".formatted(friend.name(),me.name()), privateChatMembers);
+                })
+                .observeOn(FX_SCHEDULER)
+                .subscribe(group -> {
+                    openChat(group);
+                })
+        );
     }
 }

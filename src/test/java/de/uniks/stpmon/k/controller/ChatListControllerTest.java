@@ -1,17 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
-import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.service.GroupService;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -21,40 +13,40 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.LabeledMatchers;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.testfx.assertions.api.Assertions.assertThat;
-import static org.testfx.api.FxAssert.verifyThat;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class IngameControllerTest extends ApplicationTest {
+class ChatListControllerTest extends ApplicationTest {
 
     @Spy
     App app = new App(null);
-
-    @InjectMocks
-    IngameController ingameController;
+    @Mock
+    GroupService groupService;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+
+    final ArrayList<Group> groups = new ArrayList<>();
+    @InjectMocks
+    ChatListController chatListController;
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-        app.show(ingameController);
+        groups.add(new Group(null, null, null, "Peter", null));
+        when(groupService.getOwnGroups()).thenReturn(Observable.just(groups));
+        app.show(chatListController);
         stage.requestFocus();
     }
 
     @Test
-    void testShow() {
-        VBox ingame = lookup("#ingame").query();
-        assertNotNull(ingame);
+    void openChat() {
+        final VBox groupList = lookup("#chatList").query();
+        assertNotNull(groupList.getChildren());
     }
 }

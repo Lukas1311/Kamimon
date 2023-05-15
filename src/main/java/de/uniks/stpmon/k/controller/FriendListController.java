@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.FriendCell;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -16,7 +17,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
@@ -32,6 +37,12 @@ public class FriendListController extends Controller {
 
     @Inject
     UserService userService;
+    @Inject
+    GroupService groupService;
+    @Inject
+    Provider<ChatController> chatControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     private final ObservableList<User> friends = FXCollections.observableArrayList();
     private final ObservableList<User> users = FXCollections.observableArrayList();
@@ -88,5 +99,12 @@ public class FriendListController extends Controller {
         } else {
             disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).subscribe());
         }
+    }
+
+    public void openChat(User friend) {
+        if (!friends.contains(friend)) {
+            return;
+        }
+        hybridControllerProvider.get().openChat(friend);
     }
 }

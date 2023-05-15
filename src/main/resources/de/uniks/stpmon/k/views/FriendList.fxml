@@ -13,7 +13,7 @@
    </ScrollPane>
     <VBox alignment="BOTTOM_CENTER" fillWidth="false" VBox.vgrow="NEVER">
         <HBox alignment="BOTTOM_CENTER" fillHeight="false" prefHeight="28.0" prefWidth="351.0" style="-fx-border-color: black;">
-            <TextField fx:id="searchFriend" prefHeight="38.0" prefWidth="300.0" promptText="Search for a friend" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="searchFriend" prefHeight="38.0" prefWidth="300.0" promptText="%search.for.a.friend" HBox.hgrow="ALWAYS" />
             <Button fx:id="searchButton" ellipsisString="🔎" mnemonicParsing="false" style="-fx-background-color: transparent;" text="🔎" textAlignment="CENTER" textFill="#1a00ff">
                 <font>
                     <Font size="15.0" />
