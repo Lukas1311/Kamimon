@@ -70,6 +70,7 @@ public class CreateChatController extends Controller {
         };
         groupMembers.add(userStorage.getUser()._id());
         if (group != null) {
+            groupMembers.addAll(group.members());
             disposables.add(userService.getUsers(group.members()).observeOn(FX_SCHEDULER).subscribe(updateUsers));
         }
         disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(updateUsers));
@@ -136,5 +137,9 @@ public class CreateChatController extends Controller {
         } else {
             groupMembers.remove(item._id());
         }
+    }
+
+    public boolean isSelected(String id) {
+        return groupMembers.contains(id);
     }
 }
