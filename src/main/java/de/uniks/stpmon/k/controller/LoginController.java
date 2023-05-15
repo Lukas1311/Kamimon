@@ -12,12 +12,8 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import retrofit2.HttpException;
@@ -49,6 +45,10 @@ public class LoginController extends Controller {
     public RadioButton germanButton;
     @FXML
     public RadioButton englishButton;
+    @FXML
+    public VBox loginScreen;
+    @FXML
+    public ToggleGroup lang;
 
     @Inject
     AuthenticationService authService;

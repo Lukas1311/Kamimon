@@ -50,7 +50,8 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
@@ -67,7 +68,8 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         // pressing Friends Button and check if friendList is shown
         write("\t");
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         VBox chatList = lookup("#friendList").query();
         assertNotNull(chatList);
     }
@@ -76,7 +78,8 @@ class HybridControllerTest extends ApplicationTest {
     public void toIngame() {
         // pressing Region button and check if ingame is shown
         write("\t\t\t\t");
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         VBox ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
@@ -84,14 +87,17 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void Pause() {
         toIngame();
+        waitForFxEvents();
         // pressing Pause button and check if pause is shown
         write("\t\t");
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         Pane pause = lookup("#pauseScreen").query();
         assertNotNull(pause);
 
         // pressing Pause button again and check if ingame is shown
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         VBox ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
@@ -100,17 +106,21 @@ class HybridControllerTest extends ApplicationTest {
     public void toHome() {
         // pressing home button and check if lobby is shown
         toIngame();
+        waitForFxEvents();
         write("\t\t\t");
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         Pane pane = lookup("#pane").query();
         assertNotNull(pane);
     }
 
     @Test
-    public void
-    logout() {
+    public void logout() {
         // pressing logout button and check if login is shown
         write("\t\t");
-        type(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
+        Pane pane = lookup("#loginScreen").query();
+        assertNotNull(pane);
     }
 }
