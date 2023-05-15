@@ -4,6 +4,8 @@ import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.FriendCell;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -44,7 +46,7 @@ public class FriendListController extends Controller {
 
     private final ObservableList<User> friends = FXCollections.observableArrayList();
     private final ObservableList<User> users = FXCollections.observableArrayList();
-
+    private Subject<String> searchUpdate = PublishSubject.create();
 
     @Inject
     public FriendListController() {
@@ -52,7 +54,13 @@ public class FriendListController extends Controller {
 
     @Override
     public void init() {
-        disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
+        disposables.add(searchUpdate.flatMap((text) -> userService.filterFriends(text))
+                .observeOn(FX_SCHEDULER)
+                .subscribe(this.friends::setAll));
+        disposables.add(searchUpdate.flatMap((text) -> userService.searchFriend(text))
+                .observeOn(FX_SCHEDULER)
+                .subscribe(this.users::setAll));
+        searchUpdate.onNext("");
     }
 
     @Override
@@ -82,21 +90,14 @@ public class FriendListController extends Controller {
     @FXML
     private void searchForFriend() {
         String name = searchFriend.getText();
-        disposables.add(userService.filterFriends(name).observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
-        disposables.add(userService.searchFriend(name).observeOn(FX_SCHEDULER).subscribe(this.users::setAll));
+        searchUpdate.onNext(name);
     }
 
     public void handleFriend(Boolean newFriend, User user) {
         if (newFriend) {
-            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe(col -> {
-                searchForFriend();
-                this.friends.setAll(col);
-            }));
+            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe());
         } else {
-            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).subscribe(col -> {
-                searchForFriend();
-                this.friends.setAll(col);
-            }));
+            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).subscribe());
         }
     }
 

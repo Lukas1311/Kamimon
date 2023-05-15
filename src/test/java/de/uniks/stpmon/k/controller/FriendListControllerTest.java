@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
@@ -20,6 +21,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -42,6 +44,8 @@ class FriendListControllerTest extends ApplicationTest {
 
     final ArrayList<User> friends = new ArrayList<>();
     final ArrayList<User> users = new ArrayList<>();
+    final BehaviorSubject<List<User>> updatedFriends = BehaviorSubject.createDefault(friends);
+    final BehaviorSubject<List<User>> filteredUsers = BehaviorSubject.createDefault(List.of());
 
     @InjectMocks
     FriendListController friendListController;
@@ -51,9 +55,8 @@ class FriendListControllerTest extends ApplicationTest {
         app.start(stage);
         friends.add(new User(null, "Peter", "online", null, null));
         users.add(new User(null, "Alice", "online", null, null));
-        when(userService.getFriends()).thenReturn(Observable.just(friends));
-        when(userService.filterFriends(anyString())).thenReturn(Observable.just(friends));
-        when(userService.searchFriend(anyString())).thenReturn(Observable.just(friends));
+        when(userService.filterFriends(anyString())).thenReturn(updatedFriends);
+        when(userService.searchFriend(anyString())).thenReturn(filteredUsers);
         app.show(friendListController);
         stage.requestFocus();
     }
@@ -90,6 +93,8 @@ class FriendListControllerTest extends ApplicationTest {
         //remove friend from local list
         friends.remove(0);
         clickOn("#removeFriendButton");
+        updatedFriends.onNext(friends);
+        sleep(200);
         verify(userService).removeFriend(any(User.class));
 
         //peter is no longer in friends
@@ -98,8 +103,6 @@ class FriendListControllerTest extends ApplicationTest {
 
     @Test
     void addFriend() {
-        when(userService.searchFriend(anyString())).thenReturn(Observable.just(users));
-
         //get friendList
         final ScrollPane scrollPane = lookup("#scrollPane").query();
         final VBox userList = (VBox) scrollPane.getContent();
@@ -117,11 +120,20 @@ class FriendListControllerTest extends ApplicationTest {
 
         clickOn("#searchButton");
 
+        updatedFriends.onNext(List.of());
+        filteredUsers.onNext(users);
+        sleep(200);
+
         when(userService.addFriend(any(User.class))).thenReturn(Observable.just(users));
 
         //add "Alice" to friends
         friends.add(users.get(0));
+
         clickOn("#Alice #removeFriendButton");
+        updatedFriends.onNext(friends);
+        filteredUsers.onNext(users);
+        sleep(200);
+
         verify(userService).addFriend(any(User.class));
 
         //"Alice" is in friends
