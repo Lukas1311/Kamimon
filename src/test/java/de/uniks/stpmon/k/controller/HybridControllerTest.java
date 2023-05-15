@@ -59,6 +59,7 @@ class HybridControllerTest extends ApplicationTest {
         // pressing on a chat and check if chatScreen is shown
         clickOn("#TestGroup0");
         waitForFxEvents();
+        printSceneGraph();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
     }
@@ -122,5 +123,24 @@ class HybridControllerTest extends ApplicationTest {
         waitForFxEvents();
         Pane pane = lookup("#loginScreen").query();
         assertNotNull(pane);
+    }
+
+
+    public void printSceneGraph() {
+        printNode(app.getStage().getScene().getRoot(), 0);
+    }
+
+    private void printNode(javafx.scene.Node node, int depth) {
+        for (int i = 0; i < depth; i++) {
+            System.out.print("  "); // Print indentation
+        }
+        System.out.println(node);
+
+        if (node instanceof javafx.scene.Parent) {
+            javafx.scene.Parent parent = (javafx.scene.Parent) node;
+            for (javafx.scene.Node child : parent.getChildrenUnmodifiable()) {
+                printNode(child, depth + 1);
+            }
+        }
     }
 }
