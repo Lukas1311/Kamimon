@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.ws.EventListener;
 
 import javax.inject.Singleton;
 
-@Component(modules = {TestModule.class, GroupTestModule.class, MessageTestModule.class})
+@Component(modules = {TestModule.class, GroupTestModule.class, MessageTestModule.class, BoundModule.class})
 @Singleton
 public interface TestComponent extends MainComponent {
 
