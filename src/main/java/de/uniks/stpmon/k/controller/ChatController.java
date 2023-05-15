@@ -60,12 +60,11 @@ public class ChatController extends Controller {
     @Inject
     EventListener eventListener;
 
-
     private StringProperty regionName;
-    private ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
     private Group group;
     private HashMap<String, String> groupMembers = new HashMap<>();
+    private final ObservableList<Message> messages = FXCollections.observableArrayList();
 
     public Group getGroup() { return this.group; }
     public void setGroup(Group group) { this.group = group; }
@@ -121,7 +120,7 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService, groupMembers));
+        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         // scrolls to the bottom of the listview
