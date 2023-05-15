@@ -43,7 +43,7 @@ public class HybridController extends Controller {
     @Inject
     ChatListController chatListController;
     @Inject
-    CreateChatController createChatController;
+    Provider<CreateChatController> createChatControllerProvider;
     @Inject
     Provider<ChatController> chatControllerProvider;
     @Inject
@@ -122,7 +122,7 @@ public class HybridController extends Controller {
                 openSecondary(chatListController);
                 break;
             case "createChat":
-                openSecondary(createChatController);
+                openSecondary(createChatControllerProvider.get());
                 break;
             case "friends":
                 openSecondary(friendListController);
@@ -174,5 +174,11 @@ public class HybridController extends Controller {
                     openChat(group);
                 })
         );
+    }
+
+    public void createChat(Group group) {
+        CreateChatController createChat = createChatControllerProvider.get();
+        createChat.setGroup(group);
+        openSecondary(createChat);
     }
 }

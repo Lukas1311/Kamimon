@@ -181,8 +181,7 @@ public class ChatController extends Controller {
 
     @FXML
     public void openSettings() {
-        app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar("createChat");
+        hybridControllerProvider.get().createChat(group);
     }
 
     public void leaveChat() {

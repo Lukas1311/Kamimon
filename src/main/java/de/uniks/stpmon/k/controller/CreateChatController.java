@@ -1,10 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.views.GroupMemberCell;
+import io.reactivex.rxjava3.functions.Consumer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -17,8 +19,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
 public class CreateChatController extends Controller {
 
@@ -45,14 +46,33 @@ public class CreateChatController extends Controller {
 
     public final HashSet<String> groupMembers = new HashSet<>();
 
+    private Group group;
+
     @Inject
     public CreateChatController() {
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     @Override
     public void init() {
         groupMembers.add(userStorage.getUser()._id());
-        disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(this.friends::setAll));
+        Map<String, User> userMap = new LinkedHashMap<>();
+        Consumer<List<User>> updateUsers = (users) -> {
+            for (User user : users) {
+                userMap.put(user._id(), user);
+            }
+            // Remove the user itself from the list
+            userMap.remove(userService.getMe()._id());
+            friends.setAll(userMap.values());
+        };
+        groupMembers.add(userStorage.getUser()._id());
+        if (group != null) {
+            disposables.add(userService.getUsers(group.members()).observeOn(FX_SCHEDULER).subscribe(updateUsers));
+        }
+        disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(updateUsers));
     }
 
     @Override
@@ -73,7 +93,22 @@ public class CreateChatController extends Controller {
         });
         createGroupButton.setOnAction(e -> createGroup());
 
+        if (group != null) {
+            leaveGroupButton.setVisible(true);
+            createGroupButton.setText(resources.getString("create.group.button.update"));
+            createGroupButton.setOnAction(e -> updateGroup());
+        }
+
         return parent;
+    }
+
+    private void updateGroup() {
+        if (groupNameField.getText().isEmpty()) {
+            return;
+        }
+        disposables.add(groupService.updateGroup(group, groupNameField.getText(), groupMembers)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(group1 -> hybridControllerProvider.get().openChat(group1)));
     }
 
     public void returnToChatList() {
@@ -90,7 +125,9 @@ public class CreateChatController extends Controller {
             return;
         }
         final ArrayList<String> groupMemberNames = new ArrayList<>(groupMembers);
-        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames).observeOn(FX_SCHEDULER).subscribe(hybridControllerProvider.get()::openChat));
+        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(hybridControllerProvider.get()::openChat));
     }
 
     public void handleGroup(User item) {
