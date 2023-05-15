@@ -21,8 +21,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FriendCacheTest {
@@ -101,7 +105,7 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user, friendFirst)));
-        when(eventListener.<User>listen(eq("users.0.updated"), any())).thenReturn(mainUserEvents);
+        when(eventListener.<User>listen(eq("users.*.*"), any())).thenReturn(mainUserEvents);
 
         // initialise cache with user
         List<User> cachedFriends = cache.init(user).blockingFirst();

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Singleton
 public class FriendCache implements IFriendCache {
@@ -26,6 +27,7 @@ public class FriendCache implements IFriendCache {
 	private final Map<String, User> userById = new LinkedHashMap<>();
 	protected CompositeDisposable disposables = new CompositeDisposable();
 	private boolean initialized = false;
+	private String mainUser;
 
 	@Inject
 	public FriendCache() {
@@ -37,6 +39,7 @@ public class FriendCache implements IFriendCache {
 		friends.onNext(List.of());
 		users.onNext(List.of());
 		disposables.dispose();
+		this.mainUser = null;
 	}
 
 	@Override
@@ -56,6 +59,7 @@ public class FriendCache implements IFriendCache {
 		}
 		disposables = new CompositeDisposable();
 		initialized = true;
+		this.mainUser = mainUser._id();
 
 		disposables.add(eventListener
 				.listen("users.*.*", User.class).subscribe(event -> {
@@ -65,14 +69,6 @@ public class FriendCache implements IFriendCache {
 								case "updated" -> updateUser(user);
 								case "deleted" -> removeUser(user);
 							}
-						}, this::handleError
-				)
-		);
-
-		disposables.add(eventListener
-				.listen("users.%s.updated".formatted(mainUser._id()), User.class).subscribe(event -> {
-							final User user = event.data();
-							NotifyUpdateFriends(user);
 						}, this::handleError
 				)
 		);
@@ -132,6 +128,10 @@ public class FriendCache implements IFriendCache {
 	public void updateUser(User user) {
 		userById.put(user._id(), user);
 		users.onNext(new ArrayList<>(userById.values()));
+		if (mainUser == null || !Objects.equals(user._id(), mainUser)) {
+			return;
+		}
+		NotifyUpdateFriends(user);
 	}
 
 	@Override

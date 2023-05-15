@@ -1,6 +1,10 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.dto.*;
+import de.uniks.stpmon.k.dto.ErrorResponse;
+import de.uniks.stpmon.k.dto.LoginDto;
+import de.uniks.stpmon.k.dto.LoginResult;
+import de.uniks.stpmon.k.dto.RefreshDto;
+import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
@@ -9,19 +13,19 @@ import javax.inject.Inject;
 import java.util.prefs.Preferences;
 
 public class AuthenticationService {
-    private final TokenStorage tokenStorage;
-    private final AuthenticationApiService authApiService;
-    private final UserStorage userStorage;
-    private final FriendCache friendCache;
-    private final Preferences preferences;
+    @Inject
+    TokenStorage tokenStorage;
+    @Inject
+    AuthenticationApiService authApiService;
+    @Inject
+    UserStorage userStorage;
+    @Inject
+    IFriendCache friendCache;
+    @Inject
+    Preferences preferences;
 
     @Inject
-    public AuthenticationService(TokenStorage tokenStorage, AuthenticationApiService authApiService, UserStorage userStorage, Preferences preferences, FriendCache friendCache) {
-        this.tokenStorage = tokenStorage;
-        this.authApiService = authApiService;
-        this.userStorage = userStorage;
-        this.preferences = preferences;
-        this.friendCache = friendCache;
+    public AuthenticationService() {
     }
 
     public Observable<LoginResult> login(String username, String password, boolean rememberMe) {
