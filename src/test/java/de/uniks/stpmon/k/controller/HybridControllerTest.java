@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 class HybridControllerTest extends ApplicationTest {
@@ -50,14 +51,13 @@ class HybridControllerTest extends ApplicationTest {
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
         type(KeyCode.ENTER);
-        sleep(500);
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
         clickOn("#TestGroup0");
-        sleep(500);
+        waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
     }
