@@ -59,7 +59,7 @@ class HybridControllerTest extends ApplicationTest {
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
         write("\t\t\t\t\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        type(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
