@@ -74,6 +74,7 @@ public class ChatListController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         final ListView<Group> groups = new ListView<>(this.groups);
+        groups.setId("chatListView");
         // pass current chatListController (this) to make use of it in subclasses that cannot use inject
         groups.setCellFactory(param -> new ChatCell(this));
         groups.setOnKeyReleased(event -> {
