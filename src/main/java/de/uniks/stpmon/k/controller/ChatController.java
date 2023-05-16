@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
+import de.uniks.stpmon.k.dto.Region;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
@@ -25,6 +26,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class ChatController extends Controller {
     @FXML
@@ -213,6 +215,29 @@ public class ChatController extends Controller {
 
         } else {
             //check for region selection
+            if (!regionPicker.getSelectionModel().isEmpty()) {
+                int regionIndex = regionPicker.getSelectionModel().getSelectedIndex();
+                String regionName = regionPicker.getSelectionModel().getSelectedItem();
+                Optional<Region> regionOptional = regionService.getRegions().blockingFirst()
+                        .stream().filter(r -> r.name().equals(regionName)).findFirst();
+
+                if(regionOptional.isPresent()) {
+                    String regionId = regionOptional.get()._id();
+
+                    String invitationText = "Join " + regionId;
+
+                    disposables.add(msgService
+                            .sendMessage(invitationText, "groups", group._id())
+                            .observeOn(FX_SCHEDULER)
+                            .subscribe(msg -> {
+                                System.out.println("Message sent: " + msg.body());
+                                messagesListView.scrollTo(msg);
+                            }, this::handleError)
+                    );
+                    regionPicker.getSelectionModel().clearSelection();
+                }
+            }
+
             if (message.isEmpty()) {
                 return;
             }
