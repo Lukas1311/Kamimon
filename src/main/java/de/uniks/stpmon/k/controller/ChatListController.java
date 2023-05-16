@@ -45,7 +45,10 @@ public class ChatListController extends Controller {
 
     @Override
     public void init() {
-        disposables.add(groupService.getOwnGroups().observeOn(FX_SCHEDULER).subscribe(this.groups::setAll));
+        disposables.add(groupService.getOwnGroups().observeOn(FX_SCHEDULER).subscribe((list) -> {
+            list.forEach(group -> groupMap.put(group._id(), group));
+            groups.setAll(groupMap.values());
+        }));
         disposables.add(eventListener.listen("groups.*.*", Group.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(event -> {
