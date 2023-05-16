@@ -39,6 +39,7 @@ public class MessageCell extends ListCell<Message> {
             // setting the alignment directly on the cell makes the trick
             setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
             setGraphic(messageController.render());
+            setDisable(!isOwnMessage(item));
         }
     }
 
