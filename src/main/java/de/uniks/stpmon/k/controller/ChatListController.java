@@ -54,12 +54,12 @@ public class ChatListController extends Controller {
                 .subscribe(event -> {
                     final Group group = event.data();
                     switch (event.suffix()) {
-                        case "create" -> groupMap.put(group._id(), group);
-                        case "update" -> {
+                        case "created" -> groupMap.put(group._id(), group);
+                        case "updated" -> {
                             groupMap.remove(group._id());
                             groupMap.put(group._id(), group);
                         }
-                        case "delete" -> groupMap.remove(group._id());
+                        case "deleted" -> groupMap.remove(group._id());
                     }
                     groups.setAll(groupMap.values());
                 }));

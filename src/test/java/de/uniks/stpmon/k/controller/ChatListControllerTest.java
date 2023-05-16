@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.service.GroupService;
+import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +30,8 @@ class ChatListControllerTest extends ApplicationTest {
     App app = new App(null);
     @Mock
     GroupService groupService;
+    @Mock
+    EventListener eventListener;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
@@ -39,6 +43,7 @@ class ChatListControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         groups.add(new Group(null, null, null, "Peter", null));
+        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
         when(groupService.getOwnGroups()).thenReturn(Observable.just(groups));
         app.show(chatListController);
         stage.requestFocus();
