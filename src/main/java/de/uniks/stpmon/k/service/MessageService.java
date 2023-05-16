@@ -32,7 +32,6 @@ public class MessageService {
         this.messageApiService = messageApiService;
     }
 
-    // TODO: namespace has to be picked dependant where the user is currently (here either "global" or "groups")
     // groups is taken when the user sends messages in a group or to another user (counts as group)
     /**
      * sends a message to the given id of a namespace
@@ -67,7 +66,7 @@ public class MessageService {
     }
 
     /**
-     * delete a message
+     * this method takes a message as param and deletes it returning the deleted message afterwards
      * @param message the message you want to delete, should be used when a 'delete flag' is clicked/pressed
      * @param namespace is one of "global", "regions", "groups"
      * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
@@ -81,14 +80,36 @@ public class MessageService {
         );
     }
 
-    // TODO: not sure about the other methods yet
+    /**
+     * this method returns the last 100 or less messages
+     * @param namespace is one of "global", "regions", "groups"
+     * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
+     * @return the last 100 or less messages (100 is default value)
+     */
     public Observable<ArrayList<Message>> getAllMessages(String namespace, String parent) {
         return messageApiService.getMessages(
             namespace,
             parent,
             null,
             null,
-            100
+            null
+        );
+    }
+
+    /**
+     * returns equal or less messages by the given limit 
+     * @param namespace is one of "global", "regions", "groups"
+     * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
+     * @param limit describes the maximum number of messages that can be received (range 1 - 100)
+     * @return all messages within the limit
+     */
+    public Observable<ArrayList<Message>> getLastMessagesByLimit(String namespace, String parent, int limit) {
+        return messageApiService.getMessages(
+            namespace,
+            parent,
+            null,
+            null,
+            limit
         );
     }
 }
