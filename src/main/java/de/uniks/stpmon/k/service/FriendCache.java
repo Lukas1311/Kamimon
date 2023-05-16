@@ -114,6 +114,7 @@ public class FriendCache implements IFriendCache {
 	public void NotifyUpdateFriends(User user) {
 		friends.onNext(user.friends()
 				.stream()
+				.filter(Objects::nonNull)
 				.map(userById::get)
 				.toList());
 	}

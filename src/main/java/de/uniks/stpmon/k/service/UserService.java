@@ -155,11 +155,12 @@ public class UserService {
      * @return the user found by id
      */
     public Observable<User> getUserById(String userId) {
-        return userApiService.getUser(userId);
+        return Observable.just(friendCache.get().getUser(userId));
     }
 
     public Observable<List<User>> getUsers(List<String> ids) {
-        return userApiService.getUsers(ids);
+        List<User> users = ids.stream().map(id -> friendCache.get().getUser(id)).toList();
+        return Observable.just(users);
     }
 
     public User getMe() {
