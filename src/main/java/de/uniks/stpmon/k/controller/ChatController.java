@@ -182,17 +182,33 @@ public class ChatController extends Controller {
 
         //check if a message is edited
         if (editMessage != null) {
-            //updateMessage
-            disposables.add(msgService
-                    .editMessage(editMessage, "groups", group._id(), message)
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(msg -> {
-                                System.out.println("Message sent: " + msg.body());
-                                messageField.clear();
-                                messagesListView.getSelectionModel().clearSelection();
-                            }, this::handleError
-                    )
-            );
+            //check if message should be deleted
+            if (message.isEmpty()) {
+                disposables.add(msgService
+                        .deleteMessage(editMessage, "groups", group._id())
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(msg -> {
+                                    System.out.println("Message sent: " + msg.body());
+                                    messageField.clear();
+
+                                    messagesListView.getSelectionModel().clearSelection();
+                                }, this::handleError
+                        )
+                );
+            } else {
+                //updateMessage
+                disposables.add(msgService
+                        .editMessage(editMessage, "groups", group._id(), message)
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(msg -> {
+                                    System.out.println("Message sent: " + msg.body());
+                                    messageField.clear();
+                                    messagesListView.getSelectionModel().clearSelection();
+                                }, this::handleError
+                        )
+                );
+            }
+
             editMessage = null;
 
         } else {
