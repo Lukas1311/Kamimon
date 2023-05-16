@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import java.util.HashMap;
-
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.rest.GroupApiService;
@@ -10,23 +8,23 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.HashMap;
 
 public class ChatController extends Controller {
     @FXML
@@ -62,10 +60,10 @@ public class ChatController extends Controller {
 
 
     private StringProperty regionName;
-    private ObservableList<Message> messages = FXCollections.observableArrayList();
+    private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
     private Group group;
-    private HashMap<String, String> groupMembers = new HashMap<>();
+    private final HashMap<String, String> groupMembers = new HashMap<>();
 
     public Group getGroup() { return this.group; }
     public void setGroup(Group group) { this.group = group; }
@@ -79,12 +77,10 @@ public class ChatController extends Controller {
         messages.clear();
         // populate a group users hashmap with just one REST call to not run into rate limit
         disposables.add(userService
-            .getUsers(group.members())
-            .observeOn(FX_SCHEDULER)
-            .subscribe(users -> {
-                users.forEach(user -> groupMembers.put(user._id(), user.name()));
-            },this::handleError
-            )
+                .getUsers(group.members())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(users -> users.forEach(user -> groupMembers.put(user._id(), user.name())), this::handleError
+                )
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
@@ -128,13 +124,14 @@ public class ChatController extends Controller {
         messagesListView.scrollTo(1);
 
 
-        // TODO: edit and delete single messages by chosing them and some listener stuff @basbaer
+        // TODO: edit and delete single messages by choosing them and some listener stuff @basbaer
         // messages.getSelectionModel().selectedItemProperty()... listener stuff
 
 
 
         // disable button if field empty
         sendButton.disableProperty().bind(messageField.textProperty().isEmpty());
+        sendButton.disableProperty().bind(messageField.textProperty().length().greaterThan(16000));
         sendButton.setOnAction(click -> sendMessage());
         messageField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
