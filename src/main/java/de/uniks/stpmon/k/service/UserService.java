@@ -139,9 +139,6 @@ public class UserService {
     }
 
     public Observable<List<User>> getFriends() {
-        if (userStorage.getUser().friends().isEmpty()) {
-            return Observable.fromSupplier(ArrayList::new);
-        }
         return friendCache.get().getFriends();
     }
 

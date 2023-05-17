@@ -1,15 +1,15 @@
 package de.uniks.stpmon.k.controller;
 
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
-import javafx.beans.binding.Bindings;
 import de.uniks.stpmon.k.service.UserService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 public class LoginController extends Controller {
@@ -62,9 +61,6 @@ public class LoginController extends Controller {
     UserService userService;
     @Inject
     Preferences preferences;
-    @Inject
-    Provider<ResourceBundle> resourceBundleProvider;
-
 
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
@@ -92,9 +88,9 @@ public class LoginController extends Controller {
         englishButton.setSelected(!germanSelected);
         errorLabel.textProperty().bind(
             Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
-                .then(resources.getString("password.too.short."))
+                .then(translateString("password.too.short."))
                 .otherwise(Bindings.when(usernameTooLong)
-                    .then(resources.getString("username.too.long."))
+                    .then(translateString("username.too.long."))
                     .otherwise("")
                 )
         );
@@ -127,7 +123,7 @@ public class LoginController extends Controller {
             return;
         }
         if(!netAvailability.isInternetAvailable()) {
-            errorText.set(resources.getString("no.internet.connection"));
+            errorText.set(translateString("no.internet.connection"));
             return;
         }
     }
@@ -143,7 +139,7 @@ public class LoginController extends Controller {
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
-                    errorText.set(resources.getString("login.successful"));
+                    errorText.set(translateString("login.successful"));
                     // TODO: user.status should be set to online here
                     errorLabel.setTextFill(Color.GREEN);
                     app.show(hybridControllerProvider.get());
@@ -159,7 +155,7 @@ public class LoginController extends Controller {
                 .addUser(usernameInput.getText(), passwordInput.getText())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
-                    errorText.set(resources.getString("registration.successful"));
+                    errorText.set(translateString("registration.successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
                     loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected());
@@ -174,11 +170,11 @@ public class LoginController extends Controller {
             return errorText.get();
         }
         return switch (exception.code()) {
-            case 400 -> resources.getString("validation.failed");
-            case 401 -> resources.getString("invalid.username.or.password");
-            case 409 -> resources.getString("username.was.already.taken");
-            case 429 -> resources.getString("rate.limit.reached");
-            default  -> resources.getString("error");
+            case 400 -> translateString("validation.failed");
+            case 401 -> translateString("invalid.username.or.password");
+            case 409 -> translateString("username.was.already.taken");
+            case 429 -> translateString("rate.limit.reached");
+            default  -> translateString("error");
         };
     }
 
@@ -188,13 +184,13 @@ public class LoginController extends Controller {
         }else{
             passwordInput.setText(password);
         }
-        passwordInput.setPromptText(resources.getString("password"));
+        passwordInput.setPromptText(translateString("password"));
     }
 
     private void showPassword() {
         password = passwordInput.getText();
         if(password == null || password.isEmpty()) {
-            password = resources.getString("password");
+            password = translateString("password");
             isEmpty = true;
         }else{
             isEmpty = false;
@@ -213,7 +209,6 @@ public class LoginController extends Controller {
 
     private void setLanguage(Locale locale) {
         preferences.put("locale", locale.toLanguageTag());
-        resources = resourceBundleProvider.get();
         app.show(this); //reloaded
     }
 
