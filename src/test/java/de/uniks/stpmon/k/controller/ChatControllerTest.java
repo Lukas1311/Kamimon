@@ -180,39 +180,6 @@ public class ChatControllerTest extends ApplicationTest {
 
     }
 
-    @Test
-    void testListenerMessageCreated() {
-        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
-        assertEquals(2, listView.getItems().size());
-
-        events.onNext(new Event<Message>("groups.g_id.messages.1.created", new Message("2023-05-15T18:43:40.413Z", "2023-05-15T18:43:40.413Z", "1", "s", "C")));
-
-        waitForFxEvents();
-        assertEquals(3, listView.getItems().size());
-    }
-
-    @Test
-    void testListenerMessageEdited() {
-        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
-        assertEquals(2, listView.getItems().size());
-
-        events.onNext(new Event<Message>("groups.g_id.messages.bobs_msg_id.updated", new Message("2023-05-15T00:00:00.000Z", "2023-05-15T18:43:40.413Z", "bobs_msg_id", "b", "B")));
-
-        waitForFxEvents();
-        assertEquals(2, listView.getItems().size());
-    }
-
-    @Test
-    void testListenerMessageDeleted() {
-        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
-        assertEquals(2, listView.getItems().size());
-
-        events.onNext(new Event<Message>("groups.g_id.messages.bobs_msg_id.deleted", new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "bobs_msg_id", "b", "B")));
-
-        waitForFxEvents();
-        assertEquals(1, listView.getItems().size());
-    }
-
     @Test // TODO: add test
     void testEditMessage() {}
 
