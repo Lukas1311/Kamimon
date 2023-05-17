@@ -32,7 +32,7 @@ public class MessageService {
 
     public class InvalidNamespaceException extends IllegalArgumentException {
         public InvalidNamespaceException(String namespace) {
-            super("invalid namespace: '" + namespace + "'', must be one of " + MessageNamespace.values());
+            super("invalid namespace: " + namespace + ", must be one of [global, regions, groups]");
         }
     }
 
