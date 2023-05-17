@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -28,7 +29,8 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 

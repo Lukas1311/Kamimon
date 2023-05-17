@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.DaggerTestComponent;
 import de.uniks.stpmon.k.TestComponent;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
