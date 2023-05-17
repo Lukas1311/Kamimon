@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import java.util.HashMap;
-
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.rest.GroupApiService;
@@ -10,23 +8,23 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.HashMap;
 
 public class ChatController extends Controller {
     @FXML
@@ -67,8 +65,13 @@ public class ChatController extends Controller {
     private Group group;
     private HashMap<String, String> groupMembers = new HashMap<>();
 
-    public Group getGroup() { return this.group; }
-    public void setGroup(Group group) { this.group = group; }
+    public Group getGroup() {
+        return this.group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 
     @Inject
     public ChatController() {
@@ -79,32 +82,32 @@ public class ChatController extends Controller {
         messages.clear();
         // populate a group users hashmap with just one REST call to not run into rate limit
         disposables.add(userService
-            .getUsers(group.members())
-            .observeOn(FX_SCHEDULER)
-            .subscribe(users -> {
-                users.forEach(user -> groupMembers.put(user._id(), user.name()));
-            },this::handleError
-            )
+                .getUsers(group.members())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(users -> {
+                            users.forEach(user -> groupMembers.put(user._id(), user.name()));
+                        }, this::handleError
+                )
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-            .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
+                .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
-            .listen("groups.%s.messages.*.*".formatted(group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
-             // only listen to messages in the current specific group ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
-                final Message msg = event.data();
-                System.out.println(msg);
-                switch (event.suffix()) {
-                    case "created" -> this.messages.add(msg);
-                    // checks and updates all messages that have been edited by a user
-                    case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
-                    case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
-                }
-                messagesListView.scrollTo(msg);
-            }, this::handleError
-            )
+                .listen("groups.%s.messages.*.*".formatted(group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+                            // only listen to messages in the current specific group ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
+                            final Message msg = event.data();
+                            System.out.println(msg);
+                            switch (event.suffix()) {
+                                case "created" -> this.messages.add(msg);
+                                // checks and updates all messages that have been edited by a user
+                                case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
+                                case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
+                            }
+                            messagesListView.scrollTo(msg);
+                        }, this::handleError
+                )
         );
     }
 
@@ -132,7 +135,6 @@ public class ChatController extends Controller {
         // messages.getSelectionModel().selectedItemProperty()... listener stuff
 
 
-
         // disable button if field empty
         sendButton.disableProperty().bind(messageField.textProperty().isEmpty());
         sendButton.setOnAction(click -> sendMessage());
@@ -153,11 +155,11 @@ public class ChatController extends Controller {
     // TODO: this is just for testing remove afterwards or use it if you want
     public void addRegionsToChoiceBox() {
         disposables.add(regionService
-            .getRegions()
-            .subscribe(regions -> {
-                // add all region names to the choice box
-                regions.forEach(region -> regionPicker.getItems().add(region.name()));
-            })
+                .getRegions()
+                .subscribe(regions -> {
+                    // add all region names to the choice box
+                    regions.forEach(region -> regionPicker.getItems().add(region.name()));
+                })
         );
     }
 
@@ -168,14 +170,14 @@ public class ChatController extends Controller {
             return;
         }
         disposables.add(msgService
-            .sendMessage(message, "groups", group._id())
-            .observeOn(FX_SCHEDULER)
-            .subscribe(msg -> {
-                System.out.println("Message sent: " + msg.body());
-                messageField.clear();
-                messagesListView.scrollTo(msg);
-            },this::handleError
-            )
+                .sendMessage(message, "groups", group._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(msg -> {
+                            System.out.println("Message sent: " + msg.body());
+                            messageField.clear();
+                            messagesListView.scrollTo(msg);
+                        }, this::handleError
+                )
         );
     }
 
