@@ -14,12 +14,19 @@ import io.reactivex.rxjava3.core.Observable;
 public class MessageService {
 
     public enum MessageNamespace {
-        GLOBAL,
-        REGIONS,
-        GROUPS;
+        GLOBAL("global"),
+        REGIONS("regions"),
+        GROUPS("groups");
 
-        public String toLower() {
-            return name().toLowerCase();
+        private final String namespace;
+
+        MessageNamespace(final String namespace) {
+            this.namespace = namespace;
+        }
+
+        @Override
+        public String toString() {
+            return namespace;
         }
     }
 
@@ -32,7 +39,6 @@ public class MessageService {
         this.messageApiService = messageApiService;
     }
 
-    // TODO: namespace has to be picked dependant where the user is currently (here either "global" or "groups")
     // groups is taken when the user sends messages in a group or to another user (counts as group)
     /**
      * sends a message to the given id of a namespace
@@ -41,9 +47,9 @@ public class MessageService {
      * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
      * @return the message sent
      */
-    public Observable<Message> sendMessage(String body, String namespace, String parent) {
+    public Observable<Message> sendMessage(String body, MessageNamespace namespace, String parent) {
         return messageApiService.sendMessage(
-            namespace,
+            namespace.toString(),
             parent,
             new CreateMessageDto(body)
         );
@@ -57,9 +63,9 @@ public class MessageService {
      * @param newBody the new contents of your new message body
      * @return the updated new message
      */
-    public Observable<Message> editMessage(Message message, String namespace, String parent, String newBody) {
+    public Observable<Message> editMessage(Message message, MessageNamespace namespace, String parent, String newBody) {
         return messageApiService.editMessage(
-            namespace,
+            namespace.toString(),
             parent,
             message._id(),
             new UpdateMessageDto(newBody)
@@ -67,28 +73,50 @@ public class MessageService {
     }
 
     /**
-     * delete a message
+     * this method takes a message as param and deletes it returning the deleted message afterwards
      * @param message the message you want to delete, should be used when a 'delete flag' is clicked/pressed
      * @param namespace is one of "global", "regions", "groups"
      * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
      * @return the deleted message
      */
-    public Observable<Message> deleteMessage(Message message, String namespace, String parent) {
+    public Observable<Message> deleteMessage(Message message, MessageNamespace namespace, String parent) {
         return messageApiService.deleteMessage(
-            namespace,
+            namespace.toString(),
             parent,
             message._id()
         );
     }
 
-    // TODO: not sure about the other methods yet
-    public Observable<ArrayList<Message>> getAllMessages(String namespace, String parent) {
+    /**
+     * this method returns the last 100 or less messages
+     * @param namespace is one of "global", "regions", "groups"
+     * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
+     * @return the last 100 or less messages (100 is default value)
+     */
+    public Observable<ArrayList<Message>> getAllMessages(MessageNamespace namespace, String parent) {
         return messageApiService.getMessages(
-            namespace,
+            namespace.toString(),
             parent,
             null,
             null,
-            100
+            null
+        );
+    }
+
+    /**
+     * returns equal or less messages by the given limit 
+     * @param namespace is one of "global", "regions", "groups"
+     * @param parent is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
+     * @param limit describes the maximum number of messages that can be received (range 1 - 100)
+     * @return all messages within the limit
+     */
+    public Observable<ArrayList<Message>> getLastMessagesByLimit(MessageNamespace namespace, String parent, int limit) {
+        return messageApiService.getMessages(
+            namespace.toString(),
+            parent,
+            null,
+            null,
+            limit
         );
     }
 }

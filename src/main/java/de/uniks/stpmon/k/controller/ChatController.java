@@ -2,14 +2,15 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
+import de.uniks.stpmon.k.dto.Region;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.*;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,6 +26,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class ChatController extends Controller {
     @FXML
@@ -59,11 +61,11 @@ public class ChatController extends Controller {
     EventListener eventListener;
 
 
-    private StringProperty regionName;
-    private ObservableList<Message> messages = FXCollections.observableArrayList();
+    private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
     private Group group;
-    private HashMap<String, String> groupMembers = new HashMap<>();
+    private final HashMap<String, String> groupMembers = new HashMap<>();
+    private Message editMessage;
 
     public Group getGroup() {
         return this.group;
@@ -84,19 +86,18 @@ public class ChatController extends Controller {
         disposables.add(userService
                 .getUsers(group.members())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(users -> {
-                            users.forEach(user -> groupMembers.put(user._id(), user.name()));
-                        }, this::handleError
+                .subscribe(users -> users.forEach(user -> groupMembers.put(user._id(), user.name())), this::handleError
                 )
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-                .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
+                .getAllMessages(GROUPS, group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
-                .listen("groups.%s.messages.*.*".formatted(group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
-                            // only listen to messages in the current specific group ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
+                .listen("%s.%s.messages.*.*".formatted(GROUPS.toString(), group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+                            // only listen to messages in the current specific group
+                            // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
                             final Message msg = event.data();
                             System.out.println(msg);
                             switch (event.suffix()) {
@@ -105,7 +106,9 @@ public class ChatController extends Controller {
                                 case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
                                 case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
                             }
-                            messagesListView.scrollTo(msg);
+                            if (event.suffix().equals("created")) {
+                                messagesListView.scrollTo(msg);
+                            }
                         }, this::handleError
                 )
         );
@@ -130,13 +133,23 @@ public class ChatController extends Controller {
         // scrolls to the bottom of the listview
         messagesListView.scrollTo(1);
 
-
-        // TODO: edit and delete single messages by chosing them and some listener stuff @basbaer
-        // messages.getSelectionModel().selectedItemProperty()... listener stuff
+        messagesListView.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        // handle selected message
+                        messageField.setText(newValue.body());
+                        editMessage = newValue;
+                    } else if (oldValue != null) {
+                        messageField.setText("");
+                        editMessage = null;
+                    }
+                });
 
 
         // disable button if field empty
         sendButton.disableProperty().bind(messageField.textProperty().isEmpty());
+        sendButton.disableProperty().bind(messageField.textProperty().length().greaterThan(16000));
         sendButton.setOnAction(click -> sendMessage());
         messageField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -144,9 +157,6 @@ public class ChatController extends Controller {
             }
         });
 
-        regionName = new SimpleStringProperty("");
-        // bind regionName to selected choice box item
-        regionName.bind(regionPicker.getSelectionModel().selectedItemProperty());
         messageArea.getChildren().setAll(messagesListView);
 
         return parent;
@@ -165,25 +175,84 @@ public class ChatController extends Controller {
 
     @FXML
     public void sendMessage() {
+        //remove spaces at end of string
         String message = messageField.getText().trim();
-        if (message.isEmpty()) {
-            return;
+
+        //check if a message is edited
+        if (editMessage != null) {
+            //check if message should be deleted
+            if (message.isEmpty()) {
+                disposables.add(msgService
+                        .deleteMessage(editMessage, GROUPS, group._id())
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(msg -> {
+                                    System.out.println("Message sent: " + msg.body());
+                                    messageField.clear();
+
+                                    messagesListView.getSelectionModel().clearSelection();
+                                }, this::handleError
+                        )
+                );
+            } else {
+                //updateMessage
+                disposables.add(msgService
+                        .editMessage(editMessage, GROUPS, group._id(), message)
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(msg -> {
+                                    System.out.println("Message sent: " + msg.body());
+                                    messageField.clear();
+                                    messagesListView.getSelectionModel().clearSelection();
+                                }, this::handleError
+                        )
+                );
+            }
+
+            editMessage = null;
+
+        } else {
+            //check for region selection
+            if (!regionPicker.getSelectionModel().isEmpty()) {
+                String regionName = regionPicker.getSelectionModel().getSelectedItem();
+                Optional<Region> regionOptional = regionService.getRegions().blockingFirst()
+                        .stream().filter(r -> r.name().equals(regionName)).findFirst();
+
+                if(regionOptional.isPresent()) {
+                    String regionId = regionOptional.get()._id();
+
+                    String invitationText = "Join " + regionId;
+
+                    disposables.add(msgService
+                            .sendMessage(invitationText, GROUPS, group._id())
+                            .observeOn(FX_SCHEDULER)
+                            .subscribe(msg -> {
+                                System.out.println("Message sent: " + msg.body());
+                                messagesListView.scrollTo(msg);
+                            }, this::handleError)
+                    );
+                    regionPicker.getSelectionModel().clearSelection();
+                }
+            }
+
+            if (message.isEmpty()) {
+                return;
+            }
+            disposables.add(msgService
+                    .sendMessage(message, GROUPS, group._id())
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(msg -> {
+                                System.out.println("Message sent: " + msg.body());
+                                messageField.clear();
+                                messagesListView.scrollTo(msg);
+                            }, this::handleError
+                    )
+            );
         }
-        disposables.add(msgService
-                .sendMessage(message, "groups", group._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(msg -> {
-                            System.out.println("Message sent: " + msg.body());
-                            messageField.clear();
-                            messagesListView.scrollTo(msg);
-                        }, this::handleError
-                )
-        );
     }
 
     @FXML
     public void openSettings() {
-        hybridControllerProvider.get().createChat(group);
+        app.show(hybridControllerProvider.get());
+        hybridControllerProvider.get().openSidebar("createChat");
     }
 
     public void leaveChat() {
