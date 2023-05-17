@@ -52,7 +52,7 @@ public class CreateChatController extends Controller {
     @Inject
     UserStorage userStorage;
 
-    private final ObservableList<User> friends = FXCollections.observableArrayList();
+    private final ObservableList<User> members = FXCollections.observableArrayList();
     public final HashSet<String> groupMembers = new HashSet<>();
     private Group group;
 
@@ -78,7 +78,8 @@ public class CreateChatController extends Controller {
             }
             // Remove the user itself from the list
             userMap.remove(userService.getMe()._id());
-            friends.setAll(userMap.values());
+            notEnoughGroupMembers.setValue(true);
+            members.setAll(userMap.values());
         };
         groupMembers.add(userStorage.getUser()._id());
         if (group != null) {
@@ -113,7 +114,7 @@ public class CreateChatController extends Controller {
                 .or(groupNameTooLong);
         createGroupButton.disableProperty().bind(isInvalid);
 
-        final ListView<User> groupMembers = new ListView<>(this.friends);
+        final ListView<User> groupMembers = new ListView<>(this.members);
         groupMemberList.getChildren().add(groupMembers);
         VBox.setVgrow(groupMembers, Priority.ALWAYS);
         groupMembers.setCellFactory(e -> new GroupMemberCell(this));
