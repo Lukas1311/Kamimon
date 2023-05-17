@@ -14,12 +14,25 @@ import io.reactivex.rxjava3.core.Observable;
 public class MessageService {
 
     public enum MessageNamespace {
-        GLOBAL,
-        REGIONS,
-        GROUPS;
+        GLOBAL("global"),
+        REGIONS("regions"),
+        GROUPS("groups");
 
-        public String toLower() {
-            return name().toLowerCase();
+        private final String namespace;
+
+        MessageNamespace(final String namespace) {
+            this.namespace = namespace;
+        }
+
+        @Override
+        public String toString() {
+            return namespace;
+        }
+    }
+
+    public class InvalidNamespaceException extends IllegalArgumentException {
+        public InvalidNamespaceException(String namespace) {
+            super("invalid namespace: '" + namespace + "'', must be one of " + MessageNamespace.values());
         }
     }
 
@@ -32,6 +45,15 @@ public class MessageService {
         this.messageApiService = messageApiService;
     }
 
+    private boolean isValidNamespace(String namespace) {
+        try {
+            MessageNamespace.valueOf(namespace.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     // groups is taken when the user sends messages in a group or to another user (counts as group)
     /**
      * sends a message to the given id of a namespace
@@ -41,11 +63,15 @@ public class MessageService {
      * @return the message sent
      */
     public Observable<Message> sendMessage(String body, String namespace, String parent) {
-        return messageApiService.sendMessage(
-            namespace,
-            parent,
-            new CreateMessageDto(body)
-        );
+        if (isValidNamespace(namespace)) {
+            return messageApiService.sendMessage(
+                namespace,
+                parent,
+                new CreateMessageDto(body)
+            );
+        } else {
+            return Observable.error(new InvalidNamespaceException(namespace));
+        }
     }
 
     /**
@@ -57,12 +83,16 @@ public class MessageService {
      * @return the updated new message
      */
     public Observable<Message> editMessage(Message message, String namespace, String parent, String newBody) {
-        return messageApiService.editMessage(
-            namespace,
-            parent,
-            message._id(),
-            new UpdateMessageDto(newBody)
-        );
+        if (isValidNamespace(namespace)) {
+            return messageApiService.editMessage(
+                namespace,
+                parent,
+                message._id(),
+                new UpdateMessageDto(newBody)
+            );
+        } else {
+            return Observable.error(new InvalidNamespaceException(namespace));
+        }
     }
 
     /**
@@ -73,11 +103,15 @@ public class MessageService {
      * @return the deleted message
      */
     public Observable<Message> deleteMessage(Message message, String namespace, String parent) {
-        return messageApiService.deleteMessage(
-            namespace,
-            parent,
-            message._id()
-        );
+        if (isValidNamespace(namespace)) {
+            return messageApiService.deleteMessage(
+                namespace,
+                parent,
+                message._id()
+            );
+        } else {
+            return Observable.error(new InvalidNamespaceException(namespace));
+        }
     }
 
     /**
@@ -87,13 +121,17 @@ public class MessageService {
      * @return the last 100 or less messages (100 is default value)
      */
     public Observable<ArrayList<Message>> getAllMessages(String namespace, String parent) {
-        return messageApiService.getMessages(
-            namespace,
-            parent,
-            null,
-            null,
-            null
-        );
+        if (isValidNamespace(namespace)) {
+            return messageApiService.getMessages(
+                namespace,
+                parent,
+                null,
+                null,
+                null
+            );
+        } else {
+            return Observable.error(new InvalidNamespaceException(namespace));
+        }
     }
 
     /**
@@ -104,12 +142,16 @@ public class MessageService {
      * @return all messages within the limit
      */
     public Observable<ArrayList<Message>> getLastMessagesByLimit(String namespace, String parent, int limit) {
-        return messageApiService.getMessages(
-            namespace,
-            parent,
-            null,
-            null,
-            limit
-        );
+        if (isValidNamespace(namespace)) {
+            return messageApiService.getMessages(
+                namespace,
+                parent,
+                null,
+                null,
+                limit
+            );
+        } else {
+            return Observable.error(new InvalidNamespaceException(namespace));
+        }
     }
 }
