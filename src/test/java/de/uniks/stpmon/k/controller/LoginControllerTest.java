@@ -51,6 +51,8 @@ public class LoginControllerTest extends ApplicationTest {
     UserService userService;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     @Spy
     App app = new App(null);
@@ -64,6 +66,7 @@ public class LoginControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         when(preferences.get(anyString(), anyString())).thenReturn("en");
         app.show(loginController);
         stage.requestFocus();

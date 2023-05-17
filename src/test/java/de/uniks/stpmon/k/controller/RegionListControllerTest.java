@@ -45,12 +45,15 @@ public class RegionListControllerTest extends ApplicationTest {
     App app = new App(null);
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     @Override
     public void start(Stage stage) throws Exception {
         final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("", "", "0", "Test")));
         when(regionApiService.getRegions()).thenReturn(regionMock);
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(regionListController);
         stage.requestFocus();
     }
