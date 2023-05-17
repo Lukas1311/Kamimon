@@ -80,6 +80,8 @@ public class ChatControllerTest extends ApplicationTest {
     EventListener eventListener;
     @Mock
     Group group;
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
@@ -93,6 +95,7 @@ public class ChatControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        when(resourceBundleProvider.get()).thenReturn(resources);
         // we have to do all the stuff here because it is set in the init() method of ChatController :(((
         final User bob = new User("b_id", "b", null, null, null);
         final User alice = new User("a_id", "a", null, null, null);
@@ -307,7 +310,40 @@ public class ChatControllerTest extends ApplicationTest {
 
     @Test // TODO: add test
     void testSendInvite() {
+        // define mocks:
+        Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "join");
+        // this simulates the send message call and the listener in one action
+        when(msgService.sendMessage(any(), any(), any()))
+        .thenAnswer((invocation)->{
+            events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
+            return Observable.just(msg);
+        });
 
+        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
+        verifyThat(listView, ListViewMatchers.hasItems(2));
+
+        // action: tab into region list and chose a region
+        write("\t".repeat(5));
+        press(KeyCode.DOWN).release(KeyCode.DOWN).press(KeyCode.DOWN).release(KeyCode.DOWN);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        // tab back into message input and send the invite with enter keycode
+        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
+        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
+        TextField messageInput = lookup("#messageField").query();
+        assertThat(messageInput).isFocused();
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        assertThat(messageInput.getText().isEmpty());
+
+        // check values:
+        waitForFxEvents();
+        verifyThat(listView, ListViewMatchers.hasItems(3));
+        
+        // last item has to be desired message
+        ObservableList<Message> items = listView.getItems();
+        Message joinMessage = items.get(items.size() - 1);
+
+        // check mocks:
+        verifyThat(joinMessage.body(), TextMatchers.hasText("join"));
     }
 
     @Test
