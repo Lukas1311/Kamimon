@@ -1,7 +1,9 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.sidebar;
 
+import de.uniks.stpmon.k.controller.ChatController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.service.AuthenticationService;
-import de.uniks.stpmon.k.dto.Group;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -10,6 +12,11 @@ import javafx.scene.layout.GridPane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.LOBBY;
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.PAUSE;
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_LIST;
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.FRIEND_LIST;
 
 @Singleton
 public class SidebarController extends Controller {
@@ -68,19 +75,19 @@ public class SidebarController extends Controller {
     }
 
     public void openChat() {
-        hybridController.openSidebar("chatList");
+        hybridController.forceTab(CHAT_LIST);
     }
 
     public void openFriends() {
-        hybridController.openSidebar("friends");
+        hybridController.forceTab(FRIEND_LIST);
     }
 
     public void backtoLobby() {
-        hybridController.openSidebar("lobby");
+        hybridController.openMain(LOBBY);
     }
 
     public void toPause() {
-        hybridController.openSidebar("pause");
+        hybridController.openMain(PAUSE);
     }
 
     public void setPause(boolean b) {

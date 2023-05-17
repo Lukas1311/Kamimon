@@ -1,46 +1,40 @@
 package de.uniks.stpmon.k.controller;
 
-import org.mockito.Mockito;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.LabeledMatchers;
-
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-import static org.testfx.assertions.api.Assertions.assertThat;
-import static org.testfx.api.FxAssert.verifyThat;
-
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.LoginResult;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.TokenStorage;
 import de.uniks.stpmon.k.service.UserService;
-
-import javafx.stage.Stage;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.LabeledMatchers;
 
-
-import javax.inject.Inject;
 import javax.inject.Provider;
-import io.reactivex.rxjava3.core.Observable;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.assertions.api.Assertions.assertThat;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 
 @ExtendWith(MockitoExtension.class)
