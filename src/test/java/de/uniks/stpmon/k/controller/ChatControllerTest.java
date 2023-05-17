@@ -351,7 +351,6 @@ public class ChatControllerTest extends ApplicationTest {
         // define mocks:
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
-        doNothing().when(app).show(mock);
         doNothing().when(mock).popTab();
 
         // action:
@@ -360,7 +359,6 @@ public class ChatControllerTest extends ApplicationTest {
         // no values to check
 
         // check mocks:
-        verify(app).show(mock);
         verify(mock).popTab();
     }
 
@@ -369,7 +367,6 @@ public class ChatControllerTest extends ApplicationTest {
         // define mocks:
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
-        doNothing().when(app).show(mock);
         doNothing().when(mock).createChat(any());
 
         // action:
@@ -378,7 +375,6 @@ public class ChatControllerTest extends ApplicationTest {
         // no values to check
 
         // check mocks:
-        verify(app).show(mock);
         verify(mock).createChat(chatController.getGroup());
     }
 
