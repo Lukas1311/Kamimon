@@ -4,8 +4,7 @@ import de.uniks.stpmon.k.dto.CreateMessageDto;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
 import de.uniks.stpmon.k.rest.MessageApiService;
-import de.uniks.stpmon.k.service.MessageService.InvalidNamespaceException;
-import de.uniks.stpmon.k.service.MessageService.MessageNamespace;
+import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.*;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -43,7 +42,7 @@ public class MessageServiceTest {
         );
 
         // action:
-        final Message msg = msgService.sendMessage("hi", MessageNamespace.GROUPS.toString(), "p")
+        final Message msg = msgService.sendMessage("hi", GROUPS, "p")
             .blockingFirst();
 
         // check values:
@@ -68,7 +67,7 @@ public class MessageServiceTest {
 
         // action:
         final Message msg = msgService.deleteMessage(
-            new Message("123", "321", "id", "s", "b"), MessageNamespace.GLOBAL.toString(), "p")
+            new Message("123", "321", "id", "s", "b"), GLOBAL, "p")
                 .blockingFirst();
 
         // check values:
@@ -94,7 +93,7 @@ public class MessageServiceTest {
         // action:
         final Message msg = msgService.editMessage(
             new Message("123", "321", "id", "s", "old bdy"),
-            MessageNamespace.REGIONS.toString(), "p", "new bdy"
+            REGIONS, "p", "new bdy"
         ).blockingFirst();
 
         // check values:
@@ -118,7 +117,7 @@ public class MessageServiceTest {
         ));
 
         // action:
-        final ArrayList<Message> msgs = msgService.getAllMessages(MessageNamespace.GROUPS.toString(), "p").blockingFirst();
+        final ArrayList<Message> msgs = msgService.getAllMessages(GROUPS, "p").blockingFirst();
 
         // check values of the last message in returned messages:
         assertEquals("11",msgs.get(msgs.size() - 1).createdAt());
@@ -143,7 +142,7 @@ public class MessageServiceTest {
             .getMessages(any(), any(), any(), any(), any())).thenReturn(Observable.just(tenMessages));
 
         // action:
-        final ArrayList<Message> msgs = msgService.getLastMessagesByLimit(MessageNamespace.GROUPS.toString(), "p",10).blockingFirst();
+        final ArrayList<Message> msgs = msgService.getLastMessagesByLimit(GROUPS, "p",10).blockingFirst();
 
         // check values of the last message in returned messages:
         assertEquals("11",msgs.get(msgs.size() - 1).createdAt());
@@ -155,25 +154,5 @@ public class MessageServiceTest {
 
         // check mocks:
         verify(msgApiService).getMessages("groups", "p", null, null, 10);
-    }
-
-    @Test
-    void TestMessageActionsWithInvalidNamespace() {   
-        // preparation:
-        String invalidNamespace = "invalid";
-        Message dummyMsg = new Message("a", "b", "c", "d", "e");
-        // action:
-        final Observable<Message> result1 = msgService.sendMessage("hi", invalidNamespace, "p");
-        final Observable<Message> result2 = msgService.deleteMessage(dummyMsg, invalidNamespace, "p");
-        final Observable<Message> result3 = msgService.editMessage(dummyMsg, invalidNamespace, "p", "hi");
-        final Observable<ArrayList<Message>> result4 = msgService.getAllMessages(invalidNamespace, "p");
-        final Observable<ArrayList<Message>> result5 = msgService.getLastMessagesByLimit(invalidNamespace, "p", 5);
-
-        // check the observables (must be exception)
-        result1.test().assertError(InvalidNamespaceException.class);
-        result2.test().assertError(InvalidNamespaceException.class);
-        result3.test().assertError(InvalidNamespaceException.class);
-        result4.test().assertError(InvalidNamespaceException.class);
-        result5.test().assertError(InvalidNamespaceException.class);
     }
 }
