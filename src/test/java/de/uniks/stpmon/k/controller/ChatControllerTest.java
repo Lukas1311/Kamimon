@@ -33,6 +33,7 @@ import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.api.FxAssert.verifyThat;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Event;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
@@ -305,7 +306,9 @@ public class ChatControllerTest extends ApplicationTest {
     }
 
     @Test // TODO: add test
-    void testSendInvite() {}
+    void testSendInvite() {
+
+    }
 
     @Test
     void testLeaveChat() {
@@ -313,7 +316,7 @@ public class ChatControllerTest extends ApplicationTest {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
-        doNothing().when(mock).openSidebar("chatList");
+        doNothing().when(mock).popTab();
 
         // action:
         clickOn("#backButton");
@@ -322,7 +325,7 @@ public class ChatControllerTest extends ApplicationTest {
 
         // check mocks:
         verify(app).show(mock);
-        verify(mock).openSidebar("chatList");
+        verify(mock).popTab();
     }
 
     @Test
@@ -331,7 +334,7 @@ public class ChatControllerTest extends ApplicationTest {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
-        doNothing().when(mock).openSidebar("createChat");
+        doNothing().when(mock).createChat(any());
 
         // action:
         clickOn("#settingsButton");
@@ -340,7 +343,7 @@ public class ChatControllerTest extends ApplicationTest {
 
         // check mocks:
         verify(app).show(mock);
-        verify(mock).openSidebar("createChat");
+        verify(mock).createChat(chatController.getGroup());
     }
 
     @Test
