@@ -62,6 +62,7 @@ class CreateChatControllerTest extends ApplicationTest {
         final User bob = new User("Bob", "Bob", "online", null, null);
         final User peter = new User("Peter", "Peter", "online", null, null);
         when(userStorage.getUser()).thenReturn(alice);
+        when(userService.getMe()).thenReturn(alice);
         members.add(alice);
         members.add(bob);
         members.add(peter);
