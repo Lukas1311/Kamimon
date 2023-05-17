@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 public class LoginController extends Controller {
