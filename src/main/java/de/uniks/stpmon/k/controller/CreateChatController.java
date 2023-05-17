@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -79,6 +80,7 @@ public class CreateChatController extends Controller {
             // Remove the user itself from the list
             userMap.remove(userService.getMe()._id());
             notEnoughGroupMembers.setValue(true);
+
             members.setAll(userMap.values());
         };
         groupMembers.add(userStorage.getUser()._id());
@@ -132,6 +134,7 @@ public class CreateChatController extends Controller {
             leaveGroupButton.setVisible(true);
             createGroupButton.setText(resources.getString("create.group.button.update"));
             createGroupButton.setOnAction(e -> updateGroup());
+            groupNameField.setText(group.name());
         }
 
         return parent;
@@ -147,7 +150,7 @@ public class CreateChatController extends Controller {
     }
 
     public void returnToChatList() {
-        hybridControllerProvider.get().openSidebar("chatList");
+        hybridControllerProvider.get().popTab();
     }
 
     public void leaveGroup() {
@@ -161,7 +164,10 @@ public class CreateChatController extends Controller {
         final ArrayList<String> groupMemberNames = new ArrayList<>(groupMembers);
         disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(hybridControllerProvider.get()::openChat));
+                .subscribe(group -> {
+                    hybridControllerProvider.get().popTab();
+                    hybridControllerProvider.get().openChat(group);
+                }));
     }
 
     public void handleGroup(User item) {

@@ -1,16 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,16 +18,16 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
-
-import java.awt.image.SinglePixelPackedSampleModel;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -68,9 +65,9 @@ public class RegionListControllerTest extends ApplicationTest {
         Button button = (Button) listView.lookup("#regionButton");
         assertEquals("Test", button.getText());
 
-
-        hybridController.get().openSidebar("ingame");
-        verify(mock).openSidebar("ingame");
+        clickOn(button);
+        waitForFxEvents();
+        verify(mock).openMain(INGAME);
 
     }
 }
