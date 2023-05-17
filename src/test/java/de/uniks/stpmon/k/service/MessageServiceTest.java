@@ -43,7 +43,7 @@ public class MessageServiceTest {
         );
 
         // action:
-        final Message msg = msgService.sendMessage("hi", MessageNamespace.GROUPS.toString() , "p")
+        final Message msg = msgService.sendMessage("hi", MessageNamespace.GROUPS.toString(), "p")
             .blockingFirst();
 
         // check values:
@@ -158,13 +158,22 @@ public class MessageServiceTest {
     }
 
     @Test
-    void TestSendMessageWithInvalidNamespace() {   
+    void TestMessageActionsWithInvalidNamespace() {   
         // preparation:
-        String invalidNamespace = "invalid";     
+        String invalidNamespace = "invalid";
+        Message dummyMsg = new Message("a", "b", "c", "d", "e");
         // action:
-        final Observable<Message> result = msgService.sendMessage("hi", invalidNamespace, "p");
+        final Observable<Message> result1 = msgService.sendMessage("hi", invalidNamespace, "p");
+        final Observable<Message> result2 = msgService.deleteMessage(dummyMsg, invalidNamespace, "p");
+        final Observable<Message> result3 = msgService.editMessage(dummyMsg, invalidNamespace, "p", "hi");
+        final Observable<ArrayList<Message>> result4 = msgService.getAllMessages(invalidNamespace, "p");
+        final Observable<ArrayList<Message>> result5 = msgService.getLastMessagesByLimit(invalidNamespace, "p", 5);
 
-        // check the observable (must be exception)
-        result.test().assertError(InvalidNamespaceException.class);
+        // check the observables (must be exception)
+        result1.test().assertError(InvalidNamespaceException.class);
+        result2.test().assertError(InvalidNamespaceException.class);
+        result3.test().assertError(InvalidNamespaceException.class);
+        result4.test().assertError(InvalidNamespaceException.class);
+        result5.test().assertError(InvalidNamespaceException.class);
     }
 }
