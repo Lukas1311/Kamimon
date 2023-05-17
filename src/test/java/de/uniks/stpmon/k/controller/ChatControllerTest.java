@@ -58,6 +58,7 @@ import org.mockito.Mockito;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.*;
@@ -248,8 +249,60 @@ public class ChatControllerTest extends ApplicationTest {
         });
     }
 
-    @Test // TODO: add test
-    void testDeleteMessage() {}
+    @Test
+    void testDeleteMessage() {
+        // preperation:
+        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
+        Message deleteMsg = new Message("2023-05-15T18:30:00.000Z", "1", "b_msg_id", "b_id", "new text from B");
+        ObservableList<Message> items = listView.getItems();
+        // find old message and verify old text of message which is just "B"
+        Message oldMsg = null;
+        for (Message msg : items)  {
+            if (msg._id() == deleteMsg._id()) {
+                oldMsg = msg;
+                break;
+            }
+        };
+        assertNotNull(oldMsg);
+        verifyThat(oldMsg.body(), TextMatchers.hasText("B"));
+        verifyThat(listView, ListViewMatchers.hasItems(2));
+
+        // define mocks: this simulates the edit message call and the listener in one action
+        when(msgService.deleteMessage(any(), any(), any()))
+        .thenAnswer((invocation)->{
+            events.onNext(new Event<Message>("groups.g_id.messages.1.deleted", deleteMsg));
+            return Observable.just(deleteMsg);
+        });
+
+        // action: go into messages list and click on a list item (message)
+        ListCell<Message> desiredCell = null;
+        for (Node node : listView.lookupAll(".list-cell")) {
+            if (node instanceof ListCell) {
+                ListCell<Message> cell = (ListCell<Message>) node;
+                Message message = cell.getItem();
+                // Check the desired condition or property of the message object
+                if (message.body() == "B") {
+                    desiredCell = cell;
+                    break;
+                }
+            }
+        }
+
+        // action: click the old message and then edit the text
+        clickOn(desiredCell);
+        TextField messageInput = lookup("#messageField").query();
+        clickOn(messageInput);
+        press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
+        // delete text and hit enter
+        press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        assertThat(messageInput.getText().isEmpty());
+
+        // check values:
+        waitForFxEvents();
+        // messages have to be count of one now
+        verifyThat(listView, ListViewMatchers.hasItems(1));
+    }
 
     @Test // TODO: add test
     void testSendInvite() {}
