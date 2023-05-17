@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
@@ -77,7 +78,7 @@ public class CreateChatController extends Controller {
     }
 
     public void returnToChatList() {
-        hybridControllerProvider.get().openSidebar("chatList");
+        hybridControllerProvider.get().popTab();
     }
 
     public void leaveGroup() {
@@ -90,7 +91,12 @@ public class CreateChatController extends Controller {
             return;
         }
         final ArrayList<String> groupMemberNames = new ArrayList<>(groupMembers);
-        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames).observeOn(FX_SCHEDULER).subscribe(hybridControllerProvider.get()::openChat));
+        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(group -> {
+                    hybridControllerProvider.get().popTab();
+                    hybridControllerProvider.get().openChat(group);
+                }));
     }
 
     public void handleGroup(User item) {

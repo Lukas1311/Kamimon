@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.Region;
@@ -25,6 +26,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Optional;
+
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_CREATE;
 
 public class ChatController extends Controller {
     @FXML
@@ -249,14 +252,12 @@ public class ChatController extends Controller {
 
     @FXML
     public void openSettings() {
-        app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar("createChat");
+        hybridControllerProvider.get().pushTab(CHAT_CREATE);
     }
 
     public void leaveChat() {
         messages.clear();
-        app.show(hybridControllerProvider.get());
-        hybridControllerProvider.get().openSidebar("chatList");
+        hybridControllerProvider.get().popTab();
     }
 
     // reusable handle error function for the onError of an Observable

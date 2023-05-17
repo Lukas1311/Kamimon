@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.views.ChatCell;
@@ -18,6 +19,8 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_CREATE;
 
 @Singleton
 public class ChatListController extends Controller {
@@ -94,6 +97,6 @@ public class ChatListController extends Controller {
     }
 
     public void createChat() {
-        hybridControllerProvider.get().openSidebar("createChat");
+        hybridControllerProvider.get().pushTab(CHAT_CREATE);
     }
 }
