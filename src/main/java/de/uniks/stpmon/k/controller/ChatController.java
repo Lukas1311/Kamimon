@@ -10,8 +10,6 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
-import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.*;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,7 +27,7 @@ import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_CREATE;
+import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
 public class ChatController extends Controller {
     @FXML
@@ -254,7 +252,7 @@ public class ChatController extends Controller {
 
     @FXML
     public void openSettings() {
-        hybridControllerProvider.get().pushTab(CHAT_CREATE);
+        hybridControllerProvider.get().createChat(group);
     }
 
     public void leaveChat() {

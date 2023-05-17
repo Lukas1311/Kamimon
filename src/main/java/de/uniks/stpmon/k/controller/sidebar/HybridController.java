@@ -43,9 +43,9 @@ public class HybridController extends Controller {
     @Inject
     ChatListController chatListController;
     @Inject
-    CreateChatController createChatController;
-    @Inject
     Provider<ChatController> chatControllerProvider;
+    @Inject
+    Provider<CreateChatController> createChatControllerProvider;
     @Inject
     UserService userService;
     @Inject
@@ -143,7 +143,7 @@ public class HybridController extends Controller {
         switch (tab) {
             case CHAT -> pushController(chatControllerProvider.get(), setup);
             case CHAT_LIST -> pushController(chatListController, setup);
-            case CHAT_CREATE -> pushController(createChatController, setup);
+            case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
         }
     }
@@ -221,5 +221,9 @@ public class HybridController extends Controller {
                 .subscribe(group ->
                         pushTab(SidebarTab.CHAT, (ChatController controller) -> controller.setGroup(group)))
         );
+    }
+
+    public void createChat(Group group) {
+        pushTab(SidebarTab.CHAT_CREATE, (CreateChatController controller) -> controller.setGroup(group));
     }
 }

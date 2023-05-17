@@ -27,8 +27,7 @@ import javafx.scene.text.Font;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
 public class CreateChatController extends Controller {
 
@@ -81,6 +80,7 @@ public class CreateChatController extends Controller {
             // Remove the user itself from the list
             userMap.remove(userService.getMe()._id());
             notEnoughGroupMembers.setValue(true);
+
             members.setAll(userMap.values());
         };
         groupMembers.add(userStorage.getUser()._id());
@@ -134,6 +134,7 @@ public class CreateChatController extends Controller {
             leaveGroupButton.setVisible(true);
             createGroupButton.setText(resources.getString("create.group.button.update"));
             createGroupButton.setOnAction(e -> updateGroup());
+            groupNameField.setText(group.name());
         }
 
         return parent;
