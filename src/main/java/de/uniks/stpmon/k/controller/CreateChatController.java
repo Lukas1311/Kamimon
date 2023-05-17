@@ -7,15 +7,20 @@ import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.views.GroupMemberCell;
 import io.reactivex.rxjava3.functions.Consumer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -29,6 +34,7 @@ public class CreateChatController extends Controller {
     public VBox groupMemberList;
     public TextField groupNameField;
     public Button createGroupButton;
+    public Label errorLabel;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -47,6 +53,9 @@ public class CreateChatController extends Controller {
     public final HashSet<String> groupMembers = new HashSet<>();
 
     private Group group;
+
+    private BooleanBinding isInvalid;
+    private BooleanBinding groupNameTooLong;
 
     @Inject
     public CreateChatController() {
@@ -79,6 +88,24 @@ public class CreateChatController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        errorLabel.setFont(new Font(10));
+        errorLabel.setTextFill(Color.RED);
+        groupNameTooLong = groupNameField.textProperty().length().greaterThan(32);
+
+        errorLabel.textProperty().bind(
+                Bindings.when(groupNameTooLong.and(groupNameField.textProperty().isNotEmpty()))
+                        .then(resources.getString("group.name.too.long"))
+                        .otherwise(Bindings.when(groupNameField.textProperty().isEmpty())
+                                .then(resources.getString("group.name.is.empty"))
+                                .otherwise("")
+                        )
+        );
+        isInvalid = groupNameField
+                .textProperty()
+                .isEmpty()
+                .or(groupNameTooLong);
+        createGroupButton.disableProperty().bind(isInvalid);
 
         final ListView<User> groupMembers = new ListView<>(this.friends);
         groupMemberList.getChildren().add(groupMembers);

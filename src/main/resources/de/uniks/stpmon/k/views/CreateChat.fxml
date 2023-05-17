@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateChatController">
+<?import javafx.scene.text.Font?>
+<VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0"
+      style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateChatController">
     <HBox fillHeight="false" prefWidth="368.0">
         <VBox fillWidth="false" prefWidth="185.0">
-            <Button fx:id="returnButton" mnemonicParsing="false" onAction="#returnToChatList" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
+            <Button fx:id="returnButton" mnemonicParsing="false" onAction="#returnToChatList" prefHeight="42.0"
+                    prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="25.0" right="5.0" top="5.0" />
+                    <Insets bottom="5.0" left="25.0" right="5.0" top="5.0"/>
                 </VBox.margin>
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-            <font>
-               <Font size="18.0" />
-            </font>
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <font>
+                    <Font size="18.0"/>
+                </font>
             </Button>
         </VBox>
         <VBox alignment="TOP_RIGHT" fillWidth="false" prefWidth="185.0">
-            <Button fx:id="leaveGroupButton" mnemonicParsing="false" onAction="#leaveGroup" style="-fx-background-color: red; -fx-background-radius: 10;" text="%leave.group" textFill="WHITE" visible="false">
+            <Button fx:id="leaveGroupButton" mnemonicParsing="false" onAction="#leaveGroup"
+                    style="-fx-background-color: red; -fx-background-radius: 10;" text="%leave.group" textFill="WHITE"
+                    visible="false">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="5.0" right="25.0" top="15.0" />
+                    <Insets bottom="5.0" left="5.0" right="25.0" top="15.0"/>
                 </VBox.margin>
             </Button>
         </VBox>
@@ -40,31 +44,38 @@
                 </padding>
             </VBox>
         </ScrollPane>
-      <VBox.margin>
-         <Insets />
-      </VBox.margin>
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
     </VBox>
+    <Label fx:id="errorLabel">
+        <VBox.margin>
+            <Insets left="10.0"/>
+        </VBox.margin>
+    </Label>
     <HBox>
         <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
             <TextField fx:id="groupNameField" prefWidth="350.0" promptText="%enter.groupname">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="10.0" right="10.0" top="10.0" />
+                    <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
                 </VBox.margin>
             </TextField>
-          <Button fx:id="createGroupButton" mnemonicParsing="false" onAction="#createGroup" prefHeight="25.0" prefWidth="350.0" style="-fx-background-color: blue; -fx-background-radius: 10;" text="%create.group.button.create" textFill="WHITE">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
-            <VBox.margin>
-               <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-            </VBox.margin>
-          </Button>
+            <Button fx:id="createGroupButton" mnemonicParsing="false" onAction="#createGroup" prefHeight="25.0"
+                    prefWidth="350.0" style="-fx-background-color: blue; -fx-background-radius: 10;"
+                    text="%create.group.button.create" textFill="WHITE">
+                <cursor>
+                    <Cursor fx:constant="HAND"/>
+                </cursor>
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <VBox.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="5.0"/>
+                </VBox.margin>
+            </Button>
         </VBox>
     </HBox>
-   <cursor>
-      <Cursor fx:constant="DEFAULT" />
-   </cursor>
+    <cursor>
+        <Cursor fx:constant="DEFAULT"/>
+    </cursor>
 </VBox>
