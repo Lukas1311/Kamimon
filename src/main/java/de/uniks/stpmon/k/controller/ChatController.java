@@ -91,7 +91,7 @@ public class ChatController extends Controller {
         );
         System.out.println("group name is: " + group.name());
         disposables.add(msgService
-                .getAllMessages(GROUPS.toString(), group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
+                .getAllMessages(GROUPS, group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
@@ -183,7 +183,7 @@ public class ChatController extends Controller {
             //check if message should be deleted
             if (message.isEmpty()) {
                 disposables.add(msgService
-                        .deleteMessage(editMessage, GROUPS.toString(), group._id())
+                        .deleteMessage(editMessage, GROUPS, group._id())
                         .observeOn(FX_SCHEDULER)
                         .subscribe(msg -> {
                                     System.out.println("Message sent: " + msg.body());
@@ -196,7 +196,7 @@ public class ChatController extends Controller {
             } else {
                 //updateMessage
                 disposables.add(msgService
-                        .editMessage(editMessage, GROUPS.toString(), group._id(), message)
+                        .editMessage(editMessage, GROUPS, group._id(), message)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(msg -> {
                                     System.out.println("Message sent: " + msg.body());
@@ -222,7 +222,7 @@ public class ChatController extends Controller {
                     String invitationText = "Join " + regionId;
 
                     disposables.add(msgService
-                            .sendMessage(invitationText, GROUPS.toString(), group._id())
+                            .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
                             .subscribe(msg -> {
                                 System.out.println("Message sent: " + msg.body());
@@ -237,7 +237,7 @@ public class ChatController extends Controller {
                 return;
             }
             disposables.add(msgService
-                    .sendMessage(message, GROUPS.toString(), group._id())
+                    .sendMessage(message, GROUPS, group._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(msg -> {
                                 System.out.println("Message sent: " + msg.body());
