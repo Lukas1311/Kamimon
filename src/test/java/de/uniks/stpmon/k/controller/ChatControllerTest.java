@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import javax.inject.Provider;
 
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -24,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.ListViewMatchers;
 import org.testfx.matcher.control.TextMatchers;
+import org.testfx.matcher.base.NodeMatchers;
 
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -51,6 +53,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.Mockito;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -155,7 +158,7 @@ public class ChatControllerTest extends ApplicationTest {
     @Test
     void testSendMessageOnEnter() {
         // define mocks:
-        Message msg = new Message("2023-05-15T18:30:00.000Z", "1", "id", "b_id", "moin");
+        Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "moin");
         // this simulates the send message call and the listener in one action
         when(msgService.sendMessage(any(), any(), any()))
         .thenAnswer((invocation)->{
@@ -186,8 +189,64 @@ public class ChatControllerTest extends ApplicationTest {
         verifyThat(lastMessage.body(), TextMatchers.hasText("moin"));
     }
 
-    @Test // TODO: add test
-    void testEditMessage() {}
+    @Test
+    void testEditMessage() {
+        // define mocks:
+        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
+        Message editMsg = new Message("2023-05-15T18:30:00.000Z", "1", "b_msg_id", "b_id", "new text from B");
+        ObservableList<Message> items = listView.getItems();
+        // find old message and verify old text of message which is just "B"
+        Message oldMsg = null;
+        for (Message msg : items)  {
+            if (msg._id() == editMsg._id()) {
+                oldMsg = msg;
+                break;
+            }
+        };
+        assertNotNull(oldMsg);
+        verifyThat(oldMsg.body(), TextMatchers.hasText("B"));
+        verifyThat(listView, ListViewMatchers.hasItems(2));
+        // this simulates the edit message call and the listener in one action
+        when(msgService.editMessage(any(), any(), any(), any()))
+        .thenAnswer((invocation)->{
+            events.onNext(new Event<Message>("groups.g_id.messages.1.updated", editMsg));
+            return Observable.just(editMsg);
+        });
+
+        // action: go into messages list and click on a list item (message)
+        ListCell<Message> desiredCell = null;
+        for (Node node : listView.lookupAll(".list-cell")) {
+            if (node instanceof ListCell) {
+                ListCell<Message> cell = (ListCell<Message>) node;
+                Message message = cell.getItem();
+                // Check the desired condition or property of the message object
+                if (message.body() == "B") {
+                    desiredCell = cell;
+                    break;
+                }
+            }
+        }
+
+        // action: click the old message and then edit the text
+        clickOn(desiredCell);
+        TextField messageInput = lookup("#messageField").query();
+        clickOn(messageInput);
+        write("trololo");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        assertThat(messageInput.getText().isEmpty());
+
+        // check values:
+        waitForFxEvents();
+        // messages are still of count 2
+        verifyThat(listView, ListViewMatchers.hasItems(2));
+
+        // check mocks:
+        items.forEach(msg -> {
+            if (msg._id() == editMsg._id()) {
+                verifyThat(msg.body(), TextMatchers.hasText("new text from B"));
+            }
+        });
+    }
 
     @Test // TODO: add test
     void testDeleteMessage() {}
