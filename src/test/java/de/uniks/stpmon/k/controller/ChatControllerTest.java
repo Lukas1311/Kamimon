@@ -22,6 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.ListViewMatchers;
+import org.testfx.matcher.control.TextMatchers;
+
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -112,19 +115,21 @@ public class ChatControllerTest extends ApplicationTest {
         app.start(stage);
         app.show(chatController);
         stage.requestFocus();
-
-        // messagesListView.setCellFactory(listView -> messageCellSpy);
     }
 
     @Test
     void testSendMessageOnButtonClick() {
         // define mocks:
-        when(msgService.sendMessage(any(), any(), any())).thenReturn(Observable.just(
-            new Message("2023-05-15T18:30:00.000Z", "1", "id", "b_id", "moin")
-        ));
+        Message msg = new Message("2023-05-15T18:30:00.000Z", "1", "id", "b_id", "moin");
+        // this simulates the send message call and the listener in one action
+        when(msgService.sendMessage(any(), any(), any()))
+        .thenAnswer((a)->{
+            events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
+            return Observable.just(msg);
+        });
 
         final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
-        assertEquals(2, listView.getItems().size());
+        verifyThat(listView, ListViewMatchers.hasItems(2));
 
         // action:
         // go into message input and send a message
@@ -138,21 +143,20 @@ public class ChatControllerTest extends ApplicationTest {
 
         // check values:
         waitForFxEvents();
-        assertEquals(3, listView.getItems().size());
+        verifyThat(listView, ListViewMatchers.hasItems(3));
         
         ObservableList<Message> items = listView.getItems();
         // last item has to be desired message
         Message lastItem = items.get(items.size() - 1);
-        System.out.println(lastItem);
 
         // find the last cell that corresponds to the lastItem
         ListCell<Message> lastCell = lookup(
             node -> node instanceof ListCell && ((ListCell<Message>) node).getItem() == lastItem
         ).query();
         assertNotNull(lastCell);
-        System.out.println(lastCell);
 
-        assertThat(lastCell.getText()).isEqualTo("desired text");
+        Text bodyText = lookup("#bodyText").queryText();
+        verifyThat(bodyText, TextMatchers.hasText("moin"));
     }
 
     @Test
