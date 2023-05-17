@@ -86,7 +86,6 @@ public class ChatController extends Controller {
                 .subscribe(users -> users.forEach(user -> groupMembers.put(user._id(), user.name())), this::handleError
                 )
         );
-        System.out.println("group name is: " + group.name());
         disposables.add(msgService
                 .getAllMessages("groups", group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
@@ -96,7 +95,6 @@ public class ChatController extends Controller {
                             // only listen to messages in the current specific group
                             // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
                             final Message msg = event.data();
-                            System.out.println(msg);
                             switch (event.suffix()) {
                                 case "created" -> this.messages.add(msg);
                                 // checks and updates all messages that have been edited by a user
@@ -183,7 +181,6 @@ public class ChatController extends Controller {
                         .deleteMessage(editMessage, "groups", group._id())
                         .observeOn(FX_SCHEDULER)
                         .subscribe(msg -> {
-                                    System.out.println("Message sent: " + msg.body());
                                     messageField.clear();
 
                                     messagesListView.getSelectionModel().clearSelection();
@@ -196,7 +193,6 @@ public class ChatController extends Controller {
                         .editMessage(editMessage, "groups", group._id(), message)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(msg -> {
-                                    System.out.println("Message sent: " + msg.body());
                                     messageField.clear();
                                     messagesListView.getSelectionModel().clearSelection();
                                 }, this::handleError
@@ -222,7 +218,6 @@ public class ChatController extends Controller {
                             .sendMessage(invitationText, "groups", group._id())
                             .observeOn(FX_SCHEDULER)
                             .subscribe(msg -> {
-                                System.out.println("Message sent: " + msg.body());
                                 messagesListView.scrollTo(msg);
                             }, this::handleError)
                     );
@@ -237,7 +232,6 @@ public class ChatController extends Controller {
                     .sendMessage(message, "groups", group._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(msg -> {
-                                System.out.println("Message sent: " + msg.body());
                                 messageField.clear();
                                 messagesListView.scrollTo(msg);
                             }, this::handleError
