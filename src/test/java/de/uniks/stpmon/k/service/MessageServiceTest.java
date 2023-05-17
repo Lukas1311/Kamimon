@@ -4,6 +4,8 @@ import de.uniks.stpmon.k.dto.CreateMessageDto;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
 import de.uniks.stpmon.k.rest.MessageApiService;
+import de.uniks.stpmon.k.service.MessageService.InvalidNamespaceException;
+import de.uniks.stpmon.k.service.MessageService.MessageNamespace;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -41,7 +43,7 @@ public class MessageServiceTest {
         );
 
         // action:
-        final Message msg = msgService.sendMessage("hi", "n", "p")
+        final Message msg = msgService.sendMessage("hi", MessageNamespace.GROUPS.toString() , "p")
             .blockingFirst();
 
         // check values:
@@ -52,7 +54,7 @@ public class MessageServiceTest {
         assertEquals("bdy", msg.body());
 
         // check mocks:
-        verify(msgApiService).sendMessage("n", "p", new CreateMessageDto("hi"));
+        verify(msgApiService).sendMessage("groups", "p", new CreateMessageDto("hi"));
     }
 
     @Test
@@ -66,7 +68,7 @@ public class MessageServiceTest {
 
         // action:
         final Message msg = msgService.deleteMessage(
-            new Message("123", "321", "id", "s", "b"), "n", "p")
+            new Message("123", "321", "id", "s", "b"), MessageNamespace.GLOBAL.toString(), "p")
                 .blockingFirst();
 
         // check values:
@@ -77,7 +79,7 @@ public class MessageServiceTest {
         assertEquals("bdy", msg.body());
 
         // check mocks:
-        verify(msgApiService).deleteMessage("n", "p", "id");
+        verify(msgApiService).deleteMessage("global", "p", "id");
     }
 
     @Test
@@ -92,7 +94,7 @@ public class MessageServiceTest {
         // action:
         final Message msg = msgService.editMessage(
             new Message("123", "321", "id", "s", "old bdy"),
-            "n", "p", "new bdy"
+            MessageNamespace.REGIONS.toString(), "p", "new bdy"
         ).blockingFirst();
 
         // check values:
@@ -103,7 +105,7 @@ public class MessageServiceTest {
         assertEquals("bdy", msg.body());
 
         // check mocks:
-        verify(msgApiService).editMessage("n", "p", "id", new UpdateMessageDto("new bdy"));
+        verify(msgApiService).editMessage("regions", "p", "id", new UpdateMessageDto("new bdy"));
     }
 
     @Test
@@ -116,7 +118,7 @@ public class MessageServiceTest {
         ));
 
         // action:
-        final ArrayList<Message> msgs = msgService.getAllMessages("n","p").blockingFirst();
+        final ArrayList<Message> msgs = msgService.getAllMessages(MessageNamespace.GROUPS.toString(), "p").blockingFirst();
 
         // check values of the last message in returned messages:
         assertEquals("11",msgs.get(msgs.size() - 1).createdAt());
@@ -126,7 +128,7 @@ public class MessageServiceTest {
         assertEquals("bdy", msgs.get(msgs.size() - 1).body());
 
         // check mocks:
-        verify(msgApiService).getMessages("n", "p", null, null, null);
+        verify(msgApiService).getMessages("groups", "p", null, null, null);
     }
 
     @Test
@@ -141,7 +143,7 @@ public class MessageServiceTest {
             .getMessages(any(), any(), any(), any(), any())).thenReturn(Observable.just(tenMessages));
 
         // action:
-        final ArrayList<Message> msgs = msgService.getLastMessagesByLimit("n","p",10).blockingFirst();
+        final ArrayList<Message> msgs = msgService.getLastMessagesByLimit(MessageNamespace.GROUPS.toString(), "p",10).blockingFirst();
 
         // check values of the last message in returned messages:
         assertEquals("11",msgs.get(msgs.size() - 1).createdAt());
@@ -152,6 +154,17 @@ public class MessageServiceTest {
         assertEquals(10, msgs.size());
 
         // check mocks:
-        verify(msgApiService).getMessages("n", "p", null, null, 10);
+        verify(msgApiService).getMessages("groups", "p", null, null, 10);
+    }
+
+    @Test
+    void TestSendMessageWithInvalidNamespace() {   
+        // preparation:
+        String invalidNamespace = "invalid";     
+        // action:
+        final Observable<Message> result = msgService.sendMessage("hi", invalidNamespace, "p");
+
+        // check the observable (must be exception)
+        result.test().assertError(InvalidNamespaceException.class);
     }
 }
