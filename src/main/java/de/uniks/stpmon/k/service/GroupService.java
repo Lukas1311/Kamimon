@@ -3,16 +3,13 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.CreateGroupDto;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.UpdateGroupDto;
-import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GroupService {
 
@@ -26,20 +23,20 @@ public class GroupService {
     // creates a new group: caller has to provide a list of members and a name for the group
     public Observable<Group> createGroup(String name, List<String> members) {
         return groupApiService.createGroup(
-            new CreateGroupDto(name, members)
+                new CreateGroupDto(name, members)
         );
     }
 
-    /** 
+    /**
      * returns all groups where the current user is member of
      */
     public Observable<ArrayList<Group>> getOwnGroups() {
         return groupApiService.getGroups();
     }
-    
+
     /**
      * returns one or more groups that have all the users given in the parameter inside
-     * 
+     *
      * @param members is an ArrayList of user id's
      * @return group/s with the exact members list
      */
@@ -49,15 +46,15 @@ public class GroupService {
 
     /**
      * searches for groups that contain the given name
-     * 
+     *
      * @param name is part of the search query that is used to search for group names
      * @return all groups that contain the given name
-    */
+     */
     public Observable<Group> searchGroup(String name) {
         return groupApiService.getGroups()
-            // converts each ArrayList<Group> into an Observable<Group> that we can work with directly
-            .flatMap(Observable::fromIterable)
-            .filter(group -> group.name().contains(name));
+                // converts each ArrayList<Group> into an Observable<Group> that we can work with directly
+                .flatMap(Observable::fromIterable)
+                .filter(group -> group.name().contains(name));
     }
 
     /**
@@ -65,14 +62,14 @@ public class GroupService {
      */
     public Observable<Group> updateGroup(Group group, String name, Collection<String> members) {
         return groupApiService.editGroup(
-            group._id(),
-            new UpdateGroupDto(name, members.stream().distinct().toList())
+                group._id(),
+                new UpdateGroupDto(name, members.stream().distinct().toList())
         );
     }
 
     /**
      * deletes a group that is given by parameter
-     * 
+     *
      * @param group the group to be deleted
      * @return the deleted group
      */

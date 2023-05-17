@@ -9,8 +9,10 @@ import de.uniks.stpmon.k.views.GroupMemberCell;
 import io.reactivex.rxjava3.functions.Consumer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,34 +30,35 @@ import java.util.*;
 
 public class CreateChatController extends Controller {
 
-
+    @FXML
     public Button returnButton;
+    @FXML
     public Button leaveGroupButton;
+    @FXML
     public VBox groupMemberList;
+    @FXML
     public TextField groupNameField;
+    @FXML
     public Button createGroupButton;
+    @FXML
     public Label errorLabel;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
-
     @Inject
     GroupService groupService;
-
     @Inject
     UserService userService;
-
     @Inject
     UserStorage userStorage;
 
     private final ObservableList<User> friends = FXCollections.observableArrayList();
-
     public final HashSet<String> groupMembers = new HashSet<>();
-
     private Group group;
 
     private BooleanBinding isInvalid;
     private BooleanBinding groupNameTooLong;
+    public SimpleBooleanProperty notEnoughGroupMembers = new SimpleBooleanProperty(true);
 
     @Inject
     public CreateChatController() {
@@ -98,12 +101,15 @@ public class CreateChatController extends Controller {
                         .then(resources.getString("group.name.too.long"))
                         .otherwise(Bindings.when(groupNameField.textProperty().isEmpty())
                                 .then(resources.getString("group.name.is.empty"))
-                                .otherwise("")
+                                .otherwise(Bindings.when(notEnoughGroupMembers)
+                                        .then(resources.getString("not.enough.group.members"))
+                                        .otherwise(""))
                         )
         );
         isInvalid = groupNameField
                 .textProperty()
                 .isEmpty()
+                .or(notEnoughGroupMembers)
                 .or(groupNameTooLong);
         createGroupButton.disableProperty().bind(isInvalid);
 
@@ -147,7 +153,6 @@ public class CreateChatController extends Controller {
         //TODO
     }
 
-
     public void createGroup() {
         if (groupNameField.getText().isEmpty()) {
             return;
@@ -161,8 +166,12 @@ public class CreateChatController extends Controller {
     public void handleGroup(User item) {
         if (!groupMembers.contains(item._id())) {
             groupMembers.add(item._id());
+            notEnoughGroupMembers.setValue(false);
         } else {
             groupMembers.remove(item._id());
+            if (groupMembers.size() == 1) {
+                notEnoughGroupMembers.setValue(true);
+            }
         }
     }
 
