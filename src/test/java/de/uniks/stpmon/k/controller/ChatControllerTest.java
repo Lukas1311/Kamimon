@@ -123,7 +123,7 @@ public class ChatControllerTest extends ApplicationTest {
         Message msg = new Message("2023-05-15T18:30:00.000Z", "1", "id", "b_id", "moin");
         // this simulates the send message call and the listener in one action
         when(msgService.sendMessage(any(), any(), any()))
-        .thenAnswer((a)->{
+        .thenAnswer((invocation)->{
             events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
             return Observable.just(msg);
         });
@@ -131,8 +131,7 @@ public class ChatControllerTest extends ApplicationTest {
         final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
         verifyThat(listView, ListViewMatchers.hasItems(2));
 
-        // action:
-        // go into message input and send a message
+        // action: go into message input and send a message with enter keycode
         write("\t".repeat(3));
         write("moin\t");
         Button sendButton = lookup("#sendButton").queryButton();
@@ -145,39 +144,46 @@ public class ChatControllerTest extends ApplicationTest {
         waitForFxEvents();
         verifyThat(listView, ListViewMatchers.hasItems(3));
         
-        ObservableList<Message> items = listView.getItems();
         // last item has to be desired message
-        Message lastItem = items.get(items.size() - 1);
+        ObservableList<Message> items = listView.getItems();
+        Message lastMessage = items.get(items.size() - 1);
 
-        // find the last cell that corresponds to the lastItem
-        ListCell<Message> lastCell = lookup(
-            node -> node instanceof ListCell && ((ListCell<Message>) node).getItem() == lastItem
-        ).query();
-        assertNotNull(lastCell);
-
-        Text bodyText = lookup("#bodyText").queryText();
-        verifyThat(bodyText, TextMatchers.hasText("moin"));
+        // check mocks:
+        verifyThat(lastMessage.body(), TextMatchers.hasText("moin"));
     }
 
     @Test
     void testSendMessageOnEnter() {
         // define mocks:
-        when(msgService.sendMessage(any(), any(), any())).thenReturn(Observable.just(
-            new Message("2023-05-15T18:43:40.413Z", any(), any(), "bobs_id", "moin")
-        ));
+        Message msg = new Message("2023-05-15T18:30:00.000Z", "1", "id", "b_id", "moin");
+        // this simulates the send message call and the listener in one action
+        when(msgService.sendMessage(any(), any(), any()))
+        .thenAnswer((invocation)->{
+            events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
+            return Observable.just(msg);
+        });
 
-        // action:
-        write("\t".repeat(10));
+        final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
+        verifyThat(listView, ListViewMatchers.hasItems(2));
+
+        // action: go into message input and send a message with enter keycode
+        write("\t".repeat(3));
+        write("moin");
         TextField messageInput = lookup("#messageField").query();
         assertThat(messageInput).isFocused();
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-
-
+        assertThat(messageInput.getText().isEmpty());
 
         // check values:
+        waitForFxEvents();
+        verifyThat(listView, ListViewMatchers.hasItems(3));
+        
+        // last item has to be desired message
+        ObservableList<Message> items = listView.getItems();
+        Message lastMessage = items.get(items.size() - 1);
 
         // check mocks:
-
+        verifyThat(lastMessage.body(), TextMatchers.hasText("moin"));
     }
 
     @Test // TODO: add test
