@@ -101,11 +101,11 @@ public class CreateChatController extends Controller {
 
         errorLabel.textProperty().bind(
                 Bindings.when(groupNameTooLong.and(groupNameField.textProperty().isNotEmpty()))
-                        .then(resources.getString("group.name.too.long"))
+                        .then(translateString("group.name.too.long"))
                         .otherwise(Bindings.when(groupNameField.textProperty().isEmpty())
-                                .then(resources.getString("group.name.is.empty"))
+                                .then(translateString("group.name.is.empty"))
                                 .otherwise(Bindings.when(notEnoughGroupMembers)
-                                        .then(resources.getString("not.enough.group.members"))
+                                        .then(translateString("not.enough.group.members"))
                                         .otherwise(""))
                         )
         );
@@ -132,7 +132,7 @@ public class CreateChatController extends Controller {
 
         if (group != null) {
             leaveGroupButton.setVisible(true);
-            createGroupButton.setText(resources.getString("create.group.button.update"));
+            createGroupButton.setText(translateString("create.group.button.update"));
             createGroupButton.setOnAction(e -> updateGroup());
             groupNameField.setText(group.name());
         }

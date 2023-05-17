@@ -52,6 +52,8 @@ class CreateChatControllerTest extends ApplicationTest {
     CreateChatController createChatController;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     final List<User> members = new ArrayList<>();
     final List<User> friends = new ArrayList<>();
@@ -60,6 +62,7 @@ class CreateChatControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         final User alice = new User("Alice", "Alice", null, null, null);
         final User bob = new User("Bob", "Bob", "online", null, null);
         final User peter = new User("Peter", "Peter", "online", null, null);
