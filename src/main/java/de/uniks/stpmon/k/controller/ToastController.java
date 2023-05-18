@@ -35,6 +35,9 @@ public class ToastController extends Controller {
         Platform.runLater(()->{
             Stage mainStage = app.getStage();
             Stage toastStage = new Stage();
+            toastStage.setTitle("Toast");
+            toastStage.initStyle(StageStyle.TRANSPARENT);
+            Parent root = render();
         });
     }
 }
