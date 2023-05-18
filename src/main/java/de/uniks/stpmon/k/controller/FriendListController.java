@@ -93,9 +93,16 @@ public class FriendListController extends Controller {
 
     public void handleFriend(Boolean newFriend, User user) {
         if (newFriend) {
-            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).subscribe());
+            disposables.add(userService.addFriend(user)
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(this::handleError)
+                    .subscribe());
         } else {
-            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).subscribe());
+            disposables.add(userService
+                    .removeFriend(user)
+                    .observeOn(FX_SCHEDULER)
+                    .doOnError(this::handleError)
+                    .subscribe());
         }
     }
 
