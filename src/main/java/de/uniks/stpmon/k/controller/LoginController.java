@@ -62,6 +62,8 @@ public class LoginController extends Controller {
     @Inject
     Preferences preferences;
 
+    @Inject
+    IntroductionController introductionController;
 
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
@@ -143,7 +145,7 @@ public class LoginController extends Controller {
                     errorText.set(translateString("login.successful"));
                     // TODO: user.status should be set to online here
                     errorLabel.setTextFill(Color.GREEN);
-                    app.show(hybridControllerProvider.get());
+                    app.show(introductionController);
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
