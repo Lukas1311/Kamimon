@@ -42,7 +42,12 @@ public class IntroductionController extends Controller{
         final Image imageTwo = loadImage("introductionSheetTwo.png");
         imageIntroduction.setImage(imageTwo);
         further.setOnAction(event1 -> {
-            app.show(hybridControllerProvider.get());
+            final Image imageThree = loadImage("introductionSheetThree.png");
+            imageIntroduction.setImage(imageThree);
+            further.setOnAction(event2 -> {
+                app.show(hybridControllerProvider.get());
+            });
+            //app.show(hybridControllerProvider.get());
         });
     }
 
