@@ -38,6 +38,7 @@ public class IntroductionController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
         imageIntroduction.setImage(imageOne);
         if (imageIntroduction.getImage() == imageOne) {
             back.setVisible(false);
