@@ -14,5 +14,6 @@
       </ImageView>
          </children>
       </VBox>
+      <Button fx:id="back" layoutX="21.0" layoutY="333.0" mnemonicParsing="false" onAction="#previousSheet" text="Zurück" />
    </children>
 </AnchorPane>
