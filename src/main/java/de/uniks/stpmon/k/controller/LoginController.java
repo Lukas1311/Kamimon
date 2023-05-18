@@ -133,11 +133,11 @@ public class LoginController extends Controller {
 
     public void login() {
         validateLoginAndRegistration();
-        loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected());
+        loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected(), true);
     }
 
     // TODO: is almost the same like register method, i bet we can refactor this to one method
-    private void loginWithCredentials(String username, String password, boolean rememberMe){
+    private void loginWithCredentials(String username, String password, boolean rememberMe, boolean isRegistered){
         disposables.add(authService
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
@@ -145,7 +145,11 @@ public class LoginController extends Controller {
                     errorText.set(translateString("login.successful"));
                     // TODO: user.status should be set to online here
                     errorLabel.setTextFill(Color.GREEN);
-                    app.show(introductionController);
+                    if(isRegistered) {
+                        app.show(hybridControllerProvider.get());
+                    }else {
+                        app.show(introductionController);
+                    }
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
@@ -161,7 +165,7 @@ public class LoginController extends Controller {
                     errorText.set(translateString("registration.successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
-                    loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected());
+                    loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected(), false);
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                     System.out.println("look here for the error: " + error);
