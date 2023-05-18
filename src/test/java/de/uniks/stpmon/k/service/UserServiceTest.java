@@ -174,6 +174,9 @@ class UserServiceTest {
         verify(userApiService).updateUser(ArgumentMatchers.anyString(), captor.capture());
     }
 
+    /**
+     * Checks if an empty list is returned when the user has no friends
+     */
     @Test
     void searchFriendEmpty() {
         User user = new User(
@@ -193,13 +196,16 @@ class UserServiceTest {
         assertTrue(emptyList.isEmpty());
     }
 
+    /**
+     * tests if the right other user is shown (and not the one using the app)
+     */
     @Test
     void searchFriend() {
         when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
                 "0",
-                "Test",
+                "a",
                 "offline",
                 "picture",
                 new ArrayList<>());
@@ -224,6 +230,9 @@ class UserServiceTest {
         verify(userApiService).getUsers();
     }
 
+    /**
+     * tests if empty list comes back, when friend is already in friend list
+     */
     @Test
     void addFriendAlreadyInFriendList() {
         User friend = new User(
@@ -302,6 +311,9 @@ class UserServiceTest {
         verify(userApiService).getUsers(listArgumentCaptor.capture());
     }
 
+    /**
+     * test if empty list comes back, when a friend that is not in the friend list should be removed
+     */
     @Test
     void removeFriendNotInFriendList() {
         User friend = new User(
@@ -405,6 +417,9 @@ class UserServiceTest {
         verify(userApiService).getUsers(listArgumentCaptor.capture());
     }
 
+    /**
+     * checks if empty list is returned when user has no friends
+     */
     @Test
     void getEmptyFriends() {
 
