@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class App extends Application {
     private final MainComponent component;
@@ -42,7 +44,7 @@ public class App extends Application {
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
-        final Scene scene = new Scene(new Label("Loading"));
+        final Scene scene = new Scene(new Label(""));
         stage.setScene(scene);
         stage.show();
 
@@ -54,6 +56,16 @@ public class App extends Application {
         if (component == null) {
             return;
         }
+
+        show(component.loadingScreenController());
+        // Schedule a task to hide the controller after a delay
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                controller.destroy(); // Call the method in your controller to hide it
+            }
+        }, 7000);
 
         disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
 
