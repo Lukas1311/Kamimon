@@ -37,7 +37,9 @@ public class RegionListController extends Controller{
 
     @Override
     public void init() {
-        disposables.add(regionApiService.getRegions().observeOn(FX_SCHEDULER).subscribe(regions::setAll));
+        disposables.add(regionApiService.getRegions()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(regions::setAll, this::handleError));
     }
 
     @Override
