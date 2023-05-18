@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -13,8 +14,6 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class App extends Application {
     private final MainComponent component;
@@ -41,10 +40,12 @@ public class App extends Application {
         //initial window size
         stage.setWidth(1280);
         stage.setHeight(720);
+        stage.setMinWidth(512);
+        stage.setMinHeight(400);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
-        final Scene scene = new Scene(new Label(""));
+        final Scene scene = new Scene(new Label("Loading"));
         stage.setScene(scene);
         stage.show();
 
@@ -56,19 +57,14 @@ public class App extends Application {
         if (component == null) {
             return;
         }
-
-        show(component.loadingScreenController());
-        // Schedule a task to hide the controller after a delay
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                controller.destroy(); // Call the method in your controller to hide it
-            }
-        }, 7000);
+        LoadingScreenController loadingScreen = component.loadingScreenController();
+        loadingScreen.setOnLoadingFinished(this::onFinishedLoading);
+        show(loadingScreen);
 
         disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
+    }
 
+    private void onFinishedLoading() {
         final AuthenticationService authService = component.authenticationService();
         if (authService.isRememberMe()) {
             disposables.add(authService
