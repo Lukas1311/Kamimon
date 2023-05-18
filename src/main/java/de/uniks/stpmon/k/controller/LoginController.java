@@ -62,6 +62,7 @@ public class LoginController extends Controller {
     @Inject
     Preferences preferences;
 
+
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
