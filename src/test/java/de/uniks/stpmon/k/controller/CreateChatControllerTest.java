@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
@@ -19,7 +20,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.assertions.api.ListViewAssert;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.ListViewMatchers;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -29,10 +32,12 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 class CreateChatControllerTest extends ApplicationTest {
@@ -76,6 +81,87 @@ class CreateChatControllerTest extends ApplicationTest {
         when(userService.getFriends()).thenReturn(Observable.just(friends));
         app.show(createChatController);
         stage.requestFocus();
+    }
+
+    @Test
+    void leaveChat() {
+        when(userService.getUsers(anyList())).thenReturn(Observable.just(List.of()));
+
+        // add User id to memberNames
+        memberNames.add(members.get(0)._id());
+        memberNames.add(members.get(1)._id());
+
+        final Group group = new Group(null, null, null, "", memberNames);
+        createChatController.setGroup(group);
+        Platform.runLater(() -> app.show(createChatController));
+        waitForFxEvents();
+
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+
+        when(groupService.updateGroup(any(), any(), any())).thenReturn(Observable.just(group));
+
+        clickOn("#leaveGroupButton");
+        verify(groupService).updateGroup(any(), any(), any());
+
+        verify(mock, times(2)).popTab();
+    }
+
+    @Test
+    void updateChat() {
+        when(userService.getUsers(anyList())).thenReturn(Observable.just(List.of()));
+
+        // add User id to memberNames
+        memberNames.add(members.get(0)._id());
+        memberNames.add(members.get(1)._id());
+
+        final Group group = new Group(null, null, null, "Coole", memberNames);
+        createChatController.setGroup(group);
+        Platform.runLater(() -> app.show(createChatController));
+        waitForFxEvents();
+
+        verifyThat("#groupNameField", hasText("Coole"));
+
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+
+        when(groupService.updateGroup(any(), any(), any())).thenReturn(Observable.just(group));
+
+        clickOn("#groupNameField");
+        write("Gruppe");
+
+        verifyThat("#groupNameField", hasText("CooleGruppe"));
+
+        clickOn("#Peter");
+        clickOn("#Bob");
+
+        clickOn("#createGroupButton");
+        verify(groupService).updateGroup(any(), any(), any());
+
+        verify(mock, times(1)).popTab();
+    }
+
+    @Test
+    void deleteChat() {
+        when(userService.getUsers(anyList())).thenReturn(Observable.just(List.of()));
+
+        // add User id to memberNames
+        memberNames.add(members.get(0)._id());
+
+        final Group group = new Group(null, null, null, "", memberNames);
+        createChatController.setGroup(group);
+        Platform.runLater(() -> app.show(createChatController));
+        waitForFxEvents();
+
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+
+        when(groupService.deleteGroup(any())).thenReturn(Observable.just(group));
+
+        clickOn("#leaveGroupButton");
+        verify(groupService).deleteGroup(any());
+
+        verify(mock, times(2)).popTab();
     }
 
     @Test
