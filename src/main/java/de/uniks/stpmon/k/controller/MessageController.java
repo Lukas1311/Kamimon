@@ -2,19 +2,18 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
+import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 public class MessageController extends Controller {
 
@@ -23,12 +22,14 @@ public class MessageController extends Controller {
     @FXML
     public HBox textBox;
     @FXML
+    public TextFlow textFlow;
+    @FXML
     public Text bodyText;
     @FXML
     public Text senderName;
     @FXML
     public Text sendTime;
-    
+
 
     private final Message message;
     private final String username;
@@ -41,7 +42,7 @@ public class MessageController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-
+        textFlow.setMaxWidth(320);
         senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
