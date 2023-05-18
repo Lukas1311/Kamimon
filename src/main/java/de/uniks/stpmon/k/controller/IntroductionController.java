@@ -33,13 +33,17 @@ public class IntroductionController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        final Image image = loadImage("introductionSheetOne.png");
-        imageIntroduction.setImage(image);
+        final Image imageOne = loadImage("introductionSheetOne.png");
+        imageIntroduction.setImage(imageOne);
         return parent;
     }
 
     public void nextSheet(ActionEvent event) {
-        app.show(hybridControllerProvider.get());
+        final Image imageTwo = loadImage("introductionSheetTwo.png");
+        imageIntroduction.setImage(imageTwo);
+        further.setOnAction(event1 -> {
+            app.show(hybridControllerProvider.get());
+        });
     }
 
     private Image loadImage(String image) {
