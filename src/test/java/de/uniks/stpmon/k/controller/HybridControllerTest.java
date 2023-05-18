@@ -48,6 +48,7 @@ class HybridControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        hybridController.setPlayAnimations(false);
         app.show(hybridController);
         stage.requestFocus();
     }
@@ -65,7 +66,7 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
-        write("\t\t\t\t\t");
+        write("\t\t\t\t\t\t");
         type(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();

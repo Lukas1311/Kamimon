@@ -7,15 +7,16 @@ import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.UpdateGroupDto;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
-import org.mockito.Spy;
 
-import java.util.*;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Module
 public class GroupTestModule {
-    @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Provides
+    @Singleton
     static GroupApiService groupApiService() {
 
 
@@ -43,7 +44,7 @@ public class GroupTestModule {
             private ArrayList<Group> getDummyGroups(int amount) {
                 ArrayList<Group> groups = new ArrayList<>();
                 for (int i = 0; i < amount; i++) {
-                    String[] memberIds = {String.valueOf(i), String.valueOf(i + 1)};
+                    String[] memberIds = {String.valueOf("id" + i), String.valueOf("id" + (i + 1))};
                     ArrayList<String> members = new ArrayList<>(Arrays.asList(memberIds));
                     Group group = new Group(
                             "2023-01-01T00:00:00.000Z",
@@ -56,6 +57,11 @@ public class GroupTestModule {
                 return groups;
             }
 
+            /**
+             * Creates a group and adds it to groups
+             * @param group: CreateGroupDto
+             * @return: the added Group object
+             */
             @Override
             public Observable<Group> createGroup(CreateGroupDto group) {
                 //create new group
@@ -73,15 +79,17 @@ public class GroupTestModule {
 
             /**
              * Get all groups
-             * @return: groups that are added before. if no groups where added: 3 dummy groups are returned
+             * Note: if you don't want to add groups manually, call initDummyGroups()
+             * @return: groups that are added before
              */
             @Override
             public Observable<ArrayList<Group>> getGroups() {
-                if (groups.isEmpty()) {
+                if(groups.isEmpty()){
                     return Observable.just(getDummyGroups(3));
                 }
                 return Observable.just(groups);
             }
+
 
             /**
              * Returns the all groups which contain all given member
@@ -93,25 +101,14 @@ public class GroupTestModule {
              */
             @Override
             public Observable<ArrayList<Group>> getGroups(String members) {
-                ArrayList<Group> returnGroups = new ArrayList<>();
+                ArrayList<String> membersList = new ArrayList<>(Arrays.asList(members.split(",")));
 
-                boolean allMembersIn;
-                //iterates of all groups on the "server"
-                for (Group group : groups) {
-                    allMembersIn = true;
-                    //checks if all given members are in the group
-                    for (String memberId : members.split(",")) {
-                        if (!group.members().contains(memberId)) {
-                            allMembersIn = false;
-                            break;
-                        }
-                    }
-                    //if all members are in, the group gets added to the return array of groups
-                    if (allMembersIn) {
-                        returnGroups.add(group);
-                    }
-                }
-                return Observable.just(returnGroups);
+                List<Group> returnGroups = groups
+                        .stream()
+                        .filter(g -> g.members().containsAll(membersList))
+                        .toList();
+
+                return Observable.just(new ArrayList<>(returnGroups));
             }
 
             /**
