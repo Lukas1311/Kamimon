@@ -54,6 +54,11 @@ class AppTest extends ApplicationTest {
         //register
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
+
+        //introduction
+        clickOn("#further");
+        clickOn("#further");
+        clickOn("#further");
         //open friend list
         clickOn("#friends");
 
