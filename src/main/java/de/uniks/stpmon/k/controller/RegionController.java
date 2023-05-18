@@ -1,11 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Region;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 
 import javax.inject.Provider;
+
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 public class RegionController extends Controller{
     private final Region region;
@@ -24,7 +27,7 @@ public class RegionController extends Controller{
         final Parent parent = super.render();
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
-            hybridControllerProvider.get().openSidebar("ingame");
+            hybridControllerProvider.get().openMain(INGAME);
         });
         return parent;
     }

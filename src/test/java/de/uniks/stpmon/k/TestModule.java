@@ -55,7 +55,7 @@ public class TestModule {
 
             @Override
             public Observable<Response<ErrorResponse>> logout() {
-                return Observable.empty();
+                return Observable.just(Response.success(null));
             }
 
             @Override

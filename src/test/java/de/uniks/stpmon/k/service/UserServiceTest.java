@@ -10,10 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,8 +26,11 @@ class UserServiceTest {
     @Mock
     UserApiService userApiService;
     @InjectMocks
+    IFriendCache friendCache = new FriendCacheDummy();
+    @Mock
+    Provider<IFriendCache> friendCacheProvider;
+    @InjectMocks
     UserService userService;
-
 
     @Test
     void addUser() {
@@ -171,6 +176,16 @@ class UserServiceTest {
 
     @Test
     void searchFriendEmpty() {
+        User user = new User(
+                "0",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
+        userStorage.setUser(user);
+
+        when(userApiService.getUsers()).thenReturn(Observable.just(List.of()));
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         //action
         List<User> emptyList = userService.searchFriend("").blockingFirst();
 
@@ -180,6 +195,7 @@ class UserServiceTest {
 
     @Test
     void searchFriend() {
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
                 "0",
@@ -237,6 +253,8 @@ class UserServiceTest {
 
     @Test
     void addNewFriend() {
+
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend = new User(
                 "1",
                 "Test2",
@@ -352,6 +370,7 @@ class UserServiceTest {
 
     @Test
     void getFriends() {
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend = new User(
                 "1",
                 "Test2",
@@ -388,6 +407,8 @@ class UserServiceTest {
 
     @Test
     void getEmptyFriends() {
+
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
                 "0",
@@ -407,6 +428,8 @@ class UserServiceTest {
 
     @Test
     void filterFriends() {
+
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend1 = new User(
                 "1",
                 "Test2",

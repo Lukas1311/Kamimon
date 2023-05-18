@@ -3,6 +3,7 @@ package de.uniks.stpmon.k;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -19,16 +20,19 @@ public class App extends Application {
 
     private Controller controller;
     private Stage stage;
-    
-    public App(){
+
+    public App() {
         component = DaggerMainComponent.builder().mainApp(this).build();
     }
-    public App(MainComponent component){
+
+    public App(MainComponent component) {
         this.component = component;
     }
-    public Stage getStage(){
+
+    public Stage getStage() {
         return stage;
     }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
@@ -47,47 +51,50 @@ public class App extends Application {
         //icon in the taskbar of the os
         setTaskbarIcon();
 
-        if(component == null){
+        if (component == null) {
             return;
         }
-        
+
+        disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
+
         final AuthenticationService authService = component.authenticationService();
         if (authService.isRememberMe()) {
             disposables.add(authService
-                .refresh()
-                .subscribe(lr -> show(component.hybridController()), err -> show(component.loginController())));
+                    .refresh()
+                    .subscribe(lr -> show(component.hybridController()), err -> show(component.loginController())));
         } else {
             show(component.loginController());
         }
     }
 
-    private void setAppIcon(Stage stage){
+    private void setAppIcon(Stage stage) {
         //requireNonNull was not shown in Lecture, but is needed to eliminate warning
         final Image image = new Image(Objects.requireNonNull(App.class.getResource("icon.png")).toString());
         stage.getIcons().add(image);
     }
 
-    private void setTaskbarIcon(){
-        if(GraphicsEnvironment.isHeadless()){
+    private void setTaskbarIcon() {
+        if (GraphicsEnvironment.isHeadless()) {
             //No Taskbar Icon, if headless -> is important for tests
             return;
         }
-        try{
+        try {
             final Taskbar taskbar = Taskbar.getTaskbar();
             //requireNonNull was not shown in Lecture, but is needed to eliminate warning
             final java.awt.Image image = ImageIO.read(Objects.requireNonNull(Main.class.getResource("icon.png")));
             taskbar.setIconImage(image);
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
 
         }
     }
+
     @Override
-    public void stop() throws Exception{
+    public void stop() throws Exception {
         cleanup();
         disposables.dispose();
     }
 
-    public void show(Controller controller){
+    public void show(Controller controller) {
         cleanup();
         this.controller = controller;
         initAndRender(controller);
@@ -106,7 +113,7 @@ public class App extends Application {
      */
     private void cleanup() {
 
-        if(controller != null){
+        if (controller != null) {
             controller.destroy();
             controller = null;
         }

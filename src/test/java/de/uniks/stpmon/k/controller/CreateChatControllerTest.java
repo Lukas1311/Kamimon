@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -28,7 +29,8 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
@@ -50,6 +52,8 @@ class CreateChatControllerTest extends ApplicationTest {
     CreateChatController createChatController;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     final List<User> members = new ArrayList<>();
     final List<User> friends = new ArrayList<>();
@@ -58,10 +62,12 @@ class CreateChatControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         final User alice = new User("Alice", "Alice", null, null, null);
         final User bob = new User("Bob", "Bob", "online", null, null);
         final User peter = new User("Peter", "Peter", "online", null, null);
         when(userStorage.getUser()).thenReturn(alice);
+        when(userService.getMe()).thenReturn(alice);
         members.add(alice);
         members.add(bob);
         members.add(peter);

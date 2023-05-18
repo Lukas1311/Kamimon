@@ -23,6 +23,7 @@ public class GroupMemberCell extends ListCell<User> {
             final CheckBox checkBox = new CheckBox();
             checkBox.setText(item.name());
             checkBox.setId(item.name());
+            checkBox.setSelected(createChatController.isSelected(item._id()));
             checkBox.selectedProperty().addListener((ov, old_val, new_val) -> {
                 if (checkBox.isSelected()) {
                     createChatController.handleGroup(item);
