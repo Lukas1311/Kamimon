@@ -48,6 +48,7 @@ class HybridControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        hybridController.setPlayAnimations(false);
         app.show(hybridController);
         stage.requestFocus();
     }

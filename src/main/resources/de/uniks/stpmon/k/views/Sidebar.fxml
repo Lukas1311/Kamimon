@@ -2,15 +2,14 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:id="grid" alignment="TOP_CENTER" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="500.0"
-          prefWidth="50.0" style="-fx-border-color: #000000;" xmlns="http://javafx.com/javafx/19"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.sidebar.SidebarController">
+
+<GridPane fx:id="grid" alignment="TOP_CENTER" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="500.0" prefWidth="50.0" style="-fx-border-color: #000000; -fx-background-color: WhiteSmoke;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.sidebar.SidebarController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS"/>
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS"/>
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
       <VBox alignment="TOP_CENTER" prefWidth="50.0" GridPane.hgrow="ALWAYS" GridPane.valignment="TOP">

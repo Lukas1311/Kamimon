@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k;
 
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -26,11 +27,13 @@ class AppTest extends ApplicationTest {
     private Stage stage;
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final MessageApiDummy messageApi = component.messageApi();
+    private final HybridController hybridController = component.hybridController();
 
 
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
+        hybridController.setPlayAnimations(false);
         app.start(stage);
         stage.requestFocus();
     }
