@@ -84,6 +84,9 @@ public class GroupTestModule {
              */
             @Override
             public Observable<ArrayList<Group>> getGroups() {
+                if(groups.isEmpty()){
+                    return Observable.just(getDummyGroups(3));
+                }
                 return Observable.just(groups);
             }
 
