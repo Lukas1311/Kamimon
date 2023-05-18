@@ -20,6 +20,8 @@ public class InvitationController extends Controller {
 
     private final Message message;
     private final String username;
+    private MessageController messageController;
+
 
     public InvitationController(Message msg, String senderUsername, User me) {
         this.message = msg;
@@ -33,4 +35,5 @@ public class InvitationController extends Controller {
 
         return parent;
     }
+
 }

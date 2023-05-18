@@ -1,18 +1,13 @@
 package de.uniks.stpmon.k.views;
 
-import java.util.HashMap;
-
-
-import de.uniks.stpmon.k.controller.MessageController;
+import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserService;
-
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
+
+import java.util.HashMap;
 
 
 public class MessageCell extends ListCell<Message> {
@@ -35,7 +30,7 @@ public class MessageCell extends ListCell<Message> {
             setText(null);
         } else {
             String sender = groupUsers.get(item.sender());
-            final MessageController messageController = new MessageController(item, sender, userService.getMe());
+            final InvitationController messageController = new InvitationController(item, sender, userService.getMe());
             // setting the alignment directly on the cell makes the trick
             setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
             setGraphic(messageController.render());
