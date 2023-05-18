@@ -186,7 +186,6 @@ class UserServiceTest {
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of()));
         when(friendCacheProvider.get()).thenReturn(friendCache);
-        when(userApiService.getUsers(anyList())).thenReturn(Observable.just(new ArrayList<>()));
         //action
         List<User> emptyList = userService.searchFriend("").blockingFirst();
 
@@ -213,7 +212,6 @@ class UserServiceTest {
         // some other user
         usersFromServer.add(new User("1", "a", null, null, null));
         when(userApiService.getUsers()).thenReturn(Observable.just(usersFromServer));
-        when(userApiService.getUsers(anyList())).thenReturn(Observable.just(new ArrayList<>()));
 
         //action
         final List<User> users = userService.searchFriend("a").blockingFirst();
@@ -409,6 +407,8 @@ class UserServiceTest {
 
     @Test
     void getEmptyFriends() {
+
+        when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
                 "0",

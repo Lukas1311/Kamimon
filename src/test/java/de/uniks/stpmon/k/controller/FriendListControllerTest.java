@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -41,6 +42,8 @@ class FriendListControllerTest extends ApplicationTest {
     App app = new App(null);
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     final ArrayList<User> friends = new ArrayList<>();
     final ArrayList<User> users = new ArrayList<>();
@@ -53,6 +56,7 @@ class FriendListControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         friends.add(new User(null, "Peter", "online", null, null));
         users.add(new User(null, "Alice", "online", null, null));
         when(userService.filterFriends(anyString())).thenReturn(updatedFriends);

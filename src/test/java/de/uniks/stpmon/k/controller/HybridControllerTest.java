@@ -3,6 +3,8 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.DaggerTestComponent;
 import de.uniks.stpmon.k.TestComponent;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserStorage;
@@ -14,10 +16,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -37,6 +41,8 @@ class HybridControllerTest extends ApplicationTest {
     private final EventListener eventListener = component.eventListener();
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
 
     @Override
@@ -50,6 +56,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
+        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatList = lookup("#chatList").query();

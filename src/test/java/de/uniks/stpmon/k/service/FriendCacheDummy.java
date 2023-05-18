@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendCacheDummy implements IFriendCache {
@@ -63,6 +64,9 @@ public class FriendCacheDummy implements IFriendCache {
 
     @Override
     public Observable<List<User>> getFriends() {
+        if (userStorage.getUser().friends().isEmpty()) {
+            return Observable.fromSupplier(ArrayList::new);
+        }
         return userApiService.getUsers(userStorage.getUser().friends());
     }
 }

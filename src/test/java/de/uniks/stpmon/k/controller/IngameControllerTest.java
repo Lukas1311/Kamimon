@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
+import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -44,10 +45,13 @@ public class IngameControllerTest extends ApplicationTest {
     IngameController ingameController;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(ingameController);
         stage.requestFocus();
     }
