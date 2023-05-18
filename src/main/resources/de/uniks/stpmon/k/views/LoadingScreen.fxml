@@ -7,27 +7,27 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
             fx:controller="de.uniks.stpmon.k.controller.LoadingScreenController">
-   <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView id="imageKamimonLettering" fx:id="imageViewKamimonLettering" fitHeight="200.0"
-                       fitWidth="200.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets bottom="25.0"/>
-               </VBox.margin>
-               <viewport>
-                  <Rectangle2D/>
-               </viewport>
-            </ImageView>
-            <HBox fx:id="hBoxCompanies" alignment="CENTER" prefHeight="100.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <ImageView fx:id="imageViewDeadBirdsSociety" fitHeight="90.0" fitWidth="200.0"
-                             pickOnBounds="true" preserveRatio="true"/>
-                  <ImageView fx:id="imageViewKgmLogo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true"
-                             preserveRatio="true"/>
-               </children>
-            </HBox>
-         </children>
+    <center>
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <children>
+                <ImageView id="imageKamimonLettering" fx:id="imageViewKamimonLettering" fitHeight="200.0"
+                           fitWidth="200.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets bottom="25.0"/>
+                    </VBox.margin>
+                    <viewport>
+                        <Rectangle2D/>
+                    </viewport>
+                </ImageView>
+                <HBox fx:id="hBoxCompanies" alignment="CENTER" prefHeight="100.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <ImageView fx:id="imageViewDeadBirdsSociety" fitHeight="90.0" fitWidth="200.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                        <ImageView fx:id="imageViewKgmLogo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true"
+                                   preserveRatio="true"/>
+                    </children>
+                </HBox>
+            </children>
       </VBox>
    </center>
 </BorderPane>

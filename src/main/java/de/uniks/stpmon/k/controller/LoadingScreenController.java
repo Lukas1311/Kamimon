@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 
+import io.reactivex.rxjava3.subjects.ReplaySubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -30,17 +32,17 @@ public class LoadingScreenController extends Controller {
     public Runnable onLoadingFinished;
     public int minTime = 2000;
 
-    @Inject
-    public LoadingScreenController() {
-
-    }
-
     public void setOnLoadingFinished(Runnable onLoadingFinished) {
         this.onLoadingFinished = onLoadingFinished;
     }
 
     public void setMinTime(int minTime) {
         this.minTime = minTime;
+    }
+
+    @Inject
+    public LoadingScreenController() {
+
     }
 
     @Override
