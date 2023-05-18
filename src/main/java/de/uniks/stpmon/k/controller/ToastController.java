@@ -27,4 +27,14 @@ public class ToastController extends Controller {
     public ToastController() {
     }
 
+    public void openToast(String message) {
+        if(open){
+            return;
+        }
+        open = true;
+        Platform.runLater(()->{
+            Stage mainStage = app.getStage();
+            Stage toastStage = new Stage();
+        });
+    }
 }
