@@ -23,7 +23,7 @@ import java.util.Map;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_CREATE;
 
 @Singleton
-public class ChatListController extends Controller {
+public class ChatListController extends ToastedController {
 
     @FXML
     public Button newChatButton;

@@ -23,7 +23,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class FriendListController extends Controller {
+public class FriendListController extends ToastedController {
 
     @FXML
     public TextField searchFriend;

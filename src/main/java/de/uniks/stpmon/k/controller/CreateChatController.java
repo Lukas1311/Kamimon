@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
-public class CreateChatController extends Controller {
+public class CreateChatController extends ToastedController {
 
     @FXML
     public Button returnButton;

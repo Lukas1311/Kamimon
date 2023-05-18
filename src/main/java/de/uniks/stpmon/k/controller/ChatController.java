@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
-public class ChatController extends Controller {
+public class ChatController extends ToastedController {
     @FXML
     public Button backButton;
     @FXML
@@ -251,11 +251,5 @@ public class ChatController extends Controller {
     public void leaveChat() {
         messages.clear();
         hybridControllerProvider.get().popTab();
-    }
-
-    // reusable handle error function for the onError of an Observable
-    private void handleError(Throwable error) {
-        System.out.println("Look here for the error: " + error);
-        error.printStackTrace();
     }
 }
