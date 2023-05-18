@@ -85,10 +85,57 @@ public class GroupServiceTest {
 
     @Test
     void getGroupsByMembers() {
+        ArrayList<String> members = new ArrayList<>();
+        members.add("01");
+        ArrayList<Group> groups = new ArrayList<>();
+        groups.add(new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "1",
+                "Test",
+                members
+        ));
+        when(groupApiService.getGroups("01")).thenReturn(Observable.just(groups));
+
+        //action
+        Observable<ArrayList<Group>> groupsByMembers = groupService.getGroupsByMembers(members);
+
+        //check values
+        assertEquals(groups, groupsByMembers.blockingFirst());
+        assertEquals("01", groupsByMembers.blockingFirst().get(0).members().get(0));
+
+        //check mocks
+        verify(groupApiService).getGroups("01");
     }
 
     @Test
     void searchGroup() {
+        ArrayList<Group> groups = new ArrayList<>();
+        groups.add(new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "1",
+                "Alice",
+                new ArrayList<>()
+        ));
+        groups.add(new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "2",
+                "Bob",
+                new ArrayList<>()
+        ));
+        when(groupApiService.getGroups()).thenReturn(Observable.just(groups));
+
+        //action
+        Observable<Group> searchGroup = groupService.searchGroup("Alice");
+
+        //check values
+        assertEquals("Alice", searchGroup.blockingFirst().name());
+        assertEquals("1", searchGroup.blockingFirst()._id());
+
+        //check mocks
+        verify(groupApiService).getGroups();
     }
 
     @Test
