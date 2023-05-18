@@ -26,6 +26,9 @@ public class IntroductionController extends Controller{
     public Button back;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    final Image imageOne = loadImage("introductionSheetOne.png");
+    final Image imageTwo = loadImage("introductionSheetTwo.png");
+    final Image imageThree = loadImage("introductionSheetThree.png");
 
     @Inject
     public IntroductionController(){
@@ -35,7 +38,6 @@ public class IntroductionController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        final Image imageOne = loadImage("introductionSheetOne.png");
         imageIntroduction.setImage(imageOne);
         if (imageIntroduction.getImage() == imageOne) {
             back.setVisible(false);
@@ -44,16 +46,12 @@ public class IntroductionController extends Controller{
     }
 
     public void nextSheet(ActionEvent event) {
-        back.setVisible(true);
-        final Image imageTwo = loadImage("introductionSheetTwo.png");
-        final Image imageThree = loadImage("introductionSheetThree.png");
-        imageIntroduction.setImage(imageTwo);
-        further.setOnAction(event1 -> {
-            imageIntroduction.setImage(imageThree);
-            further.setOnAction(event2 -> {
-                app.show(hybridControllerProvider.get());
-            });
-        });
+        if (imageIntroduction.getImage() == imageOne) {
+            back.setVisible(false);
+        }else {
+            back.setVisible(true);
+        }
+        openSheet(true);
     }
 
     private Image loadImage(String image) {
@@ -61,23 +59,29 @@ public class IntroductionController extends Controller{
     }
 
     public void previousSheet(ActionEvent event) {
-        final Image previousImageOne = loadImage("introductionSheetOne.png");
-        final Image previousImageTwo = loadImage("introductionSheetTwo.png");
-        imageIntroduction.setImage(previousImageTwo);
-        back.setOnAction(event1 -> {
-            imageIntroduction.setImage(previousImageOne);
-        });
-        /*Image currentImage = imageIntroduction.getImage();
-        final Image previousImageOne = loadImage("introductionSheetOne.png");
-        final Image previousImageTwo = loadImage("introductionSheetTwo.png");
-        final Image previousImageThree = loadImage("introductionSheetThree.png");
-        if(Objects.equals(currentImage, previousImageTwo)) {
-            imageIntroduction.setImage(previousImageOne);
+        if (imageIntroduction.getImage() == imageTwo) {
             back.setVisible(false);
-        } else if(Objects.equals(currentImage, previousImageThree)) {
-            imageIntroduction.setImage(previousImageTwo);
+        }else {
+            back.setVisible(true);
         }
-
-         */
+        openSheet(false);
+    }
+    private void openSheet(boolean forward) {
+        if(forward) {
+            if(imageIntroduction.getImage() == imageOne) {
+                imageIntroduction.setImage(imageTwo);
+                back.setVisible(true);
+            } else if (imageIntroduction.getImage() == imageTwo) {
+                imageIntroduction.setImage(imageThree);
+            } else if (imageIntroduction.getImage() == imageThree) {
+                app.show(hybridControllerProvider.get());
+            }
+        }else {
+            if(imageIntroduction.getImage() == imageTwo) {
+                imageIntroduction.setImage(imageOne);
+            } else if (imageIntroduction.getImage() == imageThree) {
+                imageIntroduction.setImage(imageTwo);
+            }
+        }
     }
 }
