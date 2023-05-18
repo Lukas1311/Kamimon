@@ -1,0 +1,103 @@
+package de.uniks.stpmon.k.service;
+
+import de.uniks.stpmon.k.dto.CreateGroupDto;
+import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.rest.GroupApiService;
+import io.reactivex.rxjava3.core.Observable;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
+@ExtendWith(MockitoExtension.class)
+public class GroupServiceTest {
+
+    @Mock
+    GroupApiService groupApiService;
+    @InjectMocks
+    GroupService groupService;
+
+    @Test
+    void createGroup() {
+        final ArgumentCaptor<CreateGroupDto> captor = ArgumentCaptor.forClass(CreateGroupDto.class);
+        when(groupApiService.createGroup(ArgumentMatchers.any(CreateGroupDto.class)))
+                .thenReturn(Observable.just(new Group(
+                        "01.01.2023",
+                        "02.02.2023",
+                        "1",
+                        "Test",
+                        new ArrayList<>()
+                )));
+
+        //action
+        final Group newGroup = groupService.createGroup("Test", new ArrayList<>()).blockingFirst();
+
+        //check values
+        assertEquals("01.01.2023", newGroup.createdAt());
+        assertEquals("02.02.2023", newGroup.updatedAt());
+        assertEquals("1", newGroup._id());
+        assertEquals("Test", newGroup.name());
+        assertEquals(new ArrayList<String>(), newGroup.members());
+
+        //check mocks
+        verify(groupApiService).createGroup(captor.capture());
+    }
+
+    @Test
+    void getOwnGroups() {
+        ArrayList<Group> groups = new ArrayList<>();
+        groups.add(new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "1",
+                "Test",
+                new ArrayList<>()
+        ));
+        groups.add(new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "2",
+                "Test2",
+                new ArrayList<>()
+        ));
+        when(groupApiService.getGroups()).thenReturn(Observable.just(groups));
+
+        //action
+        Observable<ArrayList<Group>> ownGroups = groupService.getOwnGroups();
+
+        //check values
+        assertEquals(groups, ownGroups.blockingFirst());
+        assertEquals(2, ownGroups.blockingFirst().size());
+
+        //check mocks
+        verify(groupApiService).getGroups();
+    }
+
+    @Test
+    void getGroupsByMembers() {
+    }
+
+    @Test
+    void searchGroup() {
+    }
+
+    @Test
+    void updateGroup() {
+    }
+
+    @Test
+    void deleteGroup() {
+    }
+
+
+}
