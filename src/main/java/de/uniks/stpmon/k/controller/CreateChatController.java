@@ -154,7 +154,25 @@ public class CreateChatController extends Controller {
     }
 
     public void leaveGroup() {
-        //TODO
+        if(group == null) {
+            return;
+        }
+        groupMembers.remove(userStorage.getUser()._id());
+        if(groupMembers.size() == 0){
+            disposables.add(groupService.deleteGroup(group)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(group -> {
+                        hybridControllerProvider.get().popTab();
+                        hybridControllerProvider.get().popTab();
+                    }));
+        } else {
+            disposables.add(groupService.updateGroup(group, group.name(), new ArrayList<>(groupMembers))
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(group -> {
+                        hybridControllerProvider.get().popTab();
+                        hybridControllerProvider.get().popTab();
+                    }));
+        }
     }
 
     public void createGroup() {
