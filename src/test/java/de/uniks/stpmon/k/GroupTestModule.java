@@ -44,7 +44,7 @@ public class GroupTestModule {
             private ArrayList<Group> getDummyGroups(int amount) {
                 ArrayList<Group> groups = new ArrayList<>();
                 for (int i = 0; i < amount; i++) {
-                    String[] memberIds = {String.valueOf(i), String.valueOf(i + 1)};
+                    String[] memberIds = {String.valueOf("id" + i), String.valueOf("id" + (i + 1))};
                     ArrayList<String> members = new ArrayList<>(Arrays.asList(memberIds));
                     Group group = new Group(
                             "2023-01-01T00:00:00.000Z",

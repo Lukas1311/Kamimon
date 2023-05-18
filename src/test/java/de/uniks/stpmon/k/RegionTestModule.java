@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Module
-public class RegionTestModule {
+public class    RegionTestModule {
 
     @Provides
     @Singleton
