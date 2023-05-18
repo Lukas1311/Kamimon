@@ -26,7 +26,9 @@ public class IntroductionController extends Controller{
 
     @Override
     public Parent render() {
-        return null;
+        final Parent parent = super.render();
+
+        return parent;
     }
 
     public void nextSheet(ActionEvent event) {
