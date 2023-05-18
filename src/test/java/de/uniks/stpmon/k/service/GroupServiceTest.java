@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.CreateGroupDto;
 import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.dto.UpdateGroupDto;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -140,10 +141,57 @@ public class GroupServiceTest {
 
     @Test
     void updateGroup() {
+        ArrayList<String> members = new ArrayList<>();
+        members.add("01");
+        Group group = new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "1",
+                "Alice",
+                new ArrayList<>()
+        );
+        Group editedGroup = new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "1",
+                "Bob",
+                members
+        );
+
+        UpdateGroupDto updateGroupDto = new UpdateGroupDto("Bob", members);
+        when(groupApiService.editGroup("1", updateGroupDto)).thenReturn(Observable.just(editedGroup));
+
+        //action
+        Observable<Group> updatedGroup = groupService.updateGroup(group, "Bob", members);
+
+        //check values
+        assertEquals("Bob", updatedGroup.blockingFirst().name());
+        assertEquals("01", updatedGroup.blockingFirst().members().get(0));
+
+        //check mocks
+        verify(groupApiService).editGroup("1", updateGroupDto);
     }
 
     @Test
     void deleteGroup() {
+        Group group = new Group(
+                "01.01.2023",
+                "02.02.2023",
+                "1",
+                "Alice",
+                new ArrayList<>()
+        );
+
+        when(groupApiService.deleteGroup("1")).thenReturn(Observable.just(group));
+
+        //action
+        Observable<Group> deletedGroup = groupService.deleteGroup(group);
+
+        //check values
+        assertEquals(group, deletedGroup.blockingFirst());
+
+        //check mocks
+        verify(groupApiService).deleteGroup("1");
     }
 
 
