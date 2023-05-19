@@ -143,14 +143,12 @@ public class LoginController extends Controller {
         loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected(), true);
     }
 
-    // TODO: is almost the same like register method, i bet we can refactor this to one method
     private void loginWithCredentials(String username, String password, boolean rememberMe, boolean isRegistered){
         disposables.add(authService
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
                     errorText.set(translateString("login.successful"));
-                    // TODO: user.status should be set to online here
                     errorLabel.setTextFill(Color.GREEN);
                     if(isRegistered) {
                         app.show(hybridControllerProvider.get());
@@ -159,7 +157,7 @@ public class LoginController extends Controller {
                     }
                 }, error -> {
                     errorText.set(getErrorMessage(error));
-                    System.out.println("look here for the error: " + error);
+
                 }));
     }
 
@@ -175,7 +173,6 @@ public class LoginController extends Controller {
                     loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected(), false);
                 }, error -> {
                     errorText.set(getErrorMessage(error));
-                    System.out.println("look here for the error: " + error);
                 }));
     }
 
