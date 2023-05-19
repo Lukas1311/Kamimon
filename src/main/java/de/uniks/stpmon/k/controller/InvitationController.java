@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ResourceBundle;
 
 import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
@@ -32,10 +33,11 @@ public class InvitationController extends Controller {
     private final String username;
 
     @Inject
-    public InvitationController(Message msg, String senderUsername, User me, Provider<HybridController> hybridController) {
+    public InvitationController(Message msg, String senderUsername, User me, Provider<HybridController> hybridController, Provider<ResourceBundle> resources) {
         this.message = msg;
         this.username = senderUsername;
         this.hybridController = hybridController;
+        this.resources = resources;
     }
 
     @Override

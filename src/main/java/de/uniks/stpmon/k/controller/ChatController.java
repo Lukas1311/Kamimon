@@ -127,7 +127,7 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, hybridControllerProvider));
+        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, hybridControllerProvider, resources));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         // scrolls to the bottom of the listview

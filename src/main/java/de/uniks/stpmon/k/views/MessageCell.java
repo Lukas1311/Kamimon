@@ -10,6 +10,7 @@ import javafx.scene.control.ListCell;
 
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 
 public class MessageCell extends ListCell<Message> {
@@ -17,11 +18,13 @@ public class MessageCell extends ListCell<Message> {
     private final HashMap<String, String> groupUsers;
     private final User me;
     private final Provider<HybridController> hybridController;
+    private final Provider<ResourceBundle> resources;
 
-    public MessageCell(User me, HashMap<String, String> groupUsers, Provider<HybridController> hybridController) {
+    public MessageCell(User me, HashMap<String, String> groupUsers, Provider<HybridController> hybridController, Provider<ResourceBundle> resources) {
         this.groupUsers = groupUsers;
         this.me = me;
         this.hybridController = hybridController;
+        this.resources = resources;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class MessageCell extends ListCell<Message> {
         } else {
             String sender = groupUsers.get(item.sender());
             if(item.body().startsWith("JoinInvitation")) {
-                final InvitationController invitationController = new InvitationController(item, sender, me, hybridController);
+                final InvitationController invitationController = new InvitationController(item, sender, me, hybridController, resources);
                 // setting the alignment directly on the cell makes the trick
                 setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(invitationController.render());
