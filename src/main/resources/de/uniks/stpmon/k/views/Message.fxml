@@ -11,7 +11,7 @@
         <VBox.margin>
             <Insets/>
         </VBox.margin>
-        <TextFlow fx:id="textFlow">
+        <TextFlow fx:id="textFlow" maxWidth="300.0">
             <children>
                 <Text fx:id="bodyText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
             </children>

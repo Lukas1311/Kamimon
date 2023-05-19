@@ -42,7 +42,6 @@ public class MessageController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        textFlow.setMaxWidth(320);
         senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
