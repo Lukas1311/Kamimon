@@ -5,8 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -62,8 +64,10 @@ class AppTest extends ApplicationTest {
         clickOn("#further");
         clickOn("#further");
         clickOn("#further");
+        clickOn("#further");
         //open friend list
         clickOn("#friends");
+
 
         //check if friend list is empty
         VBox friendListVbox = lookup("#friendList").query();
@@ -100,20 +104,22 @@ class AppTest extends ApplicationTest {
         Text groupname = lookup("#groupName").query();
         assertThat(!groupname.getText().isEmpty()).isTrue();
 
+        TextField messagefield = lookup("#messageField").query();
         clickOn("#messageField");
         write("t");
-        verifyThat("#messageField", hasText("t"));
+        String x = messagefield.getText();
+        waitForFxEvents();
 
         type(KeyCode.ENTER);
         //chatlist first entry is message with t
         verifyThat("#bodyText", hasText("t"));
-        //TODO: potential invite here
+        //potential invite here
         //...
 
 
         //close friends sidebar
         clickOn("#friends");
-        AnchorPane regionList = lookup("#regionList").query();
+        BorderPane regionList = lookup("#regionsBorderPane").query();
         ListView regionsListView = (ListView) regionList.getChildren().get(0);
         assertThat(regionsListView.getItems().size()).isEqualTo(2);
 
