@@ -47,7 +47,7 @@ public class RegionListController extends Controller{
     public Parent render(){
         final Parent parent = super.render();
         final Image imageKamimonLettering = loadImage("kamimonLettering.png");
-        imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
+        //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
         final ListView<Region> regionListView = new ListView<>(this.regions);
         regionListView.setStyle("-fx-background-color: transparent;");
         //.list-cell { -fx-background-color: transparent;} .list-view {    -fx-background-color: transparent;}
