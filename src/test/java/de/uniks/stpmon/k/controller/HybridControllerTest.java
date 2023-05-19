@@ -16,10 +16,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -39,11 +41,14 @@ class HybridControllerTest extends ApplicationTest {
     private final EventListener eventListener = component.eventListener();
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        hybridController.setPlayAnimations(false);
         app.show(hybridController);
         stage.requestFocus();
     }
@@ -61,7 +66,7 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
-        write("\t\t\t\t\t");
+        write("\t\t\t\t\t\t");
         type(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();

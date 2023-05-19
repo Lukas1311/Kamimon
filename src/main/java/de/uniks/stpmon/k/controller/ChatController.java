@@ -244,6 +244,7 @@ public class ChatController extends Controller {
                     .sendMessage(message, GROUPS, group._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(msg -> {
+                                System.out.println("Message sent: " + msg.body());
                                 messageField.clear();
                                 messagesListView.scrollTo(msg);
                             }, this::handleError

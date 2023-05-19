@@ -17,6 +17,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -39,6 +40,8 @@ class ChatListControllerTest extends ApplicationTest {
     EventListener eventListener;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
     @InjectMocks
     ChatListController chatListController;
     Subject<Event<Group>> groupEvents = PublishSubject.create();
@@ -47,6 +50,7 @@ class ChatListControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
         groups.add(new Group(null, null, "0", "Peter", null));
         when(eventListener.<Group>listen(any(), any())).thenReturn(groupEvents);
         when(groupService.getOwnGroups()).thenReturn(Observable.just(groups));

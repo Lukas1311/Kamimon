@@ -79,7 +79,7 @@ public class CreateChatController extends Controller {
             }
             // Remove the user itself from the list
             userMap.remove(userService.getMe()._id());
-            notEnoughGroupMembers.setValue(true);
+            notEnoughGroupMembers.setValue(groupMembers.size() < 1);
 
             members.setAll(userMap.values());
         };
@@ -101,11 +101,11 @@ public class CreateChatController extends Controller {
 
         errorLabel.textProperty().bind(
                 Bindings.when(groupNameTooLong.and(groupNameField.textProperty().isNotEmpty()))
-                        .then(resources.getString("group.name.too.long"))
+                        .then(translateString("group.name.too.long"))
                         .otherwise(Bindings.when(groupNameField.textProperty().isEmpty())
-                                .then(resources.getString("group.name.is.empty"))
+                                .then(translateString("group.name.is.empty"))
                                 .otherwise(Bindings.when(notEnoughGroupMembers)
-                                        .then(resources.getString("not.enough.group.members"))
+                                        .then(translateString("not.enough.group.members"))
                                         .otherwise(""))
                         )
         );
@@ -132,7 +132,7 @@ public class CreateChatController extends Controller {
 
         if (group != null) {
             leaveGroupButton.setVisible(true);
-            createGroupButton.setText(resources.getString("create.group.button.update"));
+            createGroupButton.setText(translateString("create.group.button.update"));
             createGroupButton.setOnAction(e -> updateGroup());
             groupNameField.setText(group.name());
         }
@@ -146,7 +146,10 @@ public class CreateChatController extends Controller {
         }
         disposables.add(groupService.updateGroup(group, groupNameField.getText(), groupMembers)
                 .observeOn(FX_SCHEDULER)
-                .subscribe(group1 -> hybridControllerProvider.get().openChat(group1)));
+                .subscribe(group1 -> {
+                    hybridControllerProvider.get().popTab();
+                    hybridControllerProvider.get().openChat(group1);
+                }));
     }
 
     public void returnToChatList() {
@@ -154,7 +157,25 @@ public class CreateChatController extends Controller {
     }
 
     public void leaveGroup() {
-        //TODO
+        if(group == null) {
+            return;
+        }
+        groupMembers.remove(userStorage.getUser()._id());
+        if(groupMembers.size() == 0){
+            disposables.add(groupService.deleteGroup(group)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(group -> {
+                        hybridControllerProvider.get().popTab();
+                        hybridControllerProvider.get().popTab();
+                    }));
+        } else {
+            disposables.add(groupService.updateGroup(group, group.name(), new ArrayList<>(groupMembers))
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(group -> {
+                        hybridControllerProvider.get().popTab();
+                        hybridControllerProvider.get().popTab();
+                    }));
+        }
     }
 
     public void createGroup() {

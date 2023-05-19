@@ -1,18 +1,31 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.*;
+import de.uniks.stpmon.k.controller.ChatController;
+import de.uniks.stpmon.k.controller.ChatListController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.CreateChatController;
+import de.uniks.stpmon.k.controller.FriendListController;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.LobbyController;
+import de.uniks.stpmon.k.controller.PauseController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -24,6 +37,17 @@ import java.util.function.Consumer;
 
 @Singleton
 public class HybridController extends Controller {
+    public static final int TAB_WIDTH = -370;
+    private final Stack<Controller> tabStack = new Stack<>();
+    private final TranslateTransition sidebarTransition = new TranslateTransition(Duration.millis(800));
+    private final EventHandler<MouseEvent> consumeMouse = MouseEvent::consume;
+
+    private boolean playAnimations = true;
+
+    private SidebarTab mainTab = SidebarTab.NONE;
+
+    private MainWindow currentWindow = MainWindow.LOBBY;
+
     @FXML
     public HBox hBox;
     @FXML
@@ -50,13 +74,14 @@ public class HybridController extends Controller {
     UserService userService;
     @Inject
     GroupService groupService;
-    private SidebarTab mainTab = SidebarTab.NONE;
-    private MainWindow currentWindow = MainWindow.LOBBY;
-
-    private final Stack<Controller> tabStack = new Stack<>();
 
     @Inject
     public HybridController() {
+
+    }
+
+    public void setPlayAnimations(boolean playAnimations) {
+        this.playAnimations = playAnimations;
     }
 
     @Override
@@ -81,11 +106,11 @@ public class HybridController extends Controller {
         return parent;
     }
 
+    @SuppressWarnings("unchecked")
     private <C extends Controller> void pushController(Controller controller, Consumer<C> setup) {
         ObservableList<Node> children = stackPane.getChildren();
 
         if (setup != null) {
-            // noinspection unchecked
             setup.accept((C) controller);
         }
         controller.init();
@@ -164,17 +189,58 @@ public class HybridController extends Controller {
         removeChildren(Math.max(tabStack.size() - 1, 1));
     }
 
+    private void applyTransition(boolean open, Runnable callback) {
+        ObservableList<Node> children = stackPane.getChildren();
+        if (children.size() < 2) {
+            return;
+        }
+
+        if(!playAnimations){
+            if(callback != null) {
+                callback.run();
+            }
+            return;
+        }
+
+        // Disable mouse events on the stack pane while the animation is running
+        stackPane.addEventFilter(MouseEvent.ANY, consumeMouse);
+
+        Region node = (Region) children.get(open ? 1 : children.size() - 1);
+
+        sidebarTransition.setToX(open ? 0 : TAB_WIDTH);
+        sidebarTransition.setFromX(open ? TAB_WIDTH : 0);
+        sidebarTransition.setNode(node);
+        sidebarTransition.setInterpolator(EASE_OUT_QUINT);
+        sidebarTransition.playFromStart();
+        sidebarTransition.setOnFinished(event -> {
+            stackPane.removeEventFilter(MouseEvent.ANY, consumeMouse);
+            if(callback != null) {
+                callback.run();
+            }
+        });
+
+    }
+
     /**
      * Opens a tab in the sidebar at the first position or closes it if it is already open.
      * This closes all other open tabs.
      */
     public <C extends Controller> void forceTab(SidebarTab tab, Consumer<C> setup) {
-        closeTab();
         if (mainTab != tab) {
+            closeTab();
             mainTab = tab;
             pushTab(tab, setup);
+
+            applyTransition(true, null);
         } else {
+            ObservableList<Node> children = stackPane.getChildren();
+
             mainTab = SidebarTab.NONE;
+            // Hide tabs behind the tab that is on top
+            for (int i = 1; i < tabStack.size() - 1; i++) {
+                children.get(i).setVisible(false);
+            }
+            applyTransition(false, this::closeTab);
         }
     }
 
@@ -226,4 +292,11 @@ public class HybridController extends Controller {
     public void createChat(Group group) {
         pushTab(SidebarTab.CHAT_CREATE, (CreateChatController controller) -> controller.setGroup(group));
     }
+
+    private static final Interpolator EASE_OUT_QUINT = new Interpolator() {
+        @Override
+        protected double curve(double t) {
+            return 1 - Math.pow(1 - t, 5);
+        }
+    };
 }

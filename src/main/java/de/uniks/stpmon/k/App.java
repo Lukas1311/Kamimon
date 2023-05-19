@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -39,6 +40,8 @@ public class App extends Application {
         //initial window size
         stage.setWidth(1280);
         stage.setHeight(720);
+        stage.setMinWidth(512);
+        stage.setMinHeight(400);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
@@ -54,9 +57,14 @@ public class App extends Application {
         if (component == null) {
             return;
         }
+        LoadingScreenController loadingScreen = component.loadingScreenController();
+        loadingScreen.setOnLoadingFinished(this::onFinishedLoading);
+        show(loadingScreen);
 
         disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
+    }
 
+    private void onFinishedLoading() {
         final AuthenticationService authService = component.authenticationService();
         if (authService.isRememberMe()) {
             disposables.add(authService
