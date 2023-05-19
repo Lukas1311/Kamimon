@@ -27,6 +27,11 @@ public class ToastController extends Controller {
     public ToastController() {
     }
 
+    private static void updatePosition(Stage mainStage, Stage toastStage){
+        toastStage.setY(mainStage.getY() + (mainStage.getHeight()) - toastStage.getHeight());
+        toastStage.setX(mainStage.getX() + ((mainStage.getWidth() / 2) - (toastStage.getWidth() / 2)));
+    }
+
     public void openToast(String message) {
         if(open){
             return;
@@ -36,6 +41,12 @@ public class ToastController extends Controller {
             Stage mainStage = app.getStage();
             Stage toastStage = new Stage();
             toastStage.setTitle("Toast");
+            toastStage.initOwner(app.getStage());
+            mainStage.xProperty().addListener((observable, oldValue, newValue) -> updatePosition(mainStage, toastStage));
+            mainStage.yProperty().addListener((observable, oldValue, newValue) -> updatePosition(mainStage, toastStage));
+            mainStage.heightProperty().addListener((observable, oldValue, newValue) -> updatePosition(mainStage, toastStage));
+            mainStage.widthProperty().addListener((observable, oldValue, newValue) -> updatePosition(mainStage, toastStage));
+            toastStage.setResizable(false);
             toastStage.initStyle(StageStyle.TRANSPARENT);
             Parent root = render();
         });
