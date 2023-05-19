@@ -170,7 +170,7 @@ public class HybridController extends Controller {
             case CHAT_LIST -> pushController(chatListController, setup);
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
-            // TODO: case NONE ? -> The enum constant NONE needs a corresponding case label in this enum switch on SidebarTab
+            case NONE -> {}
         }
     }
 
