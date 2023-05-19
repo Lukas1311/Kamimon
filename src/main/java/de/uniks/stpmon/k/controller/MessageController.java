@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -20,6 +21,8 @@ public class MessageController extends Controller {
     public VBox messageBox;
     @FXML
     public HBox textBox;
+    @FXML
+    public TextFlow textFlow;
     @FXML
     public Text bodyText;
     @FXML
@@ -39,7 +42,6 @@ public class MessageController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-
         senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
