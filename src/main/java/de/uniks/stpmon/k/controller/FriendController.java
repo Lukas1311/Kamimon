@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
@@ -21,6 +22,8 @@ public class FriendController extends Controller {
     public Button messageButton;
     @FXML
     public Button removeFriendButton;
+    @FXML
+    public Text removeFriendText;
 
     private final FriendListController friendListController;
 
@@ -43,8 +46,9 @@ public class FriendController extends Controller {
         userName.setText(user.name());
 
         if (newFriend) {
-            removeFriendButton.setText("+");
-            removeFriendButton.setStyle("-fx-text-fill: green");
+
+            removeFriendText.setText("+");
+            removeFriendText.setFill(Paint.valueOf("GREEN"));
         }
 
         if (user.status().equals("offline")) {

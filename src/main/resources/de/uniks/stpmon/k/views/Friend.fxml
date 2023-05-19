@@ -62,7 +62,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </HBox.margin>
          <graphic>
-            <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="❌" />
+            <Text fx:id="removeFriendText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="❌" />
          </graphic>
       </Button>
    </children>
