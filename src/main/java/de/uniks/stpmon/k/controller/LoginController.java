@@ -10,9 +10,12 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,6 +23,7 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
@@ -48,6 +52,8 @@ public class LoginController extends Controller {
     public VBox loginScreen;
     @FXML
     public ToggleGroup lang;
+    @FXML
+    public ImageView kamimonLetteringImageView;
 
     @Inject
     AuthenticationService authService;
@@ -80,6 +86,7 @@ public class LoginController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        initImageAsync(kamimonLetteringImageView, "kamimonLettering.png");
 
         errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
@@ -217,6 +224,21 @@ public class LoginController extends Controller {
     private void setLanguage(Locale locale) {
         preferences.put("locale", locale.toLanguageTag());
         app.show(this); //reloaded
+    }
+
+    private void initImageAsync(ImageView imageView, String imagePath) {
+        final Task<Image> loadImageTask = new Task<>() {
+            @Override
+            protected Image call() {
+                URL url = Objects.requireNonNull(LoadingScreenController.class.getResource(imagePath));
+                return new Image(url.toString());
+            }
+        };
+        loadImageTask.setOnSucceeded(event -> {
+            Image loadedImage = loadImageTask.getValue();
+            imageView.setImage(loadedImage);
+        });
+        new Thread(loadImageTask).start();
     }
 
 }
