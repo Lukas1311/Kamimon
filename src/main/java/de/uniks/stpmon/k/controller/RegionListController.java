@@ -49,6 +49,8 @@ public class RegionListController extends Controller{
         final Image imageKamimonLettering = loadImage("kamimonLettering.png");
         imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
         final ListView<Region> regionListView = new ListView<>(this.regions);
+        regionListView.setStyle("-fx-background-color: transparent;");
+        //.list-cell { -fx-background-color: transparent;} .list-view {    -fx-background-color: transparent;}
         regionListView.setMaxWidth(200);
         regionsBorderPane.setCenter(regionListView);
         //regionList.getChildren().add(regionListView);

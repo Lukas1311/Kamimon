@@ -18,6 +18,7 @@ public class RegionCell extends ListCell<Region> {
     @Override
     protected void updateItem(Region item, boolean empty) {
         super.updateItem(item, empty);
+        setStyle("-fx-background-color: transparent;");
         if(empty || item == null) {
             setGraphic(null);
         } else {
