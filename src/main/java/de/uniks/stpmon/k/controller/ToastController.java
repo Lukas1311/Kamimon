@@ -64,6 +64,19 @@ public class ToastController extends Controller {
 
             // Update position after layout is done
             Platform.runLater(() -> updatePosition(mainStage, toastStage));
+
+            Timeline fadeIn = new Timeline();
+            fadeIn.getKeyFrames().add(new KeyFrame(Duration.millis(1500),
+                    new KeyValue(root.opacityProperty(), 1),
+                    new KeyValue(root.translateYProperty(), 0)));
+            fadeIn.setOnFinished((ae) -> new Thread(() -> {
+                try {
+                    Thread.sleep(3500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start());
+            fadeIn.play();
         });
     }
 }
