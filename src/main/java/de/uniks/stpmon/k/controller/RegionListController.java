@@ -19,9 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RegionListController extends Controller{
+public class RegionListController extends ToastedController{
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
-    private final List<RegionController> controllers = new ArrayList<>();
     @Inject
     RegionApiService regionApiService;
     @FXML
@@ -37,7 +36,9 @@ public class RegionListController extends Controller{
 
     @Override
     public void init() {
-        disposables.add(regionApiService.getRegions().observeOn(FX_SCHEDULER).subscribe(regions::setAll));
+        disposables.add(regionApiService.getRegions()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(regions::setAll, this::handleError));
     }
 
     @Override

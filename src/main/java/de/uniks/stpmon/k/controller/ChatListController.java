@@ -23,7 +23,7 @@ import java.util.Map;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_CREATE;
 
 @Singleton
-public class ChatListController extends Controller {
+public class ChatListController extends ToastedController {
 
     @FXML
     public Button newChatButton;
@@ -48,10 +48,12 @@ public class ChatListController extends Controller {
 
     @Override
     public void init() {
-        disposables.add(groupService.getOwnGroups().observeOn(FX_SCHEDULER).subscribe((list) -> {
+        disposables.add(groupService.getOwnGroups()
+                .observeOn(FX_SCHEDULER)
+                .subscribe((list) -> {
             list.forEach(group -> groupMap.put(group._id(), group));
             groups.setAll(groupMap.values());
-        }));
+        }, this::handleError));
         disposables.add(eventListener.listen("groups.*.*", Group.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(event -> {
@@ -65,7 +67,7 @@ public class ChatListController extends Controller {
                         case "deleted" -> groupMap.remove(group._id());
                     }
                     groups.setAll(groupMap.values());
-                }));
+                }, this::handleError));
     }
 
     @Override
