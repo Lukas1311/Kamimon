@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -17,7 +19,6 @@ import java.util.Objects;
 
 public class IntroductionController extends Controller{
 
-
     @FXML
     public ImageView imageIntroduction;
     @FXML
@@ -29,6 +30,9 @@ public class IntroductionController extends Controller{
     final Image imageOne = loadImage("introductionSheetOne.png");
     final Image imageTwo = loadImage("introductionSheetTwo.png");
     final Image imageThree = loadImage("introductionSheetThree.png");
+    final Image imageFour = loadImage("introductionSheetFour.png");
+    final Image[] images = {imageOne, imageTwo, imageThree, imageFour};
+    private final IntegerProperty indexProperty = new SimpleIntegerProperty(0);
 
     @Inject
     public IntroductionController(){
@@ -43,46 +47,37 @@ public class IntroductionController extends Controller{
         if (imageIntroduction.getImage() == imageOne) {
             back.setVisible(false);
         }
+        back.visibleProperty()
+                .bind(indexProperty.greaterThan(0));
+        further.visibleProperty()
+                .bind(indexProperty.lessThan(images.length));
         return parent;
-    }
-
-    public void nextSheet(ActionEvent event) {
-        if (imageIntroduction.getImage() == imageOne) {
-            back.setVisible(false);
-        }else {
-            back.setVisible(true);
-        }
-        openSheet(true);
     }
 
     private Image loadImage(String image) {
         return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 
+    public void nextSheet(ActionEvent event) {
+        openSheet(true);
+    }
+
     public void previousSheet(ActionEvent event) {
-        if (imageIntroduction.getImage() == imageTwo) {
-            back.setVisible(false);
-        }else {
-            back.setVisible(true);
-        }
         openSheet(false);
     }
     private void openSheet(boolean forward) {
+        int index = indexProperty.get();
         if(forward) {
-            if(imageIntroduction.getImage() == imageOne) {
-                imageIntroduction.setImage(imageTwo);
-                back.setVisible(true);
-            } else if (imageIntroduction.getImage() == imageTwo) {
-                imageIntroduction.setImage(imageThree);
-            } else if (imageIntroduction.getImage() == imageThree) {
+            index++;
+            if(index == images.length) {
                 app.show(hybridControllerProvider.get());
+                return;
             }
-        }else {
-            if(imageIntroduction.getImage() == imageTwo) {
-                imageIntroduction.setImage(imageOne);
-            } else if (imageIntroduction.getImage() == imageThree) {
-                imageIntroduction.setImage(imageTwo);
-            }
+        } else {
+            index--;
         }
+        index = Math.min(Math.max(index, 0), images.length - 1);
+        imageIntroduction.setImage(images[index]);
+        indexProperty.set(index);
     }
 }
