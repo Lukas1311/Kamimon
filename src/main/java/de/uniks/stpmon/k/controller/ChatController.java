@@ -137,11 +137,11 @@ public class ChatController extends Controller {
         messagesListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    if (newValue.body().startsWith("JoinInvitation")) {
-                        Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
-                        return;
-                    }
                     if (newValue != null) {
+                        if (newValue.body().startsWith("JoinInvitation")) {
+                            Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
+                            return;
+                        }
                         // handle selected message
                         messageField.setText(newValue.body());
                         editMessage = newValue;
