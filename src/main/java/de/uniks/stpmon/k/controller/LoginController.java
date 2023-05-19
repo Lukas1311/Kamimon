@@ -86,7 +86,7 @@ public class LoginController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        initImageAsync(kamimonLetteringImageView, "kamimonLettering.png");
+        //initImageAsync(kamimonLetteringImageView, "kamimonLettering.png");
 
         errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
