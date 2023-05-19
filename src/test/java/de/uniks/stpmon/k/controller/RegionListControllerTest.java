@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,8 +64,8 @@ public class RegionListControllerTest extends ApplicationTest {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridController.get()).thenReturn(mock);
 
-        AnchorPane anchorPane = lookup("#regionList").query();
-        ListView<?> listView = (ListView<?>) anchorPane.getChildren().get(0);
+        BorderPane borderPane = lookup("#regionsBorderPane").query();
+        ListView<?> listView = (ListView<?>) borderPane.getChildren().get(0);
         Button button = (Button) listView.lookup("#regionButton");
         assertEquals("Test", button.getText());
 

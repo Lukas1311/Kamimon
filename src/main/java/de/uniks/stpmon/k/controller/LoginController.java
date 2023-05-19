@@ -13,6 +13,8 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,6 +22,7 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
@@ -48,6 +51,8 @@ public class LoginController extends Controller {
     public VBox loginScreen;
     @FXML
     public ToggleGroup lang;
+    @FXML
+    public ImageView kamimonLetteringImageView;
 
     @Inject
     AuthenticationService authService;
@@ -136,14 +141,12 @@ public class LoginController extends Controller {
         loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected(), true);
     }
 
-    // TODO: is almost the same like register method, i bet we can refactor this to one method
     private void loginWithCredentials(String username, String password, boolean rememberMe, boolean isRegistered){
         disposables.add(authService
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
                     errorText.set(translateString("login.successful"));
-                    // TODO: user.status should be set to online here
                     errorLabel.setTextFill(Color.GREEN);
                     if(isRegistered) {
                         app.show(hybridControllerProvider.get());
@@ -152,6 +155,7 @@ public class LoginController extends Controller {
                     }
                 }, error -> {
                     errorText.set(getErrorMessage(error));
+
                 }));
     }
 
@@ -215,6 +219,11 @@ public class LoginController extends Controller {
     private void setLanguage(Locale locale) {
         preferences.put("locale", locale.toLanguageTag());
         app.show(this); //reloaded
+    }
+
+
+    private Image loadImage(String image) {
+        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 
 }

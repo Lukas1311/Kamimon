@@ -61,14 +61,14 @@ public class LoadingScreenController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        initImageAsync(imageViewKamimonLettering, "kamimonLettering.png");
+        imageViewKamimonLettering.setImage(loadImage("kamimonLettering.png"));
         imageViewKamimonLettering.setPreserveRatio(true);
         imageViewKamimonLettering.fitWidthProperty().bind(hBoxCompanies.widthProperty().multiply(0.5));
         imageViewKamimonLettering.fitHeightProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
 
-        initImageAsync(imageViewDeadBirdsSociety, "deadBirdsSocietyLogo.png");
+        imageViewDeadBirdsSociety.setImage(loadImage("deadBirdsSocietyLogo.png"));
         imageViewDeadBirdsSociety.setPreserveRatio(true);
         imageViewDeadBirdsSociety.fitWidthProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
@@ -76,8 +76,7 @@ public class LoadingScreenController extends Controller {
         imageViewDeadBirdsSociety.fitHeightProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
-
-        initImageAsync(imageViewKgmLogo, "kgmLogo.png");
+        imageViewKgmLogo.setImage(loadImage("kgmLogo.png"));
         imageViewKgmLogo.setPreserveRatio(true);
         imageViewKgmLogo.fitWidthProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
@@ -88,18 +87,7 @@ public class LoadingScreenController extends Controller {
         return parent;
     }
 
-    private void initImageAsync(ImageView imageView, String imagePath) {
-        final Task<Image> loadImageTask = new Task<>() {
-            @Override
-            protected Image call() {
-                URL url = Objects.requireNonNull(LoadingScreenController.class.getResource(imagePath));
-                return new Image(url.toString());
-            }
-        };
-        loadImageTask.setOnSucceeded(event -> {
-            Image loadedImage = loadImageTask.getValue();
-            imageView.setImage(loadedImage);
-        });
-        new Thread(loadImageTask).start();
+    private Image loadImage(String image) {
+        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 }
