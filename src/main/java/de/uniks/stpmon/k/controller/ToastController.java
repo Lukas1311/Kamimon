@@ -75,6 +75,16 @@ public class ToastController extends Controller {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                Timeline fadeOut = new Timeline();
+                fadeOut.getKeyFrames().add(new KeyFrame(Duration.millis(500),
+                        new KeyValue(root.opacityProperty(), 0),
+                        new KeyValue(root.translateYProperty(),  20)
+                ));
+                fadeOut.setOnFinished((aeb) -> {
+                    toastStage.close();
+                    open = false;
+                });
+                fadeOut.play();
             }).start());
             fadeIn.play();
         });
