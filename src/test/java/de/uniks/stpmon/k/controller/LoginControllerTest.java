@@ -138,6 +138,7 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testUsernameTooLong() {
+        waitForFxEvents();
         Label label = lookup("#errorLabel").queryAs(Label.class);
 
         // tab into username input field

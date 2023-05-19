@@ -86,7 +86,8 @@ public class LoginController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        //initImageAsync(kamimonLetteringImageView, "kamimonLettering.png");
+        loadImage("kamimonLettering.png");
+        //initImageAsync(kamimonLetteringImageView, ;
 
         errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
@@ -223,19 +224,9 @@ public class LoginController extends Controller {
         app.show(this); //reloaded
     }
 
-    private void initImageAsync(ImageView imageView, String imagePath) {
-        final Task<Image> loadImageTask = new Task<>() {
-            @Override
-            protected Image call() {
-                URL url = Objects.requireNonNull(LoadingScreenController.class.getResource(imagePath));
-                return new Image(url.toString());
-            }
-        };
-        loadImageTask.setOnSucceeded(event -> {
-            Image loadedImage = loadImageTask.getValue();
-            imageView.setImage(loadedImage);
-        });
-        new Thread(loadImageTask).start();
+
+    private Image loadImage(String image) {
+        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 
 }
