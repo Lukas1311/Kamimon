@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
@@ -61,9 +60,6 @@ public class ChatController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     EventListener eventListener;
-    @Inject
-    Provider<ResourceBundle> resourceBundleProvider;
-
 
     private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
@@ -131,7 +127,7 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService, groupMembers, hybridControllerProvider, resourceBundleProvider));
+        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, hybridControllerProvider));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         // scrolls to the bottom of the listview
