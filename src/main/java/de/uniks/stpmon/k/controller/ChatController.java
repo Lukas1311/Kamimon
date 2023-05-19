@@ -263,11 +263,5 @@ public class ChatController extends ToastedController {
         messages.clear();
         hybridControllerProvider.get().popTab();
     }
-
-    // reusable handle error function for the onError of an Observable
-    private void handleError(Throwable error) {
-        System.out.println("Look here for the error: " + error);
-        error.printStackTrace();
-    }
 }
 
