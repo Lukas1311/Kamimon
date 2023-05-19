@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.*;
 
-public class CreateChatController extends Controller {
+public class CreateChatController extends ToastedController {
 
     @FXML
     public Button returnButton;
@@ -167,14 +167,14 @@ public class CreateChatController extends Controller {
                     .subscribe(group -> {
                         hybridControllerProvider.get().popTab();
                         hybridControllerProvider.get().popTab();
-                    }));
+                    }, this::handleError));
         } else {
             disposables.add(groupService.updateGroup(group, group.name(), new ArrayList<>(groupMembers))
                     .observeOn(FX_SCHEDULER)
                     .subscribe(group -> {
                         hybridControllerProvider.get().popTab();
                         hybridControllerProvider.get().popTab();
-                    }));
+                    }, this::handleError));
         }
     }
 
@@ -188,7 +188,7 @@ public class CreateChatController extends Controller {
                 .subscribe(group -> {
                     hybridControllerProvider.get().popTab();
                     hybridControllerProvider.get().openChat(group);
-                }));
+                }, this::handleError));
     }
 
     public void handleGroup(User item) {

@@ -64,7 +64,6 @@ public class SidebarController extends Controller {
                 .logout()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(res -> {
-                    System.out.println(res);
                     app.show(loginControllerProvider.get());
                 })
         );

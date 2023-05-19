@@ -10,12 +10,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -172,6 +169,7 @@ public class LoginController extends Controller {
                     loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected(), false);
                 }, error -> {
                     errorText.set(getErrorMessage(error));
+                    System.out.println("look here for the error: " + error);
                 }));
     }
 

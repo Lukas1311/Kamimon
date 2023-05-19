@@ -69,7 +69,7 @@ public class FriendCache implements IFriendCache {
 								case "updated" -> updateUser(user);
 								case "deleted" -> removeUser(user);
 							}
-						}, this::handleError
+						}, error -> {}
 				)
 		);
 
@@ -77,12 +77,6 @@ public class FriendCache implements IFriendCache {
 			NotifyUpdateFriends(mainUser);
 			return friends.take(1);
 		});
-	}
-
-	// reusable handle error function for the onError of an Observable
-	private void handleError(Throwable error) {
-		System.out.println("Look here for the error: " + error);
-		error.printStackTrace();
 	}
 
 	@Override
