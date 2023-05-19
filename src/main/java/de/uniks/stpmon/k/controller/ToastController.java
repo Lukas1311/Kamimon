@@ -49,6 +49,21 @@ public class ToastController extends Controller {
             toastStage.setResizable(false);
             toastStage.initStyle(StageStyle.TRANSPARENT);
             Parent root = render();
+            text.setText(message);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            toastStage.setScene(scene);
+            toastStage.setWidth(400);
+            toastStage.setHeight(40);
+            root.setOpacity(0);
+            root.setTranslateY(20);
+
+            toastStage.show();
+
+
+            // Update position after layout is done
+            Platform.runLater(() -> updatePosition(mainStage, toastStage));
         });
     }
 }
