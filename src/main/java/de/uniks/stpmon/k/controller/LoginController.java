@@ -152,7 +152,6 @@ public class LoginController extends Controller {
                     }
                 }, error -> {
                     errorText.set(getErrorMessage(error));
-                    System.out.println("look here for the error: " + error);
                 }));
     }
 
@@ -168,7 +167,6 @@ public class LoginController extends Controller {
                     loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected(), false);
                 }, error -> {
                     errorText.set(getErrorMessage(error));
-                    System.out.println("look here for the error: " + error);
                 }));
     }
 

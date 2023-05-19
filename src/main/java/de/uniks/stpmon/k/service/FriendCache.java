@@ -81,7 +81,6 @@ public class FriendCache implements IFriendCache {
 
 	// reusable handle error function for the onError of an Observable
 	private void handleError(Throwable error) {
-		System.out.println("Look here for the error: " + error);
 		error.printStackTrace();
 	}
 
