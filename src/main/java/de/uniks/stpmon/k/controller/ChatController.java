@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -136,6 +137,10 @@ public class ChatController extends Controller {
         messagesListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
+                    if (newValue.body().startsWith("JoinInvitation")) {
+                        Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
+                        return;
+                    }
                     if (newValue != null) {
                         // handle selected message
                         messageField.setText(newValue.body());

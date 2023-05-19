@@ -40,6 +40,7 @@ public class MessageCell extends ListCell<Message> {
                 // setting the alignment directly on the cell makes the trick
                 setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(invitationController.render());
+                setDisable(false);
             } else {
                 final MessageController messageController = new MessageController(item, sender, me);
                 // setting the alignment directly on the cell makes the trick
