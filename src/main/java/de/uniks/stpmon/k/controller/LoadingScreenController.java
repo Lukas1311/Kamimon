@@ -61,14 +61,14 @@ public class LoadingScreenController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadImage("kamimonLettering.png");
+        imageViewKamimonLettering.setImage(loadImage("kamimonLettering.png"));
         imageViewKamimonLettering.setPreserveRatio(true);
         imageViewKamimonLettering.fitWidthProperty().bind(hBoxCompanies.widthProperty().multiply(0.5));
         imageViewKamimonLettering.fitHeightProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
 
-        loadImage("deadBirdsSocietyLogo.png");
+        imageViewDeadBirdsSociety.setImage(loadImage("deadBirdsSocietyLogo.png"));
         imageViewDeadBirdsSociety.setPreserveRatio(true);
         imageViewDeadBirdsSociety.fitWidthProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
@@ -76,7 +76,7 @@ public class LoadingScreenController extends Controller {
         imageViewDeadBirdsSociety.fitHeightProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
-        loadImage("kgmLogo.png");
+        imageViewKgmLogo.setImage(loadImage("kgmLogo.png"));
         imageViewKgmLogo.setPreserveRatio(true);
         imageViewKgmLogo.fitWidthProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
