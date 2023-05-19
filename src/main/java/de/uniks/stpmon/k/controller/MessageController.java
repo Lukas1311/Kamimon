@@ -29,7 +29,7 @@ public class MessageController extends Controller {
     public Text senderName;
     @FXML
     public Text sendTime;
-
+    
 
     private final Message message;
     private final String username;
@@ -54,7 +54,7 @@ public class MessageController extends Controller {
 
     // TODO: add something like "today", "yesterday" and then the date like "May 13" 
     // OR create seperators between messages when a day changed to another
-    private String convertDateTimeToTime(String dateTimeString) {
+    public static String convertDateTimeToTime(String dateTimeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
 

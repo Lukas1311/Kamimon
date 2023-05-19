@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -60,7 +61,6 @@ public class ChatController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     EventListener eventListener;
-
 
     private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
@@ -128,7 +128,7 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService, groupMembers));
+        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, hybridControllerProvider, resources));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         // scrolls to the bottom of the listview
@@ -138,6 +138,10 @@ public class ChatController extends Controller {
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
+                        if (newValue.body().startsWith("JoinInvitation")) {
+                            Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
+                            return;
+                        }
                         // handle selected message
                         messageField.setText(newValue.body());
                         editMessage = newValue;
@@ -220,7 +224,7 @@ public class ChatController extends Controller {
                 if(regionOptional.isPresent()) {
                     String regionId = regionOptional.get()._id();
 
-                    String invitationText = "Join " + regionId;
+                    String invitationText = "JoinInvitation " + regionId;
 
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())

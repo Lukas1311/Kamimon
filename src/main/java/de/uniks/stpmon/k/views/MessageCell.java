@@ -1,30 +1,30 @@
 package de.uniks.stpmon.k.views;
 
-import java.util.HashMap;
-
-
+import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.controller.MessageController;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.service.UserService;
-
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
+
+import javax.inject.Provider;
+import java.util.HashMap;
+import java.util.ResourceBundle;
 
 
 public class MessageCell extends ListCell<Message> {
 
-    private final UserService userService;
     private final HashMap<String, String> groupUsers;
     private final User me;
+    private final Provider<HybridController> hybridController;
+    private final Provider<ResourceBundle> resources;
 
-    public MessageCell(UserService userService, HashMap<String, String> groupUsers) {
-        this.userService = userService;
+    public MessageCell(User me, HashMap<String, String> groupUsers, Provider<HybridController> hybridController, Provider<ResourceBundle> resources) {
         this.groupUsers = groupUsers;
-        this.me = userService.getMe();
+        this.me = me;
+        this.hybridController = hybridController;
+        this.resources = resources;
     }
 
     @Override
@@ -35,11 +35,20 @@ public class MessageCell extends ListCell<Message> {
             setText(null);
         } else {
             String sender = groupUsers.get(item.sender());
-            final MessageController messageController = new MessageController(item, sender, userService.getMe());
-            // setting the alignment directly on the cell makes the trick
-            setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-            setGraphic(messageController.render());
-            setDisable(!isOwnMessage(item));
+            if(item.body().startsWith("JoinInvitation")) {
+                final InvitationController invitationController = new InvitationController(item, sender, me, hybridController, resources);
+                // setting the alignment directly on the cell makes the trick
+                setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+                setGraphic(invitationController.render());
+                setDisable(false);
+            } else {
+                final MessageController messageController = new MessageController(item, sender, me);
+                // setting the alignment directly on the cell makes the trick
+                setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+                setGraphic(messageController.render());
+                setDisable(!isOwnMessage(item));
+            }
+
         }
     }
 
