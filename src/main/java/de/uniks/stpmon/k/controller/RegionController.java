@@ -3,8 +3,10 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Region;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 
 import javax.inject.Provider;
 
@@ -14,6 +16,8 @@ public class RegionController extends Controller{
     private final Region region;
     @FXML
     private Button regionButton;
+    @FXML
+    private BorderPane regionBorderPane;
 
     private final Provider<HybridController> hybridControllerProvider;
 
@@ -24,6 +28,7 @@ public class RegionController extends Controller{
 
     @Override
     public Parent render(){
+
         final Parent parent = super.render();
         regionButton.setText(region.name());
         regionButton.setOnAction(event -> {
