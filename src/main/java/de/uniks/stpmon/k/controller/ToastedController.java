@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.ToastController;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
