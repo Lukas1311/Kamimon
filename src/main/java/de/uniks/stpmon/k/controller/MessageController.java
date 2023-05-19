@@ -2,6 +2,12 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
+import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -9,19 +15,14 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-
 public class MessageController extends Controller {
 
     @FXML
     public VBox messageBox;
     @FXML
     public HBox textBox;
+    @FXML
+    public TextFlow textFlow;
     @FXML
     public Text bodyText;
     @FXML
@@ -41,7 +42,6 @@ public class MessageController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-
         senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
@@ -53,7 +53,7 @@ public class MessageController extends Controller {
 
     // TODO: add something like "today", "yesterday" and then the date like "May 13" 
     // OR create seperators between messages when a day changed to another
-    private String convertDateTimeToTime(String dateTimeString) {
+    public static String convertDateTimeToTime(String dateTimeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
 

@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
 import de.uniks.stpmon.k.ws.EventListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -89,6 +90,7 @@ public class ChatController extends Controller {
                 .subscribe(users -> users.forEach(user -> groupMembers.put(user._id(), user.name())), this::handleError
                 )
         );
+        System.out.println("group name is: " + group.name());
         disposables.add(msgService
                 .getAllMessages(GROUPS, group._id()).observeOn(FX_SCHEDULER).subscribe(this.messages::setAll, this::handleError));
 
@@ -98,6 +100,7 @@ public class ChatController extends Controller {
                             // only listen to messages in the current specific group
                             // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
                             final Message msg = event.data();
+                            System.out.println(msg);
                             switch (event.suffix()) {
                                 case "created" -> this.messages.add(msg);
                                 // checks and updates all messages that have been edited by a user
@@ -125,7 +128,7 @@ public class ChatController extends Controller {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers));
+        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, hybridControllerProvider, resources));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         // scrolls to the bottom of the listview
@@ -135,6 +138,10 @@ public class ChatController extends Controller {
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
+                        if (newValue.body().startsWith("JoinInvitation")) {
+                            Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
+                            return;
+                        }
                         // handle selected message
                         messageField.setText(newValue.body());
                         editMessage = newValue;
@@ -184,6 +191,7 @@ public class ChatController extends Controller {
                         .deleteMessage(editMessage, GROUPS, group._id())
                         .observeOn(FX_SCHEDULER)
                         .subscribe(msg -> {
+                                    System.out.println("Message sent: " + msg.body());
                                     messageField.clear();
 
                                     messagesListView.getSelectionModel().clearSelection();
@@ -196,6 +204,7 @@ public class ChatController extends Controller {
                         .editMessage(editMessage, GROUPS, group._id(), message)
                         .observeOn(FX_SCHEDULER)
                         .subscribe(msg -> {
+                                    System.out.println("Message sent: " + msg.body());
                                     messageField.clear();
                                     messagesListView.getSelectionModel().clearSelection();
                                 }, this::handleError
@@ -215,12 +224,13 @@ public class ChatController extends Controller {
                 if(regionOptional.isPresent()) {
                     String regionId = regionOptional.get()._id();
 
-                    String invitationText = "Join " + regionId;
+                    String invitationText = "JoinInvitation " + regionId;
 
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
                             .subscribe(msg -> {
+                                System.out.println("Message sent: " + msg.body());
                                 messagesListView.scrollTo(msg);
                             }, this::handleError)
                     );
@@ -235,6 +245,7 @@ public class ChatController extends Controller {
                     .sendMessage(message, GROUPS, group._id())
                     .observeOn(FX_SCHEDULER)
                     .subscribe(msg -> {
+                                System.out.println("Message sent: " + msg.body());
                                 messageField.clear();
                                 messagesListView.scrollTo(msg);
                             }, this::handleError
