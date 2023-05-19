@@ -15,7 +15,7 @@ public class ToastedController extends Controller {
             return;
         }
         if (http.code() == 429) {
-            toastController.openToast("Too many requests, please try again later");
+            toastController.openToast(translateString("too.many.requests.try.again"));
         }
     }
 }
