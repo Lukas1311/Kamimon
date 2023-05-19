@@ -2,13 +2,16 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.controller.MessageController;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 
+import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 
 public class MessageCell extends ListCell<Message> {
@@ -16,11 +19,15 @@ public class MessageCell extends ListCell<Message> {
     private final UserService userService;
     private final HashMap<String, String> groupUsers;
     private final User me;
+    private final Provider<HybridController> hybridController;
+    Provider<ResourceBundle> resourceBundleProvider;
 
-    public MessageCell(UserService userService, HashMap<String, String> groupUsers) {
+    public MessageCell(UserService userService, HashMap<String, String> groupUsers, Provider<HybridController> hybridController, Provider<ResourceBundle> resourceBundleProvider) {
         this.userService = userService;
         this.groupUsers = groupUsers;
         this.me = userService.getMe();
+        this.hybridController = hybridController;
+        this.resourceBundleProvider = resourceBundleProvider;
     }
 
     @Override
@@ -32,7 +39,7 @@ public class MessageCell extends ListCell<Message> {
         } else {
             String sender = groupUsers.get(item.sender());
             if(item.body().startsWith("JoinInvitation")) {
-                final InvitationController invitationController = new InvitationController(item, sender, userService.getMe());
+                final InvitationController invitationController = new InvitationController(item, sender, userService.getMe(), hybridController, resourceBundleProvider);
                 // setting the alignment directly on the cell makes the trick
                 setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(invitationController.render());
