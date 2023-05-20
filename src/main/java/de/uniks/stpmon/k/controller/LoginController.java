@@ -22,7 +22,6 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
@@ -73,8 +72,10 @@ public class LoginController extends Controller {
     private BooleanBinding isInvalid;
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
+    private final SimpleStringProperty username = new SimpleStringProperty();
+    private final SimpleStringProperty password = new SimpleStringProperty();
     private StringProperty errorText;
-    private String password;
+    private String tempPassword;
     private boolean isEmpty = false;
 
     @Inject
@@ -88,22 +89,26 @@ public class LoginController extends Controller {
 
         errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
-        passwordTooShort = passwordInput.textProperty().length().lessThan(8);
-        usernameTooLong = usernameInput.textProperty().length().greaterThan(32);
+        passwordTooShort = password.length().lessThan(8);
+        usernameTooLong = username.length().greaterThan(32);
+
+        usernameInput.textProperty().bindBidirectional(username);
+        passwordInput.textProperty().bindBidirectional(password);
+
 
         boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
         germanButton.setSelected(germanSelected);
         englishButton.setSelected(!germanSelected);
+
         errorLabel.textProperty().bind(
-            Bindings.when(passwordTooShort.and(passwordInput.textProperty().isNotEmpty()))
+            Bindings.when(passwordTooShort.and(password.isNotEmpty()))
                 .then(translateString("password.too.short."))
                 .otherwise(Bindings.when(usernameTooLong)
                     .then(translateString("username.too.long."))
                     .otherwise("")
                 )
         );
-        isInvalid = usernameInput
-            .textProperty()
+        isInvalid = username
             .isEmpty()
             .or(passwordTooShort)
             .or(usernameTooLong);
@@ -138,7 +143,7 @@ public class LoginController extends Controller {
 
     public void login() {
         validateLoginAndRegistration();
-        loginWithCredentials(usernameInput.getText(), passwordInput.getText(), rememberMe.isSelected(), true);
+        loginWithCredentials(username.get(), password.get(), rememberMe.isSelected(), true);
     }
 
     private void loginWithCredentials(String username, String password, boolean rememberMe, boolean isRegistered){
@@ -155,20 +160,19 @@ public class LoginController extends Controller {
                     }
                 }, error -> {
                     errorText.set(getErrorMessage(error));
-
                 }));
     }
 
     public void register() {
         validateLoginAndRegistration();
         disposables.add(userService
-                .addUser(usernameInput.getText(), passwordInput.getText())
+                .addUser(username.get(), password.get())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(user -> {
                     errorText.set(translateString("registration.successful"));
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
-                    loginWithCredentials(user.name(), passwordInput.getText(), rememberMe.isSelected(), false);
+                    loginWithCredentials(user.name(), password.get(), rememberMe.isSelected(), false);
                 }, error -> {
                     errorText.set(getErrorMessage(error));
                 }));
@@ -189,29 +193,31 @@ public class LoginController extends Controller {
 
     private void hidePassword() {
         if(isEmpty){
-            passwordInput.setText("");
+            password.set("");
         }else{
-            passwordInput.setText(password);
+            password.set(tempPassword);
         }
         passwordInput.setPromptText(translateString("password"));
     }
 
     private void showPassword() {
-        password = passwordInput.getText();
-        if(password == null || password.isEmpty()) {
-            password = translateString("password");
+        tempPassword = password.get();
+        if(tempPassword == null || tempPassword.isEmpty()) {
+            tempPassword = translateString("password");
             isEmpty = true;
         }else{
             isEmpty = false;
         }
-        passwordInput.clear();
-        passwordInput.setPromptText(password);
+        password.set(""); // clears the bound input field
+        passwordInput.setPromptText(tempPassword);
     }
 
+    @FXML
     public void setDe() {
         setLanguage(Locale.GERMAN);
     }
 
+    @FXML
     public void setEn() {
         setLanguage(Locale.ENGLISH);
     }
@@ -221,9 +227,7 @@ public class LoginController extends Controller {
         app.show(this); //reloaded
     }
 
-
     private Image loadImage(String image) {
         return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
-
 }
