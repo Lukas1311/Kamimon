@@ -101,7 +101,7 @@ public class HybridController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         pane.getChildren().add(sidebarController.get().render());
-
+        stackPane.prefWidthProperty().bind(app.getStage().widthProperty().subtract(50));
         openMain(MainWindow.LOBBY);
         return parent;
     }

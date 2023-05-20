@@ -86,7 +86,6 @@ public class LoginControllerTest extends ApplicationTest {
         // write username and password
         write("\tstring\t");
         write("stringst");
-        // TODO: make sure to adjust count of tabs when Login fxml is changed
         // tab 3 times to go on the login button -> is faster than click on button (no mouse movement)
         write("\t\t\t");
         Button selectedButton = lookup("#loginButton").queryButton();
@@ -111,7 +110,6 @@ public class LoginControllerTest extends ApplicationTest {
         write("Bob\t");
         // type password
         write("password");
-        // TODO: make sure to adjust count of tabs when Login fxml is changed
         // tab 3 times to go on the login button -> is faster than click on button (no mouse movement)
         write("\t\t\t\t");
         // Retrieve the currently selected button
