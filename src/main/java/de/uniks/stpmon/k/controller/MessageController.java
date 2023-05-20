@@ -51,8 +51,6 @@ public class MessageController extends Controller {
         return parent;
     }
 
-    // TODO: add something like "today", "yesterday" and then the date like "May 13" 
-    // OR create seperators between messages when a day changed to another
     public static String convertDateTimeToTime(String dateTimeString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);

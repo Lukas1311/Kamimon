@@ -308,7 +308,7 @@ public class ChatControllerTest extends ApplicationTest {
         verifyThat(listView, ListViewMatchers.hasItems(1));
     }
 
-    @Test // TODO: add test
+    @Test
     void testSendInvite() {
         // define mocks:
         Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "join");
