@@ -61,7 +61,7 @@ public class FriendCacheDummy implements IFriendCache {
     }
 
     @Override
-    public void NotifyUpdateFriends(User user) {
+    public void notifyUpdateFriends(User user) {
 
     }
 

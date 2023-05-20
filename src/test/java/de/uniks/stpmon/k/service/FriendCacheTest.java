@@ -109,7 +109,7 @@ class FriendCacheTest {
 
         // initialise cache with user
         List<User> cachedFriends = cache.init(user).blockingFirst();
-        verify(cache).NotifyUpdateFriends(any(User.class));
+        verify(cache).notifyUpdateFriends(any(User.class));
         assertEquals(0, cache.getFriends().blockingFirst().size());
 
         mainUserEvents.onNext(new Event<>("users.0.updated", new User(
@@ -118,7 +118,7 @@ class FriendCacheTest {
                 "offline",
                 "picture",
                 friends)));
-        verify(cache, times(2)).NotifyUpdateFriends(any(User.class));
+        verify(cache, times(2)).notifyUpdateFriends(any(User.class));
         assertEquals(1, cache.getFriends().blockingFirst().size());
     }
 
