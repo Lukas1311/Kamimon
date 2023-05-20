@@ -165,7 +165,6 @@ public class ChatController extends ToastedController {
         return parent;
     }
 
-    // TODO: this is just for testing remove afterwards or use it if you want
     public void addRegionsToChoiceBox() {
         disposables.add(regionService
                 .getRegions()
