@@ -17,7 +17,7 @@ public interface IFriendCache{
 
 	void removeUser(User user);
 
-	void NotifyUpdateFriends(User user);
+	void notifyUpdateFriends(User user);
 
 	User getUser(String id);
 

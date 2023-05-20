@@ -74,7 +74,7 @@ public class FriendCache implements IFriendCache {
 		);
 
 		return addUsers(userApiService.getUsers()).flatMap((users) -> {
-			NotifyUpdateFriends(mainUser);
+			notifyUpdateFriends(mainUser);
 			return friends.take(1);
 		});
 	}
@@ -87,11 +87,11 @@ public class FriendCache implements IFriendCache {
 		if (newUserIds.size() > 0) {
 			return addUsers(userApiService.getUsers(newUserIds))
 					.flatMap((users) -> {
-						NotifyUpdateFriends(user);
+						notifyUpdateFriends(user);
 						return friends.take(1);
 					});
 		}
-		NotifyUpdateFriends(user);
+		notifyUpdateFriends(user);
 
 		return friends.take(1);
 	}
@@ -105,11 +105,11 @@ public class FriendCache implements IFriendCache {
 		});
 	}
 
-	public void NotifyUpdateFriends(User user) {
+	public void notifyUpdateFriends(User user) {
 		friends.onNext(user.friends()
 				.stream()
-				.filter(Objects::nonNull)
 				.map(userById::get)
+				.filter(Objects::nonNull)
 				.toList());
 	}
 
@@ -126,7 +126,7 @@ public class FriendCache implements IFriendCache {
 		if (mainUser == null || !Objects.equals(user._id(), mainUser)) {
 			return;
 		}
-		NotifyUpdateFriends(user);
+		notifyUpdateFriends(user);
 	}
 
 	@Override
