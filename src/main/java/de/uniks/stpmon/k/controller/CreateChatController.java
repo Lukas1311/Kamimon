@@ -146,6 +146,7 @@ public class CreateChatController extends TabController {
         subscribe(groupService.updateGroup(group, groupNameField.getText(), groupMembers),
                 group1 -> {
                     popTab();
+                    popTab();
                     openTab(hybrid -> hybrid.openChat(group1));
                 });
     }
