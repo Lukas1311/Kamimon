@@ -12,3 +12,13 @@
 .button-color:hover {
     -fx-font-size: 22px;
 }
+
+.sidebar-content {
+    -fx-background-color: #FFE599;
+}
+
+.settings-button {
+    -fx-background-color: #2b78e4;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 10);
+}
