@@ -26,13 +26,13 @@ public class SidebarController extends Controller {
     @FXML
     public Button friends;
     @FXML
-    public Button home;
-    @FXML
     public Button logoutButton;
     @FXML
     public Button pause;
     @FXML
     public GridPane grid;
+    @FXML
+    public Button settings;
     @Inject
     @Singleton
     HybridController hybridController;
@@ -53,7 +53,7 @@ public class SidebarController extends Controller {
         final Parent parent = super.render();
         grid.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
         pause.setVisible(false);
-        home.setVisible(false);
+        settings.setVisible(false);
         logoutButton.setOnAction(event -> {
             if (ingame) {
                 backtoLobby();
@@ -83,7 +83,7 @@ public class SidebarController extends Controller {
     }
 
     public void setLobby(boolean b) {
-        home.setVisible(b);
+        settings.setVisible(b);
     }
 
     public void openChat() {
@@ -100,5 +100,9 @@ public class SidebarController extends Controller {
 
     public void setPause(boolean b) {
         pause.setVisible(b);
+    }
+
+    public void openSettings() {
+        hybridController.forceTab(SidebarTab.SETTINGS);
     }
 }
