@@ -80,10 +80,6 @@ public class SidebarController extends Controller {
         hybridController.openMain(LOBBY);
     }
 
-    public void setLobby(boolean b) {
-        settings.setVisible(b);
-    }
-
     public void openChat() {
         hybridController.forceTab(CHAT_LIST);
     }
@@ -98,6 +94,10 @@ public class SidebarController extends Controller {
 
     public void setPause(boolean b) {
         pause.setVisible(b);
+    }
+
+    public void setSettings(boolean b) {
+        settings.setVisible(b);
     }
 
     public void openSettings() {
