@@ -59,4 +59,8 @@ public class SettingsController extends Controller {
 
         return parent;
     }
+
+    public void backtoMainScreen() {
+        hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
+    }
 }
