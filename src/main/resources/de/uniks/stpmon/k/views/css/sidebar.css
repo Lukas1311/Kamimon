@@ -1,0 +1,9 @@
+.sidebar-color {
+    -fx-background-color: #ae2f34;
+}
+
+.button-color {
+    -fx-text-fill: #ffffff;
+    -fx-border-color: black;
+    -fx-border: 1px;
+}
