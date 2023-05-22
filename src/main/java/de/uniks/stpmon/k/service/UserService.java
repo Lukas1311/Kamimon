@@ -11,6 +11,7 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class UserService {
 
@@ -148,6 +149,7 @@ public class UserService {
 
     /**
      * gets a user and all its attributes by a given user id
+     *
      * @param userId the id of a user object
      * @return the user found by id
      */
@@ -156,7 +158,9 @@ public class UserService {
     }
 
     public Observable<List<User>> getUsers(List<String> ids) {
-        List<User> users = ids.stream().map(id -> friendCache.get().getUser(id)).toList();
+        List<User> users = ids.stream().map(id -> friendCache.get().getUser(id))
+                .filter(Objects::nonNull)
+                .toList();
         return Observable.just(users);
     }
 
