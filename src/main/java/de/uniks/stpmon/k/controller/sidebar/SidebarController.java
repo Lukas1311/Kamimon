@@ -43,6 +43,7 @@ public class SidebarController extends Controller {
     Provider<LoginController> loginControllerProvider;
     @Inject
     Provider<ChatController> chatControlleProvider;
+    boolean ingame = false;
 
     @Inject
     public SidebarController() {
@@ -53,11 +54,19 @@ public class SidebarController extends Controller {
         grid.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
         pause.setVisible(false);
         home.setVisible(false);
-        logoutButton.setOnAction(e -> logout());
-        chat.setOnAction(e -> openChat());
+        logoutButton.setOnAction(event -> {
+            if (ingame) {
+                backtoLobby();
+            } else {
+                logout();
+            }
+        });
         return parent;
     }
 
+    public void setIngame(boolean ingame) {
+        this.ingame = ingame;
+    }
 
     public void logout() {
         disposables.add(authService
@@ -67,6 +76,10 @@ public class SidebarController extends Controller {
                     app.show(loginControllerProvider.get());
                 })
         );
+    }
+
+    public void backtoLobby() {
+        hybridController.openMain(LOBBY);
     }
 
     public void setLobby(boolean b) {
@@ -81,10 +94,6 @@ public class SidebarController extends Controller {
         hybridController.forceTab(FRIEND_LIST);
     }
 
-    public void backtoLobby() {
-        hybridController.openMain(LOBBY);
-    }
-
     public void toPause() {
         hybridController.openMain(PAUSE);
     }
@@ -92,6 +101,4 @@ public class SidebarController extends Controller {
     public void setPause(boolean b) {
         pause.setVisible(b);
     }
-
-
 }
