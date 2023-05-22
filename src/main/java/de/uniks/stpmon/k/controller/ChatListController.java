@@ -48,12 +48,13 @@ public class ChatListController extends ToastedController {
 
     @Override
     public void init() {
+        groupMap.clear();
         disposables.add(groupService.getOwnGroups()
                 .observeOn(FX_SCHEDULER)
                 .subscribe((list) -> {
-            list.forEach(group -> groupMap.put(group._id(), group));
-            groups.setAll(groupMap.values());
-        }, this::handleError));
+                    list.forEach(group -> groupMap.put(group._id(), group));
+                    groups.setAll(groupMap.values());
+                }, this::handleError));
         disposables.add(eventListener.listen("groups.*.*", Group.class)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(event -> {
