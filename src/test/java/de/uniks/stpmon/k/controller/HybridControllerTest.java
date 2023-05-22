@@ -86,6 +86,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void toIngame() {
+
         // pressing Region button and check if ingame is shown
         write("\t\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -114,8 +115,9 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void settings() {
-        // pressing home button and check if lobby is shown
-        waitForFxEvents();
+        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
+        when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
+        // pressing settings button and check if settings is shown
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
