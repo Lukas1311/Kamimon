@@ -27,7 +27,11 @@ import javafx.scene.text.Font;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CreateChatController extends ToastedController {
 
@@ -71,6 +75,7 @@ public class CreateChatController extends ToastedController {
 
     @Override
     public void init() {
+        groupMembers.clear();
         groupMembers.add(userStorage.getUser()._id());
         Map<String, User> userMap = new LinkedHashMap<>();
         Consumer<List<User>> updateUsers = (users) -> {
