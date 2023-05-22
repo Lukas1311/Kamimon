@@ -158,19 +158,12 @@ public class CreateChatController extends TabController {
         if (group == null) {
             return;
         }
+        // Remove the user itself from the list, even if the group will be deleted
         groupMembers.remove(userStorage.getUser()._id());
-        if (groupMembers.size() == 0) {
-            subscribe(groupService.deleteGroup(group)
-                    , group -> {
-                        popTab();
-                        popTab();
-                    }, this::handleError);
-        } else {
-            subscribe(groupService.updateGroup(group, group.name(), new ArrayList<>(groupMembers)), group -> {
-                popTab();
-                popTab();
-            }, this::handleError);
-        }
+        subscribe(groupService.deleteOrUpdateGroup(group, group.name(), new ArrayList<>(groupMembers)), group -> {
+            popTab();
+            popTab();
+        }, this::handleError);
     }
 
     public void createGroup() {
