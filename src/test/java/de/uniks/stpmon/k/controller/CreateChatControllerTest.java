@@ -139,7 +139,7 @@ class CreateChatControllerTest extends ApplicationTest {
         clickOn("#createGroupButton");
         verify(groupService).updateGroup(any(), any(), any());
 
-        verify(mock, times(1)).popTab();
+        verify(mock, times(2)).popTab();
     }
 
     @Test
