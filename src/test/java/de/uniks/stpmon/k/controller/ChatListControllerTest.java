@@ -10,17 +10,15 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import javafx.stage.Stage;
 import okhttp3.ResponseBody;
-import retrofit2.HttpException;
-import retrofit2.Response;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import retrofit2.HttpException;
+import retrofit2.Response;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -96,6 +94,6 @@ class ChatListControllerTest extends ApplicationTest {
         Response<Object> response = Response.error(429, ResponseBody.create(null, "test"));
         when(groupService.getOwnGroups()).thenReturn(Observable.error(new HttpException(response)));
         app.show(chatListController);
-        verify(chatListController.toastController).openToast(any());
+        verify(toastController).openToast(any());
     }
 }

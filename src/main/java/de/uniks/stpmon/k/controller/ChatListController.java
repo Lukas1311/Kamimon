@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.TabController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.views.ChatCell;
@@ -23,7 +23,7 @@ import java.util.Map;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHAT_CREATE;
 
 @Singleton
-public class ChatListController extends ToastedController {
+public class ChatListController extends TabController {
 
     @FXML
     public Button newChatButton;
@@ -31,9 +31,6 @@ public class ChatListController extends ToastedController {
     VBox chatList;
     @Inject
     GroupService groupService;
-    @Inject
-    @Singleton
-    Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<ChatController> chatControllerProvider;
     @Inject
@@ -49,31 +46,22 @@ public class ChatListController extends ToastedController {
     @Override
     public void init() {
         groupMap.clear();
-        disposables.add(groupService.getOwnGroups()
-                .observeOn(FX_SCHEDULER)
-                .subscribe((list) -> {
-                    list.forEach(group -> groupMap.put(group._id(), group));
-                    groups.setAll(groupMap.values());
-                }, this::handleError));
-        disposables.add(eventListener.listen("groups.*.*", Group.class)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(event -> {
-                    final Group group = event.data();
-                    switch (event.suffix()) {
-                        case "created" -> groupMap.put(group._id(), group);
-                        case "updated" -> {
-                            groupMap.remove(group._id());
-                            groupMap.put(group._id(), group);
-                        }
-                        case "deleted" -> groupMap.remove(group._id());
-                    }
-                    groups.setAll(groupMap.values());
-                }, this::handleError));
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
+        subscribe(groupService.getOwnGroups(), (list) -> {
+            list.forEach(group -> groupMap.put(group._id(), group));
+            groups.setAll(groupMap.values());
+        }, this::handleError);
+        subscribe(eventListener.listen("groups.*.*", Group.class), event -> {
+            final Group group = event.data();
+            switch (event.suffix()) {
+                case "created" -> groupMap.put(group._id(), group);
+                case "updated" -> {
+                    groupMap.remove(group._id());
+                    groupMap.put(group._id(), group);
+                }
+                case "deleted" -> groupMap.remove(group._id());
+            }
+            groups.setAll(groupMap.values());
+        }, this::handleError);
     }
 
     @Override
@@ -81,7 +69,6 @@ public class ChatListController extends ToastedController {
         final Parent parent = super.render();
         final ListView<Group> groups = new ListView<>(this.groups);
         groups.setId("chatListView");
-        // pass current chatListController (this) to make use of it in subclasses that cannot use inject
         groups.setCellFactory(param -> new ChatCell(this));
         groups.setOnKeyReleased(event -> {
             if (groups.getSelectionModel().isEmpty()
@@ -94,12 +81,19 @@ public class ChatListController extends ToastedController {
         return parent;
     }
 
-    // a method that is used by the chatEntryController to open a new chat (chatController)
+    /**
+     * Opens a new chat with the given group.
+     *
+     * @param group the group to open a chat with
+     */
     public void openChat(Group group) {
-        hybridControllerProvider.get().openChat(group);
+        openTab(hybrid -> hybrid.openChat(group));
     }
 
+    /**
+     * Opens a new created chat screen.
+     */
     public void createChat() {
-        hybridControllerProvider.get().pushTab(CHAT_CREATE);
+        pushTab(CHAT_CREATE);
     }
 }
