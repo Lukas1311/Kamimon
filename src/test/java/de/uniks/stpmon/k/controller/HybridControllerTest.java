@@ -66,7 +66,7 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
-        write("\t\t\t\t\t\t");
+        write("\t\t\t\t\t\t\t");
         type(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
@@ -87,7 +87,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void toIngame() {
         // pressing Region button and check if ingame is shown
-        write("\t\t\t\t");
+        write("\t\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox ingame = lookup("#ingame").query();
@@ -95,7 +95,7 @@ class HybridControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void Pause() {
+    public void pause() {
         toIngame();
         waitForFxEvents();
         // pressing Pause button and check if pause is shown
@@ -113,24 +113,29 @@ class HybridControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void toHome() {
+    public void settings() {
         // pressing home button and check if lobby is shown
-        toIngame();
         waitForFxEvents();
-        write("\t\t\t");
+        write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pane = lookup("#pane").query();
-        assertNotNull(pane);
+        VBox settings = lookup("#settingsScreen").query();
+        assertNotNull(settings);
     }
 
     @Test
     public void logout() {
-        // pressing logout button and check if login is shown
-        write("\t\t");
+        // pressing logout button and check if lobby is shown then login
+        toIngame();
+        write("\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pane = lookup("#loginScreen").query();
+        Pane pane = lookup("#pane").query();
         assertNotNull(pane);
+
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
+        Pane pane2 = lookup("#loginScreen").query();
+        assertNotNull(pane2);
     }
 }
