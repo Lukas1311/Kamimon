@@ -72,9 +72,7 @@ public class SidebarController extends Controller {
         disposables.add(authService
                 .logout()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(res -> {
-                    app.show(loginControllerProvider.get());
-                })
+                .subscribe(res -> app.show(loginControllerProvider.get()))
         );
     }
 

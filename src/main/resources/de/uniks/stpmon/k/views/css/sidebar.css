@@ -6,4 +6,9 @@
     -fx-text-fill: #ffffff;
     -fx-border-color: black;
     -fx-border: 1px;
+    -fx-font-size: 18px;
+}
+
+.button-color:hover {
+    -fx-font-size: 22px;
 }

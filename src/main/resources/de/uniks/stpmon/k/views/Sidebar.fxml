@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <GridPane fx:id="grid" alignment="TOP_CENTER" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="500.0"
           prefWidth="50.0" styleClass="sidebar-color" stylesheets="@css/sidebar.css" xmlns="http://javafx.com/javafx/19"
@@ -23,6 +23,9 @@
                   <String fx:value="sidebar-color"/>
                   <String fx:value="button-color"/>
                </styleClass>
+               <font>
+                  <Font size="18.0"/>
+               </font>
             </Button>
             <Button fx:id="friends" mnemonicParsing="false" onAction="#openFriends" prefHeight="50.0" prefWidth="50.0"
                     text="F">
@@ -30,6 +33,9 @@
                   <String fx:value="sidebar-color"/>
                   <String fx:value="button-color"/>
                </styleClass>
+               <font>
+                  <Font size="18.0"/>
+               </font>
             </Button>
          </children>
       </VBox>
@@ -42,6 +48,9 @@
                   <String fx:value="sidebar-color"/>
                   <String fx:value="button-color"/>
                </styleClass>
+               <font>
+                  <Font size="18.0"/>
+               </font>
             </Button>
             <Button fx:id="settings" mnemonicParsing="false" onAction="#openSettings" prefHeight="50.0" prefWidth="50.0"
                     text="⚙">
@@ -59,6 +68,9 @@
                   <String fx:value="sidebar-color"/>
                   <String fx:value="button-color"/>
                </styleClass>
+               <font>
+                  <Font size="18.0"/>
+               </font>
             </Button>
          </children>
       </VBox>
