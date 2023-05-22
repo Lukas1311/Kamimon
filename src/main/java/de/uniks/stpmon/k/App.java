@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.net.URL;
 import java.util.Objects;
 
 public class App extends Application {
@@ -75,9 +76,13 @@ public class App extends Application {
         }
     }
 
+    private URL getIconUrl() {
+        return Objects.requireNonNull(App.class.getResource("icon_256.png"));
+    }
+
     private void setAppIcon(Stage stage) {
         //requireNonNull was not shown in Lecture, but is needed to eliminate warning
-        final Image image = new Image(Objects.requireNonNull(App.class.getResource("icon.png")).toString());
+        final Image image = new Image(getIconUrl().toString());
         stage.getIcons().add(image);
     }
 
@@ -89,7 +94,7 @@ public class App extends Application {
         try {
             final Taskbar taskbar = Taskbar.getTaskbar();
             //requireNonNull was not shown in Lecture, but is needed to eliminate warning
-            final java.awt.Image image = ImageIO.read(Objects.requireNonNull(Main.class.getResource("icon.png")));
+            final java.awt.Image image = ImageIO.read(getIconUrl());
             taskbar.setIconImage(image);
         } catch (Exception ignored) {
 
