@@ -20,9 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.assertions.api.ListViewAssert;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.ListViewMatchers;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -31,7 +29,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -99,6 +99,7 @@ class CreateChatControllerTest extends ApplicationTest {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
 
+        when(groupService.deleteOrUpdateGroup(any(), any(), any())).thenCallRealMethod();
         when(groupService.updateGroup(any(), any(), any())).thenReturn(Observable.just(group));
 
         clickOn("#leaveGroupButton");
@@ -138,7 +139,7 @@ class CreateChatControllerTest extends ApplicationTest {
         clickOn("#createGroupButton");
         verify(groupService).updateGroup(any(), any(), any());
 
-        verify(mock, times(1)).popTab();
+        verify(mock, times(2)).popTab();
     }
 
     @Test
@@ -156,6 +157,7 @@ class CreateChatControllerTest extends ApplicationTest {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
 
+        when(groupService.deleteOrUpdateGroup(any(), any(), any())).thenCallRealMethod();
         when(groupService.deleteGroup(any())).thenReturn(Observable.just(group));
 
         clickOn("#leaveGroupButton");

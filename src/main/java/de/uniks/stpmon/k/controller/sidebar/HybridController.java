@@ -167,8 +167,7 @@ public class HybridController extends Controller {
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
             case SETTINGS -> pushController(settingsController, setup);
-            case NONE -> {
-            }
+            case NONE -> {}
         }
     }
 
@@ -194,8 +193,8 @@ public class HybridController extends Controller {
             return;
         }
 
-        if(!playAnimations){
-            if(callback != null) {
+        if (!playAnimations) {
+            if (callback != null) {
                 callback.run();
             }
             return;
@@ -213,7 +212,7 @@ public class HybridController extends Controller {
         sidebarTransition.playFromStart();
         sidebarTransition.setOnFinished(event -> {
             stackPane.removeEventFilter(MouseEvent.ANY, consumeMouse);
-            if(callback != null) {
+            if (callback != null) {
                 callback.run();
             }
         });
