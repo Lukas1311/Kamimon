@@ -9,7 +9,9 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GroupService {
 
@@ -55,6 +57,24 @@ public class GroupService {
                 // converts each ArrayList<Group> into an Observable<Group> that we can work with directly
                 .flatMap(Observable::fromIterable)
                 .filter(group -> group.name().contains(name));
+    }
+
+    /**
+     * Deletes or updates a group depending on the current members of the group.
+     *
+     * @param group   the group to be deleted or updated
+     * @param name    the new name of the group
+     * @param members the new members of the group
+     * @return observable with the updated group from the server
+     */
+    public Observable<Group> deleteOrUpdateGroup(Group group, String name, Collection<String> members) {
+        // Use old group members so the current edit of the user ha no affect
+        Set<String> currentMembers = new HashSet<>(group.members());
+        // Check if only the current user is left in the group
+        if (currentMembers.size() == 1) {
+            return deleteGroup(group);
+        }
+        return updateGroup(group, name, members);
     }
 
     /**

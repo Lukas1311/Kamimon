@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.views;
 import de.uniks.stpmon.k.controller.ChatEntryController;
 import de.uniks.stpmon.k.controller.ChatListController;
 import de.uniks.stpmon.k.dto.Group;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 
 public class ChatCell extends ListCell<Group> {
@@ -13,7 +12,6 @@ public class ChatCell extends ListCell<Group> {
     public ChatCell(ChatListController chatListController) {
         this.chatListController = chatListController;
     }
-
 
     @Override
     protected void updateItem(Group item, boolean empty) {
