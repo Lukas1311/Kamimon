@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.TabController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -26,14 +26,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateChatController extends ToastedController {
+public class CreateChatController extends TabController {
 
     @FXML
     public Button returnButton;
@@ -49,8 +48,6 @@ public class CreateChatController extends ToastedController {
     public Label errorLabel;
 
     @Inject
-    Provider<HybridController> hybridControllerProvider;
-    @Inject
     GroupService groupService;
     @Inject
     UserService userService;
@@ -58,12 +55,9 @@ public class CreateChatController extends ToastedController {
     UserStorage userStorage;
 
     private final ObservableList<User> members = FXCollections.observableArrayList();
-    public final HashSet<String> groupMembers = new HashSet<>();
+    private final HashSet<String> groupMembers = new HashSet<>();
+    private final SimpleBooleanProperty notEnoughGroupMembers = new SimpleBooleanProperty(true);
     private Group group;
-
-    private BooleanBinding isInvalid;
-    private BooleanBinding groupNameTooLong;
-    public SimpleBooleanProperty notEnoughGroupMembers = new SimpleBooleanProperty(true);
 
     @Inject
     public CreateChatController() {
@@ -91,9 +85,9 @@ public class CreateChatController extends ToastedController {
         groupMembers.add(userStorage.getUser()._id());
         if (group != null) {
             groupMembers.addAll(group.members());
-            disposables.add(userService.getUsers(group.members()).observeOn(FX_SCHEDULER).subscribe(updateUsers));
+            subscribe(userService.getUsers(group.members()), updateUsers);
         }
-        disposables.add(userService.getFriends().observeOn(FX_SCHEDULER).subscribe(updateUsers));
+        subscribe(userService.getFriends(), updateUsers);
     }
 
     @Override
@@ -102,7 +96,7 @@ public class CreateChatController extends ToastedController {
 
         errorLabel.setFont(new Font(10));
         errorLabel.setTextFill(Color.RED);
-        groupNameTooLong = groupNameField.textProperty().length().greaterThan(32);
+        BooleanBinding groupNameTooLong = groupNameField.textProperty().length().greaterThan(32);
 
         errorLabel.textProperty().bind(
                 Bindings.when(groupNameTooLong.and(groupNameField.textProperty().isNotEmpty()))
@@ -114,7 +108,7 @@ public class CreateChatController extends ToastedController {
                                         .otherwise(""))
                         )
         );
-        isInvalid = groupNameField
+        BooleanBinding isInvalid = groupNameField
                 .textProperty()
                 .isEmpty()
                 .or(notEnoughGroupMembers)
@@ -149,37 +143,33 @@ public class CreateChatController extends ToastedController {
         if (groupNameField.getText().isEmpty()) {
             return;
         }
-        disposables.add(groupService.updateGroup(group, groupNameField.getText(), groupMembers)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(group1 -> {
-                    hybridControllerProvider.get().popTab();
-                    hybridControllerProvider.get().openChat(group1);
-                }));
+        subscribe(groupService.updateGroup(group, groupNameField.getText(), groupMembers),
+                group1 -> {
+                    popTab();
+                    openTab(hybrid -> hybrid.openChat(group1));
+                });
     }
 
     public void returnToChatList() {
-        hybridControllerProvider.get().popTab();
+        popTab();
     }
 
     public void leaveGroup() {
-        if(group == null) {
+        if (group == null) {
             return;
         }
         groupMembers.remove(userStorage.getUser()._id());
-        if(groupMembers.size() == 0){
-            disposables.add(groupService.deleteGroup(group)
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(group -> {
-                        hybridControllerProvider.get().popTab();
-                        hybridControllerProvider.get().popTab();
-                    }, this::handleError));
+        if (groupMembers.size() == 0) {
+            subscribe(groupService.deleteGroup(group)
+                    , group -> {
+                        popTab();
+                        popTab();
+                    }, this::handleError);
         } else {
-            disposables.add(groupService.updateGroup(group, group.name(), new ArrayList<>(groupMembers))
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(group -> {
-                        hybridControllerProvider.get().popTab();
-                        hybridControllerProvider.get().popTab();
-                    }, this::handleError));
+            subscribe(groupService.updateGroup(group, group.name(), new ArrayList<>(groupMembers)), group -> {
+                popTab();
+                popTab();
+            }, this::handleError);
         }
     }
 
@@ -188,17 +178,14 @@ public class CreateChatController extends ToastedController {
             return;
         }
         final ArrayList<String> groupMemberNames = new ArrayList<>(groupMembers);
-        disposables.add(groupService.createGroup(groupNameField.getText(), groupMemberNames)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(group -> {
-                    hybridControllerProvider.get().popTab();
-                    hybridControllerProvider.get().openChat(group);
-                }, this::handleError));
+        subscribe(groupService.createGroup(groupNameField.getText(), groupMemberNames), group -> {
+            popTab();
+            openTab(hybrid -> hybrid.openChat(group));
+        }, this::handleError);
     }
 
     public void handleGroup(User item) {
-        if (!groupMembers.contains(item._id())) {
-            groupMembers.add(item._id());
+        if (groupMembers.add(item._id())) {
             notEnoughGroupMembers.setValue(false);
         } else {
             groupMembers.remove(item._id());
