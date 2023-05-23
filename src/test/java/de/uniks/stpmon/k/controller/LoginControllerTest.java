@@ -76,7 +76,7 @@ public class LoginControllerTest extends ApplicationTest {
     @Test
     void testLogin() {
         when(authService.login(any(), any(), eq(false))).thenReturn(Observable.just(
-            new LoginResult(null null, null, null, null, null, null, "a", "r")
+            new LoginResult(null, null, null, null, null, "a", "r")
         ));
 
         final HybridController mock = Mockito.mock(HybridController.class);

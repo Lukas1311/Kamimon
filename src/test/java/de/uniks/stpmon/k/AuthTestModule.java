@@ -24,8 +24,6 @@ public class AuthTestModule {
             @Override
             public Observable<LoginResult> login(LoginDto dto) {
                 loginResult = new LoginResult(
-                        "1",
-                        "2",
                         "0",
                         dto.name(),
                         "offline",

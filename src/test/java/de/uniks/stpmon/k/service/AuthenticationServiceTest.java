@@ -53,7 +53,7 @@ public class AuthenticationServiceTest {
         Mockito.doNothing().when(prefs).put(ArgumentMatchers.eq("refreshToken"), captor.capture());
         when(friendCache.init(any())).thenReturn(Observable.just(List.of()));
         Mockito.when(authApiService.login(any()))
-                .thenReturn(Observable.just(new LoginResult("1", "2", "i", "n", "s", "a", null, "a", "r")));
+                .thenReturn(Observable.just(new LoginResult("i", "n", "s", "a", null, "a", "r")));
 
         // action:
         final LoginResult result = authService.login("Alice", "12345678", true).blockingFirst();
@@ -111,7 +111,7 @@ public class AuthenticationServiceTest {
         Mockito.doCallRealMethod().when(tokenStorage).setToken(captor.capture());
         when(friendCache.init(any())).thenReturn(Observable.just(List.of()));
         Mockito.when(authApiService.refresh(any()))
-                .thenReturn(Observable.just(new LoginResult("1", "2", "i", "n", "s", "a", null, "a", "r")));
+                .thenReturn(Observable.just(new LoginResult("i", "n", "s", "a", null, "a", "r")));
         Mockito.when(prefs.get("refreshToken", null)).thenReturn("r"); // mock the pref get call
 
         // action:
