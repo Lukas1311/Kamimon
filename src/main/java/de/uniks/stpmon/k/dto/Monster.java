@@ -3,8 +3,6 @@ package de.uniks.stpmon.k.dto;
 import java.util.SortedMap;
 
 public record Monster(
-        String createdAt, // date-time 
-        String updatedAt, // date-time 
         String _id, // objectid example: 507f191e810c19729de860ea
         String trainer, // objectid example: 507f191e810c19729de860ea
         Integer type,

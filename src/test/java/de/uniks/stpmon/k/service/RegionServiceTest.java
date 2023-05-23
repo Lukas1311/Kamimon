@@ -26,8 +26,6 @@ class RegionServiceTest {
     @Test
     void getRegions() {
         Region region = new Region(
-                "a",
-                "1",
                 "1",
                 "Test",
                 null,
@@ -55,8 +53,6 @@ class RegionServiceTest {
     @Test
     void getRegion() {
         Region region = new Region(
-                "a",
-                "1",
                 "1",
                 "Test",
                 null,

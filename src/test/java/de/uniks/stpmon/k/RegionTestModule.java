@@ -26,11 +26,9 @@ public class RegionTestModule {
              * names {"TestRegion0", "TestRegion"}
              */
             private void initDummyRegions(){
-                Region region0 = new Region("2023-01-01T00:00:00.000Z",
-                        "2023-02-02T00:00:00.000Z", "id0", "TestRegion0", null, null);
+                Region region0 = new Region("id0", "TestRegion0", null, null);
 
-                Region region1 = new Region("2023-01-01T00:00:00.000Z",
-                        "2023-02-02T00:00:00.000Z", "id1", "TestRegion1", null, null);
+                Region region1 = new Region("id1", "TestRegion1", null, null);
 
                 regions.add(region0);
                 regions.add(region1);
