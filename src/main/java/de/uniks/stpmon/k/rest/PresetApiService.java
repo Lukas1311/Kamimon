@@ -31,7 +31,7 @@ public interface PresetApiService {
 
     @GET("presets/monsters/{id}/image")
     @Streaming
-    //TODO:
+    //TODO: save file
     Observable<String> getMonsterImage(@Path("id") String id);
 
     @GET("presets/abilities")
