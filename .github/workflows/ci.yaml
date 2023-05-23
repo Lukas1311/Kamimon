@@ -20,7 +20,10 @@ jobs:
           java-version: 17
           java-package: jdk
       - name: Set up fontconfig
-        run: sudo apt-get -y update && sudo apt-get -y install fontconfig libpangoft2-1.0-0
+        run: |
+          sudo apt-get update -y
+          sudo apt install ca-certificates -y
+          sudo apt-get install fontconfig libpangoft2-1.0-0 -y
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
