@@ -8,7 +8,7 @@
             xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="de.uniks.stpmon.k.controller.IngameController">
    <center>
-      <Text layoutX="211.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME"
+      <Text fx:id="inGameText" layoutX="211.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME"
             BorderPane.alignment="CENTER">
          <font>
             <Font size="61.0"/>

@@ -11,6 +11,7 @@ import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -91,7 +92,7 @@ class HybridControllerTest extends ApplicationTest {
         write("\t\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        VBox ingame = lookup("#ingame").query();
+        BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
 
@@ -103,13 +104,13 @@ class HybridControllerTest extends ApplicationTest {
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pause = lookup("#pauseScreen").query();
+        BorderPane pause = lookup("#pauseScreen").query();
         assertNotNull(pause);
 
         // pressing Pause button again and check if ingame is shown
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        VBox ingame = lookup("#ingame").query();
+        BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
 
