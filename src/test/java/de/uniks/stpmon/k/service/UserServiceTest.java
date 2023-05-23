@@ -38,6 +38,8 @@ class UserServiceTest {
         final ArgumentCaptor<CreateUserDto> captor = ArgumentCaptor.forClass(CreateUserDto.class);
         when(userApiService.addUser(ArgumentMatchers.any(CreateUserDto.class)))
                 .thenReturn(Observable.just(new User(
+		null,
+		null,
                         "0",
                         "Test",
                         "offline",
@@ -68,6 +70,8 @@ class UserServiceTest {
 
         //setting up user which will be updated
         User oldUser = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -80,6 +84,8 @@ class UserServiceTest {
         when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(Observable.just(
                         new User(
+                                null,
+                                null,
                                 "0",
                                 "Test2",
                                 "offline",
@@ -107,6 +113,8 @@ class UserServiceTest {
 
         //setting up user which will be updated
         User oldUser = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -119,6 +127,8 @@ class UserServiceTest {
         when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(Observable.just(
                         new User(
+                                null,
+                                null,
                                 "0",
                                 "Test",
                                 "offline",
@@ -145,6 +155,8 @@ class UserServiceTest {
 
         //setting up user which will be updated
         User oldUser = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -157,6 +169,8 @@ class UserServiceTest {
         when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(Observable.just(
                         new User(
+                                null,
+                                null,
                                 "0",
                                 "Test",
                                 "offline",
@@ -180,6 +194,8 @@ class UserServiceTest {
     @Test
     void searchFriendEmpty() {
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -204,6 +220,8 @@ class UserServiceTest {
         when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "a",
                 "offline",
@@ -214,9 +232,9 @@ class UserServiceTest {
         //define mock
         List<User> usersFromServer = new ArrayList<>();
         //current user (that should not be shown)
-        usersFromServer.add(new User("0", "a", null, null, null));
+        usersFromServer.add(new User(null, null, "0", "a", null, null, null));
         // some other user
-        usersFromServer.add(new User("1", "a", null, null, null));
+        usersFromServer.add(new User(null, null, "1", "a", null, null, null));
         when(userApiService.getUsers()).thenReturn(Observable.just(usersFromServer));
 
         //action
@@ -236,6 +254,8 @@ class UserServiceTest {
     @Test
     void addFriendAlreadyInFriendList() {
         User friend = new User(
+		null,
+		null,
                 "1",
                 "Test2",
                 "offline",
@@ -245,6 +265,8 @@ class UserServiceTest {
         friends.add(friend._id());
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -265,6 +287,8 @@ class UserServiceTest {
 
         when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend = new User(
+		null,
+		null,
                 "1",
                 "Test2",
                 "offline",
@@ -274,6 +298,8 @@ class UserServiceTest {
         friends.add(friend._id());
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -287,6 +313,8 @@ class UserServiceTest {
         when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(Observable.just(
                         new User(
+                                null,
+                                null,
                                 "0",
                                 "Test2",
                                 "offline",
@@ -317,6 +345,8 @@ class UserServiceTest {
     @Test
     void removeFriendNotInFriendList() {
         User friend = new User(
+		null,
+		null,
                 "1",
                 "Test2",
                 "offline",
@@ -324,6 +354,8 @@ class UserServiceTest {
                 new ArrayList<>());
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -341,6 +373,8 @@ class UserServiceTest {
     @Test
     void removeFriendFromFriendList() {
         User friend = new User(
+		null,
+		null,
                 "1",
                 "Test2",
                 "offline",
@@ -350,6 +384,8 @@ class UserServiceTest {
         friends.add(friend._id());
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -363,6 +399,8 @@ class UserServiceTest {
         when(userApiService.updateUser(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(Observable.just(
                         new User(
+                                null,
+                                null,
                                 "0",
                                 "Test2",
                                 "offline",
@@ -384,6 +422,8 @@ class UserServiceTest {
     void getFriends() {
         when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend = new User(
+		null,
+		null,
                 "1",
                 "Test2",
                 "offline",
@@ -393,6 +433,8 @@ class UserServiceTest {
         friends.add(friend._id());
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -426,6 +468,8 @@ class UserServiceTest {
         when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",
@@ -446,6 +490,8 @@ class UserServiceTest {
 
         when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend1 = new User(
+		null,
+		null,
                 "1",
                 "Test2",
                 "offline",
@@ -453,6 +499,8 @@ class UserServiceTest {
                 new ArrayList<>());
 
         User friend2 = new User(
+		null,
+		null,
                 "1",
                 "est",
                 "offline",
@@ -464,6 +512,8 @@ class UserServiceTest {
         friends.add(friend2._id());
         //setting up user which will be updated
         User user = new User(
+		null,
+		null,
                 "0",
                 "Test",
                 "offline",

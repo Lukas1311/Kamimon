@@ -63,7 +63,7 @@ class HybridControllerTest extends ApplicationTest {
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
-        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
+        userStorage.setUser(new User(null, null, "1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
         write("\t\t\t\t\t\t\t");
@@ -75,7 +75,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void openFriends() {
-        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
+        userStorage.setUser(new User(null, null, "1", "Bob", "", "", new ArrayList<>()));
         // pressing Friends Button and check if friendList is shown
         write("\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -115,7 +115,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void settings() {
-        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
+        userStorage.setUser(new User(null, null, "1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
         // pressing settings button and check if settings is shown
         write("\t\t");

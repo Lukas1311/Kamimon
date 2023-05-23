@@ -68,9 +68,9 @@ class CreateChatControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        final User alice = new User("Alice", "Alice", null, null, null);
-        final User bob = new User("Bob", "Bob", "online", null, null);
-        final User peter = new User("Peter", "Peter", "online", null, null);
+        final User alice = new User(null, null, "Alice", "Alice", null, null, null);
+        final User bob = new User(null, null, "Bob", "Bob", "online", null, null);
+        final User peter = new User(null, null, "Peter", "Peter", "online", null, null);
         when(userStorage.getUser()).thenReturn(alice);
         when(userService.getMe()).thenReturn(alice);
         members.add(alice);

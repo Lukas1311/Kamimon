@@ -97,8 +97,8 @@ public class ChatControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         when(resourceBundleProvider.get()).thenReturn(resources);
         // we have to do all the stuff here because it is set in the init() method of ChatController :(((
-        final User bob = new User("b_id", "b", null, null, null);
-        final User alice = new User("a_id", "a", null, null, null);
+        final User bob = new User(null, null, "b_id", "b", null, null, null);
+        final User alice = new User(null, null, "a_id", "a", null, null, null);
         final List<User> userList = Arrays.asList(bob, alice);
         final List<String> memberIds = Arrays.asList(bob._id(), alice._id());
         final Group group = new Group("", "", "g_id", "a + b", memberIds);

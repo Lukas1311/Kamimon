@@ -44,7 +44,7 @@ public class UserService {
         if (oldUser == null) {
             return Observable.empty();
         }
-        User newUser = new User(oldUser._id(), username, oldUser.status(), oldUser.avatar(), oldUser.friends());
+        User newUser = new User(oldUser.createdAt(), oldUser.updatedAt(), oldUser._id(), username, oldUser.status(), oldUser.avatar(), oldUser.friends());
         userStorage.setUser(newUser);
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, null, null, null);
         return userApiService.updateUser(oldUser._id(), dto);
@@ -78,7 +78,7 @@ public class UserService {
         if (oldUser == null) {
             return Observable.empty();
         }
-        User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
+        User newUser = new User(oldUser.createdAt(), oldUser.updatedAt(), oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
         userStorage.setUser(newUser);
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
         return userApiService.updateUser(oldUser._id(), dto);

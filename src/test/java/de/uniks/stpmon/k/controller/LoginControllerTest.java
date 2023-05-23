@@ -99,7 +99,7 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testRegister() {
-        User bob = new User(null, "Bob", null, null, null);
+        User bob = new User(null, null, null, "Bob", null, null, null);
         when(userService.addUser(any(), any())).thenReturn(Observable.just(
             bob
         ));
