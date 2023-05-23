@@ -116,7 +116,7 @@ public class ChatControllerTest extends ApplicationTest {
         when(msgService.getAllMessages(any(), any())).thenReturn(Observable.just(messagesMock));
         when(eventListener.<Message>listen(any(), any())).thenReturn(events);
         
-        when(regionService.getRegions()).thenReturn(Observable.just(List.of(new Region("1", "1", "i", "reg"))));
+        when(regionService.getRegions()).thenReturn(Observable.just(List.of(new Region("i", "reg", null, null))));
         when(userService.getMe()).thenReturn(bob);
 
         // show app
