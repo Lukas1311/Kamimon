@@ -12,7 +12,7 @@ public class LobbyController extends Controller {
     @FXML
     public Pane pane;
     @Inject
-    Provider<HybridController> hybridController;
+    Provider<HybridController> hybridControllerProvider;
     @Inject
     RegionListController regionListController;
 
@@ -26,11 +26,15 @@ public class LobbyController extends Controller {
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
 
         pane.getChildren().add(regionListController.render());
 
         return parent;
+    }
+
+    public void closeSidebar() {
+        hybridControllerProvider.get().closeTab();
     }
 }
