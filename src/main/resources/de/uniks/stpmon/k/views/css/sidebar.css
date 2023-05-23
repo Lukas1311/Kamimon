@@ -1,0 +1,24 @@
+.sidebar-color {
+    -fx-background-color: #ae2f34;
+}
+
+.button-color {
+    -fx-text-fill: #ffffff;
+    -fx-border-color: black;
+    -fx-border: 1px;
+    -fx-font-size: 18px;
+}
+
+.button-color:hover {
+    -fx-font-size: 20px;
+}
+
+.sidebar-content {
+    -fx-background-color: #FFE599;
+}
+
+.settings-button {
+    -fx-background-color: #2b78e4;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 10);
+}

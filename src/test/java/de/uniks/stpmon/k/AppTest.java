@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -128,7 +127,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#pause", Node::isVisible);
         clickOn("#pause");
         verifyThat("#pauseScreen", Node::isVisible);
-        clickOn("#home");
+        clickOn("#logoutButton");
         verifyThat(regionsListView, Node::isVisible);
 
         clickOn("#regionButton");
