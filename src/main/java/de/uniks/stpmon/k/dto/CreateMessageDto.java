@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.dto;
 
 public record CreateMessageDto (
-    String body // maxLength: 16384
+        String body // maxLength: 16384
     ) {
     
 }
