@@ -31,7 +31,7 @@ public record TileMap(
         String renderorder,
         String tiledversion,
         int tileheight,
-        List<Tileset> tilesets,
+        List<TilesetSource> tilesets,
         int tilewidth,
         String type,
         String version,
