@@ -19,6 +19,7 @@ import java.util.List;
  * @param version          The JSON format version (previously a number, saved as string since 1.6)
  * @param width            Number of tile columns
  */
+@SuppressWarnings("SpellCheckingInspection")
 public record TileMap(
         int compressionlevel,
         int height,

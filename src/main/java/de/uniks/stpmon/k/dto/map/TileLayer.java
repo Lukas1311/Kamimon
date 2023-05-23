@@ -18,6 +18,7 @@ import java.util.List;
  * @param y          Vertical layer offset in tiles. Always 0.
  * @param draworder  topdown (default) or index. objectgroup only.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public record TileLayer(
         List<Chunk> chunks,
         int height,
