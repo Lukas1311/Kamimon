@@ -63,7 +63,7 @@ public class AuthenticationServiceTest {
         assertEquals("a", tokenStorage.getToken());
         assertEquals("r", result.refreshToken());
         assertEquals("r", captor.getValue());
-        assertEquals(new User(null, null, "i", "n", "s", "a", null), userStorage.getUser());
+        assertEquals(new User("i", "n", "s", "a", null), userStorage.getUser());
 
         // check mocks:
         verify(prefs).put("refreshToken", "r");
@@ -121,7 +121,7 @@ public class AuthenticationServiceTest {
         assertEquals("a", result.accessToken());
         assertEquals("a", tokenStorage.getToken());
         assertEquals("a", captor.getValue());
-        assertEquals(new User(null, null, "i", "n", "s", "a", null), userStorage.getUser());
+        assertEquals(new User("i", "n", "s", "a", null), userStorage.getUser());
 
         // check mocks:
         verify(tokenStorage).setToken("a");

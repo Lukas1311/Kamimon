@@ -57,8 +57,8 @@ class FriendListControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        friends.add(new User(null, null, null, "Peter", "online", null, null));
-        users.add(new User(null, null, null, "Alice", "online", null, null));
+        friends.add(new User(null, "Peter", "online", null, null));
+        users.add(new User(null, "Alice", "online", null, null));
         when(userService.filterFriends(anyString())).thenReturn(updatedFriends);
         when(userService.searchFriend(anyString())).thenReturn(filteredUsers);
         app.show(friendListController);

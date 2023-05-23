@@ -35,7 +35,7 @@ public class AuthenticationService {
                 preferences.put("refreshToken", lr.refreshToken());
             }
             //Add User to UserStorage
-            userStorage.setUser(new User(lr.createdAt(), lr.updatedAt(), lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
+            userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
             return lr;
         }).concatMap(old -> friendCache.init(userStorage.getUser()).map((ignore) -> old));
     }
@@ -55,7 +55,7 @@ public class AuthenticationService {
     public Observable<LoginResult> refresh() {
         return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).map(lr -> {
             tokenStorage.setToken(lr.accessToken());
-            userStorage.setUser(new User(lr.createdAt(), lr.updatedAt(), lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
+            userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
             return lr;
         }).concatMap(old -> friendCache.init(userStorage.getUser()).map((ignore) -> old));
     }

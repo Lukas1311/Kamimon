@@ -32,7 +32,7 @@ public class UserTestModule {
                 for(int i = size; i < size + amount; i++){
                     String id = "id" + i;
                     String name = "TestUser" + i;
-                    users.add(new User(null, null, id, name, "offline", "someAvatar", new ArrayList<>()));
+                    users.add(new User(id, name, "offline", "someAvatar", new ArrayList<>()));
                 }
 
             }
@@ -42,7 +42,7 @@ public class UserTestModule {
                 if (dto.avatar() != null){
                     avatar = dto.avatar();
                 }
-                User user = new User(null, null, 
+                User user = new User(
                         String.valueOf(users.size()),
                         dto.name(),
                         "offline",
@@ -122,7 +122,7 @@ public class UserTestModule {
                     if(dto.friends() != null){
                         friends = dto.friends();
                     }
-                    User newUser = new User(null, null, 
+                    User newUser = new User(
                             oldUser._id(), name, status, avatar, friends
                     );
                     users.remove(oldUser);

@@ -48,24 +48,18 @@ class FriendCacheTest {
     @Test
     void userEvents() {
         User created = new User(
-                null,
-                null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User updated = new User(
-                null,
-                null, 
                 "1",
                 "Test",
                 "online",
                 "picture",
                 new ArrayList<>());
         User user = new User(
-                null,
-                null, 
                 "0",
                 "Test",
                 "offline",
@@ -96,8 +90,6 @@ class FriendCacheTest {
     @Test
     void friendEvents() {
         User friendFirst = new User(
-                null,
-                null, 
                 "1",
                 "Test",
                 "offline",
@@ -106,8 +98,6 @@ class FriendCacheTest {
         ArrayList<String> friends = new ArrayList<>();
         friends.add(friendFirst._id());
         User user = new User(
-                null,
-                null, 
                 "0",
                 "Test",
                 "offline",
@@ -123,8 +113,6 @@ class FriendCacheTest {
         assertEquals(0, cache.getFriends().blockingFirst().size());
 
         mainUserEvents.onNext(new Event<>("users.0.updated", new User(
-                null,
-                null, 
                 "0",
                 "Test",
                 "offline",
@@ -137,16 +125,12 @@ class FriendCacheTest {
     @Test
     void getUser() {
         User friend = new User(
-		null,
-		null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
@@ -169,16 +153,12 @@ class FriendCacheTest {
     @Test
     void initAndReset() {
         User friendFirst = new User(
-		null,
-		null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User friendSecond = new User(
-		null,
-		null, 
                 "2",
                 "Test",
                 "offline",
@@ -188,8 +168,6 @@ class FriendCacheTest {
         friends.add(friendFirst._id());
         friends.add(friendSecond._id());
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
@@ -215,8 +193,6 @@ class FriendCacheTest {
     @Test
     void initExisting() {
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
@@ -239,24 +215,18 @@ class FriendCacheTest {
     @Test
     void updateFriends() {
         User friendFirst = new User(
-		null,
-		null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User friendSecond = new User(
-		null,
-		null, 
                 "2",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
@@ -277,16 +247,12 @@ class FriendCacheTest {
     @Test
     void updateFriendMissing() {
         User friendFirst = new User(
-		null,
-		null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
@@ -307,16 +273,12 @@ class FriendCacheTest {
     @Test
     void addUser() {
         User friend = new User(
-		null,
-		null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
@@ -344,16 +306,12 @@ class FriendCacheTest {
     @Test
     void removeUser() {
         User friend = new User(
-		null,
-		null, 
                 "1",
                 "Test",
                 "offline",
                 "picture",
                 new ArrayList<>());
         User user = new User(
-		null,
-		null, 
                 "0",
                 "Test",
                 "offline",
