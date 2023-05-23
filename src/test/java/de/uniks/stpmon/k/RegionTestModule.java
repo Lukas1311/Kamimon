@@ -39,7 +39,6 @@ public class    RegionTestModule {
 
             /**
              * Returns all regions (if list of regions is empty, it gets initialized
-             * @return: all regions
              */
             @Override
             public Observable<List<Region>> getRegions() {
@@ -51,7 +50,6 @@ public class    RegionTestModule {
 
             /**
              * Returns all region with id (if list of regions is empty, it gets initialized
-             * @return: all regions
              */
             @Override
             public Observable<Region> getRegion(String id) {
