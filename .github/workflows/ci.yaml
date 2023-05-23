@@ -21,6 +21,8 @@ jobs:
           java-package: jdk
       - name: Set up fontconfig
         run: |
+          echo "curl version: $(curl --version)"
+          echo "openssl version: $(openssl version)"
           sudo mkdir -p /etc/apt/keyrings
 
           curl -fsSL \
