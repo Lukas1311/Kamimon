@@ -29,7 +29,9 @@ class RegionServiceTest {
                 "a",
                 "1",
                 "1",
-                "Test"
+                "Test",
+                null,
+                null
         );
         ArrayList<String> regions = new ArrayList<>();
         regions.add(region._id());
@@ -56,7 +58,9 @@ class RegionServiceTest {
                 "a",
                 "1",
                 "1",
-                "Test"
+                "Test",
+                null,
+                null
         );
         ArrayList<String> regions = new ArrayList<>();
         regions.add(region._id());
