@@ -94,13 +94,13 @@
                   spacing="20.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
-                          text="Trainer bearbeiten">
+                          text="%editTrainer">
                      <font>
                         <Font size="18.0"/>
                      </font>
                   </Button>
                   <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
-                          text="Benutzer bearbeiten">
+                          text="%editUser">
                      <font>
                         <Font size="18.0"/>
                      </font>
