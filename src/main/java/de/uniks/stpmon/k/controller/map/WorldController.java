@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.map;
 
 import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TileMapService;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -10,7 +11,6 @@ import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 
 @Singleton
 public class WorldController extends Controller {
@@ -19,19 +19,27 @@ public class WorldController extends Controller {
 
     @Inject
     protected TileMapService tileMapService;
+    @Inject
+    protected RegionService regionService;
 
     @Inject
     public WorldController() {
     }
 
+    ImageView imageView = new ImageView();
+
     @Override
     public void init() {
         super.init();
-        try {
-            tileMapService.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        subscribe(regionService.getRegion("0").map((region) ->
+                        tileMapService.loadImage(region)),
+                (image) -> {
+                    // imageView.setImage(SwingFXUtils.toFXImage(image, null));
+                },
+                (error) -> {
+                    System.out.println("Error loading image");
+                    error.printStackTrace();
+                });
     }
 
     @Override
@@ -40,7 +48,6 @@ public class WorldController extends Controller {
         Image image = new Image(Main.class.getResource("test.png").toString());
 
         // Create an ImageView with the loaded image
-        ImageView imageView = new ImageView(image);
         imageView.setFitWidth(IMAGE_WIDTH);
         imageView.setFitHeight(IMAGE_HEIGHT);
         imageView.setPreserveRatio(true);
