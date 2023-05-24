@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -57,13 +59,11 @@ public class App extends Application {
             return;
         }
 
-        show(component.worldController());
+        LoadingScreenController loadingScreen = component.loadingScreenController();
+        loadingScreen.setOnLoadingFinished(this::onFinishedLoading);
+        show(loadingScreen);
 
-//        LoadingScreenController loadingScreen = component.loadingScreenController();
-//        loadingScreen.setOnLoadingFinished(this::onFinishedLoading);
-//        show(loadingScreen);
-//
-//        disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
+        disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
     }
 
     private void onFinishedLoading() {

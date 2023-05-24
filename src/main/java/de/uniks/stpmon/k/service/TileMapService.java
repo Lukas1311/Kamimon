@@ -45,7 +45,7 @@ public class TileMapService {
                 .map((body) -> mapper.readValue(new BufferedInputStream(body.byteStream()), TilesetData.class));
     }
 
-    public TileMap loadMap(IMapProvider mapProvider) throws IOException {
+    public TileMap loadMap(IMapProvider mapProvider) {
         TileMapData mapData = mapProvider.map();
         Observable<Tileset> imageObservable = Observable.empty();
         for (TilesetSource source : mapData.tilesets()) {
@@ -65,29 +65,9 @@ public class TileMapService {
                 .collect(Collectors.toMap(Tileset::source, Function.identity())));
     }
 
-    public BufferedImage loadImage(IMapProvider provider) throws IOException {
-//        Area caveArea = mapper.readValue(
-//                Main.class.getResource("map_data/cave.json"), Area.class);
+    public BufferedImage renderImage(IMapProvider provider) throws IOException {
         TileMap map = loadMap(provider);
         return map.renderMap();
-//        TileMap image = loadTileset(caveArea.map());
-//        TileMapData tileMap = caveArea.map();
-//        BufferedImage mergedImage = image.renderMap(tileMap);
-//
-//        ImageIO.write(mergedImage, "png", new File("test.png"));
     }
 
-//    public TileMap loadTileset(TileMapData tileMap) throws IOException {
-//        Map<TilesetSource, TilesetData> tileSets = new HashMap<>();
-//        Map<TilesetSource, BufferedImage> images = new HashMap<>();
-//        for (TilesetSource source : tileMap.tilesets()) {
-//            TilesetData tileset = mapper.readValue(
-//                    Main.class.getResource("map_data/" + source.source().replace("../", "")), TilesetData.class);
-//            BufferedImage image = ImageIO.read(
-//                    Objects.requireNonNull(Main.class.getResource("map_data/" + tileset.image())));
-//            images.put(source, image);
-//            tileSets.put(source, tileset);
-//        }
-//        return new TileMap(tileSets, images);
-//    }
 }
