@@ -78,11 +78,11 @@ public class App extends Application {
     }
 
     private URL getIconUrl() {
+        //requireNonNull was not shown in Lecture, but is needed to eliminate warning
         return Objects.requireNonNull(App.class.getResource("icon_256.png"));
     }
 
     private void setAppIcon(Stage stage) {
-        //requireNonNull was not shown in Lecture, but is needed to eliminate warning
         final Image image = new Image(getIconUrl().toString());
         stage.getIcons().add(image);
     }
@@ -94,7 +94,6 @@ public class App extends Application {
         }
         try {
             final Taskbar taskbar = Taskbar.getTaskbar();
-            //requireNonNull was not shown in Lecture, but is needed to eliminate warning
             final java.awt.Image image = ImageIO.read(getIconUrl());
             taskbar.setIconImage(image);
         } catch (Exception ignored) {
@@ -103,7 +102,7 @@ public class App extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         cleanup();
         disposables.dispose();
     }
@@ -116,7 +115,7 @@ public class App extends Application {
 
     private void initAndRender(Controller controller) {
         controller.init();
-        //sets the firs knot in the scene tree
+        //sets the first node in the scene tree
         stage.getScene().setRoot(controller.render());
     }
 
@@ -126,7 +125,6 @@ public class App extends Application {
      * Is called, when the app is closed
      */
     private void cleanup() {
-
         if (controller != null) {
             controller.destroy();
             controller = null;

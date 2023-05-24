@@ -30,9 +30,7 @@ public class WorldController extends Controller {
         super.init();
         subscribe(regionService.getRegion("645e32c6866ace359554a7ec").map((region) ->
                         tileMapService.renderImage(region)),
-                (image) -> {
-                    imageView.setImage(SwingFXUtils.toFXImage(image, null));
-                },
+                (image) -> imageView.setImage(SwingFXUtils.toFXImage(image, null)),
                 (error) -> {
                     System.out.println("Error loading image");
                     error.printStackTrace();
