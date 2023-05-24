@@ -37,10 +37,10 @@ public interface RegionApiService {
     //---------------- Region Areas ------------------------------
 
     @GET("regions/{region}/areas")
-    Observable<List<Area>> getRegions(@Path("region") String region);
+    Observable<List<Area>> getAreas(@Path("region") String region);
 
     @GET("regions/{region}/areas/{id}")
-    Observable<Area> getRegion(@Path("region") String region, @Path("id") String id);
+    Observable<Area> getArea(@Path("region") String region, @Path("id") String id);
 
     //------------- Trainer Monsters -------------------------------
     @GET("regions/{regionId}/trainers/{trainerId}/monsters")

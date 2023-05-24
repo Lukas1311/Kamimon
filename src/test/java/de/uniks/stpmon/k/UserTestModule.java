@@ -55,10 +55,10 @@ public class UserTestModule {
 
             /**
              * returns the Users (if list is empty, it gets initialized with dummyUsers
-             * @return: list of users
              */
             @Override
             public Observable<List<User>> getUsers() {
+                //1 because test bot registers, and is added to list
                 if(users.size() <= 1){
                     initDummyUsers();
                 }
@@ -67,6 +67,7 @@ public class UserTestModule {
 
             @Override
             public Observable<List<User>> getUsers(List<String> ids) {
+                //1 because test bot registers, and is added to list
                 if(users.size() <= 1){
                     initDummyUsers();
                 }
@@ -78,6 +79,7 @@ public class UserTestModule {
 
             @Override
             public Observable<User> getUser(String id) {
+                //1 because test bot registers, and is added to list
                 if(users.size() <= 1){
                     initDummyUsers();
                 }
@@ -93,10 +95,10 @@ public class UserTestModule {
              * updates attribute(s) of user
              * @param id: id of User
              * @param dto: dto with attributes that should be changed (password has no effect in this method)
-             * @return: updated User
              */
             @Override
             public Observable<User> updateUser(String id, UpdateUserDto dto) {
+                //1 because test bot registers, and is added to list
                 if(users.size() <= 1){
                     initDummyUsers();
                 }
