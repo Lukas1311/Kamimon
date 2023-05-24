@@ -54,8 +54,7 @@ public class UserTestModule {
             }
 
             /**
-             * returns the Users (if list is empty, it gets initialized with dummyUsers
-             * @return: list of users
+             * returns the Users (if list is empty, it gets initialized with dummyUsers)
              */
             @Override
             public Observable<List<User>> getUsers() {
@@ -93,7 +92,6 @@ public class UserTestModule {
              * updates attribute(s) of user
              * @param id: id of User
              * @param dto: dto with attributes that should be changed (password has no effect in this method)
-             * @return: updated User
              */
             @Override
             public Observable<User> updateUser(String id, UpdateUserDto dto) {
