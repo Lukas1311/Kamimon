@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
@@ -45,12 +44,11 @@ public class PresetsTestModule {
                 int amount = 3;
 
                 for(int i = 0; i < amount; i++){
-                    int id = i;
                     String name = "TestMonster" + i;
                     String image = "MonsterImage" + i;
                     String type = types[i % types.length];
                     String description = "description" + i;
-                    monsters.add(new MonsterTypeDto(id, name, image, type, description));
+                    monsters.add(new MonsterTypeDto(i, name, image, type, description));
                 }
             }
 
@@ -60,14 +58,13 @@ public class PresetsTestModule {
             private void initDummyAbilities(){
                 int amount = 5;
                 for(int i = 0; i < amount; i++){
-                     int id = i;
                      String type = types[i % types.length];
                      String name = type + "Ability" + i;
                      String description = "description" + i;
                      int maxUses = 3;
                      double accuracy = 0.5;
                      int power = 5;
-                    abilities.add(id, name, description, type, maxUses, accuracy, power);
+                    abilities.add(i, name, description, type, maxUses, accuracy, power);
                 }
 
             }

@@ -8,7 +8,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
 
-import javax.json.Json;
 import java.util.List;
 
 public interface PresetApiService {
