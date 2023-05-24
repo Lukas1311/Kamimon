@@ -8,5 +8,5 @@ public record Region(
         String _id,
         String name,
         TileMap map
-) {
+) implements IMapProvider {
 }

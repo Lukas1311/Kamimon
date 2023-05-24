@@ -3,7 +3,12 @@ package de.uniks.stpmon.k;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.rest.*;
+import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.rest.GroupApiService;
+import de.uniks.stpmon.k.rest.MessageApiService;
+import de.uniks.stpmon.k.rest.PresetApiService;
+import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.TokenStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,13 +50,19 @@ public class HttpModule {
 
     @Provides
     @Singleton
+    PresetApiService presetApiService(Retrofit retrofit) {
+        return retrofit.create(PresetApiService.class);
+    }
+
+    @Provides
+    @Singleton
     AuthenticationApiService authApi(Retrofit retrofit) {
         return retrofit.create(AuthenticationApiService.class);
     }
 
     @Provides
     @Singleton
-    UserApiService userApi(Retrofit retrofit){
+    UserApiService userApi(Retrofit retrofit) {
         return retrofit.create(UserApiService.class);
     }
 
