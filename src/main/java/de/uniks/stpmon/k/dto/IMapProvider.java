@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.dto;
 
-import de.uniks.stpmon.k.dto.map.TileMap;
+import de.uniks.stpmon.k.dto.map.TileMapData;
 
 public interface IMapProvider {
-    TileMap map();
+    TileMapData map();
 }

@@ -7,6 +7,6 @@ public record Area(
         String name,
         String region,
         String createdAt,
-        TileMap map,
+        TileMapData map,
         String updatedAt) implements IMapProvider {
 }

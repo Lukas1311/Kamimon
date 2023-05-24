@@ -9,7 +9,7 @@ import java.util.List;
  * @param x      X coordinate in tiles
  * @param y      Y coordinate in tiles
  */
-public record Chunk(
+public record ChunkData(
         List<Integer> data,
         int height,
         int width,

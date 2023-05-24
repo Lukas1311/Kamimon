@@ -20,11 +20,11 @@ import java.util.List;
  * @param width            Number of tile columns
  */
 @SuppressWarnings("SpellCheckingInspection")
-public record TileMap(
+public record TileMapData(
         int compressionlevel,
         int height,
         boolean infinite,
-        List<TileLayer> layers,
+        List<TileLayerData> layers,
         int nextlayerid,
         int nextobjectid,
         String orientation,

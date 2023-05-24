@@ -19,7 +19,7 @@ import java.util.List;
  * @param version      The JSON format version (previously a number, saved as string since 1.6)
  * @param wangsets     Array of Wang sets (since 1.1.5)
  */
-public record Tileset(
+public record TilesetData(
         int columns,
         String image,
         int imageheight,

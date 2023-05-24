@@ -19,8 +19,8 @@ import java.util.List;
  * @param draworder  topdown (default) or index. objectgroup only.
  */
 @SuppressWarnings("SpellCheckingInspection")
-public record TileLayer(
-        List<Chunk> chunks,
+public record TileLayerData(
+        List<ChunkData> chunks,
         int height,
         int id,
         String name,

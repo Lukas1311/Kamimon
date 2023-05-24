@@ -1,11 +1,11 @@
 package de.uniks.stpmon.k.dto;
 
-import de.uniks.stpmon.k.dto.map.TileMap;
+import de.uniks.stpmon.k.dto.map.TileMapData;
 
 public record Region(
         String _id,
         String name,
         Spawn spawn,
-        TileMap map
+        TileMapData map
     ) implements IMapProvider {
 }
