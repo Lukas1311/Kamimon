@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.dto.LoginResult;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
-import de.uniks.stpmon.k.service.TokenStorage;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;

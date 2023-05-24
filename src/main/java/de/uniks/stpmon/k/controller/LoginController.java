@@ -4,7 +4,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
-import de.uniks.stpmon.k.service.TokenStorage;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;

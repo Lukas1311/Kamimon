@@ -2,11 +2,10 @@ package de.uniks.stpmon.k.ws;
 
 import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.service.TokenStorage;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 

@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.Event;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;
+import de.uniks.stpmon.k.service.storage.FriendCache;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;

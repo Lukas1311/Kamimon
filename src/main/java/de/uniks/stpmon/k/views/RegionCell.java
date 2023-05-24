@@ -19,7 +19,7 @@ public class RegionCell extends ListCell<Region> {
     protected void updateItem(Region item, boolean empty) {
         super.updateItem(item, empty);
         setStyle("-fx-background-color: transparent;");
-        if(empty || item == null) {
+        if (empty || item == null) {
             setGraphic(null);
         } else {
             final RegionController regionController = new RegionController(item, hybridControllerProvider);

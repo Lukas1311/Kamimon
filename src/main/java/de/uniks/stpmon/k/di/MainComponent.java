@@ -7,8 +7,7 @@ import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
-import de.uniks.stpmon.k.service.IFriendCache;
-import de.uniks.stpmon.k.service.NetworkAvailability;
+import de.uniks.stpmon.k.service.storage.IFriendCache;
 
 import javax.inject.Singleton;
 

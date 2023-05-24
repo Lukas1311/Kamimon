@@ -37,18 +37,15 @@ public class MessageCell extends ListCell<Message> {
             String sender = groupUsers.get(item.sender());
             if(item.body().startsWith("JoinInvitation")) {
                 final InvitationController invitationController = new InvitationController(item, sender, me, hybridController, resources);
-                // setting the alignment directly on the cell makes the trick
-                setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {
                 final MessageController messageController = new MessageController(item, sender, me);
-                // setting the alignment directly on the cell makes the trick
-                setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(messageController.render());
                 setDisable(!isOwnMessage(item));
             }
-
+            // setting the alignment directly on the cell makes the trick
+            setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         }
     }
 

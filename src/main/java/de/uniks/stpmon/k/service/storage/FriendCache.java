@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;

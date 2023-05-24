@@ -2,8 +2,8 @@ package de.uniks.stpmon.k.di;
 
 import dagger.Binds;
 import dagger.Module;
-import de.uniks.stpmon.k.service.FriendCache;
-import de.uniks.stpmon.k.service.IFriendCache;
+import de.uniks.stpmon.k.service.storage.FriendCache;
+import de.uniks.stpmon.k.service.storage.IFriendCache;
 
 import javax.inject.Singleton;
 

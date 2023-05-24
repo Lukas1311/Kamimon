@@ -31,8 +31,6 @@ public class MessageService {
     }
 
     private final MessageApiService messageApiService;
-    // 'namespace' is one of "groups", "regions" or "global" dependant where you open the chat
-    // 'parent' is the id of the group, or region, or global world
     
     @Inject
     public MessageService(MessageApiService messageApiService) {

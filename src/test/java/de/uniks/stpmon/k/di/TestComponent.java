@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.MessageApiDummy;
 import de.uniks.stpmon.k.TestModule;
 import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.service.UserStorage;
+import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 
 import javax.inject.Singleton;
