@@ -2,7 +2,7 @@ package de.uniks.stpmon.k;
 
 import dagger.Component;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.service.UserStorage;
+import de.uniks.stpmon.k.service.storages.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 
 import javax.inject.Singleton;

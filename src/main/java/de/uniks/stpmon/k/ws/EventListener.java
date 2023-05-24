@@ -1,25 +1,20 @@
 package de.uniks.stpmon.k.ws;
 
-import de.uniks.stpmon.k.Main;
-import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.service.TokenStorage;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
+import de.uniks.stpmon.k.Main;
+import de.uniks.stpmon.k.dto.Event;
+import de.uniks.stpmon.k.service.storages.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 @Singleton
 public class EventListener {

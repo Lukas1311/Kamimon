@@ -6,6 +6,9 @@ import de.uniks.stpmon.k.dto.LoginResult;
 import de.uniks.stpmon.k.dto.RefreshDto;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.service.storages.IFriendCache;
+import de.uniks.stpmon.k.service.storages.TokenStorage;
+import de.uniks.stpmon.k.service.storages.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
