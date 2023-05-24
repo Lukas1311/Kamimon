@@ -1,9 +1,14 @@
-package de.uniks.stpmon.k;
+package de.uniks.stpmon.k.di;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.rest.*;
+import de.uniks.stpmon.k.Main;
+import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.rest.GroupApiService;
+import de.uniks.stpmon.k.rest.MessageApiService;
+import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.TokenStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,10 +22,10 @@ import javax.inject.Singleton;
 public class HttpModule {
     @Provides
     @Singleton
-    static OkHttpClient client(TokenStorage tokenStorage){
+    static OkHttpClient client(TokenStorage tokenStorage) {
         return new OkHttpClient.Builder().addInterceptor(chain -> {
             final String token = tokenStorage.getToken();
-            if(token == null){
+            if (token == null) {
                 return chain.proceed(chain.request());
             }
             final Request newRequest = chain
@@ -34,7 +39,7 @@ public class HttpModule {
 
     @Provides
     @Singleton
-    Retrofit retrofit(OkHttpClient client, ObjectMapper mapper){
+    Retrofit retrofit(OkHttpClient client, ObjectMapper mapper) {
         return new Retrofit.Builder()
                 .baseUrl(Main.API_URL.endsWith("/") ? Main.API_URL : Main.API_URL + "/")
                 .client(client)
@@ -51,15 +56,16 @@ public class HttpModule {
 
     @Provides
     @Singleton
-    UserApiService userApi(Retrofit retrofit){
+    UserApiService userApi(Retrofit retrofit) {
         return retrofit.create(UserApiService.class);
     }
 
     @Provides
     @Singleton
-    GroupApiService groupApi(Retrofit retrofit){
+    GroupApiService groupApi(Retrofit retrofit) {
         return retrofit.create(GroupApiService.class);
     }
+
     @Provides
     @Singleton
     RegionApiService regionApi(Retrofit retrofit) {

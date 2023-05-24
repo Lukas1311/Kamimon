@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k;
+package de.uniks.stpmon.k.di;
 
 import dagger.Binds;
 import dagger.Module;
@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 
 @Module
 public abstract class BoundModule {
-	@Binds
-	@Singleton
-	public abstract IFriendCache friendCache(FriendCache cache);
+    @Binds
+    @Singleton
+    public abstract IFriendCache friendCache(FriendCache cache);
 }

@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.di.TestComponent;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;

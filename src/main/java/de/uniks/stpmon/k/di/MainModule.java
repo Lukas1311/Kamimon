@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k;
+package de.uniks.stpmon.k.di;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
