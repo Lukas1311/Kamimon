@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
+
 public class PauseController extends Controller {
 
     @FXML
@@ -27,6 +29,6 @@ public class PauseController extends Controller {
     }
 
     public void closeSidebar() {
-        hybridControllerProvider.get().closeTab();
+        hybridControllerProvider.get().forceTab(NONE);
     }
 }

@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
+
 @Singleton
 public class IngameController extends Controller {
 
@@ -29,6 +31,6 @@ public class IngameController extends Controller {
     }
 
     public void closeSidebar() {
-        hybridControllerProvider.get().closeTab();
+        hybridControllerProvider.get().forceTab(NONE);
     }
 }

@@ -167,7 +167,8 @@ public class HybridController extends Controller {
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
             case SETTINGS -> pushController(settingsController, setup);
-            case NONE -> {}
+            case NONE -> {
+            }
         }
     }
 
@@ -224,7 +225,7 @@ public class HybridController extends Controller {
      * This closes all other open tabs.
      */
     public <C extends Controller> void forceTab(SidebarTab tab, Consumer<C> setup) {
-        if (mainTab != tab) {
+        if (mainTab != tab && tab != SidebarTab.NONE) {
             closeTab();
             mainTab = tab;
             pushTab(tab, setup);

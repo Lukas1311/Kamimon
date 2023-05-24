@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
+
 public class LobbyController extends Controller {
     @FXML
     public Pane pane;
@@ -21,7 +23,7 @@ public class LobbyController extends Controller {
     }
 
     @Override
-    public void init(){
+    public void init() {
         regionListController.init();
     }
 
@@ -35,6 +37,6 @@ public class LobbyController extends Controller {
     }
 
     public void closeSidebar() {
-        hybridControllerProvider.get().closeTab();
+        hybridControllerProvider.get().forceTab(NONE);
     }
 }
