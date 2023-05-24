@@ -1,9 +1,6 @@
 package de.uniks.stpmon.k.rest;
 
-import de.uniks.stpmon.k.dto.Area;
-import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.dto.Region;
-import de.uniks.stpmon.k.dto.Trainer;
+import de.uniks.stpmon.k.dto.*;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
 
@@ -17,7 +14,7 @@ public interface RegionApiService {
                                       @Body CreateTrainerDto trainerDto);
 
     @GET("regions/{regionId}/trainers")
-    Observable<List<Trainer>> getTrainers(@Path("regionId"),
+    Observable<List<Trainer>> getTrainers(@Path("regionId") String regionId,
                                           @Query("area") String areaId,
                                           @Query("user") String userId);
 
@@ -44,4 +41,11 @@ public interface RegionApiService {
 
     @GET("regions/{region}/areas/{id}")
     Observable<Area> getRegion(@Path("region") String region, @Path("id") String id);
+
+    //------------- Trainer Monsters -------------------------------
+    @GET("regions/{regionId}/trainers/{trainerId}/monsters")
+    Observable<List<Monster>> getMonsters(@Path("trainerId") String trainerId);
+
+    @GET("regions/{regionId}/trainers/{trainerId}/monsters/{id}")
+    Observable<Monster> getMonster(@Path("id") String monsterId);
 }
