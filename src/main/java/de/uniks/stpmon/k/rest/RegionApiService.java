@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.rest;
 
+import de.uniks.stpmon.k.models.Region;
 import io.reactivex.rxjava3.core.Observable;
-import de.uniks.stpmon.k.dto.Region;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 

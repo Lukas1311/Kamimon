@@ -1,15 +1,13 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.dto.Message;
-
-import java.util.ArrayList;
-
-import javax.inject.Inject;
-
 import de.uniks.stpmon.k.dto.CreateMessageDto;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
+import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.rest.MessageApiService;
 import io.reactivex.rxjava3.core.Observable;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
 
 public class MessageService {
 

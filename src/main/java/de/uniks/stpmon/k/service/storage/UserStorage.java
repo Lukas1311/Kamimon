@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.service.storage;
 
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

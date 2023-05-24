@@ -1,13 +1,17 @@
 package de.uniks.stpmon.k.rest;
 
-import de.uniks.stpmon.k.dto.UpdateUserDto;
-import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.dto.CreateUserDto;
-
+import de.uniks.stpmon.k.dto.UpdateUserDto;
+import de.uniks.stpmon.k.models.User;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public interface UserApiService {

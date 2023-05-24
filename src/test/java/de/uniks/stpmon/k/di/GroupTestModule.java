@@ -3,8 +3,8 @@ package de.uniks.stpmon.k.di;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.dto.CreateGroupDto;
-import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.UpdateGroupDto;
+import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -44,7 +44,7 @@ public class GroupTestModule {
             private ArrayList<Group> getDummyGroups(int amount) {
                 ArrayList<Group> groups = new ArrayList<>();
                 for (int i = 0; i < amount; i++) {
-                    String[] memberIds = {String.valueOf("id" + i), String.valueOf("id" + (i + 1))};
+                    String[] memberIds = {"id" + i, "id" + (i + 1)};
                     ArrayList<String> members = new ArrayList<>(Arrays.asList(memberIds));
                     Group group = new Group(
                             "2023-01-01T00:00:00.000Z",

@@ -1,12 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.DaggerTestComponent;
-import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.Message;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.di.DaggerTestComponent;
+import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.Message;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
@@ -44,7 +44,6 @@ class HybridControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 
-
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
@@ -52,7 +51,6 @@ class HybridControllerTest extends ApplicationTest {
         app.show(hybridController);
         stage.requestFocus();
     }
-
 
     @Test
     public void openChat() {

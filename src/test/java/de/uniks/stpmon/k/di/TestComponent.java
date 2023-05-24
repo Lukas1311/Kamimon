@@ -1,10 +1,10 @@
 package de.uniks.stpmon.k.di;
 
 import dagger.Component;
-import de.uniks.stpmon.k.MessageApiDummy;
 import de.uniks.stpmon.k.TestModule;
 import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 

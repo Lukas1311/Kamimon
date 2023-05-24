@@ -1,16 +1,16 @@
 package de.uniks.stpmon.k.rest;
 
 import de.uniks.stpmon.k.dto.CreateMessageDto;
-import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
+import de.uniks.stpmon.k.models.Message;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.PATCH;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Body;
 
 import java.util.ArrayList;
 

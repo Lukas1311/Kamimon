@@ -1,6 +1,6 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.dummies;
 
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.storage.IFriendCache;
 import de.uniks.stpmon.k.service.storage.UserStorage;

@@ -1,9 +1,9 @@
-package de.uniks.stpmon.k;
+package de.uniks.stpmon.k.service.dummies;
 
 import de.uniks.stpmon.k.dto.CreateMessageDto;
-import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
+import de.uniks.stpmon.k.models.Event;
+import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.rest.MessageApiService;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;

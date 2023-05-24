@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.dto;
+package de.uniks.stpmon.k.models;
 
 public record Trainer(
         String _id, // objectid example: 507f191e810c19729de860ea
@@ -11,7 +11,6 @@ public record Trainer(
         Integer x,
         Integer y,
         Integer direction,
-        NPCInfo npc
-    ) {
-    
+        NPCInfo npc) {
+
 }

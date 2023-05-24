@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.TabController;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.UserStorage;

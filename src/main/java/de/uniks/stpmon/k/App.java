@@ -2,6 +2,7 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoadingScreenController;
+import de.uniks.stpmon.k.di.DaggerMainComponent;
 import de.uniks.stpmon.k.di.MainComponent;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;

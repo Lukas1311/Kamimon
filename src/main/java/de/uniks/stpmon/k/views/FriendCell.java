@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.FriendController;
 import de.uniks.stpmon.k.controller.FriendListController;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import javafx.scene.control.ListCell;
 
 public class FriendCell extends ListCell<User> {

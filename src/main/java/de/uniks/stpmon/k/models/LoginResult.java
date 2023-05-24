@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.dto;
+package de.uniks.stpmon.k.models;
 
 import java.util.ArrayList;
 

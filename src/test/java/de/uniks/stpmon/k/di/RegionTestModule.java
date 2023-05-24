@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.di;
 
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 

@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.Message;
-import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.Message;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;

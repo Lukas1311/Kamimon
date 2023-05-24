@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.dto;
+package de.uniks.stpmon.k.models;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,6 @@ public record User(
         String name,
         String status,
         String avatar,
-        ArrayList<String> friends
-    ) {
+        ArrayList<String> friends) {
 
 }

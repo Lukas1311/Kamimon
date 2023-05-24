@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.Event;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.storage.FriendCache;
 import de.uniks.stpmon.k.ws.EventListener;
@@ -22,12 +22,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FriendCacheTest {

@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.dto;
+package de.uniks.stpmon.k.models;
 
 import java.util.SortedMap;
 
@@ -9,9 +9,11 @@ public record Monster(
         Integer level,
         Integer experience,
         // object whose keys are the currently known ability IDs and values are remaining uses
-        SortedMap<String, Integer> abilities, // maxProperties: 4, example: { "1": 15, "2": 10, "7": 5, "10": 0 }
+        SortedMap<String, Integer> abilities,
+        // maxProperties: 4, example: { "1": 15, "2": 10, "7": 5, "10": 0 }
         MonsterAttributes attributes, // The persistent or maximum attributes of the monster.
-        MonsterAttributes currentAttributes // The current attributes of the monster. Resets to persistent attributes when healed.
-    ) {
+        MonsterAttributes currentAttributes
+// The current attributes of the monster. Resets to persistent attributes when healed.
+) {
 
 }

@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.RegionController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.models.Region;
 import javafx.scene.control.ListCell;
 
 import javax.inject.Provider;
