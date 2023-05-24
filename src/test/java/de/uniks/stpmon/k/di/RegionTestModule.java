@@ -16,7 +16,7 @@ public class RegionTestModule {
 
     @Provides
     @Singleton
-    static RegionApiService regionApiService(){
+    static RegionApiService regionApiService() {
         return new RegionApiService() {
 
             final List<Region> regions = new ArrayList<>();
@@ -25,7 +25,7 @@ public class RegionTestModule {
              * Adds 2 DummyRegions to the regions list with ids {"id0", "id1"} and
              * names {"TestRegion0", "TestRegion"}
              */
-            private void initDummyRegions(){
+            private void initDummyRegions() {
                 Region region0 = new Region("id0", "TestRegion0", null, null);
 
                 Region region1 = new Region("id1", "TestRegion1", null, null);
@@ -40,7 +40,7 @@ public class RegionTestModule {
              */
             @Override
             public Observable<List<Region>> getRegions() {
-                if(regions.isEmpty()){
+                if (regions.isEmpty()) {
                     initDummyRegions();
                 }
                 return Observable.just(regions);
@@ -51,7 +51,7 @@ public class RegionTestModule {
              */
             @Override
             public Observable<Region> getRegion(String id) {
-                if(regions.isEmpty()){
+                if (regions.isEmpty()) {
                     initDummyRegions();
                 }
 

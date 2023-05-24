@@ -30,12 +30,12 @@ public class MessageCell extends ListCell<Message> {
     @Override
     protected void updateItem(Message item, boolean empty) {
         super.updateItem(item, empty);
-        if(empty || item == null) {
+        if (empty || item == null) {
             setGraphic(null);
             setText(null);
         } else {
             String sender = groupUsers.get(item.sender());
-            if(item.body().startsWith("JoinInvitation")) {
+            if (item.body().startsWith("JoinInvitation")) {
                 final InvitationController invitationController = new InvitationController(item, sender, me, hybridController, resources);
                 setGraphic(invitationController.render());
                 setDisable(false);

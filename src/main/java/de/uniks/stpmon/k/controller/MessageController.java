@@ -29,7 +29,7 @@ public class MessageController extends Controller {
     public Text senderName;
     @FXML
     public Text sendTime;
-    
+
 
     private final Message message;
     private final String username;

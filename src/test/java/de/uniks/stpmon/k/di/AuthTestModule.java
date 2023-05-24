@@ -21,6 +21,7 @@ public class AuthTestModule {
     static AuthenticationApiService authApiService() {
         return new AuthenticationApiService() {
             LoginResult loginResult;
+
             @Override
             public Observable<LoginResult> login(LoginDto dto) {
                 loginResult = new LoginResult(

@@ -14,35 +14,35 @@ public class PresetService {
     @Inject
     PresetApiService presetApiService;
 
-    public Observable<ResponseBody> getFile(String filename){
+    public Observable<ResponseBody> getFile(String filename) {
         return presetApiService.getFile(filename);
     }
 
-    public Observable<List<String>> getCharacters(){
+    public Observable<List<String>> getCharacters() {
         return presetApiService.getCharacters();
     }
 
-    public Observable<ResponseBody> getCharacterFile(String filename){
+    public Observable<ResponseBody> getCharacterFile(String filename) {
         return presetApiService.getCharacterFile(filename);
     }
 
-    public Observable<List<MonsterTypeDto>> getMonsters(){
+    public Observable<List<MonsterTypeDto>> getMonsters() {
         return presetApiService.getMonsters();
     }
 
-    public Observable<MonsterTypeDto> getMonster(String id){
+    public Observable<MonsterTypeDto> getMonster(String id) {
         return presetApiService.getMonster(id);
     }
 
-    public Observable<String> getMonsterImage(String id){
+    public Observable<String> getMonsterImage(String id) {
         return presetApiService.getMonsterImage(id);
     }
 
-    public Observable<List<AbilityDto>> getAbilities(){
+    public Observable<List<AbilityDto>> getAbilities() {
         return presetApiService.getAbilities();
     }
 
-    public Observable<AbilityDto> getAbility(String id){
+    public Observable<AbilityDto> getAbility(String id) {
         return presetApiService.getAbility(id);
     }
 

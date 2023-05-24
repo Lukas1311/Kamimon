@@ -216,7 +216,7 @@ public class ChatController extends ToastedController {
                 Optional<Region> regionOptional = regionService.getRegions().blockingFirst()
                         .stream().filter(r -> r.name().equals(regionName)).findFirst();
 
-                if(regionOptional.isPresent()) {
+                if (regionOptional.isPresent()) {
                     String regionId = regionOptional.get()._id();
 
                     String invitationText = "JoinInvitation " + regionId;

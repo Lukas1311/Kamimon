@@ -175,7 +175,8 @@ public class HybridController extends Controller {
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
             case SETTINGS -> pushController(settingsController, setup);
-            case NONE -> {}
+            case NONE -> {
+            }
         }
     }
 

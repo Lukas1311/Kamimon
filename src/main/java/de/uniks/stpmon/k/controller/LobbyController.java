@@ -21,12 +21,12 @@ public class LobbyController extends Controller {
     }
 
     @Override
-    public void init(){
+    public void init() {
         regionListController.init();
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
 
         pane.getChildren().add(regionListController.render());

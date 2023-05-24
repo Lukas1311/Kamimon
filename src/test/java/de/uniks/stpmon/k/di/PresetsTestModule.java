@@ -19,19 +19,19 @@ public class PresetsTestModule {
 
     @Provides
     @Singleton
-    static PresetApiService presetApiService(){
+    static PresetApiService presetApiService() {
         return new PresetApiService() {
             final List<String> characters = new ArrayList<>();
             final List<MonsterTypeDto> monsters = new ArrayList<>();
             final List<AbilityDto> abilities = new ArrayList<>();
             final String[] types = {"fire", "water", "grass", "electro", "physics", "ground",
-            "dragon", "poison", "ice", "normal", "dark", "flying", "fighting", "rock", "steel", "bug"};
+                    "dragon", "poison", "ice", "normal", "dark", "flying", "fighting", "rock", "steel", "bug"};
 
             /**
              * Initializes 3 DummyCharacters when getCharacters()
              * is called but no characters are in the list
              */
-            private void initDummyCharacters(){
+            private void initDummyCharacters() {
                 String[] c = {"testCharacter1", "testCharacter2", "testCharacter3"};
                 characters.addAll(Arrays.stream(c).toList());
             }
@@ -43,15 +43,15 @@ public class PresetsTestModule {
              * TestMonster1 of type water, fire
              * TestMonster2 of type grass
              */
-            private  void initDummyMonsters(){
+            private void initDummyMonsters() {
                 int amount = 3;
 
-                for(int i = 0; i < amount; i++){
+                for (int i = 0; i < amount; i++) {
                     String name = "TestMonster" + i;
                     String image = "MonsterImage" + i;
                     List<String> monsterTypes = new ArrayList<>();
                     monsterTypes.add(types[i]);
-                    if(i == 1){
+                    if (i == 1) {
                         monsterTypes.add(types[i - 1]);
                     }
                     String description = "description" + i;
@@ -62,19 +62,20 @@ public class PresetsTestModule {
             /**
              * Initializes 5 DummyAbilities
              */
-            private void initDummyAbilities(){
+            private void initDummyAbilities() {
                 int amount = 5;
-                for(int i = 0; i < amount; i++){
-                     String type = types[i % types.length];
-                     String name = type + "Ability" + i;
-                     String description = "description" + i;
-                     int maxUses = 3;
-                     double accuracy = 0.5;
-                     int power = 5;
+                for (int i = 0; i < amount; i++) {
+                    String type = types[i % types.length];
+                    String name = type + "Ability" + i;
+                    String description = "description" + i;
+                    int maxUses = 3;
+                    double accuracy = 0.5;
+                    int power = 5;
                     abilities.add(new AbilityDto(i, name, description, type, maxUses, accuracy, power));
                 }
 
             }
+
             @Override
             public Observable<ResponseBody> getFile(String filename) {
                 //TODO: save test file somewhere and return it
@@ -83,7 +84,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<List<String>> getCharacters() {
-                if(characters.size() == 0){
+                if (characters.size() == 0) {
                     initDummyCharacters();
                 }
                 return Observable.just(characters);
@@ -97,7 +98,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<List<MonsterTypeDto>> getMonsters() {
-                if(monsters.size() == 0){
+                if (monsters.size() == 0) {
                     initDummyCharacters();
                 }
                 return Observable.just(monsters);
@@ -105,7 +106,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<MonsterTypeDto> getMonster(String id) {
-                if(monsters.size() == 0){
+                if (monsters.size() == 0) {
                     initDummyMonsters();
                 }
                 Optional<MonsterTypeDto> returnMonster = monsters.stream()
@@ -118,7 +119,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<String> getMonsterImage(String id) {
-                if(monsters.size() == 0){
+                if (monsters.size() == 0) {
                     initDummyMonsters();
                 }
                 Optional<MonsterTypeDto> returnMonster = monsters.stream()
@@ -131,7 +132,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<List<AbilityDto>> getAbilities() {
-                if(abilities.size() == 0){
+                if (abilities.size() == 0) {
                     initDummyAbilities();
                 }
                 return Observable.just(abilities);
@@ -139,7 +140,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<AbilityDto> getAbility(String id) {
-                if(abilities.size() == 0){
+                if (abilities.size() == 0) {
                     initDummyAbilities();
                 }
                 Optional<AbilityDto> returnAbility = abilities.stream()

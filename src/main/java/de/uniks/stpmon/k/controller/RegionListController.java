@@ -20,7 +20,7 @@ import javax.inject.Provider;
 import java.util.Objects;
 
 
-public class RegionListController extends ToastedController{
+public class RegionListController extends ToastedController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
     RegionApiService regionApiService;
@@ -33,7 +33,7 @@ public class RegionListController extends ToastedController{
     Provider<HybridController> hybridControllerProvider;
 
     @Inject
-    public RegionListController(){
+    public RegionListController() {
 
     }
 
@@ -45,7 +45,7 @@ public class RegionListController extends ToastedController{
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
         final Image imageKamimonLettering = loadImage("kamimonLettering.png");
         //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
@@ -60,7 +60,7 @@ public class RegionListController extends ToastedController{
         return parent;
     }
 
-    private Image loadImage(String image){
+    private Image loadImage(String image) {
         return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 }

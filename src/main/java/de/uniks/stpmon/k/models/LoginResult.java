@@ -10,6 +10,6 @@ public record LoginResult(
         ArrayList<String> friends,
         String accessToken,
         String refreshToken
-    ) {
+) {
 
 }

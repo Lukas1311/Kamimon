@@ -5,26 +5,26 @@ import io.reactivex.rxjava3.core.Observable;
 
 import java.util.List;
 
-public interface IFriendCache{
+public interface IFriendCache {
 
-	Observable<List<User>> init(User user);
+    Observable<List<User>> init(User user);
 
-	void reset();
+    void reset();
 
-	void addUser(User user);
+    void addUser(User user);
 
-	void updateUser(User user);
+    void updateUser(User user);
 
-	void removeUser(User user);
+    void removeUser(User user);
 
-	void notifyUpdateFriends(User user);
+    void notifyUpdateFriends(User user);
 
-	User getUser(String id);
+    User getUser(String id);
 
-	Observable<List<User>> getUsers();
+    Observable<List<User>> getUsers();
 
-	Observable<List<User>> updateFriends(User user);
+    Observable<List<User>> updateFriends(User user);
 
 
-	Observable<List<User>> getFriends();
+    Observable<List<User>> getFriends();
 }

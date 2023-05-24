@@ -19,14 +19,15 @@ public class MainModule {
     @Provides
     ResourceBundle bundle(Preferences preferences) {
         String locale = preferences.get("locale", Locale.ROOT.toLanguageTag());
-        if(locale.equals("en")) {
+        if (locale.equals("en")) {
             locale = "";
         }
         return ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.forLanguageTag(locale));
     }
+
     @Provides
     @Singleton
-    ObjectMapper mapper(){
+    ObjectMapper mapper() {
         return new ObjectMapper()
                 //needed for error messages
                 .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
