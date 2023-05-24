@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.*;
 
-import javax.inject.Inject;
 import java.util.List;
 
 public interface UserApiService {
