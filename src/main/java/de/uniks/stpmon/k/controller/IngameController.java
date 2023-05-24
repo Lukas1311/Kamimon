@@ -4,6 +4,8 @@ import de.uniks.stpmon.k.controller.map.WorldController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +15,10 @@ public class IngameController extends Controller {
 
     @FXML
     public StackPane ingameStack;
+    @FXML
+    public VBox ingame;
+    @FXML
+    public Text inGameText;
 
     @Inject
     WorldController worldController;
