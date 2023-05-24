@@ -1,13 +1,6 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.ChatController;
-import de.uniks.stpmon.k.controller.ChatListController;
-import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.CreateChatController;
-import de.uniks.stpmon.k.controller.FriendListController;
-import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.LobbyController;
-import de.uniks.stpmon.k.controller.PauseController;
+import de.uniks.stpmon.k.controller.*;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -74,6 +67,8 @@ public class HybridController extends Controller {
     UserService userService;
     @Inject
     GroupService groupService;
+    @Inject
+    SettingsController settingsController;
 
     @Inject
     public HybridController() {
@@ -139,12 +134,13 @@ public class HybridController extends Controller {
         switch (window) {
             case LOBBY -> {
                 sidebar.setPause(false);
-                sidebar.setLobby(false);
+                sidebar.setIngame(false);
+                sidebar.setSettings(true);
                 openMain(lobbyController.get());
             }
             case INGAME -> {
                 sidebar.setPause(true);
-                sidebar.setLobby(true);
+                sidebar.setIngame(true);
                 openMain(ingameController);
             }
             case PAUSE -> {
@@ -170,8 +166,8 @@ public class HybridController extends Controller {
             case CHAT_LIST -> pushController(chatListController, setup);
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
-            case NONE -> {
-            }
+            case SETTINGS -> pushController(settingsController, setup);
+            case NONE -> {}
         }
     }
 

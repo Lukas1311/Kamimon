@@ -8,5 +8,5 @@ public record UpdateUserDto(
         String avatar,
         ArrayList<String> friends,
         String password
-) {
+    ) {
 }

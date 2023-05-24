@@ -26,13 +26,13 @@ public class SidebarController extends Controller {
     @FXML
     public Button friends;
     @FXML
-    public Button home;
-    @FXML
     public Button logoutButton;
     @FXML
     public Button pause;
     @FXML
     public GridPane grid;
+    @FXML
+    public Button settings;
     @Inject
     @Singleton
     HybridController hybridController;
@@ -43,6 +43,7 @@ public class SidebarController extends Controller {
     Provider<LoginController> loginControllerProvider;
     @Inject
     Provider<ChatController> chatControlleProvider;
+    boolean ingame = false;
 
     @Inject
     public SidebarController() {
@@ -52,25 +53,31 @@ public class SidebarController extends Controller {
         final Parent parent = super.render();
         grid.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
         pause.setVisible(false);
-        home.setVisible(false);
-        logoutButton.setOnAction(e -> logout());
-        chat.setOnAction(e -> openChat());
+        settings.setVisible(false);
+        logoutButton.setOnAction(event -> {
+            if (ingame) {
+                backtoLobby();
+            } else {
+                logout();
+            }
+        });
         return parent;
     }
 
+    public void setIngame(boolean ingame) {
+        this.ingame = ingame;
+    }
 
     public void logout() {
         disposables.add(authService
                 .logout()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(res -> {
-                    app.show(loginControllerProvider.get());
-                })
+                .subscribe(res -> app.show(loginControllerProvider.get()))
         );
     }
 
-    public void setLobby(boolean b) {
-        home.setVisible(b);
+    public void backtoLobby() {
+        hybridController.openMain(LOBBY);
     }
 
     public void openChat() {
@@ -81,10 +88,6 @@ public class SidebarController extends Controller {
         hybridController.forceTab(FRIEND_LIST);
     }
 
-    public void backtoLobby() {
-        hybridController.openMain(LOBBY);
-    }
-
     public void toPause() {
         hybridController.openMain(PAUSE);
     }
@@ -93,5 +96,11 @@ public class SidebarController extends Controller {
         pause.setVisible(b);
     }
 
+    public void setSettings(boolean b) {
+        settings.setVisible(b);
+    }
 
+    public void openSettings() {
+        hybridController.forceTab(SidebarTab.SETTINGS);
+    }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Module
-public class    RegionTestModule {
+public class RegionTestModule {
 
     @Provides
     @Singleton
@@ -26,11 +26,9 @@ public class    RegionTestModule {
              * names {"TestRegion0", "TestRegion"}
              */
             private void initDummyRegions(){
-                Region region0 = new Region("2023-01-01T00:00:00.000Z",
-                        "2023-02-02T00:00:00.000Z", "id0", "TestRegion0");
+                Region region0 = new Region("id0", "TestRegion0", null, null);
 
-                Region region1 = new Region("2023-01-01T00:00:00.000Z",
-                        "2023-02-02T00:00:00.000Z", "id1", "TestRegion1");
+                Region region1 = new Region("id1", "TestRegion1", null, null);
 
                 regions.add(region0);
                 regions.add(region1);
@@ -39,7 +37,6 @@ public class    RegionTestModule {
 
             /**
              * Returns all regions (if list of regions is empty, it gets initialized
-             * @return: all regions
              */
             @Override
             public Observable<List<Region>> getRegions() {
@@ -51,7 +48,6 @@ public class    RegionTestModule {
 
             /**
              * Returns all region with id (if list of regions is empty, it gets initialized
-             * @return: all regions
              */
             @Override
             public Observable<Region> getRegion(String id) {
