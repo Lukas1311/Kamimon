@@ -39,6 +39,9 @@ public class PresetsTestModule {
             /**
              * Initializes 3 DummyMonsters when getMonsters()
              * is called but no monsters are in the list
+             * TestMonster0 of type fire
+             * TestMonster1 of type water, fire
+             * TestMonster2 of type grass
              */
             private  void initDummyMonsters(){
                 int amount = 3;
@@ -46,9 +49,13 @@ public class PresetsTestModule {
                 for(int i = 0; i < amount; i++){
                     String name = "TestMonster" + i;
                     String image = "MonsterImage" + i;
-                    String type = types[i % types.length];
+                    List<String> monsterTypes = new ArrayList<>();
+                    monsterTypes.add(types[i]);
+                    if(i == 1){
+                        monsterTypes.add(types[i - 1]);
+                    }
                     String description = "description" + i;
-                    monsters.add(new MonsterTypeDto(i, name, image, type, description));
+                    monsters.add(new MonsterTypeDto(i, name, image, monsterTypes, description));
                 }
             }
 
@@ -64,13 +71,13 @@ public class PresetsTestModule {
                      int maxUses = 3;
                      double accuracy = 0.5;
                      int power = 5;
-                    abilities.add(i, name, description, type, maxUses, accuracy, power);
+                    abilities.add(new AbilityDto(i, name, description, type, maxUses, accuracy, power));
                 }
 
             }
             @Override
             public Observable<ResponseBody> getFile(String filename) {
-                //TODO: save test file somewhere
+                //TODO: save test file somewhere and return it
                 return Observable.empty();
             }
 
@@ -84,6 +91,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getCharacterFile(String filename) {
+                //TODO: save test file save somewhere and return it
                 return null;
             }
 
@@ -101,7 +109,7 @@ public class PresetsTestModule {
                     initDummyMonsters();
                 }
                 Optional<MonsterTypeDto> returnMonster = monsters.stream()
-                        .filter(m -> id.equals(m.id()))
+                        .filter(m -> Integer.parseInt(id) == m.id())
                         .findFirst();
 
                 return returnMonster.map(r -> Observable.just(returnMonster.get())).orElseGet(()
@@ -114,7 +122,7 @@ public class PresetsTestModule {
                     initDummyMonsters();
                 }
                 Optional<MonsterTypeDto> returnMonster = monsters.stream()
-                        .filter(m -> id.equals(m.id()))
+                        .filter(m -> Integer.parseInt(id) == m.id())
                         .findFirst();
 
                 return returnMonster.map(r -> Observable.just(returnMonster.get().image())).orElseGet(()
@@ -135,7 +143,7 @@ public class PresetsTestModule {
                     initDummyAbilities();
                 }
                 Optional<AbilityDto> returnAbility = abilities.stream()
-                        .filter(a -> id.equals(a.id()))
+                        .filter(a -> Integer.parseInt(id) == a.id())
                         .findFirst();
 
                 return returnAbility.map(r -> Observable.just(returnAbility.get())).orElseGet(()
