@@ -42,8 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -111,16 +110,38 @@ public class ChatControllerTest extends ApplicationTest {
         stage.requestFocus();
     }
 
+    private <T> void mockSend(T methodCall, String type, Message msg) {
+        when(methodCall).thenAnswer((invocation) -> {
+            events.onNext(new Event<>("groups.g_id.messages.1." + type, msg));
+            return Observable.just(msg);
+        });
+    }
+
+    private void findAndClick(ListView<Message> listView) {
+        ListCell<?> desiredCell = null;
+        for (Node node : listView.lookupAll(".list-cell")) {
+            if (!(node instanceof ListCell<?> cell)) {
+                continue;
+            }
+            if (!(cell.getItem() instanceof Message message)) {
+                continue;
+            }
+            // Check the desired condition or property of the message object
+            if (message.body().equals("B")) {
+                desiredCell = cell;
+                break;
+            }
+        }
+
+        clickOn(desiredCell);
+    }
+
     @Test
     void testSendMessageOnButtonClick() {
         // define mocks:
         Message msg = new Message("2023-05-15T18:30:00.000Z", "1", "id", "b_id", "moin");
         // this simulates the send message call and the listener in one action
-        when(msgService.sendMessage(any(), any(), any()))
-                .thenAnswer((invocation) -> {
-                    events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
-                    return Observable.just(msg);
-                });
+        mockSend(msgService.sendMessage(any(), any(), any()), "created", msg);
 
         final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
         verifyThat(listView, ListViewMatchers.hasItems(2));
@@ -132,7 +153,7 @@ public class ChatControllerTest extends ApplicationTest {
         assertThat(sendButton).isFocused();
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         TextField messageInput = lookup("#messageField").query();
-        assertThat(messageInput.getText().isEmpty());
+        assertTrue(messageInput.getText().isEmpty());
 
         // check values:
         waitForFxEvents();
@@ -151,11 +172,7 @@ public class ChatControllerTest extends ApplicationTest {
         // define mocks:
         Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "moin");
         // this simulates the send message call and the listener in one action
-        when(msgService.sendMessage(any(), any(), any()))
-                .thenAnswer((invocation) -> {
-                    events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
-                    return Observable.just(msg);
-                });
+        mockSend(msgService.sendMessage(any(), any(), any()), "created", msg);
 
         final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
         verifyThat(listView, ListViewMatchers.hasItems(2));
@@ -166,7 +183,7 @@ public class ChatControllerTest extends ApplicationTest {
         TextField messageInput = lookup("#messageField").query();
         assertThat(messageInput).isFocused();
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-        assertThat(messageInput.getText().isEmpty());
+        assertTrue(messageInput.getText().isEmpty());
 
         // check values:
         waitForFxEvents();
@@ -189,7 +206,7 @@ public class ChatControllerTest extends ApplicationTest {
         // find old message and verify old text of message which is just "B"
         Message oldMsg = null;
         for (Message msg : items) {
-            if (msg._id() == editMsg._id()) {
+            if (msg._id().equals(editMsg._id())) {
                 oldMsg = msg;
                 break;
             }
@@ -198,33 +215,17 @@ public class ChatControllerTest extends ApplicationTest {
         verifyThat(oldMsg.body(), TextMatchers.hasText("B"));
         verifyThat(listView, ListViewMatchers.hasItems(2));
         // this simulates the edit message call and the listener in one action
-        when(msgService.editMessage(any(), any(), any(), any()))
-                .thenAnswer((invocation) -> {
-                    events.onNext(new Event<Message>("groups.g_id.messages.1.updated", editMsg));
-                    return Observable.just(editMsg);
-                });
+        mockSend(msgService.editMessage(any(), any(), any(), any()), "updated", editMsg);
 
         // action: go into messages list and click on a list item (message)
-        ListCell<Message> desiredCell = null;
-        for (Node node : listView.lookupAll(".list-cell")) {
-            if (node instanceof ListCell) {
-                ListCell<Message> cell = (ListCell<Message>) node;
-                Message message = cell.getItem();
-                // Check the desired condition or property of the message object
-                if (message.body() == "B") {
-                    desiredCell = cell;
-                    break;
-                }
-            }
-        }
+        findAndClick(listView);
 
-        // action: click the old message and then edit the text
-        clickOn(desiredCell);
         TextField messageInput = lookup("#messageField").query();
         clickOn(messageInput);
+
         write("trololo");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-        assertThat(messageInput.getText().isEmpty());
+        assertTrue(messageInput.getText().isEmpty());
 
         // check values:
         waitForFxEvents();
@@ -233,7 +234,7 @@ public class ChatControllerTest extends ApplicationTest {
 
         // check mocks:
         items.forEach(msg -> {
-            if (msg._id() == editMsg._id()) {
+            if (msg._id().equals(editMsg._id())) {
                 verifyThat(msg.body(), TextMatchers.hasText("new text from B"));
             }
         });
@@ -248,7 +249,7 @@ public class ChatControllerTest extends ApplicationTest {
         // find old message and verify old text of message which is just "B"
         Message oldMsg = null;
         for (Message msg : items) {
-            if (msg._id() == deleteMsg._id()) {
+            if (msg._id().equals(deleteMsg._id())) {
                 oldMsg = msg;
                 break;
             }
@@ -258,35 +259,19 @@ public class ChatControllerTest extends ApplicationTest {
         verifyThat(listView, ListViewMatchers.hasItems(2));
 
         // define mocks: this simulates the edit message call and the listener in one action
-        when(msgService.deleteMessage(any(), any(), any()))
-                .thenAnswer((invocation) -> {
-                    events.onNext(new Event<Message>("groups.g_id.messages.1.deleted", deleteMsg));
-                    return Observable.just(deleteMsg);
-                });
+        mockSend(msgService.deleteMessage(any(), any(), any()), "deleted", deleteMsg);
 
         // action: go into messages list and click on a list item (message)
-        ListCell<Message> desiredCell = null;
-        for (Node node : listView.lookupAll(".list-cell")) {
-            if (node instanceof ListCell) {
-                ListCell<Message> cell = (ListCell<Message>) node;
-                Message message = cell.getItem();
-                // Check the desired condition or property of the message object
-                if (message.body() == "B") {
-                    desiredCell = cell;
-                    break;
-                }
-            }
-        }
+        findAndClick(listView);
 
         // action: click the old message and then edit the text
-        clickOn(desiredCell);
         TextField messageInput = lookup("#messageField").query();
         clickOn(messageInput);
         press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
         // delete text and hit enter
         press(KeyCode.BACK_SPACE).release(KeyCode.BACK_SPACE);
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-        assertThat(messageInput.getText().isEmpty());
+        assertTrue(messageInput.getText().isEmpty());
 
         // check values:
         waitForFxEvents();
@@ -299,11 +284,7 @@ public class ChatControllerTest extends ApplicationTest {
         // define mocks:
         Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "join");
         // this simulates the send message call and the listener in one action
-        when(msgService.sendMessage(any(), any(), any()))
-                .thenAnswer((invocation) -> {
-                    events.onNext(new Event<Message>("groups.g_id.messages.1.created", msg));
-                    return Observable.just(msg);
-                });
+        mockSend(msgService.sendMessage(any(), any(), any()), "created", msg);
 
         final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
         verifyThat(listView, ListViewMatchers.hasItems(2));
@@ -318,7 +299,7 @@ public class ChatControllerTest extends ApplicationTest {
         TextField messageInput = lookup("#messageField").query();
         assertThat(messageInput).isFocused();
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-        assertThat(messageInput.getText().isEmpty());
+        assertTrue(messageInput.getText().isEmpty());
 
         // check values:
         waitForFxEvents();
