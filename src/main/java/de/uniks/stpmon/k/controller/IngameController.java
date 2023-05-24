@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.App;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;

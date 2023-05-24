@@ -1,13 +1,11 @@
 package de.uniks.stpmon.k.service;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import de.uniks.stpmon.k.Main;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import de.uniks.stpmon.k.Main;
+import java.io.IOException;
+import java.net.InetAddress;
 
 @Singleton
 public class NetworkAvailability {

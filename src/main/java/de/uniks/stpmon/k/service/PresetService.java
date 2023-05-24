@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
-import retrofit2.http.Path;
 
 import javax.inject.Inject;
 import java.util.List;
