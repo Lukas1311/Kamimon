@@ -51,7 +51,7 @@ public class RegionListControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("", "", "0", "Test")));
+        final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("0", "Test", null, null)));
         when(regionApiService.getRegions()).thenReturn(regionMock);
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);

@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.dto;
 
-public record LoginDto(
+public record CreateTrainerDto(
         String name,
-        String password
+        String image
     ) {
     
 }

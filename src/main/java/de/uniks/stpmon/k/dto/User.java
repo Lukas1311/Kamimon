@@ -8,6 +8,6 @@ public record User(
         String status,
         String avatar,
         ArrayList<String> friends
-        ) {
+    ) {
 
 }
