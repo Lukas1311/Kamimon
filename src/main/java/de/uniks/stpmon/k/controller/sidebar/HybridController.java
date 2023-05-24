@@ -258,6 +258,7 @@ public class HybridController extends Controller {
     public void closeTab() {
         // remove all tabs, only leave the main window
         removeChildren(1);
+        mainTab = SidebarTab.NONE;
     }
 
     public void openChat(Group group) {
