@@ -46,11 +46,12 @@ public class UserManagementController extends Controller {
         // TODO: all ui functionality here
 
         backButton.setOnAction(click -> backToSettings());
-
+        // TODO: add deleteUserButton.setOnAction(click -> deleteUser()); but not yet, because critical action
         return parent;
     }
 
     public void deleteUser() {
+        // TODO: we definitely need two popups here!!!! Or three!!
         disposables.add(userService
             .deleteMe()
             .observeOn(FX_SCHEDULER)
@@ -66,6 +67,7 @@ public class UserManagementController extends Controller {
     }
 
     public void backToSettings() {
+        // TODO: add pop confirmation on unsaved settings?
         hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
     }
 }
