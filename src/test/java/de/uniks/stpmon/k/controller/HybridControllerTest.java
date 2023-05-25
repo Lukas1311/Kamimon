@@ -11,7 +11,9 @@ import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -89,7 +92,7 @@ class HybridControllerTest extends ApplicationTest {
         write("\t\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        VBox ingame = lookup("#ingame").query();
+        BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
 
@@ -101,13 +104,13 @@ class HybridControllerTest extends ApplicationTest {
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pause = lookup("#pauseScreen").query();
+        BorderPane pause = lookup("#pauseScreen").query();
         assertNotNull(pause);
 
         // pressing Pause button again and check if ingame is shown
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        VBox ingame = lookup("#ingame").query();
+        BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
 
@@ -137,5 +140,48 @@ class HybridControllerTest extends ApplicationTest {
         waitForFxEvents();
         Pane pane2 = lookup("#loginScreen").query();
         assertNotNull(pane2);
+    }
+
+    @Test
+    public void closeSidebar() {
+        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
+        StackPane stackPane = lookup("#stackPane").query();
+        assertEquals(1, stackPane.getChildren().size());
+
+        // start Lobby with ohne Lobby inside Stackpane
+        clickOn("#chat");
+        waitForFxEvents();
+        assertEquals(2, stackPane.getChildren().size());
+
+        // lobby: close sidebar by clicking inside the lobby
+        clickOn("#pane");
+        waitForFxEvents();
+
+        clickOn("#regionButton");
+        waitForFxEvents();
+
+        clickOn("#chat");
+        waitForFxEvents();
+        assertEquals(2, stackPane.getChildren().size());
+
+        // ingame: close sidebar by clicking inside the game
+        BorderPane ingame = lookup("#ingame").query();
+        assertNotNull(ingame);
+        clickOn("#ingame");
+        waitForFxEvents();
+        assertEquals(1, stackPane.getChildren().size());
+
+        clickOn("#pause");
+        waitForFxEvents();
+        BorderPane pause = lookup("#pauseScreen").query();
+        assertNotNull(pause);
+        clickOn("#chat");
+        assertEquals(2, stackPane.getChildren().size());
+
+        // pause: close Sidebar by clicking inside the pause
+        clickOn("#pauseScreen");
+        waitForFxEvents();
+        assertEquals(1, stackPane.getChildren().size());
+
     }
 }
