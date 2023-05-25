@@ -6,7 +6,6 @@ import javax.inject.Provider;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.UserService;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -101,14 +100,12 @@ public class UserManagementController extends Controller {
     public void backToSettings() {
         // TODO: add pop confirmation only when unsaved settings
         // TODO: replace this with real modal pop pop up
-        Platform.runLater(() -> {
-            new Alert(Alert.AlertType.CONFIRMATION, "do you want to go back?").showAndWait().ifPresent(buttonType -> {
-                if (buttonType == ButtonType.OK) {
-                    hybridControllerProvider.get().popTab();
-                } else if (buttonType == ButtonType.CANCEL) {
-                    // do nothing
-                }
-            });
+        new Alert(Alert.AlertType.CONFIRMATION, "do you want to go back?").showAndWait().ifPresent(buttonType -> {
+            if (buttonType == ButtonType.OK) {
+                hybridControllerProvider.get().popTab();
+            } else if (buttonType == ButtonType.CANCEL) {
+                // do nothing
+            }
         });
 
     }
