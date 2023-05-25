@@ -66,7 +66,6 @@ public class UserManagementController extends Controller {
     }
 
     public void backToSettings() {
-        hybridControllerProvider.get().forceTab(SidebarTab.USER_MANAGEMENT);
-        hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
+        hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
     }
 }
