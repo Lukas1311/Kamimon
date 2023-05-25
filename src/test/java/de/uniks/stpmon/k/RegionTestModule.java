@@ -18,8 +18,10 @@ public class RegionTestModule {
         return new RegionApiService() {
 
             final String USER_ID = "0";
+            int trainerIdCount = 0;
             final List<Region> regions = new ArrayList<>();
-            final Map<Region, List<Area>> areasHashMap = new HashMap<>();
+            //String is regionId
+            final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
             final Map<Area, List<Trainer>> trainersHashMap = new HashMap<>();
 
             /**
@@ -51,27 +53,26 @@ public class RegionTestModule {
                         Area area = new Area(id, region._id(), name, null);
                         areas.add(area);
                     }
-                    areasHashMap.put(region, areas);
+                    areasHashMap.put(region._id(), areas);
                 }
+                initDummyTrainers();
             }
 
             /**
              * Adds 1 Trainer to each area
-             * The id's increment, the coins are equal to the id's,
              */
             private void initDummyTrainers() {
-                int i = 0;
                 for (Region region : regions) {
-                    for (Area area : areasHashMap.get(region)) {
+                    for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
-                        String trainerImage = "TrainerImage" + i;
+                        String trainerImage = "TrainerImage" + trainerIdCount;
                         Trainer trainer = new Trainer(
-                                Integer.toString(i),
+                                Integer.toString(trainerIdCount),
                                 region._id(),
                                 USER_ID,
                                 name,
                                 trainerImage,
-                                i,
+                                0,
                                 area._id(),
                                 0,
                                 0,
@@ -80,15 +81,37 @@ public class RegionTestModule {
                         ArrayList<Trainer> trainers = new ArrayList<>();
                         trainers.add(trainer);
                         trainersHashMap.put(area, trainers);
-                        i++;
+                        trainerIdCount++;
                     }
                 }
 
             }
 
+            /**
+             * trainers are added always to first area the region
+             */
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
-                return null;
+                Area area = areasHashMap.get(regionId).get(0);
+                NPCInfo npcInfo = new NPCInfo(true);
+                Trainer trainer = new Trainer(
+                        String.valueOf(trainerIdCount),
+                        regionId,
+                        USER_ID,
+                        trainerDto.name(),
+                        trainerDto.image(),
+                        0,
+                        String.valueOf(area),
+                        0,
+                        0,
+                        0,
+                        npcInfo
+                );
+                trainerIdCount++;
+                List<Trainer> trainers = trainersHashMap.get(area);
+                trainers.add(trainer);
+
+                return Observable.just(trainer);
             }
 
             @Override
