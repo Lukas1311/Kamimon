@@ -26,9 +26,11 @@ public class GroupTestModule {
             // all are updated at: 2023-02-02T00:00:00.000Z
             ArrayList<Group> groups = new ArrayList<>();
 
-            public void initDummyGroups(int amount) {
-                ArrayList<Group> dummyGroups = getDummyGroups(amount);
-                groups = new ArrayList<>(dummyGroups);
+            public void initDummyGroups() {
+                if (groups.isEmpty()) {
+                    ArrayList<Group> dummyGroups = getDummyGroups(3);
+                    groups = new ArrayList<>(dummyGroups);
+                }
             }
 
             /**
@@ -38,8 +40,8 @@ public class GroupTestModule {
              * Names: TestGroup0, TestGroup1...
              * ids: id0, id1,..
              * members: all have 2 members starting by ["id0","id1"], then ["id1","id2"]...
-             * @param: amount: how many groups should be returned
-             * @return: dummyGroups for testing
+             *
+             * @param amount: how many groups should be returned
              */
             private ArrayList<Group> getDummyGroups(int amount) {
                 ArrayList<Group> groups = new ArrayList<>();
@@ -60,7 +62,6 @@ public class GroupTestModule {
             /**
              * Creates a group and adds it to groups
              * @param group: CreateGroupDto
-             * @return: the added Group object
              */
             @Override
             public Observable<Group> createGroup(CreateGroupDto group) {
@@ -78,9 +79,7 @@ public class GroupTestModule {
             }
 
             /**
-             * Get all groups
-             * Note: if you don't want to add groups manually, call initDummyGroups()
-             * @return: groups that are added before
+             * If no groups are added before, 3 dummyGroups are added
              */
             @Override
             public Observable<ArrayList<Group>> getGroups() {
@@ -93,11 +92,9 @@ public class GroupTestModule {
 
             /**
              * Returns the all groups which contain all given member
-             * Note: if you don't want to add Groups manually before, but still want to use this method
-             * call initDummyGroups() before
+             * If there are no groups, dummyGroups are added
              *
              * @param members: ArrayList of id's (look above for better understanding)
-             * @return: matching groups of dummy groups
              */
             @Override
             public Observable<ArrayList<Group>> getGroups(String members) {
@@ -114,7 +111,7 @@ public class GroupTestModule {
             /**
              * Get group by id (if you don't want to add a group before, use "id0")
              * @param id: id of the group (if id = "id0" the dummy)
-             * @return: group with given id (if there is no group the 404 error is thrown)
+             * @return group with given id (if there is no group the 404 error is thrown)
              */
             @Override
             public Observable<Group> getGroup(String id) {
@@ -133,11 +130,9 @@ public class GroupTestModule {
             }
 
             /**
-             * Edit the group with the given id (if you don't want to add a group before,
-             * user initDummyGroup)
+             * Edit the group with the given id
              * @param id: id of group to edit
              * @param group: UpdateGroupDto (method can handle null values)
-             * @return: the edit group
              */
             @Override
             public Observable<Group> editGroup(String id, UpdateGroupDto group) {
