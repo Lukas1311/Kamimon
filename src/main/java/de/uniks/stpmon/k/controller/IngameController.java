@@ -8,7 +8,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends Controller {
@@ -16,7 +19,7 @@ public class IngameController extends Controller {
     @FXML
     public StackPane ingameStack;
     @FXML
-    public VBox ingame;
+    public BorderPane ingame;
     @FXML
     public Text inGameText;
 
@@ -38,5 +41,9 @@ public class IngameController extends Controller {
         final Parent parent = super.render();
         ingameStack.getChildren().add(0, worldController.render());
         return parent;
+    }
+
+    public void closeSidebar() {
+        hybridControllerProvider.get().forceTab(NONE);
     }
 }

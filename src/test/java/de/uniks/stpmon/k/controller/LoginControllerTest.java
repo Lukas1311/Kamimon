@@ -2,12 +2,12 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.LoginResult;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.LoginResult;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.service.TokenStorage;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,10 +31,7 @@ import java.util.prefs.Preferences;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -64,7 +61,7 @@ public class LoginControllerTest extends ApplicationTest {
     LoginController loginController;
     @Mock
     Preferences preferences;
-    
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -79,7 +76,7 @@ public class LoginControllerTest extends ApplicationTest {
     @Test
     void testLogin() {
         when(authService.login(any(), any(), eq(false))).thenReturn(Observable.just(
-            new LoginResult(null, null, null, null, null, "a", "r")
+                new LoginResult(null, null, null, null, null, "a", "r")
         ));
 
         final HybridController mock = Mockito.mock(HybridController.class);
@@ -104,7 +101,7 @@ public class LoginControllerTest extends ApplicationTest {
     void testRegister() {
         User bob = new User(null, "Bob", null, null, null);
         when(userService.addUser(any(), any())).thenReturn(Observable.just(
-            bob
+                bob
         ));
 
         // tab into username input field
@@ -173,7 +170,7 @@ public class LoginControllerTest extends ApplicationTest {
         press(KeyCode.ENTER);
         waitForFxEvents(); // not really necessary i guess
         // get password input field to verify the contents
-        
+
         // check if prompt text matches the password that was written into password field before
         assertThat(pwdField.getPromptText()).isEqualTo("stringst");
         release(KeyCode.ENTER);

@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.CreateChatController;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 

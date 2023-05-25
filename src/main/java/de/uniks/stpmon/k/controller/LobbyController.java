@@ -8,11 +8,13 @@ import javafx.scene.layout.Pane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
+
 public class LobbyController extends Controller {
     @FXML
     public Pane pane;
     @Inject
-    Provider<HybridController> hybridController;
+    Provider<HybridController> hybridControllerProvider;
     @Inject
     RegionListController regionListController;
 
@@ -21,16 +23,20 @@ public class LobbyController extends Controller {
     }
 
     @Override
-    public void init(){
+    public void init() {
         regionListController.init();
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
 
         pane.getChildren().add(regionListController.render());
 
         return parent;
+    }
+
+    public void closeSidebar() {
+        hybridControllerProvider.get().forceTab(NONE);
     }
 }

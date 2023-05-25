@@ -2,7 +2,6 @@ package de.uniks.stpmon.k;
 
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.service.TileMapService;
 import de.uniks.stpmon.k.ws.EventListener;
 
 import javax.inject.Singleton;
@@ -29,12 +28,6 @@ public class TestModule {
     @Singleton
     static EventListener eventListener() {
         return mock(EventListener.class);
-    }
-
-    @Provides
-    @Singleton
-    static TileMapService tileMapService() {
-        return mock(TileMapService.class);
     }
 
 }

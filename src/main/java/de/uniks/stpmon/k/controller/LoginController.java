@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.service.TokenStorage;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -107,25 +107,25 @@ public class LoginController extends Controller {
         englishButton.setSelected(!germanSelected);
 
         errorLabel.textProperty().bind(
-            Bindings.when(passwordTooShort.and(password.isNotEmpty()))
-                .then(translateString("password.too.short."))
-                .otherwise(Bindings.when(usernameTooLong)
-                    .then(translateString("username.too.long."))
-                    .otherwise("")
-                )
+                Bindings.when(passwordTooShort.and(password.isNotEmpty()))
+                        .then(translateString("password.too.short."))
+                        .otherwise(Bindings.when(usernameTooLong)
+                                .then(translateString("username.too.long."))
+                                .otherwise("")
+                        )
         );
         isInvalid = username
-            .isEmpty()
-            .or(passwordTooShort)
-            .or(usernameTooLong);
+                .isEmpty()
+                .or(passwordTooShort)
+                .or(usernameTooLong);
         loginButton.disableProperty().bind(isInvalid);
         registerButton.disableProperty().bind(isInvalid);
 
         // shows Password on holding mouse button or holding enter
         toggleButton.armedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue){
+            if (newValue) {
                 showPassword();
-            }else{
+            } else {
                 hidePassword();
             }
         });
@@ -141,7 +141,7 @@ public class LoginController extends Controller {
         if (isInvalid.get()) {
             return;
         }
-        if(!netAvailability.isInternetAvailable()) {
+        if (!netAvailability.isInternetAvailable()) {
             errorText.set(translateString("no.internet.connection"));
         }
     }
@@ -151,16 +151,16 @@ public class LoginController extends Controller {
         loginWithCredentials(username.get(), password.get(), rememberMe.isSelected(), true);
     }
 
-    private void loginWithCredentials(String username, String password, boolean rememberMe, boolean isRegistered){
+    private void loginWithCredentials(String username, String password, boolean rememberMe, boolean isRegistered) {
         disposables.add(authService
                 .login(username, password, rememberMe)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(lr -> {
                     errorText.set(translateString("login.successful"));
                     errorLabel.setTextFill(Color.GREEN);
-                    if(isRegistered) {
+                    if (isRegistered) {
                         app.show(hybridControllerProvider.get());
-                    }else {
+                    } else {
                         app.show(introductionController);
                     }
                 }, error -> {
@@ -183,7 +183,7 @@ public class LoginController extends Controller {
                 }));
     }
 
-    private String getErrorMessage(Throwable error){
+    private String getErrorMessage(Throwable error) {
         if (!(error instanceof HttpException exception)) {
             return errorText.get();
         }
@@ -192,14 +192,14 @@ public class LoginController extends Controller {
             case 401 -> translateString("invalid.username.or.password");
             case 409 -> translateString("username.was.already.taken");
             case 429 -> translateString("rate.limit.reached");
-            default  -> translateString("error");
+            default -> translateString("error");
         };
     }
 
     private void hidePassword() {
-        if(isEmpty){
+        if (isEmpty) {
             password.set("");
-        }else{
+        } else {
             password.set(tempPassword);
         }
         passwordInput.setPromptText(translateString("password"));
@@ -207,10 +207,10 @@ public class LoginController extends Controller {
 
     private void showPassword() {
         tempPassword = password.get();
-        if(tempPassword == null || tempPassword.isEmpty()) {
+        if (tempPassword == null || tempPassword.isEmpty()) {
             tempPassword = translateString("password");
             isEmpty = true;
-        }else{
+        } else {
             isEmpty = false;
         }
         password.set(""); // clears the bound input field

@@ -2,8 +2,11 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
+import de.uniks.stpmon.k.service.dummies.FriendCacheDummy;
+import de.uniks.stpmon.k.service.storage.IFriendCache;
+import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +21,7 @@ import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

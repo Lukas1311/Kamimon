@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
@@ -98,6 +99,16 @@ public class SidebarController extends Controller {
 
     public void setSettings(boolean b) {
         settings.setVisible(b);
+    }
+
+    public void updatePauseButton(boolean isPause){
+        //TODO: Change Icon here based on game state
+        pause.setTooltip(new Tooltip(translateString(isPause? ("resume.game"):("pause.game"))));
+    }
+
+    public void updateLogoutButton(boolean leaveRegion){
+        //TODO: Change Icon here based on main window content
+        logoutButton.setTooltip(new Tooltip(translateString(leaveRegion? ("leaveRegion"):("logout"))));
     }
 
     public void openSettings() {
