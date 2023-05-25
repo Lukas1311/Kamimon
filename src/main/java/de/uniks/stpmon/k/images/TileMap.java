@@ -1,10 +1,10 @@
 package de.uniks.stpmon.k.images;
 
-import de.uniks.stpmon.k.dto.map.ChunkData;
-import de.uniks.stpmon.k.dto.map.TileLayerData;
-import de.uniks.stpmon.k.dto.map.TileMapData;
-import de.uniks.stpmon.k.dto.map.TilesetData;
-import de.uniks.stpmon.k.dto.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.ChunkData;
+import de.uniks.stpmon.k.models.map.TileLayerData;
+import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.TilesetData;
+import de.uniks.stpmon.k.models.map.TilesetSource;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

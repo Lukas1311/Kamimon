@@ -2,9 +2,9 @@ package de.uniks.stpmon.k.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.stpmon.k.dto.IMapProvider;
-import de.uniks.stpmon.k.dto.map.TileMapData;
-import de.uniks.stpmon.k.dto.map.TilesetData;
-import de.uniks.stpmon.k.dto.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.TilesetData;
+import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.images.TileMap;
 import de.uniks.stpmon.k.images.Tileset;
 import de.uniks.stpmon.k.rest.PresetApiService;

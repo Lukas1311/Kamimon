@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.dto.map;
+package de.uniks.stpmon.k.models.map;
 
 /**
  * @param color       Hex-formatted color (#RRGGBB or #AARRGGBB)

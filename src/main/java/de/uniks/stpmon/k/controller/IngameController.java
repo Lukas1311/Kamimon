@@ -1,8 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.map.WorldController;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -25,6 +28,9 @@ public class IngameController extends Controller {
 
     @Inject
     WorldController worldController;
+
+    @Inject
+    protected Provider<HybridController> hybridControllerProvider;
 
     @Inject
     public IngameController() {

@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.dto.map;
+package de.uniks.stpmon.k.models.map;
 
 import java.util.List;
 

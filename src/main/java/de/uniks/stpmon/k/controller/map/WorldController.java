@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.map;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TileMapService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -18,6 +19,8 @@ public class WorldController extends Controller {
     protected TileMapService tileMapService;
     @Inject
     protected RegionService regionService;
+    @Inject
+    protected RegionStorage regionStorage;
 
     @Inject
     public WorldController() {

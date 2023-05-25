@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.images;
 
-import de.uniks.stpmon.k.dto.map.TilesetData;
-import de.uniks.stpmon.k.dto.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.TilesetData;
+import de.uniks.stpmon.k.models.map.TilesetSource;
 
 import java.awt.image.BufferedImage;
 
