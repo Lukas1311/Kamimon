@@ -1,6 +1,14 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.*;
+import de.uniks.stpmon.k.controller.ChatController;
+import de.uniks.stpmon.k.controller.ChatListController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.CreateChatController;
+import de.uniks.stpmon.k.controller.FriendListController;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.LobbyController;
+import de.uniks.stpmon.k.controller.PauseController;
+import de.uniks.stpmon.k.controller.SettingsController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -131,6 +139,7 @@ public class HybridController extends Controller {
     public void openMain(MainWindow window) {
         SidebarController sidebar = sidebarController.get();
         MainWindow newWindow = window;
+        mainTab = SidebarTab.NONE;
         switch (window) {
             case LOBBY -> {
                 sidebar.setPause(false);
