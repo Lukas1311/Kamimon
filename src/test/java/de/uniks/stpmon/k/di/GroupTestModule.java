@@ -19,7 +19,6 @@ public class GroupTestModule {
     @Singleton
     static GroupApiService groupApiService() {
 
-
         return new GroupApiService() {
 
             // all are created at:2023-01-01T00:00:00.000Z
@@ -28,7 +27,7 @@ public class GroupTestModule {
 
             public void initDummyGroups() {
                 if (groups.isEmpty()) {
-                    ArrayList<Group> dummyGroups = getDummyGroups(3);
+                    ArrayList<Group> dummyGroups = getDummyGroups();
                     groups = new ArrayList<>(dummyGroups);
                 }
             }
@@ -40,11 +39,10 @@ public class GroupTestModule {
              * Names: TestGroup0, TestGroup1...
              * ids: id0, id1,..
              * members: all have 2 members starting by ["id0","id1"], then ["id1","id2"]...
-             *
-             * @param amount: how many groups should be returned
              */
-            private ArrayList<Group> getDummyGroups(int amount) {
+            private ArrayList<Group> getDummyGroups() {
                 ArrayList<Group> groups = new ArrayList<>();
+                int amount = 3;
                 for (int i = 0; i < amount; i++) {
                     String[] memberIds = {"id" + i, "id" + (i + 1)};
                     ArrayList<String> members = new ArrayList<>(Arrays.asList(memberIds));
@@ -61,7 +59,6 @@ public class GroupTestModule {
 
             /**
              * Creates a group and adds it to groups
-             * @param group: CreateGroupDto
              */
             @Override
             public Observable<Group> createGroup(CreateGroupDto group) {
@@ -83,9 +80,7 @@ public class GroupTestModule {
              */
             @Override
             public Observable<ArrayList<Group>> getGroups() {
-                if (groups.isEmpty()) {
-                    return Observable.just(getDummyGroups(3));
-                }
+                initDummyGroups();
                 return Observable.just(groups);
             }
 
@@ -98,6 +93,7 @@ public class GroupTestModule {
              */
             @Override
             public Observable<ArrayList<Group>> getGroups(String members) {
+                initDummyGroups();
                 ArrayList<String> membersList = new ArrayList<>(Arrays.asList(members.split(",")));
 
                 List<Group> returnGroups = groups
@@ -116,9 +112,7 @@ public class GroupTestModule {
             @Override
             public Observable<Group> getGroup(String id) {
                 //check if dummy should be returned
-                if (id.equals("id0")) {
-                    return Observable.just(getDummyGroups(1).get(0));
-                }
+                initDummyGroups();
 
                 for (Group group : groups) {
                     if (group._id().equals(id)) {
@@ -172,8 +166,6 @@ public class GroupTestModule {
 
             /**
              * Delete a group; if you don't want to add groups manually before, use initDummyGroups()
-             * @param id: id of group
-             * @return: the deleted group
              */
             @Override
             public Observable<Group> deleteGroup(String id) {
