@@ -1,8 +1,16 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.*;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.controller.ChatController;
+import de.uniks.stpmon.k.controller.ChatListController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.CreateChatController;
+import de.uniks.stpmon.k.controller.FriendListController;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.LobbyController;
+import de.uniks.stpmon.k.controller.PauseController;
+import de.uniks.stpmon.k.controller.SettingsController;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
@@ -138,14 +146,19 @@ public class HybridController extends Controller {
                 sidebar.setPause(false);
                 sidebar.setIngame(false);
                 sidebar.setSettings(true);
+                sidebar.updateLogoutButton(false);
                 openMain(lobbyController.get());
             }
             case INGAME -> {
                 sidebar.setPause(true);
                 sidebar.setIngame(true);
+                sidebar.updatePauseButton(true);
+                sidebar.updateLogoutButton(true);
                 openMain(ingameController);
             }
             case PAUSE -> {
+                sidebar.updatePauseButton(false);
+                sidebar.updateLogoutButton(true);
                 boolean pause = currentWindow == MainWindow.PAUSE;
                 openMain(pause ? ingameController : pauseController);
                 newWindow = pause ? MainWindow.INGAME : MainWindow.PAUSE;

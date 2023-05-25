@@ -19,6 +19,7 @@
                 <font>
                     <Font size="18.0" />
                 </font>
+                <tooltip><Tooltip text="%back"/></tooltip>
             </Button>
         </VBox>
         <VBox alignment="TOP_RIGHT" fillWidth="false" prefWidth="185.0">

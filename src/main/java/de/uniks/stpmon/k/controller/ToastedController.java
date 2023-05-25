@@ -9,7 +9,7 @@ public class ToastedController extends Controller {
     ToastController toastController;
 
     protected void handleError(Throwable error) {
-        if(!(error instanceof HttpException http)){
+        if (!(error instanceof HttpException http)) {
             return;
         }
         if (http.code() == 429) {

@@ -6,6 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.control.Tooltip?>
 <VBox fx:id="settingsScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/sidebar.css"
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
@@ -20,6 +21,7 @@
             <font>
                <Font size="18.0"/>
             </font>
+            <tooltip><Tooltip text="%back"/> </tooltip>
          </Button>
          <VBox.margin>
             <Insets/>
@@ -92,13 +94,13 @@
                   spacing="20.0" HBox.hgrow="ALWAYS">
                <children>
                   <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
-                          text="Trainer bearbeiten">
+                          text="%editTrainer">
                      <font>
                         <Font size="18.0"/>
                      </font>
                   </Button>
                   <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
-                          text="Benutzer bearbeiten">
+                          text="%editUser">
                      <font>
                         <Font size="18.0"/>
                      </font>

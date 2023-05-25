@@ -1,12 +1,11 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
-import de.uniks.stpmon.k.dto.Region;
 import io.reactivex.rxjava3.core.Observable;
 
-import java.util.List;
-
 import javax.inject.Inject;
+import java.util.List;
 
 public class RegionService {
     private final RegionApiService regionApiService;

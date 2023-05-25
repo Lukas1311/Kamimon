@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -18,7 +18,7 @@ public class UserTestModule {
 
     @Provides
     @Singleton
-    static UserApiService userApiService(){
+    static UserApiService userApiService() {
         return new UserApiService() {
             final ArrayList<User> users = new ArrayList<>();
 
@@ -26,20 +26,21 @@ public class UserTestModule {
              * 3 DummyUsers are added to the users list
              * ids are of type "id0" and names are of type "TestUser0"
              */
-            private void initDummyUsers(){
+            private void initDummyUsers() {
                 int amount = 3;
                 int size = users.size();
-                for(int i = size; i < size + amount; i++){
+                for (int i = size; i < size + amount; i++) {
                     String id = "id" + i;
                     String name = "TestUser" + i;
                     users.add(new User(id, name, "offline", "someAvatar", new ArrayList<>()));
                 }
 
             }
+
             @Override
             public Observable<User> addUser(CreateUserDto dto) {
                 String avatar = "someAvatar";
-                if (dto.avatar() != null){
+                if (dto.avatar() != null) {
                     avatar = dto.avatar();
                 }
                 User user = new User(
@@ -58,7 +59,7 @@ public class UserTestModule {
              */
             @Override
             public Observable<List<User>> getUsers() {
-                if(users.size() <= 1){
+                if (users.size() <= 1) {
                     initDummyUsers();
                 }
                 return Observable.just(users);
@@ -66,7 +67,7 @@ public class UserTestModule {
 
             @Override
             public Observable<List<User>> getUsers(List<String> ids) {
-                if(users.size() <= 1){
+                if (users.size() <= 1) {
                     initDummyUsers();
                 }
                 List<User> returnUsers = users.stream()
@@ -77,7 +78,7 @@ public class UserTestModule {
 
             @Override
             public Observable<User> getUser(String id) {
-                if(users.size() <= 1){
+                if (users.size() <= 1) {
                     initDummyUsers();
                 }
                 Optional<User> returnUser = users.stream()
@@ -95,29 +96,29 @@ public class UserTestModule {
              */
             @Override
             public Observable<User> updateUser(String id, UpdateUserDto dto) {
-                if(users.size() <= 1){
+                if (users.size() <= 1) {
                     initDummyUsers();
                 }
 
                 Optional<User> oldUserOptional = users.stream()
                         .filter(u -> id.equals(u._id()))
                         .findFirst();
-                if(oldUserOptional.isPresent()){
+                if (oldUserOptional.isPresent()) {
                     User oldUser = oldUserOptional.get();
                     String name = oldUser.name();
                     String status = oldUser.status();
                     String avatar = oldUser.avatar();
                     ArrayList<String> friends = oldUser.friends();
-                    if(dto.name() != null){
+                    if (dto.name() != null) {
                         name = dto.name();
                     }
-                    if(dto.status() != null){
+                    if (dto.status() != null) {
                         status = dto.status();
                     }
-                    if(dto.avatar() != null){
+                    if (dto.avatar() != null) {
                         avatar = dto.avatar();
                     }
-                    if(dto.friends() != null){
+                    if (dto.friends() != null) {
                         friends = dto.friends();
                     }
                     User newUser = new User(
@@ -132,7 +133,7 @@ public class UserTestModule {
 
             @Override
             public Observable<User> deleteUser(String id) {
-                if(users.isEmpty()){
+                if (users.isEmpty()) {
                     initDummyUsers();
                 }
 
@@ -140,7 +141,7 @@ public class UserTestModule {
                         .filter(u -> id.equals(u._id()))
                         .findFirst();
 
-                if(deleteUser.isPresent()){
+                if (deleteUser.isPresent()) {
                     users.remove(deleteUser.get());
                     return Observable.just(deleteUser.get());
                 }

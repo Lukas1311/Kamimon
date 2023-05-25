@@ -12,7 +12,8 @@ import java.util.List;
 
 public interface PresetApiService {
     @GET("presets/tilesets/{filename}")
-    @Streaming //streaming is needed for receiving (larger) files
+    @Streaming
+        //streaming is needed for receiving (larger) files
     Observable<ResponseBody> getFile(@Path("filename") String filename);
 
     @GET("presets/characters")
@@ -30,7 +31,7 @@ public interface PresetApiService {
 
     @GET("presets/monsters/{id}/image")
     @Streaming
-    //TODO: save file
+        //TODO: save file
     Observable<String> getMonsterImage(@Path("id") String id);
 
     @GET("presets/abilities")
