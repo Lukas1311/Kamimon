@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.LobbyController;
 import de.uniks.stpmon.k.controller.PauseController;
 import de.uniks.stpmon.k.controller.SettingsController;
+import de.uniks.stpmon.k.controller.UserManagementController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
