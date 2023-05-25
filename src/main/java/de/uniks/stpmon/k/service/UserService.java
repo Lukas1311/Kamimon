@@ -4,8 +4,6 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.storages.IFriendCache;
-import de.uniks.stpmon.k.service.storages.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;

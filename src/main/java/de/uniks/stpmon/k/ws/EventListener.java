@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.service.storages.TokenStorage;
+import de.uniks.stpmon.k.service.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 

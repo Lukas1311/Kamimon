@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.storages;
+package de.uniks.stpmon.k.service;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

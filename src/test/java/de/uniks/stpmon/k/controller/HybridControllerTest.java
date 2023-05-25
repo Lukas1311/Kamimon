@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.Message;
 import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.service.storages.UserStorage;
+import de.uniks.stpmon.k.service.UserStorage;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;

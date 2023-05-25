@@ -9,7 +9,7 @@ import de.uniks.stpmon.k.rest.MessageApiService;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.storages.TokenStorage;
+import de.uniks.stpmon.k.service.TokenStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;

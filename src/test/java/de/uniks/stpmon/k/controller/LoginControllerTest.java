@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.service.storages.TokenStorage;
+import de.uniks.stpmon.k.service.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

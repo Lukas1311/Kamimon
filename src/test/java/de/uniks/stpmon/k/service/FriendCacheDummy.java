@@ -2,8 +2,6 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.User;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.storages.IFriendCache;
-import de.uniks.stpmon.k.service.storages.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
