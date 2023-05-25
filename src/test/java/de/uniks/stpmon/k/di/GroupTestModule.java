@@ -79,7 +79,7 @@ public class GroupTestModule {
             }
 
             /**
-             * If no groups are added before, 3 dummyGroups are added
+             * If no groups are added before, 3 dummyGroups are returned
              */
             @Override
             public Observable<ArrayList<Group>> getGroups() {
