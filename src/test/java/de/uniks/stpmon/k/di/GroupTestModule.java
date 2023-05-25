@@ -93,7 +93,6 @@ public class GroupTestModule {
              */
             @Override
             public Observable<ArrayList<Group>> getGroups(String members) {
-                initDummyGroups();
                 ArrayList<String> membersList = new ArrayList<>(Arrays.asList(members.split(",")));
 
                 List<Group> returnGroups = groups
@@ -105,8 +104,9 @@ public class GroupTestModule {
             }
 
             /**
-             * Get group by id (if you don't want to add a group before, use "id0")
-             * @param id: id of the group (if id = "id0" the dummy)
+             * Get group by id
+             *
+             * @param id of the group
              * @return group with given id (if there is no group the 404 error is thrown)
              */
             @Override
