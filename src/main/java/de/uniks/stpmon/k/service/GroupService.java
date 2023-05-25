@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.CreateGroupDto;
-import de.uniks.stpmon.k.dto.Group;
 import de.uniks.stpmon.k.dto.UpdateGroupDto;
+import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
 

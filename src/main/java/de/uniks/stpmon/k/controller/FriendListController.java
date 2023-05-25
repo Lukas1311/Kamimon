@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.FriendCell;
@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.ResourceBundle;
 
 @Singleton
 public class FriendListController extends ToastedController {
@@ -42,9 +43,12 @@ public class FriendListController extends ToastedController {
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
+    @Inject
+    Provider<ResourceBundle> resources;
+
     private final ObservableList<User> friends = FXCollections.observableArrayList();
     private final ObservableList<User> users = FXCollections.observableArrayList();
-    private Subject<String> searchUpdate = PublishSubject.create();
+    private final Subject<String> searchUpdate = PublishSubject.create();
 
     @Inject
     public FriendListController() {
@@ -67,12 +71,12 @@ public class FriendListController extends ToastedController {
 
         final ListView<User> friends = new ListView<>(this.friends);
         friendList.getChildren().add(friends);
-        friends.setCellFactory(e -> new FriendCell(this, false));
+        friends.setCellFactory(e -> new FriendCell(this, false, resources));
 
         final ListView<User> users = new ListView<>(this.users);
         friendList.getChildren().add(users);
         VBox.setVgrow(users, Priority.ALWAYS);
-        users.setCellFactory(e -> new FriendCell(this, true));
+        users.setCellFactory(e -> new FriendCell(this, true, resources));
 
         searchButton.setOnAction(e -> searchForFriend());
 

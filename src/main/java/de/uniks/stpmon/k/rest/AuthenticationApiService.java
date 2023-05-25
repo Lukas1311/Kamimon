@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.rest;
 
-import de.uniks.stpmon.k.dto.ErrorResponse;
 import de.uniks.stpmon.k.dto.LoginDto;
-import de.uniks.stpmon.k.dto.LoginResult;
 import de.uniks.stpmon.k.dto.RefreshDto;
+import de.uniks.stpmon.k.models.ErrorResponse;
+import de.uniks.stpmon.k.models.LoginResult;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 import retrofit2.http.Body;

@@ -8,6 +8,6 @@ public record AbilityDto(
         Integer maxUses,
         Number accuracy, // min: 0, max: 1, The highest chance of any effect: 1 -> 100 %
         Integer power // min: 0, The amount of damage this ability does
-    ) {
-    
+) {
+
 }

@@ -1,13 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.App;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class IngameController extends Controller{
+public class IngameController extends Controller {
 
 
     @Inject
@@ -15,7 +14,7 @@ public class IngameController extends Controller{
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
         return parent;
     }
