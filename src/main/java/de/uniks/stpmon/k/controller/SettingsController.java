@@ -68,7 +68,7 @@ public class SettingsController extends Controller {
     }
 
     public void backToMainScreen() {
-        hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
+        hybridControllerProvider.get().popTab();
     }
 
     public void editUser() {
