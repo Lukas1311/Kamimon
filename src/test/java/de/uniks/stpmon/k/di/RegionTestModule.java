@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k;
+package de.uniks.stpmon.k.di;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,7 +17,6 @@ public class RegionTestModule {
     @Singleton
     static RegionApiService regionApiService() {
         return new RegionApiService() {
-
             final String USER_ID = "0";
             int trainerIdCount = 0;
             int monsterIdCount = 0;
