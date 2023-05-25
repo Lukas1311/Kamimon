@@ -19,10 +19,12 @@ public class RegionTestModule {
 
             final String USER_ID = "0";
             int trainerIdCount = 0;
+            int monsterIdCount = 0;
             final List<Region> regions = new ArrayList<>();
             //String is regionId
             final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
-            final Map<Area, List<Trainer>> trainersHashMap = new HashMap<>();
+            final Map<String, List<Trainer>> trainersHashMap = new HashMap<>();
+            final List<Monster> monsters = new ArrayList<>();
 
             /**
              * Adds 2 DummyRegions to the regions list with ids {"id0", "id1"} and
@@ -59,6 +61,36 @@ public class RegionTestModule {
             }
 
             /**
+             * The same monster is added to all trainers
+             */
+            private void initDummyMonsters() {
+                SortedMap<String, Integer> abilities = new TreeMap<>();
+                abilities.put("1", 15);
+                abilities.put("2", 10);
+                abilities.put("7", 5);
+                abilities.put("10", 0);
+
+                MonsterAttributes attributes = new MonsterAttributes(0, 0, 0, 0);
+                MonsterAttributes currentAttributes = new MonsterAttributes(0, 0, 0, 0);
+                for (List<Trainer> trainerList : trainersHashMap.values()) {
+                    for (Trainer trainer : trainerList) {
+                        Monster monster = new Monster(
+                                String.valueOf(monsterIdCount),
+                                trainer._id(),
+                                0,
+                                0,
+                                0,
+                                abilities,
+                                attributes,
+                                currentAttributes);
+                        monsterIdCount++;
+                        monsters.add(monster);
+                    }
+                }
+
+            }
+
+            /**
              * Adds 1 Trainer to each area
              */
             private void initDummyTrainers() {
@@ -80,11 +112,22 @@ public class RegionTestModule {
                                 null);
                         ArrayList<Trainer> trainers = new ArrayList<>();
                         trainers.add(trainer);
-                        trainersHashMap.put(area, trainers);
+                        trainersHashMap.put(area._id(), trainers);
                         trainerIdCount++;
                     }
                 }
+                initDummyMonsters();
+            }
 
+            private Trainer getTrainerById(String trainerId) {
+                for (String areaId : trainersHashMap.keySet()) {
+                    List<Trainer> trainers = trainersHashMap.get(areaId);
+                    Optional<Trainer> trainerOp = trainers.stream().filter(t -> t._id().equals(trainerId)).findFirst();
+                    if (trainerOp.isPresent()) {
+                        return trainerOp.get();
+                    }
+                }
+                return null;
             }
 
             /**
@@ -108,7 +151,7 @@ public class RegionTestModule {
                         npcInfo
                 );
                 trainerIdCount++;
-                List<Trainer> trainers = trainersHashMap.get(area);
+                List<Trainer> trainers = trainersHashMap.get(area._id());
                 trainers.add(trainer);
 
                 return Observable.just(trainer);
@@ -116,17 +159,31 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Trainer>> getTrainers(String regionId, String areaId, String userId) {
-                return null;
+                List<Trainer> trainerList = trainersHashMap.get(areaId);
+                if (trainerList != null) {
+                    return Observable.just(trainerList);
+                }
+                return Observable.empty();
             }
 
             @Override
             public Observable<Trainer> getTrainer(String trainerId) {
-                return null;
+                Trainer trainer = getTrainerById(trainerId);
+                if (trainer != null) {
+                    return Observable.just(trainer);
+                }
+                return Observable.error(new Throwable("404 Not found"));
             }
 
             @Override
             public Observable<Trainer> deleteTrainer(String trainerId) {
-                return null;
+                Trainer trainer = getTrainerById(trainerId);
+                if (trainer != null) {
+                    List<Trainer> trainerList = trainersHashMap.get(trainer.area());
+                    trainerList.remove(trainer);
+                    return Observable.just(trainer);
+                }
+                return Observable.error(new Throwable("404 Not found"));
             }
 
             /**
@@ -156,22 +213,32 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Area>> getAreas(String region) {
-                return null;
+                List<Area> areaList = areasHashMap.get(region);
+                if (areaList != null) {
+                    return Observable.just(areaList);
+                }
+                return Observable.empty();
             }
 
             @Override
             public Observable<Area> getArea(String region, String id) {
-                return null;
+                List<Area> areaList = areasHashMap.get(region);
+                Optional<Area> areaOptional = areaList.stream().filter(a -> a._id().equals(id)).findFirst();
+                return areaOptional.map(Observable::just).orElseGet(Observable::empty);
             }
 
             @Override
             public Observable<List<Monster>> getMonsters(String trainerId) {
-                return null;
+                return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
+
             }
 
             @Override
             public Observable<Monster> getMonster(String monsterId) {
-                return null;
+                Optional<Monster> monsterOptional = monsters
+                        .stream().filter(m -> m._id().equals(monsterId)).findFirst();
+                return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()
+                        -> Observable.error(new Throwable("404 Not found")));
             }
         };
     }
