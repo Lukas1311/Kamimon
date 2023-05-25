@@ -142,6 +142,7 @@ public class HybridController extends Controller {
     public void openMain(MainWindow window) {
         SidebarController sidebar = sidebarController.get();
         MainWindow newWindow = window;
+        mainTab = SidebarTab.NONE;
         switch (window) {
             case LOBBY -> {
                 sidebar.setPause(false);
