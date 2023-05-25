@@ -102,8 +102,7 @@ public class UserManagementController extends Controller {
         // TODO: replace this with real modal pop pop up
         new Alert(Alert.AlertType.CONFIRMATION, "do you want to go back?").showAndWait().ifPresent(buttonType -> {
             if (buttonType == ButtonType.OK) {
-                hybridControllerProvider.get().forceTab(SidebarTab.USER_MANAGEMENT);
-                hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
+                hybridControllerProvider.get().popTab();
             } else if (buttonType == ButtonType.CANCEL) {
                 // do nothing
             }
