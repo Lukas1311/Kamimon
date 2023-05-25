@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +42,7 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void testShow() {
-        VBox ingame = lookup("#ingame").query();
+        BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
 }
