@@ -3,8 +3,6 @@ package de.uniks.stpmon.k.controller;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-
 
 import java.util.ResourceBundle;
 import java.util.Locale;
@@ -68,7 +66,6 @@ public class UserManagementControllerTest extends ApplicationTest {
         clickOn("#backButton");
         // click the OK button
         clickOn(".dialog-pane .button");
-        waitForFxEvents();
 
         // no values to check
 
