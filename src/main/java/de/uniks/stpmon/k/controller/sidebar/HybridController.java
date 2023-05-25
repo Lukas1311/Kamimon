@@ -144,14 +144,19 @@ public class HybridController extends Controller {
                 sidebar.setPause(false);
                 sidebar.setIngame(false);
                 sidebar.setSettings(true);
+                sidebar.updateLogoutButton(false);
                 openMain(lobbyController.get());
             }
             case INGAME -> {
                 sidebar.setPause(true);
                 sidebar.setIngame(true);
+                sidebar.updatePauseButton(true);
+                sidebar.updateLogoutButton(true);
                 openMain(ingameController);
             }
             case PAUSE -> {
+                sidebar.updatePauseButton(false);
+                sidebar.updateLogoutButton(true);
                 boolean pause = currentWindow == MainWindow.PAUSE;
                 openMain(pause ? ingameController : pauseController);
                 newWindow = pause ? MainWindow.INGAME : MainWindow.PAUSE;

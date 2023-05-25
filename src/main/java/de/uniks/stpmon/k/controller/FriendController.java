@@ -4,11 +4,16 @@ import de.uniks.stpmon.k.models.User;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.ResourceBundle;
 
 public class FriendController extends Controller {
 
@@ -31,10 +36,11 @@ public class FriendController extends Controller {
     private final boolean newFriend;
 
 
-    public FriendController(User user, Boolean newFriend, FriendListController friendListController) {
+    public FriendController(User user, Boolean newFriend, FriendListController friendListController, Provider<ResourceBundle> resources) {
         this.user = user;
         this.newFriend = newFriend;
         this.friendListController = friendListController;
+        this.resources = resources;
     }
 
     @Override
@@ -44,6 +50,8 @@ public class FriendController extends Controller {
         parent.setId(user.name());
 
         userName.setText(user.name());
+        messageButton.setTooltip(new Tooltip(translateString("chatWithFriend")));
+        removeFriendButton.setTooltip(new Tooltip(translateString(newFriend?("addFriend"):("removeFriend"))));
 
         if (newFriend) {
 
