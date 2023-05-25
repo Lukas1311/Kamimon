@@ -18,6 +18,7 @@
                 <font>
                     <Font size="15.0" />
                 </font>
+                <tooltip><Tooltip text="%search"/> </tooltip>
             </Button>
         </HBox>
         <VBox.margin>

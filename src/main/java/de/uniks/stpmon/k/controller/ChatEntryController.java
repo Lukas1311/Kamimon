@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.models.Group;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;

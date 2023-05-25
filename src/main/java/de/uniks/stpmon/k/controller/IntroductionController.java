@@ -16,8 +16,7 @@ import javax.inject.Provider;
 import java.util.Objects;
 
 
-
-public class IntroductionController extends Controller{
+public class IntroductionController extends Controller {
 
     @FXML
     public ImageView imageIntroduction;
@@ -35,7 +34,7 @@ public class IntroductionController extends Controller{
     private final IntegerProperty indexProperty = new SimpleIntegerProperty(0);
 
     @Inject
-    public IntroductionController(){
+    public IntroductionController() {
 
     }
 
@@ -65,11 +64,12 @@ public class IntroductionController extends Controller{
     public void previousSheet(ActionEvent event) {
         openSheet(false);
     }
+
     private void openSheet(boolean forward) {
         int index = indexProperty.get();
-        if(forward) {
+        if (forward) {
             index++;
-            if(index == images.length) {
+            if (index == images.length) {
                 app.show(hybridControllerProvider.get());
                 return;
             }

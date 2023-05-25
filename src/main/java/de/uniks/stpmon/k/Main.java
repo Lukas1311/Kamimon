@@ -7,7 +7,7 @@ public class Main {
     public static final String API_URL = "https://" + API_DOMAIN + "/api/v1";
     public static final String WS_URL = "wss://stpmon.uniks.de/ws/v1";
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Application.launch(App.class, args);
     }
 }

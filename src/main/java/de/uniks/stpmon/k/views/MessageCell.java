@@ -3,8 +3,8 @@ package de.uniks.stpmon.k.views;
 import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.controller.MessageController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Message;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.Message;
+import de.uniks.stpmon.k.models.User;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 
@@ -30,25 +30,22 @@ public class MessageCell extends ListCell<Message> {
     @Override
     protected void updateItem(Message item, boolean empty) {
         super.updateItem(item, empty);
-        if(empty || item == null) {
+        if (empty || item == null) {
             setGraphic(null);
             setText(null);
         } else {
             String sender = groupUsers.get(item.sender());
-            if(item.body().startsWith("JoinInvitation")) {
+            if (item.body().startsWith("JoinInvitation")) {
                 final InvitationController invitationController = new InvitationController(item, sender, me, hybridController, resources);
-                // setting the alignment directly on the cell makes the trick
-                setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {
                 final MessageController messageController = new MessageController(item, sender, me);
-                // setting the alignment directly on the cell makes the trick
-                setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
                 setGraphic(messageController.render());
                 setDisable(!isOwnMessage(item));
             }
-
+            // setting the alignment directly on the cell makes the trick
+            setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         }
     }
 

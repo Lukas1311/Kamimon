@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.views.RegionCell;
 import javafx.collections.FXCollections;
@@ -11,16 +11,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
-public class RegionListController extends ToastedController{
+public class RegionListController extends ToastedController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
     RegionApiService regionApiService;
@@ -33,7 +33,7 @@ public class RegionListController extends ToastedController{
     Provider<HybridController> hybridControllerProvider;
 
     @Inject
-    public RegionListController(){
+    public RegionListController() {
 
     }
 
@@ -45,7 +45,7 @@ public class RegionListController extends ToastedController{
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
         final Image imageKamimonLettering = loadImage("kamimonLettering.png");
         //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
@@ -60,7 +60,7 @@ public class RegionListController extends ToastedController{
         return parent;
     }
 
-    private Image loadImage(String image){
+    private Image loadImage(String image) {
         return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 }

@@ -27,17 +27,17 @@ public class ToastController extends Controller {
     public ToastController() {
     }
 
-    private static void updatePosition(Stage mainStage, Stage toastStage){
+    private static void updatePosition(Stage mainStage, Stage toastStage) {
         toastStage.setY(mainStage.getY() + (mainStage.getHeight()) - toastStage.getHeight());
         toastStage.setX(mainStage.getX() + ((mainStage.getWidth() / 2) - (toastStage.getWidth() / 2)));
     }
 
     public void openToast(String message) {
-        if(open){
+        if (open) {
             return;
         }
         open = true;
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             Stage mainStage = app.getStage();
             Stage toastStage = new Stage();
             toastStage.setTitle("Toast");
@@ -78,7 +78,7 @@ public class ToastController extends Controller {
                 Timeline fadeOut = new Timeline();
                 fadeOut.getKeyFrames().add(new KeyFrame(Duration.millis(500),
                         new KeyValue(root.opacityProperty(), 0),
-                        new KeyValue(root.translateYProperty(),  20)
+                        new KeyValue(root.translateYProperty(), 20)
                 ));
                 fadeOut.setOnFinished((aeb) -> {
                     toastStage.close();

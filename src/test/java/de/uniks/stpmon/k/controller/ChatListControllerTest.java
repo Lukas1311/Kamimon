@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.models.Event;
+import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
