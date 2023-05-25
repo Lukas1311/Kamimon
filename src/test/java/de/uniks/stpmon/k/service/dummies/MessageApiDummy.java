@@ -23,7 +23,6 @@ import java.util.Optional;
 @Singleton
 public class MessageApiDummy implements MessageApiService {
 
-
     //this ArrayList contains all messages
     //each entry is an array ob size = 3: [<namespace>, <parent>, <message>]
     final ArrayList<Object[]> messageEntities = new ArrayList<>();
