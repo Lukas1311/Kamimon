@@ -69,6 +69,8 @@ public class HybridController extends Controller {
     GroupService groupService;
     @Inject
     SettingsController settingsController;
+    @Inject
+    Provider<UserManagementController> userManagementControllerProvider;
 
     @Inject
     public HybridController() {
@@ -167,6 +169,7 @@ public class HybridController extends Controller {
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
             case SETTINGS -> pushController(settingsController, setup);
+            case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case NONE -> {}
         }
     }
