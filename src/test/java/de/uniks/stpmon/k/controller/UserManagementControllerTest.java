@@ -64,9 +64,7 @@ public class UserManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        // click the OK button
-        clickOn(".dialog-pane .button");
-
+        
         // no values to check
 
         // check mocks:
