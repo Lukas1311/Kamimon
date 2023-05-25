@@ -4,8 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
-import de.uniks.stpmon.k.service.UserService;
+import de.uniks.stpmon.k.service.RegionService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -30,7 +29,7 @@ public class TrainerManagementController extends Controller {
     public ImageView trainerSprite;
 
     @Inject
-    UserService userService;
+    RegionService regionService;
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
@@ -59,7 +58,7 @@ public class TrainerManagementController extends Controller {
     }
 
     public void changeTrainerName() {
-        // TODO: change the trainer name
+        // TODO: change the trainer name -> region service
     }
 
     public void openTrainerSpriteEditor() {
@@ -78,6 +77,7 @@ public class TrainerManagementController extends Controller {
     }
 
     public void deleteTrainer() {
-        // TODO: do some delete logic here
+        // TODO: do some delete logic here -> region service
+        
     }
 }
