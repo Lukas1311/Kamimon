@@ -60,15 +60,17 @@ public class UserManagementControllerTest extends ApplicationTest {
         // define mocks:
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
-        doNothing().when(mock).forceTab(any());
+        doNothing().when(mock).popTab();
 
         // action:
         clickOn("#backButton");
+        // click the OK button
+        clickOn(".dialog-pane .button");
 
         // no values to check
 
         // check mocks:
-        verify(mock).forceTab(SidebarTab.SETTINGS);
+        verify(mock).popTab();
     }
 
     @Test
