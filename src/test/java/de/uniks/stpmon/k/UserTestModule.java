@@ -36,7 +36,6 @@ public class UserTestModule {
                 }
 
             }
-
             @Override
             public Observable<User> addUser(CreateUserDto dto) {
                 String avatar = "someAvatar";
@@ -59,6 +58,7 @@ public class UserTestModule {
              */
             @Override
             public Observable<List<User>> getUsers() {
+                //1 because test bot registers, and is added to list
                 if (users.size() <= 1) {
                     initDummyUsers();
                 }
@@ -67,6 +67,7 @@ public class UserTestModule {
 
             @Override
             public Observable<List<User>> getUsers(List<String> ids) {
+                //1 because test bot registers, and is added to list
                 if (users.size() <= 1) {
                     initDummyUsers();
                 }
@@ -78,7 +79,8 @@ public class UserTestModule {
 
             @Override
             public Observable<User> getUser(String id) {
-                if (users.size() <= 1) {
+                //1 because test bot registers, and is added to list
+                if(users.size() <= 1) {
                     initDummyUsers();
                 }
                 Optional<User> returnUser = users.stream()
@@ -96,6 +98,7 @@ public class UserTestModule {
              */
             @Override
             public Observable<User> updateUser(String id, UpdateUserDto dto) {
+                //1 because test bot registers, and is added to list
                 if (users.size() <= 1) {
                     initDummyUsers();
                 }
