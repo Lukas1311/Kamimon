@@ -99,14 +99,6 @@ public class UserManagementController extends Controller {
 
     public void backToSettings() {
         // TODO: add pop confirmation only when unsaved settings
-        // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "do you want to go back?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                hybridControllerProvider.get().popTab();
-            } else if (buttonType == ButtonType.CANCEL) {
-                // do nothing
-            }
-        });
-
+        hybridControllerProvider.get().popTab();
     }
 }
