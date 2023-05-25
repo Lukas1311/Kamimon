@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -40,6 +41,8 @@ public class FriendListController extends ToastedController {
     public VBox friendSection;
     @FXML
     public VBox userSection;
+    @FXML
+    public ScrollPane scrollPane;
 
     @Inject
     UserService userService;

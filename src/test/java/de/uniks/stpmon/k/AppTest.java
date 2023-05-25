@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -16,9 +17,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.ListViewMatchers;
-
-import java.util.List;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -69,11 +67,15 @@ class AppTest extends ApplicationTest {
         clickOn("#friends");
 
 
+        ScrollPane scrollPane = lookup("#scrollPane").query();
+        VBox userList = (VBox) scrollPane.getContent();
+        VBox friendView = (VBox) userList.lookup("#friendSection");
+        VBox userView = (VBox) userList.lookup("#userSection");
+        ObservableList<Node> friendChildren = friendView.getChildren();
+        ObservableList<Node> userChildren = userView.getChildren();
         //check if friend list is empty
-        VBox friendListVbox = lookup("#friendList").query();
-        ObservableList<Node> listViews = friendListVbox.getChildren();
-        List<Node> list = listViews.stream().filter(n -> !((ListView<?>) n).getItems().isEmpty()).toList();
-        assertThat(list).isEmpty();
+        assertThat(friendChildren).isEmpty();
+        assertThat(userChildren).isEmpty();
 
         //add a new friend
         clickOn("#searchFriend");
@@ -81,20 +83,15 @@ class AppTest extends ApplicationTest {
         verifyThat("#searchFriend", hasText("TestUser1"));
         type(KeyCode.ENTER);
 
-        //friend has to appear in users list and not in friends list
-        ListView<?> friendList = (ListView<?>) listViews.get(0);
-        ListView<?> usersList = (ListView<?>) listViews.get(1);
-
-        assertThat(friendList).isEmpty();
-        assertThat(usersList).isNotEmpty();
+        assertThat(friendChildren).isEmpty();
+        assertThat(userChildren).isNotEmpty();
 
         //add friend
         clickOn("#removeFriendButton");
         waitForFxEvents();
         //check if user is added to friend list
-        verifyThat(friendList, ListViewMatchers.hasItems(1));
-        assertThat(friendList).isNotEmpty();
-        assertThat(usersList).isEmpty();
+        assertThat(friendChildren).hasSize(1);
+        assertThat(userChildren).isEmpty();
 
         messageApi.mockEvents("0");
 
@@ -120,7 +117,7 @@ class AppTest extends ApplicationTest {
         //close friends sidebar
         clickOn("#friends");
         BorderPane regionList = lookup("#regionsBorderPane").query();
-        ListView regionsListView = (ListView) regionList.getChildren().get(0);
+        ListView<?> regionsListView = (ListView<?>) regionList.getChildren().get(0);
         assertThat(regionsListView.getItems().size()).isEqualTo(2);
 
         clickOn("#regionButton");
