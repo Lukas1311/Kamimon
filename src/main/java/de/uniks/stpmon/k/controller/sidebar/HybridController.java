@@ -238,7 +238,7 @@ public class HybridController extends Controller {
      * This closes all other open tabs.
      */
     public <C extends Controller> void forceTab(SidebarTab tab, Consumer<C> setup) {
-        if (mainTab != tab && tab != SidebarTab.NONE) {
+        if (mainTab != tab) {
             closeTab();
             mainTab = tab;
             pushTab(tab, setup);
@@ -271,7 +271,6 @@ public class HybridController extends Controller {
     public void closeTab() {
         // remove all tabs, only leave the main window
         removeChildren(1);
-        mainTab = SidebarTab.NONE;
     }
 
     public void openChat(Group group) {
