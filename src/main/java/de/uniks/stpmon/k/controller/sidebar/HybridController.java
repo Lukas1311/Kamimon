@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.LobbyController;
 import de.uniks.stpmon.k.controller.PauseController;
 import de.uniks.stpmon.k.controller.SettingsController;
+import de.uniks.stpmon.k.controller.TrainerManagementController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -77,6 +78,8 @@ public class HybridController extends Controller {
     GroupService groupService;
     @Inject
     SettingsController settingsController;
+    @Inject
+    Provider<TrainerManagementController> trainerManagementControllerProvider;
 
     @Inject
     public HybridController() {
@@ -181,6 +184,7 @@ public class HybridController extends Controller {
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
             case SETTINGS -> pushController(settingsController, setup);
+            case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
             case NONE -> {}
         }
     }

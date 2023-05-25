@@ -63,4 +63,8 @@ public class SettingsController extends Controller {
     public void backtoMainScreen() {
         hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
     }
+
+    public void editTrainer() {
+        hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+    }
 }
