@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.di;
 
 import dagger.Component;
-import de.uniks.stpmon.k.RegionTestModule;
 import de.uniks.stpmon.k.TestModule;
 import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
