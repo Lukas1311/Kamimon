@@ -22,6 +22,8 @@ public class SettingsController extends Controller {
     @FXML
     public Button backButton;
     @FXML
+    public Button editUserButton;
+    @FXML
     public ImageView userSprite;
     @FXML
     public Text usernameValue;
@@ -39,6 +41,8 @@ public class SettingsController extends Controller {
     UserStorage userStorage;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<UserManagementController> userManagementControllerProvider;
 
     @Inject
     public SettingsController() {
@@ -56,11 +60,18 @@ public class SettingsController extends Controller {
         User user = userStorage.getUser();
         usernameValue.setText(user.name());
         // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
+        
+        backButton.setOnAction(click -> backToMainScreen());
+        editUserButton.setOnAction(click -> editUser());
 
         return parent;
     }
 
     public void backToMainScreen() {
         hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
+    }
+
+    public void editUser() {
+        hybridControllerProvider.get().pushTab(SidebarTab.USER_MANAGEMENT);
     }
 }
