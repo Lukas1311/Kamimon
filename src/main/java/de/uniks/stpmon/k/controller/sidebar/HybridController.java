@@ -9,8 +9,8 @@ import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.LobbyController;
 import de.uniks.stpmon.k.controller.PauseController;
 import de.uniks.stpmon.k.controller.SettingsController;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
@@ -145,14 +145,19 @@ public class HybridController extends Controller {
                 sidebar.setPause(false);
                 sidebar.setIngame(false);
                 sidebar.setSettings(true);
+                sidebar.updateLogoutButton(false);
                 openMain(lobbyController.get());
             }
             case INGAME -> {
                 sidebar.setPause(true);
                 sidebar.setIngame(true);
+                sidebar.updatePauseButton(true);
+                sidebar.updateLogoutButton(true);
                 openMain(ingameController);
             }
             case PAUSE -> {
+                sidebar.updatePauseButton(false);
+                sidebar.updateLogoutButton(true);
                 boolean pause = currentWindow == MainWindow.PAUSE;
                 openMain(pause ? ingameController : pauseController);
                 newWindow = pause ? MainWindow.INGAME : MainWindow.PAUSE;
@@ -176,8 +181,7 @@ public class HybridController extends Controller {
             case CHAT_CREATE -> pushController(createChatControllerProvider.get(), setup);
             case FRIEND_LIST -> pushController(friendListController, setup);
             case SETTINGS -> pushController(settingsController, setup);
-            case NONE -> {
-            }
+            case NONE -> {}
         }
     }
 
@@ -234,7 +238,7 @@ public class HybridController extends Controller {
      * This closes all other open tabs.
      */
     public <C extends Controller> void forceTab(SidebarTab tab, Consumer<C> setup) {
-        if (mainTab != tab && tab != SidebarTab.NONE) {
+        if (mainTab != tab) {
             closeTab();
             mainTab = tab;
             pushTab(tab, setup);
@@ -267,7 +271,6 @@ public class HybridController extends Controller {
     public void closeTab() {
         // remove all tabs, only leave the main window
         removeChildren(1);
-        mainTab = SidebarTab.NONE;
     }
 
     public void openChat(Group group) {

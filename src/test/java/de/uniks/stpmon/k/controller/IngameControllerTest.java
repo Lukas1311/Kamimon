@@ -10,13 +10,18 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.LabeledMatchers;
 
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static org.testfx.assertions.api.Assertions.assertThat;
+import static org.testfx.api.FxAssert.verifyThat;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 
 @ExtendWith(MockitoExtension.class)

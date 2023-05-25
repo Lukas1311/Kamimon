@@ -1,5 +1,13 @@
 package de.uniks.stpmon.k.ws;
 
+import javax.websocket.CloseReason;
+import javax.websocket.ContainerProvider;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -7,26 +15,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.OnError;
-import javax.websocket.WebSocketContainer;
-
 
 @javax.websocket.ClientEndpoint
 public class ClientEndpoint {
     private final URI endpointURI;
     private final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
-    
+
     Session userSession;
 
-    public ClientEndpoint(URI endpointURI) { this.endpointURI = endpointURI; }
+    public ClientEndpoint(URI endpointURI) {
+        this.endpointURI = endpointURI;
+    }
 
-    public boolean isOpen() { return this.userSession != null && this.userSession.isOpen();}
+    public boolean isOpen() {
+        return this.userSession != null && this.userSession.isOpen();
+    }
 
     public void open() {
         if (isOpen()) {
@@ -41,10 +44,14 @@ public class ClientEndpoint {
     }
 
     @OnOpen
-    public void onOpen(Session userSession) { this.userSession = userSession; }
+    public void onOpen(Session userSession) {
+        this.userSession = userSession;
+    }
 
     @OnClose
-    public void onClose(Session userSession, CloseReason reason) { this.userSession = null; }
+    public void onClose(Session userSession, CloseReason reason) {
+        this.userSession = null;
+    }
 
     @OnMessage
     public void onMessage(String message) {
@@ -54,11 +61,17 @@ public class ClientEndpoint {
     }
 
     @OnError
-    public void onError(Throwable error) { error.printStackTrace(); }
+    public void onError(Throwable error) {
+        error.printStackTrace();
+    }
 
-    public void addMessageHandler(Consumer<String> msgHandler) { this.messageHandlers.add(msgHandler); }
+    public void addMessageHandler(Consumer<String> msgHandler) {
+        this.messageHandlers.add(msgHandler);
+    }
 
-    public void removeMessageHandler(Consumer<String> msgHandler) { this.messageHandlers.remove(msgHandler); }
+    public void removeMessageHandler(Consumer<String> msgHandler) {
+        this.messageHandlers.remove(msgHandler);
+    }
 
     public void sendMessage(String message) {
         if (this.userSession == null) {
@@ -79,5 +92,7 @@ public class ClientEndpoint {
         }
     }
 
-    public boolean hasMessageHandlers() { return !this.messageHandlers.isEmpty(); }
+    public boolean hasMessageHandlers() {
+        return !this.messageHandlers.isEmpty();
+    }
 }
