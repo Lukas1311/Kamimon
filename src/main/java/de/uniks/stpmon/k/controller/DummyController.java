@@ -7,9 +7,10 @@ import javax.inject.Inject;
 
 // use this controller for testing view change functionality
 public class DummyController extends Controller {
-    
+
     @Inject
-    public DummyController(){}
+    public DummyController() {
+    }
 
     @Override
     public Parent render() {

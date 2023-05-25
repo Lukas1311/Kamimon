@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.TabController;
-import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.views.ChatCell;
 import de.uniks.stpmon.k.ws.EventListener;

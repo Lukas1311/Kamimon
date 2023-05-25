@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;

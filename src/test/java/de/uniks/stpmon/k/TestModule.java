@@ -29,5 +29,5 @@ public class TestModule {
     static EventListener eventListener() {
         return mock(EventListener.class);
     }
-    
+
 }

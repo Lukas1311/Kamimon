@@ -1,11 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.TabController;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.service.UserStorage;
+import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.views.GroupMemberCell;
 import io.reactivex.rxjava3.functions.Consumer;
 import javafx.beans.binding.Bindings;

@@ -1,17 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.scene.text.Text;
-import org.mockito.Mockito;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
-import de.uniks.stpmon.k.App;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -21,18 +10,13 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.LabeledMatchers;
 
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.testfx.assertions.api.Assertions.assertThat;
-import static org.testfx.api.FxAssert.verifyThat;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)

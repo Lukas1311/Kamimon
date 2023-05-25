@@ -2,12 +2,11 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
