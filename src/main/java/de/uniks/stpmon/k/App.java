@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import fr.brouillard.oss.cssfx.CSSFX;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.net.URL;
@@ -48,6 +50,10 @@ public class App extends Application {
         //set scene for loading screen
         final Scene scene = new Scene(new Label("Loading"));
         stage.setScene(scene);
+
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/style.css")).toString());
+        CSSFX.start(scene);
+
         stage.show();
 
         //shows in the top bar of the app window (very tiny)

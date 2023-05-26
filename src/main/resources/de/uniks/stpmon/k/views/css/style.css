@@ -27,3 +27,10 @@ Load fonts
     src: url("de/uniks/stpmon/k/views/fonts/BalsamiqSans-BoldItalic.ttf");
 }
 
+.root {
+    -fx-font-family: "Balsamiq Sans Regular";
+
+}
+
+
+
