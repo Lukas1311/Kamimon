@@ -142,12 +142,7 @@ public class LoginControllerTest extends ApplicationTest {
         // tab into username input field
         write("\t");
         // type username that is too long (> 32 chars)
-        write("string").press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        press(KeyCode.CONTROL).press(KeyCode.C).release(KeyCode.C).release(KeyCode.CONTROL).press(KeyCode.RIGHT);
-        for (int i = 0; i < 5; i++) {
-            // paste "string" 5 times
-            paste();
-        }
+        write("stringstringstringstringstringstring"); // 36 chars
         verifyThat(label, LabeledMatchers.hasText("Username too long."));
     }
 
