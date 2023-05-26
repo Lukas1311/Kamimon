@@ -8,7 +8,7 @@
 
 <BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IngameController">
    <center>
-      <Text layoutX="211.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME" BorderPane.alignment="CENTER">
+      <Text fx:id="inGameText" layoutX="211.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME" BorderPane.alignment="CENTER">
          <font>
             <Font size="61.0" />
          </font>
