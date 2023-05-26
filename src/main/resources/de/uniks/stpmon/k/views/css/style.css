@@ -3,28 +3,28 @@ Load fonts
  */
 
 @font-face {
-    font-family: "Balsamiq Sans Regular";
+    font-family: Balsamiq Sans Regular;
     font-style: normal;
     font-weight: 400;
-    src: url("de/uniks/stpmon/k/views/fonts/BalsamiqSans-Regular.ttf");
+    src: url("../fonts/BalsamiqSans-Regular.ttf");
 }
 @font-face {
-    font-family: "Balsamiq Sans Bold";
+    font-family: Balsamiq Sans Bold;
     font-style: normal;
     font-weight: 700;
-    src: url("de/uniks/stpmon/k/views/fonts/BalsamiqSans-Bold.ttf");
+    src: url("../fonts/BalsamiqSans-Bold.ttf");
 }
 @font-face {
-    font-family: "Balsamiq Sans Italic";
+    font-family: Balsamiq Sans Italic;
     font-style: italic;
     font-weight: 400;
-    src: url("de/uniks/stpmon/k/views/fonts/BalsamiqSans-Italic.ttf");
+    src: url("../fonts/BalsamiqSans-Italic.ttf");
 }
 @font-face {
-    font-family: "Open Sans BoldItalic";
+    font-family: Open Sans BoldItalic;
     font-style: italic;
     font-weight: 700;
-    src: url("de/uniks/stpmon/k/views/fonts/BalsamiqSans-BoldItalic.ttf");
+    src: url("../fonts/BalsamiqSans-BoldItalic.ttf");
 }
 
 .root {
