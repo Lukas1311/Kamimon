@@ -63,10 +63,10 @@
 
    <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
       <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" HBox.hgrow="ALWAYS">
-         <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button, general-button" text="Änderungen speichern">
+         <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button, general-button" text="%saveChanges">
             <font><Font size="18.0"/></font>
          </Button>
-         <Button fx:id="deleteTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="remove-button, general-button" text="Trainer löschen">
+         <Button fx:id="deleteTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="remove-button, general-button" text="%deleteTrainer">
             <font><Font size="18.0"/></font>
          </Button>
          <padding>
