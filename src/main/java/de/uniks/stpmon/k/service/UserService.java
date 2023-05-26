@@ -169,4 +169,12 @@ public class UserService {
     public User getMe() {
         return this.userStorage.getUser();
     }
+
+    public Observable<User> deleteMe() {
+        User currentUser = userStorage.getUser();
+        if (currentUser == null) {
+            return Observable.empty();
+        }
+        return userApiService.deleteUser(currentUser._id());
+    }
 }

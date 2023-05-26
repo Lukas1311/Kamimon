@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox fx:id="userManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/sidebar.css"
+   xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+   fx:controller="de.uniks.stpmon.k.controller.UserManagementController">
+
+   <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
+      <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
+         <VBox.margin>
+            <Insets bottom="5.0" left="25.0" right="5.0" top="5.0"/>
+         </VBox.margin>
+         <font>
+            <Font size="18.0"/>
+         </font>
+      </Button>
+      <VBox.margin>
+         <Insets/>
+      </VBox.margin>
+      <padding>
+         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+      </padding>
+   </HBox>
+
+   <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
+         <Text fx:id="usernameText" underline="true" strokeType="OUTSIDE" strokeWidth="0.0" text="%username">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </Text>
+         <Text fx:id="passwordText" underline="true" strokeType="OUTSIDE" strokeWidth="0.0" text="%password">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </Text>
+         <padding>
+            <Insets left="30.0"/>
+         </padding>
+      </VBox>
+
+      <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
+         <TextField fx:id="usernameInput" promptText="Namen eingeben">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </TextField>
+         <TextField fx:id="passwordInput" promptText="Passwort eingeben" styleClass="text-input">
+            <font>
+               <Font size="18.0"/>
+            </font>
+         </TextField>
+         <padding>
+            <Insets right="30.0"/>
+         </padding>
+      </VBox>
+   </HBox>
+
+   <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" HBox.hgrow="ALWAYS">
+         <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button, general-button" text="Änderungen speichern">
+            <font><Font size="18.0"/></font>
+         </Button>
+         <Button fx:id="deleteUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="remove-button, general-button" text="Benutzer löschen">
+            <font><Font size="18.0"/></font>
+         </Button>
+         <padding>
+            <Insets bottom="30.0"/>
+         </padding>
+      </VBox>
+   </HBox>
+
+</VBox>
