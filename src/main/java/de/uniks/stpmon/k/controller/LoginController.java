@@ -51,7 +51,7 @@ public class LoginController extends Controller {
     @FXML
     public ToggleGroup lang;
     @FXML
-    public ImageView kamimonLetteringImageView;
+    public ImageView imageViewKamimonLettering;
 
     @Inject
     AuthenticationService authService;
@@ -126,6 +126,11 @@ public class LoginController extends Controller {
 
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
+
+
+        //Show KAMIMON Logo
+        imageViewKamimonLettering.setImage(loadImage("kamimonLettering.png"));
+        imageViewKamimonLettering.setPreserveRatio(true);
         return parent;
     }
 

@@ -3,34 +3,107 @@ Load fonts
  */
 
 @font-face {
-    font-family: Balsamiq Sans Regular;
-    font-style: normal;
-    font-weight: 400;
+    font-family: "Balsamiq Sans Regular";
+    font-weight: 200;
     src: url("../fonts/BalsamiqSans-Regular.ttf");
 }
 @font-face {
-    font-family: Balsamiq Sans Bold;
-    font-style: normal;
+    font-family: "Balsamiq Sans Bold";
     font-weight: 700;
     src: url("../fonts/BalsamiqSans-Bold.ttf");
 }
 @font-face {
-    font-family: Balsamiq Sans Italic;
-    font-style: italic;
+    font-family: "Balsamiq Sans Italic";
     font-weight: 400;
     src: url("../fonts/BalsamiqSans-Italic.ttf");
-}
-@font-face {
-    font-family: Open Sans BoldItalic;
-    font-style: italic;
-    font-weight: 700;
-    src: url("../fonts/BalsamiqSans-BoldItalic.ttf");
 }
 
 .root {
     -fx-font-family: "Balsamiq Sans Regular";
+    -fx-font-size: 16;
+    -fx-font-smoothing-type: gray;
+
+
+    -fx-color-kgm-red:#AE2F34;
+    -fx-color-kgm-yellow:#FCF1D0;
+    -fx-color-red:#CF2A27;
+    -fx-color-blue:#2B78E4;
+    -fx-color-light-blue:#9FC5F8;
+    -fx-color-light-green:#B6D7A8;
+    -fx-color-yellow:#FFE599;
+    -fx-color-light-grey:#F2F2F2;
+    -fx-color-black:#000000;
 
 }
+
+
+
+
+/* Loading Screen */
+.loading-screen {
+    -fx-background-color: -fx-color-kgm-yellow;
+}
+
+/* Login Window  */
+.login-background {
+    -fx-background-image: url("../images/background.png");
+    -fx-background-size: contain;
+}
+
+.login-window {
+    -fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: -fx-color-black;
+    -fx-border-radius: 0;
+    -fx-border-width: 4;
+    -fx-pref-width: 400;
+    -fx-pref-height: 450;
+    -fx-min-width: 400;
+    -fx-min-height: 450;
+    -fx-max-width: 400;
+    -fx-max-height: 450;
+    -fx-spacing: 10;
+}
+
+.login-element {
+    -fx-pref-width: 250;
+    -fx-pref-height: 30;
+    -fx-min-width: 250;
+    -fx-min-height: 30;
+    -fx-max-width: 250;
+    -fx-max-height: 30;
+}
+.login-text-input {
+    -fx-border-width: 3;
+    -fx-text-alignment: center-left;
+    -fx-text-fill: #000000;
+}
+
+.login-check-box {
+    -fx-alignment: center-left;
+}
+
+.login-button {
+    -fx-text-fill: #000000;
+}
+
+.login-register-button {
+    -fx-text-fill: #000000;
+}
+
+.login-radio-button{
+    -fx-pref-width: 125;
+    -fx-pref-height: 30;
+    -fx-min-width: 125;
+    -fx-min-height: 30;
+    -fx-max-width: 125;
+    -fx-max-height: 30;
+}
+
+
+
+
+
 
 
 
