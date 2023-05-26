@@ -32,8 +32,6 @@ public class TrainerManagementController extends Controller {
     RegionService regionService;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-    @Inject
-    Provider<LoginController> loginControllerProvider;
 
     @Inject
     public TrainerManagementController() {
