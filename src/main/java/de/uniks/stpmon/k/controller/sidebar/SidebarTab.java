@@ -8,4 +8,5 @@ public enum SidebarTab {
     FRIEND_LIST,
     SETTINGS,
     USER_MANAGEMENT,
+    TRAINER_MANAGEMENT,
 }

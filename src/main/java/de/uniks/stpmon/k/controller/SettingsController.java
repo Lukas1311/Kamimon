@@ -74,4 +74,8 @@ public class SettingsController extends Controller {
     public void editUser() {
         hybridControllerProvider.get().pushTab(SidebarTab.USER_MANAGEMENT);
     }
+
+    public void editTrainer() {
+        hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+    }
 }
