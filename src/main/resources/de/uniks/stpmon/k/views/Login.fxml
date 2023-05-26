@@ -8,79 +8,83 @@
 
 <BorderPane prefHeight="450.0" prefWidth="800.0" styleClass="login-background" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoginController">
     <center>
-        <VBox fx:id="loginScreen" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="200.0" spacing="5.0" styleClass="login-window">
-            <children>
-            <ImageView fx:id="imageViewKamimonLettering" fitHeight="118.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
-
-                <TextField fx:id="usernameInput" alignment="TOP_CENTER" opacity="0.6" promptText="%username">
-                    <VBox.margin>
-                        <Insets left="20.0" right="20.0" />
-                    </VBox.margin>
-               <styleClass>
-                  <String fx:value="login-text-input" />
-                  <String fx:value="login-element" />
-               </styleClass>
-                </TextField>
-                <PasswordField fx:id="passwordInput" alignment="CENTER" opacity="0.6" promptText="%password">
-                    <VBox.margin>
-                        <Insets left="20.0" right="20.0" />
-                    </VBox.margin>
-               <styleClass>
-                  <String fx:value="login-text-input" />
-                  <String fx:value="login-element" />
-               </styleClass>
-                </PasswordField>
-                <Button fx:id="toggleButton" mnemonicParsing="false" text="%show" />
-                <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay.logged.in">
-               <styleClass>
-                  <String fx:value="login-check-box" />
-                  <String fx:value="login-element" />
-               </styleClass></CheckBox>
-                <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="%login" textAlignment="JUSTIFY">
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-               <styleClass>
-                  <String fx:value="login-element" />
-                  <String fx:value="login-button" />
-               </styleClass>
-                </Button>
-                <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="%register" textAlignment="JUSTIFY">
-               <styleClass>
-                  <String fx:value="login-element" />
-                  <String fx:value="login-register-button" />
-               </styleClass></Button>
-                <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0" styleClass="login-element">
-                    <children>
-                        <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setDe" styleClass="login-radio-button" text="%german">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="lang" />
-                            </toggleGroup>
-                            <padding>
-                                <Insets right="5.0" />
-                            </padding>
-                        </RadioButton>
-                        <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setEn" styleClass="login-radio-button" text="%english" toggleGroup="$lang">
-                            <padding>
-                                <Insets left="5.0" />
-                            </padding>
-                        </RadioButton>
-                    </children>
-                    <VBox.margin>
-                        <Insets left="20.0" right="20.0" />
-                    </VBox.margin>
-                </HBox>
-                <Label fx:id="errorLabel" />
-            </children>
+        <VBox fx:id="loginScreen" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+              minWidth="-Infinity" prefHeight="300.0" prefWidth="200.0" spacing="5.0" styleClass="login-window">
             <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </padding>
             <opaqueInsets>
-                <Insets />
+                <Insets/>
             </opaqueInsets>
             <BorderPane.margin>
-                <Insets />
+                <Insets/>
             </BorderPane.margin>
+            <ImageView fx:id="imageViewKamimonLettering" fitHeight="118.0" fitWidth="350.0" pickOnBounds="true"
+                       preserveRatio="true"/>
+
+            <TextField fx:id="usernameInput" alignment="TOP_CENTER" opacity="0.6" promptText="%username">
+                <VBox.margin>
+                    <Insets left="20.0" right="20.0"/>
+                </VBox.margin>
+                <styleClass>
+                    <String fx:value="login-text-input"/>
+                    <String fx:value="login-element"/>
+                </styleClass>
+            </TextField>
+            <PasswordField fx:id="passwordInput" alignment="CENTER" opacity="0.6" promptText="%password">
+                <VBox.margin>
+                    <Insets left="20.0" right="20.0"/>
+                </VBox.margin>
+                <styleClass>
+                    <String fx:value="login-text-input"/>
+                    <String fx:value="login-element"/>
+                </styleClass>
+            </PasswordField>
+            <Button fx:id="toggleButton" mnemonicParsing="false" text="%show"/>
+            <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay.logged.in">
+                <styleClass>
+                    <String fx:value="login-check-box"/>
+                    <String fx:value="login-element"/>
+                </styleClass>
+            </CheckBox>
+            <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0"
+                    prefWidth="135.0" text="%login" textAlignment="JUSTIFY">
+                <opaqueInsets>
+                    <Insets/>
+                </opaqueInsets>
+                <styleClass>
+                    <String fx:value="login-element"/>
+                    <String fx:value="login-button"/>
+                </styleClass>
+            </Button>
+            <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0"
+                    prefWidth="135.0" text="%register" textAlignment="JUSTIFY">
+                <styleClass>
+                    <String fx:value="login-element"/>
+                    <String fx:value="login-register-button"/>
+                </styleClass>
+            </Button>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0" styleClass="login-element">
+                <VBox.margin>
+                    <Insets left="20.0" right="20.0"/>
+                </VBox.margin>
+                <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setDe"
+                             styleClass="login-radio-button" text="%german">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="lang"/>
+                    </toggleGroup>
+                    <padding>
+                        <Insets right="5.0"/>
+                    </padding>
+                </RadioButton>
+                <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setEn"
+                             styleClass="login-radio-button" text="%english" toggleGroup="$lang">
+                    <padding>
+                        <Insets left="5.0"/>
+                    </padding>
+                </RadioButton>
+            </HBox>
+            <Label fx:id="errorLabel"/>
         </VBox>
     </center>
 </BorderPane>

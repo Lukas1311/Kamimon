@@ -7,64 +7,63 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="340.0" style="-fx-border-color: black;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendController">
-   <children>
-      <VBox alignment="CENTER_LEFT" fillWidth="false" prefHeight="157.0" prefWidth="60.0">
-         <children>
-            <VBox fx:id="avatarBox" prefHeight="100.0" prefWidth="50.0" style="-fx-border-color: black;">
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
-            </VBox>
-         </children>
+<HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="60.0" prefWidth="340.0" style="-fx-border-color: black;"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.FriendController">
+   <VBox alignment="CENTER_LEFT" fillWidth="false" prefHeight="157.0" prefWidth="60.0">
+      <VBox fx:id="avatarBox" prefHeight="100.0" prefWidth="50.0" style="-fx-border-color: black;">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+         </VBox.margin>
       </VBox>
-      <VBox maxHeight="50.0" prefWidth="215.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Circle fx:id="userStatus" fill="#41ff1f" radius="8.0" stroke="BLACK" strokeType="INSIDE">
-                     <HBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </HBox.margin></Circle>
-                  <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="TestPlayerName" wrappingWidth="170.0">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="5.0" />
-                     </HBox.margin>
+   </VBox>
+   <VBox maxHeight="50.0" prefWidth="215.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+         <Circle fx:id="userStatus" fill="#41ff1f" radius="8.0" stroke="BLACK" strokeType="INSIDE">
+            <HBox.margin>
+               <Insets left="5.0" right="5.0"/>
+            </HBox.margin>
+         </Circle>
+         <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="TestPlayerName"
+               wrappingWidth="170.0">
+            <font>
+               <Font size="15.0"/>
+            </font>
+            <HBox.margin>
+               <Insets left="5.0"/>
+            </HBox.margin>
 
-                  </Text>
-               </children>
-            </HBox>
-            <HBox maxHeight="10.0" />
-         </children>
-      </VBox>
-      <Button fx:id="messageButton" mnemonicParsing="false" onAction="#openChat" prefHeight="37.0" prefWidth="37.0" style="-fx-background-color: transparent; -fx-border-color: black;">
-         <HBox.margin>
-            <Insets left="5.0" />
-         </HBox.margin>
-         <font>
-            <Font size="15.0" />
-         </font>
-         <graphic>
-            <Text fx:id="chat" text="🗨">
-               <font>
-                  <Font size="15.0"/>
-               </font>
-            </Text>
-         </graphic>
-      </Button>
-      <Button fx:id="removeFriendButton" mnemonicParsing="false" onAction="#handleFriend" prefHeight="37.0" prefWidth="37.0" style="-fx-background-color: transparent; -fx-border-color: black;" textFill="RED">
-         <font>
-            <Font size="14.0" />
-         </font>
-         <HBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </HBox.margin>
-         <graphic>
-            <Text fx:id="removeFriendText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="❌" />
-         </graphic>
-      </Button>
-   </children>
+         </Text>
+      </HBox>
+      <HBox maxHeight="10.0"/>
+   </VBox>
+   <Button fx:id="messageButton" mnemonicParsing="false" onAction="#openChat" prefHeight="37.0" prefWidth="37.0"
+           style="-fx-background-color: transparent; -fx-border-color: black;">
+      <HBox.margin>
+         <Insets left="5.0"/>
+      </HBox.margin>
+      <font>
+         <Font size="15.0"/>
+      </font>
+      <graphic>
+         <Text fx:id="chat" text="🗨">
+            <font>
+               <Font size="15.0"/>
+            </font>
+         </Text>
+      </graphic>
+   </Button>
+   <Button fx:id="removeFriendButton" mnemonicParsing="false" onAction="#handleFriend" prefHeight="37.0"
+           prefWidth="37.0" style="-fx-background-color: transparent; -fx-border-color: black;" textFill="RED">
+      <font>
+         <Font size="14.0"/>
+      </font>
+      <HBox.margin>
+         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+      </HBox.margin>
+      <graphic>
+         <Text fx:id="removeFriendText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="❌"/>
+      </graphic>
+   </Button>
 </HBox>

@@ -19,7 +19,7 @@ Load fonts
 }
 
 .root {
-    -fx-font-family: "Balsamiq Sans Regular";
+    -fx-font-family: "Comic Sans MS";
     -fx-font-size: 16;
     -fx-font-smoothing-type: gray;
 
@@ -75,7 +75,7 @@ Load fonts
 }
 .login-text-input {
     -fx-border-width: 3;
-    -fx-text-alignment: center-left;
+    -fx-alignment: center-left;
     -fx-text-fill: #000000;
 }
 
