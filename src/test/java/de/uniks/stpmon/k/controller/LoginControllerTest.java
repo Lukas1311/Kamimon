@@ -171,7 +171,36 @@ public class LoginControllerTest extends ApplicationTest {
         release(KeyCode.ENTER);
     }
 
-    private void paste() {
-        press(KeyCode.CONTROL).press(KeyCode.V).release(KeyCode.V).release(KeyCode.CONTROL);
+    @Test
+    void testGetErrorMessage() {
+        // prep:
+        Map<String, Integer> errorMap = new HashMap<>();
+        errorMap.put("Validation failed", 400);
+        errorMap.put("Invalid username or password", 401);
+        errorMap.put("Username was already taken", 409);
+        errorMap.put("Rate limit reached", 429);
+
+        for (Map.Entry<String, Integer> entry : errorMap.entrySet()) {
+            String expectedErrorMsg = entry.getKey();
+            int statusCode = entry.getValue();
+
+            Response<Object> response = Response.error(statusCode, ResponseBody.create(null, "test"));
+
+            // define mocks:
+            when(authService.login(any(), any(), anyBoolean())).thenReturn(Observable.error(new HttpException(response)));
+
+            // action:
+            Platform.runLater(() -> {
+                loginController.login();
+            });
+            waitForFxEvents();
+
+            // check error label text
+            Label label = lookup("#errorLabel").queryAs(Label.class);
+            verifyThat(label, LabeledMatchers.hasText(expectedErrorMsg));
+        };
+
+        // test has to be verified 4 times because we check 4 error codes
+        verify(authService, times(4)).login(any(), any(), anyBoolean());
     }
 }
