@@ -47,12 +47,12 @@
       </VBox>
 
       <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
-         <TextField fx:id="usernameInput" promptText="Namen eingeben">
+         <TextField fx:id="usernameInput" promptText="%enterName">
             <font>
                <Font size="18.0"/>
             </font>
          </TextField>
-         <TextField fx:id="passwordInput" promptText="Passwort eingeben" styleClass="text-input">
+         <TextField fx:id="passwordInput" promptText="%enterPassword" styleClass="text-input">
             <font>
                <Font size="18.0"/>
             </font>
