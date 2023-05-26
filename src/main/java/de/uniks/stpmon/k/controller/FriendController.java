@@ -11,7 +11,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
 
@@ -29,6 +28,8 @@ public class FriendController extends Controller {
     public Button removeFriendButton;
     @FXML
     public Text removeFriendText;
+    @FXML
+    public Text chat;
 
     private final FriendListController friendListController;
 
@@ -51,7 +52,7 @@ public class FriendController extends Controller {
 
         userName.setText(user.name());
         messageButton.setTooltip(new Tooltip(translateString("chatWithFriend")));
-        removeFriendButton.setTooltip(new Tooltip(translateString(newFriend?("addFriend"):("removeFriend"))));
+        removeFriendButton.setTooltip(new Tooltip(translateString(newFriend ? ("addFriend") : ("removeFriend"))));
 
         if (newFriend) {
 
