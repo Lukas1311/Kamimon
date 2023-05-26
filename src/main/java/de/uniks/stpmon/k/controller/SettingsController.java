@@ -65,6 +65,8 @@ public class SettingsController extends Controller {
         
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
+        editTrainerButton.setOnAction(click -> editTrainer());
+
 
         return parent;
     }
