@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="monsterBar" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#showMonsters" prefHeight="60.0" prefWidth="250.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonsterBarController">
+      <HBox fx:id="monsterSlotsHBox" alignment="CENTER" prefHeight="30.0" prefWidth="250.0">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets right="10.0" />
+         </padding></HBox>
+      <ImageView fitHeight="15.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../controller/monsterbarArrow.png" />
+      </ImageView>
+</VBox>

@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -16,9 +17,13 @@ public class IngameController extends Controller{
 
     @FXML
     public BorderPane ingame;
+    @FXML
+    public Pane pane;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<MonsterBarController> monsterBarControllerProvider;
 
     @Inject
     public IngameController() {
@@ -27,6 +32,7 @@ public class IngameController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        pane.getChildren().add(monsterBarControllerProvider.get().render());
         return parent;
     }
 
