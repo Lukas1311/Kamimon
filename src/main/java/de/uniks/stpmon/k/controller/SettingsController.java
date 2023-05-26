@@ -24,6 +24,8 @@ public class SettingsController extends Controller {
     @FXML
     public Button editUserButton;
     @FXML
+    public Button editTrainerButton;
+    @FXML
     public ImageView userSprite;
     @FXML
     public Text usernameValue;
@@ -63,6 +65,8 @@ public class SettingsController extends Controller {
         
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
+        editTrainerButton.setOnAction(click -> editTrainer());
+
 
         return parent;
     }

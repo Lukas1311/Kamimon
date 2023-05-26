@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;

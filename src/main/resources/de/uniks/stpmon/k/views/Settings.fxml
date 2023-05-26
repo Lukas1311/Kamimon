@@ -93,7 +93,7 @@
             <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                   spacing="20.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
+                  <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
                           text="%editTrainer">
                      <font>
                         <Font size="18.0"/>
