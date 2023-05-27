@@ -41,11 +41,14 @@ public class IngameControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+    @Mock
+    Provider<MonsterBarController> monsterBarControllerProvider;
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
+        when(monsterBarControllerProvider.get()).thenReturn(new MonsterBarController());
         app.show(ingameController);
         stage.requestFocus();
     }

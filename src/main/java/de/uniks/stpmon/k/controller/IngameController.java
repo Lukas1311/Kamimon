@@ -6,9 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.scene.layout.Pane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -24,10 +26,14 @@ public class IngameController extends Controller {
     @FXML
     public BorderPane ingame;
     @FXML
+    public Pane pane;
+    @FXML
     public Text inGameText;
 
     @Inject
-    protected Provider<HybridController> hybridControllerProvider;
+    Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<MonsterBarController> monsterBarControllerProvider;
 
     @Inject
     protected WorldView worldView;
@@ -64,6 +70,7 @@ public class IngameController extends Controller {
             scene.heightProperty()
                     .bind(((Region) parent).heightProperty());
         }
+        pane.getChildren().add(monsterBarControllerProvider.get().render());
         return parent;
     }
 
