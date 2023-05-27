@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -28,17 +29,15 @@ class RegionServiceTest {
         Region region = new Region(
                 "1",
                 "Test",
-                null,
+                new Spawn("1", 0, 0),
                 null
         );
-        ArrayList<String> regions = new ArrayList<>();
-        regions.add(region._id());
-        ArrayList<Region> regionsAsRegion = new ArrayList<>();
-        regionsAsRegion.add(region);
+        ArrayList<Region> regions = new ArrayList<>();
+        regions.add(region);
 
 
         when(regionApiService.getRegions())
-                .thenReturn(Observable.just(regionsAsRegion));
+                .thenReturn(Observable.just(regions));
 
         //action
         List<Region> regionList = regionService.getRegions().blockingFirst();
@@ -55,12 +54,9 @@ class RegionServiceTest {
         Region region = new Region(
                 "1",
                 "Test",
-                null,
+                new Spawn("1", 0, 0),
                 null
         );
-        ArrayList<String> regions = new ArrayList<>();
-        regions.add(region._id());
-
 
         when(regionApiService.getRegion("1"))
                 .thenReturn(Observable.just(region));

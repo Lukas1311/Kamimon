@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
@@ -101,7 +102,7 @@ public class ChatControllerTest extends ApplicationTest {
         when(msgService.getAllMessages(any(), any())).thenReturn(Observable.just(messagesMock));
         when(eventListener.<Message>listen(any(), any())).thenReturn(events);
 
-        when(regionService.getRegions()).thenReturn(Observable.just(List.of(new Region("i", "reg", null, null))));
+        when(regionService.getRegions()).thenReturn(Observable.just(List.of(new Region("i", "reg", new Spawn("0", 0, 0), null))));
         when(userService.getMe()).thenReturn(bob);
 
         // show app

@@ -3,12 +3,25 @@ package de.uniks.stpmon.k.di;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Area;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Module
 public class RegionTestModule {
@@ -31,8 +44,8 @@ public class RegionTestModule {
              * names {"TestRegion0", "TestRegion1"}
              */
             private void initDummyRegions() {
-                Region region0 = new Region("id0", "TestRegion0", null, null);
-                Region region1 = new Region("id1", "TestRegion1", null, null);
+                Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), null);
+                Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), null);
 
                 regions.add(region0);
                 regions.add(region1);

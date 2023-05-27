@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.MonsterBarController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
@@ -37,6 +38,9 @@ public class WorldViewTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     public Provider<HybridController> hybridControllerProvider;
+    @Mock
+    @SuppressWarnings("unused")
+    MonsterBarController monsterBarController;
 
     @InjectMocks
     public IngameController ingameController;
