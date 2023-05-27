@@ -250,7 +250,7 @@ public class LoginControllerTest extends ApplicationTest {
             verifyThat(label, LabeledMatchers.hasText(expectedErrorMsg));
         };
 
-        // test has to be verified 4 times because we check 4 error codes
-        verify(authService, times(4)).login(any(), any(), anyBoolean());
+        // test has to be verified 5 times because we check 5 error codes
+        verify(authService, times(5)).login(any(), any(), anyBoolean());
     }
 }
