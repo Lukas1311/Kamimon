@@ -57,21 +57,21 @@ Load fonts
     -fx-border-radius: 0;
     -fx-border-width: 4;
     -fx-pref-width: 400;
-    -fx-pref-height: 450;
+    -fx-pref-height: 500;
     -fx-min-width: 400;
-    -fx-min-height: 450;
+    -fx-min-height: 500;
     -fx-max-width: 400;
-    -fx-max-height: 450;
+    -fx-max-height: 500;
     -fx-spacing: 10;
 }
 
 .login-element {
     -fx-pref-width: 250;
-    -fx-pref-height: 30;
+    -fx-pref-height: 35;
     -fx-min-width: 250;
-    -fx-min-height: 30;
+    -fx-min-height: 35;
     -fx-max-width: 250;
-    -fx-max-height: 30;
+    -fx-max-height: 35;
 }
 .login-text-input {
     -fx-border-width: 3;
@@ -98,6 +98,12 @@ Load fonts
     -fx-min-height: 30;
     -fx-max-width: 125;
     -fx-max-height: 30;
+}
+
+.login-error-text {
+    -fx-text-fill: -fx-color-red;
+    -fx-text-overrun: ellipsis;
+    -fx-font-size: 12;
 }
 
 
