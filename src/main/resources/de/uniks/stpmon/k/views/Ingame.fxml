@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<StackPane fx:id="ingameStack" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="de.uniks.stpmon.k.controller.IngameController" onMouseClicked="#closeSidebar"
-           prefHeight="380.0" prefWidth="380.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-           minHeight="-Infinity" minWidth="-Infinity">
-    <BorderPane fx:id="ingame">
-        <center>
-            <Text fx:id="inGameText" layoutX="211.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                  text="INGAME"
-                  BorderPane.alignment="CENTER">
+<BorderPane fx:id="ingame" prefHeight="380.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            onMouseClicked="#closeSidebar"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IngameController">
+    <center>
+        <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
+            <Text fx:id="inGameText" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME">
                 <font>
                     <Font size="61.0"/>
                 </font>
             </Text>
-        </center>
-    </BorderPane>
-</StackPane>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -1,13 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.map.WorldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.views.WorldView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.SubScene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -27,10 +27,10 @@ public class IngameController extends Controller {
     public Text inGameText;
 
     @Inject
-    WorldController worldController;
+    protected Provider<HybridController> hybridControllerProvider;
 
     @Inject
-    protected Provider<HybridController> hybridControllerProvider;
+    protected WorldView worldView;
 
     @Inject
     public IngameController() {
@@ -39,13 +39,31 @@ public class IngameController extends Controller {
     @Override
     public void init() {
         super.init();
-        worldController.init();
+
+        worldView.init();
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        worldView.destroy();
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        ingameStack.getChildren().add(0, worldController.render());
+
+        SubScene scene = worldView.renderScene();
+        if (scene != null) {
+            ingameStack.getChildren().add(0, scene);
+
+            // Scale the scene to the parent
+            scene.widthProperty()
+                    .bind(((Region) parent).widthProperty());
+            scene.heightProperty()
+                    .bind(((Region) parent).heightProperty());
+        }
         return parent;
     }
 
