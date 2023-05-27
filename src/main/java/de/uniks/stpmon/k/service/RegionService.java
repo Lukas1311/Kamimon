@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -21,5 +22,13 @@ public class RegionService {
 
     public Observable<Region> getRegion(String id) {
         return regionApiService.getRegion(id);
+    }
+
+    public Observable<Area> getArea(String regionId, String areaId) {
+        return regionApiService.getArea(regionId, areaId);
+    }
+
+    public Observable<List<Area>> getAreas(String regionId) {
+        return regionApiService.getAreas(regionId);
     }
 }

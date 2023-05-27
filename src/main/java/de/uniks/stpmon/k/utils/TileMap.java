@@ -1,29 +1,30 @@
-package de.uniks.stpmon.k.images;
+package de.uniks.stpmon.k.utils;
 
+import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.ChunkData;
 import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
-
-import static de.uniks.stpmon.k.images.ImageUtils.TILE_SIZE;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
+    private final int tileWidth;
+    private final int tileHeight;
 
-    public TileMap(TileMapData data, Map<TilesetSource, Tileset> tilesetBySource) {
-        this.data = data;
+    public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
+        this.data = provider.map();
         this.tilesetBySource = tilesetBySource;
+        this.tileHeight = data.tileheight();
+        this.tileWidth = data.tilewidth();
     }
 
     public TileMapData getData() {
@@ -50,8 +51,16 @@ public class TileMap {
         return renderMap(width, height);
     }
 
+    private BufferedImage createImage(int width, int height) {
+        return new BufferedImage(
+                width * tileWidth,
+                height * tileHeight,
+                BufferedImage.TYPE_4BYTE_ABGR);
+    }
+
     public BufferedImage renderMap(int width, int height) throws IOException {
-        BufferedImage mergedImage = ImageUtils.createImage(width, height);
+        BufferedImage mergedImage = createImage(
+                width, height);
         Graphics2D g = mergedImage.createGraphics();
         int i = 0;
         for (TileLayerData layer : data.layers()) {
@@ -59,8 +68,7 @@ public class TileMap {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
-            ImageIO.write(layerImage, "png", new File("test_layer_" + i++ + ".png"));
-            g.drawImage(layerImage, 0, 0, null);
+            g.drawImage(layerImage, layer.startx(), layer.starty(), null);
         }
         g.dispose();
         return mergedImage;
@@ -69,19 +77,21 @@ public class TileMap {
     public BufferedImage renderLayer(TileLayerData layer) {
         int width = layer.width();
         int height = layer.height();
-        BufferedImage chunkImage = ImageUtils.createImage(width, height);
+        BufferedImage chunkImage = createImage(
+                width, height);
         for (ChunkData chunk : layer.chunks()) {
             BufferedImage chunkImage1 = renderChunk(chunk);
-            ImageUtils.copyData(chunkImage.getRaster(), chunkImage1,
-                    chunk.x() * TILE_SIZE, chunk.y() * TILE_SIZE,
+            ImageUtils.copyData(chunkImage.getRaster(),
+                    chunkImage1,
+                    chunk.x() * tileWidth, chunk.y() * tileHeight,
                     0, 0,
-                    chunk.width() * TILE_SIZE, chunk.height() * TILE_SIZE);
+                    chunk.width() * tileWidth, chunk.height() * tileHeight);
         }
         return chunkImage;
     }
 
     public BufferedImage renderChunk(ChunkData chunk) {
-        BufferedImage chunkImage = ImageUtils.createImage(chunk.width(), chunk.height());
+        BufferedImage chunkImage = createImage(chunk.width(), chunk.height());
         WritableRaster raster = chunkImage.getRaster();
 
         for (int x = 0; x < chunk.width(); x++) {
@@ -92,22 +102,18 @@ public class TileMap {
                 }
                 TilesetSource source = getSource(data);
                 Tileset tileset = tilesetBySource.get(source);
-                TilesetData tilesetData = tileset.data();
-                int value = tilesetData.tilewidth() * (data - source.firstgid());
-                int posX = value % tilesetData.imagewidth();
-                int posY = (value / tilesetData.imagewidth()) * tilesetData.tileheight();
-                ImageUtils.copyData(raster,
-                        tileset.image(),
-                        x * tilesetData.tilewidth(), y * tilesetData.tileheight(),
-                        posX, posY,
-                        tilesetData.tilewidth(), tilesetData.tileheight());
+                tileset.setTile(raster, x, y, data);
             }
         }
         return chunkImage;
     }
 
     private TilesetSource getSource(int gid) {
-        return tilesetBySource.keySet().stream().filter(tileset -> tileset.firstgid() <= gid).findFirst().orElse(null);
+        return tilesetBySource.keySet().stream()
+                .sorted(Comparator.comparingInt(TilesetSource::firstgid).reversed())
+                .filter(tileset -> (gid - tileset.firstgid()) >= 0)
+                .findFirst()
+                .orElse(null);
     }
 
 }

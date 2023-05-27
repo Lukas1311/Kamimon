@@ -1,17 +1,29 @@
-package de.uniks.stpmon.k.images;
+package de.uniks.stpmon.k.utils;
 
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 
 public record Tileset(TilesetSource source,
                       TilesetData data,
                       BufferedImage image) {
 
+    public void setTile(WritableRaster raster, int x, int y, int index) {
+        int value = data.tilewidth() * (index - source.firstgid());
+        int posX = value % data.imagewidth();
+        int posY = (value / data.imagewidth()) * data.tileheight();
+        ImageUtils.copyData(raster, image,
+                x * data.tilewidth(), y * data.tileheight(),
+                posX, posY,
+                data.tilewidth(), data.tileheight());
+    }
+
     public static Tileset.Builder builder() {
         return new Tileset.Builder();
     }
+
 
     public static class Builder {
         private TilesetSource source;

@@ -21,4 +21,8 @@ public class RegionStorage {
     public void setRegion(Region region) {
         this.region = region;
     }
+
+    public boolean isEmpty() {
+        return region == null;
+    }
 }
