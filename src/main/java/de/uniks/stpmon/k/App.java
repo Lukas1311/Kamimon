@@ -2,6 +2,8 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoadingScreenController;
+import de.uniks.stpmon.k.di.DaggerMainComponent;
+import de.uniks.stpmon.k.di.MainComponent;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -65,6 +67,7 @@ public class App extends Application {
         if (component == null) {
             return;
         }
+
         LoadingScreenController loadingScreen = component.loadingScreenController();
         loadingScreen.setOnLoadingFinished(this::onFinishedLoading);
         show(loadingScreen);
@@ -84,11 +87,11 @@ public class App extends Application {
     }
 
     private URL getIconUrl() {
+        //requireNonNull was not shown in Lecture, but is needed to eliminate warning
         return Objects.requireNonNull(App.class.getResource("icon_256.png"));
     }
 
     private void setAppIcon(Stage stage) {
-        //requireNonNull was not shown in Lecture, but is needed to eliminate warning
         final Image image = new Image(getIconUrl().toString());
         stage.getIcons().add(image);
     }
@@ -100,7 +103,6 @@ public class App extends Application {
         }
         try {
             final Taskbar taskbar = Taskbar.getTaskbar();
-            //requireNonNull was not shown in Lecture, but is needed to eliminate warning
             final java.awt.Image image = ImageIO.read(getIconUrl());
             taskbar.setIconImage(image);
         } catch (Exception ignored) {
@@ -109,7 +111,7 @@ public class App extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         cleanup();
         disposables.dispose();
     }
@@ -122,7 +124,7 @@ public class App extends Application {
 
     private void initAndRender(Controller controller) {
         controller.init();
-        //sets the firs knot in the scene tree
+        //sets the first node in the scene tree
         stage.getScene().setRoot(controller.render());
     }
 
@@ -132,7 +134,6 @@ public class App extends Application {
      * Is called, when the app is closed
      */
     private void cleanup() {
-
         if (controller != null) {
             controller.destroy();
             controller = null;

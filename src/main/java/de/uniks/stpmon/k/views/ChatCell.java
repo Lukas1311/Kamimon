@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.ChatEntryController;
 import de.uniks.stpmon.k.controller.ChatListController;
-import de.uniks.stpmon.k.dto.Group;
+import de.uniks.stpmon.k.models.Group;
 import javafx.scene.control.ListCell;
 
 public class ChatCell extends ListCell<Group> {

@@ -104,7 +104,7 @@ dependencies {
 
 javafx {
     version = '20'
-    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.web']
+    modules = ['javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.web', 'javafx.swing']
 }
 
 jacoco {

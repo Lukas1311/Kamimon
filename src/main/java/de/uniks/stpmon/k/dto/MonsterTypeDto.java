@@ -8,6 +8,6 @@ public record MonsterTypeDto(
         String image,
         List<String> type, // array because of multi-types
         String description
-    ) {
-    
+) {
+
 }

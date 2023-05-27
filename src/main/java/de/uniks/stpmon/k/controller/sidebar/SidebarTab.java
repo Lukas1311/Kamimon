@@ -7,4 +7,6 @@ public enum SidebarTab {
     CHAT_CREATE,
     FRIEND_LIST,
     SETTINGS,
+    USER_MANAGEMENT,
+    TRAINER_MANAGEMENT,
 }

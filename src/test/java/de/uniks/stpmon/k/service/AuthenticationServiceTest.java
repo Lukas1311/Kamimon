@@ -1,12 +1,15 @@
 package de.uniks.stpmon.k.service;
 
 
-import de.uniks.stpmon.k.dto.ErrorResponse;
 import de.uniks.stpmon.k.dto.LoginDto;
-import de.uniks.stpmon.k.dto.LoginResult;
 import de.uniks.stpmon.k.dto.RefreshDto;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.ErrorResponse;
+import de.uniks.stpmon.k.models.LoginResult;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.service.storage.IFriendCache;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
+import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

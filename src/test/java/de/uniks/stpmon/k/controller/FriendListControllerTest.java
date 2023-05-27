@@ -1,11 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.dto.User;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,9 +19,9 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -88,9 +87,8 @@ class FriendListControllerTest extends ApplicationTest {
         //get friendList
         final ScrollPane scrollPane = lookup("#scrollPane").query();
         final VBox userList = (VBox) scrollPane.getContent();
-        final ListView<?> listView = (ListView<?>) userList.getChildren().get(0);
 
-        assertNotNull(listView.lookup("#Peter"));
+        assertNotNull(userList.lookup("#Peter"));
 
         when(userService.removeFriend(any(User.class))).thenReturn(Observable.just(friends));
 
@@ -102,7 +100,7 @@ class FriendListControllerTest extends ApplicationTest {
         verify(userService).removeFriend(any(User.class));
 
         //peter is no longer in friends
-        assertNull(listView.lookup("#Peter"));
+        assertNull(userList.lookup("#Peter"));
     }
 
     @Test
@@ -110,8 +108,8 @@ class FriendListControllerTest extends ApplicationTest {
         //get friendList
         final ScrollPane scrollPane = lookup("#scrollPane").query();
         final VBox userList = (VBox) scrollPane.getContent();
-        final ListView<?> friendView = (ListView<?>) userList.getChildren().get(0);
-        final ListView<?> userView = (ListView<?>) userList.getChildren().get(1);
+        final VBox friendView = (VBox) userList.lookup("#friendSection");
+        final VBox userView = (VBox) userList.lookup("#userSection");
 
         //"Alice" is not displayed before search
         assertNull(userView.lookup("#Alice"));

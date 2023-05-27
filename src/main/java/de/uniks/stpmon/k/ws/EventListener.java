@@ -1,25 +1,20 @@
 package de.uniks.stpmon.k.ws;
 
-import de.uniks.stpmon.k.Main;
-import de.uniks.stpmon.k.dto.Event;
-import de.uniks.stpmon.k.service.TokenStorage;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-
+import de.uniks.stpmon.k.Main;
+import de.uniks.stpmon.k.models.Event;
+import de.uniks.stpmon.k.service.storage.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 @Singleton
 public class EventListener {
@@ -61,7 +56,7 @@ public class EventListener {
 
     public static <T> Consumer<String> createPatternHandler(
             ObjectMapper mapper, String pattern, Class<T> type, ObservableEmitter<Event<T>> emitter
-        ) {
+    ) {
         // pattern of form like 'regions.*.created'
         final Pattern regex = Pattern.compile(pattern.replace(".", "\\.").replace("*", "[^.]*"));
         return eventStr -> {
@@ -73,7 +68,7 @@ public class EventListener {
                 }
 
                 final T data = mapper.treeToValue(node.get("data"), type);
-                emitter.onNext(new Event<T>(event, data));
+                emitter.onNext(new Event<>(event, data));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }

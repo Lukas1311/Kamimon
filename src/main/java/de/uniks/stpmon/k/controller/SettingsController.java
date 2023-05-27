@@ -2,8 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
-import de.uniks.stpmon.k.dto.User;
-import de.uniks.stpmon.k.service.UserStorage;
+import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.storage.UserStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -22,6 +22,10 @@ public class SettingsController extends Controller {
     @FXML
     public Button backButton;
     @FXML
+    public Button editUserButton;
+    @FXML
+    public Button editTrainerButton;
+    @FXML
     public ImageView userSprite;
     @FXML
     public Text usernameValue;
@@ -39,6 +43,8 @@ public class SettingsController extends Controller {
     UserStorage userStorage;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<UserManagementController> userManagementControllerProvider;
 
     @Inject
     public SettingsController() {
@@ -56,11 +62,24 @@ public class SettingsController extends Controller {
         User user = userStorage.getUser();
         usernameValue.setText(user.name());
         // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
+        
+        backButton.setOnAction(click -> backToMainScreen());
+        editUserButton.setOnAction(click -> editUser());
+        editTrainerButton.setOnAction(click -> editTrainer());
+
 
         return parent;
     }
 
-    public void backtoMainScreen() {
+    public void backToMainScreen() {
         hybridControllerProvider.get().forceTab(SidebarTab.SETTINGS);
+    }
+
+    public void editUser() {
+        hybridControllerProvider.get().pushTab(SidebarTab.USER_MANAGEMENT);
+    }
+
+    public void editTrainer() {
+        hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
     }
 }

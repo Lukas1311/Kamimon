@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.dto.Group;
-import de.uniks.stpmon.k.dto.Message;
-import de.uniks.stpmon.k.dto.Region;
+import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.models.Message;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
@@ -22,12 +22,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
 public class ChatController extends ToastedController {
@@ -126,7 +128,7 @@ public class ChatController extends ToastedController {
 
         // the factory creates the initial message list in the chat ui
         messagesListView = new ListView<>(this.messages);
-        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, hybridControllerProvider, resources));
+        messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, this, resources));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         // scrolls to the bottom of the listview
@@ -216,7 +218,7 @@ public class ChatController extends ToastedController {
                 Optional<Region> regionOptional = regionService.getRegions().blockingFirst()
                         .stream().filter(r -> r.name().equals(regionName)).findFirst();
 
-                if(regionOptional.isPresent()) {
+                if (regionOptional.isPresent()) {
                     String regionId = regionOptional.get()._id();
 
                     String invitationText = "JoinInvitation " + regionId;
@@ -255,6 +257,24 @@ public class ChatController extends ToastedController {
     public void leaveChat() {
         messages.clear();
         hybridControllerProvider.get().popTab();
+    }
+
+    public void openRegion(String regionId) {
+        subscribe(regionService.getRegion(regionId), region -> {
+            subscribe(regionService.enterRegion(region),
+                    (area) -> hybridControllerProvider.get().openMain(INGAME));
+        }, this::handleError);
+    }
+
+    @Override
+    protected void handleError(Throwable error) {
+        super.handleError(error);
+        if (!(error instanceof HttpException http)) {
+            return;
+        }
+        if (http.code() == 404) {
+            toastController.openToast(translateString("region.not.found"));
+        }
     }
 }
 
