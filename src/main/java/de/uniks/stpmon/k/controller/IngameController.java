@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.scene.layout.Pane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -33,7 +32,7 @@ public class IngameController extends Controller {
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
-    Provider<MonsterBarController> monsterBarControllerProvider;
+    MonsterBarController monsterBar;
 
     @Inject
     protected WorldView worldView;
@@ -47,6 +46,7 @@ public class IngameController extends Controller {
         super.init();
 
         worldView.init();
+        monsterBar.init();
     }
 
     @Override
@@ -54,6 +54,7 @@ public class IngameController extends Controller {
         super.destroy();
 
         worldView.destroy();
+        monsterBar.destroy();
     }
 
     @Override
@@ -70,7 +71,11 @@ public class IngameController extends Controller {
             scene.heightProperty()
                     .bind(((Region) parent).heightProperty());
         }
-        pane.getChildren().add(monsterBarControllerProvider.get().render());
+        Parent monsterBar = this.monsterBar.render();
+        // Null if unit testing world view
+        if (monsterBar != null) {
+            pane.getChildren().add(monsterBar);
+        }
         return parent;
     }
 

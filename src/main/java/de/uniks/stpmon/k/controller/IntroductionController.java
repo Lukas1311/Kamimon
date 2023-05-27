@@ -13,7 +13,6 @@ import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Objects;
 
 
 public class IntroductionController extends Controller {
@@ -51,10 +50,6 @@ public class IntroductionController extends Controller {
         further.visibleProperty()
                 .bind(indexProperty.lessThan(images.length));
         return parent;
-    }
-
-    private Image loadImage(String image) {
-        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 
     public void nextSheet(ActionEvent event) {

@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.map.ChunkData;
 import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
@@ -58,7 +59,7 @@ public class TileMapServiceTest {
         when(presetService.getImage("grass.png")).thenReturn(Observable.just(image));
 
         TileMapData map = createDummyMap();
-        Region region = new Region("1", "2", null, map);
+        Region region = new Region("1", "2", new Spawn("1", 0, 0), map);
         TileMap tileMap = msgService.createMap(region);
 
         //check if map is created

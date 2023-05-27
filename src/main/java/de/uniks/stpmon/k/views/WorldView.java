@@ -2,11 +2,11 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TileMapService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.utils.MeshUtils;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -129,22 +129,11 @@ public class WorldView extends Viewable {
         if (regionStorage.isEmpty()) {
             return;
         }
-        subscribe(regionService.getRegion("645e32c6866ace359554a7ec")
-                        .flatMap((region) -> regionService.getAreas(region._id()))
-                        .observeOn(Schedulers.io()).map((areas) ->
-                                tileMapService.createMap(areas.get(0)).renderMap()),
-                (image) -> {
-                    // imageView.setImage(SwingFXUtils.toFXImage(image, null));
-                },
-                (error) -> {
-                    System.out.println("Error loading image");
-                    error.printStackTrace();
-                });
-    }
-
-    @Override
-    public void destroy() {
-
+        Area area = regionStorage.getArea();
+        if (area == null || area.map() == null) {
+            return;
+        }
+        tileMapService.createMap(area);
     }
 
     private static EventHandler<KeyEvent> keyPressed(PerspectiveCamera camera) {

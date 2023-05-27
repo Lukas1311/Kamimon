@@ -9,8 +9,10 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 
 import javax.inject.Inject;
+import java.util.Objects;
 
 public abstract class Viewable {
 
@@ -59,5 +61,15 @@ public abstract class Viewable {
                                           Consumer<T> onNext,
                                           @NonNull Consumer<? super Throwable> onError) {
         disposables.add(observable.observeOn(FX_SCHEDULER).subscribe(onNext, onError));
+    }
+
+    /**
+     * Loads an image from the resource folder.
+     *
+     * @param image Path to the image relative to "resources/de/uniks/stpmon/k/controller"
+     * @return The loaded image
+     */
+    protected Image loadImage(String image) {
+        return new Image(Objects.requireNonNull(Viewable.class.getResource(image)).toString());
     }
 }
