@@ -1,9 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.map.WorldController;
 import de.uniks.stpmon.k.service.RegionService;
-import io.reactivex.rxjava3.core.Observable;
+import de.uniks.stpmon.k.views.WorldView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -32,9 +30,8 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     RegionService regionService;
 
-    @Spy
-    @InjectMocks
-    WorldController worldController;
+    @Mock
+    WorldView worldView;
 
     @InjectMocks
     IngameController ingameController;
@@ -47,7 +44,6 @@ public class IngameControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        when(regionService.getRegion(any())).thenReturn(Observable.empty());
         app.show(ingameController);
         stage.requestFocus();
     }
