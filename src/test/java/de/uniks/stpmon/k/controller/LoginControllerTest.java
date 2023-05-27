@@ -8,12 +8,20 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
+
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
+import retrofit2.Response;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,11 +33,18 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import javax.inject.Provider;
+
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -57,6 +72,7 @@ public class LoginControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
+    @Spy
     @InjectMocks
     LoginController loginController;
     @Mock
@@ -171,6 +187,39 @@ public class LoginControllerTest extends ApplicationTest {
         release(KeyCode.ENTER);
     }
 
+    @Test
+    void testChoseLanguage() {
+        // prep:
+        TextField usernameField = lookup("#usernameInput").queryAs(TextField.class);
+        RadioButton enButton = lookup("#englishButton").queryAs(RadioButton.class);
+        RadioButton deButton = lookup("#germanButton").queryAs(RadioButton.class);
+        assertTrue(enButton.isSelected());
+        assertThat(usernameField.getPromptText()).isEqualTo("Username");
+        // define mocks:
+        when(resourceBundleProvider.get()).thenReturn(resources);
+        when(preferences.get(anyString(), anyString())).thenReturn("de");
+
+        doAnswer(invocation -> {
+            System.out.println("es gibt kuchen!");
+            preferences.put("locale", "de");
+            resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.forLanguageTag("de"));
+            resourceBundleProvider.get();
+            return null;
+        }).when(loginController).setDe();
+
+        // action: chose the DE button
+        write("\t".repeat(5));
+        press(KeyCode.LEFT).release(KeyCode.LEFT);
+        assertTrue(deButton.isSelected());
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+
+        // check values:
+        assertThat(usernameField.getPromptText()).isEqualTo("Benutzername");
+
+        // verify mock:
+        verify(loginController).setDe();
+    }
+    
     @Test
     void testGetErrorMessage() {
         // prep:
