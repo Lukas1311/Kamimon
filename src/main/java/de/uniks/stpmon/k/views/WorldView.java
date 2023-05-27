@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.RegionService;
@@ -26,10 +25,14 @@ import javafx.scene.transform.Translate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Objects;
+
+import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 @Singleton
 public class WorldView extends Viewable {
+
+    public static final int MOVMENT_UNIT = 8;
+    public static double IMAGE_SCALE = 2.0;
 
     @Inject
     protected TileMapService tileMapService;
@@ -48,28 +51,37 @@ public class WorldView extends Viewable {
         return material;
     }
 
-    private MeshView createFloor(Image image) {
-        double height = image.getHeight();
-        double width = image.getWidth();
-        MeshView floor = MeshUtils.createPlane((int) width * 2, (int) height * 2);
+    private MeshView createFloorScaled(String path) {
+        Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
+
+        return createFloor(scaledimage,
+                (int) (scaledimage.getWidth() / IMAGE_SCALE),
+                (int) (scaledimage.getHeight() / IMAGE_SCALE));
+    }
+
+    private MeshView createFloor(Image image, int width, int height) {
+        MeshView floor = MeshUtils.createPlane(width, height);
         floor.setDrawMode(DrawMode.FILL);
-        floor.setScaleX(0.5);
-        floor.setScaleY(0.5);
-        floor.setScaleZ(0.5);
         floor.setCullFace(CullFace.BACK);
         floor.setMaterial(createMaterial(image));
 
         return floor;
     }
 
-    private MeshView createEntity(Image image, int angle) {
-        MeshView entity = MeshUtils.createRectangle(32, 64);
+    private MeshView createEntityScaled(String path, int angle) {
+        Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
+        return createEntity(scaledimage,
+                (int) (scaledimage.getWidth() / IMAGE_SCALE),
+                (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
+    }
+
+    private MeshView createEntity(Image image, int width, int height, int angle) {
+        MeshView entity = MeshUtils.createRectangle(width, height);
         entity.setDrawMode(DrawMode.FILL);
-        entity.setScaleX(0.5);
-        entity.setScaleY(0.5);
-        entity.setScaleZ(0.5);
-        entity.setCullFace(null);
-        entity.setTranslateY(-14);
+        entity.setCullFace(CullFace.BACK);
+        entity.setTranslateY(-16);
+        entity.setTranslateX(8);
+        entity.setTranslateZ(-8);
         entity.setRotationAxis(Rotate.X_AXIS);
         entity.setRotate(angle);
         entity.setMaterial(createMaterial(image));
@@ -91,7 +103,7 @@ public class WorldView extends Viewable {
         int angle = -45;
         PerspectiveCamera camera = createCamera(angle);
 
-        MeshView character = createEntity(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("map/char.png"))), angle);
+        MeshView character = createEntityScaled("map/char.png", angle);
         character.setId("character");
 
         camera.translateXProperty().addListener((observable, oldValue, newValue) ->
@@ -101,8 +113,10 @@ public class WorldView extends Viewable {
         camera.rotateProperty().addListener((observable, oldValue, newValue) ->
                 character.setRotate(character.getRotate() - ((double) oldValue - (double) newValue)));
 
-        MeshView floor = createFloor(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("map/natchester.png"))));
+        MeshView floor = createFloorScaled("map/natchester.png");
         floor.setId("floor");
+        floor.setTranslateX(1280.0 / 2);
+        floor.setTranslateZ(-1280.0 / 2);
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
@@ -140,10 +154,10 @@ public class WorldView extends Viewable {
         return (event) -> {
             System.out.println("Key pressed: " + event.getCode());
             switch (event.getCode()) {
-                case W -> camera.setTranslateZ(camera.getTranslateZ() + 5);
-                case S -> camera.setTranslateZ(camera.getTranslateZ() - 5);
-                case A -> camera.setTranslateX(camera.getTranslateX() - 5);
-                case D -> camera.setTranslateX(camera.getTranslateX() + 5);
+                case W -> camera.setTranslateZ(camera.getTranslateZ() + MOVMENT_UNIT);
+                case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVMENT_UNIT);
+                case A -> camera.setTranslateX(camera.getTranslateX() - MOVMENT_UNIT);
+                case D -> camera.setTranslateX(camera.getTranslateX() + MOVMENT_UNIT);
             }
             rotate(event, camera);
         };
