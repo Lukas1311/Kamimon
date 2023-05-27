@@ -11,7 +11,7 @@
 <?import java.lang.String?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       styleClass="sidebar-content" stylesheets="@css/sidebar.css" xmlns="http://javafx.com/javafx/19"
-      xmlns:fx="http://javafx.com/fxml/1">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChooseSpriteController">>
    <children>
       <HBox alignment="CENTER" prefHeight="76.0" prefWidth="500.0">
          <children>
