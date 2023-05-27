@@ -1,18 +1,16 @@
 package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.controller.RegionController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.RegionListController;
 import de.uniks.stpmon.k.models.Region;
 import javafx.scene.control.ListCell;
 
-import javax.inject.Provider;
-
 public class RegionCell extends ListCell<Region> {
 
-    private final Provider<HybridController> hybridControllerProvider;
+    private final RegionListController listController;
 
-    public RegionCell(Provider<HybridController> hybridControllerProvider) {
-        this.hybridControllerProvider = hybridControllerProvider;
+    public RegionCell(RegionListController listController) {
+        this.listController = listController;
     }
 
     @Override
@@ -22,7 +20,7 @@ public class RegionCell extends ListCell<Region> {
         if (empty || item == null) {
             setGraphic(null);
         } else {
-            final RegionController regionController = new RegionController(item, hybridControllerProvider);
+            final RegionController regionController = new RegionController(item, listController);
             setGraphic(regionController.render());
         }
     }

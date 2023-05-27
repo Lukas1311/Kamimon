@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.views.WorldView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -25,20 +27,28 @@ public class IngameControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
+    @Mock
+    @SuppressWarnings("unused")
+    RegionService regionService;
+
+    @Mock
+    @SuppressWarnings("unused")
+    WorldView worldView;
+
     @InjectMocks
     IngameController ingameController;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
-    @Mock
-    Provider<MonsterBarController> monsterBarControllerProvider;
+    @Spy
+    @SuppressWarnings("unused")
+    MonsterBarController monsterBarController = new MonsterBarController();
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        when(monsterBarControllerProvider.get()).thenReturn(new MonsterBarController());
         app.show(ingameController);
         stage.requestFocus();
     }

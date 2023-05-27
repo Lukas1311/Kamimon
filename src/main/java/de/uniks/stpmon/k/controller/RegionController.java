@@ -1,15 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-
-import javax.inject.Provider;
-
-import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 public class RegionController extends Controller {
     private final Region region;
@@ -18,11 +13,11 @@ public class RegionController extends Controller {
     @FXML
     private BorderPane regionBorderPane;
 
-    private final Provider<HybridController> hybridControllerProvider;
+    private final RegionListController listController;
 
-    public RegionController(Region region, Provider<HybridController> hybridControllerProvider) {
+    public RegionController(Region region, RegionListController listController) {
         this.region = region;
-        this.hybridControllerProvider = hybridControllerProvider;
+        this.listController = listController;
     }
 
     @Override
@@ -30,9 +25,7 @@ public class RegionController extends Controller {
 
         final Parent parent = super.render();
         regionButton.setText(region.name());
-        regionButton.setOnAction(event -> {
-            hybridControllerProvider.get().openMain(INGAME);
-        });
+        regionButton.setOnAction(event -> listController.openRegion(region));
         return parent;
     }
 }

@@ -3,12 +3,10 @@ package de.uniks.stpmon.k.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,9 +79,5 @@ public class LoadingScreenController extends Controller {
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
         return parent;
-    }
-
-    private Image loadImage(String image) {
-        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 }

@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.ws.EventListener;
@@ -28,6 +29,11 @@ public class TestModule {
     @Singleton
     static EventListener eventListener() {
         return mock(EventListener.class);
+    }
+
+    @Provides
+    static ObjectMapper mapper() {
+        return mock(ObjectMapper.class);
     }
 
 }

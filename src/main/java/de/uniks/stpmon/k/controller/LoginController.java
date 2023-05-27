@@ -19,7 +19,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -230,9 +229,5 @@ public class LoginController extends Controller {
     private void setLanguage(Locale locale) {
         preferences.put("locale", locale.toLanguageTag());
         app.show(this); //reloaded
-    }
-
-    private Image loadImage(String image) {
-        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
     }
 }
