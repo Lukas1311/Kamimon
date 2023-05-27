@@ -228,7 +228,7 @@ public class LoginControllerTest extends ApplicationTest {
         errorMap.put("Invalid username or password", 401);
         errorMap.put("Username was already taken", 409);
         errorMap.put("Rate limit reached", 429);
-        errorMap.put("error", 999); // for default case
+        errorMap.put("Error", 999); // for default case
 
         for (Map.Entry<String, Integer> entry : errorMap.entrySet()) {
             String expectedErrorMsg = entry.getKey();
