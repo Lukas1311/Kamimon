@@ -1,14 +1,20 @@
 package de.uniks.stpmon.k.utils;
 
+import de.uniks.stpmon.k.models.map.Property;
+import de.uniks.stpmon.k.models.map.Tile;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.util.BitSet;
 
 public record Tileset(TilesetSource source,
                       TilesetData data,
-                      BufferedImage image) {
+                      BufferedImage image,
+                      BitSet walkableData,
+                      BitSet tallGrassData) {
+
 
     public void setTile(WritableRaster raster, int x, int y, int index) {
         int value = data.tilewidth() * (index - source.firstgid());
@@ -24,6 +30,9 @@ public record Tileset(TilesetSource source,
         return new Tileset.Builder();
     }
 
+    public boolean hasCollision(int data) {
+        return walkableData == null || !walkableData.get(data - source.firstgid());
+    }
 
     public static class Builder {
         private TilesetSource source;
@@ -50,7 +59,31 @@ public record Tileset(TilesetSource source,
         }
 
         public Tileset build() {
-            return new Tileset(source, data, image);
+            BitSet walkableData = new BitSet(data.tilecount());
+            BitSet tallGrassData = new BitSet(data.tilecount());
+            boolean anyWalkable = false;
+            boolean anyTallGrass = false;
+            if (data.tiles() != null) {
+                for (Tile tile : data.tiles()) {
+                    for (Property property : tile.properties()) {
+                        switch (property.name()) {
+                            case "Walkable" -> {
+                                boolean walkable = Boolean.parseBoolean(property.value());
+                                walkableData.set(tile.id(), walkable);
+                                anyWalkable |= walkable;
+                            }
+                            case "TallGrass" -> {
+                                boolean walkable = Boolean.parseBoolean(property.value());
+                                tallGrassData.set(tile.id(), walkable);
+                                anyTallGrass |= walkable;
+                            }
+                        }
+                    }
+                }
+            }
+            return new Tileset(source, data, image,
+                    anyWalkable ? walkableData : null,
+                    anyTallGrass ? tallGrassData : null);
         }
     }
 }

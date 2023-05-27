@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TileMapService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.utils.MeshUtils;
+import de.uniks.stpmon.k.utils.TileMap;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -25,6 +26,7 @@ import javafx.scene.transform.Translate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.awt.image.BufferedImage;
 
 import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
@@ -147,7 +149,8 @@ public class WorldView extends Viewable {
         if (area == null || area.map() == null) {
             return;
         }
-        tileMapService.createMap(area);
+        TileMap tileMap = tileMapService.createMap(area);
+        BufferedImage image = tileMap.renderMap();
     }
 
     private static EventHandler<KeyEvent> keyPressed(PerspectiveCamera camera) {

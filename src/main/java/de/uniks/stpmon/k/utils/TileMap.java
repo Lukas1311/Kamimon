@@ -9,22 +9,37 @@ import de.uniks.stpmon.k.models.map.TilesetSource;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
+    private final List<TileProp> props = new ArrayList<>();
+    private final BitSet collisionMap;
     private final TileMapData data;
     private final int tileWidth;
     private final int tileHeight;
+    private final int width;
+    private final int height;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.data = provider.map();
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
+        int width = data.width();
+        int height = data.height();
+        for (TileLayerData tileset : data.layers()) {
+            height = Math.max(height, tileset.height());
+            width = Math.max(width, tileset.width());
+        }
+        this.width = width;
+        this.height = height;
+        this.collisionMap = new BitSet(height * width);
     }
 
     public TileMapData getData() {
@@ -45,7 +60,11 @@ public class TileMap {
                 .findFirst();
     }
 
-    public BufferedImage renderMap() throws IOException {
+    public boolean hasCollision(int x, int y) {
+        return collisionMap.get(x + y * width);
+    }
+
+    public BufferedImage renderMap() {
         int width = data.layers().get(0).width();
         int height = data.layers().get(0).height();
         return renderMap(width, height);
@@ -58,7 +77,7 @@ public class TileMap {
                 BufferedImage.TYPE_4BYTE_ABGR);
     }
 
-    public BufferedImage renderMap(int width, int height) throws IOException {
+    public BufferedImage renderMap(int width, int height) {
         BufferedImage mergedImage = createImage(
                 width, height);
         Graphics2D g = mergedImage.createGraphics();
@@ -103,6 +122,9 @@ public class TileMap {
                 TilesetSource source = getSource(data);
                 Tileset tileset = tilesetBySource.get(source);
                 tileset.setTile(raster, x, y, data);
+                if (tileset.hasCollision(data)) {
+                    collisionMap.set((chunk.x() + x) + (chunk.y() + y) * width, true);
+                }
             }
         }
         return chunkImage;
