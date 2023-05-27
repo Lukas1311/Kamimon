@@ -11,8 +11,8 @@ import java.util.List;
  */
 public record ChunkData(
         List<Integer> data,
-        int height,
         int width,
+        int height,
         int x,
         int y
 ) {
