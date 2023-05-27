@@ -99,6 +99,11 @@ public class UserManagementController extends Controller {
         return parent;
     }
 
+    public void backToSettings() {
+        // TODO: add pop confirmation only when unsaved settings
+        hybridControllerProvider.get().popTab();
+    }
+
     public void saveChanges() {
         // TODO: replace this with real modal pop pop up
         new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
@@ -178,21 +183,5 @@ public class UserManagementController extends Controller {
                 // the user clicked CANCEL
             }
         });
-    }
-
-    public void saveChanges() {
-        // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                saveChanges();
-            } else if (buttonType == ButtonType.CANCEL) {
-                // do nothing
-            }
-        });
-    }
-
-    public void backToSettings() {
-        // TODO: add pop confirmation only when unsaved settings
-        hybridControllerProvider.get().popTab();
     }
 }
