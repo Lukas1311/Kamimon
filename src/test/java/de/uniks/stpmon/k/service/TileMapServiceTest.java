@@ -48,6 +48,7 @@ public class TileMapServiceTest {
         when(presetService.getTileset("grass.json")).thenReturn(Observable.just(new TilesetData(
                 2, "grass.png", 2, 2, 0, "grass", 0, 1, 1, 1, List.of(), "", List.of()
         )));
+
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
         image.setRGB(0, 0, Color.RED.getRGB());
         image.setRGB(0, 1, Color.BLACK.getRGB());
@@ -55,6 +56,7 @@ public class TileMapServiceTest {
         image.setRGB(1, 1, Color.GREEN.getRGB());
 
         when(presetService.getImage("grass.png")).thenReturn(Observable.just(image));
+
         TileMapData map = createDummyMap();
         Region region = new Region("1", "2", null, map);
         TileMap tileMap = msgService.createMap(region);

@@ -28,9 +28,11 @@ public class IngameControllerTest extends ApplicationTest {
     App app = new App(null);
 
     @Mock
+    @SuppressWarnings("unused")
     RegionService regionService;
 
     @Mock
+    @SuppressWarnings("unused")
     WorldView worldView;
 
     @InjectMocks

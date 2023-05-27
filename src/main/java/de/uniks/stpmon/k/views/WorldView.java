@@ -92,6 +92,7 @@ public class WorldView extends Viewable {
         PerspectiveCamera camera = createCamera(angle);
 
         MeshView character = createEntity(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("map/char.png"))), angle);
+        character.setId("character");
 
         camera.translateXProperty().addListener((observable, oldValue, newValue) ->
                 character.setTranslateX(character.getTranslateX() - ((double) oldValue - (double) newValue)));
@@ -101,6 +102,7 @@ public class WorldView extends Viewable {
                 character.setRotate(character.getRotate() - ((double) oldValue - (double) newValue)));
 
         MeshView floor = createFloor(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("map/natchester.png"))));
+        floor.setId("floor");
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
@@ -117,6 +119,7 @@ public class WorldView extends Viewable {
         // Set background color to blackish
         scene.setFill(Color.web("0x13120C"));
         scene.setCamera(camera);
+        scene.setId("worldScene");
 
         return scene;
     }
@@ -152,16 +155,15 @@ public class WorldView extends Viewable {
                 case S -> camera.setTranslateZ(camera.getTranslateZ() - 5);
                 case A -> camera.setTranslateX(camera.getTranslateX() - 5);
                 case D -> camera.setTranslateX(camera.getTranslateX() + 5);
-                case Q -> camera.setRotate(camera.getRotate() - 2.5);
-                case E -> camera.setRotate(camera.getRotate() + 2.5);
-                case UP -> camera.setRotate(camera.getRotate() - 10);
-                case DOWN -> camera.setRotate(camera.getRotate() + 10);
-                case LEFT -> camera.setRotate(camera.getRotate() - 10);
-                case RIGHT -> camera.setRotate(camera.getRotate() + 10);
             }
-            System.out.println("X: " + camera.getTranslateX());
-            System.out.println("Y: " + camera.getTranslateY());
-            System.out.println("Z: " + camera.getTranslateZ());
+            rotate(event, camera);
         };
+    }
+
+    private static void rotate(KeyEvent event, PerspectiveCamera camera) {
+        switch (event.getCode()) {
+            case Q -> camera.setRotate(camera.getRotate() - 2.5);
+            case E -> camera.setRotate(camera.getRotate() + 2.5);
+        }
     }
 }
