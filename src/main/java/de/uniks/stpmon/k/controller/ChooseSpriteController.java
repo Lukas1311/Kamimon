@@ -29,8 +29,8 @@ public class ChooseSpriteController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        chooseTrainer.setText(translateString("chooseTrainer"));
-
+        chooseTrainer.setText(translateString("choose_trainer"));
+        saveSprite.setText(translateString("saveChanges"));
         return parent;
     }
 
