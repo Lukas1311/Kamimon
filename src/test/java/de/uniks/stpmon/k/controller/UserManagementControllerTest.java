@@ -110,9 +110,10 @@ public class UserManagementControllerTest extends ApplicationTest {
         // check values:
         TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
         assertEquals("Bob", usernameText.getText());
+        assertEquals("Bob", usernameCaptor.getValue());
 
         // check mocks:
-        verify(userService).setUsername(usernameCaptor.getValue());
+        verify(userService).setUsername("Bob");
     }
 
     @Test
@@ -125,7 +126,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         // assertTrue(userStorage.getUser().name().equals("Alice"));
 
         // define mocks:
-        when(userService.setPassword(passwordCaptor.capture())).thenReturn(Observable.just(dummyUser));
+        when(userService.setPassword(any())).thenReturn(Observable.just(dummyUser));
         
         // action:
         write("\t\tpassword");
@@ -138,6 +139,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         assertEquals("password", passwordText.getText());
 
         // check mocks:
-        verify(userService).setPassword(passwordCaptor.getValue());
+        verify(userService).setPassword(passwordCaptor.capture());
+        assertEquals("password", passwordCaptor.getValue());
     }
 }
