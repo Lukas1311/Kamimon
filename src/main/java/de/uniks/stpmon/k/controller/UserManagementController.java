@@ -52,7 +52,8 @@ public class UserManagementController extends Controller {
     private BooleanBinding usernameInvalid;
     private BooleanBinding passwordInvalid;
     private Boolean changesSaved = false;
-    private Boolean changesMade = false;
+    private BooleanBinding changesMade;
+
 
 
     @Inject
@@ -65,20 +66,20 @@ public class UserManagementController extends Controller {
 
         userManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        // TODO: all ui functionality here
+        // bindings:
         usernameTooLong = username.length().greaterThan(32);
         passwordTooShort = password.length().lessThan(8);
         usernameInvalid = username.isEmpty().or(usernameTooLong);
         passwordInvalid = passwordTooShort;
+        changesMade = usernameInvalid.not().or(passwordInvalid.not());
 
 
-        // bindings:
+        // bind bindings to fxml:
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
         usernameInfo.textProperty().bind(usernameError);
 
-        // TODO: what if username already taken?
-        saveChangesButton.disableProperty().bind(usernameInvalid.or(passwordInvalid));
+        saveChangesButton.disableProperty().bind(changesMade.not());
 
         usernameInfo.textProperty().bind(
             Bindings.when(usernameTooLong)
@@ -100,7 +101,19 @@ public class UserManagementController extends Controller {
     }
 
     public void backToSettings() {
-        // TODO: add pop confirmation only when unsaved settings
+        if (changesMade.get() && !changesSaved) {
+            // TODO: add pop confirmation
+            // if OK: {
+            //     saveChanges();
+            // } else CANCEL or CLOSE {
+            // return;
+            // }
+            new Alert(Alert.AlertType.CONFIRMATION, "there are unsaved changes.\nsave them?").showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK) {
+                    saveChanges();    
+                }
+            });
+        }
         hybridControllerProvider.get().popTab();
     }
 
