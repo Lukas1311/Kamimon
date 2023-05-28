@@ -122,9 +122,8 @@ public class MonsterBarController extends Controller {
     public void updatePosition() {
         // Convert the local coordinates of the monsterBar to screen coordinates
         if (monsterBar != null && monsterListPopup != null) {
-            double x = monsterBar.localToScene(monsterBar.getBoundsInLocal()).getMinX() + monsterBar.getScene().getX() + monsterBar.getScene().getWindow().getX() + 30;
-            double y = monsterBar.localToScene(monsterBar.getBoundsInLocal()).getMaxY() + monsterBar.getScene().getY() + monsterBar.getScene().getWindow().getY();
-            System.out.println(monsterBar.localToScreen(monsterBar.getBoundsInLocal()));
+            double x = monsterBar.localToScreen(monsterBar.getBoundsInLocal()).getMinX() + 30;
+            double y = monsterBar.localToScreen(monsterBar.getBoundsInLocal()).getMaxY();
             monsterListPopup.setX(x);
             monsterListPopup.setY(y);
         }
