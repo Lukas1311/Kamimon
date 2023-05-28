@@ -99,7 +99,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         // assertTrue(userStorage.getUser().name().equals("Alice"));
 
         // define mocks:
-        when(userService.setUsername(any())).thenReturn(Observable.just(dummyUser));
+        when(userService.setUsername(anyString())).thenReturn(Observable.just(dummyUser));
         
         // action:
         write("\tBob");
