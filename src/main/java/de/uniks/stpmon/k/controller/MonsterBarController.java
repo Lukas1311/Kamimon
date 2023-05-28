@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -17,6 +18,10 @@ public class MonsterBarController extends Controller {
     public HBox monsterSlotsHBox;
 
     protected ImageView[] monsterSlots;
+    protected Popup monsterListPopup;
+
+    @Inject
+    MonsterListController monsterListController;
 
     @Inject
     public MonsterBarController() {
@@ -33,6 +38,7 @@ public class MonsterBarController extends Controller {
      * Create six slots to accommodate monsters and initialize them with the image "freeSlot.png"
      */
     public void createMonsterSlots() {
+        monsterSlotsHBox.getChildren().clear();
         monsterSlots = new ImageView[6];
         for (int i = 0; i < 6; i++) {
             ImageView monsterSlot = new ImageView();
@@ -73,8 +79,27 @@ public class MonsterBarController extends Controller {
     }
 
     /**
-     * Show the list of monsters when clicked on monsterBar.
+     * Show the list of monsters when clicked on monsterBar
+     * Hide this list when clicked on monsterBar again
      */
     public void showMonsters() {
+        if (monsterListPopup == null) {
+            Parent monsterList = monsterListController.render();
+            // Create a new popup and add the monster list to its content
+            monsterListPopup = new Popup();
+            monsterListPopup.getContent().add(monsterList);
+        }
+
+        // If the monster list is already showing, hide it
+        if (monsterListPopup.isShowing()) {
+            monsterListPopup.hide();
+        } else {
+            monsterListPopup.show(monsterBar, monsterBar.getLayoutX() + 80, monsterBar.getLayoutY() + 80);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        monsterSlotsHBox.getChildren().clear();
     }
 }
