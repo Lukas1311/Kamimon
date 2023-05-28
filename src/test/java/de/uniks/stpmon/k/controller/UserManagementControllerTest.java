@@ -94,7 +94,6 @@ public class UserManagementControllerTest extends ApplicationTest {
         // TODO: add pop confirmation
 
         // prep:
-        final ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
         User dummyUser = new User("1", "Bob", null, null, null);
         // assertTrue(userStorage.getUser().name().equals("Alice"));
 
@@ -112,8 +111,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         assertEquals("Bob", usernameText.getText());
 
         // check mocks:
-        verify(userService).setUsername(usernameCaptor.capture());
-        assertEquals("Bob", usernameCaptor.getValue());
+        verify(userService).setUsername("Bob");
     }
 
     @Test
@@ -121,12 +119,11 @@ public class UserManagementControllerTest extends ApplicationTest {
         // TODO: add pop confirmation
 
         // prep:
-        final ArgumentCaptor<String> passwordCaptor = ArgumentCaptor.forClass(String.class);
         User dummyUser = new User("1", "Bob", null, null, null);
         // assertTrue(userStorage.getUser().name().equals("Alice"));
 
         // define mocks:
-        when(userService.setPassword(any())).thenReturn(Observable.just(dummyUser));
+        when(userService.setPassword(anyString())).thenReturn(Observable.just(dummyUser));
         
         // action:
         write("\t\tpassword");
@@ -139,7 +136,6 @@ public class UserManagementControllerTest extends ApplicationTest {
         assertEquals("password", passwordText.getText());
 
         // check mocks:
-        verify(userService).setPassword(passwordCaptor.capture());
-        assertEquals("password", passwordCaptor.getValue());
+        verify(userService).setPassword("password");
     }
 }
