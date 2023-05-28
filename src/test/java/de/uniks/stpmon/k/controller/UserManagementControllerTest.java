@@ -105,7 +105,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         write("\tBob");
         clickOn("#saveChangesButton");
         waitForFxEvents();
-        clickOn(".dialog-pane .button");
+        // clickOn(".dialog-pane .button");
 
         // check values:
         TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
@@ -132,7 +132,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         write("\t\tpassword");
         clickOn("#saveChangesButton");
         waitForFxEvents();
-        clickOn(".dialog-pane .button");
+        // clickOn(".dialog-pane .button");
 
         // check values:
         TextField passwordText = lookup("#passwordInput").queryAs(TextField.class);

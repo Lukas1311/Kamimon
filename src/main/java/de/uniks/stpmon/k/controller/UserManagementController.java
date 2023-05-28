@@ -119,8 +119,8 @@ public class UserManagementController extends Controller {
 
     public void saveChanges() {
         // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
+        // new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
+        //     if (buttonType == ButtonType.OK) {
 
                 if (!usernameInvalid.get()) {
                     saveUsername(username.get());
@@ -133,10 +133,10 @@ public class UserManagementController extends Controller {
                 changesSaved = true;
 
 
-            } else if (buttonType == ButtonType.CANCEL) {
-                // do nothing
-            }
-        });
+        //     } else if (buttonType == ButtonType.CANCEL) {
+        //         // do nothing
+        //     }
+        // });
     }
 
     private void saveUsername(String newUsername) {
