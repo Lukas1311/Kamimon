@@ -21,7 +21,7 @@
             </BorderPane.margin>
             <ImageView fx:id="imageViewKamimonLettering" fitHeight="118.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
 
-            <TextField fx:id="usernameInput" alignment="TOP_CENTER" opacity="0.6" promptText="%username">
+            <TextField fx:id="usernameInput" alignment="TOP_CENTER" promptText="%username">
                 <VBox.margin>
                     <Insets left="20.0" right="20.0" />
                 </VBox.margin>
@@ -37,13 +37,13 @@
                 <styleClass>
                     <String fx:value="login-element" />
                 </styleClass>
-                <PasswordField fx:id="passwordInput" alignment="CENTER" opacity="0.6" promptText="%password">
+                <PasswordField fx:id="passwordInput" alignment="CENTER" promptText="%password">
                     <styleClass>
                         <String fx:value="login-text-input" />
                         <String fx:value="login-element" />
                     </styleClass>
                 </PasswordField>
-                <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="login-password-button" StackPane.alignment="CENTER_RIGHT" textAlignment="RIGHT">
+                <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="login-password-button" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
                     <graphic>
                         <FontIcon iconLiteral="mdmz-visibility_off" iconSize="24" textAlignment="CENTER" />
                     </graphic>
@@ -62,16 +62,16 @@
                 </opaqueInsets>
                 <styleClass>
                     <String fx:value="login-element" />
-                    <String fx:value="login-button" />
+                    <String fx:value="kgm-general-button-blue" />
                 </styleClass>
             </Button>
             <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="%register" textAlignment="JUSTIFY">
                 <styleClass>
                     <String fx:value="login-element" />
-                    <String fx:value="login-register-button" />
+                    <String fx:value="kgm-general-button-white" />
                 </styleClass>
             </Button>
-            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0" styleClass="login-element">
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
                 <VBox.margin>
                     <Insets left="20.0" right="20.0" />
                 </VBox.margin>
@@ -88,6 +88,10 @@
                         <Insets left="5.0" />
                     </padding>
                 </RadioButton>
+            <styleClass>
+               <String fx:value="login-element" />
+               <String fx:value="login-lang-selection" />
+            </styleClass>
             </HBox>
             <Label fx:id="errorLabel">
             <styleClass>
