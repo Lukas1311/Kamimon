@@ -1,8 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 import java.util.ResourceBundle;
 import java.util.Locale;
@@ -12,6 +15,7 @@ import javax.inject.Provider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -20,10 +24,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 @ExtendWith(MockitoExtension.class)
@@ -86,7 +90,54 @@ public class UserManagementControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testSaveChanges() {
+    void testSaveChangesUsername() {
         // TODO: add pop confirmation
+
+        // prep:
+        final ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
+        User dummyUser = new User("1", "Bob", null, null, null);
+        // assertTrue(userStorage.getUser().name().equals("Alice"));
+
+        // define mocks:
+        when(userService.setUsername(usernameCaptor.capture())).thenReturn(Observable.just(dummyUser));
+        
+        // action:
+        write("\tBob");
+        clickOn("#saveChangesButton");
+        waitForFxEvents();
+        clickOn(".dialog-pane .button");
+
+        // check values:
+        TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
+        assertEquals("Bob", usernameText.getText());
+
+        // check mocks:
+        verify(userService).setUsername(usernameCaptor.getValue());
+    }
+
+    @Test
+    void testSaveChangesPassword() {
+        // TODO: add pop confirmation
+
+        // prep:
+        final ArgumentCaptor<String> passwordCaptor = ArgumentCaptor.forClass(String.class);
+        User dummyUser = new User("1", "Bob", null, null, null);
+        // assertTrue(userStorage.getUser().name().equals("Alice"));
+
+        // define mocks:
+        when(userService.setPassword(passwordCaptor.capture())).thenReturn(Observable.just(dummyUser));
+        
+        // action:
+        write("\t\tpassword");
+        clickOn("#saveChangesButton");
+        waitForFxEvents();
+        clickOn(".dialog-pane .button");
+
+        // check values:
+        TextField passwordText = lookup("#passwordInput").queryAs(TextField.class);
+        assertEquals("password", passwordText.getText());
+
+        // check mocks:
+        verify(userService).setPassword(passwordCaptor.getValue());
     }
 }
