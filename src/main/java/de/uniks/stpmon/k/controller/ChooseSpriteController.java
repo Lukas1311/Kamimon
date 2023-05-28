@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -13,11 +12,11 @@ public class ChooseSpriteController extends Controller {
     @FXML
     public Text chooseTrainer;
     @FXML
-    public Button SpriteLeft;
+    public Button spriteLeft;
     @FXML
-    public ImageView SpriteImage;
+    public ImageView spriteImage;
     @FXML
-    public Button SpriteRight;
+    public Button spriteRight;
     @FXML
     public Button saveSprite;
 
@@ -34,6 +33,6 @@ public class ChooseSpriteController extends Controller {
         return parent;
     }
 
-    public void saveSprite(ActionEvent actionEvent) {
+    public void saveSprite() {
     }
 }

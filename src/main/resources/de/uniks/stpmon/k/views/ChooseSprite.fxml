@@ -23,19 +23,19 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="SpriteLeft" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
+            <Button fx:id="spriteLeft" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
                     prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #ffffff; -fx-text-fill: #000000;"
                     styleClass="general-button" text="&lt;" HBox.hgrow="NEVER">
                <font>
                   <Font size="18.0"/>
                </font>
             </Button>
-            <ImageView fx:id="SpriteImage" fitHeight="250.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="spriteImage" fitHeight="250.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../spritePlacehoder.png"/>
                </image>
             </ImageView>
-            <Button fx:id="SpriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
+            <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
                     prefHeight="30.0" prefWidth="40.0" style="-fx-text-fill: #000000; -fx-background-color: #ffffff;"
                     styleClass="general-button" text="&gt;" HBox.hgrow="NEVER">
                <font>
