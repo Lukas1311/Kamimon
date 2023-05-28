@@ -1,19 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Message;
-import de.uniks.stpmon.k.models.User;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
-
-import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 public class InvitationController extends Controller {
     @FXML
@@ -27,17 +22,18 @@ public class InvitationController extends Controller {
     @FXML
     public Text sendTime;
 
-    Provider<HybridController> hybridController;
+    ChatController chatController;
 
     private final Message message;
     private final String username;
+    private final String region;
 
-    @Inject
-    public InvitationController(Message msg, String senderUsername, User me, Provider<HybridController> hybridController, Provider<ResourceBundle> resources) {
+    public InvitationController(Message msg, String senderUsername, String region, ChatController chatController, Provider<ResourceBundle> resources) {
         this.message = msg;
         this.username = senderUsername;
-        this.hybridController = hybridController;
+        this.chatController = chatController;
         this.resources = resources;
+        this.region = region;
     }
 
     @Override
@@ -49,7 +45,7 @@ public class InvitationController extends Controller {
         return parent;
     }
 
-    public void join_region() {
-        hybridController.get().openMain(INGAME);
+    public void joinRegion() {
+        chatController.openRegion(region);
     }
 }

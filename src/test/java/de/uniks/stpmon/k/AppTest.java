@@ -130,7 +130,5 @@ class AppTest extends ApplicationTest {
 
         clickOn("#regionButton");
         verifyThat("#inGameText", hasText("INGAME"));
-
-
     }
 }

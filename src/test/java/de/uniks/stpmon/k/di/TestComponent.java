@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.views.WorldView;
 import de.uniks.stpmon.k.ws.EventListener;
 
 import javax.inject.Singleton;
@@ -24,6 +25,8 @@ public interface TestComponent extends MainComponent {
     EventListener eventListener();
 
     MessageApiDummy messageApi();
+
+    WorldView worldView();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {

@@ -1,12 +1,25 @@
 package de.uniks.stpmon.k.service.dummies;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Area;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 @Singleton
 public class RegionApiDummy implements RegionApiService {
@@ -24,8 +37,10 @@ public class RegionApiDummy implements RegionApiService {
      * names {"TestRegion0", "TestRegion1"}
      */
     private void initDummyRegions() {
-        Region region0 = new Region("id0", "TestRegion0", null, null);
-        Region region1 = new Region("id1", "TestRegion1", null, null);
+        Region region0 = new Region("id0", "TestRegion0",
+                new Spawn("id0_0", 0, 0), null);
+        Region region1 = new Region("id1", "TestRegion1",
+                new Spawn("id1_1", 0, 0), null);
 
         regions.add(region0);
         regions.add(region1);
@@ -127,7 +142,7 @@ public class RegionApiDummy implements RegionApiService {
      * trainers are added always to first area the region
      */
     @Override
-    public io.reactivex.rxjava3.core.Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
+    public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
         Area area = areasHashMap.get(regionId).get(0);
         NPCInfo npcInfo = new NPCInfo(true);
         Trainer trainer = new Trainer(
@@ -147,90 +162,90 @@ public class RegionApiDummy implements RegionApiService {
         List<Trainer> trainers = trainersHashMap.get(area._id());
         trainers.add(trainer);
 
-        return io.reactivex.rxjava3.core.Observable.just(trainer);
+        return Observable.just(trainer);
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<List<Trainer>> getTrainers(String regionId, String areaId, String userId) {
+    public Observable<List<Trainer>> getTrainers(String regionId, String areaId, String userId) {
         List<Trainer> trainerList = trainersHashMap.get(areaId);
         if (trainerList != null) {
-            return io.reactivex.rxjava3.core.Observable.just(trainerList);
+            return Observable.just(trainerList);
         }
-        return io.reactivex.rxjava3.core.Observable.empty();
+        return Observable.empty();
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<Trainer> getTrainer(String trainerId) {
+    public Observable<Trainer> getTrainer(String trainerId) {
         Trainer trainer = getTrainerById(trainerId);
         if (trainer != null) {
-            return io.reactivex.rxjava3.core.Observable.just(trainer);
+            return Observable.just(trainer);
         }
-        return io.reactivex.rxjava3.core.Observable.error(new Throwable("404 Not found"));
+        return Observable.error(new Throwable("404 Not found"));
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<Trainer> deleteTrainer(String trainerId) {
+    public Observable<Trainer> deleteTrainer(String trainerId) {
         Trainer trainer = getTrainerById(trainerId);
         if (trainer != null) {
             List<Trainer> trainerList = trainersHashMap.get(trainer.area());
             trainerList.remove(trainer);
-            return io.reactivex.rxjava3.core.Observable.just(trainer);
+            return Observable.just(trainer);
         }
-        return io.reactivex.rxjava3.core.Observable.error(new Throwable("404 Not found"));
+        return Observable.error(new Throwable("404 Not found"));
     }
 
     /**
      * Returns all regions (if list of regions is empty, it gets initialized
      */
     @Override
-    public io.reactivex.rxjava3.core.Observable<List<Region>> getRegions() {
+    public Observable<List<Region>> getRegions() {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        return io.reactivex.rxjava3.core.Observable.just(regions);
+        return Observable.just(regions);
     }
 
     /**
      * Returns all region with id (if list of regions is empty, it gets initialized
      */
     @Override
-    public io.reactivex.rxjava3.core.Observable<Region> getRegion(String id) {
+    public Observable<Region> getRegion(String id) {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
 
         Optional<Region> region = regions.stream().filter(r -> r._id().equals(id)).findFirst();
-        return region.map(r -> io.reactivex.rxjava3.core.Observable.just(region.get())).orElseGet(()
-                -> io.reactivex.rxjava3.core.Observable.error(new Throwable("404 Not found")));
+        return region.map(r -> Observable.just(region.get())).orElseGet(()
+                -> Observable.error(new Throwable("404 Not found")));
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<List<Area>> getAreas(String region) {
+    public Observable<List<Area>> getAreas(String region) {
         List<Area> areaList = areasHashMap.get(region);
         if (areaList != null) {
-            return io.reactivex.rxjava3.core.Observable.just(areaList);
+            return Observable.just(areaList);
         }
-        return io.reactivex.rxjava3.core.Observable.empty();
+        return Observable.empty();
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<Area> getArea(String region, String id) {
+    public Observable<Area> getArea(String region, String id) {
         List<Area> areaList = areasHashMap.get(region);
         Optional<Area> areaOptional = areaList.stream().filter(a -> a._id().equals(id)).findFirst();
-        return areaOptional.map(io.reactivex.rxjava3.core.Observable::just).orElseGet(io.reactivex.rxjava3.core.Observable::empty);
+        return areaOptional.map(Observable::just).orElseGet(Observable::empty);
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<List<Monster>> getMonsters(String trainerId) {
-        return io.reactivex.rxjava3.core.Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
+    public Observable<List<Monster>> getMonsters(String trainerId) {
+        return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
 
     }
 
     @Override
-    public io.reactivex.rxjava3.core.Observable<Monster> getMonster(String monsterId) {
+    public Observable<Monster> getMonster(String monsterId) {
         Optional<Monster> monsterOptional = monsters
                 .stream().filter(m -> m._id().equals(monsterId)).findFirst();
-        return monsterOptional.map(m -> io.reactivex.rxjava3.core.Observable.just(monsterOptional.get())).orElseGet(()
+        return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()
                 -> Observable.error(new Throwable("404 Not found")));
     }
 

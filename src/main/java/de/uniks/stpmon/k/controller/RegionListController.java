@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.views.RegionCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,13 +17,14 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Objects;
+
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 
 public class RegionListController extends ToastedController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
-    RegionApiService regionApiService;
+    RegionService regionService;
     @FXML
     private BorderPane regionsBorderPane;
     @FXML
@@ -39,7 +40,7 @@ public class RegionListController extends ToastedController {
 
     @Override
     public void init() {
-        disposables.add(regionApiService.getRegions()
+        disposables.add(regionService.getRegions()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(regions::setAll, this::handleError));
     }
@@ -51,16 +52,15 @@ public class RegionListController extends ToastedController {
         //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
         final ListView<Region> regionListView = new ListView<>(this.regions);
         regionListView.setStyle("-fx-background-color: transparent;");
-        //.list-cell { -fx-background-color: transparent;} .list-view {    -fx-background-color: transparent;}
         regionListView.setMaxWidth(200);
         regionsBorderPane.setCenter(regionListView);
-        //regionList.getChildren().add(regionListView);
         VBox.setVgrow(regionListView, Priority.ALWAYS);
-        regionListView.setCellFactory(e -> new RegionCell(hybridControllerProvider));
+        regionListView.setCellFactory(e -> new RegionCell(this));
         return parent;
     }
 
-    private Image loadImage(String image) {
-        return new Image(Objects.requireNonNull(LoadingScreenController.class.getResource(image)).toString());
+    public void openRegion(Region region) {
+        subscribe(regionService.enterRegion(region),
+                (area) -> hybridControllerProvider.get().openMain(INGAME));
     }
 }

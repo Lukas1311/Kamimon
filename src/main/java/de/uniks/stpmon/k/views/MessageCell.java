@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views;
 
+import de.uniks.stpmon.k.controller.ChatController;
 import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.controller.MessageController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import javafx.geometry.Pos;
@@ -17,13 +17,13 @@ public class MessageCell extends ListCell<Message> {
 
     private final HashMap<String, String> groupUsers;
     private final User me;
-    private final Provider<HybridController> hybridController;
+    private final ChatController chatController;
     private final Provider<ResourceBundle> resources;
 
-    public MessageCell(User me, HashMap<String, String> groupUsers, Provider<HybridController> hybridController, Provider<ResourceBundle> resources) {
+    public MessageCell(User me, HashMap<String, String> groupUsers, ChatController chatController, Provider<ResourceBundle> resources) {
         this.groupUsers = groupUsers;
         this.me = me;
-        this.hybridController = hybridController;
+        this.chatController = chatController;
         this.resources = resources;
     }
 
@@ -36,7 +36,9 @@ public class MessageCell extends ListCell<Message> {
         } else {
             String sender = groupUsers.get(item.sender());
             if (item.body().startsWith("JoinInvitation")) {
-                final InvitationController invitationController = new InvitationController(item, sender, me, hybridController, resources);
+                String regionId = item.body().substring(15);
+
+                final InvitationController invitationController = new InvitationController(item, sender, regionId, chatController, resources);
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {
