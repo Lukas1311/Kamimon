@@ -46,8 +46,8 @@ public class App extends Application {
         //initial window size
         stage.setWidth(1280);
         stage.setHeight(720);
-        stage.setMinWidth(512);
-        stage.setMinHeight(400);
+        stage.setMinWidth(600);
+        stage.setMinHeight(600);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen

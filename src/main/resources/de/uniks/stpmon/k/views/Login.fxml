@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.*?>
 
 <BorderPane prefHeight="450.0" prefWidth="800.0" styleClass="login-background" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoginController">
     <center>
@@ -29,16 +30,26 @@
                     <String fx:value="login-element" />
                 </styleClass>
             </TextField>
-            <PasswordField fx:id="passwordInput" alignment="CENTER" opacity="0.6" promptText="%password">
+            <StackPane>
                 <VBox.margin>
                     <Insets left="20.0" right="20.0" />
                 </VBox.margin>
                 <styleClass>
-                    <String fx:value="login-text-input" />
                     <String fx:value="login-element" />
                 </styleClass>
-            </PasswordField>
-            <Button fx:id="toggleButton" mnemonicParsing="false" text="%show" />
+                <PasswordField fx:id="passwordInput" alignment="CENTER" opacity="0.6" promptText="%password">
+                    <styleClass>
+                        <String fx:value="login-text-input" />
+                        <String fx:value="login-element" />
+                    </styleClass>
+                </PasswordField>
+                <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="login-password-button" StackPane.alignment="CENTER_RIGHT" textAlignment="RIGHT">
+                    <graphic>
+                        <FontIcon iconLiteral="mdmz-visibility_off" iconSize="24" textAlignment="CENTER" />
+                    </graphic>
+                    <tooltip><Tooltip text="%show" /></tooltip>
+                </Button>
+            </StackPane>
             <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay.logged.in">
                 <styleClass>
                     <String fx:value="login-check-box" />

@@ -34,20 +34,28 @@ Load fonts
     -fx-color-light-grey:#F2F2F2;
     -fx-color-black:#000000;
 
+
+
+}
+/* -------------------- General Items -------------------- */
+.general-button{
+
+}
+
+.general-icon-button{
+
 }
 
 
-
-
-/* Loading Screen */
+/* -------------------- Loading Screen -------------------- */
 .loading-screen {
     -fx-background-color: -fx-color-kgm-yellow;
 }
 
-/* Login Window  */
+/* -------------------- Login Window -------------------- */
 .login-background {
     -fx-background-image: url("../images/background.png");
-    -fx-background-size: contain;
+    -fx-background-size: cover;
 }
 
 .login-window {
@@ -73,10 +81,24 @@ Load fonts
     -fx-max-width: 250;
     -fx-max-height: 35;
 }
+
 .login-text-input {
     -fx-border-width: 3;
     -fx-alignment: center-left;
     -fx-text-fill: #000000;
+}
+
+.login-password-button {
+    -fx-pref-width: 45;
+    -fx-pref-height: 35;
+    -fx-min-width: 45;
+    -fx-min-height: 35;
+    -fx-max-width: 45;
+    -fx-max-height: 35;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-icon-size: 24;
 }
 
 .login-check-box {
@@ -105,6 +127,9 @@ Load fonts
     -fx-text-overrun: ellipsis;
     -fx-font-size: 12;
 }
+
+
+
 
 
 
