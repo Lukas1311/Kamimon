@@ -142,7 +142,8 @@ public class UserManagementController extends Controller {
     private void saveUsername(String newUsername) {
         disposables.add(
             userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
-
+                // TODO: remove in clean up
+                System.out.println(usr);
             }, err -> {
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
@@ -156,7 +157,8 @@ public class UserManagementController extends Controller {
     private void savePassword(String newPassword) {
         disposables.add(
             userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
-
+                // TODO: remove in clean up
+                System.out.println(usr);
             }, err -> {
                 passwordError.set("error");
             })
