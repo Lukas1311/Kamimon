@@ -1,12 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
+import javafx.stage.Window;
 
 import javax.inject.Inject;
 import java.util.Objects;
@@ -87,15 +89,44 @@ public class MonsterBarController extends Controller {
             Parent monsterList = monsterListController.render();
             // Create a new popup and add the monster list to its content
             monsterListPopup = new Popup();
-            monsterListPopup.getContent().add(monsterList);
+            // Set the autoHide property of the popup to false, so it does not automatically hide
+            monsterListPopup.setAutoHide(false);
+            monsterListPopup.getScene().setRoot(monsterList);
+
+            Window window = monsterBar.getScene().getWindow();
+            // Add listeners whenever the x or y property changes
+            window.xProperty().addListener((observable, oldValue, newValue) -> updatePosition());
+            window.yProperty().addListener((observable, oldValue, newValue) -> updatePosition());
+
+            monsterListPopup.setOnShown(event -> updatePosition());
         }
 
-        // If the monster list is already showing, hide it
+        // If the monster list is already showing, hide it when clicked on the monster bar
         if (monsterListPopup.isShowing()) {
             monsterListPopup.hide();
         } else {
-            monsterListPopup.show(monsterBar, monsterBar.getLayoutX() + 80, monsterBar.getLayoutY() + 80);
+            updatePosition();
+            monsterListPopup.show(monsterBar.getScene().getWindow());
         }
+
+        monsterBar.getScene().setOnMousePressed(event -> {
+            // Check if the click event is outside the bounds of the monsterBar
+            if (!monsterBar.getBoundsInParent().contains(event.getX(), event.getY())) {
+                monsterListPopup.hide();
+            }
+        });
+    }
+
+    /**
+     * Update the position of the monsterListPopup
+     */
+    public void updatePosition() {
+        // Convert the local coordinates of the monsterBar to screen coordinates
+        Bounds bounds = monsterBar.localToScreen(monsterBar.getBoundsInLocal());
+        double x = bounds.getMinX() + 30;
+        double y = bounds.getMaxY();
+        monsterListPopup.setX(x);
+        monsterListPopup.setY(y);
     }
 
     @Override

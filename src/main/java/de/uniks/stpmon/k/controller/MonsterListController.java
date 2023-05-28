@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 
-public class MonsterListController extends ToastController {
+public class MonsterListController extends Controller {
     public VBox monsterListVBox;
 
     @Inject
