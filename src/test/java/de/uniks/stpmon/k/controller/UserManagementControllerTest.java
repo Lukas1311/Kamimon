@@ -110,10 +110,10 @@ public class UserManagementControllerTest extends ApplicationTest {
         // check values:
         TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
         assertEquals("Bob", usernameText.getText());
-        assertEquals("Bob", usernameCaptor.getValue());
 
         // check mocks:
-        verify(userService).setUsername("Bob");
+        verify(userService).setUsername(usernameCaptor.capture());
+        assertEquals("Bob", usernameCaptor.getValue());
     }
 
     @Test
