@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -122,11 +121,13 @@ public class MonsterBarController extends Controller {
      */
     public void updatePosition() {
         // Convert the local coordinates of the monsterBar to screen coordinates
-        Bounds bounds = monsterBar.localToScreen(monsterBar.getBoundsInLocal());
-        double x = bounds.getMinX() + 30;
-        double y = bounds.getMaxY();
-        monsterListPopup.setX(x);
-        monsterListPopup.setY(y);
+        if (monsterBar != null && monsterListPopup != null) {
+            double x = monsterBar.localToScene(monsterBar.getBoundsInLocal()).getMinX() + monsterBar.getScene().getX() + monsterBar.getScene().getWindow().getX() + 30;
+            double y = monsterBar.localToScene(monsterBar.getBoundsInLocal()).getMaxY() + monsterBar.getScene().getY() + monsterBar.getScene().getWindow().getY();
+            System.out.println(monsterBar.localToScreen(monsterBar.getBoundsInLocal()));
+            monsterListPopup.setX(x);
+            monsterListPopup.setY(y);
+        }
     }
 
     @Override
