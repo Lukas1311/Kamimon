@@ -93,7 +93,6 @@ Load fonts
 
 
 
-
 /* -------------------- Loading Screen -------------------- */
 .loading-screen {
     -fx-background-color: -fx-color-kgm-yellow;
@@ -196,12 +195,28 @@ Load fonts
 }
 
 
+/* -------------------- Introduction -------------------- */
+.intro-screen {
+    -fx-background-color: -fx-color-kgm-yellow;
+}
+
+.intro-container {
+    -fx-background-color: -fx-color-kgm-yellow;
+}
+
+
+/* -------------------- SideBar -------------------- */
 
 
 
 
+/* -------------------- Friends -------------------- */
 
 
 
+/* -------------------- Chat -------------------- */
 
+
+
+/* -------------------- Settings -------------------- */
 

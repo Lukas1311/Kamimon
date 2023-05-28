@@ -5,9 +5,9 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IntroductionController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="intro-screen" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IntroductionController">
    <center>
-      <VBox alignment="CENTER" maxHeight="500.0" maxWidth="900.0" prefHeight="618.0" prefWidth="1109.0" style="-fx-border-color: black; -fx-border-radius: 5px;" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" maxHeight="500.0" maxWidth="900.0" prefHeight="618.0" prefWidth="1109.0" styleClass="intro-container" BorderPane.alignment="CENTER">
          <children>
          <VBox alignment="CENTER" prefHeight="255.0" prefWidth="650.0" VBox.vgrow="ALWAYS">
             <children>
@@ -19,12 +19,12 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
-                     <Button fx:id="back" mnemonicParsing="false" onAction="#previousSheet" text="%previous" />
+                     <Button fx:id="back" mnemonicParsing="false" onAction="#previousSheet" styleClass="kgm-general-button-blue" text="%previous" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
-                     <Button fx:id="further" mnemonicParsing="false" onAction="#nextSheet" text="%further" />
+                     <Button fx:id="further" mnemonicParsing="false" onAction="#nextSheet" styleClass="kgm-general-button-blue" text="%further" />
                      </children>
                   </HBox>
                </children>
