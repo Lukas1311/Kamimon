@@ -24,6 +24,7 @@ import retrofit2.Response;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -40,6 +41,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -189,35 +191,41 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testChoseLanguage() {
-        // // prep:
-        // TextField usernameField = lookup("#usernameInput").queryAs(TextField.class);
-        // RadioButton enButton = lookup("#englishButton").queryAs(RadioButton.class);
-        // RadioButton deButton = lookup("#germanButton").queryAs(RadioButton.class);
-        // assertTrue(enButton.isSelected());
-        // assertThat(usernameField.getPromptText()).isEqualTo("Username");
-        // // define mocks:
-        // when(resourceBundleProvider.get()).thenReturn(resources);
-        // when(preferences.get(anyString(), anyString())).thenReturn("de");
+        // prep:
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        TextField usernameField = lookup("#usernameInput").queryAs(TextField.class);
+        RadioButton enButton = lookup("#englishButton").queryAs(RadioButton.class);
+        RadioButton deButton = lookup("#germanButton").queryAs(RadioButton.class);
+        assertTrue(enButton.isSelected());
+        // check that language is english first
+        assertThat(usernameField.getPromptText()).isEqualTo("Username");
+        // define mocks:
+        doNothing().when(preferences).put(eq("locale"), captor.capture());
+        doNothing().when(app).show(loginController);
 
-        // doAnswer(invocation -> {
-        //     System.out.println("es gibt kuchen!");
-        //     preferences.put("locale", "de");
-        //     resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.forLanguageTag("de"));
-        //     resourceBundleProvider.get();
-        //     return null;
-        // }).when(loginController).setDe();
+        // action: chose the DE button
+        write("\t".repeat(5));
+        press(KeyCode.LEFT).release(KeyCode.LEFT);
+        assertTrue(deButton.isSelected());
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        sleep(3000);
 
-        // // action: chose the DE button
-        // write("\t".repeat(5));
-        // press(KeyCode.LEFT).release(KeyCode.LEFT);
-        // assertTrue(deButton.isSelected());
-        // press(KeyCode.ENTER).release(KeyCode.ENTER);
+        // verify mock:
+        verify(preferences).put("locale", captor.getValue());
+        assertEquals("de", captor.getValue());
 
-        // // check values:
-        // assertThat(usernameField.getPromptText()).isEqualTo("Benutzername");
+        // action: chose the EN button
+        press(KeyCode.RIGHT).release(KeyCode.RIGHT);
+        assertTrue(enButton.isSelected());
 
-        // // verify mock:
-        // verify(loginController).setDe();
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+
+        // verify mock:
+        verify(preferences).put("locale", captor.getValue());
+        assertEquals("en", captor.getValue());
+
+        verify(loginController).setDe();
+        verify(loginController).setEn();
     }
     
     @Test
