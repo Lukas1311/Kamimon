@@ -48,8 +48,8 @@ public class UserService {
         }
         User newUser = new User(oldUser._id(), username, oldUser.status(), oldUser.avatar(), oldUser.friends());
         userStorage.setUser(newUser);
-        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, null, null, null);
-        return userApiService.updateUser(oldUser._id(), dto);
+        UpdateUserDto dto = new UpdateUserDto(newUser.name(), null, null, null, null);
+        return userApiService.updateUser(newUser._id(), dto);
     }
 
     /**
