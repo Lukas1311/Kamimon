@@ -47,6 +47,7 @@ public class TrainerManagementController extends Controller {
 
         backButton.setOnAction(click -> backToSettings());
         deleteTrainerButton.setOnAction(click -> deleteTrainer());
+        trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
         return parent;
     }
 
@@ -60,7 +61,8 @@ public class TrainerManagementController extends Controller {
     }
 
     public void openTrainerSpriteEditor() {
-        // TODO: open trainer sprite controller
+        hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
+
     }
 
     public void saveChanges() {
