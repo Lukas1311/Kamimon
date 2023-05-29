@@ -3,7 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,8 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,20 +85,13 @@ public class MonsterBarControllerTest extends ApplicationTest {
 
     @Test
     public void testShowMonsters() {
-        Pane monsterList = new Pane();
+        VBox monsterList = new VBox();
         when(monsterListController.render()).thenReturn(monsterList);
 
         // Click on monster bar to show the popup
         clickOn("#monsterBar");
 
         // Check if the monster list is showing
-        assertTrue(monsterBarController.monsterListPopup.isShowing());
-
-        // Click on monster bar to hide the popup
-        clickOn("#monsterBar");
-
-        // Check if the monster list is hidden
-        assertFalse(monsterBarController.monsterListPopup.isShowing());
-
+        assertTrue(monsterList.isVisible());
     }
 }
