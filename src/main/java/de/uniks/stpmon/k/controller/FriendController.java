@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
@@ -58,16 +57,16 @@ public class FriendController extends Controller {
 
         if (newFriend) {
             removeFriendText.setIconLiteral("mdral-add");
-            removeFriendText.setIconColor(Color.GREEN);
+            removeFriendText.setIconColor(Color.rgb(106, 168, 79));
         } else {
             removeFriendText.setIconLiteral("mdral-clear");
-            removeFriendText.setIconColor(Color.RED);
+            removeFriendText.setIconColor(Color.rgb(207, 42, 39));
         }
 
         if (user.status().equals("offline")) {
-            userStatus.setFill(Color.RED);
+            userStatus.setFill(Color.rgb(207, 42, 39));
         } else {
-            userStatus.setFill(Color.GREEN);
+            userStatus.setFill(Color.rgb(106, 168, 79));
         }
 
         //add avatar-url when avatar != null
