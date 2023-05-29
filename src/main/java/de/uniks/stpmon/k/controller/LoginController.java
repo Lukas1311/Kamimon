@@ -20,6 +20,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -104,6 +105,16 @@ public class LoginController extends Controller {
         boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
         germanButton.setSelected(germanSelected);
         englishButton.setSelected(!germanSelected);
+        germanButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setDe();
+            }
+        });
+        englishButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setEn();
+            }
+        });
 
         errorLabel.textProperty().bind(
                 Bindings.when(passwordTooShort.and(password.isNotEmpty()))
