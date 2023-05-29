@@ -4,6 +4,8 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -46,6 +48,8 @@ public class SettingsController extends Controller {
     @Inject
     Provider<UserManagementController> userManagementControllerProvider;
 
+    private final SimpleStringProperty usernameProperty = new SimpleStringProperty();
+
     @Inject
     public SettingsController() {
     }
@@ -59,8 +63,9 @@ public class SettingsController extends Controller {
         rectangle.setArcHeight(20);
         userSprite.setClip(rectangle);
 
+        usernameProperty.set(userStorage.getUser().name());
         User user = userStorage.getUser();
-        usernameValue.setText(user.name());
+        usernameValue.textProperty().bind(usernameProperty);
         // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
         
         backButton.setOnAction(click -> backToMainScreen());

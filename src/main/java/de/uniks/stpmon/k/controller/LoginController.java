@@ -200,7 +200,7 @@ public class LoginController extends Controller {
         return switch (exception.code()) {
             case 400 -> translateString("validation.failed");
             case 401 -> translateString("invalid.username.or.password");
-            case 409 -> translateString("username.was.already.taken");
+            case 409 -> translateString("username.already.in.use");
             case 429 -> translateString("rate.limit.reached");
             default -> translateString("error");
         };
