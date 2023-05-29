@@ -206,9 +206,64 @@ Load fonts
 
 
 /* -------------------- SideBar -------------------- */
+.sidebar-holder {
+    -fx-background-color: -fx-color-kgm-red;
+    -fx-background-radius: 0;
+
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+
+    -fx-pref-width: 50;
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+}
+
+.sidebar-button {
+    -fx-background-color: -fx-color-kgm-red;
+    -fx-background-radius: 0;
+
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-border-style: solid outside;
+
+    -fx-pref-width: 44;
+    -fx-pref-height: 44;
+    -fx-min-width: 44;
+    -fx-min-height: 44;
+    -fx-max-width: 44;
+    -fx-max-height: 44;
+
+    -fx-content-display: center;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.sidebar-button .ikonli-font-icon {
+    -fx-icon-color: white;
+    -fx-icon-size: 30px;
+}
 
 
+.sidebar-button:pressed {
+    -fx-background-color: -fx-color-kgm-yellow;
+}
+.sidebar-button:pressed .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
+}
 
+.sidebar-button:hover {
+    -fx-background-color: -fx-color-kgm-yellow;
+}
+.sidebar-button:hover .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
+}
 
 /* -------------------- Friends -------------------- */
 

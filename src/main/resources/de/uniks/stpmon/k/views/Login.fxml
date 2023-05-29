@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<BorderPane prefHeight="450.0" prefWidth="800.0" styleClass="login-background" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoginController">
+<BorderPane prefHeight="450.0" prefWidth="800.0" styleClass="login-background" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoginController">
     <center>
-        <VBox fx:id="loginScreen" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="200.0" spacing="5.0" styleClass="login-window">
+        <VBox fx:id="loginScreen" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="200.0" spacing="5.0" styleClass="login-window" stylesheets="@css/style.css">
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
@@ -21,7 +21,7 @@
             </BorderPane.margin>
             <ImageView fx:id="imageViewKamimonLettering" fitHeight="118.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
 
-            <TextField fx:id="usernameInput" alignment="TOP_CENTER" promptText="%username">
+            <TextField fx:id="usernameInput" alignment="TOP_CENTER" promptText="%username" stylesheets="@css/style.css">
                 <VBox.margin>
                     <Insets left="20.0" right="20.0" />
                 </VBox.margin>
@@ -30,33 +30,33 @@
                     <String fx:value="login-element" />
                 </styleClass>
             </TextField>
-            <StackPane>
+            <StackPane stylesheets="@css/style.css">
                 <VBox.margin>
                     <Insets left="20.0" right="20.0" />
                 </VBox.margin>
                 <styleClass>
                     <String fx:value="login-element" />
                 </styleClass>
-                <PasswordField fx:id="passwordInput" alignment="CENTER" promptText="%password">
+                <PasswordField fx:id="passwordInput" alignment="CENTER" promptText="%password" stylesheets="@css/style.css">
                     <styleClass>
                         <String fx:value="login-text-input" />
                         <String fx:value="login-element" />
                     </styleClass>
                 </PasswordField>
-                <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="login-password-button" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
+                <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false" styleClass="login-password-button" stylesheets="@css/style.css" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
                     <graphic>
                         <FontIcon iconLiteral="mdmz-visibility_off" iconSize="24" textAlignment="CENTER" />
                     </graphic>
                     <tooltip><Tooltip text="%show" /></tooltip>
                 </Button>
             </StackPane>
-            <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" text="%stay.logged.in">
+            <CheckBox fx:id="rememberMe" alignment="CENTER" prefHeight="17.0" prefWidth="135.0" stylesheets="@css/style.css" text="%stay.logged.in">
                 <styleClass>
                     <String fx:value="login-check-box" />
                     <String fx:value="login-element" />
                 </styleClass>
             </CheckBox>
-            <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" text="%login" textAlignment="JUSTIFY">
+            <Button fx:id="loginButton" defaultButton="true" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="135.0" stylesheets="@css/style.css" text="%login" textAlignment="JUSTIFY">
                 <opaqueInsets>
                     <Insets />
                 </opaqueInsets>
@@ -65,17 +65,17 @@
                     <String fx:value="kgm-general-button-blue" />
                 </styleClass>
             </Button>
-            <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" text="%register" textAlignment="JUSTIFY">
+            <Button fx:id="registerButton" mnemonicParsing="false" onAction="#register" prefHeight="25.0" prefWidth="135.0" stylesheets="@css/style.css" text="%register" textAlignment="JUSTIFY">
                 <styleClass>
                     <String fx:value="login-element" />
                     <String fx:value="kgm-general-button-white" />
                 </styleClass>
             </Button>
-            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0" stylesheets="@css/style.css">
                 <VBox.margin>
                     <Insets left="20.0" right="20.0" />
                 </VBox.margin>
-                <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setDe" styleClass="login-radio-button" text="%german">
+                <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setDe" styleClass="login-radio-button" stylesheets="@css/style.css" text="%german">
                     <toggleGroup>
                         <ToggleGroup fx:id="lang" />
                     </toggleGroup>
@@ -83,7 +83,7 @@
                         <Insets right="5.0" />
                     </padding>
                 </RadioButton>
-                <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setEn" styleClass="login-radio-button" text="%english" toggleGroup="$lang">
+                <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setEn" styleClass="login-radio-button" stylesheets="@css/style.css" text="%english" toggleGroup="$lang">
                     <padding>
                         <Insets left="5.0" />
                     </padding>
@@ -93,7 +93,7 @@
                <String fx:value="login-lang-selection" />
             </styleClass>
             </HBox>
-            <Label fx:id="errorLabel">
+            <Label fx:id="errorLabel" stylesheets="@css/style.css">
             <styleClass>
                <String fx:value="login-element" />
                <String fx:value="login-error-text" />
