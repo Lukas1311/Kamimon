@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -104,8 +105,10 @@ public class MonsterBarController extends Controller {
         if (monsterListPopup.isShowing()) {
             monsterListPopup.hide();
         } else {
-            updatePosition();
-            monsterListPopup.show(monsterBar.getScene().getWindow());
+            Platform.runLater(() -> {
+                updatePosition();
+                monsterListPopup.show(monsterBar.getScene().getWindow());
+            });
         }
 
         monsterBar.getScene().setOnMousePressed(event -> {
@@ -119,7 +122,7 @@ public class MonsterBarController extends Controller {
     /**
      * Update the position of the monsterListPopup
      */
-    public void updatePosition() {
+    private void updatePosition() {
         // Convert the local coordinates of the monsterBar to screen coordinates
         if (monsterBar != null && monsterListPopup != null) {
             double x = monsterBar.localToScreen(monsterBar.getBoundsInLocal()).getMinX() + 30;

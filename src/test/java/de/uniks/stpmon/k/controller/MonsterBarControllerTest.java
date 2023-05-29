@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -88,19 +87,17 @@ public class MonsterBarControllerTest extends ApplicationTest {
         Pane monsterList = new Pane();
         when(monsterListController.render()).thenReturn(monsterList);
 
-        Platform.runLater(() -> {
-            // Show the popup
-            monsterBarController.showMonsters();
+        // Click on monster bar to show the popup
+        clickOn("#monsterBar");
 
-            // Check if the monster list is showing
-            assertTrue(monsterBarController.monsterListPopup.isShowing());
+        // Check if the monster list is showing
+        assertTrue(monsterBarController.monsterListPopup.isShowing());
 
-            // Hide the popup
-            monsterBarController.showMonsters();
+        // Click on monster bar to hide the popup
+        clickOn("#monsterBar");
 
-            // Check if the monster list is hidden
-            assertFalse(monsterBarController.monsterListPopup.isShowing());
+        // Check if the monster list is hidden
+        assertFalse(monsterBarController.monsterListPopup.isShowing());
 
-        });
     }
 }
