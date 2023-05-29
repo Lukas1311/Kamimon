@@ -234,7 +234,7 @@ public class LoginControllerTest extends ApplicationTest {
         Map<String, Integer> errorMap = new HashMap<>();
         errorMap.put("Validation failed", 400);
         errorMap.put("Invalid username or password", 401);
-        errorMap.put("Username was already taken", 409);
+        errorMap.put("Username is already in use", 409);
         errorMap.put("Rate limit reached", 429);
         errorMap.put("Error", 999); // for default case
 
