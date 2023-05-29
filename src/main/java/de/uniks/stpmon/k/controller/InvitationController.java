@@ -21,17 +21,24 @@ public class InvitationController extends Controller {
     public Text senderName;
     @FXML
     public Text sendTime;
+    @FXML
+    public VBox invitationHolder;
 
     ChatController chatController;
+
 
     private final Message message;
     private final String username;
     private final String region;
+    private final boolean ownMessage;
 
-    public InvitationController(Message msg, String senderUsername, String region, ChatController chatController, Provider<ResourceBundle> resources) {
+
+
+    public InvitationController(Message msg, String senderUsername, String region, ChatController chatController, Provider<ResourceBundle> resources, boolean ownMessage) {
         this.message = msg;
         this.username = senderUsername;
         this.chatController = chatController;
+        this.ownMessage = ownMessage;
         this.resources = resources;
         this.region = region;
     }
@@ -41,6 +48,7 @@ public class InvitationController extends Controller {
         final Parent parent = super.render();
         senderName.setText(username);
         sendTime.setText(MessageController.convertDateTimeToTime(message.createdAt()));
+        invitationHolder.getStyleClass().add(ownMessage ? "chat-my-message" : "chat-ext-message");
 
         return parent;
     }

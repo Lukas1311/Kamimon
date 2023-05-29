@@ -38,16 +38,18 @@ public class MessageCell extends ListCell<Message> {
             if (item.body().startsWith("JoinInvitation")) {
                 String regionId = item.body().substring(15);
 
-                final InvitationController invitationController = new InvitationController(item, sender, regionId, chatController, resources);
+                final InvitationController invitationController = new InvitationController(item, sender, regionId, chatController, resources, isOwnMessage(item));
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {
-                final MessageController messageController = new MessageController(item, sender, me);
+                final MessageController messageController = new MessageController(item, sender, me, isOwnMessage(item));
                 setGraphic(messageController.render());
                 setDisable(!isOwnMessage(item));
             }
             // setting the alignment directly on the cell makes the trick
             setAlignment(isOwnMessage(item) ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+
+
         }
     }
 

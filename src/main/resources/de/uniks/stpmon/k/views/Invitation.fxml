@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-<VBox fx:id="messageBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.InvitationController">
-    <VBox alignment="CENTER">
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="messageBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="3.0" styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.InvitationController">
+    <VBox fx:id="invitationHolder" alignment="CENTER" spacing="3.0">
         <Text fx:id="invited_text" strokeType="OUTSIDE" strokeWidth="0.0" text="%you.are.invited">
-            <font>
-                <Font size="12.0"/>
-            </font>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </VBox.margin>
+         <font>
+            <Font size="11.0" />
+         </font>
         </Text>
-        <Button fx:id="joinButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinRegion"
-                text="%joinButton">
+        <Button fx:id="joinButton" contentDisplay="CENTER" maxHeight="20.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#joinRegion" prefHeight="15.0" prefWidth="70.0" styleClass="kgm-general-button-white" stylesheets="@css/style.css" text="%joinButton" textAlignment="CENTER">
             <VBox.margin>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+                <Insets bottom="8.0" left="8.0" right="8.0" top="3.0" />
             </VBox.margin>
+         <padding>
+            <Insets bottom="-2.0" top="-2.0" />
+         </padding>
+         <font>
+            <Font size="11.0" />
+         </font>
         </Button>
     </VBox>
     <HBox VBox.vgrow="ALWAYS">
         <VBox.margin>
-            <Insets/>
+            <Insets />
         </VBox.margin>
         <VBox HBox.hgrow="ALWAYS">
             <Text fx:id="senderName" strokeType="OUTSIDE" strokeWidth="0.0" text="Name">
                 <VBox.margin>
-                    <Insets left="10.0"/>
+                    <Insets left="10.0" />
                 </VBox.margin>
-                <font>
-                    <Font size="10.0"/>
-                </font>
+            <font>
+               <Font size="11.0" />
+            </font>
             </Text>
         </VBox>
         <VBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
             <Text fx:id="sendTime" strokeType="OUTSIDE" strokeWidth="0.0" text="12:00">
                 <VBox.margin>
-                    <Insets right="10.0"/>
+                    <Insets right="10.0" />
                 </VBox.margin>
-                <font>
-                    <Font size="10.0"/>
-                </font>
+            <font>
+               <Font size="11.0" />
+            </font>
             </Text>
         </VBox>
     </HBox>
     <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
     </padding>
 </VBox>

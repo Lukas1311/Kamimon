@@ -34,9 +34,12 @@ public class MessageController extends Controller {
     private final Message message;
     private final String username;
 
-    public MessageController(Message msg, String senderUsername, User me) {
+    private boolean isOwnMessage;
+
+    public MessageController(Message msg, String senderUsername, User me, boolean isOwnMessage) {
         this.message = msg;
         this.username = senderUsername;
+        this.isOwnMessage = isOwnMessage;
     }
 
     @Override
@@ -45,9 +48,8 @@ public class MessageController extends Controller {
         senderName.setText(username);
         bodyText.setText(message.body());
         sendTime.setText(convertDateTimeToTime(message.createdAt()));
-        // Set the alignment of the text based on the item's alignment property
-        // messageBox.setAlignment(isOwnMessage() ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
-
+        // Set the alignment of the text based on the item's alignment property -> see view/MessageCell
+        textBox.getStyleClass().add(isOwnMessage ? "chat-my-message" : "chat-ext-message");
         return parent;
     }
 
