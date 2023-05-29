@@ -1,0 +1,6 @@
+.outstanding {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-padding: 5 5 5 15;
+}
