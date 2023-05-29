@@ -7,9 +7,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import java.lang.String?>
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      styleClass="sidebar-content" stylesheets="@css/sidebar.css" xmlns="http://javafx.com/javafx/19"
+      styleClass="loading-screen" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChooseSpriteController">
    <children>
       <HBox alignment="CENTER" prefHeight="76.0" prefWidth="500.0">
@@ -24,8 +23,8 @@
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" VBox.vgrow="ALWAYS">
          <children>
             <Button fx:id="spriteLeft" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
-                    prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #ffffff; -fx-text-fill: #000000;"
-                    styleClass="general-button" text="&lt;" HBox.hgrow="NEVER">
+                    prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&lt;"
+                    HBox.hgrow="NEVER">
                <font>
                   <Font size="18.0"/>
                </font>
@@ -36,8 +35,8 @@
                </image>
             </ImageView>
             <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
-                    prefHeight="30.0" prefWidth="40.0" style="-fx-text-fill: #000000; -fx-background-color: #ffffff;"
-                    styleClass="general-button" text="&gt;" HBox.hgrow="NEVER">
+                    prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&gt;"
+                    HBox.hgrow="NEVER">
                <font>
                   <Font size="18.0"/>
                </font>
@@ -46,12 +45,8 @@
       </HBox>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="saveSprite" mnemonicParsing="false" onAction="#saveSprite" text="%saveChanges">
-               <styleClass>
-                  <String fx:value="general-button"/>
-                  <String fx:value="settings-button"/>
-               </styleClass>
-            </Button>
+            <Button fx:id="saveSprite" mnemonicParsing="false" onAction="#saveSprite"
+                    styleClass="kgm-general-button-blue" text="%saveChanges"/>
          </children>
       </HBox>
    </children>
