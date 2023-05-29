@@ -69,6 +69,7 @@ public class ChatListController extends TabController {
         final Parent parent = super.render();
         final ListView<Group> groups = new ListView<>(this.groups);
         groups.setId("chatListView");
+        groups.getStyleClass().add("chat-ov-list");
         groups.setCellFactory(param -> new ChatCell(this));
         groups.setOnKeyReleased(event -> {
             if (groups.getSelectionModel().isEmpty()

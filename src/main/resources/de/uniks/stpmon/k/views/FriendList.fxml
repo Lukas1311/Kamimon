@@ -22,7 +22,7 @@
         </VBox>
     </ScrollPane>
     <VBox alignment="BOTTOM_RIGHT" styleClass="friends-scroll-pane" stylesheets="@css/style.css" VBox.vgrow="NEVER">
-        <StackPane styleClass="friends-search-element" stylesheets="@css/style.css">
+        <StackPane styleClass="tab-element" stylesheets="@css/style.css">
             <TextField fx:id="searchFriend" prefHeight="38.0" prefWidth="300.0" promptText="%search.for.a.friend" styleClass="friends-text-input" stylesheets="@css/style.css" />
             <Button fx:id="searchButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" styleClass="friends-search-button" stylesheets="@css/style.css" textAlignment="CENTER" StackPane.alignment="CENTER_RIGHT">
                 <graphic>

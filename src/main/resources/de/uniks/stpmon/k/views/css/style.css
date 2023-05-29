@@ -121,8 +121,6 @@ Load fonts
     -fx-border-width: 3px;
 }
 
-
-
 /* -------------------- Loading Screen -------------------- */
 .loading-screen {
     -fx-background-color: -fx-color-kgm-yellow;
@@ -418,18 +416,83 @@ Load fonts
     -fx-background-color: transparent;
 }
 
-.friend-state-symbol{
+
+/* -------------------- Chat Overview-------------------- */
+
+.chat-ov-menu {
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
+    -fx-max-width: 370;
+
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+.chat-ov-list {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: none;
+    -fx-hbar-policy: never;
+    -fx-vbar-policy: never;
+}
+
+.chat-ov-list .list-view{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+}
+
+.chat-ov-list .list-cell{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-alignment: center;
 
 }
 
+.chat-ov-button {
+    -fx-pref-width: 330;
+    -fx-pref-height: 35;
+    -fx-min-width: 330;
+    -fx-min-height: 35;
+    -fx-max-width: 330;
+    -fx-max-height: 35;
+}
 
+.chat-element {
+    -fx-pref-width: 330;
+    -fx-pref-height: 35;
+    -fx-min-width: 330;
+    -fx-min-height: 35;
+    -fx-max-width: 330;
+    -fx-max-height: 35;
 
+    -fx-background-color: -fx-color-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
 
+.chat-ov-button-holder{
+    -fx-pref-width: 370;
+    -fx-pref-height: 50;
+    -fx-min-width: 370;
+    -fx-min-height: 50;
+    -fx-max-width: 370;
+    -fx-max-height: 50;
 
-
-
-/* -------------------- Chat -------------------- */
-
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
 
 
 /* -------------------- Settings -------------------- */
