@@ -26,9 +26,7 @@
          </font>
       </Button>
       <ImageView fx:id="spriteImage" fitHeight="250.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../spritePlacehoder.png"/>
-         </image>
+         <Image url="@../spritePlacehoder.png"/>
       </ImageView>
       <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
               prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&gt;"
