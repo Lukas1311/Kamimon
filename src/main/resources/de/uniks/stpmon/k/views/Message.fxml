@@ -4,24 +4,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="messageBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MessageController">
+<VBox fx:id="messageBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="chat-message-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MessageController">
     <HBox fx:id="textBox" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
         <VBox.margin>
             <Insets />
         </VBox.margin>
         <TextFlow fx:id="textFlow" maxWidth="250.0">
-            <children>
-                <Text fx:id="bodyText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-               <font>
-                  <Font size="11.0" />
-               </font></Text>
-            </children>
+            <Text fx:id="bodyText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
         </TextFlow>
         <padding>
             <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
         </padding>
     </HBox>
-    <HBox VBox.vgrow="ALWAYS">
+    <HBox spacing="5.0" VBox.vgrow="ALWAYS">
         <VBox.margin>
             <Insets />
         </VBox.margin>
@@ -30,9 +25,6 @@
                 <VBox.margin>
                     <Insets left="10.0" />
                 </VBox.margin>
-            <font>
-               <Font size="11.0" />
-            </font>
             </Text>
         </VBox>
         <VBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
@@ -40,9 +32,6 @@
                 <VBox.margin>
                     <Insets right="10.0" />
                 </VBox.margin>
-            <font>
-               <Font size="11.0" />
-            </font>
             </Text>
         </VBox>
     </HBox>

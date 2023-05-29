@@ -17,9 +17,6 @@
          <VBox.margin>
             <Insets bottom="5.0" left="25.0" right="5.0" top="5.0"/>
          </VBox.margin>
-         <font>
-            <Font size="18.0"/>
-         </font>
       </Button>
       <VBox.margin>
          <Insets/>
@@ -32,10 +29,7 @@
    <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefWidth="370.0">
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
          <Text fx:id="trainerNameText" underline="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Trainer">
-            <font>
-               <Font size="18.0"/>
-            </font>
-         </Text>
+            </Text>
          <padding>
             <Insets left="30.0"/>
          </padding>
@@ -43,10 +37,7 @@
 
       <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
          <TextField fx:id="trainerNameInput" text="Bob">
-            <font>
-               <Font size="18.0"/>
-            </font>
-         </TextField>
+           </TextField>
          <padding>
             <Insets right="30.0"/>
          </padding>
@@ -64,10 +55,8 @@
    <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
       <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" HBox.hgrow="ALWAYS">
          <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button, general-button" text="%saveChanges">
-            <font><Font size="18.0"/></font>
          </Button>
          <Button fx:id="deleteTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="remove-button, general-button" text="%deleteTrainer">
-            <font><Font size="18.0"/></font>
          </Button>
          <padding>
             <Insets bottom="30.0"/>

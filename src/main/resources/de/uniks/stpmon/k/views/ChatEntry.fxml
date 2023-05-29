@@ -4,14 +4,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="chatEntry" alignment="CENTER" maxHeight="-Infinity" maxWidth="370.0" styleClass="chat-element" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatEntryController">
-   <children>
-      <Text fx:id="chatName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-         <font>
-            <Font size="16.0" />
-         </font></Text>
-   </children>
+<VBox fx:id="chatEntry" alignment="CENTER" maxHeight="-Infinity" maxWidth="370.0" styleClass="chat-element"
+      stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.ChatEntryController">
    <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
    </padding>
+   <Text fx:id="chatName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+   </Text>
 </VBox>

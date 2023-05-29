@@ -11,106 +11,65 @@
       prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/sidebar.css"
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.SettingsController">
-   <children>
-      <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
-         <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0"
-                 prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
-            <VBox.margin>
-               <Insets bottom="5.0" left="25.0" right="5.0" top="5.0"/>
-            </VBox.margin>
-            <font>
-               <Font size="18.0"/>
-            </font>
-            <tooltip><Tooltip text="%back"/> </tooltip>
-         </Button>
+   <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
+      <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0"
+              prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
          <VBox.margin>
-            <Insets/>
+            <Insets bottom="5.0" left="25.0" right="5.0" top="5.0"/>
          </VBox.margin>
+         <tooltip>
+            <Tooltip text="%back"/>
+         </tooltip>
+      </Button>
+      <VBox.margin>
+         <Insets/>
+      </VBox.margin>
+      <padding>
+         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+      </padding>
+   </HBox>
+   <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="370.0">
+      <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../spritePlacehoder.png"/>
+      </ImageView>
+   </HBox>
+   <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            <Insets left="30.0"/>
          </padding>
-      </HBox>
-      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="370.0">
-         <children>
-            <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../spritePlacehoder.png"/>
-               </image>
-            </ImageView>
-         </children>
-      </HBox>
-      <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
-         <children>
-            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
-               <children>
-                  <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" text="%username">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Text>
-                  <Text fx:id="userRegion" strokeType="OUTSIDE" strokeWidth="0.0" text="%userRegion">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Text>
-                  <Text fx:id="userTrainer" strokeType="OUTSIDE" strokeWidth="0.0" text="%userTrainer">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Text>
-               </children>
-               <padding>
-                  <Insets left="30.0"/>
-               </padding>
-            </VBox>
-            <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
-               <children>
-                  <Text fx:id="usernameValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Bob">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Text>
-                  <Text fx:id="userRegionValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Test">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Text>
-                  <Text fx:id="userTrainerValue" strokeType="OUTSIDE" strokeWidth="0.0" text="testUser">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Text>
-               </children>
-               <padding>
-                  <Insets right="30.0"/>
-               </padding>
-            </VBox>
-         </children>
-      </HBox>
-      <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-            prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                  spacing="20.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
-                          text="%editTrainer">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Button>
-                  <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button"
-                          text="%editUser">
-                     <font>
-                        <Font size="18.0"/>
-                     </font>
-                  </Button>
-               </children>
-               <padding>
-                  <Insets bottom="30.0"/>
-               </padding>
-            </VBox>
-         </children>
-      </HBox>
-   </children>
+         <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" text="%username">
+         </Text>
+         <Text fx:id="userRegion" strokeType="OUTSIDE" strokeWidth="0.0" text="%userRegion">
+         </Text>
+         <Text fx:id="userTrainer" strokeType="OUTSIDE" strokeWidth="0.0" text="%userTrainer">
+         </Text>
+      </VBox>
+      <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
+         <padding>
+            <Insets right="30.0"/>
+         </padding>
+         <Text fx:id="usernameValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Bob">
+         </Text>
+         <Text fx:id="userRegionValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Test">
+         </Text>
+         <Text fx:id="userTrainerValue" strokeType="OUTSIDE" strokeWidth="0.0" text="testUser">
+         </Text>
+      </VBox>
+   </HBox>
+   <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+         prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+      <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            spacing="20.0" HBox.hgrow="ALWAYS">
+         <padding>
+            <Insets bottom="30.0"/>
+         </padding>
+         <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0"
+                 text="%editTrainer">
+         </Button>
+         <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0"
+                 text="%editUser">
+         </Button>
+      </VBox>
+   </HBox>
 </VBox>

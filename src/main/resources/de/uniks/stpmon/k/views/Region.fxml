@@ -4,11 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.RegionController">
-   <children>
-      <Button fx:id="regionButton" maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="150.0" mnemonicParsing="false" text="Button" VBox.vgrow="SOMETIMES">
-         <font>
-            <Font size="18.0" />
-         </font></Button>
-   </children>
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.RegionController">
+   <Button fx:id="regionButton" maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="150.0"
+           mnemonicParsing="false" text="Button" VBox.vgrow="SOMETIMES">
+   </Button>
 </VBox>

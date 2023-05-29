@@ -16,9 +16,6 @@
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
-                <font>
-                    <Font size="18.0" />
-                </font>
                 <tooltip><Tooltip text="%back"/></tooltip>
             </Button>
         </VBox>

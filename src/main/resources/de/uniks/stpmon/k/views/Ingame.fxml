@@ -16,9 +16,6 @@
             <BorderPane>
                 <center>
                     <Text fx:id="inGameText" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME">
-                        <font>
-                            <Font size="61.0"/>
-                        </font>
                     </Text>
                 </center>
                 <top>
