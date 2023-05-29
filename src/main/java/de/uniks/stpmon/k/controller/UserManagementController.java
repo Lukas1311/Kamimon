@@ -1,17 +1,17 @@
 package de.uniks.stpmon.k.controller;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class UserManagementController extends Controller {
     @FXML
@@ -98,6 +98,6 @@ public class UserManagementController extends Controller {
 
     public void backToSettings() {
         // TODO: add pop confirmation only when unsaved settings
-        hybridControllerProvider.get().popTab();
+
     }
 }
