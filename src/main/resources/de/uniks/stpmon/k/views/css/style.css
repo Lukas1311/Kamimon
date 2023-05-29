@@ -26,7 +26,9 @@ Load fonts
 
     -fx-color-kgm-red:#AE2F34;
     -fx-color-kgm-yellow:#FCF1D0;
+    -fx-color-kgm-yellow-transparent: rgb(252, 241, 208, 0.8);
     -fx-color-red:#CF2A27;
+    -fx-color-light-red: #c75f5d;
     -fx-color-blue:#2B78E4;
     -fx-color-light-blue:#9FC5F8;
     -fx-color-light-green:#B6D7A8;
@@ -83,6 +85,34 @@ Load fonts
     -fx-opacity: 1.0;
     -fx-background-color: -fx-color-dark-white;
     -fx-text-fill: -fx-color-light-grey;
+    -fx-font-weight: bolder;
+    -fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: -fx-color-light-grey;
+    -fx-border-width: 3px;
+}
+
+.kgm-general-button-red{
+    -fx-opacity: 1.0;
+    -fx-background-color: -fx-color-red;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+    -fx-font-weight: bolder;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+}
+
+.kgm-general-button-red:disabled{
+    -fx-opacity: 1.0;
+    -fx-background-color: -fx-color-light-red;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
     -fx-font-weight: bolder;
     -fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
     -fx-border-style: solid outside;
@@ -265,7 +295,136 @@ Load fonts
     -fx-icon-size: 30px;
 }
 
-/* -------------------- Friends -------------------- */
+
+/* -------------------- Friend list -------------------- */
+.friends-menu-holder {
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
+    -fx-max-width: 370;
+
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+.friends-search-element {
+    -fx-pref-width: 330;
+    -fx-pref-height: 35;
+    -fx-min-width: 330;
+    -fx-min-height: 35;
+    -fx-max-width: 330;
+    -fx-max-height: 35;
+
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.friends-text-input {
+    -fx-alignment: center-left;
+    -fx-text-fill: black;
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: -fx-color-light-grey;
+    -fx-border-width: 3px;
+    -fx-background-radius: 0px;
+    -fx-background-color: white;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.friends-search-button {
+    -fx-pref-width: 45;
+    -fx-pref-height: 35;
+    -fx-min-width: 45;
+    -fx-min-height: 35;
+    -fx-max-width: 45;
+    -fx-max-height: 35;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-icon-size: 24;
+}
+
+.friends-search-button .ikonli-font-icon{
+    -fx-icon-size: 24px;
+    -fx-icon-color: -fx-color-blue;
+}
+
+.friends-scroll-pane {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-spacing: 6;
+
+    -fx-vbar-policy: never;
+    -fx-hbar-policy: never;
+
+}
+
+
+/* -------------------- Friend element -------------------- */
+.friend-element-holder {
+    -fx-background-color: -fx-color-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-border-style: solid outside;
+
+    -fx-pref-width: 325;
+    -fx-pref-height: 60;
+    -fx-min-width: 325;
+    -fx-min-height: 60;
+    -fx-max-width: 325;
+    -fx-max-height: 60;
+
+    -fx-spacing: 5;
+}
+
+.friend-element-avatar-holder {
+    -fx-pref-width: 40;
+    -fx-pref-height: 55;
+    -fx-min-width: 40;
+    -fx-min-height: 55;
+    -fx-max-width: 40;
+    -fx-max-height: 55;
+}
+
+.friend-element-avatar {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-border-style: solid outside;
+}
+
+.friend-icon-button {
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.friend-state-symbol{
+
+}
+
+
+
+
 
 
 

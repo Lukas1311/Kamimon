@@ -14,6 +14,8 @@ import javafx.scene.text.Text;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
 
+import org.kordamp.ikonli.javafx.FontIcon;
+
 public class FriendController extends Controller {
 
     @FXML
@@ -27,9 +29,9 @@ public class FriendController extends Controller {
     @FXML
     public Button removeFriendButton;
     @FXML
-    public Text removeFriendText;
+    public FontIcon removeFriendText;
     @FXML
-    public Text chat;
+    public FontIcon chat;
 
     private final FriendListController friendListController;
 
@@ -55,13 +57,17 @@ public class FriendController extends Controller {
         removeFriendButton.setTooltip(new Tooltip(translateString(newFriend ? ("addFriend") : ("removeFriend"))));
 
         if (newFriend) {
-
-            removeFriendText.setText("+");
-            removeFriendText.setFill(Paint.valueOf("GREEN"));
+            removeFriendText.setIconLiteral("mdral-add");
+            removeFriendText.setIconColor(Color.GREEN);
+        } else {
+            removeFriendText.setIconLiteral("mdral-clear");
+            removeFriendText.setIconColor(Color.RED);
         }
 
         if (user.status().equals("offline")) {
             userStatus.setFill(Color.RED);
+        } else {
+            userStatus.setFill(Color.GREEN);
         }
 
         //add avatar-url when avatar != null
