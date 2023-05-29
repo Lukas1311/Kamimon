@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.utils.TileMap;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
@@ -34,7 +35,7 @@ import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 public class WorldView extends Viewable {
 
     public static final int MOVMENT_UNIT = 8;
-    public static double IMAGE_SCALE = 2.0;
+    public static double IMAGE_SCALE = 4.0;
 
     @Inject
     protected TileMapService tileMapService;
@@ -70,22 +71,23 @@ public class WorldView extends Viewable {
         return floor;
     }
 
-    private MeshView createEntityScaled(String path, int angle) {
+    private Node createEntityScaled(String path, int angle) {
         Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
         return createEntity(scaledimage,
                 (int) (scaledimage.getWidth() / IMAGE_SCALE),
                 (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
-    private MeshView createEntity(Image image, int width, int height, int angle) {
+    private Node createEntity(Image image, int width, int height, int angle) {
         MeshView entity = MeshUtils.createRectangle(width, height);
         entity.setDrawMode(DrawMode.FILL);
         entity.setCullFace(CullFace.BACK);
-        entity.setTranslateY(-16);
-        entity.setTranslateX(8);
-        entity.setTranslateZ(-8);
-        entity.setRotationAxis(Rotate.X_AXIS);
-        entity.setRotate(angle);
+        Rotate rotate = new Rotate(angle, Rotate.X_AXIS);
+        // Rotate around the bottom center of the entity
+        rotate.setPivotZ(width / 2.0);
+        rotate.setPivotZ(0);
+        rotate.setPivotY(0);
+        entity.getTransforms().addAll(rotate, new Translate(width / 2.0, -height, 0));
         entity.setMaterial(createMaterial(image));
         return entity;
     }
@@ -95,25 +97,42 @@ public class WorldView extends Viewable {
         // move the far clip to see more of the scene
         camera.setFarClip(10000.0);
         camera.getTransforms()
-                .addAll(new Rotate(angle, Rotate.X_AXIS),
-                        new Translate(0, 0, -620));
+                .addAll(
+                        new Rotate(angle, Rotate.X_AXIS),
+                        new Translate(0, 0, -320));
         camera.setRotationAxis(Rotate.X_AXIS);
         return camera;
     }
 
+
     public SubScene renderScene() {
-        int angle = -45;
+        int angle = -90;
         PerspectiveCamera camera = createCamera(angle);
 
-        MeshView character = createEntityScaled("map/char.png", angle);
+        Node character = createEntityScaled("map/char.png", angle);
         character.setId("character");
+
+        Node building = createEntityScaled("map/building.png", angle);
+        building.setId("building");
+        building.setTranslateX(1280.0 / 2);
+        building.setTranslateZ(-1280.0 / 2);
+
+        Node building2 = createEntityScaled("map/building.png", angle);
+        building2.setId("building2");
+        building2.setTranslateX(1280.0 / 2 + 120);
+        building2.setTranslateZ(-1280.0 / 2);
+
+        Node building3 = createEntityScaled("map/building.png", angle);
+        building3.setId("building3");
+        building3.setTranslateX(1280.0 / 2 - 120);
+        building3.setTranslateZ(-1280.0 / 2);
 
         camera.translateXProperty().addListener((observable, oldValue, newValue) ->
                 character.setTranslateX(character.getTranslateX() - ((double) oldValue - (double) newValue)));
         camera.translateZProperty().addListener((observable, oldValue, newValue) ->
                 character.setTranslateZ(character.getTranslateZ() - ((double) oldValue - (double) newValue)));
-        camera.rotateProperty().addListener((observable, oldValue, newValue) ->
-                character.setRotate(character.getRotate() - ((double) oldValue - (double) newValue)));
+//        camera.rotateProperty().addListener((observable, oldValue, newValue) ->
+//                character.setRotate(character.getRotate() - ((double) oldValue - (double) newValue)));
 
         MeshView floor = createFloorScaled("map/natchester.png");
         floor.setId("floor");
@@ -124,7 +143,7 @@ public class WorldView extends Viewable {
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        Group root = new Group(floor, ambient, character);
+        Group root = new Group(floor, ambient, character, building, building2, building3);
 
         app.getStage()
                 .getScene()

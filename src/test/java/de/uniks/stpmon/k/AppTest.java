@@ -129,6 +129,6 @@ class AppTest extends ApplicationTest {
         verifyThat(regionsListView, Node::isVisible);
 
         clickOn("#regionButton");
-        verifyThat("#inGameText", hasText("INGAME"));
+        verifyThat("#ingame", Node::isVisible);
     }
 }

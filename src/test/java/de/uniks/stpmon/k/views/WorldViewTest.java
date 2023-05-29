@@ -69,28 +69,28 @@ public class WorldViewTest extends ApplicationTest {
         type(KeyCode.W);
         waitForFxEvents();
 
-        // check if char moved up by 5
-        assertEquals(5, character.getTranslateZ());
+        // check if char moved up by 8
+        assertEquals(8, character.getTranslateZ());
 
         // test move down
         type(KeyCode.S);
         waitForFxEvents();
 
-        // check if char moved down by 5
+        // check if char moved down by 8
         assertEquals(0, character.getTranslateZ());
 
         // test move left
         type(KeyCode.A);
         waitForFxEvents();
 
-        // check if char moved left by 5
-        assertEquals(-5, character.getTranslateX());
+        // check if char moved left by 8
+        assertEquals(-8, character.getTranslateX());
 
         // test move right
         type(KeyCode.D);
         waitForFxEvents();
 
-        // check if char moved right by 5
+        // check if char moved right by 8
         assertEquals(0, character.getTranslateX());
     }
 }

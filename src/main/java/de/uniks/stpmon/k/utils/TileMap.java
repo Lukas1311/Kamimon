@@ -25,6 +25,7 @@ public class TileMap {
     private final int tileHeight;
     private final int width;
     private final int height;
+    private final PropInspector inspector;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.data = provider.map();
@@ -40,6 +41,7 @@ public class TileMap {
         this.width = width;
         this.height = height;
         this.collisionMap = new BitSet(height * width);
+        this.inspector = new PropInspector(data);
     }
 
     public TileMapData getData() {

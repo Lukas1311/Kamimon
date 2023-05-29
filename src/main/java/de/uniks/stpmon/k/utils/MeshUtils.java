@@ -36,10 +36,10 @@ public class MeshUtils {
         TriangleMesh mesh = new TriangleMesh();
 
         float[] vertices = {
-                -w / 2f, -h / 2f, 0,
-                w / 2f, -h / 2f, 0,
-                -w / 2f, h / 2f, 0,
-                w / 2f, h / 2f, 0
+                -w / 2f, 0, 0,
+                w / 2f, 0, 0,
+                -w / 2f, h, 0,
+                w / 2f, h, 0
         };
         // top not at 0 because of texture flickering
         float[] texCoords = {

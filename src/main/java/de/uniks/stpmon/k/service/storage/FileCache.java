@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.service.storage;
 import javax.inject.Singleton;
 
 @Singleton
-
 public class FileCache {
 
 //    public String getFileName() {
