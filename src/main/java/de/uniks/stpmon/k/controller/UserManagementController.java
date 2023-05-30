@@ -17,6 +17,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import retrofit2.HttpException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -137,9 +140,8 @@ public class UserManagementController extends Controller {
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
                 if (!(ex.code() == 409)) return;
-                usernameError.set("username.already.in.use");
+                usernameError.set(translateString("username.already.in.use"));
             })
-
         );
     }
 
@@ -149,9 +151,8 @@ public class UserManagementController extends Controller {
                 // TODO: remove in clean up
                 System.out.println(usr);
             }, err -> {
-                passwordError.set("error");
+                passwordError.set(translateString("error"));
             })
-
         );
     }
 
@@ -171,14 +172,13 @@ public class UserManagementController extends Controller {
                         if (!innerResult) return;
                         app.show(loginControllerProvider.get());
                     });
-                }, err -> app.show(loginControllerProvider.get())
+                }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
                 )
             );
         });
     }
 
     public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
-        System.out.println("popup is opened");
         isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
         popUp.setScenario(scenario);
