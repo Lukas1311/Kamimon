@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.ws;
+package de.uniks.stpmon.k.net;
 
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -10,27 +10,25 @@ import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
 
 @javax.websocket.ClientEndpoint
-public class ClientEndpoint {
+public class WSEndpoint extends ClientEndpoint {
     private final URI endpointURI;
-    private final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
 
     Session userSession;
 
-    public ClientEndpoint(URI endpointURI) {
+    public WSEndpoint(URI endpointURI) {
         this.endpointURI = endpointURI;
     }
 
+    @Override
     public boolean isOpen() {
         return this.userSession != null && this.userSession.isOpen();
     }
 
+    @Override
     public void open() {
         if (isOpen()) {
             return;
@@ -65,14 +63,7 @@ public class ClientEndpoint {
         error.printStackTrace();
     }
 
-    public void addMessageHandler(Consumer<String> msgHandler) {
-        this.messageHandlers.add(msgHandler);
-    }
-
-    public void removeMessageHandler(Consumer<String> msgHandler) {
-        this.messageHandlers.remove(msgHandler);
-    }
-
+    @Override
     public void sendMessage(String message) {
         if (this.userSession == null) {
             return;
@@ -80,6 +71,7 @@ public class ClientEndpoint {
         this.userSession.getAsyncRemote().sendText(message);
     }
 
+    @Override
     public void close() {
         if (this.userSession == null) {
             return;
@@ -90,9 +82,5 @@ public class ClientEndpoint {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean hasMessageHandlers() {
-        return !this.messageHandlers.isEmpty();
     }
 }

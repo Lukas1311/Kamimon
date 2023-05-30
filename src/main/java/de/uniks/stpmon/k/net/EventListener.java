@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.ws;
+package de.uniks.stpmon.k.net;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -20,7 +22,7 @@ import java.util.regex.Pattern;
 public class EventListener {
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
-    private ClientEndpoint endpoint;
+    private final Map<Socket, ClientEndpoint> endpoints = new HashMap<>();
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
@@ -28,29 +30,37 @@ public class EventListener {
         this.mapper = mapper;
     }
 
-    private void ensureOpen() {
-        if (endpoint != null && endpoint.isOpen()) {
-            return;
+    private ClientEndpoint ensureOpen(Socket key) {
+        ClientEndpoint instance = endpoints.get(key);
+        if (instance != null && instance.isOpen()) {
+            return instance;
         }
 
-        final URI endpointURI;
-        try {
-            endpointURI = new URI(Main.WS_URL + "/events?authToken=" + tokenStorage.getToken());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        switch (key) {
+            case WS -> {
+                final URI endpointURI;
+                try {
+                    endpointURI = new URI(Main.WS_URL + "/events?authToken=" + tokenStorage.getToken());
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
 
-        endpoint = new ClientEndpoint(endpointURI);
-        endpoint.open();
+                instance = new WSEndpoint(endpointURI);
+            }
+            case UDP -> instance = new UDPEndpoint();
+        }
+        instance.open();
+        endpoints.put(key, instance);
+        return instance;
     }
 
-    public <T> Observable<Event<T>> listen(String pattern, Class<T> type) {
+    public <T> Observable<Event<T>> listen(Socket endpoint, String pattern, Class<T> type) {
         return Observable.create(emitter -> {
-            this.ensureOpen();
-            send(new Event<>("subscribe", pattern));
+            ClientEndpoint instance = this.ensureOpen(endpoint);
+            send(instance, new Event<>("subscribe", pattern));
             final Consumer<String> handler = createPatternHandler(mapper, pattern, type, emitter);
-            endpoint.addMessageHandler(handler);
-            emitter.setCancellable(() -> removeEventHandler(pattern, handler));
+            instance.addMessageHandler(handler);
+            emitter.setCancellable(() -> removeEventHandler(instance, pattern, handler));
         });
     }
 
@@ -75,32 +85,37 @@ public class EventListener {
         };
     }
 
-    private void removeEventHandler(String pattern, Consumer<String> handler) {
-        if (endpoint == null) {
+    private void removeEventHandler(ClientEndpoint instance, String pattern, Consumer<String> handler) {
+        if (instance == null) {
             return;
         }
 
-        send(new Event<>("unsubscribe", pattern));
-        endpoint.removeMessageHandler(handler);
-        if (!endpoint.hasMessageHandlers()) {
-            close();
+        send(instance, new Event<>("unsubscribe", pattern));
+        instance.removeMessageHandler(handler);
+        if (!instance.hasMessageHandlers()) {
+            instance.close();
+            endpoints.remove(instance instanceof WSEndpoint ? Socket.WS : Socket.UDP);
         }
     }
 
-    public void send(Object message) {
-        ensureOpen();
+    private void send(ClientEndpoint instance, Object message) {
         try {
             final String msg = mapper.writeValueAsString(message);
-            endpoint.sendMessage(msg);
+            instance.sendMessage(msg);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
     }
 
+    public void send(Socket endpoint, Object message) {
+        ClientEndpoint instance = ensureOpen(endpoint);
+        send(instance, message);
+    }
+
     private void close() {
-        if (endpoint != null) {
+        for (ClientEndpoint endpoint : endpoints.values()) {
             endpoint.close();
-            endpoint = null;
         }
+        endpoints.clear();
     }
 }

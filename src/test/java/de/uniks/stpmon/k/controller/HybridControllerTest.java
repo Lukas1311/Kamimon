@@ -7,8 +7,9 @@ import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -58,14 +59,14 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
-        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Group>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Message>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
         write("\t\t\t\t\t\t\t");
         type(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -117,7 +118,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void settings() {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Message>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
         // pressing settings button and check if settings is shown
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -144,7 +145,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void closeSidebar() {
-        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Group>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
         StackPane stackPane = lookup("#stackPane").query();
         assertEquals(1, stackPane.getChildren().size());
 

@@ -4,8 +4,9 @@ import de.uniks.stpmon.k.dto.CreateMessageDto;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Message;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.MessageApiService;
-import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
@@ -58,7 +59,7 @@ public class MessageApiDummy implements MessageApiService {
     public void mockEvents(String groupId) {
         this.groupId = groupId;
 
-        Mockito.when(eventListener.listen("groups.%s.messages.*.*".formatted(groupId), Message.class))
+        Mockito.when(eventListener.listen(Socket.WS, "groups.%s.messages.*.*".formatted(groupId), Message.class))
                 .thenReturn(events);
     }
 

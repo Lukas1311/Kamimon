@@ -4,12 +4,13 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
-import de.uniks.stpmon.k.ws.EventListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -97,17 +98,17 @@ public class ChatController extends ToastedController {
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
-                .listen("%s.%s.messages.*.*".formatted(GROUPS.toString(), group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
-                            // only listen to messages in the current specific group
-                            // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
-                            final Message msg = event.data();
-                            switch (event.suffix()) {
-                                case "created" -> this.messages.add(msg);
-                                // checks and updates all messages that have been edited by a user
-                                case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
-                                case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
-                            }
-                            if (event.suffix().equals("created")) {
+                .listen(Socket.WS, "%s.%s.messages.*.*".formatted(GROUPS.toString(), group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+                    // only listen to messages in the current specific group
+                    // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
+                    final Message msg = event.data();
+                    switch (event.suffix()) {
+                        case "created" -> this.messages.add(msg);
+                        // checks and updates all messages that have been edited by a user
+                        case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
+                        case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
+                    }
+                    if (event.suffix().equals("created")) {
                                 messagesListView.scrollTo(msg);
                             }
                         }, this::handleError

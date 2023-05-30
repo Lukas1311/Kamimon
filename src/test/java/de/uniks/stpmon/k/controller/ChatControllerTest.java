@@ -8,11 +8,12 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
@@ -100,7 +101,7 @@ public class ChatControllerTest extends ApplicationTest {
         // this is the stuff that happens in init() -> mock this
         when(userService.getUsers(any())).thenReturn(Observable.just(userList));
         when(msgService.getAllMessages(any(), any())).thenReturn(Observable.just(messagesMock));
-        when(eventListener.<Message>listen(any(), any())).thenReturn(events);
+        when(eventListener.<Message>listen(Socket.WS, any(), any())).thenReturn(events);
 
         when(regionService.getRegions()).thenReturn(Observable.just(List.of(new Region("i", "reg", new Spawn("0", 0, 0), null))));
         when(userService.getMe()).thenReturn(bob);

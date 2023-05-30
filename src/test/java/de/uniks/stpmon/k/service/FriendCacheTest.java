@@ -2,9 +2,10 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.UserApiService;
 import de.uniks.stpmon.k.service.storage.FriendCache;
-import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -39,7 +40,7 @@ class FriendCacheTest {
 
     @BeforeEach
     void setUp() {
-        when(eventListener.listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
     }
 
     @Test
@@ -64,7 +65,7 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
-        when(eventListener.<User>listen(eq("users.*.*"), any())).thenReturn(userEvents);
+        when(eventListener.<User>listen(Socket.WS, eq("users.*.*"), any())).thenReturn(userEvents);
 
         // initialise cache with user
         List<User> cachedFriends = cache.init(user).blockingFirst();
@@ -102,7 +103,7 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user, friendFirst)));
-        when(eventListener.<User>listen(eq("users.*.*"), any())).thenReturn(mainUserEvents);
+        when(eventListener.<User>listen(Socket.WS, eq("users.*.*"), any())).thenReturn(mainUserEvents);
 
         // initialise cache with user
         List<User> cachedFriends = cache.init(user).blockingFirst();
