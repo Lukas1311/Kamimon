@@ -40,7 +40,8 @@ import javax.inject.Inject;
  */
 public class PopUpController extends Controller {
     @FXML
-    public Button popUpCancelButton;
+    @FXML
+    public Button popUpCloseButton;
     @FXML
     public Text popUpMainText;
     @FXML
@@ -103,7 +104,7 @@ public class PopUpController extends Controller {
         // bind buttons to actions
         approveButton.setOnAction(click -> approve());
         discardButton.setOnAction(click -> cancel());
-        popUpCancelButton.setOnAction(click -> cancel());
+        popUpCloseButton.setOnAction(click -> cancel());
 
         // show modal dialog and wait for interactions of the user
         modalStage.showAndWait();
