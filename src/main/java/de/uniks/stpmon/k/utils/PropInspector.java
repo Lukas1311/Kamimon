@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class PropInspector {
-    public static final int RGB_THRESHOLD = 5;
+    public static final int RGB_THRESHOLD = 0;
     public static final int CONNECT_THRESHOLD = 8;
     public static final int TILE_SIZE = 16;
     private final int[][] grid;
@@ -115,14 +115,20 @@ public class PropInspector {
 
         // Iterate over each pixel in the images and compare the edges
         for (int i = 0; i < TILE_SIZE; i++) {
-            int first = image.getRGB(tileX * TILE_SIZE + dir.imageX(i),
-                    tileY * TILE_SIZE + dir.imageY(i));
-            int second = image.getRGB(tileX * TILE_SIZE + otherDir.imageX(i),
-                    tileY * TILE_SIZE + otherDir.imageY(i));
+            int firstX = tileX * TILE_SIZE + dir.imageX(i);
+            int firstY = tileY * TILE_SIZE + dir.imageY(i);
+            int secondX = (tileX + dir.tileX()) * TILE_SIZE + otherDir.imageX(i);
+            int secondY = (tileY + dir.tileY()) * TILE_SIZE + otherDir.imageY(i);
+//            int first = image.getRGB(tileX * TILE_SIZE + dir.imageX(i),
+//                    tileY * TILE_SIZE + dir.imageY(i));
+//            int second = image.getRGB(tileX * TILE_SIZE + otherDir.imageX(i),
+//                    tileY * TILE_SIZE + otherDir.imageY(i));
+            int first = image.getRGB(firstX, firstY);
+            int second = image.getRGB(secondX, secondY);
 
             // Calculate the grayscale intensity of each pixel
-            double intensity1 = (((first >> 24 & 0xFF)) + (first >> 16 & 0xFF) + (first >> 8 & 0xF) + first & 0xFF) / 4.0;
-            double intensity2 = (((second >> 24 & 0xFF)) + (second >> 16 & 0xFF) + (second >> 8 & 0xF) + second & 0xFF) / 4.0;
+            double intensity1 = (((first >> 24 & 0xFF)) + (first >> 16 & 0xFF) + (first >> 8 & 0xFF) + ((first) & 0xFF)) / 4.0;
+            double intensity2 = (((second >> 24 & 0xFF)) + (second >> 16 & 0xFF) + (second >> 8 & 0xFF) + ((second) & 0xFF)) / 4.0;
 
             // Compare the intensities and check if the difference is above the threshold
             if (Math.abs(intensity1 - intensity2) <= RGB_THRESHOLD) {
