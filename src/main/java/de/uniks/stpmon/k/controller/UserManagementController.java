@@ -1,8 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.Bindings;
@@ -10,13 +7,12 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import retrofit2.HttpException;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class UserManagementController extends Controller {
     @FXML
@@ -122,15 +118,15 @@ public class UserManagementController extends Controller {
         // new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
         //     if (buttonType == ButtonType.OK) {
 
-                if (!usernameInvalid.get()) {
-                    saveUsername(username.get());
-                }
+        if (!usernameInvalid.get()) {
+            saveUsername(username.get());
+        }
 
-                if (!passwordInvalid.get()) {
-                    savePassword(password.get());
-                }
+        if (!passwordInvalid.get()) {
+            savePassword(password.get());
+        }
 
-                changesSaved = true;
+        changesSaved = true;
 
 
         //     } else if (buttonType == ButtonType.CANCEL) {
