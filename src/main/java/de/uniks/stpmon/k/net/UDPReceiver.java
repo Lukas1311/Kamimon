@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.function.Consumer;
 
 public class UDPReceiver implements SocketReceiver {
@@ -55,12 +56,15 @@ public class UDPReceiver implements SocketReceiver {
     protected void startReceive() {
         final byte[] buf = new byte[508];
         thread = new Thread(() -> {
-            while (isOpen()) {
+            boolean active = true;
+            while (active && isOpen()) {
                 try {
                     DatagramPacket packet = new DatagramPacket(buf, buf.length);
                     socket.receive(packet);
                     String received = new String(packet.getData());
                     handler.accept(received);
+                } catch (SocketException e) {
+                    active = false;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -71,13 +75,12 @@ public class UDPReceiver implements SocketReceiver {
 
     @Override
     public void close() {
+        if (thread != null) {
+            thread.interrupt();
+        }
         if (socket == null) {
             return;
         }
         socket.close();
-        if (thread == null) {
-            return;
-        }
-        thread.interrupt();
     }
 }
