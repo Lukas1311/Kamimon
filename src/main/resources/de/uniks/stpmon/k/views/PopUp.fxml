@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <BorderPane fx:id="popUpMainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
-            prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@css/style.css"
             fx:controller="de.uniks.stpmon.k.controller.popup.PopUpController">
     <top>
         <Button fx:id="popUpCloseButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel" text="x"
@@ -28,9 +28,9 @@
             <BorderPane.margin>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
             </BorderPane.margin>
-            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" text="%yes"/>
+            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" text="%yes" styleClass="kgm-general-button-blue"/>
             <Button fx:id="discardButton" mnemonicParsing="false" onAction="#cancel" text="%discard"
-                    GridPane.columnIndex="1"/>
+                    GridPane.columnIndex="1" styleClass="kgm-general-button-red"/>
         </GridPane>
     </bottom>
 </BorderPane>
