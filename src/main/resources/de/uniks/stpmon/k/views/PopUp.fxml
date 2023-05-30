@@ -13,7 +13,7 @@
                 textAlignment="JUSTIFY" BorderPane.alignment="TOP_RIGHT"/>
     </top>
     <center>
-        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" text="%doYouWantToSaveChanges"
+        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" text=""
               BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
