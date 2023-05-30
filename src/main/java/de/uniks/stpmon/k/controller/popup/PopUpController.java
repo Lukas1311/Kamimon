@@ -16,6 +16,8 @@ import javax.inject.Inject;
 /**
  * The PopUpController shows different text depending on in which scenario it is used
  * (The text in the buttons are always the same except in den DELETEUSER scenario)
+ * NOTE: While a PopUp is active, nothing is clickable except elements of the popUp itself.
+ * But the buttons still have to be disabled, to make it clear to the user
  * ---------------------------------------------------------------------------------
  * How to add a new customized controller:
  * 1. Add you scenario in the PopUpScenario.java enum (the string is the main text of the popup)
@@ -23,14 +25,14 @@ import javax.inject.Inject;
  * public void showPopUp(PopUpController.ModalCallback callback) {
  *  PopUpController popUp = popUpControllerProvider.get();
  *  popUp.setScenario(PopUpScenario.<your_popUp_scenario_here>);
- *  <disable buttons of your controller here>
+ *  <disable buttons and of your controller here>
  *  popUp.showModal(callback);
  * }
  * 4. Use the callback to implement the functionality in your controller
  * e.g. something like this:
  * public void saveChanges() {
  *  showPopUp(result -> {
- *  //enable buttons again
+ *  <enable buttons and again>
  *  if (!result) return; //changes are not save
  *      //implement here what should happen, when changes are saved
  *  });
