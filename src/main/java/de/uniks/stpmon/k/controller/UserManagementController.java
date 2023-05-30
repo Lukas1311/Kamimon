@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.PopUpController.ModalCallback;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -42,6 +44,8 @@ public class UserManagementController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<LoginController> loginControllerProvider;
+    @Inject
+    Provider<PopUpController> popUpControllerProvider;
 
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
@@ -118,25 +122,16 @@ public class UserManagementController extends Controller {
     }
 
     public void saveChanges() {
-        // TODO: replace this with real modal pop pop up
-        // new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
-        //     if (buttonType == ButtonType.OK) {
-
-                if (!usernameInvalid.get()) {
-                    saveUsername(username.get());
-                }
-
-                if (!passwordInvalid.get()) {
-                    savePassword(password.get());
-                }
-
-                changesSaved = true;
-
-
-        //     } else if (buttonType == ButtonType.CANCEL) {
-        //         // do nothing
-        //     }
-        // });
+        showPopUp("save changes?", result -> {
+            if (!result) return;
+            if (!usernameInvalid.get()) {
+                saveUsername(username.get());
+            }
+            if (!passwordInvalid.get()) {
+                savePassword(password.get());
+            }
+            changesSaved = true;
+        });
     }
 
     private void saveUsername(String newUsername) {
@@ -198,5 +193,12 @@ public class UserManagementController extends Controller {
                 // the user clicked CANCEL
             }
         });
+    }
+
+    public void showPopUp(String text, ModalCallback callback) {
+        System.out.println("pop up is called");
+        PopUpController popUp = popUpControllerProvider.get();
+        popUp.setPopUpText(text);
+        popUp.showModal(callback);
     }
 }
