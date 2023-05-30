@@ -47,6 +47,7 @@ public class UserManagementController extends Controller {
     private final SimpleStringProperty password = new SimpleStringProperty();
     private final SimpleStringProperty usernameError = new SimpleStringProperty();
     private final SimpleStringProperty passwordError = new SimpleStringProperty();
+    private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private BooleanBinding usernameInvalid;
@@ -79,7 +80,9 @@ public class UserManagementController extends Controller {
         passwordInput.textProperty().bindBidirectional(password);
         usernameInfo.textProperty().bind(usernameError);
 
-        saveChangesButton.disableProperty().bind(changesMade.not());
+        // set bindings to buttons that should be disabled after the popup is shown
+        saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
+        deleteUserButton.disableProperty().bind(isPopUpShown);
 
         usernameInfo.textProperty().bind(
             Bindings.when(usernameTooLong)
@@ -191,10 +194,10 @@ public class UserManagementController extends Controller {
         });
     }
 
-    public void showPopUp(String text, ModalCallback callback) {
-        System.out.println("pop up is called");
+        isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
         popUp.setPopUpText(text);
         popUp.showModal(callback);
+        isPopUpShown.set(false);
     }
 }
