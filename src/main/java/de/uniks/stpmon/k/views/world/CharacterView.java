@@ -34,19 +34,20 @@ public class CharacterView extends WorldController {
         character.setId("character");
         camera.translateXProperty().addListener((observable, oldValue, newValue) -> {
             character.setTranslateX(character.getTranslateX() - ((double) oldValue - (double) newValue));
-            onMove((int) character.getTranslateX(), (int) character.getTranslateY());
         });
         camera.translateZProperty().addListener((observable, oldValue, newValue) -> {
             character.setTranslateZ(character.getTranslateZ() - ((double) oldValue - (double) newValue));
-            onMove((int) character.getTranslateX(), (int) character.getTranslateY());
         });
-        camera.rotateProperty().addListener((observable, oldValue, newValue) ->
+        camera.rotateProperty().addListener((observable, oldValue
+                , newValue) ->
                 character.setRotate(character.getRotate() - ((double) oldValue - (double) newValue)));
         return character;
     }
 
-    private void onMove(int x, int y) {
-        //TODO: On move
+    public void onMove(int x, int y) {
+    }
+
+    public void onMoveReceived(MoveTrainerDto dto) {
     }
 
     @Override
@@ -63,7 +64,7 @@ public class CharacterView extends WorldController {
                         MoveTrainerDto.class),
                 (event) -> {
                     MoveTrainerDto dto = event.data();
-                    System.out.printf("moved{trainer=%s,x=%s,y=%s}\n", dto._id(), dto.x(), dto.y());
+                    onMoveReceived(dto);
                 });
     }
 }

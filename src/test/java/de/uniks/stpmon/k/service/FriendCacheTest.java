@@ -40,7 +40,7 @@ class FriendCacheTest {
 
     @BeforeEach
     void setUp() {
-        when(eventListener.listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
+        when(eventListener.listen(any(), any(), any())).thenReturn(Observable.empty());
     }
 
     @Test
@@ -65,7 +65,7 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
-        when(eventListener.<User>listen(Socket.WS, eq("users.*.*"), any())).thenReturn(userEvents);
+        when(eventListener.<User>listen(eq(Socket.WS), eq("users.*.*"), any())).thenReturn(userEvents);
 
         // initialise cache with user
         List<User> cachedFriends = cache.init(user).blockingFirst();
@@ -103,7 +103,7 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user, friendFirst)));
-        when(eventListener.<User>listen(Socket.WS, eq("users.*.*"), any())).thenReturn(mainUserEvents);
+        when(eventListener.<User>listen(eq(Socket.WS), eq("users.*.*"), any())).thenReturn(mainUserEvents);
 
         // initialise cache with user
         List<User> cachedFriends = cache.init(user).blockingFirst();

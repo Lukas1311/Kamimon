@@ -102,7 +102,7 @@ public class ChatControllerTest extends ApplicationTest {
         // this is the stuff that happens in init() -> mock this
         when(userService.getUsers(any())).thenReturn(Observable.just(userList));
         when(msgService.getAllMessages(any(), any())).thenReturn(Observable.just(messagesMock));
-        when(eventListener.<Message>listen(Socket.WS, any(), any())).thenReturn(events);
+        when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(events);
 
         when(regionService.getRegions()).thenReturn(Observable.just(List.of(new Region("i", "reg", new Spawn("0", 0, 0), null))));
         when(userService.getMe()).thenReturn(bob);

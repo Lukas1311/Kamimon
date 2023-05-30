@@ -32,6 +32,7 @@ import java.util.ResourceBundle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -61,14 +62,14 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
-        when(eventListener.<Group>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        when(eventListener.<Message>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
         write("\t\t\t\t\t\t\t");
         type(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -120,7 +121,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void settings() {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        when(eventListener.<Message>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         // pressing settings button and check if settings is shown
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -147,7 +148,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void closeSidebar() {
-        when(eventListener.<Group>listen(Socket.WS, any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         StackPane stackPane = lookup("#stackPane").query();
         assertEquals(1, stackPane.getChildren().size());
 
