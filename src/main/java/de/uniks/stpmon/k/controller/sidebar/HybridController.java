@@ -1,16 +1,6 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.ChatController;
-import de.uniks.stpmon.k.controller.ChatListController;
-import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.CreateChatController;
-import de.uniks.stpmon.k.controller.FriendListController;
-import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.LobbyController;
-import de.uniks.stpmon.k.controller.PauseController;
-import de.uniks.stpmon.k.controller.SettingsController;
-import de.uniks.stpmon.k.controller.UserManagementController;
-import de.uniks.stpmon.k.controller.TrainerManagementController;
+import de.uniks.stpmon.k.controller.*;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -83,6 +73,8 @@ public class HybridController extends Controller {
     Provider<UserManagementController> userManagementControllerProvider;
     @Inject
     Provider<TrainerManagementController> trainerManagementControllerProvider;
+    @Inject
+    ChooseSpriteController chooseSpriteController;
 
 
     @Inject
@@ -190,7 +182,9 @@ public class HybridController extends Controller {
             case SETTINGS -> pushController(settingsController, setup);
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
-            case NONE -> {}
+            case CHOOSE_SPRITE -> pushController(chooseSpriteController, setup);
+            case NONE -> {
+            }
         }
     }
 
