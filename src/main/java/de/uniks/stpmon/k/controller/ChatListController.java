@@ -2,9 +2,10 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.TabController;
 import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.views.ChatCell;
-import de.uniks.stpmon.k.ws.EventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -50,7 +51,7 @@ public class ChatListController extends TabController {
             list.forEach(group -> groupMap.put(group._id(), group));
             groups.setAll(groupMap.values());
         }, this::handleError);
-        subscribe(eventListener.listen("groups.*.*", Group.class), event -> {
+        subscribe(eventListener.listen(Socket.WS, "groups.*.*", Group.class), event -> {
             final Group group = event.data();
             switch (event.suffix()) {
                 case "created" -> groupMap.put(group._id(), group);
