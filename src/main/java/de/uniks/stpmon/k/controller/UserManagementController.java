@@ -61,7 +61,6 @@ public class UserManagementController extends Controller {
     private BooleanBinding changesMade;
 
 
-
     @Inject
     public UserManagementController() {
     }
@@ -78,7 +77,6 @@ public class UserManagementController extends Controller {
         usernameInvalid = username.isEmpty().or(usernameTooLong);
         passwordInvalid = passwordTooShort;
         changesMade = usernameInvalid.not().or(passwordInvalid.not());
-
 
         // bind bindings to fxml:
         usernameInput.textProperty().bindBidirectional(username);
@@ -100,7 +98,6 @@ public class UserManagementController extends Controller {
             .otherwise("")
         );
 
-
         // ui functions:
         backButton.setOnAction(click -> backToSettings());
         saveChangesButton.setOnAction(click -> saveChanges());
@@ -110,16 +107,9 @@ public class UserManagementController extends Controller {
 
     public void backToSettings() {
         if (changesMade.get() && !changesSaved) {
-            // TODO: add pop confirmation
-            // if OK: {
-            //     saveChanges();
-            // } else CANCEL or CLOSE {
-            // return;
-            // }
-            new Alert(Alert.AlertType.CONFIRMATION, "there are unsaved changes.\nsave them?").showAndWait().ifPresent(buttonType -> {
-                if (buttonType == ButtonType.OK) {
-                    saveChanges();    
-                }
+            showPopUp(PopUpScenario.UNSAVED_CHANGES, result -> {
+                if (!result) return;
+                saveChanges();
             });
         }
         hybridControllerProvider.get().popTab();
