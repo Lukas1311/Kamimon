@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.views.WorldView;
+import de.uniks.stpmon.k.views.world.WorldView;
 
 import javax.inject.Singleton;
 

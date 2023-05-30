@@ -99,16 +99,16 @@ public class ChatController extends ToastedController {
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
                 .listen(Socket.WS, "%s.%s.messages.*.*".formatted(GROUPS.toString(), group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
-                    // only listen to messages in the current specific group
-                    // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
-                    final Message msg = event.data();
-                    switch (event.suffix()) {
-                        case "created" -> this.messages.add(msg);
-                        // checks and updates all messages that have been edited by a user
-                        case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
-                        case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
-                    }
-                    if (event.suffix().equals("created")) {
+                            // only listen to messages in the current specific group
+                            // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
+                            final Message msg = event.data();
+                            switch (event.suffix()) {
+                                case "created" -> this.messages.add(msg);
+                                // checks and updates all messages that have been edited by a user
+                                case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
+                                case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
+                            }
+                            if (event.suffix().equals("created")) {
                                 messagesListView.scrollTo(msg);
                             }
                         }, this::handleError
@@ -227,9 +227,8 @@ public class ChatController extends ToastedController {
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
-                            .subscribe(msg -> {
-                                messagesListView.scrollTo(msg);
-                            }, this::handleError)
+                            .subscribe(msg -> messagesListView.scrollTo(msg),
+                                    this::handleError)
                     );
                     regionPicker.getSelectionModel().clearSelection();
                 }

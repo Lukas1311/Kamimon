@@ -44,8 +44,10 @@ class HybridControllerTest extends ApplicationTest {
     private final UserStorage userStorage = component.userStorage();
     private final EventListener eventListener = component.eventListener();
     @Spy
+    @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
+    @SuppressWarnings("unused")
     Provider<ResourceBundle> resourceBundleProvider;
 
     @Override

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.stpmon.k.Main;
+import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
 public class EventListener {
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
-    private final Map<Socket, ClientEndpoint> endpoints = new HashMap<>();
+    private final Map<Socket, SocketSender> adapters = new HashMap<>();
 
     @Inject
     public EventListener(TokenStorage tokenStorage, ObjectMapper mapper) {
@@ -30,8 +31,8 @@ public class EventListener {
         this.mapper = mapper;
     }
 
-    private ClientEndpoint ensureOpen(Socket key) {
-        ClientEndpoint instance = endpoints.get(key);
+    private SocketSender ensureOpen(Socket key) {
+        SocketSender instance = adapters.get(key);
         if (instance != null && instance.isOpen()) {
             return instance;
         }
@@ -47,20 +48,24 @@ public class EventListener {
 
                 instance = new WSEndpoint(endpointURI);
             }
-            case UDP -> instance = new UDPEndpoint();
+            case UDP -> instance = new UDPSender();
         }
         instance.open();
-        endpoints.put(key, instance);
+        adapters.put(key, instance);
         return instance;
     }
 
-    public <T> Observable<Event<T>> listen(Socket endpoint, String pattern, Class<T> type) {
+    public <T> Observable<Event<T>> listen(Socket socket, String pattern, Class<T> type) {
         return Observable.create(emitter -> {
-            ClientEndpoint instance = this.ensureOpen(endpoint);
-            send(instance, new Event<>("subscribe", pattern));
+            SocketSender adapter = this.ensureOpen(socket);
+            SocketReceiver endpoint = send(adapter, new Event<>("subscribe", pattern), true);
+            if (endpoint == null) {
+                emitter.onError(new RuntimeException("Could not subscribe to events"));
+                return;
+            }
             final Consumer<String> handler = createPatternHandler(mapper, pattern, type, emitter);
-            instance.addMessageHandler(handler);
-            emitter.setCancellable(() -> removeEventHandler(instance, pattern, handler));
+            endpoint.addMessageHandler(handler);
+            emitter.setCancellable(() -> removeEventHandler(adapter, endpoint, pattern, handler));
         });
     }
 
@@ -85,37 +90,27 @@ public class EventListener {
         };
     }
 
-    private void removeEventHandler(ClientEndpoint instance, String pattern, Consumer<String> handler) {
-        if (instance == null) {
-            return;
-        }
-
-        send(instance, new Event<>("unsubscribe", pattern));
-        instance.removeMessageHandler(handler);
-        if (!instance.hasMessageHandlers()) {
-            instance.close();
-            endpoints.remove(instance instanceof WSEndpoint ? Socket.WS : Socket.UDP);
+    private void removeEventHandler(SocketSender adapter, SocketReceiver endpoint, String pattern, Consumer<String> handler) {
+        send(adapter, new Event<>("unsubscribe", pattern), false);
+        endpoint.removeMessageHandler(handler);
+        adapter.removeReceiver(endpoint);
+        if (adapter.canClose()) {
+            adapter.close();
         }
     }
 
-    private void send(ClientEndpoint instance, Object message) {
+    private SocketReceiver send(SocketSender adapter, Object message, boolean openEndpoint) {
         try {
             final String msg = mapper.writeValueAsString(message);
-            instance.sendMessage(msg);
+            return adapter.sendMessage(msg, openEndpoint);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    public void send(Socket endpoint, Object message) {
-        ClientEndpoint instance = ensureOpen(endpoint);
-        send(instance, message);
-    }
-
-    private void close() {
-        for (ClientEndpoint endpoint : endpoints.values()) {
-            endpoint.close();
-        }
-        endpoints.clear();
+    public Object send(Socket socket, String event, MoveTrainerDto moveTrainerDto) {
+        SocketSender adapter = this.ensureOpen(socket);
+        return send(adapter, new Event<>(event, moveTrainerDto), false);
     }
 }

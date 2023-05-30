@@ -58,6 +58,7 @@ public class ChatControllerTest extends ApplicationTest {
     @Mock
     RegionService regionService;
     @Mock
+    @SuppressWarnings("unused")
     GroupApiService groupApiService;
     @Mock
     UserService userService;
