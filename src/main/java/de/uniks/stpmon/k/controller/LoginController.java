@@ -20,9 +20,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.kordamp.ikonli.javafx.FontIcon;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;
@@ -56,7 +58,7 @@ public class LoginController extends Controller {
     @FXML
     public ToggleGroup lang;
     @FXML
-    public ImageView kamimonLetteringImageView;
+    public ImageView imageViewKamimonLettering;
 
     @Inject
     AuthenticationService authService;
@@ -104,6 +106,16 @@ public class LoginController extends Controller {
         boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
         germanButton.setSelected(germanSelected);
         englishButton.setSelected(!germanSelected);
+        germanButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setDe();
+            }
+        });
+        englishButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setEn();
+            }
+        });
 
         errorLabel.textProperty().bind(
                 Bindings.when(passwordTooShort.and(password.isNotEmpty()))
@@ -131,6 +143,11 @@ public class LoginController extends Controller {
 
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
+
+
+        //Show KAMIMON Logo
+        imageViewKamimonLettering.setImage(loadImage("kamimonLettering.png"));
+        imageViewKamimonLettering.setPreserveRatio(true);
         return parent;
     }
 
@@ -189,7 +206,7 @@ public class LoginController extends Controller {
         return switch (exception.code()) {
             case 400 -> translateString("validation.failed");
             case 401 -> translateString("invalid.username.or.password");
-            case 409 -> translateString("username.was.already.taken");
+            case 409 -> translateString("username.already.in.use");
             case 429 -> translateString("rate.limit.reached");
             default -> translateString("error");
         };

@@ -8,14 +8,23 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
+
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
+import retrofit2.Response;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,11 +34,19 @@ import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
 
 import javax.inject.Provider;
+
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -57,6 +74,7 @@ public class LoginControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
+    @Spy
     @InjectMocks
     LoginController loginController;
     @Mock
@@ -142,12 +160,7 @@ public class LoginControllerTest extends ApplicationTest {
         // tab into username input field
         write("\t");
         // type username that is too long (> 32 chars)
-        write("string").press(KeyCode.CONTROL).press(KeyCode.A).release(KeyCode.A).release(KeyCode.CONTROL);
-        press(KeyCode.CONTROL).press(KeyCode.C).release(KeyCode.C).release(KeyCode.CONTROL).press(KeyCode.RIGHT);
-        for (int i = 0; i < 5; i++) {
-            // paste "string" 5 times
-            paste();
-        }
+        write("stringstringstringstringstringstring"); // 36 chars
         verifyThat(label, LabeledMatchers.hasText("Username too long."));
     }
 
@@ -176,7 +189,76 @@ public class LoginControllerTest extends ApplicationTest {
         release(KeyCode.ENTER);
     }
 
-    private void paste() {
-        press(KeyCode.CONTROL).press(KeyCode.V).release(KeyCode.V).release(KeyCode.CONTROL);
+    @Test
+    void testChoseLanguage() {
+        // prep:
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        TextField usernameField = lookup("#usernameInput").queryAs(TextField.class);
+        RadioButton enButton = lookup("#englishButton").queryAs(RadioButton.class);
+        RadioButton deButton = lookup("#germanButton").queryAs(RadioButton.class);
+        assertTrue(enButton.isSelected());
+        // check that language is english first
+        assertThat(usernameField.getPromptText()).isEqualTo("Username");
+        // define mocks:
+        doNothing().when(preferences).put(eq("locale"), captor.capture());
+        doNothing().when(app).show(loginController);
+
+        // action: chose the DE button
+        write("\t".repeat(5));
+        press(KeyCode.LEFT).release(KeyCode.LEFT);
+        assertTrue(deButton.isSelected());
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        sleep(3000);
+
+        // verify mock:
+        verify(preferences).put("locale", captor.getValue());
+        assertEquals("de", captor.getValue());
+
+        // action: chose the EN button
+        press(KeyCode.RIGHT).release(KeyCode.RIGHT);
+        assertTrue(enButton.isSelected());
+
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+
+        // verify mock:
+        verify(preferences).put("locale", captor.getValue());
+        assertEquals("en", captor.getValue());
+
+        verify(loginController).setDe();
+        verify(loginController).setEn();
+    }
+    
+    @Test
+    void testGetErrorMessage() {
+        // prep:
+        Map<String, Integer> errorMap = new HashMap<>();
+        errorMap.put("Validation failed", 400);
+        errorMap.put("Invalid username or password", 401);
+        errorMap.put("Username is already in use", 409);
+        errorMap.put("Rate limit reached", 429);
+        errorMap.put("Error", 999); // for default case
+
+        for (Map.Entry<String, Integer> entry : errorMap.entrySet()) {
+            String expectedErrorMsg = entry.getKey();
+            int statusCode = entry.getValue();
+
+            Response<Object> response = Response.error(statusCode, ResponseBody.create(null, "test"));
+
+            // define mocks:
+            when(authService.login(any(), any(), anyBoolean())).thenReturn(Observable.error(new HttpException(response)));
+
+            // action:
+            Platform.runLater(() -> {
+                loginController.login();
+            });
+            waitForFxEvents();
+
+            // check error label text
+            Label label = lookup("#errorLabel").queryAs(Label.class);
+            verifyThat(label, LabeledMatchers.hasText(expectedErrorMsg));
+        };
+
+        // test has to be verified 5 times because we check 5 error codes
+        verify(authService, times(5)).login(any(), any(), anyBoolean());
     }
 }
