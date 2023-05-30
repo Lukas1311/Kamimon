@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.TileMapService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.utils.TileMap;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -43,6 +44,7 @@ public class FloorView extends WorldController {
         if (area == null || area.map() == null) {
             return;
         }
-        tileMapService.createMap(area);
+        TileMap tileMap = tileMapService.createMap(area);
+        tileMap.renderMap();
     }
 }

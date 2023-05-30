@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 @Singleton
 public class WorldView extends Viewable {
 
-    public static final int MOVMENT_UNIT = 8;
+    public static final int MOVEMENT_UNIT = 8;
 
     @Inject
     protected RegionStorage regionStorage;
@@ -99,10 +99,10 @@ public class WorldView extends Viewable {
         return (event) -> {
             System.out.println("Key pressed: " + event.getCode());
             switch (event.getCode()) {
-                case W -> camera.setTranslateZ(camera.getTranslateZ() + MOVMENT_UNIT);
-                case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVMENT_UNIT);
-                case A -> camera.setTranslateX(camera.getTranslateX() - MOVMENT_UNIT);
-                case D -> camera.setTranslateX(camera.getTranslateX() + MOVMENT_UNIT);
+                case W -> camera.setTranslateZ(camera.getTranslateZ() + MOVEMENT_UNIT);
+                case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVEMENT_UNIT);
+                case A -> camera.setTranslateX(camera.getTranslateX() - MOVEMENT_UNIT);
+                case D -> camera.setTranslateX(camera.getTranslateX() + MOVEMENT_UNIT);
             }
             rotate(event, camera);
         };

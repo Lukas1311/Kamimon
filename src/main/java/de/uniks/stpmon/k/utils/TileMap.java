@@ -6,15 +6,21 @@ import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
@@ -89,10 +95,45 @@ public class TileMap {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
+            PropInspector inspector = new PropInspector(data);
+            inspector.work(layerImage);
+            Set<HashSet<Integer>> uniqueGroups = inspector.uniqueGroups();
+
+            BufferedImage layerImage1 = createImage(width, height);
+            for (HashSet<Integer> group : uniqueGroups) {
+                int color = generateRandomColor();
+                for (Integer tile : group) {
+                    int x = tile % layer.width();
+                    int y = tile / layer.width();
+                    for (int n = 0; n < 16; n++) {
+                        for (int m = 0; m < 16; m++) {
+                            layerImage1.setRGB(x * 16 + n, y * 16 + m, color);
+                        }
+                    }
+                }
+            }
+            try {
+                ImageIO.write(layerImage1, "png", new File("props_layer_" + i + ".png"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             g.drawImage(layerImage, layer.startx(), layer.starty(), null);
         }
         g.dispose();
         return mergedImage;
+    }
+
+
+    Random random = new Random(420);
+
+    private int generateRandomColor() {
+        // Generate random RGB values
+        int red = random.nextInt(256);
+        int green = random.nextInt(256);
+        int blue = random.nextInt(256);
+
+        // Create a new Color object
+        return (red << 24) | (green << 16) | (blue << 8) | 125;
     }
 
     public BufferedImage renderLayer(TileLayerData layer) {
