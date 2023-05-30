@@ -47,22 +47,28 @@ public class PopUpController extends Controller {
     public Button approveButton;
     @FXML
     public Button discardButton;
+    
     private Stage modalStage;
     private ModalCallback callback;
-    private final SimpleStringProperty popUpTextStringProperty = new SimpleStringProperty();
     private PopUpScenario scenario;
+
     @Inject
     public PopUpController() {
+    }
+
+    @Override
+    public Parent render(){
+        final Parent parent = super.render();
 
     }
 
     @Override
-    public void init(){
-        setPopUpMainText(scenario.toString());
+        
+        return parent;
     }
 
     public void setScenario(PopUpScenario popUpScenario) {
-        scenario = popUpScenario;
+        this.scenario = popUpScenario;
     }
 
     public void showModal(ModalCallback callback) {
@@ -76,6 +82,9 @@ public class PopUpController extends Controller {
         // set scene for the modal dialog
         Scene scene = new Scene(render());
         modalStage.setScene(scene);
+
+        // main text has to be set here after the render() call otherwise it will fail because the fxml is not available yet 
+        popUpMainText.setText(translateString(scenario.toString()));
 
         // set owner of modal to parent window to retrieve e.g. parent windows sizes
         Window parentWindow = app.getStage().getScene().getWindow();
@@ -98,11 +107,6 @@ public class PopUpController extends Controller {
 
         // show modal dialog and wait for interactions of the user
         modalStage.showAndWait();
-    }
-
-    private void setPopUpMainText(String mainText) {
-        popUpTextStringProperty.set(translateString(mainText));
-        popUpMainText.textProperty().bind(popUpTextStringProperty);
     }
 
     public void approve() {
