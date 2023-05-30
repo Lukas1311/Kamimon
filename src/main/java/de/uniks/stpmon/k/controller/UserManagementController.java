@@ -156,6 +156,8 @@ public class UserManagementController extends Controller {
     }
 
     public void deleteUser() {
+        PopUpScenario deleteScenario = PopUpScenario.DELETE_USER;
+        deleteScenario.setParams(new ArrayList<>(Arrays.asList(username.get())));
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
 
@@ -163,8 +165,9 @@ public class UserManagementController extends Controller {
                 .deleteMe()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(usr -> {
-                    System.out.println("user: " + usr + " has been deleted");
-                    showPopUp(PopUpScenario.DELETION_CONFIRMATION, innerResult -> {
+                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION;
+                    deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
+                    showPopUp(deleteConfirmScenario, innerResult -> {
                         if (!innerResult) return;
                         app.show(loginControllerProvider.get());
                     });
