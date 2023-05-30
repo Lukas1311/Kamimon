@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.popUp.PopUpController;
-import de.uniks.stpmon.k.controller.popUp.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.UserService;
 import javafx.beans.binding.Bindings;
@@ -40,8 +38,6 @@ public class UserManagementController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<LoginController> loginControllerProvider;
-    @Inject
-    Provider<PopUpController> popUpControllerProvider;
 
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
@@ -100,12 +96,6 @@ public class UserManagementController extends Controller {
         return parent;
     }
 
-    public void showPopUp(PopUpController.ModalCallback callback) {
-        PopUpController popUp = popUpControllerProvider.get();
-        popUp.setScenario(PopUpScenario.CHANGELOGINDATA);
-        popUp.showModal(callback);
-    }
-
     public void backToSettings() {
         if (changesMade.get() && !changesSaved) {
             // TODO: add pop confirmation
@@ -124,16 +114,25 @@ public class UserManagementController extends Controller {
     }
 
     public void saveChanges() {
-        showPopUp(result -> {
-            if (!result) return;
-            if (!usernameInvalid.get()) {
-                saveUsername(username.get());
-            }
-            if (!passwordInvalid.get()) {
-                savePassword(password.get());
-            }
-            changesSaved = true;
-        });
+        // TODO: replace this with real modal pop pop up
+        // new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
+        //     if (buttonType == ButtonType.OK) {
+
+        if (!usernameInvalid.get()) {
+            saveUsername(username.get());
+        }
+
+        if (!passwordInvalid.get()) {
+            savePassword(password.get());
+        }
+
+        changesSaved = true;
+
+
+        //     } else if (buttonType == ButtonType.CANCEL) {
+        //         // do nothing
+        //     }
+        // });
     }
 
     private void saveUsername(String newUsername) {
