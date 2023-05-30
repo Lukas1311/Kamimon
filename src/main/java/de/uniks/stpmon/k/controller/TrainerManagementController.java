@@ -1,18 +1,20 @@
 package de.uniks.stpmon.k.controller;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.RegionService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
 public class TrainerManagementController extends Controller {
     @FXML
@@ -47,6 +49,7 @@ public class TrainerManagementController extends Controller {
 
         backButton.setOnAction(click -> backToSettings());
         deleteTrainerButton.setOnAction(click -> deleteTrainer());
+        trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
         return parent;
     }
 
@@ -60,7 +63,8 @@ public class TrainerManagementController extends Controller {
     }
 
     public void openTrainerSpriteEditor() {
-        // TODO: open trainer sprite controller
+        hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
+
     }
 
     public void saveChanges() {

@@ -1,14 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.inject.Provider;
-
+import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.RegionService;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,10 +13,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.service.RegionService;
-import javafx.stage.Stage;
+import javax.inject.Provider;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerManagementControllerTest extends ApplicationTest {
@@ -32,6 +29,8 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     Provider<HybridController> hybridControllerProvider;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+    @Mock
+    ChooseSpriteController chooseSpriteController;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
@@ -78,7 +77,13 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
     @Test
     void testOpenTrainerSpriteEditor() {
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+        doNothing().when(mock).pushTab(CHOOSE_SPRITE);
 
+        clickOn("#trainerSprite");
+
+        verify(mock).pushTab(CHOOSE_SPRITE);
     }
 
     @Test
