@@ -156,36 +156,21 @@ public class UserManagementController extends Controller {
     }
 
     public void deleteUser() {
-        // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "do you really want to delete the user?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                // the user clicked OK
-                // TODO: we definitely need two popups here!!!! Or three!!
-                new Alert(Alert.AlertType.CONFIRMATION, "are you sure, you want to do this?").showAndWait().ifPresent(innerButtonType -> {
-                    if (innerButtonType == ButtonType.OK) {
-                        new Alert(Alert.AlertType.CONFIRMATION, "are you a 100 % sure that your user will be deleted afterwards?").showAndWait().ifPresent(innerInnerButtonType -> {
-                            if (innerInnerButtonType == ButtonType.OK) {
-                                new Alert(Alert.AlertType.CONFIRMATION, "there is no coming back!").showAndWait().ifPresent(innerInnerInnerButtonType -> {
-                                    if (innerInnerInnerButtonType == ButtonType.OK) {
-                                        disposables.add(userService
-                                            .deleteMe()
-                                            .observeOn(FX_SCHEDULER)
-                                            .subscribe(usr -> {
-                                                // TODO: user deleted pop up
-                                                app.show(loginControllerProvider.get());
-                                            })
-                                        );
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+        showPopUp(PopUpScenario.DELETE_USER, result -> {
+            if (!result) return;
 
-
-            } else if (buttonType == ButtonType.CANCEL) {
-                // the user clicked CANCEL
-            }
+            disposables.add(userService
+                .deleteMe()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(usr -> {
+                    System.out.println("user: " + usr + " has been deleted");
+                    showPopUp(PopUpScenario.DELETION_CONFIRMATION, innerResult -> {
+                        if (!innerResult) return;
+                        app.show(loginControllerProvider.get());
+                    });
+                }, err -> app.show(loginControllerProvider.get())
+                )
+            );
         });
     }
 
