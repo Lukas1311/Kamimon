@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.views.WorldView;
+import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;

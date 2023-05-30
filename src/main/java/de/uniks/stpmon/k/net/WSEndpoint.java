@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.ws;
+package de.uniks.stpmon.k.net;
 
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -17,20 +17,37 @@ import java.util.function.Consumer;
 
 
 @javax.websocket.ClientEndpoint
-public class ClientEndpoint {
+public class WSEndpoint implements SocketReceiver, SocketSender {
     private final URI endpointURI;
-    private final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
+    protected final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
 
     Session userSession;
 
-    public ClientEndpoint(URI endpointURI) {
+    public WSEndpoint(URI endpointURI) {
         this.endpointURI = endpointURI;
     }
 
+    @Override
+    public void addMessageHandler(Consumer<String> msgHandler) {
+        this.messageHandlers.add(msgHandler);
+    }
+
+    @Override
+    public void removeMessageHandler(Consumer<String> msgHandler) {
+        this.messageHandlers.remove(msgHandler);
+    }
+
+    @Override
+    public boolean canClose() {
+        return !this.messageHandlers.isEmpty();
+    }
+
+    @Override
     public boolean isOpen() {
         return this.userSession != null && this.userSession.isOpen();
     }
 
+    @Override
     public void open() {
         if (isOpen()) {
             return;
@@ -43,17 +60,24 @@ public class ClientEndpoint {
         }
     }
 
+    @Override
+    public void removeReceiver(SocketReceiver receiver) {
+    }
+
     @OnOpen
+    @SuppressWarnings("unused")
     public void onOpen(Session userSession) {
         this.userSession = userSession;
     }
 
     @OnClose
+    @SuppressWarnings("unused")
     public void onClose(Session userSession, CloseReason reason) {
         this.userSession = null;
     }
 
     @OnMessage
+    @SuppressWarnings("unused")
     public void onMessage(String message) {
         for (final Consumer<String> handler : this.messageHandlers) {
             handler.accept(message);
@@ -61,25 +85,21 @@ public class ClientEndpoint {
     }
 
     @OnError
+    @SuppressWarnings("unused")
     public void onError(Throwable error) {
         error.printStackTrace();
     }
 
-    public void addMessageHandler(Consumer<String> msgHandler) {
-        this.messageHandlers.add(msgHandler);
-    }
-
-    public void removeMessageHandler(Consumer<String> msgHandler) {
-        this.messageHandlers.remove(msgHandler);
-    }
-
-    public void sendMessage(String message) {
+    @Override
+    public WSEndpoint sendMessage(String message, boolean useEndpoint) {
         if (this.userSession == null) {
-            return;
+            return this;
         }
         this.userSession.getAsyncRemote().sendText(message);
+        return this;
     }
 
+    @Override
     public void close() {
         if (this.userSession == null) {
             return;
@@ -90,9 +110,5 @@ public class ClientEndpoint {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean hasMessageHandlers() {
-        return !this.messageHandlers.isEmpty();
     }
 }

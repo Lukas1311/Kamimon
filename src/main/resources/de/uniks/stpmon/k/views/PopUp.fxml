@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
             prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.popUp.PopUpController">
+            fx:controller="de.uniks.stpmon.k.controller.popup.PopUpController">
     <top>
         <Button fx:id="popUpCancelButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel" text="x"
                 textAlignment="JUSTIFY" BorderPane.alignment="TOP_RIGHT"/>

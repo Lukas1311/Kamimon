@@ -1,8 +1,9 @@
 package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -62,7 +63,7 @@ public class FriendCache implements IFriendCache {
         this.mainUser = mainUser._id();
 
         disposables.add(eventListener
-                .listen("users.*.*", User.class).subscribe(event -> {
+                .listen(Socket.WS, "users.*.*", User.class).subscribe(event -> {
                             final User user = event.data();
                             switch (event.suffix()) {
                                 case "created" -> addUser(user);
