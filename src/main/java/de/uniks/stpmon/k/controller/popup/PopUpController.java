@@ -1,10 +1,12 @@
 package de.uniks.stpmon.k.controller.popup;
 
 import de.uniks.stpmon.k.controller.Controller;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -40,6 +42,9 @@ import javax.inject.Inject;
  */
 public class PopUpController extends Controller {
     @FXML
+    public BorderPane popUpMainBorderPane;
+    @FXML
+    public GridPane popUpButtonPane;
     @FXML
     public Button popUpCloseButton;
     @FXML
@@ -61,10 +66,15 @@ public class PopUpController extends Controller {
     public Parent render(){
         final Parent parent = super.render();
 
-    }
-
-    @Override
-        
+        // special case for deleted user action (only one button and no close element)
+        if (scenario == PopUpScenario.DELETION_CONFIRMATION) {
+            popUpButtonPane.getChildren().remove(discardButton);
+            // border pane has no getChildren method so we have to set the element that contains the button to null
+            popUpMainBorderPane.setTop(null);
+            // update column constraints to center remaining button
+            popUpButtonPane.getColumnConstraints().remove(1);
+            approveButton.setText(translateString("backToLogin"));
+        }
         return parent;
     }
 
