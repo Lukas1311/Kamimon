@@ -17,7 +17,7 @@
               BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
-        <GridPane BorderPane.alignment="CENTER">
+        <GridPane fx:id="popUpButtonPane" BorderPane.alignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
