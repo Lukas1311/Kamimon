@@ -7,13 +7,13 @@
 <?import javafx.scene.text.Text?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
             prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.PopUpController">
+            fx:controller="de.uniks.stpmon.k.controller.popup.PopUpController">
     <top>
         <Button fx:id="popUpCancelButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel" text="x"
                 textAlignment="JUSTIFY" BorderPane.alignment="TOP_RIGHT"/>
     </top>
     <center>
-        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" text="\%popUpMainText"
+        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" text="%doYouWantToSaveChanges"
               BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
@@ -28,8 +28,8 @@
             <BorderPane.margin>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
             </BorderPane.margin>
-            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" text="\%popUpApprove"/>
-            <Button fx:id="discardButton" mnemonicParsing="false" onAction="#cancel" text="\%popUpDiscard"
+            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" text="%yes"/>
+            <Button fx:id="discardButton" mnemonicParsing="false" onAction="#cancel" text="%discard"
                     GridPane.columnIndex="1"/>
         </GridPane>
     </bottom>
