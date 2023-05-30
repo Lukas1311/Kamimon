@@ -82,6 +82,13 @@ public class PopUpController extends Controller {
         this.scenario = popUpScenario;
     }
 
+    private void setPopUpMainText() {
+        
+        popUpMainText.setText(
+            translateString(scenario.toString(), scenario.getParams() )
+        );
+    }
+
     public void showModal(ModalCallback callback) {
         this.callback = callback;
 
@@ -95,7 +102,7 @@ public class PopUpController extends Controller {
         modalStage.setScene(scene);
 
         // main text has to be set here after the render() call otherwise it will fail because the fxml is not available yet 
-        popUpMainText.setText(translateString(scenario.toString()));
+        setPopUpMainText();
 
         // set owner of modal to parent window to retrieve e.g. parent windows sizes
         Window parentWindow = app.getStage().getScene().getWindow();
