@@ -22,7 +22,7 @@ import javax.inject.Inject;
  * How to add a new customized controller:
  * 1. Add you scenario in the PopUpScenario.java enum (the string is the main text of the popup)
  * 2. Add the following method to the controller from which the popUp is called:
- * public void showPopUp(PopUpController.ModalCallback callback) {
+ * public void showPopUp(ModalCallback callback) {
  *  PopUpController popUp = popUpControllerProvider.get();
  *  popUp.setScenario(PopUpScenario.<your_popUp_scenario_here>);
  *  <disable buttons and of your controller here>
