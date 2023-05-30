@@ -3,8 +3,9 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Group;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.GroupService;
-import de.uniks.stpmon.k.ws.EventListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
@@ -26,6 +27,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -62,7 +64,7 @@ class ChatListControllerTest extends ApplicationTest {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         groups.add(new Group(null, null, "0", "Peter", null));
-        when(eventListener.<Group>listen(any(), any())).thenReturn(groupEvents);
+        when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(groupEvents);
         when(groupService.getOwnGroups()).thenReturn(Observable.just(groups));
         app.show(chatListController);
         stage.requestFocus();

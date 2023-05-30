@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.views.WorldView;
+import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
