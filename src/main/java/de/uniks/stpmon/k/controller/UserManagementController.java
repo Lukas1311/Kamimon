@@ -1,11 +1,15 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.PopUpController.ModalCallback;
+import de.uniks.stpmon.k.controller.popup.PopUpController;
+import de.uniks.stpmon.k.controller.popup.PopUpScenario;
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.UserService;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -15,6 +19,7 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+
 
 public class UserManagementController extends Controller {
     @FXML
@@ -121,7 +126,7 @@ public class UserManagementController extends Controller {
     }
 
     public void saveChanges() {
-        showPopUp("save changes?", result -> {
+        showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
             if (!result) return;
             if (!usernameInvalid.get()) {
                 saveUsername(username.get());
@@ -194,9 +199,11 @@ public class UserManagementController extends Controller {
         });
     }
 
+    public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
+        System.out.println("popup is opened");
         isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
-        popUp.setPopUpText(text);
+        popUp.setScenario(scenario);
         popUp.showModal(callback);
         isPopUpShown.set(false);
     }
