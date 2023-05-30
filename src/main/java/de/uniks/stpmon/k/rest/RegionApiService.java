@@ -24,8 +24,7 @@ public interface RegionApiService {
 
     @GET("regions/{regionId}/trainers/{id}")
         //TODO: regionId?
-    Observable<Trainer> getTrainer(@Path("id") String trainerId
-    );
+    Observable<Trainer> getTrainer(@Path("id") String trainerId);
 
     @DELETE("regions/{regionId}/trainers/{id}")
     Observable<Trainer> deleteTrainer(@Path("id") String trainerId);
