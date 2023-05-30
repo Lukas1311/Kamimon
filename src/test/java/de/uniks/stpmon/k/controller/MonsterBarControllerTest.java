@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,12 +16,16 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterBarControllerTest extends ApplicationTest {
     @Mock
     private ImageView monsterSlot;
+
+    @Mock
+    MonsterListController monsterListController;
 
     @Spy
     App app = new App(null);
@@ -67,17 +72,26 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Test
     public void testSetMonsterStatus_LowHP() throws InterruptedException {
         // Load the image for low HP
-        Image weakHP = new Image(Objects.requireNonNull(getClass().getResource("/de/uniks/stpmon/k/controller/healthPointsLow.png")).toString());
+        Image lowHP = new Image(Objects.requireNonNull(getClass().getResource("/de/uniks/stpmon/k/controller/healthPointsLow.png")).toString());
         // Set the mock
-        when(monsterSlot.getImage()).thenReturn(weakHP);
+        when(monsterSlot.getImage()).thenReturn(lowHP);
 
         monsterBarController.setMonsterStatus(2, 10, 100);
         Thread.sleep(1000);
 
         // Check if the image is the same when HP is lower than 20%
-        assertEquals(weakHP, monsterSlot.getImage());
+        assertEquals(lowHP, monsterSlot.getImage());
     }
 
+    @Test
+    public void testShowMonsters() {
+        VBox monsterList = new VBox();
+        when(monsterListController.render()).thenReturn(monsterList);
 
+        // Click on monster bar to show the popup
+        clickOn("#monsterBar");
 
+        // Check if the monster list is showing
+        assertTrue(monsterList.isVisible());
+    }
 }
