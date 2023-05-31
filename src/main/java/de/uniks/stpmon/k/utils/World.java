@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.utils;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public record World(
-        TileMap map,
+        BufferedImage groundImage,
+        BufferedImage propsImage,
         List<TileProp> props) {
 }

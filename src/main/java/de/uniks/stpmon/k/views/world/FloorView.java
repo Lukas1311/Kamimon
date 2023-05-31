@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.service.TileMapService;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.utils.TileMap;
+import de.uniks.stpmon.k.utils.World;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -26,8 +26,8 @@ public class FloorView extends WorldController {
 
     @Override
     public Node render(int angle, PerspectiveCamera camera) {
-        TileMap tileMap = storage.getTileMap();
-        BufferedImage mapImage = tileMap.renderMap();
+        World world = storage.getWorld();
+        BufferedImage mapImage = world.groundImage();
         MeshView floor = createPlaneScaled(mapImage);
         floor.setId("floor");
         Bounds bounds = floor.getBoundsInLocal();

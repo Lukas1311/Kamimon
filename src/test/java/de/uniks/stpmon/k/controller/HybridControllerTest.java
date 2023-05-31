@@ -10,6 +10,8 @@ import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.utils.World;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -43,7 +46,9 @@ class HybridControllerTest extends ApplicationTest {
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final HybridController hybridController = component.hybridController();
     private final UserStorage userStorage = component.userStorage();
+    private final WorldStorage worldStorage = component.worldStorage();
     private final EventListener eventListener = component.eventListener();
+    private final LoadingScreenController loadingScreenController = component.loadingScreenController();
     @Spy
     @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
@@ -54,7 +59,12 @@ class HybridControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+
+        BufferedImage images = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_RGB);
+        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
         hybridController.setPlayAnimations(false);
+        loadingScreenController.setSkipLoading(true);
         app.show(hybridController);
         stage.requestFocus();
     }
@@ -163,6 +173,9 @@ class HybridControllerTest extends ApplicationTest {
 
         clickOn("#regionButton");
         waitForFxEvents();
+
+        // get new stack pane from ingame sidebar
+        stackPane = lookup("#stackPane").query();
 
         clickOn("#chat");
         waitForFxEvents();

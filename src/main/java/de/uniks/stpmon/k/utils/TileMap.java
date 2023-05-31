@@ -12,19 +12,20 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
-    private final List<TileProp> props = new ArrayList<>();
-    private final BitSet collisionMap;
     private final TileMapData data;
     private final int tileWidth;
     private final int tileHeight;
-    private final int width;
-    private final int height;
-    private final PropInspector inspector;
     private final List<BufferedImage> layers = new ArrayList<>();
     private BufferedImage mainImage;
 
@@ -33,16 +34,6 @@ public class TileMap {
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
-        int width = data.width();
-        int height = data.height();
-        for (TileLayerData tileset : data.layers()) {
-            height = Math.max(height, tileset.height());
-            width = Math.max(width, tileset.width());
-        }
-        this.width = width;
-        this.height = height;
-        this.collisionMap = new BitSet(height * width);
-        this.inspector = new PropInspector(data);
     }
 
     public TileMapData getData() {
@@ -61,10 +52,6 @@ public class TileMap {
         return tilesetBySource.values().stream()
                 .filter(tileset -> tileset.source().source().equals(filename))
                 .findFirst();
-    }
-
-    public boolean hasCollision(int x, int y) {
-        return collisionMap.get(x + y * width);
     }
 
     public BufferedImage renderMap() {
@@ -129,9 +116,8 @@ public class TileMap {
         }
         g.dispose();
         mainImage = mergedImage;
-        return mainImage;
+        return mergedImage;
     }
-
 
     Random random = new Random(420);
 
@@ -174,9 +160,6 @@ public class TileMap {
                 TilesetSource source = getSource(data);
                 Tileset tileset = tilesetBySource.get(source);
                 tileset.setTile(raster, x, y, data);
-                if (tileset.hasCollision(data)) {
-                    collisionMap.set((chunk.x() + x) + (chunk.y() + y) * width, true);
-                }
             }
         }
         return chunkImage;

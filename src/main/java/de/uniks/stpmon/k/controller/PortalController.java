@@ -19,13 +19,11 @@ public class PortalController extends ToastedController {
     Provider<HybridController> hybridControllerProvider;
 
     public void enterRegion(Region region) {
-        loadingScreen.setOnLoadingFinished(() -> {
-            subscribe(regionService.enterRegion(region),
-                    (area) -> {
-                        app.show(hybridControllerProvider.get());
-                        hybridControllerProvider.get().openMain(INGAME);
-                    });
-        });
-        app.show(loadingScreen);
+        loadingScreen.startLoading(() ->
+                subscribe(regionService.enterRegion(region),
+                        (area) -> {
+                            app.show(hybridControllerProvider.get());
+                            hybridControllerProvider.get().openMain(INGAME);
+                        }));
     }
 }

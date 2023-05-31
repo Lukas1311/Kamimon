@@ -8,12 +8,13 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.utils.TileMap;
 import de.uniks.stpmon.k.utils.Tileset;
+import de.uniks.stpmon.k.utils.World;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,13 +26,17 @@ public class TileMapService {
     @Inject
     RegionStorage regionStorage;
     @Inject
-    WorldStorage tileMapStorage;
+    WorldStorage worldStorage;
 
     @Inject
     public TileMapService() {
     }
 
-    public Observable<TileMap> loadTilemap() {
+    public Observable<World> loadTilemap() {
+        if (!worldStorage.isEmpty()) {
+            return Observable
+                    .just(worldStorage.getWorld());
+        }
         if (regionStorage.isEmpty()) {
             return Observable.empty();
         }
@@ -39,9 +44,11 @@ public class TileMapService {
         if (area == null || area.map() == null) {
             return Observable.empty();
         }
-        return createMap(area).map((tileMap)->{
-            tileMapStorage.setTileMap(tileMap);
-            return tileMap;
+        return createMap(area).map((tileMap) -> {
+            World world = new World(tileMap.getMainImage()
+                    , tileMap.getMainImage(), new ArrayList<>());
+            worldStorage.setWorld(world);
+            return world;
         });
     }
 

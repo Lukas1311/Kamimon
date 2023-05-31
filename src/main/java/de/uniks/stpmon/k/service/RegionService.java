@@ -4,7 +4,7 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.utils.TileMap;
+import de.uniks.stpmon.k.utils.World;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class RegionService {
         return regionApiService.getRegion(id);
     }
 
-    public Observable<TileMap> enterRegion(Region region) {
+    public Observable<World> enterRegion(Region region) {
         if (region.spawn() == null) {
             return Observable.error(new Exception("Region has no spawn."));
         }

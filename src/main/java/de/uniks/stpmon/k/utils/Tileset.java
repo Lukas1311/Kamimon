@@ -12,7 +12,6 @@ import java.util.BitSet;
 public record Tileset(TilesetSource source,
                       TilesetData data,
                       BufferedImage image,
-                      BitSet walkableData,
                       BitSet tallGrassData) {
 
 
@@ -28,10 +27,6 @@ public record Tileset(TilesetSource source,
 
     public static Tileset.Builder builder() {
         return new Tileset.Builder();
-    }
-
-    public boolean hasCollision(int data) {
-        return walkableData == null || !walkableData.get(data - source.firstgid());
     }
 
     public static class Builder {
@@ -59,30 +54,20 @@ public record Tileset(TilesetSource source,
         }
 
         public Tileset build() {
-            BitSet walkableData = new BitSet(data.tilecount());
             BitSet tallGrassData = new BitSet(data.tilecount());
-            boolean anyWalkable = false;
             boolean anyTallGrass = false;
             if (data.tiles() != null) {
                 for (Tile tile : data.tiles()) {
                     for (Property property : tile.properties()) {
-                        switch (property.name()) {
-                            case "Walkable" -> {
-                                boolean walkable = Boolean.parseBoolean(property.value());
-                                walkableData.set(tile.id(), walkable);
-                                anyWalkable |= walkable;
-                            }
-                            case "TallGrass" -> {
-                                boolean walkable = Boolean.parseBoolean(property.value());
-                                tallGrassData.set(tile.id(), walkable);
-                                anyTallGrass |= walkable;
-                            }
+                        if (property.name().equals("TallGrass")) {
+                            boolean walkable = Boolean.parseBoolean(property.value());
+                            tallGrassData.set(tile.id(), walkable);
+                            anyTallGrass |= walkable;
                         }
                     }
                 }
             }
             return new Tileset(source, data, image,
-                    anyWalkable ? walkableData : null,
                     anyTallGrass ? tallGrassData : null);
         }
     }

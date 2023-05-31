@@ -6,6 +6,8 @@ import de.uniks.stpmon.k.controller.MonsterBarController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.utils.World;
 import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
@@ -21,6 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -43,6 +47,8 @@ public class WorldViewTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MonsterBarController monsterBarController;
 
+    WorldStorage worldStorage = component.worldStorage();
+
     @InjectMocks
     public IngameController ingameController;
 
@@ -50,8 +56,9 @@ public class WorldViewTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         super.start(stage);
 
-        //when(hybridControllerProvider.get()).thenReturn(hybridController);
-        //doNothing().when(hybridController).closeTab();
+        BufferedImage images = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_RGB);
+        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
 
         // show app
         app.start(stage);
