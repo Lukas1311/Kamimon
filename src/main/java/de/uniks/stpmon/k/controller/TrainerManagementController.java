@@ -1,5 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
+import de.uniks.stpmon.k.controller.popup.PopUpController;
+import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.RegionService;
 import javafx.fxml.FXML;
@@ -34,6 +37,8 @@ public class TrainerManagementController extends Controller {
     RegionService regionService;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<PopUpController> popUpControllerProvider;
 
     @Inject
     public TrainerManagementController() {
@@ -79,7 +84,16 @@ public class TrainerManagementController extends Controller {
     }
 
     public void deleteTrainer() {
-        // TODO: do some delete logic here -> region service
-        
+        showPopUp(result -> {
+            deleteTrainerButton.setDisable(false);
+            if (!result) return;
+        });
+    }
+
+    public void showPopUp(ModalCallback callback) {
+        PopUpController popUp = popUpControllerProvider.get();
+        popUp.setScenario(PopUpScenario.DELETE_TRAINER);
+        deleteTrainerButton.setDisable(true);
+        popUp.showModal(callback);
     }
 }

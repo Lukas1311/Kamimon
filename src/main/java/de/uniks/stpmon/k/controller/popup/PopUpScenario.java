@@ -7,7 +7,8 @@ public enum PopUpScenario {
     SAVE_CHANGES("doYouWantToSaveChanges"),
     DELETE_USER("doYouWantToDeleteUser"),
     DELETION_CONFIRMATION("userGotDeleted"),
-    UNSAVED_CHANGES("thereAreUnsavedChanges");
+    UNSAVED_CHANGES("thereAreUnsavedChanges"),
+    DELETE_TRAINER("doYouWantToDeleteTrainer");
 
 
     private final String mainText;
