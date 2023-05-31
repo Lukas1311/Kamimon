@@ -112,26 +112,34 @@ public class UserManagementController extends Controller {
     }
 
     public void backToSettings() {
-        if (changesMade.get() && !changesSaved) {
+        if (hasUnsavedChanges()) {
             showPopUp(PopUpScenario.UNSAVED_CHANGES, result -> {
                 if (!result) return;
-                saveChanges();
+                saveCredentials();
             });
         }
         hybridControllerProvider.get().popTab();
     }
 
+    public Boolean hasUnsavedChanges() {
+        return changesMade.get() && !changesSaved;
+    }
+
     public void saveChanges() {
         showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
             if (!result) return;
-            if (!usernameInvalid.get()) {
-                saveUsername(username.get());
-            }
-            if (!passwordInvalid.get()) {
-                savePassword(password.get());
-            }
+            saveCredentials();
             changesSaved = true;
         });
+    }
+
+    public void saveCredentials() {
+        if (!usernameInvalid.get()) {
+            saveUsername(username.get());
+        }
+        if (!passwordInvalid.get()) {
+            savePassword(password.get());
+        }
     }
 
     private void saveUsername(String newUsername) {
