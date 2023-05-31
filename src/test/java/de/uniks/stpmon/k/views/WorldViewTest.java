@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.World;
 import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
