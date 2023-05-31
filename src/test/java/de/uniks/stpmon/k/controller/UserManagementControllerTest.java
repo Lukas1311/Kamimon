@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+
 import java.util.ResourceBundle;
 import java.util.Locale;
 
@@ -21,8 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.popup.ModalCallback;
-import de.uniks.stpmon.k.controller.popup.PopUpController;
+import de.uniks.stpmon.k.controller.popup.*;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
@@ -49,6 +49,7 @@ public class UserManagementControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
 
+    @Spy
     @InjectMocks
     UserManagementController userManagementController;
 
@@ -79,6 +80,33 @@ public class UserManagementControllerTest extends ApplicationTest {
 
         // check mocks:
         verify(mock).popTab();
+    }
+
+    @Test
+    void testBackToSettingsWithUnsavedChanges() {
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final HybridController hybridMock = Mockito.mock(HybridController.class);
+
+        // define mocks:
+        when(userManagementController.hasUnsavedChanges()).thenReturn(true);
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+        doNothing().when(hybridMock).popTab();
+
+        // action:
+        clickOn("#backButton");
+        
+        // no values to check
+
+        // check mocks:
+        verify(popupMock).showModal(any());
+        verify(hybridMock).popTab();
     }
 
     @Test
