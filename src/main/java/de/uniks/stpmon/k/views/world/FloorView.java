@@ -1,8 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.TileMapService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.utils.TileMap;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -11,6 +10,7 @@ import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.awt.image.BufferedImage;
 
 @Singleton
 public class FloorView extends WorldController {
@@ -18,7 +18,7 @@ public class FloorView extends WorldController {
     @Inject
     protected TileMapService tileMapService;
     @Inject
-    protected RegionStorage regionStorage;
+    protected WorldStorage storage;
 
     @Inject
     public FloorView() {
@@ -26,25 +26,14 @@ public class FloorView extends WorldController {
 
     @Override
     public Node render(int angle, PerspectiveCamera camera) {
-        MeshView floor = createPlaneScaled("map/natchester.png");
+        TileMap tileMap = storage.getTileMap();
+        BufferedImage mapImage = tileMap.renderMap();
+        MeshView floor = createPlaneScaled(mapImage);
         floor.setId("floor");
         Bounds bounds = floor.getBoundsInLocal();
         floor.setTranslateX(bounds.getWidth() / 2);
         floor.setTranslateZ(-bounds.getDepth() / 2);
 
         return floor;
-    }
-
-    @Override
-    public void init() {
-        if (regionStorage.isEmpty()) {
-            return;
-        }
-        Area area = regionStorage.getArea();
-        if (area == null || area.map() == null) {
-            return;
-        }
-        TileMap tileMap = tileMapService.createMap(area);
-        tileMap.renderMap();
     }
 }

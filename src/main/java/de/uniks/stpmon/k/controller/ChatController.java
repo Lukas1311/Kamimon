@@ -33,7 +33,7 @@ import java.util.Optional;
 import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
-public class ChatController extends ToastedController {
+public class ChatController extends PortalController {
     @FXML
     public Button backButton;
     @FXML
@@ -64,6 +64,8 @@ public class ChatController extends ToastedController {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     EventListener eventListener;
+    @Inject
+    LoadingScreenController loadingScreen;
 
     private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
@@ -260,10 +262,8 @@ public class ChatController extends ToastedController {
     }
 
     public void openRegion(String regionId) {
-        subscribe(regionService.getRegion(regionId), region -> {
-            subscribe(regionService.enterRegion(region),
-                    (area) -> hybridControllerProvider.get().openMain(INGAME));
-        }, this::handleError);
+        subscribe(regionService.getRegion(regionId),
+                this::enterRegion, this::handleError);
     }
 
     @Override

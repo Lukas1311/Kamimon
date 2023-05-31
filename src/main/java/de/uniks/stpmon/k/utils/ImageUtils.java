@@ -18,20 +18,27 @@ public class ImageUtils {
 
     public static BufferedImage scaledImage(String relativePath, double scale) {
         try (InputStream inputStream = Objects.requireNonNull(Main.class.getResourceAsStream(relativePath))) {
-            BufferedImage image = ImageIO.read(inputStream);
-            int w = (int) (image.getWidth() * scale);
-            int h = (int) (image.getHeight() * scale);
-            AffineTransform at = new AffineTransform();
-            at.scale(scale, scale);
-            AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-            return scaleOp.filter(image, new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
+            return scaledImage(ImageIO.read(inputStream), scale);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static BufferedImage scaledImage(BufferedImage image, double scale) {
+        int w = (int) (image.getWidth() * scale);
+        int h = (int) (image.getHeight() * scale);
+        AffineTransform at = new AffineTransform();
+        at.scale(scale, scale);
+        AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return scaleOp.filter(image, new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
+    }
+
     public static Image scaledImageFX(String relativePath, double scale) {
         return SwingFXUtils.toFXImage(scaledImage(relativePath, scale), null);
+    }
+
+    public static Image scaledImageFX(BufferedImage image, double scale) {
+        return SwingFXUtils.toFXImage(scaledImage(image, scale), null);
     }
 
     public static void copyData(WritableRaster target, BufferedImage source,

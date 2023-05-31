@@ -12,15 +12,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
@@ -32,6 +25,8 @@ public class TileMap {
     private final int width;
     private final int height;
     private final PropInspector inspector;
+    private final List<BufferedImage> layers = new ArrayList<>();
+    private BufferedImage mainImage;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.data = provider.map();
@@ -78,6 +73,14 @@ public class TileMap {
         return renderMap(width, height);
     }
 
+    public BufferedImage getMainImage() {
+        return mainImage;
+    }
+
+    public List<BufferedImage> getLayers() {
+        return layers;
+    }
+
     private BufferedImage createImage(int width, int height) {
         return new BufferedImage(
                 width * tileWidth,
@@ -91,10 +94,16 @@ public class TileMap {
         Graphics2D g = mergedImage.createGraphics();
         int i = 0;
         for (TileLayerData layer : data.layers()) {
-            if (layer.chunks() == null || i++ == 0) {
+            if (layer.chunks() == null) {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
+            g.drawImage(layerImage, layer.startx(), layer.starty(), null);
+            layers.add(layerImage);
+
+            if (i++ == 0) {
+                continue;
+            }
             PropInspector inspector = new PropInspector(data);
             inspector.work(layerImage);
             Set<HashSet<Integer>> uniqueGroups = inspector.uniqueGroups();
@@ -117,10 +126,10 @@ public class TileMap {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            g.drawImage(layerImage, layer.startx(), layer.starty(), null);
         }
         g.dispose();
-        return mergedImage;
+        mainImage = mergedImage;
+        return mainImage;
     }
 
 
@@ -133,7 +142,7 @@ public class TileMap {
         int blue = random.nextInt(256);
 
         // Create a new Color object
-        return (red << 24) | (green << 16) | (blue << 8) | 125;
+        return (255 << 24) | (red << 16) | (green << 8) | blue;
     }
 
     public BufferedImage renderLayer(TileLayerData layer) {

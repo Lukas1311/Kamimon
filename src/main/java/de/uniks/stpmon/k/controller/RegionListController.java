@@ -21,7 +21,7 @@ import javax.inject.Provider;
 import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 
-public class RegionListController extends ToastedController {
+public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
     RegionService regionService;
@@ -29,6 +29,8 @@ public class RegionListController extends ToastedController {
     private BorderPane regionsBorderPane;
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
+    @Inject
+    protected LoadingScreenController loadingScreen;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -60,7 +62,6 @@ public class RegionListController extends ToastedController {
     }
 
     public void openRegion(Region region) {
-        subscribe(regionService.enterRegion(region),
-                (area) -> hybridControllerProvider.get().openMain(INGAME));
+        enterRegion(region);
     }
 }

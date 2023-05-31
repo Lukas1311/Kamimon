@@ -13,6 +13,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+import java.awt.image.BufferedImage;
+
 import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 public abstract class WorldController extends Viewable {
@@ -27,8 +29,8 @@ public abstract class WorldController extends Viewable {
         return material;
     }
 
-    protected MeshView createPlaneScaled(String path) {
-        Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
+    protected MeshView createPlaneScaled(BufferedImage image) {
+        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
 
         return createPlane(scaledimage,
                 (int) (scaledimage.getWidth() / IMAGE_SCALE),

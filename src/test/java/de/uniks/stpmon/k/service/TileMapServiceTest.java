@@ -2,11 +2,7 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.map.ChunkData;
-import de.uniks.stpmon.k.models.map.TileLayerData;
-import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.TilesetData;
-import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.*;
 import de.uniks.stpmon.k.utils.TileMap;
 import de.uniks.stpmon.k.utils.Tileset;
 import io.reactivex.rxjava3.core.Observable;
@@ -60,7 +56,8 @@ public class TileMapServiceTest {
 
         TileMapData map = createDummyMap();
         Region region = new Region("1", "2", new Spawn("1", 0, 0), map);
-        TileMap tileMap = msgService.createMap(region);
+        TileMap tileMap = msgService.createMap(region)
+                .blockingFirst();
 
         //check if map is created
         Map<TilesetSource, Tileset> tilesets = tileMap.getTilesets();

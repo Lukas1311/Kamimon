@@ -67,7 +67,7 @@ public class RegionListControllerTest extends ApplicationTest {
         when(hybridController.get()).thenReturn(mock);
 
         when(regionService.enterRegion(any()))
-                .thenReturn(Observable.just(new Area("0", "0", "Test", null)));
+                .thenReturn(Observable.empty());
 
         BorderPane borderPane = lookup("#regionsBorderPane").query();
         ListView<?> listView = (ListView<?>) borderPane.getChildren().get(0);
