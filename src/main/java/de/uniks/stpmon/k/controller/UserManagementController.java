@@ -178,7 +178,6 @@ public class UserManagementController extends Controller {
                     PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION;
                     deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
                     showPopUp(deleteConfirmScenario, innerResult -> {
-                        if (!innerResult) return;
                         app.show(loginControllerProvider.get());
                     });
                 }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
