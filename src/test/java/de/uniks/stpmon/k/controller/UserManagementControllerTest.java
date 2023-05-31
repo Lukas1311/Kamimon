@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -23,12 +24,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 @ExtendWith(MockitoExtension.class)
 public class UserManagementControllerTest extends ApplicationTest {
@@ -41,6 +45,8 @@ public class UserManagementControllerTest extends ApplicationTest {
     Provider<LoginController> loginControllerProvider;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+    @Mock
+    Provider<PopUpController> popUpControllerProvider;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
@@ -91,29 +97,43 @@ public class UserManagementControllerTest extends ApplicationTest {
 
     @Test
     void testSaveChangesUsername() {
-        // // TODO: add pop confirmation
+        // TODO: add pop confirmation
 
-        // // prep:
-        // final ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
-        // User dummyUser = new User("1", "Bob", null, null, null);
-        // // assertTrue(userStorage.getUser().name().equals("Alice"));
+        // prep:
+        final PopUpController mock = Mockito.mock(PopUpController.class);
+        final ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
+        User dummyUser = new User("1", "Bob", null, null, null);
+        // assertTrue(userStorage.getUser().name().equals("Alice"));
 
-        // // define mocks:
-        // when(userService.setUsername(anyString())).thenReturn(Observable.just(dummyUser));
+        // define mocks:
+        when(userService.setUsername(anyString())).thenReturn(Observable.just(dummyUser));
+        when(popUpControllerProvider.get()).thenReturn(mock);
+        // doAnswer(invoc -> {
+        //     app.show(mock);
+        //     return null;
+        // }).when(userManagementController).showPopUp(any(), any());
         
-        // // action:
-        // write("\tBob");
-        // clickOn("#saveChangesButton");
-        // waitForFxEvents();
-        // // clickOn(".dialog-pane .button");
+        // action:
+        write("\tBob");
+        clickOn("#saveChangesButton");
+        Window currentWindow = Stage.getWindows().get(0);
+        Scene scene = currentWindow.getScene();
+        if (scene != null) {
+            Stage stage = (Stage) scene.getWindow();
+            System.out.println(stage);
+            stage.requestFocus();
+        }
 
-        // // check values:
-        // TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
-        // assertEquals("Bob", usernameText.getText());
+        waitForFxEvents();
+        // clickOn(".dialog-pane .button");
 
-        // // check mocks:
-        // verify(userService).setUsername(usernameCaptor.capture());
-        // assertEquals("Bob", usernameCaptor.getValue());
+        // check values:
+        TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
+        assertEquals("Bob", usernameText.getText());
+
+        // check mocks:
+        verify(userService).setUsername(usernameCaptor.capture());
+        assertEquals("Bob", usernameCaptor.getValue());
     }
 
     @Test
