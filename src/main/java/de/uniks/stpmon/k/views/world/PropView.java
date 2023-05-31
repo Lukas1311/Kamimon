@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views.world;
 
+import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.utils.TileProp;
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.World;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;

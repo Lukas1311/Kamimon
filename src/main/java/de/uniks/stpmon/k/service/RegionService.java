@@ -4,7 +4,8 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.TileMapService;
+import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;

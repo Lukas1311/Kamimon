@@ -1,9 +1,10 @@
-package de.uniks.stpmon.k.utils;
+package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.Tile;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;

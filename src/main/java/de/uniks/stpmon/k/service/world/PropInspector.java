@@ -1,6 +1,8 @@
-package de.uniks.stpmon.k.utils;
+package de.uniks.stpmon.k.service.world;
 
-import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.TileProp;
+import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -15,31 +17,13 @@ public class PropInspector {
     public static final int CONNECT_THRESHOLD = 5;
     public static final int CHECKED_PIXELS = 3;
     public static final int TILE_SIZE = 16;
-    private final int[][] grid;
-    private final Map<Integer, HashSet<Integer>> groups;
+    private final PropGrid grid;
     private int groupId = 1;
+    private final Map<Integer, HashSet<Integer>> groups;
 
-    public PropInspector(TileMapData data) {
-        grid = new int[data.width()][data.height()];
+    public PropInspector(int width, int height) {
+        grid = new PropGrid(width, height);
         groups = new HashMap<>();
-    }
-
-    private boolean hasVisited(int x, int y, Direction direction) {
-        int data = grid[x][y];
-        return (data & (1 << direction.ordinal())) > 0;
-    }
-
-    public void setVisited(int x, int y, Direction direction) {
-        int data = grid[x][y];
-        grid[x][y] = data | (1 << direction.ordinal());
-    }
-
-    public int getGroup(int x, int y) {
-        return grid[x][y] >> 4;
-    }
-
-    public void setGroup(int x, int y, int group) {
-        grid[x][y] = (grid[x][y] & 0xF) | (group << 4);
     }
 
     public Set<HashSet<Integer>> uniqueGroups() {
@@ -47,28 +31,28 @@ public class PropInspector {
     }
 
     public List<TileProp> work(BufferedImage image) {
-        for (int x = 0; x < grid.length; x++) {
-            for (int y = 0; y < grid[x].length; y++) {
+        for (int x = 0; x < grid.getWidth(); x++) {
+            for (int y = 0; y < grid.getHeight(); y++) {
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
                     Direction otherDir = dir.opposite();
                     // Check bounds
-                    if (otherX < 0 || otherX >= grid.length
-                            || otherY < 0 || otherY >= grid[x].length) {
+                    if (otherX < 0 || otherX >= grid.getWidth()
+                            || otherY < 0 || otherY >= grid.getHeight()) {
                         continue;
                     }
                     // Check visited
-                    if (hasVisited(x, y, dir)
-                            || hasVisited(otherX, otherY, otherDir)) {
+                    if (grid.hasVisited(x, y, dir)
+                            || grid.hasVisited(otherX, otherY, otherDir)) {
                         continue;
                     }
                     // Check if the tiles are connected
                     if (checkConnection(x, y, image, dir, otherDir)) {
-                        updateGroup(x, y, otherX, otherY);
+                        tryMergeGroups(x, y, otherX, otherY);
                     }
-                    setVisited(x, y, dir);
-                    setVisited(otherX, otherY, otherDir);
+                    grid.setVisited(x, y, dir);
+                    grid.setVisited(otherX, otherY, otherDir);
                 }
             }
         }
@@ -83,8 +67,8 @@ public class PropInspector {
             int maxX = Integer.MIN_VALUE;
             int maxY = Integer.MIN_VALUE;
             for (int i : group) {
-                int x = i % grid.length;
-                int y = i / grid.length;
+                int x = i % grid.getWidth();
+                int y = i / grid.getWidth();
                 minX = Math.min(minX, x);
                 minY = Math.min(minY, y);
                 maxX = Math.max(maxX, x);
@@ -96,8 +80,8 @@ public class PropInspector {
             BufferedImage img = new BufferedImage(width * TILE_SIZE, height * TILE_SIZE,
                     BufferedImage.TYPE_4BYTE_ABGR);
             for (int i : group) {
-                int x = i % grid.length;
-                int y = i / grid.length;
+                int x = i % grid.getWidth();
+                int y = i / grid.getWidth();
                 ImageUtils.copyData(img.getRaster(), image,
                         (x - minX) * TILE_SIZE, (y - minY) * TILE_SIZE,
                         x * TILE_SIZE, y * TILE_SIZE,
@@ -109,35 +93,35 @@ public class PropInspector {
         return props;
     }
 
-    private void updateGroup(int x, int y, int otherX, int otherY) {
-        int firstGroup = getGroup(x, y);
-        int secondGroup = getGroup(otherX, otherY);
+    public void tryMergeGroups(int x, int y, int otherX, int otherY) {
+        int firstGroup = grid.getGroup(x, y);
+        int secondGroup = grid.getGroup(otherX, otherY);
         HashSet<Integer> first = groups.get(firstGroup);
         HashSet<Integer> second = groups.get(secondGroup);
         if (firstGroup == 0 && secondGroup == 0) {
             first = new HashSet<>();
-            first.add(x + y * grid.length);
-            first.add(otherX + otherY * grid.length);
+            first.add(x + y * grid.getWidth());
+            first.add(otherX + otherY * grid.getWidth());
             int groupIndex = groupId++;
             groups.put(groupIndex, first);
-            setGroup(x, y, groupIndex);
-            setGroup(otherX, otherY, groupIndex);
+            grid.setGroup(x, y, groupIndex);
+            grid.setGroup(otherX, otherY, groupIndex);
             return;
         }
         if (first != null && second == null) {
-            first.add(otherX + otherY * grid.length);
-            setGroup(otherX, otherY, firstGroup);
+            first.add(otherX + otherY * grid.getWidth());
+            grid.setGroup(otherX, otherY, firstGroup);
             return;
         }
         if (first == null && second != null) {
-            second.add(x + y * grid.length);
-            setGroup(x, y, secondGroup);
+            second.add(x + y * grid.getWidth());
+            grid.setGroup(x, y, secondGroup);
             return;
         }
-        first = setGroup(x, y, first);
-        second = setGroup(otherX, otherY, second);
-        firstGroup = getGroup(x, y);
-        secondGroup = getGroup(otherX, otherY);
+        first = createIfAbsent(x, y, first);
+        second = createIfAbsent(otherX, otherY, second);
+        firstGroup = grid.getGroup(x, y);
+        secondGroup = grid.getGroup(otherX, otherY);
         if (firstGroup != secondGroup) {
             if (first.size() >= second.size()) {
                 first.addAll(second);
@@ -149,13 +133,13 @@ public class PropInspector {
         }
     }
 
-    private HashSet<Integer> setGroup(int x, int y, HashSet<Integer> tiles) {
+    private HashSet<Integer> createIfAbsent(int x, int y, HashSet<Integer> tiles) {
         if (tiles == null) {
             tiles = new HashSet<>();
-            tiles.add(x + y * grid.length);
+            tiles.add(x + y * grid.getWidth());
             int groupIndex = groupId++;
             groups.put(groupIndex, tiles);
-            setGroup(x, y, groupIndex);
+            grid.setGroup(x, y, groupIndex);
         }
         return tiles;
     }
@@ -203,53 +187,5 @@ public class PropInspector {
         }
 
         return meetThresholds >= CONNECT_THRESHOLD;
-    }
-
-    private enum Direction {
-        LEFT,
-        TOP,
-        RIGHT,
-        BOTTOM;
-
-        public int imageX(int i, int dist) {
-            return switch (this) {
-                case LEFT -> dist;
-                case TOP, BOTTOM -> i;
-                case RIGHT -> TILE_SIZE - 1 - dist;
-            };
-        }
-
-        public int imageY(int i, int dist) {
-            return switch (this) {
-                case LEFT, RIGHT -> i;
-                case TOP -> dist;
-                case BOTTOM -> TILE_SIZE - 1 - dist;
-            };
-        }
-
-        public int tileX() {
-            return switch (this) {
-                case LEFT -> -1;
-                case TOP, BOTTOM -> 0;
-                case RIGHT -> 1;
-            };
-        }
-
-        public int tileY() {
-            return switch (this) {
-                case LEFT, RIGHT -> 0;
-                case TOP -> -1;
-                case BOTTOM -> 1;
-            };
-        }
-
-        public Direction opposite() {
-            return switch (this) {
-                case LEFT -> RIGHT;
-                case TOP -> BOTTOM;
-                case RIGHT -> LEFT;
-                case BOTTOM -> TOP;
-            };
-        }
     }
 }

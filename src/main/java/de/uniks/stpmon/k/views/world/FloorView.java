@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.World;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;

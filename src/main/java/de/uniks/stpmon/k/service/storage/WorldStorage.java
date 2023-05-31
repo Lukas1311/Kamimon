@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.service.storage;
 
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.World;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -1,16 +1,13 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.utils.PropMap;
-import de.uniks.stpmon.k.utils.TileMap;
-import de.uniks.stpmon.k.utils.TileProp;
-import de.uniks.stpmon.k.utils.Tileset;
-import de.uniks.stpmon.k.utils.World;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
