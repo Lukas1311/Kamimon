@@ -22,7 +22,7 @@ public class RegionService {
     protected RegionStorage regionStorage;
 
     @Inject
-    private UserStorage userStorage;
+    protected UserStorage userStorage;
 
     @Inject
     public RegionService(RegionApiService regionApiService) {
