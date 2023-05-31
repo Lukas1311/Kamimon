@@ -19,7 +19,7 @@ import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 public abstract class WorldController extends Viewable {
 
-    public static double IMAGE_SCALE = 4.0;
+    public static final double IMAGE_SCALE = 4.0;
 
     public abstract Node render(int angle, PerspectiveCamera camera);
 
@@ -44,6 +44,13 @@ public abstract class WorldController extends Viewable {
         floor.setMaterial(createMaterial(image));
 
         return floor;
+    }
+
+    protected Node createRectangleScaled(BufferedImage image, int angle) {
+        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
+        return createRectangle(scaledimage,
+                (int) (scaledimage.getWidth() / IMAGE_SCALE),
+                (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
     protected Node createRectangleScaled(String path, int angle) {

@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.service.TileMapService;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.utils.World;
 import javafx.geometry.Bounds;
@@ -15,8 +14,6 @@ import java.awt.image.BufferedImage;
 @Singleton
 public class FloorView extends WorldController {
 
-    @Inject
-    protected TileMapService tileMapService;
     @Inject
     protected WorldStorage storage;
 

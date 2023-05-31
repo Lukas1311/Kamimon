@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
@@ -47,22 +48,30 @@ public class WorldView extends Viewable {
         return camera;
     }
 
-
     public SubScene renderScene() {
-        int angle = -30;
+        int angle = -59;
         PerspectiveCamera camera = createCamera(angle);
-
+        int x = 0;
+        int y = 0;
+        Region region = regionStorage.getRegion();
+        if (region != null) {
+            x += region.spawn().x() * 16;
+            y += (region.spawn().y() + 1) * 16;
+        }
         Node character = characterView.render(angle, camera);
 
         Node floor = floorView.render(angle, camera);
-        Node building = propView.render(angle, camera);
-        building.setId("building");
+        camera.setTranslateX(x);
+        camera.setTranslateZ(-y);
+
+        Node props = propView.render(angle, camera);
+
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        Group root = new Group(floor, ambient, character, building);
+        Group root = new Group(floor, ambient, character, props);
 
         app.getStage()
                 .getScene()
@@ -85,6 +94,7 @@ public class WorldView extends Viewable {
         }
         characterView.init();
         floorView.init();
+        propView.init();
     }
 
     @Override
