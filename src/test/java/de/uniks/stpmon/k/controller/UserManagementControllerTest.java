@@ -1,12 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 import java.util.ResourceBundle;
 import java.util.Locale;
@@ -24,15 +21,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 @ExtendWith(MockitoExtension.class)
 public class UserManagementControllerTest extends ApplicationTest {
@@ -56,10 +52,14 @@ public class UserManagementControllerTest extends ApplicationTest {
     @InjectMocks
     UserManagementController userManagementController;
 
+    User dummyUser = new User("0", "Bob", "on", "av", null);
+
+
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
+        when(userService.getMe()).thenReturn(dummyUser);
         app.show(userManagementController);
         stage.requestFocus();
     }
@@ -83,83 +83,89 @@ public class UserManagementControllerTest extends ApplicationTest {
 
     @Test
     void testDeleteUser() {
-        // TODO: use after popups are implemented
-        // final LoginController mock = Mockito.mock(LoginController.class);
-        // User userMock = new User("0", "a", "o", "a", null);
-        // when(userService.deleteMe()).thenReturn(Observable.just(userMock));
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final LoginController loginMock = Mockito.mock(LoginController.class);
 
-        // clickOn("#deleteUserButton");
+        // define mocks:
+        when(userService.deleteMe()).thenReturn(Observable.just(dummyUser));
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        doNothing().when(app).show(any(LoginController.class));
+        when(loginControllerProvider.get()).thenReturn(loginMock);
 
-        // verify(userService).deleteMe();
-        // // TODO: add pop confirmation
-        // verify(app).show(mock);
+        // action:
+        clickOn("#deleteUserButton");
+
+        // check possible values:
+
+        // verify mocks:
+        verify(popupMock, times(2)).showModal(any());
+        verify(userService).deleteMe();
+        verify(app).show(loginMock);
     }
 
     @Test
     void testSaveChangesUsername() {
-        // TODO: add pop confirmation
-
         // prep:
         final PopUpController mock = Mockito.mock(PopUpController.class);
         final ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
-        User dummyUser = new User("1", "Bob", null, null, null);
-        // assertTrue(userStorage.getUser().name().equals("Alice"));
+        // User dummyUser = new User("1", "Bob", null, null, null);
 
         // define mocks:
         when(userService.setUsername(anyString())).thenReturn(Observable.just(dummyUser));
         when(popUpControllerProvider.get()).thenReturn(mock);
-        // doAnswer(invoc -> {
-        //     app.show(mock);
-        //     return null;
-        // }).when(userManagementController).showPopUp(any(), any());
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(mock).showModal(any());
         
         // action:
         write("\tBob");
         clickOn("#saveChangesButton");
-        Window currentWindow = Stage.getWindows().get(0);
-        Scene scene = currentWindow.getScene();
-        if (scene != null) {
-            Stage stage = (Stage) scene.getWindow();
-            System.out.println(stage);
-            stage.requestFocus();
-        }
-
-        waitForFxEvents();
-        // clickOn(".dialog-pane .button");
 
         // check values:
         TextField usernameText = lookup("#usernameInput").queryAs(TextField.class);
         assertEquals("Bob", usernameText.getText());
 
         // check mocks:
+        verify(mock).showModal(any());
         verify(userService).setUsername(usernameCaptor.capture());
         assertEquals("Bob", usernameCaptor.getValue());
     }
 
     @Test
     void testSaveChangesPassword() {
-        // // TODO: add pop confirmation
-
-        // // prep:
-        // final ArgumentCaptor<String> passwordCaptor = ArgumentCaptor.forClass(String.class);
+        // prep:
+        final PopUpController mock = Mockito.mock(PopUpController.class);
+        final ArgumentCaptor<String> passwordCaptor = ArgumentCaptor.forClass(String.class);
         // User dummyUser = new User("1", "Bob", null, null, null);
-        // // assertTrue(userStorage.getUser().name().equals("Alice"));
 
-        // // define mocks:
-        // when(userService.setPassword(any())).thenReturn(Observable.just(dummyUser));
+        // define mocks:
+        when(userService.setPassword(any())).thenReturn(Observable.just(dummyUser));
+        when(popUpControllerProvider.get()).thenReturn(mock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(mock).showModal(any());
         
-        // // action:
-        // write("\t\tpassword");
-        // clickOn("#saveChangesButton");
-        // waitForFxEvents();
-        // // clickOn(".dialog-pane .button");
+        // action:
+        write("\t\tpassword");
+        clickOn("#saveChangesButton");
 
-        // // check values:
-        // TextField passwordText = lookup("#passwordInput").queryAs(TextField.class);
-        // assertEquals("password", passwordText.getText());
+        // check values:
+        TextField passwordText = lookup("#passwordInput").queryAs(TextField.class);
+        assertEquals("password", passwordText.getText());
 
-        // // check mocks:
-        // verify(userService).setPassword(passwordCaptor.capture());
-        // assertEquals("password", passwordCaptor.getValue());
+        // check mocks:
+        verify(mock).showModal(any());
+        verify(userService).setPassword(passwordCaptor.capture());
+        assertEquals("password", passwordCaptor.getValue());
     }
 }
