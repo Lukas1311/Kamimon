@@ -1,10 +1,12 @@
 package de.uniks.stpmon.k.controller.popup;
 
 import de.uniks.stpmon.k.controller.Controller;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -40,29 +42,51 @@ import javax.inject.Inject;
  */
 public class PopUpController extends Controller {
     @FXML
-    public Button popUpCancelButton;
+    public BorderPane popUpMainBorderPane;
+    @FXML
+    public GridPane popUpButtonPane;
+    @FXML
+    public Button popUpCloseButton;
     @FXML
     public Text popUpMainText;
     @FXML
     public Button approveButton;
     @FXML
     public Button discardButton;
+    
     private Stage modalStage;
     private ModalCallback callback;
-    private final SimpleStringProperty popUpTextStringProperty = new SimpleStringProperty();
     private PopUpScenario scenario;
+
     @Inject
     public PopUpController() {
-
     }
 
     @Override
-    public void init(){
-        setPopUpMainText(scenario.toString());
+    public Parent render(){
+        final Parent parent = super.render();
+
+        // special case for deleted user action (only one button and no close element)
+        if (scenario == PopUpScenario.DELETION_CONFIRMATION) {
+            popUpButtonPane.getChildren().remove(discardButton);
+            // border pane has no getChildren method so we have to set the element that contains the button to null
+            popUpMainBorderPane.setTop(null);
+            // update column constraints to center remaining button
+            popUpButtonPane.getColumnConstraints().remove(1);
+            approveButton.setText(translateString("backToLogin"));
+        }
+        return parent;
     }
 
     public void setScenario(PopUpScenario popUpScenario) {
-        scenario = popUpScenario;
+        this.scenario = popUpScenario;
+    }
+
+    private void setPopUpMainText() {
+        
+        popUpMainText.setText(
+            translateString(scenario.toString(), scenario.getParams() )
+        );
     }
 
     public void showModal(ModalCallback callback) {
@@ -76,6 +100,9 @@ public class PopUpController extends Controller {
         // set scene for the modal dialog
         Scene scene = new Scene(render());
         modalStage.setScene(scene);
+
+        // main text has to be set here after the render() call otherwise it will fail because the fxml is not available yet 
+        setPopUpMainText();
 
         // set owner of modal to parent window to retrieve e.g. parent windows sizes
         Window parentWindow = app.getStage().getScene().getWindow();
@@ -94,15 +121,10 @@ public class PopUpController extends Controller {
         // bind buttons to actions
         approveButton.setOnAction(click -> approve());
         discardButton.setOnAction(click -> cancel());
-        popUpCancelButton.setOnAction(click -> cancel());
+        popUpCloseButton.setOnAction(click -> cancel());
 
         // show modal dialog and wait for interactions of the user
         modalStage.showAndWait();
-    }
-
-    private void setPopUpMainText(String mainText) {
-        popUpTextStringProperty.set(translateString(mainText));
-        popUpMainText.textProperty().bind(popUpTextStringProperty);
     }
 
     public void approve() {
