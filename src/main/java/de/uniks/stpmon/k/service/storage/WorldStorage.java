@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class WorldStorage {
-    public World world;
+    private World world;
 
     @Inject
     public WorldStorage() {

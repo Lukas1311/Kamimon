@@ -3,14 +3,17 @@ package de.uniks.stpmon.k.utils;
 import de.uniks.stpmon.k.models.map.TileMapData;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class PropInspector {
-    public static final int RGB_THRESHOLD = 22;
-    public static final int CONNECT_THRESHOLD = 8;
+    public static final int RGB_THRESHOLD = 45;
+    public static final int CONNECT_THRESHOLD = 5;
+    public static final int CHECKED_PIXELS = 3;
     public static final int TILE_SIZE = 16;
     private final int[][] grid;
     private final Map<Integer, HashSet<Integer>> groups;
@@ -43,7 +46,7 @@ public class PropInspector {
         return new HashSet<>(groups.values());
     }
 
-    public void work(BufferedImage image) {
+    public List<TileProp> work(BufferedImage image) {
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
@@ -69,6 +72,41 @@ public class PropInspector {
                 }
             }
         }
+        return createProps(image);
+    }
+
+    private List<TileProp> createProps(BufferedImage image) {
+        List<TileProp> props = new ArrayList<>();
+        for (HashSet<Integer> group : uniqueGroups()) {
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE;
+            int maxY = Integer.MIN_VALUE;
+            for (int i : group) {
+                int x = i % grid.length;
+                int y = i / grid.length;
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+
+            int width = maxX - minX + 1;
+            int height = maxY - minY + 1;
+            BufferedImage img = new BufferedImage(width * TILE_SIZE, height * TILE_SIZE,
+                    BufferedImage.TYPE_4BYTE_ABGR);
+            for (int i : group) {
+                int x = i % grid.length;
+                int y = i / grid.length;
+                ImageUtils.copyData(img.getRaster(), image,
+                        (x - minX) * TILE_SIZE, (y - minY) * TILE_SIZE,
+                        x * TILE_SIZE, y * TILE_SIZE,
+                        TILE_SIZE, TILE_SIZE);
+            }
+
+            props.add(new TileProp(img, minX, minY, width, height));
+        }
+        return props;
     }
 
     private void updateGroup(int x, int y, int otherX, int otherY) {
@@ -125,31 +163,42 @@ public class PropInspector {
     public boolean checkConnection(int tileX, int tileY, BufferedImage image, Direction dir, Direction otherDir) {
         int meetThresholds = 0;
         int emptyCount = 0;
-
         // Iterate over each pixel in the images and compare the edges
         for (int i = 0; i < TILE_SIZE; i++) {
-            int firstX = tileX * TILE_SIZE + dir.imageX(i);
-            int firstY = tileY * TILE_SIZE + dir.imageY(i);
-            int secondX = (tileX + dir.tileX()) * TILE_SIZE + otherDir.imageX(i);
-            int secondY = (tileY + dir.tileY()) * TILE_SIZE + otherDir.imageY(i);
-            int first = image.getRGB(firstX, firstY);
-            int second = image.getRGB(secondX, secondY);
-            int firstAlpha = (first >> 24 & 0xFF);
-            int secondAlpha = (second >> 24 & 0xFF);
-            if (first == 0 || second == 0 || firstAlpha == 0 || secondAlpha == 0) {
-                emptyCount++;
-            }
+            for (int dist = 0; dist < CHECKED_PIXELS; dist++) {
+                int firstX = tileX * TILE_SIZE + dir.imageX(i, dist);
+                int firstY = tileY * TILE_SIZE + dir.imageY(i, dist);
+                int secondX = (tileX + dir.tileX()) * TILE_SIZE + otherDir.imageX(i, dist);
+                int secondY = (tileY + dir.tileY()) * TILE_SIZE + otherDir.imageY(i, dist);
+                int first = image.getRGB(firstX, firstY);
+                int second = image.getRGB(secondX, secondY);
+                int firstAlpha = (first >> 24 & 0xFF);
+                int secondAlpha = (second >> 24 & 0xFF);
+                // Skip if any pixel is transparent
+                if (first == 0 || second == 0 || firstAlpha == 0 || secondAlpha == 0) {
+                    emptyCount++;
+                    continue;
+                }
 
-            // Calculate the grayscale intensity of each pixel
-            double intensity1 = (firstAlpha + (first >> 16 & 0xFF) + (first >> 8 & 0xFF) + ((first) & 0xFF)) / 4.0;
-            double intensity2 = (secondAlpha + (second >> 16 & 0xFF) + (second >> 8 & 0xFF) + ((second) & 0xFF)) / 4.0;
-
-            // Compare the intensities and check if the difference is above the threshold
-            if (Math.abs(intensity1 - intensity2) <= RGB_THRESHOLD) {
-                meetThresholds += 1;
+                // Calculate the grayscale intensity of each pixel
+                double intensity1 = (firstAlpha +
+                        (first >> 16 & 0xFF) +
+                        (first >> 8 & 0xFF) +
+                        ((first) & 0xFF)) / 4.0;
+                double intensity2 = (secondAlpha +
+                        (second >> 16 & 0xFF) +
+                        (second >> 8 & 0xFF) +
+                        ((second) & 0xFF)) / 4.0;
+                // Compare the intensities and check if the difference is above the threshold
+                if (Math.abs(intensity1 - intensity2) <= RGB_THRESHOLD) {
+                    meetThresholds += 1;
+                }
             }
         }
-        if (emptyCount == TILE_SIZE) {
+        meetThresholds /= CHECKED_PIXELS;
+        emptyCount /= CHECKED_PIXELS;
+        // If more than 100% of the pixels are transparent, return false
+        if (emptyCount >= TILE_SIZE) {
             return false;
         }
 
@@ -162,19 +211,19 @@ public class PropInspector {
         RIGHT,
         BOTTOM;
 
-        public int imageX(int i) {
+        public int imageX(int i, int dist) {
             return switch (this) {
-                case LEFT -> 0;
+                case LEFT -> dist;
                 case TOP, BOTTOM -> i;
-                case RIGHT -> TILE_SIZE - 1;
+                case RIGHT -> TILE_SIZE - 1 - dist;
             };
         }
 
-        public int imageY(int i) {
+        public int imageY(int i, int dist) {
             return switch (this) {
                 case LEFT, RIGHT -> i;
-                case TOP -> 0;
-                case BOTTOM -> TILE_SIZE - 1;
+                case TOP -> dist;
+                case BOTTOM -> TILE_SIZE - 1 - dist;
             };
         }
 

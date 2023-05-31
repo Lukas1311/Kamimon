@@ -9,11 +9,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.BitSet;
 
-public record Tileset(TilesetSource source,
-                      TilesetData data,
-                      BufferedImage image,
-                      BitSet tallGrassData) {
-
+public record Tileset(
+        TilesetSource source,
+        TilesetData data,
+        BufferedImage image,
+        BitSet tallGrassData) {
 
     public void setTile(WritableRaster raster, int x, int y, int index) {
         int value = data.tilewidth() * (index - source.firstgid());

@@ -6,26 +6,22 @@ import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
     private final int tileWidth;
     private final int tileHeight;
+    private final int width;
+    private final int height;
     private final List<BufferedImage> layers = new ArrayList<>();
     private BufferedImage mainImage;
 
@@ -34,6 +30,8 @@ public class TileMap {
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
+        this.width = data.layers().get(0).width();
+        this.height = data.layers().get(0).height();
     }
 
     public TileMapData getData() {
@@ -55,8 +53,6 @@ public class TileMap {
     }
 
     public BufferedImage renderMap() {
-        int width = data.layers().get(0).width();
-        int height = data.layers().get(0).height();
         return renderMap(width, height);
     }
 
@@ -66,6 +62,22 @@ public class TileMap {
 
     public List<BufferedImage> getLayers() {
         return layers;
+    }
+
+    public int getTileHeight() {
+        return tileHeight;
+    }
+
+    public int getTileWidth() {
+        return tileWidth;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     private BufferedImage createImage(int width, int height) {
@@ -87,48 +99,10 @@ public class TileMap {
             BufferedImage layerImage = renderLayer(layer);
             g.drawImage(layerImage, layer.startx(), layer.starty(), null);
             layers.add(layerImage);
-
-            if (i++ == 0) {
-                continue;
-            }
-            PropInspector inspector = new PropInspector(data);
-            inspector.work(layerImage);
-            Set<HashSet<Integer>> uniqueGroups = inspector.uniqueGroups();
-
-            BufferedImage layerImage1 = createImage(width, height);
-            for (HashSet<Integer> group : uniqueGroups) {
-                int color = generateRandomColor();
-                for (Integer tile : group) {
-                    int x = tile % layer.width();
-                    int y = tile / layer.width();
-                    for (int n = 0; n < 16; n++) {
-                        for (int m = 0; m < 16; m++) {
-                            layerImage1.setRGB(x * 16 + n, y * 16 + m, color);
-                        }
-                    }
-                }
-            }
-            try {
-                ImageIO.write(layerImage1, "png", new File("props_layer_" + i + ".png"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
         g.dispose();
         mainImage = mergedImage;
         return mergedImage;
-    }
-
-    Random random = new Random(420);
-
-    private int generateRandomColor() {
-        // Generate random RGB values
-        int red = random.nextInt(256);
-        int green = random.nextInt(256);
-        int blue = random.nextInt(256);
-
-        // Create a new Color object
-        return (255 << 24) | (red << 16) | (green << 8) | blue;
     }
 
     public BufferedImage renderLayer(TileLayerData layer) {
