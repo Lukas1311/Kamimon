@@ -102,12 +102,10 @@ public class SidebarController extends Controller {
     }
 
     public void updatePauseButton(boolean isPause){
-        //TODO: Change Icon here based on game state
         pause.setTooltip(new Tooltip(translateString(isPause? ("resume.game"):("pause.game"))));
     }
 
     public void updateLogoutButton(boolean leaveRegion){
-        //TODO: Change Icon here based on main window content
         logoutButton.setTooltip(new Tooltip(translateString(leaveRegion? ("leaveRegion"):("logout"))));
     }
 
