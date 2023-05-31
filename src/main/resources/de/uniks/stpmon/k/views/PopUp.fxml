@@ -5,19 +5,19 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
-            prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="popUpMainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
+            prefWidth="450.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@css/style.css"
             fx:controller="de.uniks.stpmon.k.controller.popup.PopUpController">
     <top>
-        <Button fx:id="popUpCancelButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel" text="x"
+        <Button fx:id="popUpCloseButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel" text="x"
                 textAlignment="JUSTIFY" BorderPane.alignment="TOP_RIGHT"/>
     </top>
     <center>
-        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" text="%doYouWantToSaveChanges"
+        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" text=""
               BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
-        <GridPane BorderPane.alignment="CENTER">
+        <GridPane fx:id="popUpButtonPane" BorderPane.alignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -28,9 +28,9 @@
             <BorderPane.margin>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
             </BorderPane.margin>
-            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" text="%yes"/>
+            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" text="%yes" styleClass="kgm-general-button-blue"/>
             <Button fx:id="discardButton" mnemonicParsing="false" onAction="#cancel" text="%discard"
-                    GridPane.columnIndex="1"/>
+                    GridPane.columnIndex="1" styleClass="kgm-general-button-red"/>
         </GridPane>
     </bottom>
 </BorderPane>
