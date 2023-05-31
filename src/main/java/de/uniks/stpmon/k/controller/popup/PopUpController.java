@@ -69,8 +69,6 @@ public class PopUpController extends Controller {
         // special case for deleted user action (only one button and no close element)
         if (scenario == PopUpScenario.DELETION_CONFIRMATION) {
             popUpButtonPane.getChildren().remove(discardButton);
-            // border pane has no getChildren method so we have to set the element that contains the button to null
-            popUpMainBorderPane.setTop(null);
             // update column constraints to center remaining button
             popUpButtonPane.getColumnConstraints().remove(1);
             approveButton.setText(translateString("backToLogin"));
