@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -39,6 +39,7 @@ public class RegionListControllerTest extends ApplicationTest {
     @Mock
     RegionService regionService;
     @Mock
+    @SuppressWarnings("unused")
     IngameController ingameController;
     @InjectMocks
     RegionListController regionListController;

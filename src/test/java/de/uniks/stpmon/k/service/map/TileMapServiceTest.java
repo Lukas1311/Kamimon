@@ -1,10 +1,16 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.map;
 
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.map.*;
-import de.uniks.stpmon.k.utils.TileMap;
-import de.uniks.stpmon.k.utils.Tileset;
+import de.uniks.stpmon.k.models.map.ChunkData;
+import de.uniks.stpmon.k.models.map.TileLayerData;
+import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.TilesetData;
+import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.world.TileMap;
+import de.uniks.stpmon.k.service.world.TileMapService;
+import de.uniks.stpmon.k.service.world.Tileset;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

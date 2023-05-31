@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.utils.World;
+import de.uniks.stpmon.k.service.world.World;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -116,7 +116,6 @@ class AppTest extends ApplicationTest {
         TextField messagefield = lookup("#messageField").query();
         clickOn("#messageField");
         write("t");
-        String x = messagefield.getText();
         waitForFxEvents();
 
         type(KeyCode.ENTER);
