@@ -139,8 +139,6 @@ public class UserManagementController extends Controller {
             userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
                 // set this to retrieve the newly set username
                 currentUser = usr;
-                // TODO: remove in clean up
-                System.out.println(currentUser);
             }, err -> {
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
@@ -153,8 +151,6 @@ public class UserManagementController extends Controller {
     private void savePassword(String newPassword) {
         disposables.add(
             userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
-                // TODO: remove in clean up
-                System.out.println(usr);
             }, err -> {
                 passwordError.set(translateString("error"));
             })
@@ -167,7 +163,6 @@ public class UserManagementController extends Controller {
         deleteScenario.setParams(new ArrayList<>(Arrays.asList(currentUser.name())));
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
-
             disposables.add(userService
                 .deleteMe()
                 .observeOn(FX_SCHEDULER)
@@ -185,7 +180,6 @@ public class UserManagementController extends Controller {
     }
 
     public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
-        System.out.println("popup is opened");
         isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
         popUp.setScenario(scenario);
