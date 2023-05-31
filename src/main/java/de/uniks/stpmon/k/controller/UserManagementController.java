@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 
 import javafx.beans.binding.Bindings;
@@ -62,6 +63,7 @@ public class UserManagementController extends Controller {
     private BooleanBinding passwordInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
+    private User currentUser;
 
 
     @Inject
@@ -72,6 +74,7 @@ public class UserManagementController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        currentUser = userService.getMe();
         userManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         // bindings:
@@ -134,8 +137,10 @@ public class UserManagementController extends Controller {
     private void saveUsername(String newUsername) {
         disposables.add(
             userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
+                // set this to retrieve the newly set username
+                currentUser = usr;
                 // TODO: remove in clean up
-                System.out.println(usr);
+                System.out.println(currentUser);
             }, err -> {
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
@@ -158,7 +163,8 @@ public class UserManagementController extends Controller {
 
     public void deleteUser() {
         PopUpScenario deleteScenario = PopUpScenario.DELETE_USER;
-        deleteScenario.setParams(new ArrayList<>(Arrays.asList(username.get())));
+        // TODO: maybe set username initially and no "enter name" placeholder? ask SM / PO
+        deleteScenario.setParams(new ArrayList<>(Arrays.asList(currentUser.name())));
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
 
@@ -179,6 +185,7 @@ public class UserManagementController extends Controller {
     }
 
     public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
+        System.out.println("popup is opened");
         isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
         popUp.setScenario(scenario);
