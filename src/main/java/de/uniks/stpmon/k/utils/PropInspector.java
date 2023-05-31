@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class PropInspector {
-    public static final int RGB_THRESHOLD = 0;
+    public static final int RGB_THRESHOLD = 22;
     public static final int CONNECT_THRESHOLD = 8;
     public static final int TILE_SIZE = 16;
     private final int[][] grid;
@@ -46,7 +46,7 @@ public class PropInspector {
     public void work(BufferedImage image) {
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[x].length; y++) {
-                for (Direction dir : Direction.values()) {
+                for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
                     Direction otherDir = dir.opposite();
@@ -86,8 +86,20 @@ public class PropInspector {
             setGroup(otherX, otherY, groupIndex);
             return;
         }
+        if (first != null && second == null) {
+            first.add(otherX + otherY * grid.length);
+            setGroup(otherX, otherY, firstGroup);
+            return;
+        }
+        if (first == null && second != null) {
+            second.add(x + y * grid.length);
+            setGroup(x, y, secondGroup);
+            return;
+        }
         first = setGroup(x, y, first);
         second = setGroup(otherX, otherY, second);
+        firstGroup = getGroup(x, y);
+        secondGroup = getGroup(otherX, otherY);
         if (firstGroup != secondGroup) {
             if (first.size() >= second.size()) {
                 first.addAll(second);
@@ -112,6 +124,7 @@ public class PropInspector {
 
     public boolean checkConnection(int tileX, int tileY, BufferedImage image, Direction dir, Direction otherDir) {
         int meetThresholds = 0;
+        int emptyCount = 0;
 
         // Iterate over each pixel in the images and compare the edges
         for (int i = 0; i < TILE_SIZE; i++) {
@@ -119,24 +132,28 @@ public class PropInspector {
             int firstY = tileY * TILE_SIZE + dir.imageY(i);
             int secondX = (tileX + dir.tileX()) * TILE_SIZE + otherDir.imageX(i);
             int secondY = (tileY + dir.tileY()) * TILE_SIZE + otherDir.imageY(i);
-//            int first = image.getRGB(tileX * TILE_SIZE + dir.imageX(i),
-//                    tileY * TILE_SIZE + dir.imageY(i));
-//            int second = image.getRGB(tileX * TILE_SIZE + otherDir.imageX(i),
-//                    tileY * TILE_SIZE + otherDir.imageY(i));
             int first = image.getRGB(firstX, firstY);
             int second = image.getRGB(secondX, secondY);
+            int firstAlpha = (first >> 24 & 0xFF);
+            int secondAlpha = (second >> 24 & 0xFF);
+            if (first == 0 || second == 0 || firstAlpha == 0 || secondAlpha == 0) {
+                emptyCount++;
+            }
 
             // Calculate the grayscale intensity of each pixel
-            double intensity1 = (((first >> 24 & 0xFF)) + (first >> 16 & 0xFF) + (first >> 8 & 0xFF) + ((first) & 0xFF)) / 4.0;
-            double intensity2 = (((second >> 24 & 0xFF)) + (second >> 16 & 0xFF) + (second >> 8 & 0xFF) + ((second) & 0xFF)) / 4.0;
+            double intensity1 = (firstAlpha + (first >> 16 & 0xFF) + (first >> 8 & 0xFF) + ((first) & 0xFF)) / 4.0;
+            double intensity2 = (secondAlpha + (second >> 16 & 0xFF) + (second >> 8 & 0xFF) + ((second) & 0xFF)) / 4.0;
 
             // Compare the intensities and check if the difference is above the threshold
             if (Math.abs(intensity1 - intensity2) <= RGB_THRESHOLD) {
                 meetThresholds += 1;
             }
         }
+        if (emptyCount == TILE_SIZE) {
+            return false;
+        }
 
-        return meetThresholds > CONNECT_THRESHOLD;
+        return meetThresholds >= CONNECT_THRESHOLD;
     }
 
     private enum Direction {

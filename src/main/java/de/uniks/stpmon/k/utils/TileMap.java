@@ -91,7 +91,7 @@ public class TileMap {
         Graphics2D g = mergedImage.createGraphics();
         int i = 0;
         for (TileLayerData layer : data.layers()) {
-            if (layer.chunks() == null) {
+            if (layer.chunks() == null || i++ == 0) {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
