@@ -16,7 +16,7 @@ Load fonts
 }
 
 .root{
-    -fx-font-family: "Comic Sans MS";
+    -fx-font-family: "Balsamiq Sans";
     -fx-font-size: 16;
     -fx-font-smoothing-type: gray;
 
@@ -32,8 +32,6 @@ Load fonts
     -fx-color-grey: #707070;
     -fx-color-light-grey:#909090;
     -fx-color-dark-white: #F2F2F2;
-
-
 
 }
 /* -------------------- General Items -------------------- */
