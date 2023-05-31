@@ -32,9 +32,6 @@ Load fonts
     -fx-color-grey: #707070;
     -fx-color-light-grey:#909090;
     -fx-color-dark-white: #F2F2F2;
-
-
-
 }
 /* -------------------- General Items -------------------- */
 .kgm-general-button-blue{
@@ -238,9 +235,9 @@ Load fonts
     -fx-border-radius: 0;
     -fx-border-width: 3;
 
-    -fx-pref-width: 50;
-    -fx-min-width: 50;
-    -fx-max-width: 50;
+    -fx-pref-width: 70;
+    -fx-min-width: 70;
+    -fx-max-width: 70;
 }
 
 .sidebar-button {
@@ -252,12 +249,12 @@ Load fonts
     -fx-border-width: 3;
     -fx-border-style: solid outside;
 
-    -fx-pref-width: 44;
-    -fx-pref-height: 44;
-    -fx-min-width: 44;
-    -fx-min-height: 44;
-    -fx-max-width: 44;
-    -fx-max-height: 44;
+    -fx-pref-width: 64;
+    -fx-pref-height: 64;
+    -fx-min-width: 64;
+    -fx-min-height: 64;
+    -fx-max-width: 64;
+    -fx-max-height: 64;
 
     -fx-content-display: center;
     -fx-alignment: center;
@@ -269,7 +266,7 @@ Load fonts
 
 .sidebar-button .ikonli-font-icon {
     -fx-icon-color: white;
-    -fx-icon-size: 30px;
+    -fx-icon-size: 50px;
 }
 
 
@@ -278,7 +275,7 @@ Load fonts
 }
 .sidebar-button:pressed .ikonli-font-icon {
     -fx-icon-color: black;
-    -fx-icon-size: 30px;
+    -fx-icon-size: 50px;
 }
 
 .sidebar-button:hover {
@@ -359,8 +356,8 @@ Load fonts
     -fx-vbar-policy: never;
     -fx-hbar-policy: never;
 
+    -fx-alignment: center;
 }
-
 
 /* -------------------- Friend element -------------------- */
 .friend-element-holder {
@@ -371,11 +368,11 @@ Load fonts
     -fx-border-width: 3;
     -fx-border-style: solid outside;
 
-    -fx-pref-width: 325;
+    -fx-pref-width: 330;
     -fx-pref-height: 60;
-    -fx-min-width: 325;
+    -fx-min-width: 330;
     -fx-min-height: 60;
-    -fx-max-width: 325;
+    -fx-max-width: 330;
     -fx-max-height: 60;
 
     -fx-spacing: 5;
