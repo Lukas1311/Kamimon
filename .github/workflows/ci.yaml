@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '.github/PULL_REQUEST_TEMPLATE/*'
+      - '.github/pull_request_template.md'
   pull_request:
   workflow_dispatch:
 jobs:
