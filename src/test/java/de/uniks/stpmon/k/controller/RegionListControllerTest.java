@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.service.RegionService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -29,7 +30,7 @@ import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 
@@ -42,6 +43,8 @@ public class RegionListControllerTest extends ApplicationTest {
     RegionService regionService;
     @Mock
     IngameController ingameController;
+    @Mock
+    CreateTrainerController createTrainerController;
     @InjectMocks
     RegionListController regionListController;
     @Spy
@@ -56,13 +59,14 @@ public class RegionListControllerTest extends ApplicationTest {
         final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("0", "Test", new Spawn("0", 0, 0), null)));
         when(regionService.getRegions()).thenReturn(regionMock);
         app.start(stage);
+        regionListController.setNewTrainer(false);
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(regionListController);
         stage.requestFocus();
     }
 
     @Test
-    void testShow() {
+    void testShowWithOldTrainer() {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridController.get()).thenReturn(mock);
 
@@ -77,8 +81,26 @@ public class RegionListControllerTest extends ApplicationTest {
         clickOn(button);
         waitForFxEvents();
 
+        verify(createTrainerController, never()).render();
         verify(regionService).enterRegion(any());
-        verify(mock).openMain(INGAME);
 
+        verify(mock).openMain(INGAME);
+    }
+
+    @Test
+    void testShowWithNewTrainer() {
+        BorderPane borderPane = lookup("#regionsBorderPane").query();
+        // New trainer
+        regionListController.setNewTrainer(true);
+
+        Parent createTrainer = createTrainerController.render();
+
+        clickOn("#regionButton");
+        waitForFxEvents();
+
+        assertEquals(createTrainer, borderPane.getCenter());
+
+        // Verify that regionService.enterRegion is not called
+        verify(regionService, never()).enterRegion(any(Region.class));
     }
 }
