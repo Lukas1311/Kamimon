@@ -7,6 +7,8 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.TileMapService;
+import de.uniks.stpmon.k.service.world.World;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -21,6 +23,8 @@ public class RegionService {
 
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    protected TileMapService worldLoader;
 
     @Inject
     UserStorage userStorage;
@@ -57,17 +61,17 @@ public class RegionService {
         return regionApiService.getRegion(id);
     }
 
-    public Observable<Area> enterRegion(Region region) {
+    public Observable<World> enterRegion(Region region) {
         if (region.spawn() == null) {
             return Observable.error(new Exception("Region has no spawn."));
         }
         if (region.spawn().area() == null) {
             return Observable.error(new Exception("Spawn has no area."));
         }
-        return getArea(region._id(), region.spawn().area()).map(area -> {
+        return getArea(region._id(), region.spawn().area()).flatMap(area -> {
             regionStorage.setRegion(region);
             regionStorage.setArea(area);
-            return area;
+            return worldLoader.loadTilemap();
         });
     }
 

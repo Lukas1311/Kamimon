@@ -1,10 +1,12 @@
 package de.uniks.stpmon.k.controller.popup;
 
 import de.uniks.stpmon.k.controller.Controller;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -15,54 +17,97 @@ import javax.inject.Inject;
 
 /**
  * The PopUpController shows different text depending on in which scenario it is used
- * (The text in the buttons are always the same except in den DELETEUSER scenario)
+ * (The text in the buttons are always the same except in den DELETE_USER scenario)
  * NOTE: While a PopUp is active, nothing is clickable except elements of the popUp itself.
  * But the buttons still have to be disabled, to make it clear to the user
  * ---------------------------------------------------------------------------------
  * How to add a new customized controller:
  * 1. Add you scenario in the PopUpScenario.java enum (the string is the main text of the popup)
  * 2. Add the following method to the controller from which the popUp is called:
- * public void showPopUp(ModalCallback callback) {
- *  PopUpController popUp = popUpControllerProvider.get();
- *  popUp.setScenario(PopUpScenario.<your_popUp_scenario_here>);
- *  <disable buttons and of your controller here>
- *  popUp.showModal(callback);
+ * 
+ * <pre>
+ * // get the pop up scneraio enum import
+ * import de.uniks.stpmon.k.controller.popup.PopUpScenario;
+ * 
+ * // create yourself a BooleanProperty field like:
+ * private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+ * // then bind all your buttons that need to be disabled to it e.g. in render() like:
+ * render() {
+ *     ...
+ *     DISABLE_ME_BUTTON.disableProperty().bind(isPopUpShown);
+ *     ...
  * }
- * 4. Use the callback to implement the functionality in your controller
- * e.g. something like this:
+ * 
+ * // create a new method called:
+ * public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
+ *     // disable buttons of your controller here
+ *     isPopUpShown.set(true);
+ *     PopUpController popUp = popUpControllerProvider.get();
+ *     popUp.setScenario(PopUpScenario.YOUR_POPUP_SCENARIO_HERE);
+ *     popUp.showModal(callback);
+ *     // enable buttons of your controller here again
+ *     isPopUpShown.set(false);
+ * }
+ * 
+ * // 4. Use the callback to implement the functionality in your controller
+ * // e.g. something like this:
+ * 
  * public void saveChanges() {
- *  showPopUp(result -> {
- *  <enable buttons and again>
- *  if (!result) return; //changes are not save
- *      //implement here what should happen, when changes are saved
- *  });
+ *     showPopUp(PopUpScenario.YOUR_POPUP_SCENARIO_HERE, result -> {
+ *         if (!result) return; // changes are not save
+ *         // implement here what should happen, when changes are saved
+ *         ...
+ *     });
  * }
+ * 
+ * </pre>
+ * 
  */
 public class PopUpController extends Controller {
     @FXML
-    public Button popUpCancelButton;
+    public BorderPane popUpMainBorderPane;
+    @FXML
+    public GridPane popUpButtonPane;
+    @FXML
+    public Button popUpCloseButton;
     @FXML
     public Text popUpMainText;
     @FXML
     public Button approveButton;
     @FXML
     public Button discardButton;
+    
     private Stage modalStage;
     private ModalCallback callback;
-    private final SimpleStringProperty popUpTextStringProperty = new SimpleStringProperty();
     private PopUpScenario scenario;
+
     @Inject
     public PopUpController() {
-
     }
 
     @Override
-    public void init(){
-        setPopUpMainText(scenario.toString());
+    public Parent render(){
+        final Parent parent = super.render();
+
+        // special case for deleted user action (only one button and no close element)
+        if (scenario == PopUpScenario.DELETION_CONFIRMATION) {
+            popUpButtonPane.getChildren().remove(discardButton);
+            // update column constraints to center remaining button
+            popUpButtonPane.getColumnConstraints().remove(1);
+            approveButton.setText(translateString("backToLogin"));
+        }
+        return parent;
     }
 
     public void setScenario(PopUpScenario popUpScenario) {
-        scenario = popUpScenario;
+        this.scenario = popUpScenario;
+    }
+
+    private void setPopUpMainText() {
+        
+        popUpMainText.setText(
+            translateString(scenario.toString(), scenario.getParams() )
+        );
     }
 
     public void showModal(ModalCallback callback) {
@@ -76,6 +121,9 @@ public class PopUpController extends Controller {
         // set scene for the modal dialog
         Scene scene = new Scene(render());
         modalStage.setScene(scene);
+
+        // main text has to be set here after the render() call otherwise it will fail because the fxml is not available yet 
+        setPopUpMainText();
 
         // set owner of modal to parent window to retrieve e.g. parent windows sizes
         Window parentWindow = app.getStage().getScene().getWindow();
@@ -94,15 +142,10 @@ public class PopUpController extends Controller {
         // bind buttons to actions
         approveButton.setOnAction(click -> approve());
         discardButton.setOnAction(click -> cancel());
-        popUpCancelButton.setOnAction(click -> cancel());
+        popUpCloseButton.setOnAction(click -> cancel());
 
         // show modal dialog and wait for interactions of the user
         modalStage.showAndWait();
-    }
-
-    private void setPopUpMainText(String mainText) {
-        popUpTextStringProperty.set(translateString(mainText));
-        popUpMainText.textProperty().bind(popUpTextStringProperty);
     }
 
     public void approve() {
