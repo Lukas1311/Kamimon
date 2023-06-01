@@ -91,12 +91,21 @@ public class PopUpController extends Controller {
         final Parent parent = super.render();
 
         // special case for deleted user action (only one button and no close element)
-        if (Objects.requireNonNull(scenario) == PopUpScenario.DELETION_CONFIRMATION) {
-            popUpButtonPane.getChildren().remove(discardButton);
-            // update column constraints to center remaining button
-            popUpButtonPane.getColumnConstraints().remove(1);
-            approveButton.setText(translateString("backToLogin"));
+        switch (Objects.requireNonNull(scenario)) {
+            case DELETION_CONFIRMATION_USER -> {
+                popUpButtonPane.getChildren().remove(discardButton);
+                // update column constraints to center remaining button
+                popUpButtonPane.getColumnConstraints().remove(1);
+                approveButton.setText(translateString("backToLogin"));
+            }
+            case DELETE_CONFIRMATION_TRAINER -> {
+                popUpButtonPane.getChildren().remove(discardButton);
+                // update column constraints to center remaining button
+                popUpButtonPane.getColumnConstraints().remove(1);
+                approveButton.setText(translateString(""));
+            }
         }
+
         return parent;
     }
 

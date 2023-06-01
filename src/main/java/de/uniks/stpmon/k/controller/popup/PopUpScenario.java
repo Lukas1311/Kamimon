@@ -6,9 +6,10 @@ import java.util.List;
 public enum PopUpScenario {
     SAVE_CHANGES("doYouWantToSaveChanges"),
     DELETE_USER("doYouWantToDeleteUser"),
-    DELETION_CONFIRMATION("userGotDeleted"),
+    DELETION_CONFIRMATION_USER("userGotDeleted"),
     UNSAVED_CHANGES("thereAreUnsavedChanges"),
-    DELETE_TRAINER("doYouWantToDeleteTrainer");
+    DELETE_TRAINER("doYouWantToDeleteTrainer"),
+    DELETE_CONFIRMATION_TRAINER("trainerGotDeleted");
 
 
     private final String mainText;

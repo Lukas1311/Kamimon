@@ -179,7 +179,7 @@ public class UserManagementController extends Controller {
                 .deleteMe()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(usr -> {
-                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION;
+                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
                     deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
                     showPopUp(deleteConfirmScenario, innerResult -> {
                         app.show(loginControllerProvider.get());

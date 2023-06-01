@@ -4,7 +4,11 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.TrainerService;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -16,6 +20,8 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
@@ -39,6 +45,15 @@ public class TrainerManagementController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<PopUpController> popUpControllerProvider;
+    @Inject
+    TrainerService trainerService;
+    @Inject
+    Provider<LoginController> loginControllerProvider;
+    @Inject
+    Provider<LobbyController> lobbyControllerProvider;
+
+    private Trainer currentTrainer;
+    private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
     @Inject
     public TrainerManagementController() {
@@ -84,15 +99,27 @@ public class TrainerManagementController extends Controller {
     }
 
     public void deleteTrainer() {
-        showPopUp(result -> {
+        PopUpScenario deleteScenario = PopUpScenario.DELETE_TRAINER;
+        deleteScenario.setParams(new ArrayList<>(List.of("trainerName")));
+        showPopUp(PopUpScenario.DELETE_TRAINER, result -> {
             deleteTrainerButton.setDisable(false);
             if (!result) return;
+            disposables.add(trainerService
+                    .deleteMe()
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe( trainer -> {
+                        PopUpScenario deleteConfirmScenario = PopUpScenario.DELETE_CONFIRMATION_TRAINER;
+                        deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
+                        showPopUp(deleteConfirmScenario, innerResult -> app.show(lobbyControllerProvider.get()));
+
+                    },err -> app.show(loginControllerProvider.get())));
         });
     }
 
-    public void showPopUp(ModalCallback callback) {
+    public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
+        isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
-        popUp.setScenario(PopUpScenario.DELETE_TRAINER);
+        popUp.setScenario(scenario);
         deleteTrainerButton.setDisable(true);
         popUp.showModal(callback);
     }
