@@ -121,6 +121,10 @@ class AppTest extends ApplicationTest {
         assertThat(regionsListView.getItems().size()).isEqualTo(2);
 
         clickOn("#regionButton");
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
         waitForFxEvents();
         verifyThat("#pause", Node::isVisible);
         clickOn("#pause");
@@ -129,6 +133,11 @@ class AppTest extends ApplicationTest {
         verifyThat(regionsListView, Node::isVisible);
 
         clickOn("#regionButton");
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        waitForFxEvents();
         verifyThat("#inGameText", hasText("INGAME"));
     }
 }
