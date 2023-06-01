@@ -1,8 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
+import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.TrainerService;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,14 +37,22 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
     @Mock
     ChooseSpriteController chooseSpriteController;
+    @Mock
+    Provider<PopUpController> popUpControllerProvider;
+    @Mock
+    Provider<LobbyController> lobbyControllerProvider;
+    @Mock
+    TrainerService trainerService;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
-
     @Spy
     App app = new App(null);
-
     @InjectMocks
     TrainerManagementController trainerManagementController;
+
+    NPCInfo npcInfo = new NPCInfo(false);
+    Trainer dummytrainer = new Trainer(
+            "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -72,7 +86,26 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
     @Test
     void testDeleteTrainer() {
-        // TODO: region service call
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+
+        when(trainerService.deleteMe()).thenReturn(Observable.just(dummytrainer));
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        doNothing().when(app).show(any(LobbyController.class));
+        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
+
+        //action
+        clickOn("#deleteTrainerButton");
+
+        verify(popupMock, times(2)).showModal(any());
+        verify(trainerService).deleteMe();
+        verify(app).show(lobbyMock);
+
     }
 
     @Test
