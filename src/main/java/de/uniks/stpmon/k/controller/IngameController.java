@@ -37,6 +37,9 @@ public class IngameController extends Controller {
     MinimapController miniMap;
 
     @Inject
+    BackpackController backPack;
+
+    @Inject
     protected WorldView worldView;
 
     @Inject
@@ -50,6 +53,7 @@ public class IngameController extends Controller {
         worldView.init();
         monsterBar.init();
         miniMap.init();
+        backPack.init();
     }
 
     @Override
@@ -59,6 +63,7 @@ public class IngameController extends Controller {
         worldView.destroy();
         monsterBar.destroy();
         miniMap.destroy();
+        backPack.destroy();
     }
 
     @Override
@@ -86,6 +91,12 @@ public class IngameController extends Controller {
         // Null if unit testing world view
         if (miniMap != null) {
             rightVbox.getChildren().add(miniMap);
+        }
+
+        Parent backPack = this.backPack.render();
+        // Null if unit testing world view
+        if (backPack != null) {
+            rightVbox.getChildren().add(backPack);
         }
 
         return parent;
