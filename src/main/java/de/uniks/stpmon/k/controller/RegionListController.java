@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -17,10 +18,8 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
-
-public class RegionListController extends ToastedController {
+public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
     RegionService regionService;
@@ -31,10 +30,6 @@ public class RegionListController extends ToastedController {
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
-    @Inject
-    CreateTrainerController createTrainerController;
-
-    private boolean isNewTrainer = true;
 
     @Inject
     public RegionListController() {
@@ -51,7 +46,8 @@ public class RegionListController extends ToastedController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        imageViewKamimonLetteringRegion.setImage(loadImage("kamimonLettering.png"));
+        final Image imageKamimonLettering = loadImage("kamimonLettering.png");
+        //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
         final ListView<Region> regionListView = new ListView<>(this.regions);
         regionListView.setStyle("-fx-background-color: transparent;");
         regionListView.setMaxWidth(200);
@@ -59,26 +55,5 @@ public class RegionListController extends ToastedController {
         VBox.setVgrow(regionListView, Priority.ALWAYS);
         regionListView.setCellFactory(e -> new RegionCell(this));
         return parent;
-    }
-
-    /**
-     * Check if the user has already created a trainer
-     * If not created, will show createTrainer screen
-     * If created, will go straight to the game
-     */
-    public void openRegion(Region region) {
-        if (isNewTrainer) {
-            Parent createTrainer = createTrainerController.render();
-            if (regionsBorderPane != null && !regionsBorderPane.getChildren().contains(createTrainer)) {
-                regionsBorderPane.setCenter(createTrainer);
-            }
-        } else {
-            subscribe(regionService.enterRegion(region),
-                    (area) -> hybridControllerProvider.get().openMain(INGAME));
-        }
-    }
-
-    public void setNewTrainer (boolean newTrainer) {
-        this.isNewTrainer = newTrainer;
     }
 }
