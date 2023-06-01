@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.MinimapController;
 import de.uniks.stpmon.k.controller.MonsterBarController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
@@ -46,6 +47,10 @@ public class WorldViewTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     MonsterBarController monsterBarController;
+
+    @Spy
+    @SuppressWarnings("unused")
+    MinimapController minimapController = new MinimapController();
 
     WorldStorage worldStorage = component.worldStorage();
 
