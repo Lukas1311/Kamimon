@@ -1,16 +1,18 @@
-package de.uniks.stpmon.k.utils;
+package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.ChunkData;
 import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,12 +21,18 @@ public class TileMap {
     private final TileMapData data;
     private final int tileWidth;
     private final int tileHeight;
+    private final int width;
+    private final int height;
+    private final List<BufferedImage> layers = new ArrayList<>();
+    private BufferedImage mainImage;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.data = provider.map();
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
+        this.width = data.layers().get(0).width();
+        this.height = data.layers().get(0).height();
     }
 
     public TileMapData getData() {
@@ -45,10 +53,32 @@ public class TileMap {
                 .findFirst();
     }
 
-    public BufferedImage renderMap() throws IOException {
-        int width = data.layers().get(0).width();
-        int height = data.layers().get(0).height();
+    public BufferedImage renderMap() {
         return renderMap(width, height);
+    }
+
+    public BufferedImage getMainImage() {
+        return mainImage;
+    }
+
+    public List<BufferedImage> getLayers() {
+        return layers;
+    }
+
+    public int getTileHeight() {
+        return tileHeight;
+    }
+
+    public int getTileWidth() {
+        return tileWidth;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 
     private BufferedImage createImage(int width, int height) {
@@ -58,7 +88,7 @@ public class TileMap {
                 BufferedImage.TYPE_4BYTE_ABGR);
     }
 
-    public BufferedImage renderMap(int width, int height) throws IOException {
+    public BufferedImage renderMap(int width, int height) {
         BufferedImage mergedImage = createImage(
                 width, height);
         Graphics2D g = mergedImage.createGraphics();
@@ -69,8 +99,10 @@ public class TileMap {
             }
             BufferedImage layerImage = renderLayer(layer);
             g.drawImage(layerImage, layer.startx(), layer.starty(), null);
+            layers.add(layerImage);
         }
         g.dispose();
+        mainImage = mergedImage;
         return mergedImage;
     }
 

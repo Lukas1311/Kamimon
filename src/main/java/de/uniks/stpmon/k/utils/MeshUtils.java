@@ -4,7 +4,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 public class MeshUtils {
-
     public static MeshView createPlane(int l, int b) {
         TriangleMesh mesh = new TriangleMesh();
 
@@ -36,14 +35,15 @@ public class MeshUtils {
         TriangleMesh mesh = new TriangleMesh();
 
         float[] vertices = {
-                -w / 2f, -h / 2f, 0,
-                w / 2f, -h / 2f, 0,
-                -w / 2f, h / 2f, 0,
-                w / 2f, h / 2f, 0
+                -w / 2f, 0, 0,
+                w / 2f, 0, 0,
+                -w / 2f, h, 0,
+                w / 2f, h, 0
         };
+        // top not at 0 because of texture flickering
         float[] texCoords = {
-                0f, 0f,
-                1f, 0f,
+                0f, 0.005f,
+                1f, 0.005f,
                 0f, 1f,
                 1f, 1f
         };
