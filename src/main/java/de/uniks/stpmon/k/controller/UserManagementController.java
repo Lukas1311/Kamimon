@@ -12,6 +12,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -54,8 +55,8 @@ public class UserManagementController extends Controller {
 
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
-    private final SimpleStringProperty usernameError = new SimpleStringProperty();
-    private final SimpleStringProperty passwordError = new SimpleStringProperty();
+    private StringProperty usernameError;
+    private StringProperty passwordError;
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
@@ -87,7 +88,6 @@ public class UserManagementController extends Controller {
         // bind bindings to fxml:
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
-        usernameInfo.textProperty().bind(usernameError);
 
         // set bindings to buttons that should be disabled after the popup is shown
         saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
@@ -112,26 +112,34 @@ public class UserManagementController extends Controller {
     }
 
     public void backToSettings() {
-        if (changesMade.get() && !changesSaved) {
+        if (hasUnsavedChanges()) {
             showPopUp(PopUpScenario.UNSAVED_CHANGES, result -> {
                 if (!result) return;
-                saveChanges();
+                saveCredentials();
             });
         }
         hybridControllerProvider.get().popTab();
     }
 
+    public Boolean hasUnsavedChanges() {
+        return changesMade.get() && !changesSaved;
+    }
+
     public void saveChanges() {
         showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
             if (!result) return;
-            if (!usernameInvalid.get()) {
-                saveUsername(username.get());
-            }
-            if (!passwordInvalid.get()) {
-                savePassword(password.get());
-            }
+            saveCredentials();
             changesSaved = true;
         });
+    }
+
+    public void saveCredentials() {
+        if (!usernameInvalid.get()) {
+            saveUsername(username.get());
+        }
+        if (!passwordInvalid.get()) {
+            savePassword(password.get());
+        }
     }
 
     private void saveUsername(String newUsername) {
@@ -139,9 +147,9 @@ public class UserManagementController extends Controller {
             userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
                 // set this to retrieve the newly set username
                 currentUser = usr;
-                // TODO: remove in clean up
-                System.out.println(currentUser);
             }, err -> {
+                usernameError = new SimpleStringProperty("");
+                usernameInfo.textProperty().bind(usernameError);
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
                 if (!(ex.code() == 409)) return;
@@ -153,9 +161,9 @@ public class UserManagementController extends Controller {
     private void savePassword(String newPassword) {
         disposables.add(
             userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
-                // TODO: remove in clean up
-                System.out.println(usr);
             }, err -> {
+                passwordError = new SimpleStringProperty("");
+                passwordInfo.textProperty().bind(passwordError);
                 passwordError.set(translateString("error"));
             })
         );
@@ -167,15 +175,13 @@ public class UserManagementController extends Controller {
         deleteScenario.setParams(new ArrayList<>(Arrays.asList(currentUser.name())));
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
-
             disposables.add(userService
                 .deleteMe()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(usr -> {
-                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION;
+                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
                     deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
                     showPopUp(deleteConfirmScenario, innerResult -> {
-                        if (!innerResult) return;
                         app.show(loginControllerProvider.get());
                     });
                 }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
@@ -185,7 +191,6 @@ public class UserManagementController extends Controller {
     }
 
     public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
-        System.out.println("popup is opened");
         isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
         popUp.setScenario(scenario);

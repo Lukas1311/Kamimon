@@ -25,7 +25,7 @@ public class RegionController extends Controller {
 
         final Parent parent = super.render();
         regionButton.setText(region.name());
-        regionButton.setOnAction(event -> listController.openRegion(region));
+        regionButton.setOnAction(event -> listController.enterRegion(region));
         return parent;
     }
 }

@@ -18,10 +18,8 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
-
-public class RegionListController extends ToastedController {
+public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
     RegionService regionService;
@@ -57,10 +55,5 @@ public class RegionListController extends ToastedController {
         VBox.setVgrow(regionListView, Priority.ALWAYS);
         regionListView.setCellFactory(e -> new RegionCell(this));
         return parent;
-    }
-
-    public void openRegion(Region region) {
-        subscribe(regionService.enterRegion(region),
-                (area) -> hybridControllerProvider.get().openMain(INGAME));
     }
 }
