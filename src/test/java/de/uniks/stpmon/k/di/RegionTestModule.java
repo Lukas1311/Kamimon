@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.di;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
+import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
@@ -186,6 +187,15 @@ public class RegionTestModule {
                     return Observable.just(trainer);
                 }
                 return Observable.error(new Throwable("404 Not found"));
+            }
+
+            @Override
+            public Observable<Trainer> updateTrainer(String regionId, String trainerId, UpdateTrainerDto trainerDto) {
+                Trainer trainer = getTrainerById(trainerId);
+                if (trainer != null) {
+                    return Observable.just(trainer);
+                }
+                return Observable.empty();
             }
 
             @Override
