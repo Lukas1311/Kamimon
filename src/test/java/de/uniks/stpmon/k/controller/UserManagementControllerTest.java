@@ -5,6 +5,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
+import retrofit2.Response;
+
 
 import java.util.ResourceBundle;
 import java.util.Locale;
@@ -27,6 +31,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -162,6 +167,7 @@ public class UserManagementControllerTest extends ApplicationTest {
         assertEquals("Bob", usernameText.getText());
 
         // check mocks:
+        verify(userManagementController).saveChanges();
         verify(mock).showModal(any());
         verify(userService).setUsername(usernameCaptor.capture());
         assertEquals("Bob", usernameCaptor.getValue());
@@ -192,8 +198,67 @@ public class UserManagementControllerTest extends ApplicationTest {
         assertEquals("password", passwordText.getText());
 
         // check mocks:
+        verify(userManagementController).saveChanges();
         verify(mock).showModal(any());
         verify(userService).setPassword(passwordCaptor.capture());
         assertEquals("password", passwordCaptor.getValue());
+    }
+
+    @Test
+    void testSaveChangesUsernameError() {
+        // prep:
+        Response<Object> response = Response.error(409, ResponseBody.create(null, "test"));
+        final PopUpController mock = Mockito.mock(PopUpController.class);
+
+
+        // define mocks:
+        when(popUpControllerProvider.get()).thenReturn(mock);
+        when(userService.setUsername(anyString())).thenReturn(Observable.error(new HttpException(response)));
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(mock).showModal(any());
+
+        // action:
+        write("\tBob");
+        clickOn("#saveChangesButton");
+
+        // check values:
+        Label errorLabel = lookup("#usernameInfo").queryAs(Label.class);
+        assertEquals("Username is already in use", errorLabel.getText());
+
+        // verify mocks:
+        verify(userManagementController).saveChanges();
+        verify(mock).showModal(any());
+        verify(userService).setUsername(any());
+    }
+
+    @Test
+    void testSaveChangesPasswordError() {
+        // prep:
+        final PopUpController mock = Mockito.mock(PopUpController.class);
+
+        // define mocks:
+        when(popUpControllerProvider.get()).thenReturn(mock);
+        when(userService.setPassword(anyString())).thenReturn(Observable.error(new Exception()));
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(mock).showModal(any());
+
+        // action:
+        write("\t\tpassword");
+        clickOn("#saveChangesButton");
+
+        // check values:
+        Label errorLabel = lookup("#passwordInfo").queryAs(Label.class);
+        assertEquals("Error", errorLabel.getText());
+
+        // verify mocks:
+        verify(userManagementController).saveChanges();
+        verify(mock).showModal(any());
+        verify(userService).setPassword(any());
     }
 }
