@@ -102,7 +102,7 @@ public class PopUpController extends Controller {
                 popUpButtonPane.getChildren().remove(discardButton);
                 // update column constraints to center remaining button
                 popUpButtonPane.getColumnConstraints().remove(1);
-                approveButton.setText(translateString(""));
+                approveButton.setText(translateString("backtoLobby"));
             }
         }
 
