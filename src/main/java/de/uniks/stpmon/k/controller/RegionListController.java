@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -49,8 +50,8 @@ public class RegionListController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        //final Image imageKamimonLettering = loadImage("kamimonLettering.png");
-        imageViewKamimonLetteringRegion.setImage(loadImage("kamimonLettering.png"));
+        final Image imageKamimonLettering = loadImage("kamimonLettering.png");
+        //imageViewKamimonLetteringRegion.setImage(loadImage("kamimonLettering.png"));
         final ListView<Region> regionListView = new ListView<>(this.regions);
         regionListView.setStyle("-fx-background-color: transparent;");
         regionListView.setMaxWidth(200);
