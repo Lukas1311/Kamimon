@@ -111,8 +111,8 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
-
         waitForFxEvents();
+
         BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
@@ -179,6 +179,12 @@ class HybridControllerTest extends ApplicationTest {
         waitForFxEvents();
 
         clickOn("#regionButton");
+        waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
         waitForFxEvents();
 
         // get new stack pane from ingame sidebar

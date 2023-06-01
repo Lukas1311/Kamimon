@@ -55,7 +55,5 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         Button createTrainer = lookup("#createTrainerButton").query();
         assertNotNull(createTrainer);
         assertEquals("Create Trainer", createTrainer.getText());
-
-        clickOn(createTrainer);
     }
 }
