@@ -1,5 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.popup.*;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.UserService;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -9,11 +15,10 @@ import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
-
 import java.util.ResourceBundle;
+import java.util.HashMap;
 import java.util.Locale;
-
-import javax.inject.Provider;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,12 +30,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.popup.*;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.User;
-import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
+import javax.inject.Provider;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -207,31 +208,41 @@ public class UserManagementControllerTest extends ApplicationTest {
     @Test
     void testSaveChangesUsernameError() {
         // prep:
-        Response<Object> response = Response.error(409, ResponseBody.create(null, "test"));
         final PopUpController mock = Mockito.mock(PopUpController.class);
 
+        Response<Object> response409 = Response.error(409, ResponseBody.create(null, "test"));
+        Response<Object> response999 = Response.error(999, ResponseBody.create(null, "test"));
+        Map<String, Throwable> errorMap = new HashMap<>();
+        errorMap.put("error", new HttpException(response999));
+        errorMap.put("Username is already in use", new HttpException(response409));
 
-        // define mocks:
-        when(popUpControllerProvider.get()).thenReturn(mock);
-        when(userService.setUsername(anyString())).thenReturn(Observable.error(new HttpException(response)));
-        doAnswer(invocation -> {
-            ModalCallback callback = invocation.getArgument(0);
-            callback.onModalResult(true);
-            return null;
-        }).when(mock).showModal(any());
+        for (Map.Entry<String, Throwable> entry : errorMap.entrySet()) {
+            String expectedErrorMsg = entry.getKey();
+            Throwable error = entry.getValue();
 
-        // action:
-        write("\tBob");
-        clickOn("#saveChangesButton");
+            // define mocks:
+            when(popUpControllerProvider.get()).thenReturn(mock);
+            when(userService.setUsername(anyString())).thenReturn(Observable.error(error));
+            doAnswer(invocation -> {
+                ModalCallback callback = invocation.getArgument(0);
+                callback.onModalResult(true);
+                return null;
+            }).when(mock).showModal(any());
 
-        // check values:
-        Label errorLabel = lookup("#usernameInfo").queryAs(Label.class);
-        assertEquals("Username is already in use", errorLabel.getText());
+            // action:
+            write("\tBob");
+            clickOn("#saveChangesButton");
+            sleep(2000);
+
+            // check values:
+            Label errorLabel = lookup("#usernameInfo").queryAs(Label.class);
+            assertEquals(expectedErrorMsg, errorLabel.getText());
+        }
 
         // verify mocks:
-        verify(userManagementController).saveChanges();
-        verify(mock).showModal(any());
-        verify(userService).setUsername(any());
+        verify(userManagementController, times(2)).saveChanges();
+        verify(mock, times(2)).showModal(any());
+        verify(userService, times(2)).setUsername(any());
     }
 
     @Test
