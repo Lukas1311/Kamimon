@@ -1,9 +1,12 @@
 package de.uniks.stpmon.k;
 
+import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.world.World;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,6 +21,9 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -29,11 +35,17 @@ class AppTest extends ApplicationTest {
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final MessageApiDummy messageApi = component.messageApi();
     private final HybridController hybridController = component.hybridController();
-
+    private final LoadingScreenController loadingScreen = component.loadingScreenController();
+    private final WorldStorage worldStorage = component.worldStorage();
 
     @Override
     public void start(Stage stage) throws Exception {
         hybridController.setPlayAnimations(false);
+        //TODO: remove if we find a way to mock the tilemap for testing
+        loadingScreen.setSkipLoading(true);
+        BufferedImage images = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        //--------------------
+        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
         app.start(stage);
         stage.requestFocus();
     }
@@ -104,7 +116,6 @@ class AppTest extends ApplicationTest {
         TextField messagefield = lookup("#messageField").query();
         clickOn("#messageField");
         write("t");
-        String x = messagefield.getText();
         waitForFxEvents();
 
         type(KeyCode.ENTER);
@@ -129,6 +140,6 @@ class AppTest extends ApplicationTest {
         verifyThat(regionsListView, Node::isVisible);
 
         clickOn("#regionButton");
-        verifyThat("#inGameText", hasText("INGAME"));
+        verifyThat("#ingame", Node::isVisible);
     }
 }

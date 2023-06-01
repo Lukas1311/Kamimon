@@ -5,8 +5,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
             minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0"
             xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
@@ -14,13 +12,6 @@
     <center>
         <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
             <BorderPane>
-                <center>
-                    <Text fx:id="inGameText" strokeType="OUTSIDE" strokeWidth="0.0" text="INGAME">
-                        <font>
-                            <Font size="61.0"/>
-                        </font>
-                    </Text>
-                </center>
                 <top>
                     <HBox prefHeight="40.0" prefWidth="380.0" BorderPane.alignment="CENTER">
                         <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0"/>
