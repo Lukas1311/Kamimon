@@ -12,6 +12,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -54,8 +55,8 @@ public class UserManagementController extends Controller {
 
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
-    private final SimpleStringProperty usernameError = new SimpleStringProperty();
-    private final SimpleStringProperty passwordError = new SimpleStringProperty();
+    private StringProperty usernameError;
+    private StringProperty passwordError;
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
@@ -87,7 +88,6 @@ public class UserManagementController extends Controller {
         // bind bindings to fxml:
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
-        usernameInfo.textProperty().bind(usernameError);
 
         // set bindings to buttons that should be disabled after the popup is shown
         saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
@@ -148,6 +148,8 @@ public class UserManagementController extends Controller {
                 // set this to retrieve the newly set username
                 currentUser = usr;
             }, err -> {
+                usernameError = new SimpleStringProperty("");
+                usernameInfo.textProperty().bind(usernameError);
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
                 if (!(ex.code() == 409)) return;
@@ -160,6 +162,8 @@ public class UserManagementController extends Controller {
         disposables.add(
             userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
             }, err -> {
+                passwordError = new SimpleStringProperty("");
+                passwordInfo.textProperty().bind(passwordError);
                 passwordError.set(translateString("error"));
             })
         );
