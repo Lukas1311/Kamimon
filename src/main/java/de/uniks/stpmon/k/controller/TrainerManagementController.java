@@ -102,7 +102,6 @@ public class TrainerManagementController extends Controller {
         PopUpScenario deleteScenario = PopUpScenario.DELETE_TRAINER;
         deleteScenario.setParams(new ArrayList<>(List.of("trainerName")));
         showPopUp(PopUpScenario.DELETE_TRAINER, result -> {
-            deleteTrainerButton.setDisable(false);
             if (!result) return;
             disposables.add(trainerService
                     .deleteMe()
@@ -120,7 +119,6 @@ public class TrainerManagementController extends Controller {
         isPopUpShown.set(true);
         PopUpController popUp = popUpControllerProvider.get();
         popUp.setScenario(scenario);
-        deleteTrainerButton.setDisable(true);
         popUp.showModal(callback);
     }
 }
