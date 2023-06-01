@@ -16,17 +16,18 @@ import java.util.List;
 
 @Singleton
 public class RegionService {
-    private final RegionApiService regionApiService;
+    @Inject
+    RegionApiService regionApiService;
 
     @Inject
     protected RegionStorage regionStorage;
 
     @Inject
-    protected UserStorage userStorage;
+    UserStorage userStorage;
 
     @Inject
-    public RegionService(RegionApiService regionApiService) {
-        this.regionApiService = regionApiService;
+    public RegionService() {
+
     }
 
     //---------------- Region Trainers ----------------------------

@@ -23,39 +23,46 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RegionServiceTest {
-    @Mock
-    RegionApiService regionApiService;
-
     @Spy
     UserStorage userStorage;
+    @Mock
+    RegionApiService regionApiService;
     @InjectMocks
     RegionService regionService;
 
-
-    //---------------- Region Trainers ----------------------------
-    @Test
-    void createTrainer() {
+    private void initUser() {
         userStorage.setUser(new User("0",
                 "Test",
                 "offline",
                 null,
                 new ArrayList<>()));
+    }
+
+    private Trainer makeTrainer() {
+        return new Trainer(
+                "0",
+                "regionId",
+                "userId",
+                "TestTrainer",
+                "trainerImage",
+                0,
+                "areaId",
+                0,
+                0,
+                0,
+                new NPCInfo(true)
+        );
+    }
+
+
+    //---------------- Region Trainers ----------------------------
+    @Test
+    void createTrainer() {
+        initUser();
         //define mocks
         final ArgumentCaptor<CreateTrainerDto> captor = ArgumentCaptor.forClass(CreateTrainerDto.class);
         when(regionApiService.createTrainer(any(), any(CreateTrainerDto.class)))
-                .thenReturn(Observable.just(new Trainer(
-                        "0",
-                        "regionId",
-                        "userId",
-                        "TestTrainer",
-                        "trainerImage",
-                        0,
-                        "areaId",
-                        0,
-                        0,
-                        0,
-                        new NPCInfo(true)
-                )));
+                .thenReturn(Observable.just(makeTrainer()));
         //action
         final Trainer trainer = regionService
                 .createTrainer("regionId", "TestTrainer", "trainerImage")
@@ -67,6 +74,32 @@ class RegionServiceTest {
 
         //check mocks
         verify(regionApiService).createTrainer(any(), captor.capture());
+    }
+
+    @Test
+    void getTrainers() {
+        initUser();
+
+        Trainer trainer = makeTrainer();
+        //define mocks
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        List<Trainer> trainers = new ArrayList<>();
+        trainers.add(trainer);
+        when(regionApiService.getTrainers(any(), any(), any(String.class)))
+                .thenReturn(Observable.just(trainers));
+
+        //action
+        final List<Trainer> returnTrainers = regionService
+                .getTrainers("regionId", "areaId")
+                .blockingFirst();
+
+        //check values
+        assertEquals(1, returnTrainers.size());
+        assertEquals("0", returnTrainers.get(0)._id());
+        assertEquals("TestTrainer", returnTrainers.get(0).name());
+
+        //check mocks
+        verify(regionApiService).getTrainers(any(), any(), captor.capture());
     }
 
     @Test
