@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Text?>
 
 <VBox fx:id="userManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-   prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/style.css"
+   prefHeight="720.0" prefWidth="370.0" styleClass="intro-screen" stylesheets="@css/style.css"
    xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.UserManagementController">
 
    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">

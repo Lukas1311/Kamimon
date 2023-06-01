@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <VBox fx:id="trainerManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-   prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/sidebar.css"
+   prefHeight="720.0" prefWidth="370.0" styleClass="intro-screen" stylesheets="@css/style.css"
    xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
    fx:controller="de.uniks.stpmon.k.controller.TrainerManagementController">
 
