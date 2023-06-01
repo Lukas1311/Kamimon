@@ -1,16 +1,51 @@
 package de.uniks.stpmon.k.utils;
 
+import de.uniks.stpmon.k.Main;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+
+import javax.imageio.ImageIO;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
 
 public class ImageUtils {
+
+    public static BufferedImage scaledImage(String relativePath, double scale) {
+        try (InputStream inputStream = Objects.requireNonNull(Main.class.getResourceAsStream(relativePath))) {
+            return scaledImage(ImageIO.read(inputStream), scale);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static BufferedImage scaledImage(BufferedImage image, double scale) {
+        int w = (int) (image.getWidth() * scale);
+        int h = (int) (image.getHeight() * scale);
+        AffineTransform at = new AffineTransform();
+        at.scale(scale, scale);
+        AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        return scaleOp.filter(image, new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
+    }
+
+    public static Image scaledImageFX(String relativePath, double scale) {
+        return SwingFXUtils.toFXImage(scaledImage(relativePath, scale), null);
+    }
+
+    public static Image scaledImageFX(BufferedImage image, double scale) {
+        return SwingFXUtils.toFXImage(scaledImage(image, scale), null);
+    }
 
     public static void copyData(WritableRaster target, BufferedImage source,
                                 int writeX, int writeY,
                                 int readX, int readY,
                                 int width, int height) {
-        Raster raster = source.getRaster();
+        Raster raster = source.getData();
         Object tdata = null;
 
         for (int i = 0; i < height; i++) {

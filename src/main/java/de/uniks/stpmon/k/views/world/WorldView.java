@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
@@ -20,12 +21,16 @@ import javax.inject.Singleton;
 @Singleton
 public class WorldView extends Viewable {
 
+    public static final int MOVEMENT_UNIT = 8;
+
     @Inject
     protected RegionStorage regionStorage;
     @Inject
     protected CharacterView characterView;
     @Inject
     protected FloorView floorView;
+    @Inject
+    protected PropView propView;
 
     @Inject
     public WorldView() {
@@ -36,25 +41,37 @@ public class WorldView extends Viewable {
         // move the far clip to see more of the scene
         camera.setFarClip(10000.0);
         camera.getTransforms()
-                .addAll(new Rotate(angle, Rotate.X_AXIS),
-                        new Translate(0, 0, -620));
+                .addAll(
+                        new Rotate(angle, Rotate.X_AXIS),
+                        new Translate(0, 0, -480));
         camera.setRotationAxis(Rotate.X_AXIS);
         return camera;
     }
 
     public SubScene renderScene() {
-        int angle = -45;
+        int angle = -59;
         PerspectiveCamera camera = createCamera(angle);
-
+        int x = 0;
+        int y = 0;
+        Region region = regionStorage.getRegion();
+        if (region != null) {
+            x += region.spawn().x() * 16;
+            y += (region.spawn().y() + 1) * 16;
+        }
         Node character = characterView.render(angle, camera);
 
         Node floor = floorView.render(angle, camera);
+        camera.setTranslateX(x);
+        camera.setTranslateZ(-y);
+
+        Node props = propView.render(angle, camera);
+
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        Group root = new Group(floor, ambient, character);
+        Group root = new Group(floor, ambient, character, props);
 
         app.getStage()
                 .getScene()
@@ -77,6 +94,7 @@ public class WorldView extends Viewable {
         }
         characterView.init();
         floorView.init();
+        propView.init();
     }
 
     @Override
@@ -91,10 +109,10 @@ public class WorldView extends Viewable {
         return (event) -> {
             System.out.println("Key pressed: " + event.getCode());
             switch (event.getCode()) {
-                case W -> camera.setTranslateZ(camera.getTranslateZ() + 5);
-                case S -> camera.setTranslateZ(camera.getTranslateZ() - 5);
-                case A -> camera.setTranslateX(camera.getTranslateX() - 5);
-                case D -> camera.setTranslateX(camera.getTranslateX() + 5);
+                case W -> camera.setTranslateZ(camera.getTranslateZ() + MOVEMENT_UNIT);
+                case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVEMENT_UNIT);
+                case A -> camera.setTranslateX(camera.getTranslateX() - MOVEMENT_UNIT);
+                case D -> camera.setTranslateX(camera.getTranslateX() + MOVEMENT_UNIT);
             }
             rotate(event, camera);
         };
