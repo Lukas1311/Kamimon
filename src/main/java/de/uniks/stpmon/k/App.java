@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.di.DaggerMainComponent;
 import de.uniks.stpmon.k.di.MainComponent;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import fr.brouillard.oss.cssfx.CSSFX;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
@@ -12,8 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import fr.brouillard.oss.cssfx.CSSFX;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -69,8 +68,7 @@ public class App extends Application {
         }
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
-        loadingScreen.setOnLoadingFinished(this::onFinishedLoading);
-        show(loadingScreen);
+        loadingScreen.startLoading(this::onFinishedLoading);
 
         disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
     }

@@ -7,9 +7,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
+@Singleton
 public class LoadingScreenController extends Controller {
 
     private final Timer timer = new Timer();
@@ -25,14 +28,7 @@ public class LoadingScreenController extends Controller {
 
     public Runnable onLoadingFinished;
     public int minTime = 2000;
-
-    public void setOnLoadingFinished(Runnable onLoadingFinished) {
-        this.onLoadingFinished = onLoadingFinished;
-    }
-
-    public void setMinTime(int minTime) {
-        this.minTime = minTime;
-    }
+    private boolean skipLoading = false;
 
     @Inject
     public LoadingScreenController() {
@@ -50,6 +46,23 @@ public class LoadingScreenController extends Controller {
                 }
             }
         }, minTime);
+    }
+
+    public void startLoading(Runnable onLoadingFinished) {
+        this.onLoadingFinished = onLoadingFinished;
+        if (skipLoading) {
+            onLoadingFinished.run();
+            return;
+        }
+        app.show(this);
+    }
+
+    public void setMinTime(int minTime) {
+        this.minTime = minTime;
+    }
+
+    public void setSkipLoading(boolean skipLoading) {
+        this.skipLoading = skipLoading;
     }
 
     @Override

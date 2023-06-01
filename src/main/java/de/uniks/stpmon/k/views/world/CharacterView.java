@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.net.EventListener;
@@ -8,11 +7,9 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.image.Image;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Objects;
 
 @Singleton
 public class CharacterView extends WorldController {
@@ -28,9 +25,7 @@ public class CharacterView extends WorldController {
 
     @Override
     public Node render(int angle, PerspectiveCamera camera) {
-        Node character = createRectangle(
-                new Image(Objects.requireNonNull(Main.class.getResourceAsStream("map/char.png"))),
-                angle);
+        Node character = createRectangleScaled("map/char.png", angle);
         character.setId("character");
         camera.translateXProperty().addListener((observable, oldValue, newValue) -> {
             character.setTranslateX(character.getTranslateX() - ((double) oldValue - (double) newValue));
@@ -38,9 +33,6 @@ public class CharacterView extends WorldController {
         camera.translateZProperty().addListener((observable, oldValue, newValue) -> {
             character.setTranslateZ(character.getTranslateZ() - ((double) oldValue - (double) newValue));
         });
-        camera.rotateProperty().addListener((observable, oldValue
-                , newValue) ->
-                character.setRotate(character.getRotate() - ((double) oldValue - (double) newValue)));
         return character;
     }
 
