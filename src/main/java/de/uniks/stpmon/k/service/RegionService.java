@@ -7,9 +7,9 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.world.TileMapService;
 import de.uniks.stpmon.k.service.world.World;
-import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -20,12 +20,10 @@ import java.util.List;
 public class RegionService {
     @Inject
     RegionApiService regionApiService;
-
     @Inject
     RegionStorage regionStorage;
     @Inject
-    protected TileMapService worldLoader;
-
+    TileMapService worldLoader;
     @Inject
     UserStorage userStorage;
 
