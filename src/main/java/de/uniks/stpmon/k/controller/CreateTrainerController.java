@@ -42,6 +42,7 @@ public class CreateTrainerController extends Controller {
 
     public void createTrainer() {
         // This line is for testing purposes when a trainer is available
+        // Should not click on this button until the createTrainer methode is fully created
         hybridControllerProvider.get().openMain(INGAME);
     }
 }
