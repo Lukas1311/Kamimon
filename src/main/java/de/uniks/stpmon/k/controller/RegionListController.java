@@ -34,9 +34,9 @@ public class RegionListController extends PortalController {
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
     @Inject
-    RegionService regionService;
-    @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<RegionController> regionControllerProvider;
 
     protected boolean doesTrainerExist = false;
 
@@ -85,8 +85,9 @@ public class RegionListController extends PortalController {
 
     public void createNewTrainer() {
         Parent createTrainer = createTrainerController.render();
-        if (regionsBorderPane != null && !regionsBorderPane.getChildren().contains(createTrainer)) {
-            regionsBorderPane.setCenter(createTrainer);
-        }
+        if ()
+            if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
+                regionListWrappingVox.getChildren().add(createTrainer);
+            }
     }
 }
