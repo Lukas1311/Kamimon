@@ -9,21 +9,21 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +47,9 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
     App app = new App(null);
+
+
+    @Spy
     @InjectMocks
     TrainerManagementController trainerManagementController;
 
@@ -80,7 +83,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testChangeTrainerName() {
+    void testTryChangeTrainerName() {
         // TODO: region service call
     }
 
@@ -121,6 +124,34 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
     @Test
     void testSaveChanges() {
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final ArgumentCaptor<String> trainerNameCaptor = ArgumentCaptor.forClass(String.class);
 
+        //define mocks
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        when(trainerService.setTrainerName(anyString())).thenReturn(Observable.just(dummytrainer));
+
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+
+        //doNothing().when(trainerManagementController).tryChangeTrainerName();
+
+        //action
+        write("\tBob2");
+        clickOn("#saveChangesButton");
+
+        //check values
+        TextField trainerName = lookup("#trainerNameInput").queryAs(javafx.scene.control.TextField.class);
+        assertEquals("Bob2", trainerName.getText());
+
+        //verify mocks
+        verify(trainerManagementController).tryChangeTrainerName();
+        verify(popupMock).showModal(any());
+        verify(trainerService).setTrainerName(any());
+        //TODO: add method for sprite save here
     }
 }
