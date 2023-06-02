@@ -22,6 +22,10 @@ import javax.inject.Provider;
 
 public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
+    @Inject
+    RegionService regionService;
+    @Inject
+    CreateTrainerController createTrainerController;
     @FXML
     public VBox regionListWrappingVox;
     private int colIndex;
@@ -33,6 +37,8 @@ public class RegionListController extends PortalController {
     RegionService regionService;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+
+    protected boolean doesTrainerExist = false;
 
     @Inject
     public RegionListController() {
@@ -59,8 +65,6 @@ public class RegionListController extends PortalController {
         disposables.add(regionService.getRegions()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(regions::setAll, this::handleError));
-
-
     }
 
     @Override
@@ -73,5 +77,16 @@ public class RegionListController extends PortalController {
 
 
         return parent;
+    }
+
+    public boolean trainerExists() {
+        return doesTrainerExist;
+    }
+
+    public void createNewTrainer() {
+        Parent createTrainer = createTrainerController.render();
+        if (regionsBorderPane != null && !regionsBorderPane.getChildren().contains(createTrainer)) {
+            regionsBorderPane.setCenter(createTrainer);
+        }
     }
 }

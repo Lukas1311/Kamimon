@@ -59,6 +59,7 @@ public class RegionListControllerTest extends ApplicationTest {
         when(regionService.getRegions()).thenReturn(regionMock);
 
         loadingScreen.setSkipLoading(true);
+        regionListController.doesTrainerExist = true;
 
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);

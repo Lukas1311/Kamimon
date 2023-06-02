@@ -133,6 +133,13 @@ class AppTest extends ApplicationTest {
 
         clickOn("#regionImage");
         waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        waitForFxEvents();
+
         verifyThat("#pause", Node::isVisible);
         clickOn("#pause");
         verifyThat("#pauseScreen", Node::isVisible);
@@ -140,6 +147,13 @@ class AppTest extends ApplicationTest {
         verifyThat(regionListGridPane, Node::isVisible);
 
         clickOn("#regionImage");
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        waitForFxEvents();
+
         verifyThat("#ingame", Node::isVisible);
     }
 }
