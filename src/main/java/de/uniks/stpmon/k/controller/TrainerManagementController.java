@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.naming.Binding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class TrainerManagementController extends Controller {
     public Button deleteTrainerButton;
     @FXML
     public Button saveChangesButton;
+
     @FXML
     public Button backButton;
     @FXML
@@ -63,6 +65,8 @@ public class TrainerManagementController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        currentTrainer = trainerService.getMe();
+
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         // TODO: all ui functionality here
@@ -70,6 +74,8 @@ public class TrainerManagementController extends Controller {
         backButton.setOnAction(click -> backToSettings());
         deleteTrainerButton.setOnAction(click -> deleteTrainer());
         trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
+        saveChangesButton.setOnMouseClicked((click -> saveChanges()));
+
         return parent;
     }
 
@@ -78,8 +84,22 @@ public class TrainerManagementController extends Controller {
         hybridControllerProvider.get().popTab();
     }
 
-    public void changeTrainerName() {
-        // TODO: change the trainer name -> region service
+    public void tryChangeTrainerName() {
+        // TODO: change the trainer name -> region service ??? still needed?
+        String newName = trainerNameInput.getText();
+        if (newName == null || newName.equals("") || newName.length() > 32) {
+            trainerNameInput.setText(currentTrainer.name());
+            return;
+        }
+        disposables.add(trainerService
+                .setTrainerName(newName)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(trainer -> {
+                    currentTrainer = trainer;
+                }, err -> {
+                    trainerNameInput.setText(currentTrainer.name());
+                })
+        );
     }
 
     public void openTrainerSpriteEditor() {
@@ -88,13 +108,12 @@ public class TrainerManagementController extends Controller {
     }
 
     public void saveChanges() {
-        // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                // TODO: save changes
-            } else if (buttonType == ButtonType.CANCEL) {
-                // do nothing
+        showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
+            if (!result) {
+                return;
             }
+            tryChangeTrainerName();
+            // TODO: change sprite here
         });
     }
 

@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -62,16 +63,16 @@ public class SettingsController extends Controller {
         rectangle.setArcWidth(20);
         rectangle.setArcHeight(20);
         userSprite.setClip(rectangle);
-
-        usernameProperty.set(userStorage.getUser().name());
         User user = userStorage.getUser();
+        usernameProperty.set(user.name());
+
         usernameValue.textProperty().bind(usernameProperty);
         // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
-        
+        // TODO disable edit trainer button if no region
+        //editTrainerButton.disableProperty().bind(Bindings.equal(null, user.region??));
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
         editTrainerButton.setOnAction(click -> editTrainer());
-
 
         return parent;
     }
