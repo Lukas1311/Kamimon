@@ -81,9 +81,8 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
-        write("\t\t\t\t\t\t\t");
-        type(KeyCode.ENTER).release(KeyCode.ENTER);
-        //clickOn("#newChatButton");
+        write("\t\t\t\t");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
@@ -104,8 +103,7 @@ class HybridControllerTest extends ApplicationTest {
     public void toIngame() {
 
         // pressing Region button and check if ingame is shown
-        write("\t\t\t\t\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        clickOn("#regionImage");
         waitForFxEvents();
 
         // create a new trainer
