@@ -35,8 +35,6 @@ public class RegionListController extends PortalController {
     private ImageView imageViewKamimonLetteringRegion;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-    @Inject
-    Provider<RegionController> regionControllerProvider;
 
     protected boolean doesTrainerExist = false;
 
@@ -48,12 +46,12 @@ public class RegionListController extends PortalController {
     private void addRegionToGridPane() {
         RegionListController listController = this;
         RegionController regionController = new RegionController(regions.get(colIndex), listController);
-        regionController.render();
+        Parent parent = regionController.render();
         ColumnConstraints column = new ColumnConstraints(300, 300, Double.MAX_VALUE);
         column.setHgrow(Priority.ALWAYS);
         column.setHalignment(HPos.CENTER);
         regionListGridPane.getColumnConstraints().add(column);
-        regionListGridPane.add(regionController.getNode(), colIndex, 0);
+        regionListGridPane.add(parent, colIndex, 0);
 
     }
 
@@ -74,8 +72,6 @@ public class RegionListController extends PortalController {
         imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
 
         regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
-
-
         return parent;
     }
 
@@ -85,9 +81,9 @@ public class RegionListController extends PortalController {
 
     public void createNewTrainer() {
         Parent createTrainer = createTrainerController.render();
-        if ()
-            if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
-                regionListWrappingVox.getChildren().add(createTrainer);
-            }
+        if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
+            regionListWrappingVox.getChildren().clear();
+            regionListWrappingVox.getChildren().add(createTrainer);
+        }
     }
 }
