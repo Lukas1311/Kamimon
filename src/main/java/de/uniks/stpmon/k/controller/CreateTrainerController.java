@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
@@ -24,6 +25,8 @@ import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 public class CreateTrainerController extends Controller {
     @FXML
     public TextField createTrainerInput;
+    @FXML
+    public Label trainerNameInfo;
     @FXML
     public ImageView trainerSprite;
     @FXML
@@ -49,6 +52,12 @@ public class CreateTrainerController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        trainerNameInfo.textProperty().bind(
+            Bindings.when(trainerNameTooLong)
+            .then(translateString("trainername.too.long"))
+            .otherwise("")
+        );
 
         // these three elements have to be disabled when pop up is shown
         trainerSprite.disableProperty().bind(isPopUpShown);
