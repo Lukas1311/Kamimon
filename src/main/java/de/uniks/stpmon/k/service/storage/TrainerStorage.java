@@ -8,17 +8,17 @@ import javax.inject.Singleton;
 @Singleton
 public class TrainerStorage {
 
-    Trainer Trainer;
+    Trainer trainer;
 
     @Inject
     public TrainerStorage() {
     }
 
     public Trainer getTrainer() {
-        return Trainer;
+        return trainer;
     }
 
     public void setTrainer(Trainer Trainer) {
-        this.Trainer = Trainer;
+        this.trainer = Trainer;
     }
 }

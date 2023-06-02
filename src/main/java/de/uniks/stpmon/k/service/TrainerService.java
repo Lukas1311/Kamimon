@@ -22,6 +22,7 @@ public class TrainerService {
     }
 
     public Trainer getMe() {
+
         return trainerStorage.getTrainer();
     }
 

@@ -428,7 +428,7 @@ Load fonts
     -fx-text-fill: black;
     -fx-background-color: white;
     -fx-border-color: black;
-    -fx-border-width: 2px;
+    -fx-border-width: 3px;
 }
 /* -------------------- Border for RegionPane -------------------- */
 .region-pane-border {
