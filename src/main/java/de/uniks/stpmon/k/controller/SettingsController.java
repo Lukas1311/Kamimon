@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -59,8 +58,6 @@ public class SettingsController extends Controller {
     private final SimpleStringProperty usernameProperty = new SimpleStringProperty();
     private final SimpleStringProperty regionProperty = new SimpleStringProperty();
     private final SimpleStringProperty trainerProperty = new SimpleStringProperty();
-
-    private final SimpleBooleanProperty hello = new SimpleBooleanProperty(true);
 
     @Inject
     public SettingsController() {
