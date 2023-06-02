@@ -44,6 +44,10 @@ public class CreateTrainerController extends Controller {
     Provider<HybridController> hybridControllerProvider;
 
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+    private final SimpleStringProperty trainerName = new SimpleStringProperty();
+    private BooleanBinding trainerNameTooLong;
+    private BooleanBinding trainerNameInvalid;
+    
 
 
     @Inject
@@ -52,6 +56,11 @@ public class CreateTrainerController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        trainerNameTooLong = trainerName.length().greaterThan(32);
+        trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
+
+        createTrainerInput.textProperty().bindBidirectional(trainerName);
 
         trainerNameInfo.textProperty().bind(
             Bindings.when(trainerNameTooLong)
@@ -62,7 +71,7 @@ public class CreateTrainerController extends Controller {
         // these three elements have to be disabled when pop up is shown
         trainerSprite.disableProperty().bind(isPopUpShown);
         createSpriteButton.disableProperty().bind(isPopUpShown);
-        createTrainerButton.disableProperty().bind(isPopUpShown);
+        createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
 
         return parent;
     }
