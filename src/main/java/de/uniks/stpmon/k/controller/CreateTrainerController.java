@@ -1,15 +1,18 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -42,7 +45,10 @@ public class CreateTrainerController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    RegionStorage regionStorage;
 
+    private Region currentRegion = regionStorage.getRegion();
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
@@ -85,9 +91,9 @@ public class CreateTrainerController extends Controller {
     public void createTrainer() {
         showPopUp(PopUpScenario.CREATE_TRAINER, result -> {
             if (!result) return;
-            // TODO: get values regionId, name and image
+            // TODO: get image id string of the sprite
             disposables.add(regionService
-                .createTrainer(null, null, null)
+                .createTrainer(currentRegion._id(), trainerName.get(), "string")
                 .observeOn(FX_SCHEDULER)
                 .subscribe(trainer -> {
                     hybridControllerProvider.get().openMain(INGAME);
