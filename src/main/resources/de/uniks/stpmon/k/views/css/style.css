@@ -426,7 +426,6 @@ Load fonts
 
 .create-trainer-text-input {
     -fx-text-fill: black;
-    -fx-color-light-grey
     -fx-background-color: white;
     -fx-border-color: black;
     -fx-border-width: 2px;
