@@ -2,9 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
-import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -44,11 +43,15 @@ public class SettingsController extends Controller {
     @Inject
     UserStorage userStorage;
     @Inject
+    TrainerService trainerService;
+    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<UserManagementController> userManagementControllerProvider;
 
     private final SimpleStringProperty usernameProperty = new SimpleStringProperty();
+    private final SimpleStringProperty regionProperty = new SimpleStringProperty();
+    private final SimpleStringProperty trainerProperty = new SimpleStringProperty();
 
     @Inject
     public SettingsController() {
@@ -64,16 +67,31 @@ public class SettingsController extends Controller {
         userSprite.setClip(rectangle);
 
         usernameProperty.set(userStorage.getUser().name());
-        User user = userStorage.getUser();
         usernameValue.textProperty().bind(usernameProperty);
-        // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
-        
+
+        if (trainerService.getMe() != null) {
+            trainerProperty.set(trainerService.getMe().name());
+            userTrainerValue.textProperty().bind(trainerProperty);
+            regionProperty.set(trainerService.getMe().region());
+            userRegionValue.textProperty().bind(regionProperty);
+
+        } else {
+            disableTrainer(false);
+        }
+
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
         editTrainerButton.setOnAction(click -> editTrainer());
 
 
         return parent;
+    }
+
+    public void disableTrainer(Boolean disable) {
+        userTrainer.setVisible(disable);
+        userTrainerValue.setVisible(disable);
+        userRegion.setVisible(disable);
+        userRegionValue.setVisible(disable);
     }
 
     public void backToMainScreen() {
