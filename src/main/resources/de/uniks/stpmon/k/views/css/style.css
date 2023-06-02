@@ -418,3 +418,9 @@ Load fonts
 /* -------------------- Chat -------------------- */
 
 /* -------------------- Settings -------------------- */
+
+/* -------------------- Border for RegionPane -------------------- */
+.region-pane-border {
+	-fx-border-color: black; /* Border color */
+	-fx-border-width: 10px; /* Border width */
+}
