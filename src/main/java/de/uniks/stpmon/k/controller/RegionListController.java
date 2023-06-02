@@ -23,6 +23,8 @@ public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
     RegionService regionService;
+    @Inject
+    CreateTrainerController createTrainerController;
     @FXML
     private BorderPane regionsBorderPane;
     @FXML
@@ -30,6 +32,8 @@ public class RegionListController extends PortalController {
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
+
+    protected boolean doesTrainerExist = false;
 
     @Inject
     public RegionListController() {
@@ -47,7 +51,7 @@ public class RegionListController extends PortalController {
     public Parent render() {
         final Parent parent = super.render();
         final Image imageKamimonLettering = loadImage("kamimonLettering.png");
-        //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
+        //imageViewKamimonLetteringRegion.setImage(loadImage("kamimonLettering.png"));
         final ListView<Region> regionListView = new ListView<>(this.regions);
         regionListView.setStyle("-fx-background-color: transparent;");
         regionListView.setMaxWidth(200);
@@ -55,5 +59,16 @@ public class RegionListController extends PortalController {
         VBox.setVgrow(regionListView, Priority.ALWAYS);
         regionListView.setCellFactory(e -> new RegionCell(this));
         return parent;
+    }
+
+    public boolean trainerExists() {
+        return doesTrainerExist;
+    }
+
+    public void createNewTrainer() {
+        Parent createTrainer = createTrainerController.render();
+        if (regionsBorderPane != null && !regionsBorderPane.getChildren().contains(createTrainer)) {
+            regionsBorderPane.setCenter(createTrainer);
+        }
     }
 }

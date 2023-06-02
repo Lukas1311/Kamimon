@@ -418,3 +418,16 @@ Load fonts
 /* -------------------- Chat -------------------- */
 
 /* -------------------- Settings -------------------- */
+
+/* -------------------- Create Trainer -------------------- */
+.create-trainer-background {
+    -fx-background-color: -fx-color-kgm-yellow;
+}
+
+.create-trainer-text-input {
+    -fx-text-fill: black;
+    -fx-color-light-grey
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
