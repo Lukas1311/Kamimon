@@ -83,6 +83,7 @@ class HybridControllerTest extends ApplicationTest {
         // pressing on a chat and check if chatScreen is shown
         write("\t\t\t\t\t\t\t");
         type(KeyCode.ENTER).release(KeyCode.ENTER);
+        //clickOn("#newChatButton");
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
