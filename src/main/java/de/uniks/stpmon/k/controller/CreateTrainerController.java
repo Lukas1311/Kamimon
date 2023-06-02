@@ -1,25 +1,35 @@
 package de.uniks.stpmon.k.controller;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.RegionService;
-import javafx.scene.Parent;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-// TODO: add all missing imports and fxml here
+import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 
+import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
-
-// TODO: dummy class
 public class CreateTrainerController extends Controller {
+    @FXML
+    public TextField createTrainerInput;
+    @FXML
+    public ImageView trainerSprite;
+    @FXML
+    public Button createSpriteButton;
+    @FXML
+    public Button createTrainerButton;
 
     @Inject
     RegionService regionService;
@@ -27,22 +37,32 @@ public class CreateTrainerController extends Controller {
     Provider<PopUpController> popUpControllerProvider;
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+
+
+    @Inject
+    public CreateTrainerController() {}
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        // TODO: ...
+
         // these three elements have to be disabled when pop up is shown
-        aPossibleTrainerSprite.disableProperty().bind(isPopUpShown);
-        aPossibleCreateSpriteButton.disableProperty().bind(isPopUpShown);
-        aPossibleCreateTrainerButton.disableProperty().bind(isPopUpShown);
-        // TODO: ...
-        return super.render();
+        trainerSprite.disableProperty().bind(isPopUpShown);
+        createSpriteButton.disableProperty().bind(isPopUpShown);
+        createTrainerButton.disableProperty().bind(isPopUpShown);
+
+        return parent;
     }
-    
-    // TODO: everything missing here just dummy
+
+    public void trainerSprite() {
+    }
+
+    public void createSprite() {
+    }
 
     public void createTrainer() {
         showPopUp(PopUpScenario.CREATE_TRAINER, result -> {
@@ -52,9 +72,8 @@ public class CreateTrainerController extends Controller {
                 .createTrainer(null, null, null)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(trainer -> {
-                    app.show(ingameControllerProvider.get());
+                    hybridControllerProvider.get().openMain(INGAME);
                 })
-
             );
         });
     }
@@ -67,3 +86,4 @@ public class CreateTrainerController extends Controller {
         isPopUpShown.set(false);
     }
 }
+
