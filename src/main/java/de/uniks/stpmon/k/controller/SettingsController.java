@@ -57,6 +57,8 @@ public class SettingsController extends Controller {
     Provider<UserManagementController> userManagementControllerProvider;
 
     private final SimpleStringProperty usernameProperty = new SimpleStringProperty();
+    private final SimpleStringProperty regionProperty = new SimpleStringProperty();
+    private final SimpleStringProperty trainerProperty = new SimpleStringProperty();
 
     private final SimpleBooleanProperty hello = new SimpleBooleanProperty(true);
 
@@ -72,18 +74,39 @@ public class SettingsController extends Controller {
         rectangle.setArcWidth(20);
         rectangle.setArcHeight(20);
         userSprite.setClip(rectangle);
+
         User user = userStorage.getUser();
-        usernameProperty.set(user.name());
 
         usernameValue.textProperty().bind(usernameProperty);
         // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
-        // TODO disable edit trainer button if no region
+
         editTrainerButton.disableProperty().bind(trainerStorage.getTrainerNotLoaded());
+
+        usernameProperty.set(user.name());
+        usernameValue.textProperty().bind(usernameProperty);
+
+        if (trainerService.getMe() != null) {
+            trainerProperty.set(trainerService.getMe().name());
+            userTrainerValue.textProperty().bind(trainerProperty);
+            regionProperty.set(trainerService.getMe().region());
+            userRegionValue.textProperty().bind(regionProperty);
+
+        } else {
+            disableTrainer(false);
+        }
+
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
         editTrainerButton.setOnAction(click -> editTrainer());
 
         return parent;
+    }
+
+    public void disableTrainer(Boolean disable) {
+        userTrainer.setVisible(disable);
+        userTrainerValue.setVisible(disable);
+        userRegion.setVisible(disable);
+        userRegionValue.setVisible(disable);
     }
 
     public void backToMainScreen() {

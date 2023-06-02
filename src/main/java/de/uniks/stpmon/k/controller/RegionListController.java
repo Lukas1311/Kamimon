@@ -3,15 +3,15 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.views.RegionCell;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.scene.Parent;
-import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -26,10 +26,12 @@ public class RegionListController extends PortalController {
     @Inject
     CreateTrainerController createTrainerController;
     @FXML
-    private BorderPane regionsBorderPane;
+    public VBox regionListWrappingVox;
+    private int colIndex;
+    @FXML
+    public GridPane regionListGridPane;
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
-
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
@@ -40,8 +42,23 @@ public class RegionListController extends PortalController {
 
     }
 
+    private void addRegionToGridPane() {
+        RegionListController listController = this;
+        RegionController regionController = new RegionController(regions.get(colIndex), listController);
+        Parent parent = regionController.render();
+        ColumnConstraints column = new ColumnConstraints(300, 300, Double.MAX_VALUE);
+        column.setHgrow(Priority.ALWAYS);
+        column.setHalignment(HPos.CENTER);
+        regionListGridPane.getColumnConstraints().add(column);
+        regionListGridPane.add(parent, colIndex, 0);
+
+    }
+
     @Override
     public void init() {
+        colIndex = 0;
+        ListChangeListener<Region> listener = c -> addRegionToGridPane();
+        regions.addListener(listener);
         disposables.add(regionService.getRegions()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(regions::setAll, this::handleError));
@@ -50,14 +67,10 @@ public class RegionListController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        final Image imageKamimonLettering = loadImage("kamimonLettering.png");
-        //imageViewKamimonLetteringRegion.setImage(loadImage("kamimonLettering.png"));
-        final ListView<Region> regionListView = new ListView<>(this.regions);
-        regionListView.setStyle("-fx-background-color: transparent;");
-        regionListView.setMaxWidth(200);
-        regionsBorderPane.setCenter(regionListView);
-        VBox.setVgrow(regionListView, Priority.ALWAYS);
-        regionListView.setCellFactory(e -> new RegionCell(this));
+        //final Image imageKamimonLettering = loadImage("kamimonLettering.png");
+        //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
+
+        regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
         return parent;
     }
 
@@ -67,8 +80,9 @@ public class RegionListController extends PortalController {
 
     public void createNewTrainer() {
         Parent createTrainer = createTrainerController.render();
-        if (regionsBorderPane != null && !regionsBorderPane.getChildren().contains(createTrainer)) {
-            regionsBorderPane.setCenter(createTrainer);
+        if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
+            regionListWrappingVox.getChildren().clear();
+            regionListWrappingVox.getChildren().add(createTrainer);
         }
     }
 }

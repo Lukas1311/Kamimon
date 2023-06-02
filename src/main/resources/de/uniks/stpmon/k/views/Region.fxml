@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.RegionController">
-   <children>
-      <Button fx:id="regionButton" maxHeight="40.0" maxWidth="150.0" minHeight="40.0" minWidth="150.0" mnemonicParsing="false" text="Button" VBox.vgrow="SOMETIMES">
-         <font>
-            <Font size="18.0" />
-         </font></Button>
-   </children>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<VBox fx:id="regionVBox" alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.RegionController">
+    <Text fx:id="regionNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+    <BorderPane fx:id="imageWrappingPane" styleClass="region-pane-border" stylesheets="@css/style.css">
+        <center>
+            <ImageView fx:id="regionImage" pickOnBounds="true" preserveRatio="true"/>
+        </center>
+    </BorderPane>
 </VBox>

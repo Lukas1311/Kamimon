@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 @Singleton
 public class TrainerStorage {
 
-    Trainer Trainer;
+    Trainer trainer;
 
     private SimpleBooleanProperty trainerNotLoaded = new SimpleBooleanProperty(true);
 
@@ -18,11 +18,11 @@ public class TrainerStorage {
     }
 
     public Trainer getTrainer() {
-        return Trainer;
+        return trainer;
     }
 
     public void setTrainer(Trainer Trainer) {
-        this.Trainer = Trainer;
+        this.trainer = Trainer;
         trainerNotLoaded.set(Trainer == null);
     }
 

@@ -7,9 +7,9 @@ import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -75,12 +76,13 @@ public class RegionListControllerTest extends ApplicationTest {
         when(regionService.enterRegion(any()))
                 .thenReturn(Observable.just(new World(null, null, List.of())));
 
-        BorderPane borderPane = lookup("#regionsBorderPane").query();
-        ListView<?> listView = (ListView<?>) borderPane.getChildren().get(0);
-        Button button = (Button) listView.lookup("#regionButton");
-        assertEquals("Test", button.getText());
 
-        clickOn(button);
+        GridPane regionListGridPane = lookup("#regionListGridPane").query();
+        assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
+        Text regionName = lookup("#regionNameText").queryText();
+        assertEquals("Test", regionName.getText());
+        ImageView regionImage = lookup("#regionImage").query();
+        clickOn(regionImage);
         waitForFxEvents();
 
         verify(regionService).enterRegion(any());
