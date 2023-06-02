@@ -7,11 +7,12 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
@@ -54,6 +55,11 @@ public class TrainerManagementController extends Controller {
 
     private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+    private final SimpleStringProperty trainerName = new SimpleStringProperty();
+    private BooleanBinding trainerNameTooLong;
+    private BooleanBinding trainerNameInvalid;
+    private Boolean changesSaved = false;
+    private BooleanBinding changesMade;
 
     @Inject
     public TrainerManagementController() {
@@ -65,7 +71,16 @@ public class TrainerManagementController extends Controller {
 
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        // TODO: all ui functionality here
+        trainerNameTooLong = trainerName.length().greaterThan(32);
+        trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
+        changesMade = trainerNameInvalid.not();
+
+        trainerNameInput.textProperty().bindBidirectional(trainerName);
+
+        // set bindings to buttons that should be disabled after the popup is shown
+        saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
+        deleteTrainerButton.disableProperty().bind(isPopUpShown);
+        
 
         backButton.setOnAction(click -> backToSettings());
         deleteTrainerButton.setOnAction(click -> deleteTrainer());
