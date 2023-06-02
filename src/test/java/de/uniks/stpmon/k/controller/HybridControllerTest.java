@@ -59,7 +59,7 @@ class HybridControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-
+        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         BufferedImage images = new BufferedImage(1, 1,
                 BufferedImage.TYPE_INT_RGB);
         worldStorage.setWorld(new World(images, images, new ArrayList<>()));

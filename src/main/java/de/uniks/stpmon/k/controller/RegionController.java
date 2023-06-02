@@ -39,7 +39,6 @@ public class RegionController extends Controller {
         regionImage.setImage(loadImage("dummyRegionImage.png"));
         regionImage.setOnMouseClicked(event -> listController.enterRegion(region));
         regionImage.setFitWidth(vboxWidth - borderSize * 2);
-        imageWrappingPane.setStyle("-fx-background-color: #4c65a1");
         imageWrappingPane.setPrefWidth(400);
         imageWrappingPane.setPrefHeight(regionImage.getFitHeight() + borderSize * 2);
 
