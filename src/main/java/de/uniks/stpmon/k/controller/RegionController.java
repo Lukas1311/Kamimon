@@ -4,14 +4,11 @@ import de.uniks.stpmon.k.models.Region;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 
 public class RegionController extends Controller {
     private final Region region;
     @FXML
     private Button regionButton;
-    @FXML
-    private BorderPane regionBorderPane;
 
     private final RegionListController listController;
 
@@ -25,7 +22,13 @@ public class RegionController extends Controller {
 
         final Parent parent = super.render();
         regionButton.setText(region.name());
-        regionButton.setOnAction(event -> listController.enterRegion(region));
+        regionButton.setOnAction(event -> {
+            if (!listController.trainerExists()) {
+                listController.createNewTrainer();
+            } else {
+                listController.enterRegion(region);
+            }
+        });
         return parent;
     }
 }
