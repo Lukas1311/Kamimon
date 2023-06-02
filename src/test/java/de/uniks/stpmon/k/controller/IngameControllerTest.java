@@ -45,6 +45,10 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MonsterBarController monsterBarController = new MonsterBarController();
 
+    @Spy
+    @SuppressWarnings("unused")
+    MinimapController minimapController = new MinimapController();
+
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
