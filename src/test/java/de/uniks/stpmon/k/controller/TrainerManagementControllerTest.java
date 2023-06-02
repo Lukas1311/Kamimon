@@ -138,8 +138,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
             return null;
         }).when(popupMock).showModal(any());
 
-        //doNothing().when(trainerManagementController).tryChangeTrainerName();
-
         //action
         write("\tBob2");
         clickOn("#saveChangesButton");

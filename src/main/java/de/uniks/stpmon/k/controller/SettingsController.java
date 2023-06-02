@@ -3,9 +3,12 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -45,11 +48,17 @@ public class SettingsController extends Controller {
     @Inject
     UserStorage userStorage;
     @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    TrainerService trainerService;
+    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<UserManagementController> userManagementControllerProvider;
 
     private final SimpleStringProperty usernameProperty = new SimpleStringProperty();
+
+    private final SimpleBooleanProperty hello = new SimpleBooleanProperty(true);
 
     @Inject
     public SettingsController() {
@@ -69,7 +78,7 @@ public class SettingsController extends Controller {
         usernameValue.textProperty().bind(usernameProperty);
         // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
         // TODO disable edit trainer button if no region
-        //editTrainerButton.disableProperty().bind(Bindings.equal(null, user.region??));
+        editTrainerButton.disableProperty().bind(trainerStorage.getTrainerNotLoaded());
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
         editTrainerButton.setOnAction(click -> editTrainer());
