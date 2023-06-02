@@ -10,11 +10,10 @@ import de.uniks.stpmon.k.service.world.World;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -114,7 +113,7 @@ class AppTest extends ApplicationTest {
         assertThat(!groupname.getText().isEmpty()).isTrue();
 
         TextField messagefield = lookup("#messageField").query();
-        clickOn("#messageField");
+        clickOn(messagefield);
         write("t");
         waitForFxEvents();
 
@@ -127,11 +126,12 @@ class AppTest extends ApplicationTest {
 
         //close friends sidebar
         clickOn("#friends");
-        BorderPane regionList = lookup("#regionsBorderPane").query();
-        ListView<?> regionsListView = (ListView<?>) regionList.getChildren().get(0);
-        assertThat(regionsListView.getItems().size()).isEqualTo(2);
 
-        clickOn("#regionButton");
+        //check that there are two test regions
+        GridPane regionListGridPane = lookup("#regionListGridPane").query();
+        assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
+
+        clickOn("#regionImage");
         waitForFxEvents();
 
         // create a new trainer
@@ -144,9 +144,9 @@ class AppTest extends ApplicationTest {
         clickOn("#pause");
         verifyThat("#pauseScreen", Node::isVisible);
         clickOn("#logoutButton");
-        verifyThat(regionsListView, Node::isVisible);
+        verifyThat(regionListGridPane, Node::isVisible);
 
-        clickOn("#regionButton");
+        clickOn("#regionImage");
 
         // create a new trainer
         clickOn("#createTrainerInput");

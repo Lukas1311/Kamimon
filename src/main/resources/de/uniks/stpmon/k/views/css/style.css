@@ -430,3 +430,8 @@ Load fonts
     -fx-border-color: black;
     -fx-border-width: 3px;
 }
+/* -------------------- Border for RegionPane -------------------- */
+.region-pane-border {
+	-fx-border-color: black; /* Border color */
+	-fx-border-width: 10px; /* Border width */
+}
