@@ -11,7 +11,7 @@ public class TrainerStorage {
 
     Trainer trainer;
 
-    private SimpleBooleanProperty trainerNotLoaded = new SimpleBooleanProperty(true);
+    private final SimpleBooleanProperty trainerLoaded = new SimpleBooleanProperty(false);
 
     @Inject
     public TrainerStorage() {
@@ -23,10 +23,10 @@ public class TrainerStorage {
 
     public void setTrainer(Trainer Trainer) {
         this.trainer = Trainer;
-        trainerNotLoaded.set(Trainer == null);
+        trainerLoaded.set(Trainer != null);
     }
 
-    public SimpleBooleanProperty getTrainerNotLoaded(){
-        return trainerNotLoaded;
+    public SimpleBooleanProperty getTrainerLoaded(){
+        return trainerLoaded;
     }
 }

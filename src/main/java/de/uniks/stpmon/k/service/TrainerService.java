@@ -28,8 +28,8 @@ public class TrainerService {
         return trainerStorage.getTrainer();
     }
 
-    public SimpleBooleanProperty getTrainerNotLoaded(){
-        return trainerStorage.getTrainerNotLoaded();
+    public SimpleBooleanProperty getTrainerLoaded(){
+        return trainerStorage.getTrainerLoaded();
     }
 
     public Observable<Trainer> deleteMe() {

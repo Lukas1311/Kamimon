@@ -76,11 +76,13 @@ public class SettingsController extends Controller {
         userSprite.setClip(rectangle);
 
         User user = userStorage.getUser();
+        SimpleBooleanProperty trainerLoaded = trainerStorage.getTrainerLoaded();
 
-        usernameValue.textProperty().bind(usernameProperty);
-        // TODO userRegionValue.setText(user.region()); and userTrainerValue.setText(user.trainer());
-
-        editTrainerButton.disableProperty().bind(trainerStorage.getTrainerNotLoaded());
+        editTrainerButton.disableProperty().bind(trainerLoaded.not());
+        userTrainerValue.visibleProperty().bind(trainerLoaded);
+        userTrainer.visibleProperty().bind(trainerLoaded);
+        userRegion.visibleProperty().bind(trainerLoaded);
+        userRegionValue.visibleProperty().bind(trainerLoaded);
 
         usernameProperty.set(user.name());
         usernameValue.textProperty().bind(usernameProperty);
@@ -91,8 +93,6 @@ public class SettingsController extends Controller {
             regionProperty.set(trainerService.getMe().region());
             userRegionValue.textProperty().bind(regionProperty);
 
-        } else {
-            disableTrainer(false);
         }
 
         backButton.setOnAction(click -> backToMainScreen());
@@ -100,13 +100,6 @@ public class SettingsController extends Controller {
         editTrainerButton.setOnAction(click -> editTrainer());
 
         return parent;
-    }
-
-    public void disableTrainer(Boolean disable) {
-        userTrainer.setVisible(disable);
-        userTrainerValue.setVisible(disable);
-        userRegion.setVisible(disable);
-        userRegionValue.setVisible(disable);
     }
 
     public void backToMainScreen() {
