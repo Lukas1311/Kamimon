@@ -89,12 +89,17 @@ public class TrainerManagementController extends Controller {
     }
 
     public void backToSettings() {
-        // TODO: add pop confirmation only when unsaved settings
+        if (hasUnsavedChanges()) {
+            showPopUp(PopUpScenario.UNSAVED_CHANGES, result -> {
+                if (!result) return;
+                saveSettings();
+            });
+        }
         hybridControllerProvider.get().popTab();
     }
 
-    public void changeTrainerName() {
-        // TODO: change the trainer name -> region service
+    public Boolean hasUnsavedChanges() {
+        return changesMade.get() && !changesSaved;
     }
 
     public void openTrainerSpriteEditor() {
@@ -103,14 +108,29 @@ public class TrainerManagementController extends Controller {
     }
 
     public void saveChanges() {
-        // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                // TODO: save changes
-            } else if (buttonType == ButtonType.CANCEL) {
-                // do nothing
-            }
+        showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
+            if (!result) return;
+            saveSettings();
+            changesSaved = true;
         });
+    }
+
+    public void saveSettings() {
+        if (!trainerNameInvalid.get()) {
+            saveTrainerName(trainerName.get());
+        }
+    }
+
+    private void saveTrainerName(String newTrainerName) {
+        if (trainerNameInvalid.get()) return;
+        disposables.add(
+            trainerService.setTrainerName(newTrainerName).observeOn(FX_SCHEDULER).subscribe(trainer -> {
+                // set this to retrieve the newly set trainerName
+                currentTrainer = trainer;
+            }, err -> {
+                // nothing
+            })
+        );
     }
 
     public void deleteTrainer() {
