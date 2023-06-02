@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.BackpackController;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.MinimapController;
 import de.uniks.stpmon.k.controller.MonsterBarController;
@@ -51,6 +52,10 @@ public class WorldViewTest extends ApplicationTest {
     @Spy
     @SuppressWarnings("unused")
     MinimapController minimapController = new MinimapController();
+
+    @Mock
+    @SuppressWarnings("unused")
+    BackpackController backpackController = new BackpackController();
 
     WorldStorage worldStorage = component.worldStorage();
 

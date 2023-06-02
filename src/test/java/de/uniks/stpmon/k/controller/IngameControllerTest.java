@@ -49,6 +49,10 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MinimapController minimapController = new MinimapController();
 
+    @Spy
+    @SuppressWarnings("unused")
+    BackpackController backpackController = new BackpackController();
+
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
