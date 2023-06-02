@@ -103,7 +103,7 @@ class HybridControllerTest extends ApplicationTest {
     public void toIngame() {
 
         // pressing Region button and check if ingame is shown
-        clickOn("#regionImage");
+        clickOn("#regionVBox");
         waitForFxEvents();
 
         // create a new trainer
@@ -177,7 +177,7 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#pane");
         waitForFxEvents();
 
-        clickOn("#regionButton");
+        clickOn("#regionVBox");
         waitForFxEvents();
 
         // create a new trainer
