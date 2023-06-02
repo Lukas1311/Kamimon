@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -53,13 +52,13 @@ public class TrainerManagementController extends Controller {
     @Inject
     Provider<LobbyController> lobbyControllerProvider;
 
-    private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
     private BooleanBinding trainerNameInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
+    private Trainer currentTrainer;
 
     @Inject
     public TrainerManagementController() {
@@ -69,6 +68,7 @@ public class TrainerManagementController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        currentTrainer = trainerService.getMe();
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         trainerNameTooLong = trainerName.length().greaterThan(32);
@@ -135,7 +135,7 @@ public class TrainerManagementController extends Controller {
 
     public void deleteTrainer() {
         PopUpScenario deleteScenario = PopUpScenario.DELETE_TRAINER;
-        deleteScenario.setParams(new ArrayList<>(List.of("trainerName")));
+        deleteScenario.setParams(new ArrayList<>(List.of(currentTrainer.name())));
         showPopUp(PopUpScenario.DELETE_TRAINER, result -> {
             if (!result) return;
             disposables.add(trainerService
