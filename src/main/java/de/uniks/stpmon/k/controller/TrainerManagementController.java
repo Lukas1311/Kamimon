@@ -53,7 +53,7 @@ public class TrainerManagementController extends Controller {
     Provider<LobbyController> lobbyControllerProvider;
 
 
-    private Trainer currentTrainer = trainerService.getMe();
+    private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
@@ -69,6 +69,7 @@ public class TrainerManagementController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        currentTrainer = trainerService.getMe();
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         trainerNameTooLong = trainerName.length().greaterThan(32);

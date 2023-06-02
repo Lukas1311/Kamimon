@@ -48,7 +48,7 @@ public class CreateTrainerController extends Controller {
     @Inject
     RegionStorage regionStorage;
 
-    private Region currentRegion = regionStorage.getRegion();
+    private Region currentRegion;
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
@@ -62,6 +62,8 @@ public class CreateTrainerController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        currentRegion = regionStorage.getRegion();
 
         trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
