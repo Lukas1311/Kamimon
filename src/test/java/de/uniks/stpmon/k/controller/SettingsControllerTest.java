@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -22,7 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SettingsControllerTest extends ApplicationTest {
@@ -36,11 +39,12 @@ public class SettingsControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Mock
+    Provider<HybridController> hybridControllerProvider;
+    @Mock
     UserStorage userStorage;
     @Mock
     @SuppressWarnings("unused")
     TrainerService trainerService;
-
     @InjectMocks
     SettingsController settingsController;
 
@@ -50,7 +54,7 @@ public class SettingsControllerTest extends ApplicationTest {
         NPCInfo npcInfo = new NPCInfo(false);
         Trainer trainer = new Trainer(
                 "1", "RegionA", "TestUser", "Bob", "0", 0, "0", 0, 0, 0, npcInfo);
-        when(trainerStorage.getTrainer()).thenReturn(trainer);
+        lenient().when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         // set user
         when(userStorage.getUser()).thenReturn(new User("1", "TestUser", "1", "1", new ArrayList<>()));
@@ -70,5 +74,35 @@ public class SettingsControllerTest extends ApplicationTest {
         assertEquals("TestUser", trainerStorage.getTrainer().user());
         assertEquals("RegionA", trainerStorage.getTrainer().region());
         assertEquals("Bob", trainerStorage.getTrainer().name());
+    }
+
+    @Test
+    public void backButton() {
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+        doNothing().when(mock).forceTab(SidebarTab.SETTINGS);
+
+        clickOn("#backButton");
+        verify(mock).forceTab(SidebarTab.SETTINGS);
+    }
+
+    @Test
+    public void editUser() {
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+        doNothing().when(mock).pushTab(SidebarTab.USER_MANAGEMENT);
+
+        clickOn("#editUserButton");
+        verify(mock).pushTab(SidebarTab.USER_MANAGEMENT);
+    }
+
+    @Test
+    public void editTrainer() {
+        final HybridController mock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(mock);
+        doNothing().when(mock).pushTab(SidebarTab.TRAINER_MANAGEMENT);
+
+        clickOn("#editTrainerButton");
+        verify(mock).pushTab(SidebarTab.TRAINER_MANAGEMENT);
     }
 }
