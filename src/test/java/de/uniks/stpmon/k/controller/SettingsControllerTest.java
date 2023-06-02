@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +50,7 @@ public class SettingsControllerTest extends ApplicationTest {
     SettingsController settingsController;
 
     @Override
+
     public void start(Stage stage) throws Exception {
         // set trainer
         NPCInfo npcInfo = new NPCInfo(false);
@@ -58,6 +60,7 @@ public class SettingsControllerTest extends ApplicationTest {
 
         // set user
         when(userStorage.getUser()).thenReturn(new User("1", "TestUser", "1", "1", new ArrayList<>()));
+        when(trainerStorage.getTrainerLoaded()).thenReturn(new SimpleBooleanProperty(true));
 
         // show app
         app.start(stage);
