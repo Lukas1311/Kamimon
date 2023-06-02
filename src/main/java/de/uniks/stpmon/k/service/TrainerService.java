@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableObjectValue;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,6 +26,10 @@ public class TrainerService {
     public Trainer getMe() {
 
         return trainerStorage.getTrainer();
+    }
+
+    public SimpleBooleanProperty getTrainerLoaded(){
+        return trainerStorage.getTrainerLoaded();
     }
 
     public Observable<Trainer> deleteMe() {

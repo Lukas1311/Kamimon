@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.naming.Binding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class TrainerManagementController extends Controller {
     public Button deleteTrainerButton;
     @FXML
     public Button saveChangesButton;
+
     @FXML
     public Button backButton;
     @FXML
@@ -86,6 +88,8 @@ public class TrainerManagementController extends Controller {
         backButton.setOnAction(click -> backToSettings());
         deleteTrainerButton.setOnAction(click -> deleteTrainer());
         trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
+        saveChangesButton.setOnMouseClicked((click -> saveChanges()));
+
         return parent;
     }
 
@@ -99,13 +103,12 @@ public class TrainerManagementController extends Controller {
         hybridControllerProvider.get().popTab();
     }
 
+
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
-    }
 
     public void openTrainerSpriteEditor() {
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
-
     }
 
     public void saveChanges() {
@@ -120,6 +123,7 @@ public class TrainerManagementController extends Controller {
         if (!trainerNameInvalid.get()) {
             saveTrainerName(trainerName.get());
         }
+        // TODO: change sprite here
     }
 
     private void saveTrainerName(String newTrainerName) {
