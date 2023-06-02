@@ -52,13 +52,14 @@ public class TrainerManagementController extends Controller {
     @Inject
     Provider<LobbyController> lobbyControllerProvider;
 
+
+    private Trainer currentTrainer = trainerService.getMe();
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
     private BooleanBinding trainerNameInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
-    private Trainer currentTrainer;
 
     @Inject
     public TrainerManagementController() {
@@ -68,7 +69,6 @@ public class TrainerManagementController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        currentTrainer = trainerService.getMe();
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         trainerNameTooLong = trainerName.length().greaterThan(32);
