@@ -59,7 +59,7 @@ class HybridControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-
+        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         BufferedImage images = new BufferedImage(1, 1,
                 BufferedImage.TYPE_INT_RGB);
         worldStorage.setWorld(new World(images, images, new ArrayList<>()));
@@ -81,8 +81,8 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
-        write("\t\t\t\t\t\t\t");
-        type(KeyCode.ENTER).release(KeyCode.ENTER);
+        write("\t\t\t\t");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
@@ -103,8 +103,7 @@ class HybridControllerTest extends ApplicationTest {
     public void toIngame() {
 
         // pressing Region button and check if ingame is shown
-        write("\t\t\t\t\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        clickOn("#regionVBox");
         waitForFxEvents();
 
         // create a new trainer
@@ -178,7 +177,7 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#pane");
         waitForFxEvents();
 
-        clickOn("#regionButton");
+        clickOn("#regionVBox");
         waitForFxEvents();
 
         // create a new trainer

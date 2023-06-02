@@ -426,8 +426,12 @@ Load fonts
 
 .create-trainer-text-input {
     -fx-text-fill: black;
-    -fx-color-light-grey
     -fx-background-color: white;
     -fx-border-color: black;
-    -fx-border-width: 2px;
+    -fx-border-width: 3px;
+}
+/* -------------------- Border for RegionPane -------------------- */
+.region-pane-border {
+	-fx-border-color: black; /* Border color */
+	-fx-border-width: 10px; /* Border width */
 }
