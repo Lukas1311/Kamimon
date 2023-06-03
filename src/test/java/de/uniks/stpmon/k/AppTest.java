@@ -152,6 +152,7 @@ class AppTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        clickOn("#approveButton");
         waitForFxEvents();
 
         verifyThat("#ingame", Node::isVisible);
