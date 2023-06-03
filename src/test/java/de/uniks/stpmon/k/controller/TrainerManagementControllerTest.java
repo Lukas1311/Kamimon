@@ -142,7 +142,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         clickOn("#saveChangesButton");
 
         //check values
-        TextField trainerName = lookup("#trainerNameInput").queryAs(javafx.scene.control.TextField.class);
+        TextField trainerName = lookup("#trainerNameInput").queryAs(TextField.class);
         assertEquals("Bob2", trainerName.getText());
 
         //verify mocks
