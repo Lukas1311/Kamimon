@@ -55,8 +55,6 @@ public class CreateTrainerController extends ToastedController {
     private BooleanBinding trainerNameTooLong;
     private BooleanBinding trainerNameInvalid;
     
-
-
     @Inject
     public CreateTrainerController() {}
 
@@ -67,8 +65,6 @@ public class CreateTrainerController extends ToastedController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-
-        currentRegion = regionStorage.getRegion();
 
         trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
@@ -85,6 +81,8 @@ public class CreateTrainerController extends ToastedController {
         trainerSprite.disableProperty().bind(isPopUpShown);
         createSpriteButton.disableProperty().bind(isPopUpShown);
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
+
+        createTrainerButton.setOnAction(click -> createTrainer());
 
         return parent;
     }
