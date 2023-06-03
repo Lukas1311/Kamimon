@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,13 +15,13 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.naming.Binding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class TrainerManagementController extends Controller {
     public VBox trainerManagementScreen;
     @FXML
     public TextField trainerNameInput;
+    @FXML
+    public Label trainerNameInfo;
     @FXML
     public Button deleteTrainerButton;
     @FXML
@@ -85,6 +88,11 @@ public class TrainerManagementController extends Controller {
         });
 
         trainerNameInput.textProperty().bindBidirectional(trainerName);
+        trainerNameInfo.textProperty().bind(
+            Bindings.when(trainerNameTooLong)
+            .then(translateString("trainername.too.long."))
+            .otherwise("")
+        );
 
         // set bindings to buttons that should be disabled after the popup is shown
         saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
