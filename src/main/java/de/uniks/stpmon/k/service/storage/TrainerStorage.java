@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.models.Trainer;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -9,6 +10,8 @@ import javax.inject.Singleton;
 public class TrainerStorage {
 
     Trainer trainer;
+
+    private final SimpleBooleanProperty trainerLoaded = new SimpleBooleanProperty(false);
 
     @Inject
     public TrainerStorage() {
@@ -20,5 +23,10 @@ public class TrainerStorage {
 
     public void setTrainer(Trainer Trainer) {
         this.trainer = Trainer;
+        trainerLoaded.set(Trainer != null);
+    }
+
+    public SimpleBooleanProperty getTrainerLoaded(){
+        return trainerLoaded;
     }
 }
