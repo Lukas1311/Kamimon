@@ -14,16 +14,16 @@ import java.util.List;
 public interface RegionApiService {
 
     //---------------- Region Trainers ----------------------------
-    @POST("regions/{regionId}/trainers")
-    Observable<Trainer> createTrainer(@Path("regionId") String regionId,
+    @POST("regions/{region}/trainers")
+    Observable<Trainer> createTrainer(@Path("region") String regionId,
                                       @Body CreateTrainerDto trainerDto);
 
-    @GET("regions/{regionId}/trainers")
-    Observable<List<Trainer>> getTrainers(@Path("regionId") String regionId,
+    @GET("regions/{region}/trainers")
+    Observable<List<Trainer>> getTrainers(@Path("region") String regionId,
                                           @Query("area") String areaId,
                                           @Query("user") String userId);
 
-    @GET("regions/{regionId}/trainers/{id}")
+    @GET("regions/{region}/trainers/{id}")
         //TODO: regionId?
     Observable<Trainer> getTrainer(@Path("id") String trainerId);
 
@@ -33,7 +33,7 @@ public interface RegionApiService {
                                                 @Body UpdateTrainerDto trainerDto);
 
 
-    @DELETE("regions/{regionId}/trainers/{id}")
+    @DELETE("regions/{region}/trainers/{id}")
     Observable<Trainer> deleteTrainer(@Path("id") String trainerId);
 
     //------------------- Regions ---------------------------------
@@ -53,9 +53,9 @@ public interface RegionApiService {
     Observable<Area> getArea(@Path("region") String region, @Path("id") String id);
 
     //------------- Trainer Monsters -------------------------------
-    @GET("regions/{regionId}/trainers/{trainerId}/monsters")
-    Observable<List<Monster>> getMonsters(@Path("trainerId") String trainerId);
+    @GET("regions/{region}/trainers/{trainer}/monsters")
+    Observable<List<Monster>> getMonsters(@Path("trainer") String trainerId);
 
-    @GET("regions/{regionId}/trainers/{trainerId}/monsters/{id}")
+    @GET("regions/{region}/trainers/{trainer}/monsters/{id}")
     Observable<Monster> getMonster(@Path("id") String monsterId);
 }
