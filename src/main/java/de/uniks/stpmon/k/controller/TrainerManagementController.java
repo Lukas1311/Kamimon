@@ -77,6 +77,12 @@ public class TrainerManagementController extends Controller {
         trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
         changesMade = trainerNameInvalid.not();
+        changesMade.addListener((observable, oldValue, newValue) -> {
+            // if changes are made again, then changesSaved should update again to false
+            if (newValue) {
+                changesSaved = false;
+            }
+        });
 
         trainerNameInput.textProperty().bindBidirectional(trainerName);
 
@@ -106,6 +112,7 @@ public class TrainerManagementController extends Controller {
 
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
+    }
 
     public void openTrainerSpriteEditor() {
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
