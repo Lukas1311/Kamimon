@@ -138,6 +138,8 @@ class AppTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
         waitForFxEvents();
 
         verifyThat("#pause", Node::isVisible);

@@ -186,6 +186,8 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        // popup pops here
+        clickOn("#approveButton");
         waitForFxEvents();
 
         // get new stack pane from ingame sidebar
