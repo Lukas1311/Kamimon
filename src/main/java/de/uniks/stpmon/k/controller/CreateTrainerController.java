@@ -48,7 +48,7 @@ public class CreateTrainerController extends Controller {
     @Inject
     RegionStorage regionStorage;
 
-    private Region currentRegion;
+    private Region chosenRegion;
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
@@ -58,6 +58,10 @@ public class CreateTrainerController extends Controller {
 
     @Inject
     public CreateTrainerController() {}
+
+    public void setChosenRegion(Region region) {
+        this.chosenRegion = region;
+    }
 
     @Override
     public Parent render() {
@@ -95,7 +99,7 @@ public class CreateTrainerController extends Controller {
             if (!result) return;
             // TODO: get image id string of the sprite
             disposables.add(regionService
-                .createTrainer(currentRegion._id(), trainerName.get(), "string")
+                .createTrainer(chosenRegion._id(), trainerName.get(), "string")
                 .observeOn(FX_SCHEDULER)
                 .subscribe(trainer -> {
                     hybridControllerProvider.get().openMain(INGAME);
