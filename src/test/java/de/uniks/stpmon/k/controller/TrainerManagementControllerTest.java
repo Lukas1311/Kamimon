@@ -147,7 +147,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         assertEquals("Bob2", trainerName.getText());
 
         //verify mocks
-        verify(trainerManagementController).tryChangeTrainerName();
+        verify(trainerManagementController).saveChanges();
         verify(popupMock).showModal(any());
         verify(trainerService).setTrainerName(any());
         //TODO: add method for sprite save here
