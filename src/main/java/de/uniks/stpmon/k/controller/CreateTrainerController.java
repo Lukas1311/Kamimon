@@ -25,7 +25,7 @@ import javax.inject.Provider;
 
 import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
-public class CreateTrainerController extends Controller {
+public class CreateTrainerController extends ToastedController {
     @FXML
     public TextField createTrainerInput;
     @FXML
@@ -104,8 +104,13 @@ public class CreateTrainerController extends Controller {
                 .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(trainer -> {
-                    hybridControllerProvider.get().openMain(INGAME);
-                })
+                        System.out.println(trainer);
+                        hybridControllerProvider.get().openMain(INGAME);
+                    }, err -> {
+                        err.printStackTrace();
+                        handleError(err);
+                    }
+                )
             );
         });
     }
