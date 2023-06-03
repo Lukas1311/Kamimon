@@ -49,6 +49,7 @@ public class CreateTrainerController extends Controller {
     RegionStorage regionStorage;
 
     private Region chosenRegion;
+    private String chosenSprite = "Premade_Character_01.png"; // TODO: hardcoded, remove afterwards
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
@@ -90,7 +91,8 @@ public class CreateTrainerController extends Controller {
 
     public void trainerSprite() {
     }
-
+    // TODO: some of these two methods have to return the sprite string also
+    // because the string is used in the create trainer call
     public void createSprite() {
     }
 
@@ -99,7 +101,7 @@ public class CreateTrainerController extends Controller {
             if (!result) return;
             // TODO: get image id string of the sprite
             disposables.add(regionService
-                .createTrainer(chosenRegion._id(), trainerName.get(), "string")
+                .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(trainer -> {
                     hybridControllerProvider.get().openMain(INGAME);
