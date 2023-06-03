@@ -90,7 +90,7 @@ public class TrainerManagementController extends Controller {
         trainerNameInput.textProperty().bindBidirectional(trainerName);
         trainerNameInfo.textProperty().bind(
             Bindings.when(trainerNameTooLong)
-            .then(translateString("trainername.too.long."))
+            .then(translateString("trainername.too.long"))
             .otherwise("")
         );
 
