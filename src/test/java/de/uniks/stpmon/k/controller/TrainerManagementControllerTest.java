@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import java.awt.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -61,6 +60,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
+        when(trainerService.getMe()).thenReturn(dummytrainer);
         app.show(trainerManagementController);
         stage.requestFocus();
     }
@@ -108,7 +108,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         verify(popupMock, times(2)).showModal(any());
         verify(trainerService).deleteMe();
         verify(app).show(lobbyMock);
-
     }
 
     @Test
