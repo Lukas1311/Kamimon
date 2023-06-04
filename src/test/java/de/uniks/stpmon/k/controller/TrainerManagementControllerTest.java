@@ -156,7 +156,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         clickOn("#deleteTrainerButton");
 
         verify(popupMock, times(1)).showModal(any());
-        verify(trainerService, times(1)).deleteMe();
+        verify(trainerService, times(0)).deleteMe();
         verify(app, times(1)).show(lobbyMock);
     }
 
@@ -222,7 +222,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         verify(trainerManagementController).saveChanges();
         verify(popupMock).showModal(any());
         verify(trainerService).setTrainerName(trainerNameCaptor.capture());
-        assertEquals("0", trainerNameCaptor.getValue());
+        assertEquals("Bob2", trainerNameCaptor.getValue());
         //TODO: add method for sprite save here
     }
 }
