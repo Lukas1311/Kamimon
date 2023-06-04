@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChooseSpriteController">
+<BorderPane prefHeight="450.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChooseSpriteController">
    <center>
-      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: black; -fx-border-width: 3px;" styleClass="loading-screen" stylesheets="@css/style.css">
+      <VBox fx:id="chooseTrainerContent" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 3px;" styleClass="loading-screen" stylesheets="@css/style.css">
          <HBox alignment="CENTER" prefHeight="76.0" prefWidth="500.0">
             <Text fx:id="chooseTrainer" strokeType="OUTSIDE" strokeWidth="0.0" text="%choose_trainer">
                <font>
@@ -16,7 +20,7 @@
             </Text>
          </HBox>
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0" VBox.vgrow="ALWAYS">
-            <Button fx:id="spriteLeft" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&lt;" HBox.hgrow="NEVER">
+            <Button fx:id="spriteLeft" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#toLeft" prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&lt;" HBox.hgrow="NEVER">
                <font>
                   <Font size="18.0" />
                </font>
@@ -24,7 +28,7 @@
             <ImageView fx:id="spriteImage" fitHeight="250.0" fitWidth="252.0" pickOnBounds="true" preserveRatio="true">
                <Image url="@../spritePlacehoder.png" />
             </ImageView>
-            <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&gt;" HBox.hgrow="NEVER">
+            <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#toRight" prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&gt;" HBox.hgrow="NEVER">
                <font>
                   <Font size="18.0" />
                </font>

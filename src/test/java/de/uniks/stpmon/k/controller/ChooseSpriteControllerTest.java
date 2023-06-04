@@ -1,6 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.popup.PopUpController;
+import de.uniks.stpmon.k.service.PresetService;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -13,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -32,11 +36,22 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+    @Mock
+    PresetService presetService;
+    @Mock
+    Provider<CreateTrainerController> createTrainerControllerProvider;
+    @Mock
+    Provider<PopUpController> popUpControllerProvider;
+
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
+
+        final Observable<List<String>> trainerList = Observable.just(List.of(new String("Pokemon.png")));
+        when(presetService.getCharacters()).thenReturn(trainerList);
+
         app.show(chooseSpriteController);
         stage.requestFocus();
     }
