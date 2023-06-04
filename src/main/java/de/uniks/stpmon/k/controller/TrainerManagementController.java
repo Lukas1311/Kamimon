@@ -57,6 +57,8 @@ public class TrainerManagementController extends Controller {
     private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
+    private final BooleanProperty disablEdit = new SimpleBooleanProperty(false);
+
     @Inject
     public TrainerManagementController() {
     }
@@ -76,6 +78,9 @@ public class TrainerManagementController extends Controller {
         trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
         saveChangesButton.setOnMouseClicked((click -> saveChanges()));
 
+        deleteTrainerButton.disableProperty().bind(disablEdit);
+        saveChangesButton.disableProperty().bind(disablEdit);
+
         return parent;
     }
 
@@ -85,7 +90,6 @@ public class TrainerManagementController extends Controller {
     }
 
     public void tryChangeTrainerName() {
-        // TODO: change the trainer name -> region service ??? still needed?
         String newName = trainerNameInput.getText();
         if (newName == null || newName.equals("") || newName.length() > 32) {
             trainerNameInput.setText(currentTrainer.name());
@@ -103,8 +107,9 @@ public class TrainerManagementController extends Controller {
     }
 
     public void openTrainerSpriteEditor() {
+        disablEdit.set(true);
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
-
+        // TODO Enable Buttons after focus returend
     }
 
     public void saveChanges() {
