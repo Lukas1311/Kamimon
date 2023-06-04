@@ -65,7 +65,7 @@ public class TrainerManagementController extends Controller {
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
 
-    private final BooleanProperty disablEdit = new SimpleBooleanProperty(false);
+    private final BooleanProperty disableEdit = new SimpleBooleanProperty(false);
 
     @Inject
     public TrainerManagementController() {
@@ -103,8 +103,8 @@ public class TrainerManagementController extends Controller {
         trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
         saveChangesButton.setOnMouseClicked((click -> saveChanges()));
 
-        deleteTrainerButton.disableProperty().bind(disablEdit);
-        saveChangesButton.disableProperty().bind(disablEdit);
+        deleteTrainerButton.disableProperty().bind(disableEdit);
+        saveChangesButton.disableProperty().bind(disableEdit);
 
         return parent;
     }
@@ -142,7 +142,7 @@ public class TrainerManagementController extends Controller {
     }
 
     public void openTrainerSpriteEditor() {
-        disablEdit.set(true);
+        disableEdit.set(true);
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
         // TODO Enable Buttons after focus returend
     }
