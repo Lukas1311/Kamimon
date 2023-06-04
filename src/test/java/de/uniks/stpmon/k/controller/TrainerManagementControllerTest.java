@@ -83,6 +83,33 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     }
 
     @Test
+    void testBackToSettingsWithUnsavedChanges() {
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final HybridController hybridMock = Mockito.mock(HybridController.class);
+
+        // define mocks:
+        when(trainerManagementController.hasUnsavedChanges()).thenReturn(true);
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+        doNothing().when(hybridMock).popTab();
+
+        // action:
+        clickOn("#backButton");
+        
+        // no values to check
+
+        // check mocks:
+        verify(popupMock).showModal(any());
+        verify(hybridMock).popTab();
+    }
+
+    @Test
     void testTryChangeTrainerName() {
         // TODO: region service call
     }
@@ -106,8 +133,54 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         clickOn("#deleteTrainerButton");
 
         verify(popupMock, times(2)).showModal(any());
-        verify(trainerService).deleteMe();
-        verify(app).show(lobbyMock);
+        verify(trainerService, times(1)).deleteMe();
+        verify(app, times(1)).show(lobbyMock);
+    }
+
+    @Test
+    void testDeleteTrainerAndDiscard() {
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+
+        when(trainerService.deleteMe()).thenReturn(Observable.just(dummytrainer));
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(false);
+            return null;
+        }).when(popupMock).showModal(any());
+        doNothing().when(app).show(any(LobbyController.class));
+        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
+
+        //action
+        clickOn("#deleteTrainerButton");
+
+        verify(popupMock, times(1)).showModal(any());
+        verify(trainerService, times(1)).deleteMe();
+        verify(app, times(1)).show(lobbyMock);
+    }
+
+    @Test
+    void testDeleteTrainerOnError() {
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+
+        when(trainerService.deleteMe()).thenReturn(Observable.error(new Exception()));
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        doNothing().when(app).show(any(LobbyController.class));
+        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
+
+        //action
+        clickOn("#deleteTrainerButton");
+
+        verify(popupMock, times(1)).showModal(any());
+        verify(trainerService, times(1)).deleteMe();
+        verify(app, times(1)).show(lobbyMock);
     }
 
     @Test
@@ -148,7 +221,8 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         //verify mocks
         verify(trainerManagementController).saveChanges();
         verify(popupMock).showModal(any());
-        verify(trainerService).setTrainerName(any());
+        verify(trainerService).setTrainerName(trainerNameCaptor.capture());
+        assertEquals("0", trainerNameCaptor.getValue());
         //TODO: add method for sprite save here
     }
 }
