@@ -135,6 +135,7 @@ public class TrainerManagementController extends Controller {
                     trainerNameInput.setText(currentTrainer.name());
                 })
         );
+    }
 
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
