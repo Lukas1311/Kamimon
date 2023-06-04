@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="500.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateTrainerController">
+<AnchorPane fx:id="createTrainerContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="500.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateTrainerController">
    <styleClass>
       <String fx:value="root" />
       <String fx:value="create-trainer-background" />
@@ -27,9 +27,7 @@
                   <VBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="230.0">
                         <TextField fx:id="createTrainerInput" prefHeight="23.0" prefWidth="197.0" promptText="%enterName" styleClass="create-trainer-text-input" />
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
                   <Label fx:id="trainerNameInfo" text="" />
-               </children>
             </HBox>
                   </VBox>
             </HBox>
