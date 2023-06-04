@@ -147,8 +147,6 @@ public class TrainerManagementController extends Controller {
     }
 
     private void saveTrainerName(String newTrainerName) {
-        if (trainerNameInvalid.get())
-            return;
         disposables.add(
                 trainerService.setTrainerName(newTrainerName).observeOn(FX_SCHEDULER).subscribe(trainer -> {
                     // set this to retrieve the newly set trainerName
@@ -172,7 +170,7 @@ public class TrainerManagementController extends Controller {
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
                         showPopUp(deleteConfirmScenario, innerResult -> app.show(lobbyControllerProvider.get()));
 
-                    }, err -> app.show(loginControllerProvider.get())));
+                    }, err -> app.show(lobbyControllerProvider.get())));
         });
     }
 
