@@ -57,7 +57,6 @@ public class TrainerManagementController extends Controller {
     @Inject
     Provider<LobbyController> lobbyControllerProvider;
 
-
     private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
@@ -65,6 +64,8 @@ public class TrainerManagementController extends Controller {
     private BooleanBinding trainerNameInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
+
+    private final BooleanProperty disableEdit = new SimpleBooleanProperty(false);
 
     @Inject
     public TrainerManagementController() {
@@ -89,20 +90,21 @@ public class TrainerManagementController extends Controller {
 
         trainerNameInput.textProperty().bindBidirectional(trainerName);
         trainerNameInfo.textProperty().bind(
-            Bindings.when(trainerNameTooLong)
-            .then(translateString("trainername.too.long"))
-            .otherwise("")
-        );
+                Bindings.when(trainerNameTooLong)
+                        .then(translateString("trainername.too.long"))
+                        .otherwise(""));
 
         // set bindings to buttons that should be disabled after the popup is shown
         saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
         deleteTrainerButton.disableProperty().bind(isPopUpShown);
-        
 
         backButton.setOnAction(click -> backToSettings());
         deleteTrainerButton.setOnAction(click -> deleteTrainer());
         trainerSprite.setOnMouseClicked(click -> openTrainerSpriteEditor());
         saveChangesButton.setOnMouseClicked((click -> saveChanges()));
+
+        deleteTrainerButton.disableProperty().bind(disableEdit);
+        saveChangesButton.disableProperty().bind(disableEdit);
 
         return parent;
     }
@@ -110,25 +112,45 @@ public class TrainerManagementController extends Controller {
     public void backToSettings() {
         if (hasUnsavedChanges()) {
             showPopUp(PopUpScenario.UNSAVED_CHANGES, result -> {
-                if (!result) return;
+                if (!result)
+                    return;
                 saveSettings();
             });
         }
         hybridControllerProvider.get().popTab();
     }
 
+    public void tryChangeTrainerName() {
+        String newName = trainerNameInput.getText();
+        if (newName == null || newName.equals("") || newName.length() > 32) {
+            trainerNameInput.setText(currentTrainer.name());
+            return;
+        }
+        disposables.add(trainerService
+                .setTrainerName(newName)
+                .observeOn(FX_SCHEDULER)
+                .subscribe(trainer -> {
+                    currentTrainer = trainer;
+                }, err -> {
+                    trainerNameInput.setText(currentTrainer.name());
+                })
+        );
+    }
 
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
     }
 
     public void openTrainerSpriteEditor() {
+        disableEdit.set(true);
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
+        // TODO Enable Buttons after focus returend
     }
 
     public void saveChanges() {
         showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
-            if (!result) return;
+            if (!result)
+                return;
             saveSettings();
             changesSaved = true;
         });
@@ -142,31 +164,32 @@ public class TrainerManagementController extends Controller {
     }
 
     private void saveTrainerName(String newTrainerName) {
-        if (trainerNameInvalid.get()) return;
+        if (trainerNameInvalid.get())
+            return;
         disposables.add(
-            trainerService.setTrainerName(newTrainerName).observeOn(FX_SCHEDULER).subscribe(trainer -> {
-                // set this to retrieve the newly set trainerName
-                currentTrainer = trainer;
-            }, err -> {
-                // nothing
-            })
-        );
+                trainerService.setTrainerName(newTrainerName).observeOn(FX_SCHEDULER).subscribe(trainer -> {
+                    // set this to retrieve the newly set trainerName
+                    currentTrainer = trainer;
+                }, err -> {
+                    // nothing
+                }));
     }
 
     public void deleteTrainer() {
         PopUpScenario deleteScenario = PopUpScenario.DELETE_TRAINER;
         deleteScenario.setParams(new ArrayList<>(List.of(currentTrainer.name())));
         showPopUp(PopUpScenario.DELETE_TRAINER, result -> {
-            if (!result) return;
+            if (!result)
+                return;
             disposables.add(trainerService
                     .deleteMe()
                     .observeOn(FX_SCHEDULER)
-                    .subscribe( trainer -> {
+                    .subscribe(trainer -> {
                         PopUpScenario deleteConfirmScenario = PopUpScenario.DELETE_CONFIRMATION_TRAINER;
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
                         showPopUp(deleteConfirmScenario, innerResult -> app.show(lobbyControllerProvider.get()));
 
-                    },err -> app.show(loginControllerProvider.get())));
+                    }, err -> app.show(loginControllerProvider.get())));
         });
     }
 
