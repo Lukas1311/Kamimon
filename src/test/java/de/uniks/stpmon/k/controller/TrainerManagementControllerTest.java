@@ -20,9 +20,12 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -229,15 +232,19 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         //define mocks
         when(popUpControllerProvider.get()).thenReturn(popupMock);
         when(trainerService.setTrainerName(anyString())).thenReturn(Observable.just(dummytrainer));
+        AtomicBoolean isFirstInvocation = new AtomicBoolean(false);
 
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
-            callback.onModalResult(true);
+            callback.onModalResult(isFirstInvocation.getAndSet(true));
             return null;
         }).when(popupMock).showModal(any());
 
         //action
         write("\tBob2");
+        // click save then discard
+        clickOn("#saveChangesButton");
+        // click save then OK
         clickOn("#saveChangesButton");
 
         //check values
@@ -245,8 +252,9 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         assertEquals("Bob2", trainerName.getText());
 
         //verify mocks
-        verify(trainerManagementController).saveChanges();
-        verify(popupMock).showModal(any());
+        verify(trainerManagementController, times(2)).saveChanges();
+        verify(trainerManagementController, times(1)).saveSettings();
+        verify(popupMock, times(2)).showModal(any());
         verify(trainerService).setTrainerName(trainerNameCaptor.capture());
         assertEquals("Bob2", trainerNameCaptor.getValue());
         //TODO: add method for sprite save here
