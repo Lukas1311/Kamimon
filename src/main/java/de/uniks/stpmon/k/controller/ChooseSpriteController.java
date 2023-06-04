@@ -45,7 +45,7 @@ public class ChooseSpriteController extends ToastedController {
     @FXML
     public Button saveSprite;
     @FXML
-    public VBox chooseSpriteContent;
+    public VBox chooseTrainerContent;
 
     @Inject
     PresetService presetService;
@@ -177,15 +177,15 @@ public class ChooseSpriteController extends ToastedController {
                 // Save the currentSpriteIndex to the configuration file
                 ConfigHelper.saveSpriteIndex(currentSpriteIndex);
                 // Render the createTrainerController
-                chooseSpriteContent.getChildren().clear();
-                chooseSpriteContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+                chooseTrainerContent.getChildren().clear();
+                chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
             });
         } else {
             // Save the previousSpriteIndex to the configuration file
             ConfigHelper.saveSpriteIndex(previousSpriteIndex);
             // Render the createTrainerController
-            chooseSpriteContent.getChildren().clear();
-            chooseSpriteContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+            chooseTrainerContent.getChildren().clear();
+            chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
         }
     }
 
