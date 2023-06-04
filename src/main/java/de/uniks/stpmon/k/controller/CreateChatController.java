@@ -116,6 +116,7 @@ public class CreateChatController extends TabController {
         createGroupButton.disableProperty().bind(isInvalid);
 
         final ListView<User> groupMembers = new ListView<>(this.members);
+        groupMembers.getStyleClass().add("edit-chat-list");
         groupMemberList.getChildren().add(groupMembers);
         VBox.setVgrow(groupMembers, Priority.ALWAYS);
         groupMembers.setCellFactory(e -> new GroupMemberCell(this));

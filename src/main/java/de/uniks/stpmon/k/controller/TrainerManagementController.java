@@ -119,24 +119,7 @@ public class TrainerManagementController extends Controller {
         }
         hybridControllerProvider.get().popTab();
     }
-
-    public void tryChangeTrainerName() {
-        String newName = trainerNameInput.getText();
-        if (newName == null || newName.equals("") || newName.length() > 32) {
-            trainerNameInput.setText(currentTrainer.name());
-            return;
-        }
-        disposables.add(trainerService
-                .setTrainerName(newName)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(trainer -> {
-                    currentTrainer = trainer;
-                }, err -> {
-                    trainerNameInput.setText(currentTrainer.name());
-                })
-        );
-    }
-
+    
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
     }

@@ -6,11 +6,11 @@
 <?import javafx.scene.text.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<VBox maxWidth="370.0" prefHeight="720.0" styleClass="friends-menu-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendListController">
+<VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" styleClass="friends-menu-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendListController">
     <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" styleClass="friends-scroll-pane" stylesheets="@css/style.css" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
-        <VBox fx:id="friendList" alignment="TOP_CENTER" prefWidth="370.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css">
-            <VBox fx:id="friendSection" alignment="TOP_CENTER" fillWidth="false" maxWidth="370.0" minWidth="370.0" prefWidth="370.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css" />
-            <VBox fx:id="userSeparator" alignment="TOP_CENTER" styleClass="friends-scroll-pane" stylesheets="@css/style.css" visible="false">
+        <VBox fx:id="friendList" alignment="TOP_CENTER" maxWidth="360.0" minWidth="360.0" prefHeight="77.0" prefWidth="360.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css">
+            <VBox fx:id="friendSection" alignment="TOP_CENTER" fillWidth="false" maxWidth="360.0" minWidth="360.0" prefWidth="360.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css" />
+            <VBox fx:id="userSeparator" alignment="CENTER" fillWidth="false" maxWidth="330.0" minWidth="330.0" prefHeight="43.0" prefWidth="330.0" stylesheets="@css/style.css" visible="false">
                 <VBox.margin>
                     <Insets bottom="10.0" top="10.0" />
                 </VBox.margin>
@@ -18,12 +18,12 @@
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•••" textAlignment="CENTER" />
                 <Separator layoutX="10.0" layoutY="10.0" prefWidth="370.0" />
             </VBox>
-            <VBox fx:id="userSection" alignment="TOP_CENTER" fillWidth="false" maxWidth="370.0" minWidth="370.0" prefWidth="370.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css" />
+            <VBox fx:id="userSection" alignment="TOP_CENTER" fillWidth="false" maxWidth="360.0" minWidth="360.0" prefWidth="360.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css" />
         </VBox>
     </ScrollPane>
-    <VBox alignment="BOTTOM_RIGHT" styleClass="friends-scroll-pane" stylesheets="@css/style.css" VBox.vgrow="NEVER">
-        <StackPane styleClass="friends-search-element" stylesheets="@css/style.css">
-            <TextField fx:id="searchFriend" prefHeight="38.0" prefWidth="300.0" promptText="%search.for.a.friend" styleClass="friends-text-input" stylesheets="@css/style.css" />
+    <VBox alignment="CENTER_LEFT" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" styleClass="friends-scroll-pane" stylesheets="@css/style.css" VBox.vgrow="NEVER">
+        <StackPane alignment="CENTER_LEFT" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" styleClass="tab-element" stylesheets="@css/style.css">
+            <TextField fx:id="searchFriend" maxWidth="330.0" minWidth="330.0" prefHeight="38.0" prefWidth="330.0" promptText="%search.for.a.friend" styleClass="friends-text-input" stylesheets="@css/style.css" StackPane.alignment="CENTER" />
             <Button fx:id="searchButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" styleClass="friends-search-button" stylesheets="@css/style.css" textAlignment="CENTER" StackPane.alignment="CENTER_RIGHT">
                 <graphic>
                     <FontIcon iconLiteral="mdmz-search" />

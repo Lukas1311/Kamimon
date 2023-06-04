@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" spacing="2.0"
-      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.ChatListController">
 
-    <VBox fx:id="chatList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS"/>
+<VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" spacing="2.0" styleClass="chat-ov-menu" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatListController">
+
+    <VBox fx:id="chatList" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="370.0" styleClass="chat-ov-list" stylesheets="@css/style.css" VBox.vgrow="ALWAYS" />
     <VBox alignment="CENTER">
-        <Button fx:id="newChatButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="350.0"
-                style="-fx-background-color: blue; -fx-background-radius: 10;" text="%new.chat" textFill="WHITE" onAction="#createChat">
+        <Button fx:id="newChatButton" mnemonicParsing="false" onAction="#createChat" prefHeight="35.0" prefWidth="330.0" stylesheets="@css/style.css" text="%new.chat">
             <VBox.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                <Insets bottom="10.0" top="10.0" />
             </VBox.margin>
+         <styleClass>
+            <String fx:value="kgm-general-button-blue" />
+            <String fx:value="chat-ov-button" />
+         </styleClass>
         </Button>
     </VBox>
 </VBox>
