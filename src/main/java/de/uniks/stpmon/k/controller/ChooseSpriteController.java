@@ -168,6 +168,8 @@ public class ChooseSpriteController extends ToastedController {
      * Check if the selected character is different from the previous character and shows a pop-up for confirmation
      */
     public void saveSprite() {
+        // TODO: Test implementieren
+        /*
         String selectedCharacter = characters.get(currentSpriteIndex);
         String previousCharacter = characters.get(previousSpriteIndex);
         if (!selectedCharacter.equals(previousCharacter)) {
@@ -187,6 +189,8 @@ public class ChooseSpriteController extends ToastedController {
             chooseTrainerContent.getChildren().clear();
             chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
         }
+
+         */
     }
 
     /**
