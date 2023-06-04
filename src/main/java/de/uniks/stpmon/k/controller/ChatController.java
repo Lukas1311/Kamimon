@@ -4,12 +4,13 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.MessageCell;
-import de.uniks.stpmon.k.ws.EventListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,7 +33,7 @@ import java.util.Optional;
 import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
-public class ChatController extends ToastedController {
+public class ChatController extends PortalController {
     @FXML
     public Button backButton;
     @FXML
@@ -63,6 +64,8 @@ public class ChatController extends ToastedController {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     EventListener eventListener;
+    @Inject
+    LoadingScreenController loadingScreen;
 
     private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
@@ -97,7 +100,7 @@ public class ChatController extends ToastedController {
 
         // with dispose the subscribed event is going to be unsubscribed
         disposables.add(eventListener
-                .listen("%s.%s.messages.*.*".formatted(GROUPS.toString(), group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
+                .listen(Socket.WS, "%s.%s.messages.*.*".formatted(GROUPS.toString(), group._id()), Message.class).observeOn(FX_SCHEDULER).subscribe(event -> {
                             // only listen to messages in the current specific group
                             // ( event format is: group.group_id.messages.message_id.{created,updated,deleted} )
                             final Message msg = event.data();
@@ -227,9 +230,8 @@ public class ChatController extends ToastedController {
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
-                            .subscribe(msg -> {
-                                messagesListView.scrollTo(msg);
-                            }, this::handleError)
+                            .subscribe(msg -> messagesListView.scrollTo(msg),
+                                    this::handleError)
                     );
                     regionPicker.getSelectionModel().clearSelection();
                 }
@@ -261,10 +263,8 @@ public class ChatController extends ToastedController {
     }
 
     public void openRegion(String regionId) {
-        subscribe(regionService.getRegion(regionId), region -> {
-            subscribe(regionService.enterRegion(region),
-                    (area) -> hybridControllerProvider.get().openMain(INGAME));
-        }, this::handleError);
+        subscribe(regionService.getRegion(regionId),
+                this::enterRegion, this::handleError);
     }
 
     @Override

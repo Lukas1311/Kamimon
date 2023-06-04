@@ -4,10 +4,11 @@ import dagger.Component;
 import de.uniks.stpmon.k.TestModule;
 import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.views.WorldView;
-import de.uniks.stpmon.k.ws.EventListener;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.views.world.WorldView;
 
 import javax.inject.Singleton;
 
@@ -21,6 +22,8 @@ public interface TestComponent extends MainComponent {
     HybridController hybridController();
 
     UserStorage userStorage();
+
+    WorldStorage worldStorage();
 
     EventListener eventListener();
 

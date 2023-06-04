@@ -9,4 +9,5 @@ public enum SidebarTab {
     SETTINGS,
     USER_MANAGEMENT,
     TRAINER_MANAGEMENT,
+    CHOOSE_SPRITE,
 }

@@ -1,22 +1,30 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.popup.PopUpController;
+import de.uniks.stpmon.k.controller.popup.PopUpScenario;
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.UserService;
+
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import retrofit2.HttpException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.service.UserService;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import retrofit2.HttpException;
 
 public class UserManagementController extends Controller {
     @FXML
@@ -42,18 +50,21 @@ public class UserManagementController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<LoginController> loginControllerProvider;
+    @Inject
+    Provider<PopUpController> popUpControllerProvider;
 
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
-    private final SimpleStringProperty usernameError = new SimpleStringProperty();
-    private final SimpleStringProperty passwordError = new SimpleStringProperty();
+    private StringProperty usernameError;
+    private StringProperty passwordError;
+    private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private BooleanBinding passwordTooShort;
     private BooleanBinding usernameTooLong;
     private BooleanBinding usernameInvalid;
     private BooleanBinding passwordInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
-
+    private User currentUser;
 
 
     @Inject
@@ -64,6 +75,7 @@ public class UserManagementController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        currentUser = userService.getMe();
         userManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         // bindings:
@@ -73,13 +85,13 @@ public class UserManagementController extends Controller {
         passwordInvalid = passwordTooShort;
         changesMade = usernameInvalid.not().or(passwordInvalid.not());
 
-
         // bind bindings to fxml:
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
-        usernameInfo.textProperty().bind(usernameError);
 
-        saveChangesButton.disableProperty().bind(changesMade.not());
+        // set bindings to buttons that should be disabled after the popup is shown
+        saveChangesButton.disableProperty().bind(changesMade.not().or(isPopUpShown));
+        deleteUserButton.disableProperty().bind(isPopUpShown);
 
         usernameInfo.textProperty().bind(
             Bindings.when(usernameTooLong)
@@ -92,7 +104,6 @@ public class UserManagementController extends Controller {
             .otherwise("")
         );
 
-
         // ui functions:
         backButton.setOnAction(click -> backToSettings());
         saveChangesButton.setOnAction(click -> saveChanges());
@@ -101,102 +112,89 @@ public class UserManagementController extends Controller {
     }
 
     public void backToSettings() {
-        if (changesMade.get() && !changesSaved) {
-            // TODO: add pop confirmation
-            // if OK: {
-            //     saveChanges();
-            // } else CANCEL or CLOSE {
-            // return;
-            // }
-            new Alert(Alert.AlertType.CONFIRMATION, "there are unsaved changes.\nsave them?").showAndWait().ifPresent(buttonType -> {
-                if (buttonType == ButtonType.OK) {
-                    saveChanges();    
-                }
+        if (hasUnsavedChanges()) {
+            showPopUp(PopUpScenario.UNSAVED_CHANGES, result -> {
+                if (!result) return;
+                saveCredentials();
             });
         }
         hybridControllerProvider.get().popTab();
     }
 
+    public Boolean hasUnsavedChanges() {
+        return changesMade.get() && !changesSaved;
+    }
+
     public void saveChanges() {
-        // TODO: replace this with real modal pop pop up
-        // new Alert(Alert.AlertType.CONFIRMATION, "save changes?").showAndWait().ifPresent(buttonType -> {
-        //     if (buttonType == ButtonType.OK) {
+        showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
+            if (!result) return;
+            saveCredentials();
+            changesSaved = true;
+        });
+    }
 
-                if (!usernameInvalid.get()) {
-                    saveUsername(username.get());
-                }
-
-                if (!passwordInvalid.get()) {
-                    savePassword(password.get());
-                }
-
-                changesSaved = true;
-
-
-        //     } else if (buttonType == ButtonType.CANCEL) {
-        //         // do nothing
-        //     }
-        // });
+    public void saveCredentials() {
+        if (!usernameInvalid.get()) {
+            saveUsername(username.get());
+        }
+        if (!passwordInvalid.get()) {
+            savePassword(password.get());
+        }
     }
 
     private void saveUsername(String newUsername) {
         disposables.add(
             userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
-                // TODO: remove in clean up
-                System.out.println(usr);
+                // set this to retrieve the newly set username
+                currentUser = usr;
             }, err -> {
+                usernameError = new SimpleStringProperty("");
+                usernameInfo.textProperty().bind(usernameError);
                 usernameError.set("error");
                 if (!(err instanceof HttpException ex)) return;
                 if (!(ex.code() == 409)) return;
-                usernameError.set("username.already.in.use");
+                usernameError.set(translateString("username.already.in.use"));
             })
-
         );
     }
 
     private void savePassword(String newPassword) {
         disposables.add(
             userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
-                // TODO: remove in clean up
-                System.out.println(usr);
             }, err -> {
-                passwordError.set("error");
+                passwordError = new SimpleStringProperty("");
+                passwordInfo.textProperty().bind(passwordError);
+                passwordError.set(translateString("error"));
             })
-
         );
     }
 
     public void deleteUser() {
-        // TODO: replace this with real modal pop pop up
-        new Alert(Alert.AlertType.CONFIRMATION, "do you really want to delete the user?").showAndWait().ifPresent(buttonType -> {
-            if (buttonType == ButtonType.OK) {
-                // the user clicked OK
-                // TODO: we definitely need two popups here!!!! Or three!!
-                new Alert(Alert.AlertType.CONFIRMATION, "are you sure, you want to do this?").showAndWait().ifPresent(innerButtonType -> {
-                    if (innerButtonType == ButtonType.OK) {
-                        new Alert(Alert.AlertType.CONFIRMATION, "are you a 100 % sure that your user will be deleted afterwards?").showAndWait().ifPresent(innerInnerButtonType -> {
-                            if (innerInnerButtonType == ButtonType.OK) {
-                                new Alert(Alert.AlertType.CONFIRMATION, "there is no coming back!").showAndWait().ifPresent(innerInnerInnerButtonType -> {
-                                    if (innerInnerInnerButtonType == ButtonType.OK) {
-                                        disposables.add(userService
-                                            .deleteMe()
-                                            .observeOn(FX_SCHEDULER)
-                                            .subscribe(usr -> {
-                                                // TODO: user deleted pop up
-                                                app.show(loginControllerProvider.get());
-                                            })
-                                        );
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-
-
-            } else if (buttonType == ButtonType.CANCEL) {
-                // the user clicked CANCEL
-            }
+        PopUpScenario deleteScenario = PopUpScenario.DELETE_USER;
+        // TODO: maybe set username initially and no "enter name" placeholder? ask SM / PO
+        deleteScenario.setParams(new ArrayList<>(Arrays.asList(currentUser.name())));
+        showPopUp(PopUpScenario.DELETE_USER, result -> {
+            if (!result) return;
+            disposables.add(userService
+                .deleteMe()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(usr -> {
+                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
+                    deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
+                    showPopUp(deleteConfirmScenario, innerResult -> {
+                        app.show(loginControllerProvider.get());
+                    });
+                }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
+                )
+            );
         });
+    }
+
+    public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
+        isPopUpShown.set(true);
+        PopUpController popUp = popUpControllerProvider.get();
+        popUp.setScenario(scenario);
+        popUp.showModal(callback);
+        isPopUpShown.set(false);
     }
 }

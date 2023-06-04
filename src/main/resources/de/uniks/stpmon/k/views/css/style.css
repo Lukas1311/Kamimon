@@ -34,206 +34,210 @@ Load fonts
     -fx-color-dark-white: #F2F2F2;
 }
 /* -------------------- General Items -------------------- */
-.kgm-general-button-blue{
-    -fx-opacity: 1.0;
-    -fx-background-color: -fx-color-blue;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-text-fill: white;
-    -fx-font-weight: bolder;
-    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: black;
-    -fx-border-width: 3px;
+.kgm-general-button-blue {
+	-fx-opacity: 1;
+	-fx-background-color: -fx-color-blue;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-text-fill: white;
+	-fx-font-weight: bolder;
+	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
 }
 
-.kgm-general-button-blue:disabled{
-    -fx-opacity: 1.0;
-    -fx-background-color: -fx-color-light-blue;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-text-fill: white;
-    -fx-font-weight: bolder;
-    -fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: -fx-color-light-grey;
-    -fx-border-width: 3px;
+.kgm-general-button-blue:disabled {
+	-fx-opacity: 1;
+	-fx-background-color: -fx-color-light-blue;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-text-fill: white;
+	-fx-font-weight: bolder;
+	-fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: -fx-color-light-grey;
+	-fx-border-width: 3px;
 }
 
-.kgm-general-button-white{
-    -fx-opacity: 1.0;
-    -fx-background-color: white;
-    -fx-text-fill: black;
-    -fx-font-weight: bolder;
-    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: black;
-    -fx-border-width: 3px;
+.kgm-general-button-white {
+	-fx-opacity: 1;
+	-fx-background-color: white;
+	-fx-text-fill: black;
+	-fx-font-weight: bolder;
+	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
 }
 
-.kgm-general-button-white:disabled{
-    -fx-opacity: 1.0;
-    -fx-background-color: -fx-color-dark-white;
-    -fx-text-fill: -fx-color-light-grey;
-    -fx-font-weight: bolder;
-    -fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: -fx-color-light-grey;
-    -fx-border-width: 3px;
+.kgm-general-button-white:disabled {
+	-fx-opacity: 1;
+	-fx-background-color: -fx-color-dark-white;
+	-fx-text-fill: -fx-color-light-grey;
+	-fx-font-weight: bolder;
+	-fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: -fx-color-light-grey;
+	-fx-border-width: 3px;
 }
 
-.kgm-general-button-red{
-    -fx-opacity: 1.0;
-    -fx-background-color: -fx-color-red;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-text-fill: white;
-    -fx-font-weight: bolder;
-    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: black;
-    -fx-border-width: 3px;
+.kgm-general-button-red {
+	-fx-opacity: 1;
+	-fx-background-color: -fx-color-red;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-text-fill: white;
+	-fx-font-weight: bolder;
+	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
 }
 
-.kgm-general-button-red:disabled{
-    -fx-opacity: 1.0;
-    -fx-background-color: -fx-color-light-red;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-text-fill: white;
-    -fx-font-weight: bolder;
-    -fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: -fx-color-light-grey;
-    -fx-border-width: 3px;
+.kgm-general-button-red:disabled {
+	-fx-opacity: 1;
+	-fx-background-color: -fx-color-light-red;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-text-fill: white;
+	-fx-font-weight: bolder;
+	-fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: -fx-color-light-grey;
+	-fx-border-width: 3px;
+}
+
+.outstanding {
+	-fx-background-color: rgba(255, 255, 255, 0.5);
+	-fx-border-color: black;
+	-fx-border-width: 2px;
+	-fx-padding: 5 5 5 15;
 }
 
 /* -------------------- Loading Screen -------------------- */
-.loading-screen{
-    -fx-background-color: -fx-color-kgm-yellow;
+.loading-screen {
+	-fx-background-color: -fx-color-kgm-yellow;
 }
 
 /* -------------------- Login Window -------------------- */
-.login-background{
-    -fx-background-image: url("../images/background.png");
-    -fx-background-size: cover;
+.login-background {
+	-fx-background-image: url("../images/background.png");
+	-fx-background-size: cover;
 }
 
-.login-window{
-    -fx-background-color: -fx-color-kgm-yellow;
-    -fx-background-radius: 0;
-    -fx-border-color: black;
-    -fx-border-radius: 0;
-    -fx-border-width: 3;
-    -fx-pref-width: 400;
-    -fx-pref-height: 500;
-    -fx-min-width: 400;
-    -fx-min-height: 500;
-    -fx-max-width: 400;
-    -fx-max-height: 500;
-    -fx-spacing: 13;
+.login-window {
+	-fx-background-color: -fx-color-kgm-yellow;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+	-fx-pref-width: 400;
+	-fx-pref-height: 500;
+	-fx-min-width: 400;
+	-fx-min-height: 500;
+	-fx-max-width: 400;
+	-fx-max-height: 500;
+	-fx-spacing: 13;
 }
 
-.login-element{
-    -fx-pref-width: 250;
-    -fx-pref-height: 35;
-    -fx-min-width: 250;
-    -fx-min-height: 35;
-    -fx-max-width: 250;
-    -fx-max-height: 35;
+.login-element {
+	-fx-pref-width: 250;
+	-fx-pref-height: 35;
+	-fx-min-width: 250;
+	-fx-min-height: 35;
+	-fx-max-width: 250;
+	-fx-max-height: 35;
 }
 
 .login-text-input {
-    -fx-alignment: center-left;
-    -fx-text-fill: black;
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: -fx-color-light-grey;
-    -fx-border-width: 3px;
-    -fx-background-radius: 0px;
-    -fx-background-color: white;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+	-fx-alignment: center-left;
+	-fx-text-fill: black;
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: -fx-color-light-grey;
+	-fx-border-width: 3px;
+	-fx-background-radius: 0px;
+	-fx-background-color: white;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
 }
 
 .login-password-button {
-    -fx-pref-width: 45;
-    -fx-pref-height: 35;
-    -fx-min-width: 45;
-    -fx-min-height: 35;
-    -fx-max-width: 45;
-    -fx-max-height: 35;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
-    -fx-icon-size: 24;
+	-fx-pref-width: 45;
+	-fx-pref-height: 35;
+	-fx-min-width: 45;
+	-fx-min-height: 35;
+	-fx-max-width: 45;
+	-fx-max-height: 35;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-icon-size: 24;
 }
 
 .login-check-box {
-    -fx-alignment: center-left;
-    -fx-text-fill: black;
+	-fx-alignment: center-left;
+	-fx-text-fill: black;
 }
 
 .login-check-box .box {
-    -fx-border-color: black;
-    -fx-border-radius: 3;
-    -fx-border-width: 2;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
-
+	-fx-border-color: black;
+	-fx-border-radius: 3;
+	-fx-border-width: 2;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
 }
 
 .login-lang-selection {
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: -fx-color-light-grey;
-    -fx-border-width: 3px;
-    -fx-background-radius: 0px;
-    -fx-background-color: white;
-    -fx-alignment: center;
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: -fx-color-light-grey;
+	-fx-border-width: 3px;
+	-fx-background-radius: 0px;
+	-fx-background-color: white;
+	-fx-alignment: center;
 }
 
-.login-radio-button{
-    -fx-pref-width: 110;
-    -fx-pref-height: 30;
-    -fx-min-width: 110;
-    -fx-min-height: 30;
-    -fx-max-width: 110;
-    -fx-max-height: 30;
+.login-radio-button {
+	-fx-pref-width: 110;
+	-fx-pref-height: 30;
+	-fx-min-width: 110;
+	-fx-min-height: 30;
+	-fx-max-width: 110;
+	-fx-max-height: 30;
 }
 
 .login-error-text {
-    -fx-text-fill: -fx-color-red;
-    -fx-text-overrun: ellipsis;
-    -fx-font-size: 12;
+	-fx-text-fill: -fx-color-red;
+	-fx-text-overrun: ellipsis;
+	-fx-font-size: 12;
 }
-
 
 /* -------------------- Introduction -------------------- */
 .intro-screen {
-    -fx-background-color: -fx-color-kgm-yellow;
+	-fx-background-color: -fx-color-kgm-yellow;
 }
 
 .intro-container {
-    -fx-background-color: -fx-color-kgm-yellow;
+	-fx-background-color: -fx-color-kgm-yellow;
 }
-
 
 /* -------------------- SideBar -------------------- */
 .sidebar-holder {
-    -fx-background-color: -fx-color-kgm-red;
-    -fx-background-radius: 0;
+	-fx-background-color: -fx-color-kgm-red;
+	-fx-background-radius: 0;
 
-    -fx-border-color: black;
-    -fx-border-radius: 0;
-    -fx-border-width: 3;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
 
     -fx-pref-width: 70;
     -fx-min-width: 70;
@@ -241,37 +245,36 @@ Load fonts
 }
 
 .sidebar-button {
-    -fx-background-color: -fx-color-kgm-red;
-    -fx-background-radius: 0;
+	-fx-background-color: -fx-color-kgm-red;
+	-fx-background-radius: 0;
 
-    -fx-border-color: black;
-    -fx-border-radius: 0;
-    -fx-border-width: 3;
-    -fx-border-style: solid outside;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+	-fx-border-style: solid outside;
 
-    -fx-pref-width: 64;
-    -fx-pref-height: 64;
-    -fx-min-width: 64;
-    -fx-min-height: 64;
-    -fx-max-width: 64;
-    -fx-max-height: 64;
+  -fx-pref-width: 64;
+  -fx-pref-height: 64;
+  -fx-min-width: 64;
+  -fx-min-height: 64;
+  -fx-max-width: 64;
+  -fx-max-height: 64;
 
-    -fx-content-display: center;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
+	-fx-content-display: center;
+	-fx-alignment: center;
+	-fx-text-alignment: center;
 
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
 }
 
 .sidebar-button .ikonli-font-icon {
-    -fx-icon-color: white;
-    -fx-icon-size: 50px;
+  -fx-icon-color: white;
+  -fx-icon-size: 50px;
 }
 
-
 .sidebar-button:pressed {
-    -fx-background-color: -fx-color-kgm-yellow;
+	-fx-background-color: -fx-color-kgm-yellow;
 }
 .sidebar-button:pressed .ikonli-font-icon {
     -fx-icon-color: black;
@@ -279,134 +282,132 @@ Load fonts
 }
 
 .sidebar-button:hover {
-    -fx-background-color: -fx-color-kgm-yellow;
+	-fx-background-color: -fx-color-kgm-yellow;
 }
 .sidebar-button:hover .ikonli-font-icon {
-    -fx-icon-color: black;
-    -fx-icon-size: 30px;
+	-fx-icon-color: black;
+	-fx-icon-size: 30px;
 }
-
 
 /* -------------------- Friend list -------------------- */
 .friends-menu-holder {
-    -fx-pref-width: 370;
-    -fx-pref-height: 720;
-    -fx-min-width: 370;
-    -fx-min-height: 70;
-    -fx-max-width: 370;
+	-fx-pref-width: 370;
+	-fx-pref-height: 720;
+	-fx-min-width: 370;
+	-fx-min-height: 70;
+	-fx-max-width: 370;
 
-    -fx-background-color: -fx-color-kgm-yellow-transparent;
-    -fx-background-radius: 0;
-    -fx-border-color: black;
-    -fx-border-radius: 0;
-    -fx-border-width: 3;
+	-fx-background-color: -fx-color-kgm-yellow-transparent;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
 }
 
 .friends-search-element {
-    -fx-pref-width: 330;
-    -fx-pref-height: 35;
-    -fx-min-width: 330;
-    -fx-min-height: 35;
-    -fx-max-width: 330;
-    -fx-max-height: 35;
+	-fx-pref-width: 330;
+	-fx-pref-height: 35;
+	-fx-min-width: 330;
+	-fx-min-height: 35;
+	-fx-max-width: 330;
+	-fx-max-height: 35;
 
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
 }
 
 .friends-text-input {
-    -fx-alignment: center-left;
-    -fx-text-fill: black;
-    -fx-border-style: solid outside;
-    -fx-border-radius: 0;
-    -fx-border-color: -fx-color-light-grey;
-    -fx-border-width: 3px;
-    -fx-background-radius: 0px;
-    -fx-background-color: white;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+	-fx-alignment: center-left;
+	-fx-text-fill: black;
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-color: -fx-color-light-grey;
+	-fx-border-width: 3px;
+	-fx-background-radius: 0px;
+	-fx-background-color: white;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
 }
 
 .friends-search-button {
-    -fx-pref-width: 45;
-    -fx-pref-height: 35;
-    -fx-min-width: 45;
-    -fx-min-height: 35;
-    -fx-max-width: 45;
-    -fx-max-height: 35;
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
-    -fx-icon-size: 24;
+	-fx-pref-width: 45;
+	-fx-pref-height: 35;
+	-fx-min-width: 45;
+	-fx-min-height: 35;
+	-fx-max-width: 45;
+	-fx-max-height: 35;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-icon-size: 24;
 }
 
-.friends-search-button .ikonli-font-icon{
-    -fx-icon-size: 24px;
-    -fx-icon-color: -fx-color-blue;
+.friends-search-button .ikonli-font-icon {
+	-fx-icon-size: 24px;
+	-fx-icon-color: -fx-color-blue;
 }
 
 .friends-scroll-pane {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background: transparent;
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-spacing: 6;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background: transparent;
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+	-fx-spacing: 6;
 
-    -fx-vbar-policy: never;
-    -fx-hbar-policy: never;
-
-    -fx-alignment: center;
+  -fx-alignment: center;
+	-fx-vbar-policy: never;
+	-fx-hbar-policy: never;
 }
 
 /* -------------------- Friend element -------------------- */
 .friend-element-holder {
-    -fx-background-color: -fx-color-yellow;
-    -fx-background-radius: 0;
-    -fx-border-color: black;
-    -fx-border-radius: 0;
-    -fx-border-width: 3;
-    -fx-border-style: solid outside;
+	-fx-background-color: -fx-color-yellow;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+	-fx-border-style: solid outside;
 
-    -fx-pref-width: 330;
-    -fx-pref-height: 60;
-    -fx-min-width: 330;
-    -fx-min-height: 60;
-    -fx-max-width: 330;
-    -fx-max-height: 60;
+	-fx-pref-width: 325;
+	-fx-pref-height: 60;
+	-fx-min-width: 325;
+	-fx-min-height: 60;
+	-fx-max-width: 325;
+	-fx-max-height: 60;
 
-    -fx-spacing: 5;
+	-fx-spacing: 5;
 }
 
 .friend-element-avatar-holder {
-    -fx-pref-width: 40;
-    -fx-pref-height: 55;
-    -fx-min-width: 40;
-    -fx-min-height: 55;
-    -fx-max-width: 40;
-    -fx-max-height: 55;
+	-fx-pref-width: 40;
+	-fx-pref-height: 55;
+	-fx-min-width: 40;
+	-fx-min-height: 55;
+	-fx-max-width: 40;
+	-fx-max-height: 55;
 }
 
 .friend-element-avatar {
-    -fx-background-color: white;
-    -fx-background-radius: 0;
-    -fx-border-color: black;
-    -fx-border-radius: 0;
-    -fx-border-width: 3;
-    -fx-border-style: solid outside;
+	-fx-background-color: white;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+	-fx-border-style: solid outside;
 }
 
 .friend-icon-button {
-    -fx-pref-width: 35;
-    -fx-pref-height: 35;
-    -fx-min-width: 35;
-    -fx-min-height: 35;
-    -fx-max-width: 35;
-    -fx-max-height: 35;
+	-fx-pref-width: 35;
+	-fx-pref-height: 35;
+	-fx-min-width: 35;
+	-fx-min-height: 35;
+	-fx-max-width: 35;
+	-fx-max-height: 35;
 
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
 }
 
 
@@ -650,3 +651,19 @@ Load fonts
 
 /* -------------------- Settings -------------------- */
 
+/* -------------------- Create Trainer -------------------- */
+.create-trainer-background {
+	-fx-background-color: -fx-color-kgm-yellow;
+}
+
+.create-trainer-text-input {
+	-fx-text-fill: black;
+	-fx-background-color: white;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+}
+/* -------------------- Border for RegionPane -------------------- */
+.region-pane-border {
+	-fx-border-color: black; /* Border color */
+	-fx-border-width: 10px; /* Border width */
+}

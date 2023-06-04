@@ -9,7 +9,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="userManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/sidebar.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.UserManagementController">
+<VBox fx:id="userManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/style.css"
+   xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.UserManagementController">
 
    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
       <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
@@ -55,9 +57,11 @@
 
    <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
       <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" HBox.hgrow="ALWAYS">
-         <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button, general-button" text="%saveChanges">
+         <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="kgm-general-button-blue" text="%saveChanges">
+            <font><Font size="18.0" /></font>
          </Button>
-         <Button fx:id="deleteUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="remove-button, general-button" text="%deleteUser">
+         <Button fx:id="deleteUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="kgm-general-button-red" text="%deleteUser">
+            <font><Font size="18.0" /></font>
          </Button>
          <padding>
             <Insets bottom="30.0" />

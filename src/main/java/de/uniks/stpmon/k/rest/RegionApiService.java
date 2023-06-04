@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.rest;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
+import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
@@ -24,8 +25,13 @@ public interface RegionApiService {
 
     @GET("regions/{regionId}/trainers/{id}")
         //TODO: regionId?
-    Observable<Trainer> getTrainer(@Path("id") String trainerId
-    );
+    Observable<Trainer> getTrainer(@Path("id") String trainerId);
+
+    @PATCH("regions/{region}/trainers/{id}")
+        Observable<Trainer> updateTrainer(@Path("region") String regionId,
+                                                @Path("id") String trainerId,
+                                                @Body UpdateTrainerDto trainerDto);
+
 
     @DELETE("regions/{regionId}/trainers/{id}")
     Observable<Trainer> deleteTrainer(@Path("id") String trainerId);

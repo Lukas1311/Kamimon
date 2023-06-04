@@ -15,8 +15,13 @@ public class MonsterBarController extends Controller {
     public VBox monsterBar;
     @FXML
     public HBox monsterSlotsHBox;
+    @FXML
+    public VBox monsterList;
 
     protected ImageView[] monsterSlots;
+
+    @Inject
+    MonsterListController monsterListController;
 
     @Inject
     public MonsterBarController() {
@@ -33,6 +38,7 @@ public class MonsterBarController extends Controller {
      * Create six slots to accommodate monsters and initialize them with the image "freeSlot.png"
      */
     public void createMonsterSlots() {
+        monsterSlotsHBox.getChildren().clear();
         monsterSlots = new ImageView[6];
         for (int i = 0; i < 6; i++) {
             ImageView monsterSlot = new ImageView();
@@ -73,8 +79,22 @@ public class MonsterBarController extends Controller {
     }
 
     /**
-     * Show the list of monsters when clicked on monsterBar.
+     * Show the list of monsters when clicked on monsterBar
+     * Hide this list when clicked on monsterBar again
      */
     public void showMonsters() {
+        if (monsterList.isVisible()) {
+            monsterList.setVisible(false);
+        } else {
+            // Render the monster list
+            Parent monsterListContent = monsterListController.render();
+            monsterList.getChildren().setAll(monsterListContent);
+            monsterList.setVisible(true);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        monsterSlotsHBox.getChildren().clear();
     }
 }

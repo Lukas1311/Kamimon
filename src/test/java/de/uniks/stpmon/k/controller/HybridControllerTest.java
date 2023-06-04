@@ -7,8 +7,11 @@ import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.ws.EventListener;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -24,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -31,6 +35,7 @@ import java.util.ResourceBundle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -41,16 +46,25 @@ class HybridControllerTest extends ApplicationTest {
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final HybridController hybridController = component.hybridController();
     private final UserStorage userStorage = component.userStorage();
+    private final WorldStorage worldStorage = component.worldStorage();
     private final EventListener eventListener = component.eventListener();
+    private final LoadingScreenController loadingScreenController = component.loadingScreenController();
     @Spy
+    @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
+    @SuppressWarnings("unused")
     Provider<ResourceBundle> resourceBundleProvider;
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
+        userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
+        BufferedImage images = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_RGB);
+        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
         hybridController.setPlayAnimations(false);
+        loadingScreenController.setSkipLoading(true);
         app.show(hybridController);
         stage.requestFocus();
     }
@@ -58,17 +72,17 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void openChat() {
         // pressing Chat Button and check if chatList is shown
-        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatList = lookup("#chatList").query();
         assertNotNull(chatList);
 
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         // pressing on a chat and check if chatScreen is shown
-        write("\t\t\t\t\t\t\t");
-        type(KeyCode.ENTER).release(KeyCode.ENTER);
+        write("\t\t\t\t");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
         VBox chatScreen = lookup("#chatScreen").query();
         assertNotNull(chatScreen);
@@ -89,9 +103,15 @@ class HybridControllerTest extends ApplicationTest {
     public void toIngame() {
 
         // pressing Region button and check if ingame is shown
-        write("\t\t\t\t\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        clickOn("#regionVBox");
         waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        waitForFxEvents();
+
         BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
@@ -117,7 +137,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void settings() {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        when(eventListener.<Message>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Message>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         // pressing settings button and check if settings is shown
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
@@ -144,7 +164,7 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void closeSidebar() {
-        when(eventListener.<Group>listen(any(), any())).thenReturn(Observable.empty());
+        when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         StackPane stackPane = lookup("#stackPane").query();
         assertEquals(1, stackPane.getChildren().size());
 
@@ -157,8 +177,17 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#pane");
         waitForFxEvents();
 
-        clickOn("#regionButton");
+        clickOn("#regionVBox");
         waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        waitForFxEvents();
+
+        // get new stack pane from ingame sidebar
+        stackPane = lookup("#stackPane").query();
 
         clickOn("#chat");
         waitForFxEvents();

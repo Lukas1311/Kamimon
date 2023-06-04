@@ -1,14 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.views.WorldView;
+import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -28,11 +25,19 @@ public class IngameController extends Controller {
     public Pane pane;
     @FXML
     public Text inGameText;
+    @FXML
+    public VBox rightVbox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     MonsterBarController monsterBar;
+
+    @Inject
+    MinimapController miniMap;
+
+    @Inject
+    BackpackController backPack;
 
     @Inject
     protected WorldView worldView;
@@ -47,6 +52,8 @@ public class IngameController extends Controller {
 
         worldView.init();
         monsterBar.init();
+        miniMap.init();
+        backPack.init();
     }
 
     @Override
@@ -55,6 +62,8 @@ public class IngameController extends Controller {
 
         worldView.destroy();
         monsterBar.destroy();
+        miniMap.destroy();
+        backPack.destroy();
     }
 
     @Override
@@ -76,6 +85,20 @@ public class IngameController extends Controller {
         if (monsterBar != null) {
             pane.getChildren().add(monsterBar);
         }
+
+
+        Parent miniMap = this.miniMap.render();
+        // Null if unit testing world view
+        if (miniMap != null) {
+            rightVbox.getChildren().add(miniMap);
+        }
+
+        Parent backPack = this.backPack.render();
+        // Null if unit testing world view
+        if (backPack != null) {
+            rightVbox.getChildren().add(backPack);
+        }
+
         return parent;
     }
 

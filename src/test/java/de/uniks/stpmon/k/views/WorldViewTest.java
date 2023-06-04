@@ -1,11 +1,16 @@
 package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.BackpackController;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.MinimapController;
 import de.uniks.stpmon.k.controller.MonsterBarController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
@@ -20,6 +25,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -42,6 +49,16 @@ public class WorldViewTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MonsterBarController monsterBarController;
 
+    @Spy
+    @SuppressWarnings("unused")
+    MinimapController minimapController = new MinimapController();
+
+    @Mock
+    @SuppressWarnings("unused")
+    BackpackController backpackController = new BackpackController();
+
+    WorldStorage worldStorage = component.worldStorage();
+
     @InjectMocks
     public IngameController ingameController;
 
@@ -49,8 +66,9 @@ public class WorldViewTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         super.start(stage);
 
-        //when(hybridControllerProvider.get()).thenReturn(hybridController);
-        //doNothing().when(hybridController).closeTab();
+        BufferedImage images = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_RGB);
+        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
 
         // show app
         app.start(stage);
@@ -69,28 +87,28 @@ public class WorldViewTest extends ApplicationTest {
         type(KeyCode.W);
         waitForFxEvents();
 
-        // check if char moved up by 5
-        assertEquals(5, character.getTranslateZ());
+        // check if char moved up by 8
+        assertEquals(8, character.getTranslateZ());
 
         // test move down
         type(KeyCode.S);
         waitForFxEvents();
 
-        // check if char moved down by 5
+        // check if char moved down by 8
         assertEquals(0, character.getTranslateZ());
 
         // test move left
         type(KeyCode.A);
         waitForFxEvents();
 
-        // check if char moved left by 5
-        assertEquals(-5, character.getTranslateX());
+        // check if char moved left by 8
+        assertEquals(-8, character.getTranslateX());
 
         // test move right
         type(KeyCode.D);
         waitForFxEvents();
 
-        // check if char moved right by 5
+        // check if char moved right by 8
         assertEquals(0, character.getTranslateX());
     }
 }

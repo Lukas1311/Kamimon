@@ -3,7 +3,7 @@ package de.uniks.stpmon.k;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
-import de.uniks.stpmon.k.ws.EventListener;
+import de.uniks.stpmon.k.net.EventListener;
 
 import javax.inject.Singleton;
 import java.util.Locale;
