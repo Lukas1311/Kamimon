@@ -142,22 +142,19 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
         final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
 
-        when(trainerService.deleteMe()).thenReturn(Observable.just(dummytrainer));
         when(popUpControllerProvider.get()).thenReturn(popupMock);
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
             callback.onModalResult(false);
             return null;
         }).when(popupMock).showModal(any());
-        doNothing().when(app).show(any(LobbyController.class));
-        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
 
         //action
         clickOn("#deleteTrainerButton");
 
         verify(popupMock, times(1)).showModal(any());
         verify(trainerService, times(0)).deleteMe();
-        verify(app, times(1)).show(lobbyMock);
+        verify(app, times(0)).show(lobbyMock);
     }
 
     @Test
