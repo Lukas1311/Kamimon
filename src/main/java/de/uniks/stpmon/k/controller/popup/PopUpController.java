@@ -104,6 +104,7 @@ public class PopUpController extends Controller {
                 popUpButtonPane.getColumnConstraints().remove(1);
                 approveButton.setText(translateString("backtoLobby"));
             }
+            default -> {}
         }
 
         return parent;

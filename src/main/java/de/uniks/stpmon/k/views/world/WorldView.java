@@ -11,9 +11,11 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -113,6 +115,7 @@ public class WorldView extends Viewable {
                 case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVEMENT_UNIT);
                 case A -> camera.setTranslateX(camera.getTranslateX() - MOVEMENT_UNIT);
                 case D -> camera.setTranslateX(camera.getTranslateX() + MOVEMENT_UNIT);
+                default -> {}
             }
             rotate(event, camera);
         };
@@ -122,6 +125,7 @@ public class WorldView extends Viewable {
         switch (event.getCode()) {
             case Q -> camera.setRotate(camera.getRotate() - 2.5);
             case E -> camera.setRotate(camera.getRotate() + 2.5);
+            default -> {}
         }
     }
 }
