@@ -37,12 +37,13 @@
          </padding>
       </VBox>
 
-      <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="185.0">
          <TextField fx:id="trainerNameInput" text="Bob">
             <font>
                <Font size="18.0" />
             </font>
          </TextField>
+         <Label fx:id="trainerNameInfo" text="Label" />
          <padding>
             <Insets right="30.0" />
          </padding>

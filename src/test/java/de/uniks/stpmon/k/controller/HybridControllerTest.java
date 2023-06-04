@@ -110,6 +110,8 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        // popup
+        clickOn("#approveButton");
         waitForFxEvents();
 
         BorderPane ingame = lookup("#ingame").query();
@@ -184,6 +186,8 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        // popup pops here
+        clickOn("#approveButton");
         waitForFxEvents();
 
         // get new stack pane from ingame sidebar
@@ -211,6 +215,5 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#pauseScreen");
         waitForFxEvents();
         assertEquals(1, stackPane.getChildren().size());
-
     }
 }
