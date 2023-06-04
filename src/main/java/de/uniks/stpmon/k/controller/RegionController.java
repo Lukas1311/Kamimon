@@ -39,7 +39,7 @@ public class RegionController extends Controller {
         //regionImage.setImage(loadImage("dummyRegionImage.png"));
         regionVBox.setOnMouseClicked(event -> {
             if (!listController.trainerExists()) {
-                listController.createNewTrainer();
+                listController.createNewTrainer(region);
             } else {
                 listController.enterRegion(region);
             }

@@ -78,7 +78,8 @@ public class RegionListController extends PortalController {
         return doesTrainerExist;
     }
 
-    public void createNewTrainer() {
+    public void createNewTrainer(Region region) {
+        createTrainerController.setChosenRegion(region);
         Parent createTrainer = createTrainerController.render();
         if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
             regionListWrappingVox.getChildren().clear();

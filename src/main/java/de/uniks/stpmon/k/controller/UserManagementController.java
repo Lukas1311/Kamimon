@@ -84,6 +84,12 @@ public class UserManagementController extends Controller {
         usernameInvalid = username.isEmpty().or(usernameTooLong);
         passwordInvalid = passwordTooShort;
         changesMade = usernameInvalid.not().or(passwordInvalid.not());
+        changesMade.addListener((observable, oldValue, newValue) -> {
+            // if changes are made again, then changesSaved should update again to false
+            if (newValue) {
+                changesSaved = false;
+            }
+        });
 
         // bind bindings to fxml:
         usernameInput.textProperty().bindBidirectional(username);

@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum PopUpScenario {
+    // general
     SAVE_CHANGES("doYouWantToSaveChanges"),
+    UNSAVED_CHANGES("thereAreUnsavedChanges"),
+    // user management
     DELETE_USER("doYouWantToDeleteUser"),
     DELETION_CONFIRMATION_USER("userGotDeleted"),
-    UNSAVED_CHANGES("thereAreUnsavedChanges"),
+    // trainer management
     DELETE_TRAINER("doYouWantToDeleteTrainer"),
-    DELETE_CONFIRMATION_TRAINER("trainerGotDeleted");
+    DELETE_CONFIRMATION_TRAINER("trainerGotDeleted"),
+    CREATE_TRAINER("doYouWantToCreateTrainer");
 
 
     private final String mainText;
