@@ -106,6 +106,35 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // check mocks:
         verify(popupMock).showModal(any());
+        verify(trainerManagementController).saveSettings();
+        verify(hybridMock).popTab();
+    }
+
+    @Test
+    void testBackToSettingsWithUnsavedChangesClickNo() {
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final HybridController hybridMock = Mockito.mock(HybridController.class);
+
+        // define mocks:
+        when(trainerManagementController.hasUnsavedChanges()).thenReturn(true);
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(false);
+            return null;
+        }).when(popupMock).showModal(any());
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+        doNothing().when(hybridMock).popTab();
+
+        // action:
+        clickOn("#backButton");
+        
+        // no values to check
+
+        // check mocks:
+        verify(popupMock).showModal(any());
+        verify(trainerManagementController, times(0)).saveSettings();
         verify(hybridMock).popTab();
     }
 
