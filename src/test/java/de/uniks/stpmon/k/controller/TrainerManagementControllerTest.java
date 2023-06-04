@@ -20,9 +20,12 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,6 +86,62 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     }
 
     @Test
+    void testBackToSettingsWithUnsavedChanges() {
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final HybridController hybridMock = Mockito.mock(HybridController.class);
+
+        // define mocks:
+        when(trainerManagementController.hasUnsavedChanges()).thenReturn(true);
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+        doNothing().when(hybridMock).popTab();
+
+        // action:
+        clickOn("#backButton");
+        
+        // no values to check
+
+        // check mocks:
+        verify(popupMock).showModal(any());
+        verify(trainerManagementController).saveSettings();
+        verify(hybridMock).popTab();
+    }
+
+    @Test
+    void testBackToSettingsWithUnsavedChangesClickNo() {
+        // prep:
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final HybridController hybridMock = Mockito.mock(HybridController.class);
+
+        // define mocks:
+        when(trainerManagementController.hasUnsavedChanges()).thenReturn(true);
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(false);
+            return null;
+        }).when(popupMock).showModal(any());
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+        doNothing().when(hybridMock).popTab();
+
+        // action:
+        clickOn("#backButton");
+        
+        // no values to check
+
+        // check mocks:
+        verify(popupMock).showModal(any());
+        verify(trainerManagementController, times(0)).saveSettings();
+        verify(hybridMock).popTab();
+    }
+
+    @Test
     void testTryChangeTrainerName() {
         // TODO: region service call
     }
@@ -106,8 +165,51 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         clickOn("#deleteTrainerButton");
 
         verify(popupMock, times(2)).showModal(any());
-        verify(trainerService).deleteMe();
-        verify(app).show(lobbyMock);
+        verify(trainerService, times(1)).deleteMe();
+        verify(app, times(1)).show(lobbyMock);
+    }
+
+    @Test
+    void testDeleteTrainerAndDiscard() {
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(false);
+            return null;
+        }).when(popupMock).showModal(any());
+
+        //action
+        clickOn("#deleteTrainerButton");
+
+        verify(popupMock, times(1)).showModal(any());
+        verify(trainerService, times(0)).deleteMe();
+        verify(app, times(0)).show(lobbyMock);
+    }
+
+    @Test
+    void testDeleteTrainerOnError() {
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+
+        when(trainerService.deleteMe()).thenReturn(Observable.error(new Exception()));
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+        doNothing().when(app).show(any(LobbyController.class));
+        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
+
+        //action
+        clickOn("#deleteTrainerButton");
+
+        verify(popupMock, times(1)).showModal(any());
+        verify(trainerService, times(1)).deleteMe();
+        verify(app, times(1)).show(lobbyMock);
     }
 
     @Test
@@ -130,15 +232,19 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         //define mocks
         when(popUpControllerProvider.get()).thenReturn(popupMock);
         when(trainerService.setTrainerName(anyString())).thenReturn(Observable.just(dummytrainer));
+        AtomicBoolean isFirstInvocation = new AtomicBoolean(false);
 
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
-            callback.onModalResult(true);
+            callback.onModalResult(isFirstInvocation.getAndSet(true));
             return null;
         }).when(popupMock).showModal(any());
 
         //action
         write("\tBob2");
+        // click save then discard
+        clickOn("#saveChangesButton");
+        // click save then OK
         clickOn("#saveChangesButton");
 
         //check values
@@ -146,9 +252,11 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         assertEquals("Bob2", trainerName.getText());
 
         //verify mocks
-        verify(trainerManagementController).saveChanges();
-        verify(popupMock).showModal(any());
-        verify(trainerService).setTrainerName(any());
+        verify(trainerManagementController, times(2)).saveChanges();
+        verify(trainerManagementController, times(1)).saveSettings();
+        verify(popupMock, times(2)).showModal(any());
+        verify(trainerService).setTrainerName(trainerNameCaptor.capture());
+        assertEquals("Bob2", trainerNameCaptor.getValue());
         //TODO: add method for sprite save here
     }
 }
