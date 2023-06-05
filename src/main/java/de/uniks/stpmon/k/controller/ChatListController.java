@@ -82,9 +82,7 @@ public class ChatListController extends TabController {
             openChat(groups.getSelectionModel().getSelectedItem());
         });
         chatList.getChildren().add(groups);
-        for(Node child : chatList.getChildren()) {
-            VBox.setVgrow(child, Priority.ALWAYS);
-        }
+        VBox.setVgrow(groups, Priority.ALWAYS);
         return parent;
     }
 
