@@ -9,14 +9,18 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import javafx.scene.Group;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.SVGPath;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,8 +30,11 @@ import javax.inject.Inject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Viewable {
 
@@ -180,6 +187,12 @@ public abstract class Viewable {
         return new SVGData(svgPaths, svgWidth, svgHeight);
     }
 
+    /**
+     * Method to load vector files (.svg) created with Adobe Illustrator and put them into an ImageView object.
+     * 
+     * @param imageView takes the ImageView object where you want to put the vector graphic inside
+     * @param filename takes the filename of the vector image e.g. kamimonLetterling.svg
+     */
     protected void setVectorImage(ImageView imageView, String filename) {
         SVGData svgData = loadVectorImage(filename);
         List<SVGPath> svgPaths = svgData.getSVGPaths();
