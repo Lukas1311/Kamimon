@@ -162,7 +162,6 @@ public abstract class Viewable {
                         fillColors.put(className, fillColor);
                     }
                 }
-                fillColors.forEach((pClass, color) -> System.out.println(pClass + " " + color));
                 // retrieve the paths
                 if (elementName.equals("path")) {
                     // 'd' contains one/the svg path
