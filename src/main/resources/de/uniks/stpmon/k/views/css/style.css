@@ -363,11 +363,11 @@ Load fonts
 }
 
 .friends-search-element {
-	-fx-pref-width: 330;
+	-fx-pref-width: 310;
 	-fx-pref-height: 35;
-	-fx-min-width: 330;
+	-fx-min-width: 310;
 	-fx-min-height: 35;
-	-fx-max-width: 330;
+	-fx-max-width: 310;
 	-fx-max-height: 35;
 
 	-fx-background-color: transparent;
@@ -413,9 +413,7 @@ Load fonts
 	-fx-border-color: transparent;
 	-fx-spacing: 6;
 
-  -fx-alignment: center;
-	-fx-vbar-policy: never;
-	-fx-hbar-policy: never;
+  	-fx-alignment: center;
 }
 
 /* -------------------- Friend element -------------------- */
@@ -491,7 +489,6 @@ Load fonts
     -fx-background-color: transparent;
     -fx-border-style: none;
     -fx-hbar-policy: never;
-    -fx-vbar-policy: never;
 }
 
 .chat-ov-list .list-view{
@@ -499,7 +496,7 @@ Load fonts
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
     -fx-border-style: hidden;
-	-fx-vbar-policy: never;
+	-fx-hbar-policy: never;
 }
 
 .chat-ov-list .list-cell{
@@ -586,7 +583,6 @@ Load fonts
     -fx-border-radius: 0;
     -fx-border-width: 3;
     -fx-hbar-policy: never;
-    -fx-vbar-policy: never;
 }
 
 .chat-list {
@@ -595,7 +591,6 @@ Load fonts
     -fx-background-color: transparent;
     -fx-border-style: none;
     -fx-hbar-policy: never;
-    -fx-vbar-policy: never;
 }
 
 .chat-list .list-view{
@@ -604,7 +599,6 @@ Load fonts
     -fx-background-color: transparent;
     -fx-border-style: hidden;
     -fx-hbar-policy: never;
-    -fx-vbar-policy: never;
 
 }
 
@@ -619,8 +613,6 @@ Load fonts
     -fx-background-color: transparent;
     -fx-border-style: hidden;
     -fx-hbar-policy: never;
-    -fx-vbar-policy: never;
-
 }
 
 
@@ -729,7 +721,6 @@ Load fonts
 	-fx-border-radius: 0;
 	-fx-border-width: 3;
 	-fx-hbar-policy: never;
-	-fx-vbar-policy: never;
 }
 
 .edit-chat-list {
@@ -738,7 +729,6 @@ Load fonts
 	-fx-background-color: transparent;
 	-fx-border-style: none;
 	-fx-hbar-policy: never;
-	-fx-vbar-policy: never;
 }
 
 .edit-chat-list .list-view{
@@ -747,13 +737,8 @@ Load fonts
 	-fx-background-color: transparent;
 	-fx-border-style: hidden;
 	-fx-hbar-policy: never;
-	-fx-vbar-policy: never;
 }
 
-.edit-chat-list .list-view .scroll-bar:horizontal{
-	-fx-padding: -10px;
-	-fx-opacity: 0;
-}
 
 .edit-chat-list .list-cell{
 	-fx-focus-color: transparent;
@@ -761,7 +746,6 @@ Load fonts
 	-fx-background-color: transparent;
 	-fx-border-style: hidden;
 	-fx-hbar-policy: never;
-	-fx-vbar-policy: never;
 }
 
 .edit-chat-checkbox {
