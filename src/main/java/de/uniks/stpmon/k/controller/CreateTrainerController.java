@@ -1,13 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -24,9 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
-
-public class CreateTrainerController extends ToastedController {
+public class CreateTrainerController extends PortalController {
     @FXML
     public TextField createTrainerInput;
     @FXML
@@ -53,14 +50,15 @@ public class CreateTrainerController extends ToastedController {
     RegionStorage regionStorage;
 
     private Region chosenRegion;
-    private String chosenSprite = "Premade_Character_01.png"; // TODO: hardcoded, remove afterwards
-    private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+    private final String chosenSprite = "Premade_Character_01.png"; // TODO: hardcoded, remove afterwards
+    private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
     private BooleanBinding trainerNameTooLong;
     private BooleanBinding trainerNameInvalid;
-    
+
     @Inject
-    public CreateTrainerController() {}
+    public CreateTrainerController() {
+    }
 
     public void setChosenRegion(Region region) {
         this.chosenRegion = region;
@@ -76,9 +74,9 @@ public class CreateTrainerController extends ToastedController {
         createTrainerInput.textProperty().bindBidirectional(trainerName);
 
         trainerNameInfo.textProperty().bind(
-            Bindings.when(trainerNameTooLong)
-            .then(translateString("trainername.too.long"))
-            .otherwise("")
+                Bindings.when(trainerNameTooLong)
+                        .then(translateString("trainername.too.long"))
+                        .otherwise("")
         );
 
         // these three elements have to be disabled when pop up is shown
@@ -93,6 +91,7 @@ public class CreateTrainerController extends ToastedController {
 
     public void trainerSprite() {
     }
+
     // TODO: some of these two methods have to return the sprite string also
     // because the string is used in the create trainer call
     public void createSprite() {
@@ -105,16 +104,16 @@ public class CreateTrainerController extends ToastedController {
             if (!result) return;
             // TODO: get image id string of the sprite
             disposables.add(regionService
-                .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(trainer -> {
-                        System.out.println(trainer);
-                        hybridControllerProvider.get().openMain(INGAME);
-                    }, err -> {
-                        err.printStackTrace();
-                        handleError(err);
-                    }
-                )
+                    .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(trainer -> {
+                                System.out.println(trainer);
+                                enterRegion(chosenRegion);
+                            }, err -> {
+                                err.printStackTrace();
+                                handleError(err);
+                            }
+                    )
             );
         });
     }
