@@ -45,7 +45,7 @@ public class ImageUtils {
                                 int writeX, int writeY,
                                 int readX, int readY,
                                 int width, int height) {
-        Raster raster = source.getData();
+        Raster raster = source.getRaster();
         Object tdata = null;
 
         for (int i = 0; i < height; i++) {
