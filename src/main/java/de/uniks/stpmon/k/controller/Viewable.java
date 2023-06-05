@@ -90,10 +90,10 @@ public abstract class Viewable {
 
     private class SVGData {
         private List<SVGPath> svgPaths;
-        private Integer width;
-        private Integer height;
+        private Double width;
+        private Double height;
 
-        private SVGData(List<SVGPath> svgPaths, Integer width, Integer height) {
+        private SVGData(List<SVGPath> svgPaths, Double width, Double height) {
             this.svgPaths = svgPaths;
             this.width = width;
             this.height = height;
@@ -103,11 +103,11 @@ public abstract class Viewable {
             return this.svgPaths;
         }
 
-        private Integer getWidth() {
+        private Double getWidth() {
             return this.width;
         }
 
-        private Integer getHeight() {
+        private Double getHeight() {
             return this.height;
         }
     }
@@ -115,7 +115,7 @@ public abstract class Viewable {
     private SVGData loadVectorImage(String filename) {
         URL svgUrl = Objects.requireNonNull(Viewable.class.getResource(filename));
         List<SVGPath> svgPaths = new ArrayList<>();
-        Integer svgWidth = 0, svgHeight = 0;
+        Double svgWidth = 0.0, svgHeight = 0.0;
         try {
             DocumentBuilderFactory  factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -126,8 +126,8 @@ public abstract class Viewable {
             Element root = document.getDocumentElement();
             // extract the width and height from the 'viewBox' node
             String[] viewBoxValues = root.getAttribute("viewBox").split(" ");
-            svgWidth = Integer.parseInt(viewBoxValues[2]);
-            svgHeight = Integer.parseInt(viewBoxValues[3]);
+            svgWidth = Double.parseDouble(viewBoxValues[2]);
+            svgHeight = Double.parseDouble(viewBoxValues[3]);
 
             NodeList elements = root.getElementsByTagName("*");
             
