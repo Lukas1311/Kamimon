@@ -141,9 +141,11 @@ public abstract class Viewable {
                 if (elementName.equals("path")) {
                     // 'd' contains one/the svg path
                     String pathData = pathElement.getAttribute("d");
+                    String fillColor = "#AE3439";
 
                     SVGPath path = new SVGPath();
                     path.setContent(pathData);
+                    path.setFill(Color.web(fillColor));
                     svgPaths.add(path);
                 }
             }
@@ -160,9 +162,10 @@ public abstract class Viewable {
         List<SVGPath> svgPaths = svgData.getSVGPaths();
 
         Group vectorGroup = new Group(svgPaths.toArray(new SVGPath[0]));
-        WritableImage image = new WritableImage(svgData.getWidth(), svgData.getHeight());
+        SnapshotParameters snapshotParams = new SnapshotParameters();
+        snapshotParams.setFill(Color.TRANSPARENT);
         // render the group onto our writeableImage
-        vectorGroup.snapshot(null, image);
+        vectorGroup.snapshot(snapshotParams, image);
         imageView.setImage(image);
     }
 }
