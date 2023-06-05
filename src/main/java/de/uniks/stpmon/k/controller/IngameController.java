@@ -1,11 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.SubScene;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -40,7 +41,7 @@ public class IngameController extends Controller {
     BackpackController backPack;
 
     @Inject
-    protected WorldView worldView;
+    protected WorldController worldController;
 
     @Inject
     public IngameController() {
@@ -50,7 +51,7 @@ public class IngameController extends Controller {
     public void init() {
         super.init();
 
-        worldView.init();
+        worldController.init();
         monsterBar.init();
         miniMap.init();
         backPack.init();
@@ -60,7 +61,7 @@ public class IngameController extends Controller {
     public void destroy() {
         super.destroy();
 
-        worldView.destroy();
+        worldController.destroy();
         monsterBar.destroy();
         miniMap.destroy();
         backPack.destroy();
@@ -70,15 +71,8 @@ public class IngameController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        SubScene scene = worldView.renderScene();
-        if (scene != null) {
-            ingameStack.getChildren().add(0, scene);
-
-            // Scale the scene to the parent
-            scene.widthProperty()
-                    .bind(((Region) parent).widthProperty());
-            scene.heightProperty()
-                    .bind(((Region) parent).heightProperty());
+        if (worldController != null) {
+            ingameStack.getChildren().add(0, worldController.render());
         }
         Parent monsterBar = this.monsterBar.render();
         // Null if unit testing world view
