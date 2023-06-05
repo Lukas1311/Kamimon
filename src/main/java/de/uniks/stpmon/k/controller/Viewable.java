@@ -130,22 +130,45 @@ public abstract class Viewable {
             svgHeight = Double.parseDouble(viewBoxValues[3]);
 
             NodeList elements = root.getElementsByTagName("*");
-            
+            final HashMap<String, String> fillColors = new HashMap<>();
+
             // process all the elements inside the svg
             for (int i = 0; i < elements.getLength(); i++) {
                 Node node = elements.item(i);
                 Element pathElement = (Element) node;
 
-                // extract relevant information from the SVG element (we only need the paths from the 'd'-node)
+                // extract relevant information from the SVG element, we need the fill colors and the paths itself
                 String elementName = node.getNodeName();
+                // retrieve the fill groups and colors if they exist
+                if (elementName.equals("style")) {
+                    // retrieves the content of a node e.g. 'style' is the node and 'type' is the attribute and in between is the content
+                    String styleContent = pathElement.getTextContent();
+
+                    // regex with two match groups to extract the path group and the path color as HEX
+                    Pattern regex = Pattern.compile("\\.(\\w+)\\{fill:(#[\\da-fA-F]{6});\\}");
+                    Matcher matcher = regex.matcher(styleContent);
+
+                    while (matcher.find()) {
+                        String className = matcher.group(1);
+                        String fillColor = matcher.group(2);
+                        // populate hashmap with all available colors with mapping: path group -> color
+                        fillColors.put(className, fillColor);
+                    }
+                }
+                fillColors.forEach((pClass, color) -> System.out.println(pClass + " " + color));
+                // retrieve the paths
                 if (elementName.equals("path")) {
                     // 'd' contains one/the svg path
+                    String pathClass = pathElement.getAttribute("class");
                     String pathData = pathElement.getAttribute("d");
-                    String fillColor = "#AE3439";
 
+                    // sets the current path and adds it to all paths
                     SVGPath path = new SVGPath();
                     path.setContent(pathData);
-                    path.setFill(Color.web(fillColor));
+                    if (!fillColors.isEmpty()) {
+                        // sets the correct path color dependant on the path class
+                        path.setFill(Color.web(fillColors.get(pathClass)));
+                    }
                     svgPaths.add(path);
                 }
             }
