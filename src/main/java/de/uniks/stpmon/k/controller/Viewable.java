@@ -187,6 +187,8 @@ public abstract class Viewable {
         Group vectorGroup = new Group(svgPaths.toArray(new SVGPath[0]));
         SnapshotParameters snapshotParams = new SnapshotParameters();
         snapshotParams.setFill(Color.TRANSPARENT);
+        
+        WritableImage image = new WritableImage(svgData.getWidth().intValue(), svgData.getHeight().intValue());
         // render the group onto our writeableImage
         vectorGroup.snapshot(snapshotParams, image);
         imageView.setImage(image);
