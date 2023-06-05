@@ -71,8 +71,10 @@ public class IngameController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        if (worldController != null) {
-            ingameStack.getChildren().add(0, worldController.render());
+        Parent world = this.worldController.render();
+        // Null if unit testing world view
+        if (world != null) {
+            ingameStack.getChildren().add(0, world);
         }
         Parent monsterBar = this.monsterBar.render();
         // Null if unit testing world view

@@ -4,13 +4,14 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,24 +21,15 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Provider;
-
-import javafx.scene.control.Label;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateTrainerControllerTest extends ApplicationTest {
@@ -59,7 +51,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     Provider<HybridController> hybridControllerProvider;
     @Mock
     RegionStorage regionStorage;
-
+    @Mock
+    LoadingScreenController loadingScreen;
 
     @Spy
     @InjectMocks
@@ -100,14 +93,12 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         // prep.
         NPCInfo npcInfo = new NPCInfo(false);
         Trainer dummyTrainer = new Trainer("1", "r", "0", "n", "i.png", 0, "0", 0, 0, 0, npcInfo);
-        final HybridController hybridMock = Mockito.mock(HybridController.class);
         final PopUpController popupMock = Mockito.mock(PopUpController.class); 
 
         // define mocks:
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
-        when(hybridControllerProvider.get()).thenReturn(hybridMock);
         when(popUpControllerProvider.get()).thenReturn(popupMock);
-        doNothing().when(hybridMock).openMain(any());
+        doNothing().when(loadingScreen).startLoading(any());
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
             callback.onModalResult(true);
@@ -123,7 +114,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(createTrainerController).createTrainer();
         verify(popupMock).showModal(any());
         verify(regionService).createTrainer("1", "Tom", "Premade_Character_01.png");
-        verify(hybridMock).openMain(any());
+        verify(loadingScreen).startLoading(any());
     }
 
     @Test
