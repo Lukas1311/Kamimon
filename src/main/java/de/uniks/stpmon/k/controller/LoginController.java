@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
@@ -146,8 +147,11 @@ public class LoginController extends Controller {
 
 
         //Show KAMIMON Logo
-        imageViewKamimonLettering.setImage(loadImage("kamimonLettering.png"));
-        imageViewKamimonLettering.setPreserveRatio(true);
+        Platform.runLater(() -> {
+            setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
+            imageViewKamimonLettering.setPreserveRatio(true);
+        });
+
         return parent;
     }
 
