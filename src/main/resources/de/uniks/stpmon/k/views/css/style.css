@@ -125,6 +125,60 @@ Load fonts
 	-fx-padding: 5 5 5 15;
 }
 
+/* -------------------- Scrollbar -------------------- */
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+	-fx-background-color : transparent;
+	-fx-border-color : transparent;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-radius : 0px;
+	-fx-border-radius : 0px;
+}
+
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+	-fx-background-color :transparent;
+	-fx-background-radius : 0.0em;
+	-fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+	-fx-background-color :transparent;
+	-fx-background-radius : 0.0em;
+	-fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow{
+	-fx-shape : " ";
+	-fx-padding :0.15em 0.0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+	-fx-shape : " ";
+	-fx-padding :0.0 0.15em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+	-fx-background-color : -fx-color-kgm-red;
+	-fx-background-insets : 2.0, 0.0, 0.0;
+	-fx-background-radius : 2.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+	-fx-background-color :-fx-color-kgm-red;
+	-fx-background-insets : 2.0, 0.0, 0.0;
+	-fx-background-radius : 2.0em;
+}
+
 /* -------------------- Loading Screen -------------------- */
 .loading-screen {
 	-fx-background-color: -fx-color-kgm-yellow;
@@ -445,6 +499,7 @@ Load fonts
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
     -fx-border-style: hidden;
+	-fx-vbar-policy: never;
 }
 
 .chat-ov-list .list-cell{
@@ -465,11 +520,11 @@ Load fonts
 }
 
 .chat-element {
-    -fx-pref-width: 330;
+    -fx-pref-width: 320;
     -fx-pref-height: 35;
-    -fx-min-width: 330;
+    -fx-min-width: 320;
     -fx-min-height: 35;
-    -fx-max-width: 330;
+    -fx-max-width: 320;
     -fx-max-height: 35;
 
     -fx-background-color: -fx-color-yellow;
@@ -550,6 +605,7 @@ Load fonts
     -fx-border-style: hidden;
     -fx-hbar-policy: never;
     -fx-vbar-policy: never;
+
 }
 
 .chat-list .list-view .scroll-bar:horizontal{
