@@ -1,7 +1,13 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Area;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -137,12 +143,12 @@ class RegionServiceTest {
         Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.getTrainer(any(String.class)))
+        when(regionApiService.getTrainer(any(String.class), any(String.class)))
                 .thenReturn(Observable.just(trainer));
 
         //action
         final Trainer returnTrainer = regionService
-                .getTrainer("trainerId")
+                .getTrainer("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -150,7 +156,7 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainer.name());
 
         //check mocks
-        verify(regionApiService).getTrainer(captor.capture());
+        verify(regionApiService).getTrainer(captor.capture(), captor.capture());
     }
 
     @Test
@@ -159,12 +165,12 @@ class RegionServiceTest {
         Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.deleteTrainer(any(String.class)))
+        when(regionApiService.deleteTrainer(any(String.class), any(String.class)))
                 .thenReturn(Observable.just(trainer));
 
         //action
         final Trainer returnTrainer = regionService
-                .deleteTrainer("trainerId")
+                .deleteTrainer("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -172,7 +178,7 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainer.name());
 
         //check mocks
-        verify(regionApiService).deleteTrainer(captor.capture());
+        verify(regionApiService).deleteTrainer(captor.capture(), captor.capture());
     }
 
     //------------------- Regions ---------------------------------

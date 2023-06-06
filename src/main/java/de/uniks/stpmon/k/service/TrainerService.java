@@ -6,7 +6,6 @@ import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableObjectValue;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,7 +36,7 @@ public class TrainerService {
         if (currentTrainer == null) {
             return Observable.empty();
         }
-        return regionApiService.deleteTrainer(currentTrainer._id());
+        return regionApiService.deleteTrainer(currentTrainer.region(), currentTrainer._id());
     }
 
     public Observable<Trainer> setTrainerName(String trainername) {
@@ -58,7 +57,7 @@ public class TrainerService {
                 trainer.npc());
         trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null);
-        return regionApiService.updateTrainer(trainer._id(), trainer.region(), dto);
+        return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 
     public Observable<Trainer> setImage(String image) {
@@ -79,6 +78,6 @@ public class TrainerService {
                 trainer.npc());
         trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(null,image);
-        return regionApiService.updateTrainer(trainer._id(), trainer.region(), dto);
+        return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 }
