@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -28,6 +29,8 @@ public class CreateTrainerController extends PortalController {
     public TextField createTrainerInput;
     @FXML
     public Label trainerNameInfo;
+    @FXML
+    public Button closeButton;
     @FXML
     public ImageView trainerSprite;
     @FXML
@@ -85,6 +88,7 @@ public class CreateTrainerController extends PortalController {
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
 
         createTrainerButton.setOnAction(click -> createTrainer());
+        closeButton.setOnAction(click -> close());
 
         return parent;
     }
@@ -124,6 +128,10 @@ public class CreateTrainerController extends PortalController {
         popUp.setScenario(scenario);
         popUp.showModal(callback);
         isPopUpShown.set(false);
+    }
+
+    public void close() {
+        hybridControllerProvider.get().openMain(MainWindow.LOBBY);
     }
 }
 
