@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
@@ -140,5 +141,21 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Test
     public void createSprite() {
 
+    }
+
+    @Test
+    void testCloseWindow() {
+        // define mocks:
+        HybridController hybridMock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+
+        // action:
+        clickOn("#closeButton");
+
+        // values to check:
+
+        // verify mocks:
+        verify(createTrainerController).closeWindow();
+        verify(hybridMock).openMain(MainWindow.LOBBY);
     }
 }
