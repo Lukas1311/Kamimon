@@ -3,10 +3,12 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Polygon?>
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.IngameSettingsController">
-      <ListView fx:id="ingameSettingsListView"/>
-      <Polygon fx:id="ingameSettingsArrow" fill="#f7f9fc" layoutY="84.0"
+<HBox fx:id="ingameSettingsHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      stylesheets="@css/style.css" styleClass="ingameSettings-hox" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.IngameSettingsController"
+>
+      <ListView fx:id="ingameSettingsListView" prefWidth="165" styleClass="bordered-listView"/>
+      <Polygon fx:id="ingameSettingsArrow" fill="#f7f9fc" layoutY="84.0" translateY="19"
                points="-50.0, -30.0, -36.0, -45.0, -50.0, -60.0" stroke="BLACK" strokeType="INSIDE"/>
 </HBox>

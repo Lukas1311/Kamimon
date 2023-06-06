@@ -735,24 +735,31 @@ Load fonts
 }
 
 .edit-chat-error-text {
-	-fx-text-fill: -fx-color-red;
-	-fx-text-overrun: ellipsis;
-	-fx-font-size: 12;
+    -fx-text-fill: -fx-color-red;
+    -fx-text-overrun: ellipsis;
+    -fx-font-size: 12;
 }
-
 
 
 /* -------------------- Settings -------------------- */
+.bordered-listView {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
+
+.ingameSettings-hox {
+    -fx-padding: 12 0 0 0;
+}
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
 
 .create-trainer-text-input {
-	-fx-text-fill: black;
-	-fx-background-color: white;
-	-fx-border-color: black;
+    -fx-text-fill: black;
+    -fx-background-color: white;
+    -fx-border-color: black;
 	-fx-border-width: 3px;
 }
 /* -------------------- Border for RegionPane -------------------- */

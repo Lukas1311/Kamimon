@@ -14,23 +14,31 @@ public class IngameSettingsCellFactory implements Callback<ListView<String>, Lis
         this.ingameSettingsController = ingameSettingsController;
     }
 
-
     @Override
     public ListCell<String> call(ListView<String> param) {
         return new ListCell<>() {
             @Override
-            protected void updateItem(String entry, boolean empty) {
-                super.updateItem(entry, empty);
+            protected void updateItem(String entryText, boolean empty) {
+                super.updateItem(entryText, empty);
 
-                if (empty || entry == null) {
+                if (empty || entryText == null) {
                     setText(null);
                     setGraphic(null);
                 } else {
                     final IngameSettingsEntryController entryController =
-                            new IngameSettingsEntryController(ingameSettingsController, entry);
+                            new IngameSettingsEntryController(ingameSettingsController, entryText);
                     setGraphic(entryController.render());
+
+                }
+
+                ListView<String> listView = getListView();
+                if (listView != null && isSelected()) {
+                    // Set the style or update the text for the selected cell
+                    setText("Selected: " + getText());
                 }
             }
         };
     }
+
+
 }

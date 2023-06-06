@@ -2,11 +2,9 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -28,6 +26,8 @@ public class IngameController extends Controller {
     public Text inGameText;
     @FXML
     public VBox rightVbox;
+    @FXML
+    public HBox ingameWrappingHBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -41,7 +41,12 @@ public class IngameController extends Controller {
     BackpackController backPack;
 
     @Inject
+    Provider<IngameSettingsController> ingameSettingsControllerProvider;
+
+    @Inject
     protected WorldController worldController;
+
+    Parent ingameSettings;
 
     @Inject
     public IngameController() {
@@ -86,13 +91,27 @@ public class IngameController extends Controller {
         Parent miniMap = this.miniMap.render();
         // Null if unit testing world view
         if (miniMap != null) {
-            rightVbox.getChildren().add(miniMap);
+            rightVbox.getChildren().add(0, miniMap);
         }
 
         Parent backPack = this.backPack.render();
         // Null if unit testing world view
         if (backPack != null) {
-            rightVbox.getChildren().add(backPack);
+            ingameWrappingHBox.getChildren().add(backPack);
+            backPack.setOnMouseClicked(click -> {
+                if (ingameSettings == null) {
+                    ingameSettings = ingameSettingsControllerProvider.get().render();
+                    ingameWrappingHBox.getChildren().add(0, ingameSettings);
+                    //ingameStack.getChildren().add(ingameSettings);
+                    ingameStack.setAlignment(Pos.TOP_RIGHT);
+
+                } else {
+                    ingameSettingsControllerProvider.get().setVisability(
+                            !ingameSettingsControllerProvider.get().isVisible());
+                }
+
+
+            });
         }
 
         return parent;
