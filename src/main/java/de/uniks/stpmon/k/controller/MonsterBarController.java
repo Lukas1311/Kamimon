@@ -2,13 +2,11 @@ package de.uniks.stpmon.k.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
-import java.util.Objects;
 
 public class MonsterBarController extends Controller {
     @FXML
@@ -44,7 +42,7 @@ public class MonsterBarController extends Controller {
             ImageView monsterSlot = new ImageView();
             monsterSlot.setFitHeight(30);
             monsterSlot.setFitWidth(30);
-            monsterSlot.setImage(loadImage("freeSlot.png"));
+            loadImage(monsterSlot, "freeSlot.png");
             monsterSlotsHBox.getChildren().add(monsterSlot);
             monsterSlots[i] = monsterSlot;
         }
@@ -63,19 +61,12 @@ public class MonsterBarController extends Controller {
 
         ImageView monsterSlot = monsterSlots[slot];
         if(currentHP <= 0) {
-            monsterSlot.setImage(loadImage("healthPointsZero.png"));
+            loadImage(monsterSlot, "healthPointsZero.png");
         } else if (currentHP < maxHP * 0.2) {
-            monsterSlot.setImage(loadImage("healthPointsLow.png"));
+            loadImage(monsterSlot, "healthPointsLow.png");
         } else {
-            monsterSlot.setImage(loadImage("healthPointsNormal.png"));
+            loadImage(monsterSlot, "healthPointsNormal.png");
         }
-    }
-
-    /**
-     * Load an image using its file path
-     */
-    public Image loadImage(String image) {
-        return new Image(Objects.requireNonNull(MonsterBarController.class.getResource(image)).toString());
     }
 
     /**

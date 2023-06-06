@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
@@ -51,14 +52,18 @@ public class RegionListControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
-    LoadingScreenController loadingScreen = new LoadingScreenController();
+    @InjectMocks
+    @SuppressWarnings("unused")
+    LoadingScreenController loadingScreen;
+    @Spy
+    EffectContext effectContext = new EffectContext();
 
     @Override
     public void start(Stage stage) throws Exception {
         final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("0", "Test", new Spawn("0", 0, 0), null)));
         when(regionService.getRegions()).thenReturn(regionMock);
 
-        loadingScreen.setSkipLoading(true);
+        effectContext.setSkipLoading(true);
         regionListController.doesTrainerExist = true;
 
         app.start(stage);
