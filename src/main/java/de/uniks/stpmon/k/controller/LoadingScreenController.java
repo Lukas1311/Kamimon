@@ -15,8 +15,6 @@ import java.util.TimerTask;
 @Singleton
 public class LoadingScreenController extends Controller {
 
-    private final Timer timer = new Timer();
-
     @FXML
     public ImageView imageViewKamimonLettering;
     @FXML
@@ -38,6 +36,7 @@ public class LoadingScreenController extends Controller {
     @Override
     public void init() {
         super.init();
+        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -46,6 +45,7 @@ public class LoadingScreenController extends Controller {
                 }
             }
         }, minTime);
+        onDestroy(timer::cancel);
     }
 
     public void startLoading(Runnable onLoadingFinished) {
