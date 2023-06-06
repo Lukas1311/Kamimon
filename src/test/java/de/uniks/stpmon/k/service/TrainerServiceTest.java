@@ -57,7 +57,7 @@ public class TrainerServiceTest {
                 "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
-        when(regionApiService.deleteTrainer(any(), eq("1"))).thenReturn(Observable.just(trainer));
+        when(regionApiService.deleteTrainer("0", "1")).thenReturn(Observable.just(trainer));
 
         //action
         Observable<Trainer> deletedTrainer = trainerService.deleteMe();
@@ -66,7 +66,7 @@ public class TrainerServiceTest {
         assertEquals(trainer, deletedTrainer.blockingFirst());
 
         //check mocks
-        verify(regionApiService).deleteTrainer(any(), eq("1"));
+        verify(regionApiService).deleteTrainer("0", "1");
     }
 
     @Test
@@ -96,7 +96,7 @@ public class TrainerServiceTest {
         assertEquals("Bob", newTrainer.name());
 
         //check mocks
-        verify(regionApiService).updateTrainer("1", "0", captor.getValue());
+        verify(regionApiService).updateTrainer("0", "1", captor.getValue());
     }
 
     @Test
@@ -126,6 +126,6 @@ public class TrainerServiceTest {
         assertEquals("101", newTrainer.image());
 
         //check mocks
-        verify(regionApiService).updateTrainer("1", "0", captor.getValue());
+        verify(regionApiService).updateTrainer("0", "1", captor.getValue());
     }
 }

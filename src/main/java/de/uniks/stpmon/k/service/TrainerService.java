@@ -57,7 +57,7 @@ public class TrainerService {
                 trainer.npc());
         trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null);
-        return regionApiService.updateTrainer(trainer._id(), trainer.region(), dto);
+        return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 
     public Observable<Trainer> setImage(String image) {
@@ -78,6 +78,6 @@ public class TrainerService {
                 trainer.npc());
         trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(null,image);
-        return regionApiService.updateTrainer(trainer._id(), trainer.region(), dto);
+        return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 }

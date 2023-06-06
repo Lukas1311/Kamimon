@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
@@ -27,7 +28,7 @@ import java.util.List;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
-public class TrainerManagementController extends ToastedController {
+public class TrainerManagementController extends Controller {
     @FXML
     public VBox trainerManagementScreen;
     @FXML
@@ -168,9 +169,9 @@ public class TrainerManagementController extends ToastedController {
                     .subscribe(trainer -> {
                         PopUpScenario deleteConfirmScenario = PopUpScenario.DELETE_CONFIRMATION_TRAINER;
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
-                        showPopUp(deleteConfirmScenario, innerResult -> app.show(lobbyControllerProvider.get()));
+                        showPopUp(deleteConfirmScenario, innerResult -> hybridControllerProvider.get().openMain(MainWindow.LOBBY));
 
-                    }, this::handleError));
+                    }, err -> hybridControllerProvider.get().openMain(MainWindow.LOBBY)));
         });
     }
 

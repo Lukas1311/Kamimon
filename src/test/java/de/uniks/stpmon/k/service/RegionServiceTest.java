@@ -137,12 +137,12 @@ class RegionServiceTest {
         Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.getTrainer(any(String.class)))
+        when(regionApiService.getTrainer(any(String.class), any(String.class)))
                 .thenReturn(Observable.just(trainer));
 
         //action
         final Trainer returnTrainer = regionService
-                .getTrainer("trainerId")
+                .getTrainer("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -150,7 +150,7 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainer.name());
 
         //check mocks
-        verify(regionApiService).getTrainer(captor.capture());
+        verify(regionApiService).getTrainer(captor.capture(), captor.capture());
     }
 
     @Test
@@ -170,7 +170,7 @@ class RegionServiceTest {
 
         //action
         final Trainer returnTrainer = regionService
-                .deleteTrainer("trainerId")
+                .deleteTrainer("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -178,7 +178,7 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainer.name());
 
         //check mocks
-        verify(regionApiService).deleteTrainer(any(), captor.capture());
+        verify(regionApiService).deleteTrainer(captor.capture(), captor.capture());
     }
 
     //------------------- Regions ---------------------------------
