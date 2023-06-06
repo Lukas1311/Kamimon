@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
+import de.uniks.stpmon.k.service.EffectContext;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -35,5 +36,11 @@ public class MainModule {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 //null values are not written into json
                 .setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
+    }
+
+    @Provides
+    @Singleton
+    EffectContext effectContext() {
+        return new EffectContext();
     }
 }

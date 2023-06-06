@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.service.EffectContext;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,10 @@ public class LoadingScreenControllerTest extends ApplicationTest {
     @Mock
     Runnable runTask;
 
+    @Spy
+    EffectContext effectContext = new EffectContext()
+            .setSkipLoadImages(true);
+
     @Override
     public void start(Stage stage) throws Exception {
         // show app
@@ -36,7 +41,7 @@ public class LoadingScreenControllerTest extends ApplicationTest {
     @Test
     public void showScreen() {
         // Show loading screen with no minimum time
-        loadingController.setSkipLoading(false);
+        effectContext.setSkipLoading(false);
         loadingController.setMinTime(0);
         loadingController.startLoading(runTask);
 
@@ -49,7 +54,7 @@ public class LoadingScreenControllerTest extends ApplicationTest {
     @Test
     public void testSkip() {
         // Skip show loading screen
-        loadingController.setSkipLoading(true);
+        effectContext.setSkipLoading(true);
         loadingController.startLoading(runTask);
 
         // Check if the loading screen is not shown
@@ -61,7 +66,7 @@ public class LoadingScreenControllerTest extends ApplicationTest {
     @Test
     public void showMin() {
         // Show loading screen but with very high minimum time
-        loadingController.setSkipLoading(false);
+        effectContext.setSkipLoading(false);
         loadingController.setMinTime(10000);
         loadingController.startLoading(runTask);
 

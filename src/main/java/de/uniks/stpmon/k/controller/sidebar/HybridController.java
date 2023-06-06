@@ -35,8 +35,6 @@ public class HybridController extends Controller {
     private final TranslateTransition sidebarTransition = new TranslateTransition(Duration.millis(800));
     private final EventHandler<MouseEvent> consumeMouse = MouseEvent::consume;
 
-    private boolean playAnimations = true;
-
     private SidebarTab mainTab = SidebarTab.NONE;
 
     private MainWindow currentWindow = MainWindow.LOBBY;
@@ -80,10 +78,6 @@ public class HybridController extends Controller {
     @Inject
     public HybridController() {
 
-    }
-
-    public void setPlayAnimations(boolean playAnimations) {
-        this.playAnimations = playAnimations;
     }
 
     @Override
@@ -210,7 +204,9 @@ public class HybridController extends Controller {
             return;
         }
 
-        if (!playAnimations) {
+        // Skip the animation if requested
+        if (effectContext != null
+                && effectContext.shouldSkipAnimations()) {
             if (callback != null) {
                 callback.run();
             }
