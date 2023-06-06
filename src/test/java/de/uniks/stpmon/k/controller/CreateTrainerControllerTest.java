@@ -109,7 +109,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         // action:
         write("Tom");
         clickOn("#createTrainerButton");
-        sleep(2000);
 
         // verify mocks:
         verify(createTrainerController).createTrainer();
