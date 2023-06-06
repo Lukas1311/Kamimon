@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Polygon?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.IngameSettingsController">
+      <ListView fx:id="ingameSettingsListView"/>
+      <Polygon fx:id="ingameSettingsArrow" fill="#f7f9fc" layoutX="173.0" layoutY="84.0"
+               points="-50.0, -30.0, -36.0, -45.0, -50.0, -60.0" stroke="BLACK" strokeType="INSIDE"/>
+</AnchorPane>
