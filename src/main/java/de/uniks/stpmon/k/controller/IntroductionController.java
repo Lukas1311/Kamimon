@@ -25,11 +25,7 @@ public class IntroductionController extends Controller {
     public Button back;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-    final Image imageOne = loadImage("introductionSheetOne.png");
-    final Image imageTwo = loadImage("introductionSheetTwo.png");
-    final Image imageThree = loadImage("introductionSheetThree.png");
-    final Image imageFour = loadImage("introductionSheetFour.png");
-    final Image[] images = {imageOne, imageTwo, imageThree, imageFour};
+    final Image[] images = new Image[4];
     private final IntegerProperty indexProperty = new SimpleIntegerProperty(0);
 
     @Inject
@@ -38,11 +34,20 @@ public class IntroductionController extends Controller {
     }
 
     @Override
+    public void init() {
+        super.init();
+        loadImage(images, 0, "introductionSheetOne.png");
+        loadImage(images, 1, "introductionSheetTwo.png");
+        loadImage(images, 2, "introductionSheetThree.png");
+        loadImage(images, 3, "introductionSheetFour.png");
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
 
-        imageIntroduction.setImage(imageOne);
-        if (imageIntroduction.getImage() == imageOne) {
+        imageIntroduction.setImage(images[0]);
+        if (imageIntroduction.getImage() == images[0]) {
             back.setVisible(false);
         }
         back.visibleProperty()

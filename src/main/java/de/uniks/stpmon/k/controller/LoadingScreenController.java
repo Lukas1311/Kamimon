@@ -26,7 +26,6 @@ public class LoadingScreenController extends Controller {
 
     public Runnable onLoadingFinished;
     public int minTime = 2000;
-    private boolean skipLoading = false;
 
     @Inject
     public LoadingScreenController() {
@@ -50,7 +49,8 @@ public class LoadingScreenController extends Controller {
 
     public void startLoading(Runnable onLoadingFinished) {
         this.onLoadingFinished = onLoadingFinished;
-        if (skipLoading) {
+        if (effectContext != null
+                && effectContext.shouldSkipLoading()) {
             onLoadingFinished.run();
             return;
         }
@@ -61,21 +61,17 @@ public class LoadingScreenController extends Controller {
         this.minTime = minTime;
     }
 
-    public void setSkipLoading(boolean skipLoading) {
-        this.skipLoading = skipLoading;
-    }
-
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        imageViewKamimonLettering.setImage(loadImage("kamimonLettering.png"));
+        loadImage(imageViewKamimonLettering, "kamimonLettering.png");
         imageViewKamimonLettering.setPreserveRatio(true);
         imageViewKamimonLettering.fitWidthProperty().bind(hBoxCompanies.widthProperty().multiply(0.5));
         imageViewKamimonLettering.fitHeightProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
 
-        imageViewDeadBirdsSociety.setImage(loadImage("deadBirdsSocietyLogo.png"));
+        loadImage(imageViewDeadBirdsSociety, "deadBirdsSocietyLogo.png");
         imageViewDeadBirdsSociety.setPreserveRatio(true);
         imageViewDeadBirdsSociety.fitWidthProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
@@ -83,7 +79,7 @@ public class LoadingScreenController extends Controller {
         imageViewDeadBirdsSociety.fitHeightProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
         );
-        imageViewKgmLogo.setImage(loadImage("kgmLogo.png"));
+        loadImage(imageViewKgmLogo, "kgmLogo.png");
         imageViewKgmLogo.setPreserveRatio(true);
         imageViewKgmLogo.fitWidthProperty().bind(
                 hBoxCompanies.heightProperty().multiply(0.5)
