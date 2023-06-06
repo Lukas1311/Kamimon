@@ -24,29 +24,21 @@ public class MinimapController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
-
-        miniMap.setOnMouseClicked(click -> openMapOverview());
-
         return parent;
     }
 
-    @Override // TODO: is this necessary?
+    @Override
     public void init() {
         super.init();
     }
 
-    @Override // TODO: is this necessary?
+    @Override
     public void destroy() {
         super.destroy();
     }
 
-    @Override // TODO: is this necessary?
+    @Override
     public void onDestroy(Runnable action) {
         super.onDestroy(action);
-    }
-
-    public void openMapOverview() {
-        System.out.println("map is opened");
-        app.show(mapOverviewControllerProvider.get());
     }
 }
