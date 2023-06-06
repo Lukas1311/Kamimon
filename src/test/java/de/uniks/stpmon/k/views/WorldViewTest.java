@@ -1,16 +1,11 @@
 package de.uniks.stpmon.k.views;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.BackpackController;
-import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.MinimapController;
-import de.uniks.stpmon.k.controller.MonsterBarController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.World;
-import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
@@ -19,12 +14,9 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Provider;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -36,31 +28,11 @@ public class WorldViewTest extends ApplicationTest {
 
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
-    @Spy
-    @SuppressWarnings("unused")
-    public WorldView worldView = component.worldView();
-    @Spy
-    @SuppressWarnings("unused")
-    public HybridController hybridController = component.hybridController();
-    @Mock
-    @SuppressWarnings("unused")
-    public Provider<HybridController> hybridControllerProvider;
-    @Mock
-    @SuppressWarnings("unused")
-    MonsterBarController monsterBarController;
-
-    @Spy
-    @SuppressWarnings("unused")
-    MinimapController minimapController = new MinimapController();
-
-    @Mock
-    @SuppressWarnings("unused")
-    BackpackController backpackController = new BackpackController();
 
     WorldStorage worldStorage = component.worldStorage();
 
     @InjectMocks
-    public IngameController ingameController;
+    public WorldController controller = component.worldController();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -72,7 +44,7 @@ public class WorldViewTest extends ApplicationTest {
 
         // show app
         app.start(stage);
-        app.show(ingameController);
+        app.show(controller);
         stage.requestFocus();
     }
 

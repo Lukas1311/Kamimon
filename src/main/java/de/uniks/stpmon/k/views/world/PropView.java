@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class PropView extends WorldController {
+public class PropView extends WorldViewable {
 
     @Inject
     protected WorldStorage storage;
