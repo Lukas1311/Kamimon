@@ -29,10 +29,6 @@ public class ChatEntryController extends Controller {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void destroy() {
         super.destroy();
     }

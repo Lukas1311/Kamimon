@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -67,8 +68,8 @@ public class RegionListController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        //final Image imageKamimonLettering = loadImage("kamimonLettering.png");
-        //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
+        final Image imageKamimonLettering = loadImage("kamimonLettering.png");
+        imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
 
         regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
         return parent;
