@@ -33,10 +33,16 @@ public class MapOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        mapOverviewContent.setStyle("-fx-background-color: black");
+
+        closeButton.setOnAction(click -> closeMap());
         return parent;
     }
 
     public void showInfo() {
+    }
 
+    public void closeMap() {
+        mapOverviewContent.setVisible(false);
     }
 }
