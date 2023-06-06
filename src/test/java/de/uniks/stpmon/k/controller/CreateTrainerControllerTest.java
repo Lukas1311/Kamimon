@@ -107,7 +107,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         }).when(popupMock).showModal(any());
 
         // action:
-        write("Tom");
+        write("\tTom");
         clickOn("#createTrainerButton");
 
         // verify mocks:
@@ -122,10 +122,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
 
         HybridController hybridMock = Mockito.mock(HybridController.class);
         PopUpController popupMock = Mockito.mock(PopUpController.class); 
-        // when(hybridControllerProvider.get()).thenReturn(hybridMock);
-        // when(popUpControllerProvider.get()).thenReturn(popUpMock);
-        // doNothing().when(hybridMock).openMain(any());
 
+        write("\t");
         write("Nom".repeat(11));
         
         Button createTrainerButton = lookup("#createTrainerButton").queryButton();
