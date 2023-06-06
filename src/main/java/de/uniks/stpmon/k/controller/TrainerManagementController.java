@@ -27,7 +27,7 @@ import java.util.List;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
-public class TrainerManagementController extends Controller {
+public class TrainerManagementController extends ToastedController {
     @FXML
     public VBox trainerManagementScreen;
     @FXML
@@ -170,7 +170,7 @@ public class TrainerManagementController extends Controller {
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
                         showPopUp(deleteConfirmScenario, innerResult -> app.show(lobbyControllerProvider.get()));
 
-                    }, err -> app.show(lobbyControllerProvider.get())));
+                    }, this::handleError));
         });
     }
 

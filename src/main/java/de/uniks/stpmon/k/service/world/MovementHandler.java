@@ -92,7 +92,7 @@ public class MovementHandler {
         if (!Objects.equals(newTrainer.area(), trainer.area())) {
             movements.clear();
             movementBlocked = true;
-            return worldLoader.enterArea()
+            return worldLoader.tryEnterArea()
                     .map((t) -> dto)
                     .doOnComplete(() -> movementBlocked = false);
         }

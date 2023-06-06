@@ -181,6 +181,12 @@ public class RegionTestModule {
             }
 
             @Override
+            public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
+                Trainer trainer = getTrainer("0").blockingFirst();
+                return Observable.just(List.of(trainer));
+            }
+
+            @Override
             public Observable<Trainer> getTrainer(String trainerId) {
                 Trainer trainer = getTrainerById(trainerId);
                 if (trainer != null) {
@@ -199,7 +205,7 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<Trainer> deleteTrainer(String trainerId) {
+            public Observable<Trainer> deleteTrainer(String regionId, String trainerId) {
                 Trainer trainer = getTrainerById(trainerId);
                 if (trainer != null) {
                     List<Trainer> trainerList = trainersHashMap.get(trainer.area());

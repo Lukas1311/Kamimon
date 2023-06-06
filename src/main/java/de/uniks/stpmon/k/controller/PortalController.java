@@ -29,17 +29,21 @@ public class PortalController extends ToastedController implements IPortalContro
     @Override
     public void init() {
         super.init();
-        portalSource.setPortalController(this);
+        if (portalSource != null) {
+            portalSource.setPortalController(this);
+        }
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        portalSource.setPortalController(null);
+        if (portalSource != null) {
+            portalSource.setPortalController(null);
+        }
     }
 
     public void enterRegion(Region region) {
-        subscribe(worldLoader.enterRegion(region), (trainer) -> {
+        subscribe(worldLoader.tryEnterRegion(region), (trainer) -> {
             // ignore because load world is called async by the portal service
         });
     }

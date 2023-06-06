@@ -56,6 +56,7 @@ public class RegionListController extends PortalController {
 
     @Override
     public void init() {
+        super.init();
         colIndex = 0;
         ListChangeListener<Region> listener = c -> addRegionToGridPane();
         regions.addListener(listener);

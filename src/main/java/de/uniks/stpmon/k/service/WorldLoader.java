@@ -55,9 +55,16 @@ public class WorldLoader {
         });
     }
 
-    public Observable<Trainer> enterRegion(Region region) {
+    public Observable<Trainer> tryEnterRegion(Region region) {
         if (loadingSource.isTeleporting()) {
             return Observable.empty();
+        }
+        Trainer currentTrainer = trainerStorage.getTrainer();
+        if (currentTrainer != null) {
+            if (currentTrainer.region().equals(region._id())) {
+                return Observable.error(new IllegalStateException("Already in this region."));
+            }
+            return Observable.error(new IllegalStateException("Old trainer was not removed from storage."));
         }
         loadingSource.setTeleporting(true);
         return regionService.getMainTrainer(region._id())
@@ -75,12 +82,19 @@ public class WorldLoader {
                 }).doOnComplete(() -> loadingSource.setTeleporting(false));
     }
 
-    public Observable<Trainer> enterArea() {
+    public Observable<Trainer> tryEnterArea() {
         if (loadingSource.isTeleporting()) {
             return Observable.empty();
         }
         loadingSource.setTeleporting(true);
         Trainer trainer = trainerStorage.getTrainer();
+        if (trainer == null) {
+            return Observable.error(new IllegalStateException("No trainer in storage."));
+        }
+        Region region = regionStorage.getRegion();
+        if (region == null) {
+            return Observable.error(new IllegalStateException("No region in storage."));
+        }
         return regionService.getArea(trainer.region(), trainer.area())
                 .map(area -> {
                     regionStorage.setArea(area);

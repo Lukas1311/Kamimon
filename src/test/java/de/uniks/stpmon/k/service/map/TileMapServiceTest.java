@@ -37,10 +37,16 @@ public class TileMapServiceTest {
     TileMapService msgService;
 
     private TileMapData createDummyMap() {
-        ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3), 2, 2, 0, 0);
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), 0, 0, 2, 2, 0, 0, "tilelayer", true, List.of());
+        ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
+                2, 2,
+                0, 0);
+        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk),
+                0, 0,
+                2, 2,
+                0, 0, "tilelayer", true, List.of());
         return new TileMapData(
-                2, 2, false, List.of(layer),
+                2, 2,
+                false, List.of(layer),
                 1, 1,
                 List.of(new TilesetSource(1, "grass.json")),
                 "map");
@@ -49,7 +55,10 @@ public class TileMapServiceTest {
     @Test
     public void renderMap() {
         when(presetService.getTileset("grass.json")).thenReturn(Observable.just(new TilesetData(
-                2, "grass.png", 2, 2, 0, "grass", 0, 1, 1, 1, List.of(), "", List.of()
+                2, "grass.png",
+                2, 2,
+                0, "grass", 0, 1,
+                1, 1, List.of(), "", List.of()
         )));
 
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
