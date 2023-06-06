@@ -3,8 +3,12 @@ package de.uniks.stpmon.k.controller;
 import javafx.scene.Parent;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class MinimapController extends Controller{
+
+    @Inject
+    Provider<MapOverviewController> mapOverviewControllerProvider; 
 
 
     @Inject
@@ -15,20 +19,25 @@ public class MinimapController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        return parent;    }
+        return parent;
+    }
 
-    @Override
+    @Override // TODO: is this necessary?
     public void init() {
         super.init();
     }
 
-    @Override
+    @Override // TODO: is this necessary?
     public void destroy() {
         super.destroy();
     }
 
-    @Override
+    @Override // TODO: is this necessary?
     public void onDestroy(Runnable action) {
         super.onDestroy(action);
+    }
+
+    public void openMapOverview() {
+        app.show(mapOverviewControllerProvider.get());
     }
 }
