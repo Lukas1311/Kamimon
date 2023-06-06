@@ -88,7 +88,7 @@ public class CreateTrainerController extends PortalController {
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
 
         createTrainerButton.setOnAction(click -> createTrainer());
-        closeButton.setOnAction(click -> close());
+        closeButton.setOnAction(click -> closeWindow());
 
         return parent;
     }
@@ -130,7 +130,7 @@ public class CreateTrainerController extends PortalController {
         isPopUpShown.set(false);
     }
 
-    public void close() {
+    public void closeWindow() {
         hybridControllerProvider.get().openMain(MainWindow.LOBBY);
     }
 }
