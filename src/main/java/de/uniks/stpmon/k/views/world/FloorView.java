@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.service.world.World;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
@@ -23,7 +22,7 @@ public class FloorView extends WorldViewable {
     }
 
     @Override
-    public Node render(int angle, PerspectiveCamera camera) {
+    public Node render() {
         World world = storage.getWorld();
         if (world == null) {
             return new Group();

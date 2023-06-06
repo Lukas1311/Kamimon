@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.World;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,12 +20,12 @@ public class PropView extends WorldViewable {
     }
 
     @Override
-    public Node render(int angle, PerspectiveCamera camera) {
+    public Node render() {
         World world = storage.getWorld();
         Group props = new Group();
         props.setId("props");
         for (TileProp prop : world.props()) {
-            Node propNode = createRectangleScaled(prop.image(), angle);
+            Node propNode = createRectangleScaled(prop.image(), WorldView.WORLD_ANGLE);
             propNode.setTranslateX(prop.x() * 16);
             propNode.setTranslateZ(-((prop.y() + prop.height()) * 16));
             props.getChildren().add(propNode);

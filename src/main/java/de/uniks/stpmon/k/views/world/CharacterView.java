@@ -1,10 +1,9 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.storage.CameraStorage;
+import de.uniks.stpmon.k.service.world.MovementHandler;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 
@@ -15,18 +14,21 @@ import javax.inject.Singleton;
 public class CharacterView extends WorldViewable {
 
     @Inject
-    protected EventListener listener;
+    protected CameraStorage cameraStorage;
     @Inject
-    protected RegionStorage regionStorage;
+    protected MovementHandler movementHandler;
 
     @Inject
     public CharacterView() {
     }
 
     @Override
-    public Node render(int angle, PerspectiveCamera camera) {
-        Node character = createRectangleScaled("map/char.png", angle);
+    public Node render() {
+        Node character = createRectangleScaled("map/char.png", WorldView.WORLD_ANGLE);
         character.setId("character");
+        PerspectiveCamera camera = cameraStorage.getCamera();
+        character.setTranslateX(camera.getTranslateX() + WorldView.ENTITY_OFFSET_X * WorldView.WORLD_UNIT);
+        character.setTranslateZ(camera.getTranslateZ() - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
         camera.translateXProperty().addListener((observable, oldValue, newValue) -> {
             character.setTranslateX(character.getTranslateX() - ((double) oldValue - (double) newValue));
         });
@@ -36,27 +38,23 @@ public class CharacterView extends WorldViewable {
         return character;
     }
 
-    public void onMove(int x, int y) {
+    private void onMoveReceived(MoveTrainerDto dto) {
+        PerspectiveCamera camera = cameraStorage.getCamera();
+        camera.setTranslateX(dto.x() * WorldView.WORLD_UNIT);
+        camera.setTranslateZ(-dto.y() * WorldView.WORLD_UNIT);
     }
 
-    public void onMoveReceived(MoveTrainerDto dto) {
+    private void onInitial(Trainer trainer) {
+        PerspectiveCamera camera = cameraStorage.getCamera();
+        camera.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
+        camera.setTranslateZ(-trainer.y() * WorldView.WORLD_UNIT);
     }
 
     @Override
     public void init() {
-        if (regionStorage.isEmpty()) {
-            return;
-        }
-        Area area = regionStorage.getArea();
-        if (area == null || area.map() == null) {
-            return;
-        }
-        subscribe(listener.listen(Socket.UDP,
-                        "areas.*.trainers.*.moved",
-                        MoveTrainerDto.class),
-                (event) -> {
-                    MoveTrainerDto dto = event.data();
-                    onMoveReceived(dto);
-                });
+        super.init();
+        subscribe(movementHandler.addMoveListener(), this::onMoveReceived);
+        onDestroy(movementHandler.addKeyHandler());
+        movementHandler.initialPosition(this::onInitial);
     }
 }

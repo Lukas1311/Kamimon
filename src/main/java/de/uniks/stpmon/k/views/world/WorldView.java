@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.controller.Viewable;
-import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.World;
@@ -24,6 +24,9 @@ import javax.inject.Singleton;
 public class WorldView extends Viewable {
 
     public static final int MOVEMENT_UNIT = 8;
+    public static final int WORLD_UNIT = 16;
+    public static final int ENTITY_OFFSET_X = 0;
+    public static final int ENTITY_OFFSET_Y = 1;
     public static final int WORLD_ANGLE = -59;
 
     @Inject
@@ -36,6 +39,9 @@ public class WorldView extends Viewable {
     protected FloorView floorView;
     @Inject
     protected PropView propView;
+
+    @Inject
+    protected CameraStorage cameraStorage;
 
     @Inject
     public WorldView() {
@@ -58,21 +64,9 @@ public class WorldView extends Viewable {
         if (world == null) {
             return new Group();
         }
-        int x = 0;
-        int y = 0;
-        Region region = regionStorage.getRegion();
-        if (region != null) {
-            x += region.spawn().x() * 16;
-            y += (region.spawn().y() + 1) * 16;
-        }
-        Node character = characterView.render(WORLD_ANGLE, camera);
-
-        Node floor = floorView.render(WORLD_ANGLE, camera);
-        camera.setTranslateX(x);
-        camera.setTranslateZ(-y);
-
-        Node props = propView.render(WORLD_ANGLE, camera);
-
+        Node character = characterView.render();
+        Node floor = floorView.render();
+        Node props = propView.render();
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
@@ -83,7 +77,10 @@ public class WorldView extends Viewable {
 
     public SubScene createScene() {
         PerspectiveCamera camera = createCamera();
-
+        if (cameraStorage != null) {
+            cameraStorage.setCamera(camera);
+        }
+        initChildren();
         Group root;
         if (storage.isEmpty()) {
             root = new Group();
@@ -91,9 +88,9 @@ public class WorldView extends Viewable {
             root = render(camera);
         }
 
-        app.getStage()
-                .getScene()
-                .setOnKeyPressed(keyPressed(camera));
+//        app.getStage()
+//                .getScene()
+//                .setOnKeyPressed(keyPressed(camera));
 
         // Create sub scene
         SubScene scene = new SubScene(root, 450, 400, true, SceneAntialiasing.DISABLED);
@@ -105,8 +102,7 @@ public class WorldView extends Viewable {
         return scene;
     }
 
-    @Override
-    public void init() {
+    private void initChildren() {
         characterView.init();
         floorView.init();
         propView.init();
@@ -118,6 +114,7 @@ public class WorldView extends Viewable {
 
         characterView.destroy();
         floorView.destroy();
+        propView.destroy();
     }
 
     private static EventHandler<KeyEvent> keyPressed(PerspectiveCamera camera) {

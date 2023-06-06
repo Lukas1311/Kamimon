@@ -21,12 +21,12 @@ public class TrainerStorage {
         return trainer;
     }
 
-    public void setTrainer(Trainer Trainer) {
-        this.trainer = Trainer;
-        trainerLoaded.set(Trainer != null);
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
+        trainerLoaded.set(trainer != null);
     }
 
-    public SimpleBooleanProperty getTrainerLoaded(){
+    public SimpleBooleanProperty getTrainerLoaded() {
         return trainerLoaded;
     }
 }

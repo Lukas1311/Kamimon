@@ -30,7 +30,6 @@ import javax.inject.Provider;
 import java.util.HashMap;
 import java.util.Optional;
 
-import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
 public class ChatController extends PortalController {
@@ -86,7 +85,9 @@ public class ChatController extends PortalController {
     }
 
     @Override
-    public void init() { // get all messages in one chat
+    public void init() {
+        super.init();
+        // get all messages in one chat
         messages.clear();
         // populate a group users hashmap with just one REST call to not run into rate limit
         disposables.add(userService
