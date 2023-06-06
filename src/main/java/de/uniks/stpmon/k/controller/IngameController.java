@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -33,15 +34,16 @@ public class IngameController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     MonsterBarController monsterBar;
-
     @Inject
     MinimapController miniMap;
-
+    @Inject
+    Provider<MapOverviewController> mapOverviewControllerProvider;
     @Inject
     BackpackController backPack;
-
     @Inject
     protected WorldController worldController;
+
+
 
     @Inject
     public IngameController() {
@@ -94,6 +96,13 @@ public class IngameController extends Controller {
         if (backPack != null) {
             rightVbox.getChildren().add(backPack);
         }
+
+        miniMap.setOnMouseClicked(click -> {
+            // TODO: block inputs while big map is open? (e.g. walking?)
+            Parent mapOverview = mapOverviewControllerProvider.get().render();
+            ingameStack.getChildren().add(mapOverview);
+            ingameStack.setAlignment(Pos.CENTER);
+        });
 
         return parent;
     }
