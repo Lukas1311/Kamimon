@@ -199,7 +199,7 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<Trainer> deleteTrainer(String trainerId) {
+            public Observable<Trainer> deleteTrainer(String regionID, String trainerId) {
                 Trainer trainer = getTrainerById(trainerId);
                 if (trainer != null) {
                     List<Trainer> trainerList = trainersHashMap.get(trainer.area());

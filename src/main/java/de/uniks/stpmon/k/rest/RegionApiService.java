@@ -7,7 +7,13 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.util.List;
 
@@ -34,7 +40,8 @@ public interface RegionApiService {
 
 
     @DELETE("regions/{region}/trainers/{id}")
-    Observable<Trainer> deleteTrainer(@Path("id") String trainerId);
+    Observable<Trainer> deleteTrainer(@Path("region") String regionId,
+                                      @Path("id") String trainerId);
 
     //------------------- Regions ---------------------------------
 
