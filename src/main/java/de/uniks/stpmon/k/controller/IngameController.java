@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
-public class IngameController extends Controller {
+public class IngameController extends PortalController {
 
     @FXML
     public StackPane ingameStack;

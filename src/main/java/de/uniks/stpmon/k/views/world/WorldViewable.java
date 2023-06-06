@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -21,7 +20,7 @@ public abstract class WorldViewable extends Viewable {
 
     public static final double IMAGE_SCALE = 4.0;
 
-    public abstract Node render(int angle, PerspectiveCamera camera);
+    public abstract Node render();
 
     protected Material createMaterial(Image image) {
         PhongMaterial material = new PhongMaterial();

@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -25,18 +24,12 @@ public class TileMapService {
     PresetService presetService;
     @Inject
     RegionStorage regionStorage;
-    @Inject
-    WorldStorage worldStorage;
 
     @Inject
     public TileMapService() {
     }
 
     public Observable<World> loadTilemap() {
-        if (!worldStorage.isEmpty()) {
-            return Observable
-                    .just(worldStorage.getWorld());
-        }
         if (regionStorage.isEmpty()) {
             return Observable.empty();
         }
@@ -48,9 +41,7 @@ public class TileMapService {
             BufferedImage image = tileMap.renderMap();
             PropMap propMap = new PropMap(tileMap);
             List<TileProp> props = propMap.createProps();
-            World world = new World(tileMap.getLayers().get(0), image, props);
-            worldStorage.setWorld(world);
-            return world;
+            return new World(tileMap.getLayers().get(0), image, props);
         });
     }
 
