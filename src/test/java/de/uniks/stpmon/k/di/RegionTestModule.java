@@ -181,7 +181,7 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<Trainer> getTrainer(String trainerId) {
+            public Observable<Trainer> getTrainer(String regionId, String trainerId) {
                 Trainer trainer = getTrainerById(trainerId);
                 if (trainer != null) {
                     return Observable.just(trainer);

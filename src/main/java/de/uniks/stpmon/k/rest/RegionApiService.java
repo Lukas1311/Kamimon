@@ -30,13 +30,13 @@ public interface RegionApiService {
                                           @Query("user") String userId);
 
     @GET("regions/{region}/trainers/{id}")
-        //TODO: regionId?
-    Observable<Trainer> getTrainer(@Path("id") String trainerId);
+    Observable<Trainer> getTrainer(@Path("region") String regionId,
+                                   @Path("id") String trainerId);
 
     @PATCH("regions/{region}/trainers/{id}")
-        Observable<Trainer> updateTrainer(@Path("region") String regionId,
-                                                @Path("id") String trainerId,
-                                                @Body UpdateTrainerDto trainerDto);
+    Observable<Trainer> updateTrainer(@Path("region") String regionId,
+                                      @Path("id") String trainerId,
+                                      @Body UpdateTrainerDto trainerDto);
 
 
     @DELETE("regions/{region}/trainers/{id}")
