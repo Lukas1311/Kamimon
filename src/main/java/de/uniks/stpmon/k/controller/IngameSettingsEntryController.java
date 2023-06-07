@@ -16,20 +16,20 @@ public class IngameSettingsEntryController extends Controller {
     public Text ingameSettingText;
     @FXML
     public HBox ingameSettingsEntryHBox;
-    final String entryText;
+    final IngameSettingsOption entry;
     final IngameSettingsController ingameSettingsController;
 
 
     @Inject
-    public IngameSettingsEntryController(IngameSettingsController isc, String entryText) {
-        this.entryText = entryText;
+    public IngameSettingsEntryController(IngameSettingsController isc, IngameSettingsOption entry) {
+        this.entry = entry;
         this.ingameSettingsController = isc;
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        ingameSettingText.setText(entryText);
+        ingameSettingText.setText(translateString(entry.toString()));
         Platform.runLater(() -> {
             ingameSettingsController.setHeight(ingameSettingsEntryHBox.heightProperty().get() + 10);
         });
@@ -41,7 +41,7 @@ public class IngameSettingsEntryController extends Controller {
     }
 
     private void openOption() {
-        ingameSettingsController.openOption(entryText);
+        ingameSettingsController.openOption(entry);
     }
 
     public void setArrow() {

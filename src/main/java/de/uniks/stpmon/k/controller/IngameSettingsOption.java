@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
 public enum IngameSettingsOption {
-    MONSTER_LIST("MonsterList"),
-    MONSTERS("Monsters"),
-    MAP("Map");
+    MONSTER_LIST("monsterList"),
+    MONSTERS("monsters"),
+    MAP("map");
 
     private final String entryText;
 

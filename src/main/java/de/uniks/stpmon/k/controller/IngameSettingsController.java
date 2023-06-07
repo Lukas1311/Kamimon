@@ -18,9 +18,9 @@ import static de.uniks.stpmon.k.controller.IngameSettingsOption.*;
 @Singleton
 public class IngameSettingsController extends Controller {
     @FXML
-    public ListView<String> ingameSettingsListView;
+    public ListView<IngameSettingsOption> ingameSettingsListView;
 
-    final List<String> ingameSettingOptions = new ArrayList<>();
+    final List<IngameSettingsOption> ingameSettingOptions = new ArrayList<>();
     @FXML
     public Polygon ingameSettingsArrow;
     @FXML
@@ -36,9 +36,9 @@ public class IngameSettingsController extends Controller {
         final Parent parent = super.render();
 
         //TODO: Translation
-        ingameSettingOptions.add(MONSTER_LIST.toString());
-        ingameSettingOptions.add(MONSTERS.toString());
-        ingameSettingOptions.add(MAP.toString());
+        ingameSettingOptions.add(MONSTER_LIST);
+        ingameSettingOptions.add(MONSTERS);
+        ingameSettingOptions.add(MAP);
         ingameSettingsListView.setItems(FXCollections.observableArrayList(ingameSettingOptions));
 
         IngameSettingsCellFactory cellFactory = new IngameSettingsCellFactory(this);
@@ -55,7 +55,7 @@ public class IngameSettingsController extends Controller {
         ingameSettingsListView.setPrefHeight(totalHeight);
     }
 
-    protected void openOption(String option) {
+    protected void openOption(IngameSettingsOption option) {
         //TODO: Open the sub menus
         ingameSettingOptions.stream().filter(e -> e.equals(option)).findFirst();
     }
