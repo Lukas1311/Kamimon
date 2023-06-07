@@ -5,14 +5,12 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.rest.PresetApiService;
+import de.uniks.stpmon.k.utils.ResponseUtils;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.util.List;
 
 public class PresetService {
@@ -60,23 +58,11 @@ public class PresetService {
     }
 
     public Observable<BufferedImage> getImage(String fileName) {
-        return getFile(fileName)
-                .observeOn(Schedulers.io())
-                .map((body) -> {
-                    try (body) {
-                        return ImageIO.read(new BufferedInputStream(body.byteStream()));
-                    }
-                });
+        return ResponseUtils.readImage(getFile(fileName));
     }
 
     public Observable<TilesetData> getTileset(String fileName) {
-        return getFile(fileName)
-                .observeOn(Schedulers.io())
-                .map((body) -> {
-                    try (body) {
-                        return mapper.readValue(new BufferedInputStream(body.byteStream()), TilesetData.class);
-                    }
-                });
+        return ResponseUtils.readJson(getFile(fileName), mapper, TilesetData.class);
     }
 
 }

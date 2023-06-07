@@ -42,7 +42,7 @@ public class EntityView extends WorldViewable {
     @Override
     public Node render() {
         MeshView character = createRectangleScaled(
-                characterSet.getImage(),
+                characterSet.image(),
                 CharacterSet.TRAINER_WIDTH, CharacterSet.TRAINER_HEIGHT,
                 WorldView.WORLD_ANGLE);
         character.setId("entity");

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
@@ -24,7 +23,6 @@ public class TileMap {
     private final int width;
     private final int height;
     private final List<BufferedImage> layers = new ArrayList<>();
-    private BufferedImage mainImage;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.data = provider.map();
@@ -43,34 +41,12 @@ public class TileMap {
         return tilesetBySource;
     }
 
-    public Tileset getTileset(TilesetSource source) {
-        return tilesetBySource.get(source);
-    }
-
-    public Optional<Tileset> getTileset(String filename) {
-        return tilesetBySource.values().stream()
-                .filter(tileset -> tileset.source().source().equals(filename))
-                .findFirst();
-    }
-
     public BufferedImage renderMap() {
         return renderMap(width, height);
     }
 
-    public BufferedImage getMainImage() {
-        return mainImage;
-    }
-
     public List<BufferedImage> getLayers() {
         return layers;
-    }
-
-    public int getTileHeight() {
-        return tileHeight;
-    }
-
-    public int getTileWidth() {
-        return tileWidth;
     }
 
     public int getHeight() {
@@ -91,18 +67,16 @@ public class TileMap {
     public BufferedImage renderMap(int width, int height) {
         BufferedImage mergedImage = createImage(
                 width, height);
-        Graphics2D g = mergedImage.createGraphics();
-        int i = 0;
+        Graphics2D graphics = mergedImage.createGraphics();
         for (TileLayerData layer : data.layers()) {
             if (layer.chunks() == null) {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
-            g.drawImage(layerImage, layer.startx(), layer.starty(), null);
+            graphics.drawImage(layerImage, layer.startx(), layer.starty(), null);
             layers.add(layerImage);
         }
-        g.dispose();
-        mainImage = mergedImage;
+        graphics.dispose();
         return mergedImage;
     }
 

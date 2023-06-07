@@ -69,7 +69,7 @@ public class WorldView extends Viewable {
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        return new Group(floor, ambient, character, props);
+        return new Group(floor, ambient, props, character);
     }
 
     public SubScene createScene() {

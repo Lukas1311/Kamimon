@@ -11,7 +11,6 @@ public class WorldStorage {
 
     @Inject
     public WorldStorage() {
-
     }
 
     public void setWorld(WorldSet world) {
