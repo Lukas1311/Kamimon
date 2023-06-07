@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -28,8 +29,9 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 public class ChooseSpriteController extends ToastedController {
+    public static final double IMAGE_SCALE = 4.0;
     protected final ObservableList<String> characters = FXCollections.observableArrayList();
-    private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+    private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
     protected int currentSpriteIndex;
     protected int previousSpriteIndex;
@@ -126,8 +128,11 @@ public class ChooseSpriteController extends ToastedController {
                 int spriteY = 0;
                 // extract the sprite from the original image
                 BufferedImage image = bufferedImage.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
+                // Scale the image
+                BufferedImage scaledImage = ImageUtils.scaledImage(image, IMAGE_SCALE);
+
                 // Convert the BufferedImage to JavaFX Image
-                Image fxImage = SwingFXUtils.toFXImage(image, null);
+                Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
                 // Set the image
                 spriteImage.setImage(fxImage);
             } catch (IOException e) {
@@ -172,8 +177,6 @@ public class ChooseSpriteController extends ToastedController {
      * Check if the selected character is different from the previous character and shows a pop-up for confirmation
      */
     public void saveSprite() {
-        // TODO: Test implementieren
-        /*
         String selectedCharacter = characters.get(currentSpriteIndex);
         String previousCharacter = characters.get(previousSpriteIndex);
         if (!selectedCharacter.equals(previousCharacter)) {
@@ -193,8 +196,6 @@ public class ChooseSpriteController extends ToastedController {
             chooseTrainerContent.getChildren().clear();
             chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
         }
-
-         */
     }
 
     /**
