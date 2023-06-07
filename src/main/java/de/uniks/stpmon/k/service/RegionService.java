@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
@@ -42,7 +43,7 @@ public class RegionService {
         return regionApiService.getMainTrainers(regionId, userStorage.getUser()._id())
                 .flatMap((trainers) -> {
                     if (trainers.isEmpty()) {
-                        return Observable.empty();
+                        return Observable.just(NoneConstants.NONE_TRAINER);
                     }
                     return Observable.just(trainers.get(0));
                 });

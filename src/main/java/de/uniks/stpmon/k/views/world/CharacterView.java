@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.views.world;
 
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -37,6 +38,11 @@ public class CharacterView extends EntityView {
         character.translateZProperty().addListener((observable, oldValue, newValue) ->
                 camera.setTranslateZ(camera.getTranslateZ() - ((double) oldValue - (double) newValue)));
         return character;
+    }
+
+    @Override
+    protected void onMove(Trainer trainer) {
+        trainerStorage.setTrainer(trainer);
     }
 
     private void keyPressed(KeyEvent event) {

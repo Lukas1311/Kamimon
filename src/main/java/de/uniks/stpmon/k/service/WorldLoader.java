@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
@@ -87,8 +88,11 @@ public class WorldLoader {
         }
         loadingSource.setTeleporting(true);
         return regionService.getMainTrainer(region._id())
-                .switchIfEmpty(Observable.error(new IllegalStateException("No trainer in region.")))
                 .flatMap((trainer) -> {
+                    // Skip enter if trainer empty
+                    if (trainer == NoneConstants.NONE_TRAINER) {
+                        return Observable.just(trainer);
+                    }
                     trainerStorage.setTrainer(trainer);
                     return regionService.getArea(region._id(), trainer.area())
                             .map((area) -> {
