@@ -18,11 +18,10 @@ import java.util.TimerTask;
 @Singleton
 public class MovementScheduler implements IMovementService {
 
-    public static final int MOVEMENT_PERIOD = 100;
+    public static final int MOVEMENT_PERIOD = 70;
     private final Deque<MoveTrainerDto> movements = new LinkedList<>();
     private final Timer timer = new Timer();
     private boolean movementBlocked = false;
-    private String eventName;
 
     @Inject
     protected EventListener listener;
