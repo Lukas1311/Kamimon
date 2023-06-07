@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Singleton
-public class TileMapService {
+public class TextureSetService {
 
     @Inject
     PresetService presetService;
@@ -25,17 +25,25 @@ public class TileMapService {
     RegionStorage regionStorage;
 
     @Inject
-    public TileMapService() {
+    public TextureSetService() {
     }
 
-    public Observable<Map<String, TrainerSet>> getAllTrainers() {
+    public Observable<CharacterSet> createCharacter(String name) {
+        return presetService.getCharacterFile(name)
+                .observeOn(Schedulers.io())
+                .map((body) -> {
+                    try (BufferedInputStream stream = new BufferedInputStream(body.byteStream())) {
+                        return new CharacterSet(name, ImageIO.read(stream));
+                    }
+                });
+    }
+
+    public Observable<Map<String, CharacterSet>> createAllCharacters() {
         return presetService.getCharacters()
                 .map((characters) -> characters.stream()
-                        .map((character) -> presetService.getCharacterFile(character)
-                                .observeOn(Schedulers.io())
-                                .map((body) -> new TrainerSet(character, ImageIO.read(new BufferedInputStream(body.byteStream())))))
+                        .map(this::createCharacter)
                         .collect(Collectors.toList())).flatMap(Observable::merge)
-                .collect(Collectors.toMap(TrainerSet::getName, Function.identity()))
+                .collect(Collectors.toMap(CharacterSet::getName, Function.identity()))
                 .toObservable();
     }
 

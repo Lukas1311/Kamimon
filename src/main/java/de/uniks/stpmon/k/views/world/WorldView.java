@@ -4,7 +4,7 @@ import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -60,7 +60,7 @@ public class WorldView extends Viewable {
     }
 
     protected Group render(PerspectiveCamera camera) {
-        World world = storage.getWorld();
+        WorldSet world = storage.getWorld();
         if (world == null) {
             return new Group();
         }

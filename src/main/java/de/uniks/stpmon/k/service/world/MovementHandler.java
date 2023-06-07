@@ -75,13 +75,13 @@ public class MovementHandler {
         }
         int dir;
         if (diffX > 0) {
-            dir = 1;
-        } else if (diffX < 0) {
-            dir = 3;
-        } else if (diffY > 0) {
-            dir = 2;
-        } else {
             dir = 0;
+        } else if (diffX < 0) {
+            dir = 2;
+        } else if (diffY > 0) {
+            dir = 3;
+        } else {
+            dir = 1;
         }
         MoveTrainerDto dto = createMoveDto(diffX, diffY, dir);
         MoveTrainerDto lastMove = movementService.getLastMovement();

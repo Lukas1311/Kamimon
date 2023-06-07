@@ -3,9 +3,9 @@ package de.uniks.stpmon.k.utils;
 import static de.uniks.stpmon.k.service.world.PropInspector.TILE_SIZE;
 
 public enum Direction {
-    LEFT,
-    TOP,
     RIGHT,
+    TOP,
+    LEFT,
     BOTTOM;
 
     public int imageX(int i, int dist) {

@@ -45,21 +45,28 @@ public abstract class WorldViewable extends Viewable {
         return floor;
     }
 
-    protected Node createRectangleScaled(BufferedImage image, int angle) {
+    protected MeshView createRectangleScaled(BufferedImage image, int angle) {
         Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
         return createRectangle(scaledimage,
                 (int) (scaledimage.getWidth() / IMAGE_SCALE),
                 (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
-    protected Node createRectangleScaled(String path, int angle) {
+    protected MeshView createRectangleScaled(BufferedImage image, int width, int height, int angle) {
+        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
+        return createRectangle(scaledimage,
+                width,
+                height, angle);
+    }
+
+    protected MeshView createRectangleScaled(String path, int angle) {
         Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
         return createRectangle(scaledimage,
                 (int) (scaledimage.getWidth() / IMAGE_SCALE),
                 (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
-    protected Node createRectangle(Image image, int width, int height, int angle) {
+    protected MeshView createRectangle(Image image, int width, int height, int angle) {
         MeshView entity = MeshUtils.createRectangle(width, height);
         entity.setDrawMode(DrawMode.FILL);
         entity.setCullFace(CullFace.BACK);

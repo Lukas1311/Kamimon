@@ -10,8 +10,8 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.PropMap;
-import de.uniks.stpmon.k.service.world.TileMapService;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class WorldLoader {
     @Inject
     WorldStorage worldStorage;
     @Inject
-    TileMapService tileMapService;
+    TextureSetService textureSetService;
     Timer timer;
 
 
@@ -49,7 +49,7 @@ public class WorldLoader {
         }
     }
 
-    public Observable<World> getOrLoadWorld() {
+    public Observable<WorldSet> getOrLoadWorld() {
         if (!worldStorage.isEmpty()) {
             return Observable
                     .just(worldStorage.getWorld());
@@ -60,7 +60,7 @@ public class WorldLoader {
         });
     }
 
-    public Observable<World> loadWorld() {
+    public Observable<WorldSet> loadWorld() {
         if (regionStorage.isEmpty()) {
             return Observable.empty();
         }
@@ -68,12 +68,12 @@ public class WorldLoader {
         if (area == null || area.map() == null) {
             return Observable.empty();
         }
-        return tileMapService.getAllTrainers().flatMap(
-                (trainers) -> tileMapService.createMap(area).map((tileMap) -> {
+        return textureSetService.createAllCharacters().flatMap(
+                (trainers) -> textureSetService.createMap(area).map((tileMap) -> {
                     BufferedImage image = tileMap.renderMap();
                     PropMap propMap = new PropMap(tileMap);
                     List<TileProp> props = propMap.createProps();
-                    return new World(tileMap.getLayers().get(0), image, props, trainers);
+                    return new WorldSet(tileMap.getLayers().get(0), image, props, trainers);
                 }));
     }
 

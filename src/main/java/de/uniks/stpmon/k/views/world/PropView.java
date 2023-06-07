@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -21,7 +21,7 @@ public class PropView extends WorldViewable {
 
     @Override
     public Node render() {
-        World world = storage.getWorld();
+        WorldSet world = storage.getWorld();
         Group props = new Group();
         props.setId("props");
         for (TileProp prop : world.props()) {

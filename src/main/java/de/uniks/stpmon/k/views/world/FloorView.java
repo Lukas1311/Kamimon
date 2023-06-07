@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -23,7 +23,7 @@ public class FloorView extends WorldViewable {
 
     @Override
     public Node render() {
-        World world = storage.getWorld();
+        WorldSet world = storage.getWorld();
         if (world == null) {
             return new Group();
         }

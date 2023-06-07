@@ -6,9 +6,9 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
-public record World(
+public record WorldSet(
         BufferedImage groundImage,
         BufferedImage propsImage,
         List<TileProp> props,
-        Map<String, TrainerSet> trainers) {
+        Map<String, CharacterSet> characters) {
 }

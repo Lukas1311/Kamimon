@@ -18,8 +18,9 @@ import java.util.TimerTask;
 @Singleton
 public class MovementScheduler implements IMovementService {
 
-    public static final int MOVEMENT_PERIOD = 70;
+    public static final int MOVEMENT_PERIOD = 150;
     private final Deque<MoveTrainerDto> movements = new LinkedList<>();
+    private MoveTrainerDto lastMovement;
     private final Timer timer = new Timer();
     private boolean movementBlocked = false;
 
@@ -69,7 +70,7 @@ public class MovementScheduler implements IMovementService {
 
     @Override
     public MoveTrainerDto getLastMovement() {
-        return movements.peekLast();
+        return lastMovement;
     }
 
     @Override
@@ -77,6 +78,7 @@ public class MovementScheduler implements IMovementService {
         if (movementBlocked) {
             return;
         }
+        lastMovement = dto;
         movements.add(dto);
     }
 }
