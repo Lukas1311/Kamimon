@@ -41,12 +41,11 @@ public class IngameController extends Controller {
     BackpackController backPack;
 
     @Inject
-    Provider<BackpackMenuController> ingameSettingsControllerProvider;
-
+    Provider<BackpackMenuController> backpackMenuControllerProvider;
     @Inject
     protected WorldController worldController;
 
-    Parent ingameSettings;
+    Parent backpackMenu;
 
     @Inject
     public IngameController() {
@@ -99,15 +98,14 @@ public class IngameController extends Controller {
         if (backPack != null) {
             ingameWrappingHBox.getChildren().add(backPack);
             backPack.setOnMouseClicked(click -> {
-                if (ingameSettings == null) {
-                    ingameSettings = ingameSettingsControllerProvider.get().render();
-                    ingameWrappingHBox.getChildren().add(0, ingameSettings);
-                    //ingameStack.getChildren().add(ingameSettings);
+                if (backpackMenu == null) {
+                    backpackMenu = backpackMenuControllerProvider.get().render();
+                    ingameWrappingHBox.getChildren().add(0, backpackMenu);
                     ingameStack.setAlignment(Pos.TOP_RIGHT);
 
                 } else {
-                    ingameSettingsControllerProvider.get().setVisability(
-                            !ingameSettingsControllerProvider.get().isVisible());
+                    backpackMenuControllerProvider.get().setVisability(
+                            !backpackMenuControllerProvider.get().isVisible());
                 }
 
 

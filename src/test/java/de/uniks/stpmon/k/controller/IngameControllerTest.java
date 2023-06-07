@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.RegionService;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -17,6 +19,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 
@@ -33,9 +36,6 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     WorldController worldController;
-
-    @InjectMocks
-    IngameController ingameController;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
@@ -52,17 +52,35 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     BackpackController backpackController = new BackpackController();
 
+    @Spy
+    Provider<BackpackMenuController> backpackMenuControllerProvider;
+    @Spy
+    Provider<HybridController> hybridControllerProvider;
+
+    @InjectMocks
+    IngameController ingameController;
+
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(ingameController);
         stage.requestFocus();
+        final HybridController hybridController = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(hybridController);
     }
 
     @Test
     void testShow() {
         BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
+    }
+
+    @Test
+    void showBackPackMenu() {
+        when(backpackMenuControllerProvider.get()).thenReturn(new BackpackMenuController());
+        clickOn("#backpackImage");
+
+        assertTrue(lookup("#backpackMenuListView").query().isVisible());
     }
 }

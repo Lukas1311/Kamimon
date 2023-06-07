@@ -29,7 +29,8 @@ public class BackpackMenuEntryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        ingameSettingText.setText(translateString(entry.toString()));
+        //ingameSettingText.setText(backpackMenuController.translateString(entry.toString()));
+        ingameSettingText.setText(entry.toString());
         Platform.runLater(() -> {
             backpackMenuController.setHeight(ingameSettingsEntryHBox.heightProperty().get() + 10);
         });
