@@ -226,6 +226,10 @@ public abstract class Viewable {
      * @param filename takes the filename of the vector image e.g. kamimonLetterling.svg
      */
     protected void setVectorImage(ImageView imageView, String filename) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
+
         SVGData svgData = loadVectorImage(filename);
         List<SVGPath> svgPaths = svgData.getSVGPaths();
 
