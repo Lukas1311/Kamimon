@@ -18,8 +18,7 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
@@ -80,7 +79,8 @@ public class IngameControllerTest extends ApplicationTest {
     void showBackPackMenu() {
         when(backpackMenuControllerProvider.get()).thenReturn(new BackpackMenuController());
         clickOn("#backpackImage");
-
-        assertTrue(lookup("#backpackMenuListView").query().isVisible());
+        assertTrue(lookup("#backpackMenuHbox").query().isVisible());
+        clickOn("#backpackImage");
+        assertFalse(lookup("#backpackMenuHbox").query().isVisible());
     }
 }
