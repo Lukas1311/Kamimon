@@ -26,6 +26,8 @@ public class BackpackMenuController extends Controller {
     @FXML
     public HBox backpackMenuHbox;
 
+    int cellId = 0;
+
     @Inject
     public BackpackMenuController() {
 
@@ -65,5 +67,13 @@ public class BackpackMenuController extends Controller {
 
     public void setVisability(boolean isVisible) {
         backpackMenuHbox.setVisible(isVisible);
+    }
+
+    public int getCellId() {
+        return this.cellId;
+    }
+
+    public void incrementCellId() {
+        this.cellId++;
     }
 }

@@ -4,10 +4,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
-<HBox fx:id="ingameSettingsEntryHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<HBox fx:id="backpackMenuHbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
       minWidth="-Infinity"
       prefWidth="100.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.BackpackMenuEntryController">
-    <Label fx:id="inSettIsSelectedLabel" prefWidth="35" minWidth="35"/>
-    <Text fx:id="ingameSettingText" strokeType="OUTSIDE" strokeWidth="0.0"/>
+    <Label fx:id="backpackMenuSelectedLabel" prefWidth="35" minWidth="35"/>
+    <Text fx:id="backpackMenuText" strokeType="OUTSIDE" strokeWidth="0.0"/>
 </HBox>

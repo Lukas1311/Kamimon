@@ -8,16 +8,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import java.util.ResourceBundle;
 
 public class BackpackMenuEntryController extends Controller {
     @FXML
-    public Label inSettIsSelectedLabel;
+    public Label backpackMenuSelectedLabel;
     @FXML
-    public Text ingameSettingText;
+    public Text backpackMenuText;
     @FXML
-    public HBox ingameSettingsEntryHBox;
+    public HBox backpackMenuHbox;
     final BackpackMenuOption entry;
     final BackpackMenuController backpackMenuController;
+
+    @Inject
+    protected Provider<ResourceBundle> resources;
 
 
     @Inject
@@ -29,10 +34,13 @@ public class BackpackMenuEntryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        //ingameSettingText.setText(backpackMenuController.translateString(entry.toString()));
-        ingameSettingText.setText(entry.toString());
+        backpackMenuText.setText(backpackMenuController.translateString(entry.toString()));
+        //backpackMenuText.setText(entry.toString());
+        backpackMenuText.setId("backpackMenuText" + backpackMenuController.getCellId());
+        backpackMenuSelectedLabel.setId("backpackMenuSelectedLabel" + backpackMenuController.getCellId());
+        backpackMenuController.incrementCellId();
         Platform.runLater(() -> {
-            backpackMenuController.setHeight(ingameSettingsEntryHBox.heightProperty().get() + 10);
+            backpackMenuController.setHeight(backpackMenuHbox.heightProperty().get() + 10);
         });
 
 
@@ -46,11 +54,11 @@ public class BackpackMenuEntryController extends Controller {
     }
 
     public void setArrow() {
-        inSettIsSelectedLabel.setText(">");
+        backpackMenuSelectedLabel.setText(">");
     }
 
     public void removeArrow() {
-        inSettIsSelectedLabel.setText("");
+        backpackMenuSelectedLabel.setText("");
     }
 
 }
