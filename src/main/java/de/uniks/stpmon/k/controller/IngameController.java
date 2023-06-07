@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
@@ -39,6 +40,9 @@ public class IngameController extends PortalController {
 
     @Inject
     BackpackController backPack;
+
+    @Inject
+    TrainerStorage trainerStorage;
 
     @Inject
     protected WorldController worldController;

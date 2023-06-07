@@ -25,12 +25,12 @@ public class MovementHandler {
         return movementService.registerSender(trainerStorage.getTrainer());
     }
 
-    public Observable<MoveTrainerDto> onMovements(Trainer trainer) {
+    public Observable<Trainer> onMovements(Trainer trainer) {
         return movementService.onMovements(trainer)
                 .flatMap(this::onMoveReceived);
     }
 
-    private Observable<MoveTrainerDto> onMoveReceived(MoveTrainerDto dto) {
+    private Observable<Trainer> onMoveReceived(MoveTrainerDto dto) {
         Trainer trainer = trainerStorage.getTrainer();
         Trainer newTrainer = new Trainer(trainer._id(),
                 trainer.region(),
@@ -43,12 +43,11 @@ public class MovementHandler {
                 dto.y(),
                 dto.direction(),
                 trainer.npc());
-        trainerStorage.setTrainer(newTrainer);
         // Check if area changed
         if (!Objects.equals(newTrainer.area(), trainer.area())) {
-            return movementService.enterArea(dto);
+            return movementService.enterArea(newTrainer);
         }
-        return Observable.just(dto);
+        return Observable.just(newTrainer);
     }
 
     private MoveTrainerDto createMoveDto(int diffX, int diffY, int dir) {

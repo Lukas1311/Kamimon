@@ -15,7 +15,6 @@ import java.util.List;
  * @param tiles       Array of Tiles (optional)
  * @param tilewidth   Maximum width of tiles in this set
  * @param type        tileset (for tileset files, since 1.0)
- * @param wangsets    Array of Wang sets (since 1.1.5)
  */
 public record TilesetData(
         int columns,

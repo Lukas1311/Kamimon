@@ -52,11 +52,10 @@ public class MovementScheduler implements IMovementService {
     }
 
     @Override
-    public Observable<MoveTrainerDto> enterArea(MoveTrainerDto dto) {
+    public Observable<Trainer> enterArea(Trainer trainer) {
         movements.clear();
         movementBlocked = true;
-        return worldLoader.tryEnterArea()
-                .map((t) -> dto)
+        return worldLoader.tryEnterArea(trainer)
                 .doOnComplete(() -> movementBlocked = false);
     }
 
@@ -79,6 +78,9 @@ public class MovementScheduler implements IMovementService {
             return;
         }
         lastMovement = dto;
-        movements.add(dto);
+        //movements.add(dto);
+        listener.send(Socket.UDP, String.format("areas.%s.trainers.%s.moved",
+                dto.area(),
+                dto._id()), dto);
     }
 }

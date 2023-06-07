@@ -12,7 +12,7 @@ public interface IMovementService {
 
     Observable<MoveTrainerDto> onMovements(Trainer trainer);
 
-    Observable<MoveTrainerDto> enterArea(MoveTrainerDto dto);
+    Observable<Trainer> enterArea(Trainer trainer);
 
     void move(MoveTrainerDto dto);
 }

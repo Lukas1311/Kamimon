@@ -87,6 +87,7 @@ public class WorldLoader {
         }
         loadingSource.setTeleporting(true);
         return regionService.getMainTrainer(region._id())
+                .switchIfEmpty(Observable.error(new IllegalStateException("No trainer in region.")))
                 .flatMap((trainer) -> {
                     trainerStorage.setTrainer(trainer);
                     return regionService.getArea(region._id(), trainer.area())
@@ -98,18 +99,15 @@ public class WorldLoader {
                                 loadRegion();
                                 return trainer;
                             });
-                }).doOnComplete(() -> loadingSource.setTeleporting(false));
+                })
+                .doOnComplete(() -> loadingSource.setTeleporting(false));
     }
 
-    public Observable<Trainer> tryEnterArea() {
+    public Observable<Trainer> tryEnterArea(Trainer trainer) {
         if (loadingSource.isTeleporting()) {
             return Observable.empty();
         }
         loadingSource.setTeleporting(true);
-        Trainer trainer = trainerStorage.getTrainer();
-        if (trainer == null) {
-            return Observable.error(new IllegalStateException("No trainer in storage."));
-        }
         Region region = regionStorage.getRegion();
         if (region == null) {
             return Observable.error(new IllegalStateException("No region in storage."));
@@ -118,6 +116,7 @@ public class WorldLoader {
                 .map(area -> {
                     regionStorage.setArea(area);
                     worldStorage.setWorld(null);
+                    trainerStorage.setTrainer(trainer);
                     loadRegion();
                     return trainer;
                 }).doOnComplete(() -> loadingSource.setTeleporting(false));

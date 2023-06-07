@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.CharacterSet;
 import de.uniks.stpmon.k.service.world.MovementHandler;
@@ -16,7 +16,6 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityView extends WorldViewable {
 
@@ -24,6 +23,8 @@ public class EntityView extends WorldViewable {
     protected MovementHandler movementHandler;
     @Inject
     protected WorldStorage worldStorage;
+    @Inject
+    protected TrainerStorage trainerStorage;
     protected MeshView entityNode;
     protected Trainer trainer;
     protected CharacterSet characterSet;
@@ -67,16 +68,19 @@ public class EntityView extends WorldViewable {
         mesh.getTexCoords().setAll(texCoords);
     }
 
-    AtomicInteger count = new AtomicInteger();
-
-    protected void onMoveReceived(MoveTrainerDto dto) {
+    protected void onMoveReceived(Trainer trainer) {
+        Trainer currentTrainer = trainerStorage.getTrainer();
+        if (!currentTrainer.area().equals(trainer.area())) {
+            return;
+        }
         TranslateTransition transition = new TranslateTransition();
         transition.setNode(entityNode);
         transition.setDuration(Duration.millis(MovementScheduler.MOVEMENT_PERIOD));
-        transition.setToX(dto.x() * WorldView.WORLD_UNIT);
-        transition.setToZ(-dto.y() * WorldView.WORLD_UNIT
+        transition.setToX(trainer.x() * WorldView.WORLD_UNIT);
+        transition.setToZ(-trainer.y() * WorldView.WORLD_UNIT
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
         transition.play();
+        transition.setOnFinished((t) -> trainerStorage.setTrainer(trainer));
         Transition spriteTransition = new Transition() {
             {
                 setCycleDuration(Duration.millis(MovementScheduler.MOVEMENT_PERIOD * 2));
@@ -84,7 +88,10 @@ public class EntityView extends WorldViewable {
 
             @Override
             protected void interpolate(double frac) {
-                applySprite(characterSet.getSprite((int) (frac * CharacterSet.SPRITES_PER_COLUMN), Direction.values()[Math.min(Math.max(dto.direction(), 0), 3)], true));
+                applySprite(characterSet.getSprite(
+                        (int) (frac * CharacterSet.SPRITES_PER_COLUMN),
+                        Direction.values()[Math.min(Math.max(trainer.direction(), 0), 3)],
+                        true));
             }
         };
         spriteTransition.play();
