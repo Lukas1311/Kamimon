@@ -1,28 +1,28 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.IngameSettingsController;
-import de.uniks.stpmon.k.controller.IngameSettingsEntryController;
-import de.uniks.stpmon.k.controller.IngameSettingsOption;
+import de.uniks.stpmon.k.controller.BackpackMenuController;
+import de.uniks.stpmon.k.controller.BackpackMenuEntryController;
+import de.uniks.stpmon.k.controller.BackpackMenuOption;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
-public class IngameSettingsCellFactory implements Callback<ListView<IngameSettingsOption>, ListCell<IngameSettingsOption>> {
+public class BackpackMenuCellFactory implements Callback<ListView<BackpackMenuOption>, ListCell<BackpackMenuOption>> {
 
-    private final IngameSettingsController ingameSettingsController;
+    private final BackpackMenuController backpackMenuController;
 
-    public IngameSettingsCellFactory(IngameSettingsController ingameSettingsController) {
-        this.ingameSettingsController = ingameSettingsController;
+    public BackpackMenuCellFactory(BackpackMenuController backpackMenuController) {
+        this.backpackMenuController = backpackMenuController;
     }
 
     @Override
-    public ListCell<IngameSettingsOption> call(ListView<IngameSettingsOption> param) {
+    public ListCell<BackpackMenuOption> call(ListView<BackpackMenuOption> param) {
         return new ListCell<>() {
             @Override
-            protected void updateItem(IngameSettingsOption entry, boolean empty) {
+            protected void updateItem(BackpackMenuOption entry, boolean empty) {
                 super.updateItem(entry, empty);
-                final IngameSettingsEntryController entryController =
-                        new IngameSettingsEntryController(ingameSettingsController, entry);
+                final BackpackMenuEntryController entryController =
+                        new BackpackMenuEntryController(backpackMenuController, entry);
                 if (empty || entry == null) {
                     setText(null);
                     setGraphic(null);

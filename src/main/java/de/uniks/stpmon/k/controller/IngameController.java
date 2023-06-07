@@ -41,7 +41,7 @@ public class IngameController extends Controller {
     BackpackController backPack;
 
     @Inject
-    Provider<IngameSettingsController> ingameSettingsControllerProvider;
+    Provider<BackpackMenuController> ingameSettingsControllerProvider;
 
     @Inject
     protected WorldController worldController;

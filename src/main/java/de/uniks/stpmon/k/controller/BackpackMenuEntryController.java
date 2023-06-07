@@ -9,21 +9,21 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 
-public class IngameSettingsEntryController extends Controller {
+public class BackpackMenuEntryController extends Controller {
     @FXML
     public Label inSettIsSelectedLabel;
     @FXML
     public Text ingameSettingText;
     @FXML
     public HBox ingameSettingsEntryHBox;
-    final IngameSettingsOption entry;
-    final IngameSettingsController ingameSettingsController;
+    final BackpackMenuOption entry;
+    final BackpackMenuController backpackMenuController;
 
 
     @Inject
-    public IngameSettingsEntryController(IngameSettingsController isc, IngameSettingsOption entry) {
+    public BackpackMenuEntryController(BackpackMenuController isc, BackpackMenuOption entry) {
         this.entry = entry;
-        this.ingameSettingsController = isc;
+        this.backpackMenuController = isc;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class IngameSettingsEntryController extends Controller {
         final Parent parent = super.render();
         ingameSettingText.setText(translateString(entry.toString()));
         Platform.runLater(() -> {
-            ingameSettingsController.setHeight(ingameSettingsEntryHBox.heightProperty().get() + 10);
+            backpackMenuController.setHeight(ingameSettingsEntryHBox.heightProperty().get() + 10);
         });
 
 
@@ -41,7 +41,7 @@ public class IngameSettingsEntryController extends Controller {
     }
 
     private void openOption() {
-        ingameSettingsController.openOption(entry);
+        backpackMenuController.openOption(entry);
     }
 
     public void setArrow() {
