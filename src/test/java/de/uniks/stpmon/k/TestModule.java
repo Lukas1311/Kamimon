@@ -5,8 +5,12 @@ import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.world.World;
 
 import javax.inject.Singleton;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -33,6 +37,30 @@ public class TestModule {
                 .setSkipLoading(true)
                 .setSkipLoadImages(true)
                 .setSkipAnimations(true);
+    }
+
+    @Provides
+    @Singleton
+    static WorldStorage worldStorage() {
+        //TODO: remove if we find a way to mock the tilemap for testing
+        BufferedImage images = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        //--------------------
+        World world = new World(images, images, new ArrayList<>());
+        return new WorldStorage() {
+            @Override
+            public void setWorld(World world) {
+            }
+
+            @Override
+            public World getWorld() {
+                return world;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+        };
     }
 
     @Provides

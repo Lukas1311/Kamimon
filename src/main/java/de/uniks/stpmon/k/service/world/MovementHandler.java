@@ -2,76 +2,32 @@ package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.InputHandler;
-import de.uniks.stpmon.k.service.WorldLoader;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.function.Consumer;
 
 public class MovementHandler {
 
-    private final Deque<MoveTrainerDto> movements = new LinkedList<>();
-    private final Timer timer = new Timer();
-    private boolean movementBlocked = false;
-
-    @Inject
-    RegionStorage regionStorage;
     @Inject
     TrainerStorage trainerStorage;
     @Inject
-    InputHandler inputHandler;
-    @Inject
-    EventListener listener;
-    @Inject
-    WorldLoader worldLoader;
+    IMovementService movementService;
 
     @Inject
     public MovementHandler() {
 
     }
 
-    public Runnable addKeyHandler() {
-        Runnable cancelKey = inputHandler.addKeyHandler(this::keyPressed);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (movements.isEmpty()) {
-                    return;
-                }
-                MoveTrainerDto dto = movements.poll();
-                listener.send(Socket.UDP, getEventName(), dto);
-            }
-        };
-        timer.schedule(task, 0, 50);
-        return () -> {
-            task.cancel();
-            cancelKey.run();
-        };
+    public Runnable registerSender() {
+        return movementService.registerSender(trainerStorage.getTrainer());
     }
 
-    public void initialPosition(Consumer<Trainer> callback) {
-        Trainer trainer = trainerStorage.getTrainer();
-        callback.accept(trainer);
-    }
-
-    public Observable<MoveTrainerDto> addMoveListener() {
-        return listener.listen(Socket.UDP,
-                getEventName(),
-                MoveTrainerDto.class).flatMap((event) -> {
-            MoveTrainerDto dto = event.data();
-            return onMoveReceived(dto);
-        });
+    public Observable<MoveTrainerDto> onMovements(Trainer trainer) {
+        return movementService.onMovements(trainer)
+                .flatMap(this::onMoveReceived);
     }
 
     private Observable<MoveTrainerDto> onMoveReceived(MoveTrainerDto dto) {
@@ -90,31 +46,26 @@ public class MovementHandler {
         trainerStorage.setTrainer(newTrainer);
         // Check if area changed
         if (!Objects.equals(newTrainer.area(), trainer.area())) {
-            movements.clear();
-            movementBlocked = true;
-            return worldLoader.tryEnterArea()
-                    .map((t) -> dto)
-                    .doOnComplete(() -> movementBlocked = false);
+            return movementService.enterArea(dto);
         }
         return Observable.just(dto);
     }
 
     private MoveTrainerDto createMoveDto(int diffX, int diffY, int dir) {
         Trainer trainer = trainerStorage.getTrainer();
-        String areaId = regionStorage.getArea()._id();
-        return new MoveTrainerDto(trainer._id(), areaId,
+        return new MoveTrainerDto(trainer._id(), trainer.area(),
                 trainer.x() + diffX, trainer.y() + diffY,
                 dir);
     }
 
-    private void keyPressed(KeyEvent event) {
+    public void moveDirection(Direction direction) {
         int diffX = 0;
         int diffY = 0;
-        switch (event.getCode()) {
-            case W -> diffY -= 1;
-            case S -> diffY += 1;
-            case A -> diffX -= 1;
-            case D -> diffX += 1;
+        switch (direction) {
+            case TOP -> diffY -= 1;
+            case BOTTOM -> diffY += 1;
+            case LEFT -> diffX -= 1;
+            case RIGHT -> diffX += 1;
             default -> {
 
             }
@@ -133,18 +84,13 @@ public class MovementHandler {
             dir = 0;
         }
         MoveTrainerDto dto = createMoveDto(diffX, diffY, dir);
-        MoveTrainerDto lastMove = movements.peekLast();
-        if (movementBlocked ||
-                lastMove != null
-                        && Objects.equals(lastMove.direction(), dto.direction())
-                        && Objects.equals(lastMove.x(), dto.x())
-                        && Objects.equals(lastMove.y(), dto.y())) {
+        MoveTrainerDto lastMove = movementService.getLastMovement();
+        if (lastMove != null
+                && Objects.equals(lastMove.direction(), dto.direction())
+                && Objects.equals(lastMove.x(), dto.x())
+                && Objects.equals(lastMove.y(), dto.y())) {
             return;
         }
-        movements.add(dto);
-    }
-
-    private String getEventName() {
-        return String.format("areas.%s.trainers.%s.moved", regionStorage.getArea()._id(), trainerStorage.getTrainer()._id());
+        movementService.move(dto);
     }
 }

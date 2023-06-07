@@ -6,7 +6,6 @@ import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -19,9 +18,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -39,10 +35,6 @@ class AppTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        //TODO: remove if we find a way to mock the tilemap for testing
-        BufferedImage images = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        //--------------------
-        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
         app.start(stage);
         stage.requestFocus();
     }
