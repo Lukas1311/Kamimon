@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.views.ConfigHelper;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -15,7 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import okhttp3.ResponseBody;
 
@@ -26,13 +25,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class ChooseSpriteController extends ToastedController {
-    private final ObservableList<String> characters = FXCollections.observableArrayList();
+    protected final ObservableList<String> characters = FXCollections.observableArrayList();
     private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
-    private int currentSpriteIndex;
-    private int previousSpriteIndex;
+    protected int currentSpriteIndex;
+    protected int previousSpriteIndex;
 
     @FXML
     public Text chooseTrainer;
@@ -45,10 +45,12 @@ public class ChooseSpriteController extends ToastedController {
     @FXML
     public Button saveSprite;
     @FXML
-    public VBox chooseTrainerContent;
+    public BorderPane chooseTrainerContent;
 
     @Inject
     PresetService presetService;
+    @Inject
+    Preferences preferences;
 
     @Inject
     Provider<CreateTrainerController> createTrainerControllerProvider;
@@ -66,9 +68,9 @@ public class ChooseSpriteController extends ToastedController {
         chooseTrainer.setText(translateString("choose_trainer"));
         saveSprite.setText(translateString("saveChanges"));
 
-        // Retrieve the sprite index from the configuration file
-        currentSpriteIndex = ConfigHelper.getSpriteIndex();
-        previousSpriteIndex = ConfigHelper.getSpriteIndex();
+        // Retrieve the sprite index from the preferences
+        currentSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
+        previousSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
         // Load the list of available sprites
         loadSpriteList();
 
@@ -89,7 +91,9 @@ public class ChooseSpriteController extends ToastedController {
      * If there are characters, load the sprite image for the currently selected character based on the currentSpriteIndex
      */
     public void getCharactersList(List<String> charactersList) {
-        this.characters.addAll(charactersList);
+        List<String> preMadeCharacters = charactersList.subList(0, Math.min(charactersList.size(), 20));
+
+        this.characters.addAll(preMadeCharacters);
 
         if (!charactersList.isEmpty()) {
             String selectedCharacter = charactersList.get(currentSpriteIndex);
@@ -176,15 +180,15 @@ public class ChooseSpriteController extends ToastedController {
             // Show a pop-up
             showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
                 if (!result) return;
-                // Save the currentSpriteIndex to the configuration file
-                ConfigHelper.saveSpriteIndex(currentSpriteIndex);
+                // Save the currentSpriteIndex to the preferences
+                preferences.putInt("currentSpriteIndex", currentSpriteIndex);
                 // Render the createTrainerController
                 chooseTrainerContent.getChildren().clear();
                 chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
             });
         } else {
-            // Save the previousSpriteIndex to the configuration file
-            ConfigHelper.saveSpriteIndex(previousSpriteIndex);
+            // Save the previousSpriteIndex to the preferences
+            preferences.putInt("currentSpriteIndex", previousSpriteIndex);
             // Render the createTrainerController
             chooseTrainerContent.getChildren().clear();
             chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
