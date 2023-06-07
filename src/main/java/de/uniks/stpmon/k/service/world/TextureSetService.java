@@ -3,9 +3,9 @@ package de.uniks.stpmon.k.service.world;
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.utils.ResponseUtils;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -22,13 +22,15 @@ public class TextureSetService {
     PresetService presetService;
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    IResourceService resourceService;
 
     @Inject
     public TextureSetService() {
     }
 
     public Observable<CharacterSet> createCharacter(String name) {
-        return ResponseUtils.readImage(presetService.getCharacterFile(name))
+        return resourceService.getCharacterImage(name)
                 .map((body) -> new CharacterSet(name, body));
     }
 
@@ -52,13 +54,14 @@ public class TextureSetService {
         for (TilesetSource source : mapData.tilesets()) {
             Tileset.Builder builder = Tileset.builder().setSource(source);
             String filename = escapeTileUrl(source.source());
-            imageObservable = imageObservable.concatWith(presetService.getTileset(filename).flatMap((pair) -> {
-                builder.setData(pair);
-                return presetService.getImage(escapeTileUrl(pair.image()));
-            }).map((image) -> {
-                builder.setImage(image);
-                return builder.build();
-            }));
+            imageObservable = imageObservable.concatWith(resourceService
+                    .getTilesetData(filename).flatMap((pair) -> {
+                        builder.setData(pair);
+                        return resourceService.getTilesetImage(escapeTileUrl(pair.image()));
+                    }).map((image) -> {
+                        builder.setImage(image);
+                        return builder.build();
+                    }));
         }
         return imageObservable
                 .observeOn(Schedulers.io())

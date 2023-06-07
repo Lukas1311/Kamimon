@@ -14,7 +14,6 @@ import java.util.Objects;
 
 public class MovementHandler {
 
-    public static final int MOVEMENT_PERIOD = 200;
     private MoveTrainerDto lastMovement;
     private boolean movementBlocked = false;
 
@@ -28,16 +27,6 @@ public class MovementHandler {
     @Inject
     public MovementHandler() {
 
-    }
-
-    public void move(MoveTrainerDto dto) {
-        if (movementBlocked) {
-            return;
-        }
-        lastMovement = dto;
-        listener.send(Socket.UDP, String.format("areas.%s.trainers.%s.moved",
-                dto.area(),
-                dto._id()), dto);
     }
 
     public Observable<Trainer> onMovements(Trainer trainer) {
@@ -76,6 +65,17 @@ public class MovementHandler {
                 trainer.x() + diffX, trainer.y() + diffY,
                 dir);
     }
+
+    public void move(MoveTrainerDto dto) {
+        if (movementBlocked) {
+            return;
+        }
+        lastMovement = dto;
+        listener.send(Socket.UDP, String.format("areas.%s.trainers.%s.moved",
+                dto.area(),
+                dto._id()), dto);
+    }
+
 
     public void moveDirection(Direction direction) {
         int diffX = 0;

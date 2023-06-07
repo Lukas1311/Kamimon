@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.CharacterSet;
 import de.uniks.stpmon.k.service.world.MovementHandler;
-import de.uniks.stpmon.k.service.world.MovementScheduler;
 import de.uniks.stpmon.k.utils.Direction;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -21,6 +20,8 @@ import javax.inject.Inject;
 import java.util.Objects;
 
 public class EntityView extends WorldViewable {
+
+    public static final int MOVEMENT_PERIOD = 200;
 
     @Inject
     protected MovementHandler movementHandler;
@@ -65,7 +66,7 @@ public class EntityView extends WorldViewable {
         TriangleMesh mesh = (TriangleMesh) entityNode.getMesh();
         // Offset to reduce texture bleeding
         float uPadding = (sprite.maxU() - sprite.minU()) / 64;
-        float vPadding = (sprite.maxV() - sprite.minV()) / 64;
+        float vPadding = (sprite.maxV() - sprite.minV()) / 512;
         float[] texCoords = {
                 sprite.minU() + uPadding, sprite.minV() + vPadding,
                 sprite.maxU() - uPadding, sprite.minV() + vPadding,
@@ -103,7 +104,7 @@ public class EntityView extends WorldViewable {
 
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityNode);
-        moveTranslation.setDuration(Duration.millis(MovementScheduler.MOVEMENT_PERIOD));
+        moveTranslation.setDuration(Duration.millis(MOVEMENT_PERIOD));
         moveTranslation.setToX(trainer.x() * WorldView.WORLD_UNIT);
         moveTranslation.setToZ(-trainer.y() * WorldView.WORLD_UNIT
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
@@ -151,7 +152,7 @@ public class EntityView extends WorldViewable {
             this.characterSet = characterSet;
             this.direction = direction;
             this.isMoving = isMoving;
-            setCycleDuration(Duration.millis(MovementScheduler.MOVEMENT_PERIOD * 5));
+            setCycleDuration(Duration.millis(MOVEMENT_PERIOD * 5));
 
         }
 
