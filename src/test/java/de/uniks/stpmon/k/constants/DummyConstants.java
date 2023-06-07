@@ -6,11 +6,16 @@ import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.map.ChunkData;
+import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.TilesetData;
+import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.service.world.WorldSet;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class DummyConstants {
 
@@ -19,13 +24,13 @@ public class DummyConstants {
             "region_0",
             "user_0",
             "Test Trainer",
-            "trainerImage",
+            "trainer_0",
             0,
             "area_0",
             0,
             0,
             0,
-            new NPCInfo(true)
+            null
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "0",
@@ -55,18 +60,54 @@ public class DummyConstants {
             new NPCInfo(true)
     );
 
-    public static final TileMapData TILE_MAP_DATA = new TileMapData(
-            2, 2,
-            false, List.of(),
+    public static final TileMapData AREA_MAP_DATA = new TileMapData(
+            16, 16,
+            false,
+            List.of(
+                    new TileLayerData(
+
+                            0, "Ground",
+                            List.of(
+                                    new ChunkData(
+                                            IntStream.range(0, 64).map(i -> 482)
+                                                    .boxed().toList(),
+                                            16, 16,
+                                            0, 0
+
+                                    )
+                            ),
+                            0, 0,
+                            16, 16,
+                            0, 0,
+                            "tilelayer",
+                            true,
+                            List.of()
+                    )
+            ),
             1, 1,
-            List.of(),
+            List.of(
+                    new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")
+            ),
             "map");
+
+    public static final TilesetData TILESET_DATA = new TilesetData(
+            176,
+            "Modern_Exteriors_16x16.png",
+            3792,
+            2816,
+            0,
+            "Modern_Exteriors_16x16", 0,
+            41712,
+            16, 16,
+            List.of(),
+            "tileset"
+    );
 
     public static final Area AREA = new Area(
             "area_0",
             "region_0",
             "Test Area",
-            TILE_MAP_DATA
+            AREA_MAP_DATA
     );
 
     public static final Area AREA_NO_MAP = new Area(

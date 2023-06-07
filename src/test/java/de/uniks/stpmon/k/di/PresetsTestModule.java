@@ -5,10 +5,13 @@ import dagger.Provides;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
+import de.uniks.stpmon.k.service.map.PropInspectionTest;
 import io.reactivex.rxjava3.core.Observable;
+import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 
 import javax.inject.Singleton;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +35,7 @@ public class PresetsTestModule {
              * is called but no characters are in the list
              */
             private void initDummyCharacters() {
-                String[] c = {"testCharacter1", "testCharacter2", "testCharacter3"};
+                String[] c = {"trainer_0.png", "trainer_1.png", "trainer_2.png", "trainer_3.png", "Premade_Character_01.png"};
                 characters.addAll(Arrays.stream(c).toList());
             }
 
@@ -78,8 +81,19 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getFile(String filename) {
-                //TODO: save test file somewhere and return it
-                return Observable.empty();
+                if (filename
+                        .equals("Modern_Exteriors_16x16.json")) {
+                    // return DummyConstants.TILESET_DATA;
+                }
+                try (InputStream is = PropInspectionTest.class.getResourceAsStream(filename)) {
+                    if (is == null) {
+                        return Observable.error(new Exception("File not found"));
+                    }
+                    ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), is.readAllBytes());
+                    return Observable.just(body);
+                } catch (Exception e) {
+                    return Observable.error(e);
+                }
             }
 
             @Override
@@ -92,8 +106,15 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getCharacterFile(String filename) {
-                //TODO: save test file save somewhere and return it
-                return null;
+                try (InputStream is = PropInspectionTest.class.getResourceAsStream(filename)) {
+                    if (is == null) {
+                        return Observable.error(new Exception("File not found"));
+                    }
+                    ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), is.readAllBytes());
+                    return Observable.just(body);
+                } catch (Exception e) {
+                    return Observable.error(e);
+                }
             }
 
             @Override

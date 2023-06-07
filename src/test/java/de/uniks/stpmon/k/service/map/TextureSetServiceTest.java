@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
-import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.service.world.TileMap;
 import de.uniks.stpmon.k.service.world.Tileset;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 public class TextureSetServiceTest {
 
     @Mock
-    PresetService presetService;
+    IResourceService resourceService;
 
     @InjectMocks
     TextureSetService msgService;
@@ -54,7 +54,7 @@ public class TextureSetServiceTest {
 
     @Test
     public void renderMap() {
-        when(presetService.getTileset("grass.json")).thenReturn(Observable.just(new TilesetData(
+        when(resourceService.getTilesetData("grass.json")).thenReturn(Observable.just(new TilesetData(
                 2, "grass.png",
                 2, 2,
                 0, "grass", 0, 1,
@@ -67,7 +67,7 @@ public class TextureSetServiceTest {
         image.setRGB(1, 0, Color.BLUE.getRGB());
         image.setRGB(1, 1, Color.GREEN.getRGB());
 
-        when(presetService.getImage("grass.png")).thenReturn(Observable.just(image));
+        when(resourceService.getTilesetImage("grass.png")).thenReturn(Observable.just(image));
 
         TileMapData map = createDummyMap();
         Region region = new Region("1", "2", new Spawn("1", 0, 0), map);

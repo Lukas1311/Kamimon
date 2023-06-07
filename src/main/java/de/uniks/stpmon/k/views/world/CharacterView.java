@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
+import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.utils.Direction;
 import javafx.scene.Node;
@@ -27,6 +27,11 @@ public class CharacterView extends EntityView {
     }
 
     @Override
+    protected TrainerProvider getProvider() {
+        return trainerStorage;
+    }
+
+    @Override
     public Node render() {
         Node character = super.render();
         character.setId("character");
@@ -38,11 +43,6 @@ public class CharacterView extends EntityView {
         character.translateZProperty().addListener((observable, oldValue, newValue) ->
                 camera.setTranslateZ(camera.getTranslateZ() - ((double) oldValue - (double) newValue)));
         return character;
-    }
-
-    @Override
-    protected void onMove(Trainer trainer) {
-        trainerStorage.setTrainer(trainer);
     }
 
     private void keyPressed(KeyEvent event) {
@@ -58,8 +58,6 @@ public class CharacterView extends EntityView {
 
     @Override
     public void init() {
-        setTrainer(trainerStorage.getTrainer());
-
         super.init();
         onDestroy(inputHandler.addKeyHandler(this::keyPressed));
     }

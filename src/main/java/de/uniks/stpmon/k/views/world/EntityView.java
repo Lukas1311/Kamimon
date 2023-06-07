@@ -3,10 +3,11 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.CharacterSet;
 import de.uniks.stpmon.k.service.world.MovementHandler;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import de.uniks.stpmon.k.utils.Direction;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -16,10 +17,13 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.util.Duration;
 
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Objects;
 
-public class EntityView extends WorldViewable {
+public abstract class EntityView extends WorldViewable {
 
     public static final int MOVEMENT_PERIOD = 200;
 
@@ -27,23 +31,43 @@ public class EntityView extends WorldViewable {
     protected MovementHandler movementHandler;
     @Inject
     protected WorldStorage worldStorage;
-    @Inject
-    protected TrainerStorage trainerStorage;
+    // Not injected by dagger, provided by upper class
+    private TrainerProvider trainerProvider;
     protected MeshView entityNode;
-    protected Trainer trainer;
     protected CharacterSet characterSet;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
 
-    @Inject
-    public EntityView() {
+    protected TrainerProvider getProvider() {
+        return trainerProvider;
     }
 
-    public void setTrainer(Trainer trainer) {
-        this.trainer = trainer;
-        characterSet = worldStorage.getWorld()
-                .characters()
-                .get(trainer.image());
+    protected void initTrainer() {
+        if (trainerProvider == null) {
+            trainerProvider = getProvider();
+        }
+        Trainer trainer = trainerProvider.getTrainer();
+        if (trainer == null) {
+            throw new IllegalStateException("Trainer cannot be null");
+        }
+        WorldSet worldSet = worldStorage.getWorld();
+        if (worldSet != null) {
+            characterSet = worldSet
+                    .characters()
+                    .get(trainer.image());
+        } else {
+            characterSet = getPlaceholder();
+        }
+    }
+
+    private CharacterSet getPlaceholder() {
+        BufferedImage image;
+        try {
+            image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("char.png")));
+        } catch (IOException e) {
+            image = new BufferedImage(384, 96, BufferedImage.TYPE_INT_RGB);
+        }
+        return new CharacterSet("placeholder", image);
     }
 
     @Override
@@ -54,7 +78,7 @@ public class EntityView extends WorldViewable {
                 WorldView.WORLD_ANGLE);
         character.setId("entity");
         entityNode = character;
-
+        Trainer trainer = trainerProvider.getTrainer();
         entityNode.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
         entityNode.setTranslateZ(-trainer.y() * WorldView.WORLD_UNIT -
                 WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
@@ -66,7 +90,7 @@ public class EntityView extends WorldViewable {
         TriangleMesh mesh = (TriangleMesh) entityNode.getMesh();
         // Offset to reduce texture bleeding
         float uPadding = (sprite.maxU() - sprite.minU()) / 64;
-        float vPadding = (sprite.maxV() - sprite.minV()) / 512;
+        float vPadding = (sprite.maxV() - sprite.minV()) / 256;
         float[] texCoords = {
                 sprite.minU() + uPadding, sprite.minV() + vPadding,
                 sprite.maxU() - uPadding, sprite.minV() + vPadding,
@@ -84,7 +108,7 @@ public class EntityView extends WorldViewable {
                 || trainer == NoneConstants.NONE_TRAINER) {
             return;
         }
-        Trainer currentTrainer = trainerStorage.getTrainer();
+        Trainer currentTrainer = trainerProvider.getTrainer();
         if (!currentTrainer.area().equals(trainer.area())) {
             return;
         }
@@ -99,8 +123,7 @@ public class EntityView extends WorldViewable {
     }
 
     protected void applyMove(Trainer trainer, boolean newDirection) {
-        this.trainer = trainer;
-        onMove(trainer);
+        trainerProvider.setTrainer(trainer);
 
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityNode);
@@ -124,10 +147,6 @@ public class EntityView extends WorldViewable {
         moveAnimation.play();
     }
 
-    protected void onMove(Trainer trainer) {
-
-    }
-
     private void startIdleAnimation(Trainer trainer) {
         if (moveAnimation != null) {
             moveAnimation.pause();
@@ -140,8 +159,11 @@ public class EntityView extends WorldViewable {
     @Override
     public void init() {
         super.init();
-        subscribe(movementHandler.onMovements(trainer), this::onMoveReceived);
+        initTrainer();
+        movementHandler.setInitialTrainer(trainerProvider);
+        subscribe(movementHandler.onMovements(), this::onMoveReceived);
     }
+
 
     private class SpriteAnimation extends Transition {
         private final CharacterSet characterSet;

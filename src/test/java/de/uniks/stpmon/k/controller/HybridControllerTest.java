@@ -9,9 +9,9 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -27,9 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -49,7 +47,7 @@ class HybridControllerTest extends ApplicationTest {
     private final UserStorage userStorage = component.userStorage();
     private final WorldStorage worldStorage = component.worldStorage();
     private final EventListener eventListener = component.eventListener();
-    private final LoadingScreenController loadingScreenController = component.loadingScreenController();
+    private final TrainerStorage trainerStorage = component.trainerStorage();
     @Spy
     @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
@@ -61,9 +59,8 @@ class HybridControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-        BufferedImage images = new BufferedImage(1, 1,
-                BufferedImage.TYPE_INT_RGB);
-        worldStorage.setWorld(new WorldSet(images, images, new ArrayList<>(), Collections.emptyMap()));
+//        worldStorage.setWorld(DummyLazy.INSTANCE.getWorldSet());
+//        trainerStorage.setTrainer(DummyConstants.TRAINER);
         app.show(hybridController);
         stage.requestFocus();
     }
@@ -100,7 +97,6 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void toIngame() {
-
         // pressing Region button and check if ingame is shown
         clickOn("#regionVBox");
         waitForFxEvents();
@@ -109,6 +105,7 @@ class HybridControllerTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+
         // popup
         clickOn("#approveButton");
         waitForFxEvents();
