@@ -1,18 +1,16 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TileProp;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.sources.IPortalController;
 import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.PropMap;
-import de.uniks.stpmon.k.service.world.TextureSetService;
-import de.uniks.stpmon.k.service.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -59,7 +57,8 @@ public class WorldLoader {
     }
 
     public Observable<WorldSet> loadWorld() {
-        if (regionStorage.isEmpty()) {
+        Region region = regionStorage.getRegion();
+        if (region == null) {
             return Observable.empty();
         }
         Area area = regionStorage.getArea();
@@ -108,6 +107,9 @@ public class WorldLoader {
     }
 
     public Observable<Trainer> tryEnterArea(Trainer trainer) {
+        if (trainer == null || trainer == NoneConstants.NONE_TRAINER) {
+            return Observable.error(new IllegalArgumentException("Trainer is null or none."));
+        }
         if (loadingSource.isTeleporting()) {
             return Observable.empty();
         }

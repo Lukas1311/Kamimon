@@ -1,7 +1,10 @@
 package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
+import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
@@ -11,22 +14,37 @@ import java.util.Objects;
 
 public class MovementHandler {
 
+    public static final int MOVEMENT_PERIOD = 200;
+    private MoveTrainerDto lastMovement;
+    private boolean movementBlocked = false;
+
     @Inject
-    TrainerStorage trainerStorage;
+    protected EventListener listener;
     @Inject
-    IMovementService movementService;
+    protected WorldLoader worldLoader;
+    @Inject
+    protected TrainerStorage trainerStorage;
 
     @Inject
     public MovementHandler() {
 
     }
 
-    public Runnable registerSender() {
-        return movementService.registerSender(trainerStorage.getTrainer());
+    public void move(MoveTrainerDto dto) {
+        if (movementBlocked) {
+            return;
+        }
+        lastMovement = dto;
+        listener.send(Socket.UDP, String.format("areas.%s.trainers.%s.moved",
+                dto.area(),
+                dto._id()), dto);
     }
 
     public Observable<Trainer> onMovements(Trainer trainer) {
-        return movementService.onMovements(trainer)
+        return listener.listen(Socket.UDP, String.format("areas.%s.trainers.%s.moved",
+                        trainer.area(),
+                        trainer._id()), MoveTrainerDto.class)
+                .map(Event::data)
                 .flatMap(this::onMoveReceived);
     }
 
@@ -45,7 +63,9 @@ public class MovementHandler {
                 trainer.npc());
         // Check if area changed
         if (!Objects.equals(newTrainer.area(), trainer.area())) {
-            return movementService.enterArea(newTrainer);
+            movementBlocked = true;
+            return worldLoader.tryEnterArea(trainer)
+                    .doOnComplete(() -> movementBlocked = false);
         }
         return Observable.just(newTrainer);
     }
@@ -83,13 +103,12 @@ public class MovementHandler {
             dir = 1;
         }
         MoveTrainerDto dto = createMoveDto(diffX, diffY, dir);
-        MoveTrainerDto lastMove = movementService.getLastMovement();
-        if (lastMove != null
-                && Objects.equals(lastMove.direction(), dto.direction())
-                && Objects.equals(lastMove.x(), dto.x())
-                && Objects.equals(lastMove.y(), dto.y())) {
+        if (lastMovement != null
+                && Objects.equals(lastMovement.direction(), dto.direction())
+                && Objects.equals(lastMovement.x(), dto.x())
+                && Objects.equals(lastMovement.y(), dto.y())) {
             return;
         }
-        movementService.move(dto);
+        move(dto);
     }
 }

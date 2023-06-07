@@ -29,8 +29,9 @@ public class TileMap {
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
-        this.width = data.layers().get(0).width();
-        this.height = data.layers().get(0).height();
+        TileLayerData layer = data.layers().isEmpty() ? null : data.layers().get(0);
+        this.width = layer != null ? layer.width() : 0;
+        this.height = layer != null ? layer.height() : 0;
     }
 
     public TileMapData getData() {

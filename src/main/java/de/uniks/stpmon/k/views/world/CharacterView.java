@@ -61,7 +61,6 @@ public class CharacterView extends EntityView {
         setTrainer(trainerStorage.getTrainer());
 
         super.init();
-        onDestroy(movementHandler.registerSender());
         onDestroy(inputHandler.addKeyHandler(this::keyPressed));
     }
 
