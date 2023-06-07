@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
@@ -19,6 +19,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -40,7 +41,7 @@ public class WorldViewTest extends ApplicationTest {
 
         BufferedImage images = new BufferedImage(1, 1,
                 BufferedImage.TYPE_INT_RGB);
-        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
+        worldStorage.setWorld(new WorldSet(images, images, new ArrayList<>(), Collections.emptyMap()));
 
         // show app
         app.start(stage);

@@ -2,8 +2,8 @@ package de.uniks.stpmon.k.service.dummies;
 
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.service.WorldLoader;
 import de.uniks.stpmon.k.service.world.IMovementService;
+import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
@@ -34,9 +34,8 @@ public class MovementDummy implements IMovementService {
     }
 
     @Override
-    public Observable<MoveTrainerDto> enterArea(MoveTrainerDto dto) {
-        return worldLoader.tryEnterArea()
-                .map((t) -> dto);
+    public Observable<Trainer> enterArea(Trainer trainer) {
+        return worldLoader.tryEnterArea(trainer);
     }
 
     @Override

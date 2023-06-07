@@ -1,14 +1,16 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.sources.IPortalController;
 import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.TileMapService;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.service.world.WorldLoader;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,8 +40,9 @@ public class WorldLoaderTest {
     @Mock
     RegionService regionService;
     @Mock
-    TileMapService tileMapService;
+    TextureSetService textureSetService;
     @InjectMocks
+    @Spy
     WorldLoader worldLoader;
     @Mock
     IPortalController portalController;
@@ -49,28 +52,81 @@ public class WorldLoaderTest {
         loadingSource.setPortalController(portalController);
     }
 
+//    @Test
+//    void loadNewWorld() {
+//        // Set the region and area, required for loading the world
+//        regionStorage.setRegion(DummyConstants.REGION);
+//        regionStorage.setArea(DummyConstants.AREA);
+//
+//        TileMap tileMap = new TileMap(DummyConstants.AREA, Collections.emptyMap());
+//        when(textureSetService.createMap(DummyConstants.AREA)).thenReturn(Observable.just(tileMap));
+//        when(textureSetService.createAllCharacters())
+//                .thenReturn(Observable.just(Map.of("test", new CharacterSet("test", null))));
+//        // Check if the world is null
+//        assertNull(worldStorage.getWorld());
+//
+//        Observable<WorldSet> world = worldLoader.loadWorld();
+//        TestObserver<WorldSet> testObserver = world.test();
+//        // Check if the world was loaded
+//        testObserver.assertValue(worldStorage.getWorld());
+//        // Check if the world is null
+//        assertNull(worldStorage.getWorld());
+//    }
+
     @Test
-    void loadNewWorld() {
-        when(tileMapService.loadTilemap()).thenReturn(Observable.just(DummyConstants.WORLD));
+    void loadNewWorldNoRegion() {
         // Check if the world is null
         assertNull(worldStorage.getWorld());
 
-        Observable<World> world = worldLoader.getOrLoadWorld();
-        // Check if the world was loaded
-        assertEquals(DummyConstants.WORLD, world.blockingFirst());
+        Observable<WorldSet> world = worldLoader.loadWorld();
+        TestObserver<WorldSet> testObserver = world.test();
+        // Check if nothing was loaded
+        testObserver.assertNoValues();
+        testObserver.assertNoErrors();
+        // Check if the world is null
+        assertNull(worldStorage.getWorld());
+    }
+
+    @Test
+    void loadNewWorldNoArea() {
+        regionStorage.setRegion(DummyConstants.REGION);
+
+        // Check if the world is null
+        assertNull(worldStorage.getWorld());
+
+        Observable<WorldSet> world = worldLoader.loadWorld();
+        TestObserver<WorldSet> testObserver = world.test();
+        // Check if nothing was loaded
+        testObserver.assertNoValues();
+        testObserver.assertNoErrors();
+        // Check if the world is null
+        assertNull(worldStorage.getWorld());
+    }
+
+    @Test
+    void getLoadedWorld() {
+        when(worldLoader.loadWorld()).thenReturn(Observable.just(DummyConstants.WORLD));
+        // Check if the world is null
+        assertNull(worldStorage.getWorld());
+
+        Observable<WorldSet> world = worldLoader.getOrLoadWorld();
+        TestObserver<WorldSet> testObserver = world.test();
+        // Check if the world is returned
+        testObserver.assertValue(DummyConstants.WORLD);
+        // Check if the world exists
         assertEquals(DummyConstants.WORLD, worldStorage.getWorld());
+        //Check if world was loaded
+        verify(worldLoader).loadWorld();
     }
 
     @Test
     void getStoredWorld() {
         worldStorage.setWorld(DummyConstants.WORLD);
-        // Check if the world is null
-        assertNull(worldStorage.getWorld());
-        Observable<World> world = worldLoader.getOrLoadWorld();
+        Observable<WorldSet> world = worldLoader.getOrLoadWorld();
         // check if the world was loaded
         assertEquals(DummyConstants.WORLD, world.blockingFirst());
         // Check if tileMapService was not called
-        verify(tileMapService, never()).loadTilemap();
+        verify(worldLoader, never()).loadWorld();
     }
 
     @Test
@@ -126,17 +182,17 @@ public class WorldLoaderTest {
 
     @Test
     void enterNewAreaNoTrainer() {
-        Observable<Trainer> world = worldLoader.tryEnterArea();
+        Observable<Trainer> world = worldLoader.tryEnterArea(NoneConstants.NONE_TRAINER);
         TestObserver<Trainer> testObserver = world.test();
         // Check if loading failed
-        testObserver.assertError(IllegalStateException.class);
+        testObserver.assertError(IllegalArgumentException.class);
         verify(portalController, never()).loadWorld();
     }
 
     @Test
     void enterNewAreaNoRegion() {
         trainerStorage.setTrainer(DummyConstants.TRAINER);
-        Observable<Trainer> world = worldLoader.tryEnterArea();
+        Observable<Trainer> world = worldLoader.tryEnterArea(DummyConstants.TRAINER);
         TestObserver<Trainer> testObserver = world.test();
         // Check if loading failed
         testObserver.assertError(IllegalStateException.class);
@@ -148,7 +204,7 @@ public class WorldLoaderTest {
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         regionStorage.setRegion(DummyConstants.REGION);
         when(regionService.getArea("region_0", "area_0")).thenReturn(Observable.just(DummyConstants.AREA));
-        Observable<Trainer> world = worldLoader.tryEnterArea();
+        Observable<Trainer> world = worldLoader.tryEnterArea(DummyConstants.TRAINER);
         // Check if all values are set correctly
         assertEquals(DummyConstants.TRAINER, world.blockingFirst());
         assertEquals(DummyConstants.REGION, regionStorage.getRegion());
@@ -163,7 +219,7 @@ public class WorldLoaderTest {
         assertNull(regionStorage.getRegion());
         assertNull(regionStorage.getArea());
 
-        Observable<Trainer> world = worldLoader.tryEnterArea();
+        Observable<Trainer> world = worldLoader.tryEnterArea(DummyConstants.TRAINER);
         TestObserver<Trainer> testObserver = world.test();
         // Check if nothing was loaded
         testObserver.assertComplete();

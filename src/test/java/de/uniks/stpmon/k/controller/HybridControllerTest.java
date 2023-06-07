@@ -11,7 +11,7 @@ import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -29,6 +29,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -62,7 +63,7 @@ class HybridControllerTest extends ApplicationTest {
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         BufferedImage images = new BufferedImage(1, 1,
                 BufferedImage.TYPE_INT_RGB);
-        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
+        worldStorage.setWorld(new WorldSet(images, images, new ArrayList<>(), Collections.emptyMap()));
         app.show(hybridController);
         stage.requestFocus();
     }

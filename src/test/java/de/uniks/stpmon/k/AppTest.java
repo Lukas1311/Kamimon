@@ -1,11 +1,8 @@
 package de.uniks.stpmon.k;
 
-import de.uniks.stpmon.k.controller.LoadingScreenController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -29,9 +26,6 @@ class AppTest extends ApplicationTest {
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final MessageApiDummy messageApi = component.messageApi();
-    private final HybridController hybridController = component.hybridController();
-    private final LoadingScreenController loadingScreen = component.loadingScreenController();
-    private final WorldStorage worldStorage = component.worldStorage();
 
     @Override
     public void start(Stage stage) throws Exception {

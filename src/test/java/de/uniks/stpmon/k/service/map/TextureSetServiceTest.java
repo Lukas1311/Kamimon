@@ -8,8 +8,8 @@ import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.service.world.TileMap;
-import de.uniks.stpmon.k.service.world.TileMapService;
 import de.uniks.stpmon.k.service.world.Tileset;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -28,13 +28,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TileMapServiceTest {
+public class TextureSetServiceTest {
 
     @Mock
     PresetService presetService;
 
     @InjectMocks
-    TileMapService msgService;
+    TextureSetService msgService;
 
     private TileMapData createDummyMap() {
         ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
@@ -58,7 +58,7 @@ public class TileMapServiceTest {
                 2, "grass.png",
                 2, 2,
                 0, "grass", 0, 1,
-                1, 1, List.of(), "", List.of()
+                1, 1, List.of(), ""
         )));
 
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);

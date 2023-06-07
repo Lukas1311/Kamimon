@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;

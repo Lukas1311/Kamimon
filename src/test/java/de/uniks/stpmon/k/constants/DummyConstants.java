@@ -6,8 +6,10 @@ import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.service.world.WorldSet;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DummyConstants {
@@ -53,7 +55,21 @@ public class DummyConstants {
             new NPCInfo(true)
     );
 
+    public static final TileMapData TILE_MAP_DATA = new TileMapData(
+            2, 2,
+            false, List.of(),
+            1, 1,
+            List.of(),
+            "map");
+
     public static final Area AREA = new Area(
+            "area_0",
+            "region_0",
+            "Test Area",
+            TILE_MAP_DATA
+    );
+
+    public static final Area AREA_NO_MAP = new Area(
             "area_0",
             "region_0",
             "Test Area",
@@ -77,9 +93,9 @@ public class DummyConstants {
             null,
             null
     );
-    public static final World WORLD = new World(
+    public static final WorldSet WORLD = new WorldSet(
             null,
             null,
-            List.of()
-    );
+            List.of(),
+            Collections.emptyMap());
 }
