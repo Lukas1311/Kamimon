@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 public class IngameSettingsEntryController extends Controller {
     @FXML
-    public Label inSettIsSelectedText;
+    public Label inSettIsSelectedLabel;
     @FXML
     public Text ingameSettingText;
     @FXML
@@ -42,6 +42,14 @@ public class IngameSettingsEntryController extends Controller {
 
     private void openOption() {
         ingameSettingsController.openOption(entryText);
+    }
+
+    public void setArrow() {
+        inSettIsSelectedLabel.setText(">");
+    }
+
+    public void removeArrow() {
+        inSettIsSelectedLabel.setText("");
     }
 
 }

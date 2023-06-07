@@ -13,6 +13,8 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.uniks.stpmon.k.controller.IngameSettingsOption.*;
+
 @Singleton
 public class IngameSettingsController extends Controller {
     @FXML
@@ -33,14 +35,14 @@ public class IngameSettingsController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        ingameSettingOptions.add("MonsterList");
-        ingameSettingOptions.add("Monsters");
-        ingameSettingOptions.add("Map");
+        //TODO: Translation
+        ingameSettingOptions.add(MONSTER_LIST.toString());
+        ingameSettingOptions.add(MONSTERS.toString());
+        ingameSettingOptions.add(MAP.toString());
         ingameSettingsListView.setItems(FXCollections.observableArrayList(ingameSettingOptions));
 
         IngameSettingsCellFactory cellFactory = new IngameSettingsCellFactory(this);
         ingameSettingsListView.setCellFactory(cellFactory);
-
 
         ingameSettingsListView.minHeightProperty().bind(ingameSettingsListView.prefHeightProperty());
         ingameSettingsListView.maxHeightProperty().bind(ingameSettingsListView.prefHeightProperty());

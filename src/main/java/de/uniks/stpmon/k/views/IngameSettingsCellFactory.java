@@ -20,22 +20,27 @@ public class IngameSettingsCellFactory implements Callback<ListView<String>, Lis
             @Override
             protected void updateItem(String entryText, boolean empty) {
                 super.updateItem(entryText, empty);
-
+                final IngameSettingsEntryController entryController =
+                        new IngameSettingsEntryController(ingameSettingsController, entryText);
                 if (empty || entryText == null) {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    final IngameSettingsEntryController entryController =
-                            new IngameSettingsEntryController(ingameSettingsController, entryText);
                     setGraphic(entryController.render());
-
                 }
 
-                ListView<String> listView = getListView();
-                if (listView != null && isSelected()) {
-                    // Set the style or update the text for the selected cell
-                    setText("Selected: " + getText());
-                }
+                this.setOnMouseEntered(event -> {
+                    if (!this.isEmpty()) {
+                        entryController.setArrow();
+                    }
+                });
+
+                this.setOnMouseExited(event -> {
+                    if (!this.isEmpty()) {
+                        entryController.removeArrow();
+                    }
+                });
+
             }
         };
     }
