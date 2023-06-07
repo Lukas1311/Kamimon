@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 
 import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
-public abstract class WorldController extends Viewable {
+public abstract class WorldViewable extends Viewable {
 
     public static final double IMAGE_SCALE = 4.0;
 

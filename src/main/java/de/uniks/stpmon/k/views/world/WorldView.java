@@ -3,6 +3,8 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.world.World;
 import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -22,11 +24,14 @@ import javax.inject.Singleton;
 public class WorldView extends Viewable {
 
     public static final int MOVEMENT_UNIT = 8;
+    public static final int WORLD_ANGLE = -59;
 
     @Inject
     protected RegionStorage regionStorage;
     @Inject
     protected CharacterView characterView;
+    @Inject
+    protected WorldStorage storage;
     @Inject
     protected FloorView floorView;
     @Inject
@@ -36,21 +41,23 @@ public class WorldView extends Viewable {
     public WorldView() {
     }
 
-    private PerspectiveCamera createCamera(int angle) {
+    private PerspectiveCamera createCamera() {
         PerspectiveCamera camera = new PerspectiveCamera(true);
         // move the far clip to see more of the scene
         camera.setFarClip(10000.0);
         camera.getTransforms()
                 .addAll(
-                        new Rotate(angle, Rotate.X_AXIS),
+                        new Rotate(WORLD_ANGLE, Rotate.X_AXIS),
                         new Translate(0, 0, -480));
         camera.setRotationAxis(Rotate.X_AXIS);
         return camera;
     }
 
-    public SubScene renderScene() {
-        int angle = -59;
-        PerspectiveCamera camera = createCamera(angle);
+    protected Group render(PerspectiveCamera camera) {
+        World world = storage.getWorld();
+        if (world == null) {
+            return new Group();
+        }
         int x = 0;
         int y = 0;
         Region region = regionStorage.getRegion();
@@ -58,20 +65,31 @@ public class WorldView extends Viewable {
             x += region.spawn().x() * 16;
             y += (region.spawn().y() + 1) * 16;
         }
-        Node character = characterView.render(angle, camera);
+        Node character = characterView.render(WORLD_ANGLE, camera);
 
-        Node floor = floorView.render(angle, camera);
+        Node floor = floorView.render(WORLD_ANGLE, camera);
         camera.setTranslateX(x);
         camera.setTranslateZ(-y);
 
-        Node props = propView.render(angle, camera);
+        Node props = propView.render(WORLD_ANGLE, camera);
 
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        Group root = new Group(floor, ambient, character, props);
+        return new Group(floor, ambient, character, props);
+    }
+
+    public SubScene createScene() {
+        PerspectiveCamera camera = createCamera();
+
+        Group root;
+        if (storage.isEmpty()) {
+            root = new Group();
+        } else {
+            root = render(camera);
+        }
 
         app.getStage()
                 .getScene()
@@ -89,9 +107,6 @@ public class WorldView extends Viewable {
 
     @Override
     public void init() {
-        if (regionStorage.isEmpty()) {
-            return;
-        }
         characterView.init();
         floorView.init();
         propView.init();
@@ -113,6 +128,8 @@ public class WorldView extends Viewable {
                 case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVEMENT_UNIT);
                 case A -> camera.setTranslateX(camera.getTranslateX() - MOVEMENT_UNIT);
                 case D -> camera.setTranslateX(camera.getTranslateX() + MOVEMENT_UNIT);
+                default -> {
+                }
             }
             rotate(event, camera);
         };
@@ -122,6 +139,8 @@ public class WorldView extends Viewable {
         switch (event.getCode()) {
             case Q -> camera.setRotate(camera.getRotate() - 2.5);
             case E -> camera.setRotate(camera.getRotate() + 2.5);
+            default -> {
+            }
         }
     }
 }

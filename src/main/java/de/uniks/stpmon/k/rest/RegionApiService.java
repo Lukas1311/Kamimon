@@ -7,34 +7,41 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.util.List;
 
 public interface RegionApiService {
 
     //---------------- Region Trainers ----------------------------
-    @POST("regions/{regionId}/trainers")
-    Observable<Trainer> createTrainer(@Path("regionId") String regionId,
+    @POST("regions/{region}/trainers")
+    Observable<Trainer> createTrainer(@Path("region") String regionId,
                                       @Body CreateTrainerDto trainerDto);
 
-    @GET("regions/{regionId}/trainers")
-    Observable<List<Trainer>> getTrainers(@Path("regionId") String regionId,
+    @GET("regions/{region}/trainers")
+    Observable<List<Trainer>> getTrainers(@Path("region") String regionId,
                                           @Query("area") String areaId,
                                           @Query("user") String userId);
 
-    @GET("regions/{regionId}/trainers/{id}")
-        //TODO: regionId?
-    Observable<Trainer> getTrainer(@Path("id") String trainerId);
+    @GET("regions/{region}/trainers/{id}")
+    Observable<Trainer> getTrainer(@Path("region") String regionId,
+                                   @Path("id") String trainerId);
 
     @PATCH("regions/{region}/trainers/{id}")
-        Observable<Trainer> updateTrainer(@Path("region") String regionId,
-                                                @Path("id") String trainerId,
-                                                @Body UpdateTrainerDto trainerDto);
+    Observable<Trainer> updateTrainer(@Path("region") String regionId,
+                                      @Path("id") String trainerId,
+                                      @Body UpdateTrainerDto trainerDto);
 
 
-    @DELETE("regions/{regionId}/trainers/{id}")
-    Observable<Trainer> deleteTrainer(@Path("id") String trainerId);
+    @DELETE("regions/{region}/trainers/{id}")
+    Observable<Trainer> deleteTrainer(@Path("region") String regionId,
+                                      @Path("id") String trainerId);
 
     //------------------- Regions ---------------------------------
 
@@ -53,9 +60,9 @@ public interface RegionApiService {
     Observable<Area> getArea(@Path("region") String region, @Path("id") String id);
 
     //------------- Trainer Monsters -------------------------------
-    @GET("regions/{regionId}/trainers/{trainerId}/monsters")
-    Observable<List<Monster>> getMonsters(@Path("trainerId") String trainerId);
+    @GET("regions/{region}/trainers/{trainer}/monsters")
+    Observable<List<Monster>> getMonsters(@Path("trainer") String trainerId);
 
-    @GET("regions/{regionId}/trainers/{trainerId}/monsters/{id}")
+    @GET("regions/{region}/trainers/{trainer}/monsters/{id}")
     Observable<Monster> getMonster(@Path("id") String monsterId);
 }

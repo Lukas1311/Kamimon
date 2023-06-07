@@ -25,7 +25,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.kordamp.ikonli.javafx.FontIcon;
 import retrofit2.HttpException;
 
 import javax.inject.Inject;

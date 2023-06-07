@@ -9,10 +9,12 @@ import de.uniks.stpmon.k.views.ChatCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -70,6 +72,7 @@ public class ChatListController extends TabController {
         final Parent parent = super.render();
         final ListView<Group> groups = new ListView<>(this.groups);
         groups.setId("chatListView");
+        groups.getStyleClass().add("chat-ov-list");
         groups.setCellFactory(param -> new ChatCell(this));
         groups.setOnKeyReleased(event -> {
             if (groups.getSelectionModel().isEmpty()
@@ -79,6 +82,7 @@ public class ChatListController extends TabController {
             openChat(groups.getSelectionModel().getSelectedItem());
         });
         chatList.getChildren().add(groups);
+        VBox.setVgrow(groups, Priority.ALWAYS);
         return parent;
     }
 

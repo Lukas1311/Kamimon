@@ -23,9 +23,6 @@
                 </HBox.margin>
             </Circle>
             <Text fx:id="userName" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" text="TestPlayerName" wrappingWidth="150.0">
-                <font>
-                    <Font size="15.0" />
-                </font>
             </Text>
         </HBox>
       <HBox.margin>
@@ -33,17 +30,11 @@
       </HBox.margin>
     </VBox>
     <Button fx:id="messageButton" contentDisplay="GRAPHIC_ONLY" maxHeight="37.0" maxWidth="37.0" minHeight="37.0" minWidth="37.0" mnemonicParsing="false" onAction="#openChat" prefHeight="37.0" prefWidth="37.0" styleClass="friend-icon-button" stylesheets="@css/style.css">
-        <font>
-            <Font size="15.0" />
-        </font>
         <graphic>
             <FontIcon fx:id="chat" iconColor="black" iconLiteral="mdmz-message" iconSize="30" />
         </graphic>
     </Button>
     <Button fx:id="removeFriendButton" maxHeight="37.0" maxWidth="37.0" minHeight="37.0" minWidth="37.0" mnemonicParsing="false" onAction="#handleFriend" prefHeight="37.0" prefWidth="37.0" styleClass="friend-icon-button" stylesheets="@css/style.css">
-        <font>
-            <Font size="14.0" />
-        </font>
         <HBox.margin>
             <Insets bottom="5.0" top="5.0" />
         </HBox.margin>

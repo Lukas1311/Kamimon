@@ -12,21 +12,52 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="500.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateTrainerController">
+<AnchorPane fx:id="createTrainerContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="450.0" prefWidth="500.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateTrainerController">
    <styleClass>
       <String fx:value="root" />
       <String fx:value="create-trainer-background" />
    </styleClass>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fcf1d0" height="440.0" layoutY="11.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="500.0" />
-      <Label layoutX="25.0" layoutY="2.0" styleClass="create-trainer-background" text="%createTrainer" />
       <VBox alignment="CENTER" prefHeight="450.0" prefWidth="500.0">
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="500.0">
+      <HBox alignment="TOP_CENTER" minHeight="50.0" prefHeight="50.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                     <Label styleClass="create-trainer-background" text="%createTrainer" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="TOP_RIGHT" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button fx:id="closeButton" alignment="CENTER" contentDisplay="CENTER" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="x" textAlignment="CENTER" />
+               </children>
+               <padding>
+                  <Insets right="15.0" />
+               </padding>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+            <HBox alignment="CENTER" prefHeight="110.0" prefWidth="500.0">
                   <HBox prefHeight="100.0" prefWidth="230.0">
                         <Label text="Trainer:" underline="true" />
                   </HBox>
-                  <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="230.0">
-                        <TextField fx:id="createTrainerInput" prefHeight="23.0" prefWidth="197.0" promptText="Tom" styleClass="create-trainer-text-input" />
-                  </HBox>
+                  <VBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="230.0">
+                        <TextField fx:id="createTrainerInput" prefHeight="23.0" prefWidth="197.0" promptText="%enterName" styleClass="create-trainer-text-input" />
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <Label fx:id="trainerNameInfo" text="" />
+            </HBox>
+                  </VBox>
             </HBox>
             <ImageView fx:id="trainerSprite" fitHeight="155.0" fitWidth="150.0" onMouseClicked="#trainerSprite" pickOnBounds="true" preserveRatio="true">
                   <Image url="@../spritePlacehoder.png" />

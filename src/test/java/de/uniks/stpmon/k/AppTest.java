@@ -39,9 +39,7 @@ class AppTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
-        hybridController.setPlayAnimations(false);
         //TODO: remove if we find a way to mock the tilemap for testing
-        loadingScreen.setSkipLoading(true);
         BufferedImage images = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         //--------------------
         worldStorage.setWorld(new World(images, images, new ArrayList<>()));
@@ -138,6 +136,8 @@ class AppTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
         waitForFxEvents();
 
         verifyThat("#pause", Node::isVisible);
@@ -152,6 +152,7 @@ class AppTest extends ApplicationTest {
         clickOn("#createTrainerInput");
         write("Tom");
         clickOn("#createTrainerButton");
+        clickOn("#approveButton");
         waitForFxEvents();
 
         verifyThat("#ingame", Node::isVisible);

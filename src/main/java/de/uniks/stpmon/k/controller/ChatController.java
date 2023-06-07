@@ -134,6 +134,7 @@ public class ChatController extends PortalController {
         messagesListView.setCellFactory(param -> new MessageCell(userService.getMe(), groupMembers, this, resources));
         messagesListView.prefHeightProperty().bind(messageArea.heightProperty());
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
+        messagesListView.getStyleClass().add("chat-list");
         // scrolls to the bottom of the listview
         messagesListView.scrollTo(1);
 

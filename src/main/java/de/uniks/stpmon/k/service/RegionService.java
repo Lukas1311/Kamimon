@@ -42,12 +42,12 @@ public class RegionService {
         return regionApiService.getTrainers(regionId, areaId, userStorage.getUser()._id());
     }
 
-    public Observable<Trainer> getTrainer(String trainerId) {
-        return regionApiService.getTrainer(trainerId);
+    public Observable<Trainer> getTrainer(String regionID, String trainerId) {
+        return regionApiService.getTrainer(regionID, trainerId);
     }
 
-    public Observable<Trainer> deleteTrainer(String trainerId) {
-        return regionApiService.deleteTrainer(trainerId);
+    public Observable<Trainer> deleteTrainer(String regionId, String trainerId) {
+        return regionApiService.deleteTrainer(regionId, trainerId);
     }
 
     //------------------- Regions ---------------------------------

@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class CharacterView extends WorldController {
+public class CharacterView extends WorldViewable {
 
     @Inject
     protected EventListener listener;

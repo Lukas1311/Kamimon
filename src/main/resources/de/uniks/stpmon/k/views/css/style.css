@@ -3,25 +3,22 @@ Load fonts
  */
 
 @font-face {
-	font-family: "Balsamiq Sans Regular";
-	font-weight: 200;
-	src: url("../fonts/BalsamiqSans-Regular.ttf");
+    /*font family name: Balsamiq Sans*/
+    src: url("../fonts/BalsamiqSans-Regular.ttf");
 }
 @font-face {
-	font-family: "Balsamiq Sans Bold";
-	font-weight: 700;
-	src: url("../fonts/BalsamiqSans-Bold.ttf");
+    /*font family name: Balsamiq Sans*/
+    src: url("../fonts/BalsamiqSans-Bold.ttf");
 }
 @font-face {
-	font-family: "Balsamiq Sans Italic";
-	font-weight: 400;
-	src: url("../fonts/BalsamiqSans-Italic.ttf");
+    /*font family name: Balsamiq Sans*/
+    src: url("../fonts/BalsamiqSans-Italic.ttf");
 }
 
-.root {
-	-fx-font-family: "Comic Sans MS";
-	-fx-font-size: 16;
-	-fx-font-smoothing-type: gray;
+.root{
+    -fx-font-family: "Balsamiq Sans";
+    -fx-font-size: 16;
+    -fx-font-smoothing-type: gray;
 
 	-fx-color-kgm-red: #ae2f34;
 	-fx-color-kgm-yellow: #fcf1d0;
@@ -33,7 +30,7 @@ Load fonts
 	-fx-color-light-green: #b6d7a8;
 	-fx-color-yellow: #ffe599;
 	-fx-color-grey: #707070;
-	-fx-color-light-grey: #909090;
+	-fx-color-light-grey: #999999;
 	-fx-color-dark-white: #f2f2f2;
 }
 /* -------------------- General Items -------------------- */
@@ -53,21 +50,23 @@ Load fonts
 
 .kgm-general-button-blue:disabled {
 	-fx-opacity: 1;
-	-fx-background-color: -fx-color-light-blue;
+	-fx-background-color: -fx-color-light-grey;
 	-fx-background-insets: 0;
 	-fx-background-radius: 0;
-	-fx-text-fill: white;
+	-fx-text-fill: black;
 	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
 	-fx-border-style: solid outside;
 	-fx-border-radius: 0;
-	-fx-border-color: -fx-color-light-grey;
+	-fx-border-color: black;
 	-fx-border-width: 3px;
 }
 
 .kgm-general-button-white {
 	-fx-opacity: 1;
 	-fx-background-color: white;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
 	-fx-text-fill: black;
 	-fx-font-weight: bolder;
 	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
@@ -79,13 +78,15 @@ Load fonts
 
 .kgm-general-button-white:disabled {
 	-fx-opacity: 1;
-	-fx-background-color: -fx-color-dark-white;
-	-fx-text-fill: -fx-color-light-grey;
+	-fx-background-color: -fx-color-light-grey;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+	-fx-text-fill: black;
 	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
 	-fx-border-style: solid outside;
 	-fx-border-radius: 0;
-	-fx-border-color: -fx-color-light-grey;
+	-fx-border-color: black;
 	-fx-border-width: 3px;
 }
 
@@ -105,15 +106,15 @@ Load fonts
 
 .kgm-general-button-red:disabled {
 	-fx-opacity: 1;
-	-fx-background-color: -fx-color-light-red;
+	-fx-background-color: -fx-color-light-grey;
 	-fx-background-insets: 0;
 	-fx-background-radius: 0;
-	-fx-text-fill: white;
+	-fx-text-fill: black;
 	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, -fx-color-light-grey, 0, 1, 3, 3);
+	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
 	-fx-border-style: solid outside;
 	-fx-border-radius: 0;
-	-fx-border-color: -fx-color-light-grey;
+	-fx-border-color: black;
 	-fx-border-width: 3px;
 }
 
@@ -122,6 +123,60 @@ Load fonts
 	-fx-border-color: black;
 	-fx-border-width: 2px;
 	-fx-padding: 5 5 5 15;
+}
+
+/* -------------------- Scrollbar -------------------- */
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+	-fx-background-color : transparent;
+	-fx-border-color : transparent;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-radius : 0px;
+	-fx-border-radius : 0px;
+}
+
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+	-fx-background-color :transparent;
+	-fx-background-radius : 0.0em;
+	-fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+	-fx-background-color :transparent;
+	-fx-background-radius : 0.0em;
+	-fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow{
+	-fx-shape : " ";
+	-fx-padding :0.15em 0.0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+	-fx-shape : " ";
+	-fx-padding :0.0 0.15em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+	-fx-background-color : -fx-color-kgm-red;
+	-fx-background-insets : 2.0, 0.0, 0.0;
+	-fx-background-radius : 2.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+	-fx-background-color :-fx-color-kgm-red;
+	-fx-background-insets : 2.0, 0.0, 0.0;
+	-fx-background-radius : 2.0em;
 }
 
 /* -------------------- Loading Screen -------------------- */
@@ -242,9 +297,9 @@ Load fonts
 	-fx-border-radius: 0;
 	-fx-border-width: 3;
 
-	-fx-pref-width: 50;
-	-fx-min-width: 50;
-	-fx-max-width: 50;
+    -fx-pref-width: 70;
+    -fx-min-width: 70;
+    -fx-max-width: 70;
 }
 
 .sidebar-button {
@@ -256,12 +311,12 @@ Load fonts
 	-fx-border-width: 3;
 	-fx-border-style: solid outside;
 
-	-fx-pref-width: 44;
-	-fx-pref-height: 44;
-	-fx-min-width: 44;
-	-fx-min-height: 44;
-	-fx-max-width: 44;
-	-fx-max-height: 44;
+  -fx-pref-width: 64;
+  -fx-pref-height: 64;
+  -fx-min-width: 64;
+  -fx-min-height: 64;
+  -fx-max-width: 64;
+  -fx-max-height: 64;
 
 	-fx-content-display: center;
 	-fx-alignment: center;
@@ -272,16 +327,16 @@ Load fonts
 }
 
 .sidebar-button .ikonli-font-icon {
-	-fx-icon-color: white;
-	-fx-icon-size: 30px;
+  -fx-icon-color: white;
+  -fx-icon-size: 50px;
 }
 
 .sidebar-button:pressed {
 	-fx-background-color: -fx-color-kgm-yellow;
 }
 .sidebar-button:pressed .ikonli-font-icon {
-	-fx-icon-color: black;
-	-fx-icon-size: 30px;
+    -fx-icon-color: black;
+    -fx-icon-size: 50px;
 }
 
 .sidebar-button:hover {
@@ -289,7 +344,7 @@ Load fonts
 }
 .sidebar-button:hover .ikonli-font-icon {
 	-fx-icon-color: black;
-	-fx-icon-size: 30px;
+	-fx-icon-size: 50px;
 }
 
 /* -------------------- Friend list -------------------- */
@@ -308,11 +363,11 @@ Load fonts
 }
 
 .friends-search-element {
-	-fx-pref-width: 330;
+	-fx-pref-width: 310;
 	-fx-pref-height: 35;
-	-fx-min-width: 330;
+	-fx-min-width: 310;
 	-fx-min-height: 35;
-	-fx-max-width: 330;
+	-fx-max-width: 310;
 	-fx-max-height: 35;
 
 	-fx-background-color: transparent;
@@ -358,8 +413,7 @@ Load fonts
 	-fx-border-color: transparent;
 	-fx-spacing: 6;
 
-	-fx-vbar-policy: never;
-	-fx-hbar-policy: never;
+  	-fx-alignment: center;
 }
 
 /* -------------------- Friend element -------------------- */
@@ -412,10 +466,321 @@ Load fonts
 	-fx-background-color: transparent;
 }
 
-.friend-state-symbol {
+
+/* -------------------- Chat Overview-------------------- */
+
+.chat-ov-menu {
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
+    -fx-max-width: 370;
+
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+.chat-ov-list {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: none;
+    -fx-hbar-policy: never;
+}
+
+.chat-ov-list .list-view{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+	-fx-hbar-policy: never;
+}
+
+.chat-ov-list .list-cell{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-alignment: center;
+}
+
+.chat-ov-button {
+    -fx-pref-width: 330;
+    -fx-pref-height: 35;
+    -fx-min-width: 330;
+    -fx-min-height: 35;
+    -fx-max-width: 330;
+    -fx-max-height: 35;
+}
+
+.chat-element {
+    -fx-pref-width: 320;
+    -fx-pref-height: 35;
+    -fx-min-width: 320;
+    -fx-min-height: 35;
+    -fx-max-width: 320;
+    -fx-max-height: 35;
+
+    -fx-background-color: -fx-color-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+.chat-ov-button-holder{
+    -fx-pref-width: 370;
+    -fx-pref-height: 50;
+    -fx-min-width: 370;
+    -fx-min-height: 50;
+    -fx-max-width: 370;
+    -fx-max-height: 50;
+
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
 /* -------------------- Chat -------------------- */
+
+.chat-tab {
+	-fx-pref-width: 370;
+	-fx-pref-height: 720;
+	-fx-min-width: 370;
+	-fx-min-height: 70;
+
+	-fx-background-color: -fx-color-kgm-yellow-transparent;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+}
+
+.chat-holders {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+}
+
+
+.chat-title{
+	-fx-pref-width: 220;
+	-fx-pref-height: 35;
+	-fx-min-width: 220;
+	-fx-min-height: 35;
+	-fx-max-width: 220;
+	-fx-max-height: 35;
+}
+
+.chat-list-holder {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: -fx-color-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-hbar-policy: never;
+}
+
+.chat-list {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: none;
+    -fx-hbar-policy: never;
+}
+
+.chat-list .list-view{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+
+}
+
+.chat-list .list-view .scroll-bar:horizontal{
+    -fx-padding: -10px;
+    -fx-opacity: 0;
+}
+
+.chat-list .list-cell{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+
+.chat-back-button{
+	-fx-pref-width: 35;
+	-fx-pref-height: 35;
+	-fx-min-width: 35;
+	-fx-min-height: 35;
+	-fx-max-width: 35;
+	-fx-max-height: 35;
+}
+.chat-back-button .ikonli-font-icon{
+	-fx-icon-color: black;
+	-fx-icon-size: 30px;
+	-fx-rotate: 180;
+}
+
+.chat-settings-button {
+	-fx-pref-width: 35;
+	-fx-pref-height: 35;
+	-fx-min-width: 35;
+	-fx-min-height: 35;
+	-fx-max-width: 35;
+	-fx-max-height: 35;
+}
+.chat-settings-button .ikonli-font-icon{
+	-fx-icon-color: black;
+	-fx-icon-size: 30px;
+}
+
+
+.chat-text-input {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+.chat-region-selection {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-effect: dropshadow(one-pass-box, transparent, 0, 1, 3, 3);
+}
+
+
+.chat-message-holder{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+
+.chat-my-message  {
+    -fx-alignment: center-right;
+    -fx-background-color: -fx-color-light-green;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+.chat-ext-message {
+    -fx-alignment: center-left;
+    -fx-background-color: -fx-color-light-blue;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+}
+
+/* -------------------- New Chat-------------------- */
+.edit-chat-tab{
+	-fx-pref-width: 370;
+	-fx-pref-height: 720;
+	-fx-min-width: 370;
+	-fx-min-height: 70;
+
+	-fx-background-color: -fx-color-kgm-yellow-transparent;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+}
+
+.edit-chat-holders {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+}
+
+.edit-chat-list-frame{
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: -fx-color-yellow;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-style: solid outside;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+	-fx-hbar-policy: never;
+}
+
+.edit-chat-list {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: none;
+	-fx-hbar-policy: never;
+}
+
+.edit-chat-list .list-view{
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-hbar-policy: never;
+}
+
+
+.edit-chat-list .list-cell{
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-hbar-policy: never;
+}
+
+.edit-chat-checkbox {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-text-fill: black;
+}
+.edit-chat-checkbox:selected {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-text-fill: -fx-color-blue;
+}
+
+.edit-chat-checkbox:selected .box{
+	-fx-border-color: -fx-color-blue;
+}
+
+.edit-chat-checkbox .box {
+	-fx-border-color: black;
+	-fx-border-radius: 3;
+	-fx-border-width: 2;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+}
+
+.edit-chat-error-text {
+	-fx-text-fill: -fx-color-red;
+	-fx-text-overrun: ellipsis;
+	-fx-font-size: 12;
+}
+
+
 
 /* -------------------- Settings -------------------- */
 
