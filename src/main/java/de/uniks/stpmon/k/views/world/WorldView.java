@@ -5,14 +5,12 @@ import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.WorldSet;
-import javafx.event.EventHandler;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -25,7 +23,6 @@ public class WorldView extends Viewable {
 
     public static final int MOVEMENT_UNIT = 8;
     public static final int WORLD_UNIT = 16;
-    public static final int ENTITY_OFFSET_X = 0;
     public static final int ENTITY_OFFSET_Y = 1;
     public static final int WORLD_ANGLE = -59;
 
@@ -59,7 +56,7 @@ public class WorldView extends Viewable {
         return camera;
     }
 
-    protected Group render(PerspectiveCamera camera) {
+    protected Group render() {
         WorldSet world = storage.getWorld();
         if (world == null) {
             return new Group();
@@ -85,12 +82,8 @@ public class WorldView extends Viewable {
         if (storage.isEmpty()) {
             root = new Group();
         } else {
-            root = render(camera);
+            root = render();
         }
-
-//        app.getStage()
-//                .getScene()
-//                .setOnKeyPressed(keyPressed(camera));
 
         // Create sub scene
         SubScene scene = new SubScene(root, 450, 400, true, SceneAntialiasing.DISABLED);
@@ -115,29 +108,5 @@ public class WorldView extends Viewable {
         characterView.destroy();
         floorView.destroy();
         propView.destroy();
-    }
-
-    private static EventHandler<KeyEvent> keyPressed(PerspectiveCamera camera) {
-        return (event) -> {
-            System.out.println("Key pressed: " + event.getCode());
-            switch (event.getCode()) {
-                case W -> camera.setTranslateZ(camera.getTranslateZ() + MOVEMENT_UNIT);
-                case S -> camera.setTranslateZ(camera.getTranslateZ() - MOVEMENT_UNIT);
-                case A -> camera.setTranslateX(camera.getTranslateX() - MOVEMENT_UNIT);
-                case D -> camera.setTranslateX(camera.getTranslateX() + MOVEMENT_UNIT);
-                default -> {
-                }
-            }
-            rotate(event, camera);
-        };
-    }
-
-    private static void rotate(KeyEvent event, PerspectiveCamera camera) {
-        switch (event.getCode()) {
-            case Q -> camera.setRotate(camera.getRotate() - 2.5);
-            case E -> camera.setRotate(camera.getRotate() + 2.5);
-            default -> {
-            }
-        }
     }
 }

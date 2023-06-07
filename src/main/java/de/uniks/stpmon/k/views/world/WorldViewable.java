@@ -45,6 +45,7 @@ public abstract class WorldViewable extends Viewable {
         return floor;
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected MeshView createRectangleScaled(BufferedImage image, int angle) {
         Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
         return createRectangle(scaledimage,
@@ -52,18 +53,12 @@ public abstract class WorldViewable extends Viewable {
                 (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected MeshView createRectangleScaled(BufferedImage image, int width, int height, int angle) {
         Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
         return createRectangle(scaledimage,
                 width,
                 height, angle);
-    }
-
-    protected MeshView createRectangleScaled(String path, int angle) {
-        Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
-        return createRectangle(scaledimage,
-                (int) (scaledimage.getWidth() / IMAGE_SCALE),
-                (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
     protected MeshView createRectangle(Image image, int width, int height, int angle) {

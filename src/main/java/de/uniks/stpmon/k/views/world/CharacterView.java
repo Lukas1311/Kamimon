@@ -32,12 +32,10 @@ public class CharacterView extends EntityView {
         PerspectiveCamera camera = cameraStorage.getCamera();
         camera.setTranslateX(character.getTranslateX());
         camera.setTranslateZ(character.getTranslateZ());
-        character.translateXProperty().addListener((observable, oldValue, newValue) -> {
-            camera.setTranslateX(camera.getTranslateX() - ((double) oldValue - (double) newValue));
-        });
-        character.translateZProperty().addListener((observable, oldValue, newValue) -> {
-            camera.setTranslateZ(camera.getTranslateZ() - ((double) oldValue - (double) newValue));
-        });
+        character.translateXProperty().addListener((observable, oldValue, newValue) ->
+                camera.setTranslateX(camera.getTranslateX() - ((double) oldValue - (double) newValue)));
+        character.translateZProperty().addListener((observable, oldValue, newValue) ->
+                camera.setTranslateZ(camera.getTranslateZ() - ((double) oldValue - (double) newValue)));
         return character;
     }
 

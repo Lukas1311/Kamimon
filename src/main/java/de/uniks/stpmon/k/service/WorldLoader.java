@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import java.util.Timer;
 
 @Singleton
 public class WorldLoader {
@@ -35,8 +34,6 @@ public class WorldLoader {
     WorldStorage worldStorage;
     @Inject
     TextureSetService textureSetService;
-    Timer timer;
-
 
     @Inject
     public WorldLoader() {
