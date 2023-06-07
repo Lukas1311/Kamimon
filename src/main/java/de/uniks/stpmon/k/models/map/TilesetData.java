@@ -29,8 +29,7 @@ public record TilesetData(
         int tilewidth,
         int tileheight,
         List<Tile> tiles,
-        String type,
-        List<WangSet> wangsets
+        String type
 ) {
 
 }
