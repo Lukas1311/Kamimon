@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.service.EffectContext;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -23,6 +24,15 @@ public class TestModule {
     @Provides
     static ResourceBundle resources() {
         return ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    }
+
+    @Provides
+    @Singleton
+    static EffectContext effectContext() {
+        return new EffectContext()
+                .setSkipLoading(true)
+                .setSkipLoadImages(true)
+                .setSkipAnimations(true);
     }
 
     @Provides

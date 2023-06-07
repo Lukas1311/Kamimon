@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
@@ -13,7 +14,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -149,7 +154,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @Test
     void testDeleteTrainer() {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
-        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+        final HybridController mock = Mockito.mock(HybridController.class);
 
         when(trainerService.deleteMe()).thenReturn(Observable.just(dummytrainer));
         when(popUpControllerProvider.get()).thenReturn(popupMock);
@@ -158,21 +163,22 @@ public class TrainerManagementControllerTest extends ApplicationTest {
             callback.onModalResult(true);
             return null;
         }).when(popupMock).showModal(any());
-        doNothing().when(app).show(any(LobbyController.class));
-        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
+
+        when(hybridControllerProvider.get()).thenReturn(mock);
+        doNothing().when(mock).openMain(MainWindow.LOBBY);
 
         //action
         clickOn("#deleteTrainerButton");
 
         verify(popupMock, times(2)).showModal(any());
         verify(trainerService, times(1)).deleteMe();
-        verify(app, times(1)).show(lobbyMock);
+        verify(mock, times(1)).openMain(MainWindow.LOBBY);
     }
 
     @Test
     void testDeleteTrainerAndDiscard() {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
-        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+        final HybridController mock = Mockito.mock(HybridController.class);
 
         when(popUpControllerProvider.get()).thenReturn(popupMock);
         doAnswer(invocation -> {
@@ -186,13 +192,13 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         verify(popupMock, times(1)).showModal(any());
         verify(trainerService, times(0)).deleteMe();
-        verify(app, times(0)).show(lobbyMock);
+        verify(mock, times(0)).openMain(MainWindow.LOBBY);
     }
 
     @Test
     void testDeleteTrainerOnError() {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
-        final LobbyController lobbyMock = Mockito.mock(LobbyController.class);
+        final HybridController mock = Mockito.mock(HybridController.class);
 
         when(trainerService.deleteMe()).thenReturn(Observable.error(new Exception()));
         when(popUpControllerProvider.get()).thenReturn(popupMock);
@@ -201,15 +207,16 @@ public class TrainerManagementControllerTest extends ApplicationTest {
             callback.onModalResult(true);
             return null;
         }).when(popupMock).showModal(any());
-        doNothing().when(app).show(any(LobbyController.class));
-        when(lobbyControllerProvider.get()).thenReturn(lobbyMock);
+
+        when(hybridControllerProvider.get()).thenReturn(mock);
+        doNothing().when(mock).openMain(MainWindow.LOBBY);
 
         //action
         clickOn("#deleteTrainerButton");
 
         verify(popupMock, times(1)).showModal(any());
         verify(trainerService, times(1)).deleteMe();
-        verify(app, times(1)).show(lobbyMock);
+        verify(mock, times(1)).openMain(MainWindow.LOBBY);
     }
 
     @Test

@@ -63,8 +63,6 @@ class HybridControllerTest extends ApplicationTest {
         BufferedImage images = new BufferedImage(1, 1,
                 BufferedImage.TYPE_INT_RGB);
         worldStorage.setWorld(new World(images, images, new ArrayList<>()));
-        hybridController.setPlayAnimations(false);
-        loadingScreenController.setSkipLoading(true);
         app.show(hybridController);
         stage.requestFocus();
     }
