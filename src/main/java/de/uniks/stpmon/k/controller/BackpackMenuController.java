@@ -57,8 +57,12 @@ public class BackpackMenuController extends Controller {
     }
 
     protected void openOption(BackpackMenuOption option) {
-        //TODO: Open the sub menus
-        backpackMenuOptions.stream().filter(e -> e.equals(option)).findFirst();
+        switch (option) {
+            // delete dummy method after functionality is implemented
+            case MONSTER_LIST -> dummyMethod();
+            case MONSTERS -> dummyMethod();
+            case MAP -> dummyMethod();
+        }
     }
 
     public boolean isVisible() {
@@ -75,5 +79,8 @@ public class BackpackMenuController extends Controller {
 
     public void incrementCellId() {
         this.cellId++;
+    }
+
+    private void dummyMethod() {
     }
 }
