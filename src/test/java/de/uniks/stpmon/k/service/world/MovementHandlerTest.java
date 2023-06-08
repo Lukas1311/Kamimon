@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.map;
+package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
@@ -6,8 +6,6 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.world.MovementHandler;
-import de.uniks.stpmon.k.service.world.WorldLoader;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
