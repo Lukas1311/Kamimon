@@ -1,62 +1,65 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.dto.MoveTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.storage.CameraStorage;
+import de.uniks.stpmon.k.service.storage.TrainerProvider;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class CharacterView extends WorldViewable {
+public class CharacterView extends EntityView {
 
     @Inject
-    protected EventListener listener;
+    protected CameraStorage cameraStorage;
     @Inject
-    protected RegionStorage regionStorage;
+    protected TrainerStorage trainerStorage;
+    @Inject
+    protected InputHandler inputHandler;
 
     @Inject
     public CharacterView() {
     }
 
     @Override
-    public Node render(int angle, PerspectiveCamera camera) {
-        Node character = createRectangleScaled("map/char.png", angle);
+    protected TrainerProvider getProvider() {
+        return trainerStorage;
+    }
+
+    @Override
+    public Node render() {
+        Node character = super.render();
         character.setId("character");
-        camera.translateXProperty().addListener((observable, oldValue, newValue) -> {
-            character.setTranslateX(character.getTranslateX() - ((double) oldValue - (double) newValue));
-        });
-        camera.translateZProperty().addListener((observable, oldValue, newValue) -> {
-            character.setTranslateZ(character.getTranslateZ() - ((double) oldValue - (double) newValue));
-        });
+        PerspectiveCamera camera = cameraStorage.getCamera();
+        camera.setTranslateX(character.getTranslateX());
+        camera.setTranslateZ(character.getTranslateZ());
+        character.translateXProperty().addListener((observable, oldValue, newValue) ->
+                camera.setTranslateX(camera.getTranslateX() - ((double) oldValue - (double) newValue)));
+        character.translateZProperty().addListener((observable, oldValue, newValue) ->
+                camera.setTranslateZ(camera.getTranslateZ() - ((double) oldValue - (double) newValue)));
         return character;
     }
 
-    public void onMove(int x, int y) {
-    }
-
-    public void onMoveReceived(MoveTrainerDto dto) {
+    private void keyPressed(KeyEvent event) {
+        switch (event.getCode()) {
+            case W -> movementHandler.moveDirection(Direction.TOP);
+            case S -> movementHandler.moveDirection(Direction.BOTTOM);
+            case A -> movementHandler.moveDirection(Direction.LEFT);
+            case D -> movementHandler.moveDirection(Direction.RIGHT);
+            default -> {
+            }
+        }
     }
 
     @Override
     public void init() {
-        if (regionStorage.isEmpty()) {
-            return;
-        }
-        Area area = regionStorage.getArea();
-        if (area == null || area.map() == null) {
-            return;
-        }
-        subscribe(listener.listen(Socket.UDP,
-                        "areas.*.trainers.*.moved",
-                        MoveTrainerDto.class),
-                (event) -> {
-                    MoveTrainerDto dto = event.data();
-                    onMoveReceived(dto);
-                });
+        super.init();
+        onDestroy(inputHandler.addKeyHandler(this::keyPressed));
     }
+
 }

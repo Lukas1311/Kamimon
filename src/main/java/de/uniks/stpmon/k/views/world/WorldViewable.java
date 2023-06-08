@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -21,7 +20,7 @@ public abstract class WorldViewable extends Viewable {
 
     public static final double IMAGE_SCALE = 4.0;
 
-    public abstract Node render(int angle, PerspectiveCamera camera);
+    public abstract Node render();
 
     protected Material createMaterial(Image image) {
         PhongMaterial material = new PhongMaterial();
@@ -46,21 +45,23 @@ public abstract class WorldViewable extends Viewable {
         return floor;
     }
 
-    protected Node createRectangleScaled(BufferedImage image, int angle) {
+    @SuppressWarnings("SameParameterValue")
+    protected MeshView createRectangleScaled(BufferedImage image, int angle) {
         Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
         return createRectangle(scaledimage,
                 (int) (scaledimage.getWidth() / IMAGE_SCALE),
                 (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
     }
 
-    protected Node createRectangleScaled(String path, int angle) {
-        Image scaledimage = scaledImageFX(path, IMAGE_SCALE);
+    @SuppressWarnings("SameParameterValue")
+    protected MeshView createRectangleScaled(BufferedImage image, int width, int height, int angle) {
+        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
         return createRectangle(scaledimage,
-                (int) (scaledimage.getWidth() / IMAGE_SCALE),
-                (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
+                width,
+                height, angle);
     }
 
-    protected Node createRectangle(Image image, int width, int height, int angle) {
+    protected MeshView createRectangle(Image image, int width, int height, int angle) {
         MeshView entity = MeshUtils.createRectangle(width, height);
         entity.setDrawMode(DrawMode.FILL);
         entity.setCullFace(CullFace.BACK);

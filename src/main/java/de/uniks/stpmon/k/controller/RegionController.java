@@ -37,13 +37,7 @@ public class RegionController extends Controller {
         regionVBox.setMaxWidth(vboxWidth);
         regionNameText.setText(region.name());
         //regionImage.setImage(loadImage("dummyRegionImage.png"));
-        regionVBox.setOnMouseClicked(event -> {
-            if (!listController.trainerExists()) {
-                listController.createNewTrainer(region);
-            } else {
-                listController.enterRegion(region);
-            }
-        });
+        regionVBox.setOnMouseClicked(event -> listController.createNewTrainer(region));
         regionImage.setFitWidth(vboxWidth - borderSize * 2);
         imageWrappingPane.setPrefWidth(400);
         imageWrappingPane.setPrefHeight(regionImage.getFitHeight() + borderSize * 2);

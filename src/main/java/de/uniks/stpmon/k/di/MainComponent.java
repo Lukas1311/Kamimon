@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.IFriendCache;
 
 import javax.inject.Singleton;
@@ -24,6 +25,8 @@ public interface MainComponent {
     LoadingScreenController loadingScreenController();
 
     IFriendCache friendCache();
+
+    InputHandler inputHandler();
 
     @Component.Builder
     interface Builder {

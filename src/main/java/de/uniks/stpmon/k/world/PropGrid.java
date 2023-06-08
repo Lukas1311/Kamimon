@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.world;
+package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.utils.Direction;
 
