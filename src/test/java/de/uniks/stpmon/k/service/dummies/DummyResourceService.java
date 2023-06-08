@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.service.dummies;
 
-import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.world.CharacterSet;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.imageio.ImageIO;
@@ -27,7 +27,7 @@ public class DummyResourceService implements IResourceService {
         if (characterImage == null) {
             return Observable.create(emitter -> {
                 try {
-                    characterImage = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("map/char.png")));
+                    characterImage = ImageIO.read(Objects.requireNonNull(CharacterSet.class.getResourceAsStream("char.png")));
                     emitter.onNext(characterImage);
                     emitter.onComplete();
                 } catch (IOException e) {
@@ -43,7 +43,7 @@ public class DummyResourceService implements IResourceService {
         if (tileSetImage == null) {
             return Observable.create(emitter -> {
                 try {
-                    characterImage = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("map/exteriors.png")));
+                    characterImage = ImageIO.read(Objects.requireNonNull(CharacterSet.class.getResourceAsStream("exteriors.png")));
                     emitter.onNext(characterImage);
                     emitter.onComplete();
                 } catch (IOException e) {

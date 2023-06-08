@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.world.WorldSet;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.stage.Stage;
@@ -15,10 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,9 +49,7 @@ public class WorldControllerTest extends ApplicationTest {
 
     @Test
     public void worldExists() {
-        BufferedImage images = new BufferedImage(1, 1,
-                BufferedImage.TYPE_INT_RGB);
-        worldStorage.setWorld(new WorldSet(images, images, new ArrayList<>(), Collections.emptyMap()));
+        worldStorage.setWorld(DummyConstants.WORLD);
         app.show(worldController);
 
         SubScene node = lookup("#worldScene").queryAs(SubScene.class);

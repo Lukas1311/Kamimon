@@ -4,9 +4,11 @@ import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.MovementHandler;
+import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.world.CharacterSet;
 import de.uniks.stpmon.k.world.WorldSet;
@@ -27,11 +29,17 @@ import java.util.Objects;
 public abstract class EntityView extends WorldViewable {
 
     public static final int MOVEMENT_PERIOD = 200;
+    public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
 
     @Inject
     protected MovementHandler movementHandler;
     @Inject
     protected WorldStorage worldStorage;
+    @Inject
+    protected WorldService worldService;
+    @Inject
+    protected EffectContext effectContext;
+
     // Not injected by dagger, provided by upper class
     private TrainerProvider trainerProvider;
     protected MeshView entityNode;
@@ -52,13 +60,7 @@ public abstract class EntityView extends WorldViewable {
             throw new IllegalStateException("Trainer cannot be null");
         }
         WorldSet worldSet = worldStorage.getWorld();
-        if (worldSet != null) {
-            characterSet = worldSet
-                    .characters()
-                    .get(trainer.image());
-        } else {
-            characterSet = getPlaceholder();
-        }
+        characterSet = worldService.getCharacter(worldSet, trainer.image());
     }
 
     private CharacterSet getPlaceholder() {
@@ -128,7 +130,7 @@ public abstract class EntityView extends WorldViewable {
 
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityNode);
-        moveTranslation.setDuration(Duration.millis(MOVEMENT_PERIOD));
+        moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()));
         moveTranslation.setToX(trainer.x() * WorldView.WORLD_UNIT);
         moveTranslation.setToZ(-trainer.y() * WorldView.WORLD_UNIT
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
@@ -175,7 +177,7 @@ public abstract class EntityView extends WorldViewable {
             this.characterSet = characterSet;
             this.direction = direction;
             this.isMoving = isMoving;
-            setCycleDuration(Duration.millis(MOVEMENT_PERIOD * 5));
+            setCycleDuration(Duration.millis(effectContext.getWalkingAnimationSpeed()));
 
         }
 

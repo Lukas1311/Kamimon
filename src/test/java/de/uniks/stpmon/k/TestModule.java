@@ -32,7 +32,8 @@ public class TestModule {
         return new EffectContext()
                 .setSkipLoading(true)
                 .setSkipLoadImages(true)
-                .setSkipAnimations(true);
+                .setSkipAnimations(true)
+                .setWalkingSpeed(1);
     }
 
 //    @Provides

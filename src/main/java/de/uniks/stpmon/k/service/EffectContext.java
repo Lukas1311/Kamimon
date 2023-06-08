@@ -1,13 +1,18 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.views.world.EntityView;
+
 /**
  * Service which controls the rendering of images and animations.
  * It can be used to skip image loading and animations while testing or in other cases.
  */
 public class EffectContext {
+
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
+    private int walkingSpeed = EntityView.MOVEMENT_PERIOD;
+    private int walkingAnimationSpeed = EntityView.WALKING_ANIMATION_PERIOD;
 
 
     /**
@@ -70,5 +75,44 @@ public class EffectContext {
      */
     public boolean shouldSkipLoading() {
         return skipLoading;
+    }
+
+    /**
+     * Sets the walking speed of the player.
+     * This is the time in milliseconds the player needs to walk one tile.
+     *
+     * @param walkingSpeed The walking speed of the player in milliseconds per tile
+     */
+    public EffectContext setWalkingSpeed(int walkingSpeed) {
+        this.walkingSpeed = walkingSpeed;
+        return this;
+    }
+
+    /**
+     * Gets the walking speed of the player.
+     *
+     * @return The walking speed of the player in milliseconds per tile.
+     */
+    public int getWalkingSpeed() {
+        return walkingSpeed;
+    }
+
+    /**
+     * Sets the walking animation speed of the player.
+     *
+     * @param walkingAnimationSpeed The walking animation speed of the player in milliseconds per 6 frames
+     */
+    public EffectContext setWalkingAnimationSpeed(int walkingAnimationSpeed) {
+        this.walkingAnimationSpeed = walkingAnimationSpeed;
+        return this;
+    }
+
+    /**
+     * Gets the walking animation speed of the player.
+     *
+     * @return The walking animation speed of the player in milliseconds per 6 frames
+     */
+    public int getWalkingAnimationSpeed() {
+        return walkingAnimationSpeed;
     }
 }

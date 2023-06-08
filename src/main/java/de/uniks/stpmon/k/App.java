@@ -69,14 +69,20 @@ public class App extends Application {
         if (component == null) {
             return;
         }
-
-        InputHandler inputHandler = component.inputHandler();
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
+        addInputHandler(component);
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
         loadingScreen.startLoading(this::onFinishedLoading);
 
         disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
+    }
+
+    public void addInputHandler(MainComponent component) {
+        if (component == null) {
+            return;
+        }
+        InputHandler inputHandler = component.inputHandler();
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
     }
 
     private void onFinishedLoading() {
