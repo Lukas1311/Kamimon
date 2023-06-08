@@ -9,9 +9,8 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -45,9 +44,7 @@ class HybridControllerTest extends ApplicationTest {
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final HybridController hybridController = component.hybridController();
     private final UserStorage userStorage = component.userStorage();
-    private final WorldStorage worldStorage = component.worldStorage();
     private final EventListener eventListener = component.eventListener();
-    private final TrainerStorage trainerStorage = component.trainerStorage();
     @Spy
     @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
@@ -59,8 +56,6 @@ class HybridControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
-//        worldStorage.setWorld(DummyLazy.INSTANCE.getWorldSet());
-//        trainerStorage.setTrainer(DummyConstants.TRAINER);
         app.show(hybridController);
         stage.requestFocus();
     }
@@ -97,6 +92,9 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void toIngame() {
+        // mock udp listener
+        MovementDummy.addMovementDummy(component.eventListener());
+
         // pressing Region button and check if ingame is shown
         clickOn("#regionVBox");
         waitForFxEvents();
@@ -162,6 +160,10 @@ class HybridControllerTest extends ApplicationTest {
 
     @Test
     public void closeSidebar() {
+        // mock udp listener
+        MovementDummy.addMovementDummy(component.eventListener());
+
+
         when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());
         StackPane stackPane = lookup("#stackPane").query();
         assertEquals(1, stackPane.getChildren().size());

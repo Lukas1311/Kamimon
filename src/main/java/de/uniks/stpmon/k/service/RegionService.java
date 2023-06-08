@@ -53,10 +53,6 @@ public class RegionService {
         return regionApiService.getTrainer(regionID, trainerId);
     }
 
-    public Observable<Trainer> deleteTrainer(String trainerId) {
-        return regionApiService.deleteTrainer(regionStorage.getRegion()._id(), trainerId);
-    }
-
     public Observable<Trainer> deleteTrainer(String regionId, String trainerId) {
         return regionApiService.deleteTrainer(regionId, trainerId);
     }

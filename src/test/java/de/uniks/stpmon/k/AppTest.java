@@ -3,6 +3,7 @@ package de.uniks.stpmon.k;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
+import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -35,6 +36,8 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV1() {
+        MovementDummy.addMovementDummy(component.eventListener());
+
         app.show(component.loginController());
 
         //put in username and password

@@ -40,6 +40,7 @@ public class WorldLoaderTest {
     @Mock
     RegionService regionService;
     @Mock
+    @SuppressWarnings("unused")
     TextureSetService textureSetService;
     @InjectMocks
     @Spy

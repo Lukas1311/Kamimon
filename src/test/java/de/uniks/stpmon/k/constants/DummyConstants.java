@@ -69,7 +69,7 @@ public class DummyConstants {
                             0, "Ground",
                             List.of(
                                     new ChunkData(
-                                            IntStream.range(0, 64).map(i -> 482)
+                                            IntStream.range(0, 256).map(i -> 482)
                                                     .boxed().toList(),
                                             16, 16,
                                             0, 0
@@ -84,7 +84,7 @@ public class DummyConstants {
                             List.of()
                     )
             ),
-            1, 1,
+            16, 16,
             List.of(
                     new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")
             ),

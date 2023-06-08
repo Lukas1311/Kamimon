@@ -13,9 +13,11 @@ import javax.inject.Singleton;
 public abstract class BoundTestModule {
     @Binds
     @Singleton
+    @SuppressWarnings("unused")
     public abstract IFriendCache friendCache(FriendCacheDummy cache);
 
     @Binds
     @Singleton
+    @SuppressWarnings("unused")
     public abstract IResourceService resourceService(DummyResourceService service);
 }

@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.service.RegionService;
@@ -29,7 +30,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-
 
 @ExtendWith(MockitoExtension.class)
 public class RegionListControllerTest extends ApplicationTest {
@@ -60,6 +60,7 @@ public class RegionListControllerTest extends ApplicationTest {
 
     @Test
     void testShow() {
+        when(regionService.getMainTrainer(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
 
         GridPane regionListGridPane = lookup("#regionListGridPane").query();

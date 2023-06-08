@@ -63,7 +63,7 @@ public abstract class EntityView extends WorldViewable {
     private CharacterSet getPlaceholder() {
         BufferedImage image;
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("char.png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("char.png")));
         } catch (IOException e) {
             image = new BufferedImage(384, 96, BufferedImage.TYPE_INT_RGB);
         }

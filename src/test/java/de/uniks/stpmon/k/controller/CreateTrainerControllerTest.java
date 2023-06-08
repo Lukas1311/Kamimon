@@ -57,8 +57,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     RegionStorage regionStorage;
     @Mock
     WorldLoader worldLoader;
-    @Mock
-    LoadingScreenController loadingScreen;
 
     @Spy
     @InjectMocks

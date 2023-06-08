@@ -5,13 +5,10 @@ import dagger.Provides;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
-import de.uniks.stpmon.k.service.map.PropInspectionTest;
 import io.reactivex.rxjava3.core.Observable;
-import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 
 import javax.inject.Singleton;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,19 +78,8 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getFile(String filename) {
-                if (filename
-                        .equals("Modern_Exteriors_16x16.json")) {
-                    // return DummyConstants.TILESET_DATA;
-                }
-                try (InputStream is = PropInspectionTest.class.getResourceAsStream(filename)) {
-                    if (is == null) {
-                        return Observable.error(new Exception("File not found"));
-                    }
-                    ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), is.readAllBytes());
-                    return Observable.just(body);
-                } catch (Exception e) {
-                    return Observable.error(e);
-                }
+                // Provider in resource service
+                return Observable.empty();
             }
 
             @Override
@@ -106,15 +92,8 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getCharacterFile(String filename) {
-                try (InputStream is = PropInspectionTest.class.getResourceAsStream(filename)) {
-                    if (is == null) {
-                        return Observable.error(new Exception("File not found"));
-                    }
-                    ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), is.readAllBytes());
-                    return Observable.just(body);
-                } catch (Exception e) {
-                    return Observable.error(e);
-                }
+                // Provider in resource service
+                return Observable.empty();
             }
 
             @Override
