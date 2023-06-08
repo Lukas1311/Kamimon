@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.di.DaggerMainComponent;
 import de.uniks.stpmon.k.di.MainComponent;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.ILifecycleService;
 import de.uniks.stpmon.k.service.InputHandler;
 import fr.brouillard.oss.cssfx.CSSFX;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -90,7 +91,8 @@ public class App extends Application {
         if (authService.isRememberMe()) {
             disposables.add(authService
                     .refresh()
-                    .subscribe(lr -> show(component.hybridController()), err -> show(component.loginController())));
+                    .subscribe(lr -> show(component.hybridController()),
+                            err -> show(component.loginController())));
         } else {
             show(component.loginController());
         }
@@ -124,6 +126,14 @@ public class App extends Application {
     public void stop() {
         cleanup();
         disposables.dispose();
+        if (component == null) {
+            return;
+        }
+
+        // destroy all lifecycle services
+        for (ILifecycleService service : component.lifecycleServices()) {
+            service.destroy();
+        }
     }
 
     public void show(Controller controller) {
