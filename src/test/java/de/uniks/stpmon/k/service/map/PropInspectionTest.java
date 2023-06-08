@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service.map;
 
+import de.uniks.stpmon.k.map.PropInspector;
 import de.uniks.stpmon.k.models.map.TileProp;
-import de.uniks.stpmon.k.service.world.PropInspector;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.service.map;
 
+import de.uniks.stpmon.k.map.TileMap;
+import de.uniks.stpmon.k.map.Tileset;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.map.ChunkData;
@@ -9,8 +11,6 @@ import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
-import de.uniks.stpmon.k.service.world.TileMap;
-import de.uniks.stpmon.k.service.world.Tileset;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

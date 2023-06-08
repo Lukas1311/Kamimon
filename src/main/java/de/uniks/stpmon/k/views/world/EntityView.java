@@ -1,13 +1,14 @@
 package de.uniks.stpmon.k.views.world;
 
+import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.constants.NoneConstants;
+import de.uniks.stpmon.k.map.CharacterSet;
+import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.CharacterSet;
 import de.uniks.stpmon.k.service.world.MovementHandler;
-import de.uniks.stpmon.k.service.world.WorldSet;
 import de.uniks.stpmon.k.utils.Direction;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -63,7 +64,7 @@ public abstract class EntityView extends WorldViewable {
     private CharacterSet getPlaceholder() {
         BufferedImage image;
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("char.png")));
+            image = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("map/char.png")));
         } catch (IOException e) {
             image = new BufferedImage(384, 96, BufferedImage.TYPE_INT_RGB);
         }

@@ -1,6 +1,9 @@
 package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.map.CharacterSet;
+import de.uniks.stpmon.k.map.TileMap;
+import de.uniks.stpmon.k.map.Tileset;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.service.IResourceService;

@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.world;
+package de.uniks.stpmon.k.map;
 
 import de.uniks.stpmon.k.models.map.TileProp;
 

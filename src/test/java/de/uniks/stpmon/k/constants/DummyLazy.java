@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.constants;
 
+import de.uniks.stpmon.k.map.CharacterSet;
+import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.service.map.PropInspectionTest;
-import de.uniks.stpmon.k.service.world.CharacterSet;
-import de.uniks.stpmon.k.service.world.WorldSet;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

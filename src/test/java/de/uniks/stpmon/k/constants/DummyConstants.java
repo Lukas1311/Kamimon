@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.constants;
 
+import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.NPCInfo;
@@ -11,7 +12,6 @@ import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
-import de.uniks.stpmon.k.service.world.WorldSet;
 
 import java.util.Collections;
 import java.util.List;

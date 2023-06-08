@@ -1,10 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.map.WorldSet;
+import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.WorldSet;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.stage.Stage;
@@ -26,10 +29,14 @@ public class WorldControllerTest extends ApplicationTest {
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     WorldController worldController = component.worldController();
     WorldStorage worldStorage = component.worldStorage();
+    TrainerStorage trainerStorage = component.trainerStorage();
 
     @Override
     public void start(Stage stage) throws Exception {
         super.start(stage);
+
+        MovementDummy.addMovementDummy(component.eventListener());
+        trainerStorage.setTrainer(DummyConstants.TRAINER);
 
         // show app
         app.start(stage);

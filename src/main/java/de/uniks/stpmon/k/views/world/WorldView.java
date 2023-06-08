@@ -1,10 +1,10 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.WorldSet;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
