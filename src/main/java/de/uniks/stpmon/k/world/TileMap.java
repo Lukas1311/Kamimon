@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.map;
+package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.ChunkData;

@@ -1,8 +1,6 @@
 package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.constants.NoneConstants;
-import de.uniks.stpmon.k.map.PropMap;
-import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
@@ -13,6 +11,8 @@ import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.world.PropMap;
+import de.uniks.stpmon.k.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;

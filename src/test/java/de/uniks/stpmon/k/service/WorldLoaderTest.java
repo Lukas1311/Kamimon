@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.constants.NoneConstants;
-import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.sources.IPortalController;
 import de.uniks.stpmon.k.service.sources.PortalSource;
@@ -11,6 +10,7 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.service.world.WorldLoader;
+import de.uniks.stpmon.k.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.BeforeEach;

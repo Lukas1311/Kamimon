@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service.map;
 
-import de.uniks.stpmon.k.map.PropGrid;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.world.PropGrid;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

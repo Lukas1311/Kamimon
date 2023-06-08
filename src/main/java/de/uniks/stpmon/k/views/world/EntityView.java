@@ -2,14 +2,14 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.constants.NoneConstants;
-import de.uniks.stpmon.k.map.CharacterSet;
-import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.world.CharacterSet;
+import de.uniks.stpmon.k.world.WorldSet;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;

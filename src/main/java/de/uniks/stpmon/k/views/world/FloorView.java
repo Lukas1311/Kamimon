@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.map.WorldSet;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.world.WorldSet;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;

@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.utils;
 
-import static de.uniks.stpmon.k.map.PropInspector.TILE_SIZE;
+import static de.uniks.stpmon.k.world.PropInspector.TILE_SIZE;
 
 public enum Direction {
     RIGHT,
