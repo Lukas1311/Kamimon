@@ -137,13 +137,7 @@ class AppTest extends ApplicationTest {
 
         clickOn("#regionImage");
 
-        // create a new trainer
-        clickOn("#createTrainerInput");
-        write("Tom");
-        clickOn("#createTrainerButton");
-        clickOn("#approveButton");
-        waitForFxEvents();
-
+        // enter with already created trainer
         verifyThat("#ingame", Node::isVisible);
     }
 }

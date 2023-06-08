@@ -6,10 +6,10 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
+import de.uniks.stpmon.k.service.world.WorldLoader;
 import de.uniks.stpmon.k.views.MessageCell;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -32,7 +32,7 @@ import java.util.Optional;
 
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
 
-public class ChatController extends PortalController {
+public class ChatController extends ToastedController {
     @FXML
     public Button backButton;
     @FXML
@@ -50,13 +50,10 @@ public class ChatController extends PortalController {
     @FXML
     public VBox chatScreen;
 
-
     @Inject
     MessageService msgService;
     @Inject
     RegionService regionService;
-    @Inject
-    GroupApiService groupApiService;
     @Inject
     UserService userService;
     @Inject
@@ -64,7 +61,7 @@ public class ChatController extends PortalController {
     @Inject
     EventListener eventListener;
     @Inject
-    LoadingScreenController loadingScreen;
+    WorldLoader worldLoader;
 
     private final ObservableList<Message> messages = FXCollections.observableArrayList();
     private ListView<Message> messagesListView;
@@ -264,8 +261,9 @@ public class ChatController extends PortalController {
     }
 
     public void openRegion(String regionId) {
-        subscribe(regionService.getRegion(regionId),
-                this::enterRegion, this::handleError);
+        subscribe(regionService.getRegion(regionId).flatMap(worldLoader::tryEnterRegion),
+                (r) -> {
+                }, this::handleError);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
@@ -20,10 +19,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.util.Duration;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Objects;
 
 public abstract class EntityView extends WorldViewable {
@@ -61,16 +57,6 @@ public abstract class EntityView extends WorldViewable {
         }
         WorldSet worldSet = worldStorage.getWorld();
         characterSet = worldService.getCharacter(worldSet, trainer.image());
-    }
-
-    private CharacterSet getPlaceholder() {
-        BufferedImage image;
-        try {
-            image = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("map/char.png")));
-        } catch (IOException e) {
-            image = new BufferedImage(384, 96, BufferedImage.TYPE_INT_RGB);
-        }
-        return new CharacterSet("placeholder", image);
     }
 
     @Override

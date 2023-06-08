@@ -43,8 +43,8 @@ public class DummyResourceService implements IResourceService {
         if (tileSetImage == null) {
             return Observable.create(emitter -> {
                 try {
-                    characterImage = ImageIO.read(Objects.requireNonNull(CharacterSet.class.getResourceAsStream("exteriors.png")));
-                    emitter.onNext(characterImage);
+                    tileSetImage = ImageIO.read(Objects.requireNonNull(CharacterSet.class.getResourceAsStream("exteriors.png")));
+                    emitter.onNext(tileSetImage);
                     emitter.onComplete();
                 } catch (IOException e) {
                     emitter.onError(e);
