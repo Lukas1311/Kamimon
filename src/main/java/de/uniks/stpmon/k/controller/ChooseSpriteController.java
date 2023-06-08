@@ -11,11 +11,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import okhttp3.ResponseBody;
 
@@ -126,15 +128,22 @@ public class ChooseSpriteController extends ToastedController {
                 int spriteHeight = 35;
                 int spriteX = 48;
                 int spriteY = 0;
-                // extract the sprite from the original image
+                // Extract the sprite from the original image
                 BufferedImage image = bufferedImage.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
+
                 // Scale the image
                 BufferedImage scaledImage = ImageUtils.scaledImage(image, IMAGE_SCALE);
 
                 // Convert the BufferedImage to JavaFX Image
                 Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
+
                 // Set the image
                 spriteImage.setImage(fxImage);
+                spriteImage.setFitHeight(260);
+                spriteImage.setFitWidth(300);
+
+                // Place the sprite in the center of the screen
+                StackPane.setMargin(spriteImage, new Insets(0, 0, 0, 35));
             } catch (IOException e) {
                 handleError(e);
             }
