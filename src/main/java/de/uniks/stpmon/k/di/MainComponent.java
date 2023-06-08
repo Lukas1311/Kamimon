@@ -6,9 +6,11 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.ILifecycleService;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.cache.ICache;
 import de.uniks.stpmon.k.service.storage.IFriendCache;
 
 import javax.inject.Singleton;
@@ -31,6 +33,8 @@ public interface MainComponent {
     InputHandler inputHandler();
 
     Set<ILifecycleService> lifecycleServices();
+
+    ICache<Monster> monsterCache();
 
     @Component.Builder
     interface Builder {

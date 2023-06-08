@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.service.storage.MonsterCache;
+import de.uniks.stpmon.k.service.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 
 import javax.inject.Inject;
