@@ -32,14 +32,11 @@ public class IngameController extends Controller {
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
-    MonsterBarController monsterBar;
-
+    MonsterBarController monsterBarController;
     @Inject
-    MinimapController miniMap;
-
+    MinimapController minimapController;
     @Inject
-    BackpackController backPack;
-
+    BackpackController backpackController;
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
     @Inject
@@ -56,9 +53,9 @@ public class IngameController extends Controller {
         super.init();
 
         worldController.init();
-        monsterBar.init();
-        miniMap.init();
-        backPack.init();
+        monsterBarController.init();
+        minimapController.init();
+        backpackController.init();
     }
 
     @Override
@@ -66,9 +63,9 @@ public class IngameController extends Controller {
         super.destroy();
 
         worldController.destroy();
-        monsterBar.destroy();
-        miniMap.destroy();
-        backPack.destroy();
+        monsterBarController.destroy();
+        minimapController.destroy();
+        backpackController.destroy();
     }
 
     @Override
@@ -80,20 +77,20 @@ public class IngameController extends Controller {
         if (world != null) {
             ingameStack.getChildren().add(0, world);
         }
-        Parent monsterBar = this.monsterBar.render();
+        Parent monsterBar = this.monsterBarController.render();
         // Null if unit testing world view
         if (monsterBar != null) {
             pane.getChildren().add(monsterBar);
         }
 
 
-        Parent miniMap = this.miniMap.render();
+        Parent miniMap = this.minimapController.render();
         // Null if unit testing world view
         if (miniMap != null) {
             rightVbox.getChildren().add(0, miniMap);
         }
 
-        Parent backPack = this.backPack.render();
+        Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
             ingameWrappingHBox.getChildren().add(backPack);
@@ -102,7 +99,6 @@ public class IngameController extends Controller {
                     backpackMenu = backpackMenuControllerProvider.get().render();
                     ingameWrappingHBox.getChildren().add(0, backpackMenu);
                     ingameStack.setAlignment(Pos.TOP_RIGHT);
-
                 } else {
                     backpackMenuControllerProvider.get().setVisability(
                             !backpackMenuControllerProvider.get().isVisible());

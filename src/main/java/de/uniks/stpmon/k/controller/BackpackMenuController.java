@@ -83,4 +83,8 @@ public class BackpackMenuController extends Controller {
 
     private void dummyMethod() {
     }
+
+    public String getString(BackpackMenuOption backpackMenuOption) {
+        return translateString(backpackMenuOption.toString());
+    }
 }

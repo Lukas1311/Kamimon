@@ -28,6 +28,9 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
+    @Spy
+    IngameController ingameController;
+
     @InjectMocks
     BackpackMenuController backpackMenuController;
 
@@ -37,6 +40,13 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(backpackMenuController);
         stage.requestFocus();
+    }
+
+    @Test
+    void showMenu() {
+        //ingameController = Mockito.mock(IngameController.class);
+        ingameController.render();
+        clickOn("#backpackImage");
     }
 
     @Test

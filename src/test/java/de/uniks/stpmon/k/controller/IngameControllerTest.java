@@ -2,8 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.service.RegionService;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,42 +19,35 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
 public class IngameControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
-
-    @Mock
+    Provider<HybridController> hybridControllerProvider;
+    @Spy
     @SuppressWarnings("unused")
-    RegionService regionService;
-
+    MonsterBarController monsterBarController;
+    @Spy
+    @SuppressWarnings("unused")
+    MinimapController minimapController;
+    @Spy
+    @SuppressWarnings("unused")
+    BackpackController backpackController;
+    @Mock
+    Provider<BackpackMenuController> backpackMenuControllerProvider;
     @Mock
     @SuppressWarnings("unused")
     WorldController worldController;
-    @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
-    @SuppressWarnings("unused")
-    MonsterBarController monsterBarController = new MonsterBarController();
-
+    App app = new App(null);
     @Spy
-    @SuppressWarnings("unused")
-    MinimapController minimapController = new MinimapController();
-
-    @Spy
-    @SuppressWarnings("unused")
-    BackpackController backpackController = new BackpackController();
-
-    @Spy
-    Provider<BackpackMenuController> backpackMenuControllerProvider;
-    @Spy
-    Provider<HybridController> hybridControllerProvider;
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @InjectMocks
     IngameController ingameController;
@@ -65,6 +58,7 @@ public class IngameControllerTest extends ApplicationTest {
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(ingameController);
         stage.requestFocus();
+
         final HybridController hybridController = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(hybridController);
     }
@@ -77,10 +71,28 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void showBackPackMenu() {
-        when(backpackMenuControllerProvider.get()).thenReturn(new BackpackMenuController());
+        //mock
+        BackpackMenuController backpackMenuController = Mockito.mock(BackpackMenuController.class);
+        when(backpackMenuControllerProvider.get()).thenReturn(backpackMenuController);
+
+        when(backpackMenuController.render()).thenReturn(new HBox());
+
+        //check if backpackController appears
+        assertEquals(1, ingameController.ingameWrappingHBox.getChildren().size());
+        //action
         clickOn("#backpackImage");
-        assertTrue(lookup("#backpackMenuHbox").query().isVisible());
+        assertEquals(2, ingameController.ingameWrappingHBox.getChildren().size());
+
+        //check for visibility
+        HBox backMenuHbox = (HBox) ingameController.ingameWrappingHBox.getChildren().get(0);
+        doAnswer(invocation -> {
+            backMenuHbox.setVisible(false);
+            return null;
+        }).when(backpackMenuController).setVisability(anyBoolean());
+
         clickOn("#backpackImage");
-        assertFalse(lookup("#backpackMenuHbox").query().isVisible());
+
+        assertFalse(backMenuHbox.isVisible());
+
     }
 }

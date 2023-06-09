@@ -35,11 +35,8 @@ public class BackpackMenuEntryController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         setIds();
-        backpackMenuText.setText(backpackMenuController.translateString(entry.toString()));
-
+        backpackMenuText.setText(translateString(entry.toString()));
         Platform.runLater(() -> backpackMenuController.setHeight(backpackMenuHbox.heightProperty().get() + 10));
-
-
         parent.setOnMouseClicked(e -> openOption());
 
         return parent;
