@@ -7,9 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class TrainerStorage {
-
-    Trainer trainer;
+public class TrainerStorage extends TrainerProvider {
 
     private final SimpleBooleanProperty trainerLoaded = new SimpleBooleanProperty(false);
 
@@ -17,16 +15,17 @@ public class TrainerStorage {
     public TrainerStorage() {
     }
 
-    public Trainer getTrainer() {
-        return trainer;
+    public void setTrainer(Trainer trainer) {
+        super.setTrainer(trainer);
+        trainerLoaded.set(trainer != null);
     }
 
-    public void setTrainer(Trainer Trainer) {
-        this.trainer = Trainer;
-        trainerLoaded.set(Trainer != null);
-    }
-
-    public SimpleBooleanProperty getTrainerLoaded(){
+    public SimpleBooleanProperty getTrainerLoaded() {
         return trainerLoaded;
+    }
+
+    @Override
+    public boolean isMain() {
+        return true;
     }
 }

@@ -7,7 +7,13 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.*;
+import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 import java.util.List;
 
@@ -23,18 +29,23 @@ public interface RegionApiService {
                                           @Query("area") String areaId,
                                           @Query("user") String userId);
 
+    @GET("regions/{region}/trainers")
+    Observable<List<Trainer>> getMainTrainers(@Path("region") String regionId,
+                                              @Query("user") String userId);
+
     @GET("regions/{region}/trainers/{id}")
-        //TODO: regionId?
-    Observable<Trainer> getTrainer(@Path("id") String trainerId);
+    Observable<Trainer> getTrainer(@Path("region") String regionId,
+                                   @Path("id") String trainerId);
 
     @PATCH("regions/{region}/trainers/{id}")
-        Observable<Trainer> updateTrainer(@Path("region") String regionId,
-                                                @Path("id") String trainerId,
-                                                @Body UpdateTrainerDto trainerDto);
+    Observable<Trainer> updateTrainer(@Path("region") String regionId,
+                                      @Path("id") String trainerId,
+                                      @Body UpdateTrainerDto trainerDto);
 
 
     @DELETE("regions/{region}/trainers/{id}")
-    Observable<Trainer> deleteTrainer(@Path("id") String trainerId);
+    Observable<Trainer> deleteTrainer(@Path("region") String regionId,
+                                      @Path("id") String trainerId);
 
     //------------------- Regions ---------------------------------
 

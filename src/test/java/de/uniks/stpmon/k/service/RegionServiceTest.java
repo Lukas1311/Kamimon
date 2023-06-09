@@ -1,14 +1,17 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Area;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.service.world.TileMapService;
-import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -21,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,8 +34,6 @@ class RegionServiceTest {
     UserStorage userStorage;
     @Spy
     RegionStorage regionStorage;
-    @Mock
-    TileMapService worldLoader;
     @Mock
     RegionApiService regionApiService;
     @InjectMocks
@@ -137,12 +137,12 @@ class RegionServiceTest {
         Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.getTrainer(any(String.class)))
+        when(regionApiService.getTrainer(any(String.class), any(String.class)))
                 .thenReturn(Observable.just(trainer));
 
         //action
         final Trainer returnTrainer = regionService
-                .getTrainer("trainerId")
+                .getTrainer("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -150,21 +150,27 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainer.name());
 
         //check mocks
-        verify(regionApiService).getTrainer(captor.capture());
+        verify(regionApiService).getTrainer(captor.capture(), captor.capture());
     }
 
     @Test
     void deleteTrainer() {
         initUser();
+        regionStorage.setRegion(new Region(
+                "regionId",
+                "Test",
+                new Spawn("regionId", 0, 0),
+                null
+        ));
         Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.deleteTrainer(any(String.class)))
+        when(regionApiService.deleteTrainer(any(), any()))
                 .thenReturn(Observable.just(trainer));
 
         //action
         final Trainer returnTrainer = regionService
-                .deleteTrainer("trainerId")
+                .deleteTrainer("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -172,7 +178,7 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainer.name());
 
         //check mocks
-        verify(regionApiService).deleteTrainer(captor.capture());
+        verify(regionApiService).deleteTrainer(captor.capture(), captor.capture());
     }
 
     //------------------- Regions ---------------------------------
@@ -222,59 +228,6 @@ class RegionServiceTest {
         assertEquals("1", regionList._id());
         //check mock
         verify(regionApiService).getRegion("1");
-    }
-
-    @Test
-    void enterRegionWithoutSpawn() {
-        Region region = new Region(
-                "1",
-                "Test",
-                new Spawn(null, 0, 0),
-                null
-        );
-        Observable<World> world = regionService.enterRegion(region);
-        TestObserver<World> testObserver = world.test();
-        testObserver.assertError(Exception.class);
-    }
-
-    @Test
-    void enterRegionWithoutSpawnArea() {
-        Region region = new Region(
-                "1",
-                "Test",
-                null,
-                null
-        );
-        Observable<World> world = regionService.enterRegion(region);
-        TestObserver<World> testObserver = world.test();
-        testObserver.assertError(Exception.class);
-    }
-
-    @Test
-    void enterRegion() {
-        Region region = new Region(
-                "1",
-                "Test",
-                new Spawn("areaId", 0, 0),
-                null
-        );
-        regionStorage.setRegion(region);
-        Area area = getDummyArea();
-        regionStorage.setArea(area);
-        World world = new World(null, null, null);
-        //define mocks
-        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.getArea(any(), any(String.class)))
-                .thenReturn(Observable.just(area));
-
-        when(worldLoader.loadTilemap()).thenReturn(Observable.just(world));
-
-        World returnWorld = regionService.enterRegion(region).blockingFirst();
-
-        assertNotNull(returnWorld);
-
-        verify(regionApiService).getArea(any(), captor.capture());
-
     }
 
     //---------------- Region Areas ------------------------------

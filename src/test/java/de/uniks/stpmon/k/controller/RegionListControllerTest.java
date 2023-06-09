@@ -1,11 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -28,20 +27,17 @@ import java.util.ResourceBundle;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-
 
 @ExtendWith(MockitoExtension.class)
 public class RegionListControllerTest extends ApplicationTest {
 
     @Mock
-    Provider<HybridController> hybridController;
-    @Mock
     RegionService regionService;
     @Mock
-    @SuppressWarnings("unused")
-    IngameController ingameController;
+    WorldLoader worldLoader;
     @InjectMocks
     RegionListController regionListController;
     @Spy
@@ -50,16 +46,11 @@ public class RegionListControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
-    @Spy
-    LoadingScreenController loadingScreen = new LoadingScreenController();
 
     @Override
     public void start(Stage stage) throws Exception {
         final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("0", "Test", new Spawn("0", 0, 0), null)));
         when(regionService.getRegions()).thenReturn(regionMock);
-
-        loadingScreen.setSkipLoading(true);
-        regionListController.doesTrainerExist = true;
 
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
@@ -69,13 +60,8 @@ public class RegionListControllerTest extends ApplicationTest {
 
     @Test
     void testShow() {
-        final HybridController mock = Mockito.mock(HybridController.class);
-        when(hybridController.get()).thenReturn(mock);
-        doNothing().when(app).show(any());
-
-        when(regionService.enterRegion(any()))
-                .thenReturn(Observable.just(new World(null, null, List.of())));
-
+        when(regionService.getMainTrainer(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
+        when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
 
         GridPane regionListGridPane = lookup("#regionListGridPane").query();
         assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
@@ -85,8 +71,7 @@ public class RegionListControllerTest extends ApplicationTest {
         clickOn(regionImage);
         waitForFxEvents();
 
-        verify(regionService).enterRegion(any());
-        verify(app, times(2)).show(any());
+        verify(worldLoader).tryEnterRegion(any());
 
     }
 }

@@ -32,7 +32,7 @@ public class PresetsTestModule {
              * is called but no characters are in the list
              */
             private void initDummyCharacters() {
-                String[] c = {"testCharacter1", "testCharacter2", "testCharacter3"};
+                String[] c = {"trainer_0.png", "trainer_1.png", "trainer_2.png", "trainer_3.png", "Premade_Character_01.png"};
                 characters.addAll(Arrays.stream(c).toList());
             }
 
@@ -78,7 +78,7 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getFile(String filename) {
-                //TODO: save test file somewhere and return it
+                // Provider in resource service
                 return Observable.empty();
             }
 
@@ -92,8 +92,8 @@ public class PresetsTestModule {
 
             @Override
             public Observable<ResponseBody> getCharacterFile(String filename) {
-                //TODO: save test file save somewhere and return it
-                return null;
+                // Provider in resource service
+                return Observable.empty();
             }
 
             @Override
