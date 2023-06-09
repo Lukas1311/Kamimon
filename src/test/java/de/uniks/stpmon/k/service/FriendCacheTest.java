@@ -5,7 +5,8 @@ import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.storage.FriendCache;
+import de.uniks.stpmon.k.service.storage.cache.FriendCache;
+import de.uniks.stpmon.k.service.storage.cache.ICache;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -20,9 +21,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -35,8 +36,6 @@ class FriendCacheTest {
     @Spy
     @InjectMocks
     FriendCache cache;
-    Subject<Event<User>> userEvents = BehaviorSubject.create();
-    Subject<Event<User>> mainUserEvents = BehaviorSubject.create();
 
     @BeforeEach
     void setUp() {
@@ -65,24 +64,27 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
+        Subject<Event<User>> userEvents = BehaviorSubject.create();
         when(eventListener.<User>listen(eq(Socket.WS), eq("users.*.*"), any())).thenReturn(userEvents);
 
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
-        assertEquals(1, cache.getUsers().blockingFirst().size());
+        List<User> cachedFriends = cache.setMainUser(user).init().getFriends().blockingFirst();
+        assertEquals(1, cache.getValues().blockingFirst().size());
 
         userEvents.onNext(new Event<>("users.1.created", created));
-        verify(cache).addUser(any(User.class));
-        assertEquals(2, cache.getUsers().blockingFirst().size());
+        verify(cache).addValue(any(User.class));
+        assertEquals(2, cache.getValues().blockingFirst().size());
 
         userEvents.onNext(new Event<>("users.1.updated", updated));
-        verify(cache).updateUser(any(User.class));
-        assertEquals(2, cache.getUsers().blockingFirst().size());
-        assertEquals("online", cache.getUser("1").status());
+        verify(cache).updateValue(any(User.class));
+        assertEquals(2, cache.getValues().blockingFirst().size());
+        Optional<User> first = cache.getValue("1");
+        assertTrue(first.isPresent());
+        assertEquals("online", first.get().status());
 
         userEvents.onNext(new Event<>("users.1.deleted", updated));
-        verify(cache).removeUser(any(User.class));
-        assertEquals(1, cache.getUsers().blockingFirst().size());
+        verify(cache).removeValue(any(User.class));
+        assertEquals(1, cache.getValues().blockingFirst().size());
     }
 
     @Test
@@ -103,11 +105,12 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user, friendFirst)));
+        Subject<Event<User>> mainUserEvents = BehaviorSubject.create();
         when(eventListener.<User>listen(eq(Socket.WS), eq("users.*.*"), any())).thenReturn(mainUserEvents);
 
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
-        verify(cache).notifyUpdateFriends(any(User.class));
+        cache.setMainUser(user).init();
+        cache.onInitialized().test().assertComplete();
         assertEquals(0, cache.getFriends().blockingFirst().size());
 
         mainUserEvents.onNext(new Event<>("users.0.updated", new User(
@@ -116,7 +119,7 @@ class FriendCacheTest {
                 "offline",
                 "picture",
                 friends)));
-        verify(cache, times(2)).notifyUpdateFriends(any(User.class));
+        verify(cache, times(1)).notifyUpdateFriends(any(User.class));
         assertEquals(1, cache.getFriends().blockingFirst().size());
     }
 
@@ -137,15 +140,18 @@ class FriendCacheTest {
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        cache.setMainUser(user).init();
         // Check if user is cached
-        assertEquals(user, cache.getUser("0"));
-        cache.addUser(friend);
+        Optional<User> first = cache.getValue("0");
+        assertTrue(first.isPresent());
+        cache.addValue(friend);
         // Check if new user is cached
-        assertEquals(friend, cache.getUser("1"));
-        cache.removeUser(user);
+        Optional<User> second = cache.getValue("1");
+        assertTrue(second.isPresent());
+        cache.removeValue(user);
         // Check if user is removed
-        assertNull(cache.getUser("0"));
+        Optional<User> firstDeleted = cache.getValue("0");
+        assertTrue(firstDeleted.isEmpty());
     }
 
     @Test
@@ -174,22 +180,26 @@ class FriendCacheTest {
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user, friendFirst, friendSecond)));
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        List<User> cachedFriends = cache.setMainUser(user)
+                .init().getFriends()
+                .blockingFirst();
         // Check if friends are cached
         assertEquals(2, cachedFriends.size());
         // Check if friends are cached correctly
         assertEquals(friendFirst, cachedFriends.get(0));
         assertEquals(friendSecond, cachedFriends.get(1));
         // Check if all users are cached
-        assertEquals(3, cache.getUsers().blockingFirst().size());
-        cache.reset();
-        // Check if cache is not empty
-        assertEquals(0, cache.getFriends().blockingFirst().size());
-        assertEquals(0, cache.getUsers().blockingFirst().size());
+        assertEquals(3, cache.getValues().blockingFirst().size());
     }
 
     @Test
-    void initExisting() {
+    void initStatusAndErrors() {
+        User other = new User(
+                "1",
+                "Test",
+                "offline",
+                "picture",
+                new ArrayList<>());
         User user = new User(
                 "0",
                 "Test",
@@ -198,16 +208,27 @@ class FriendCacheTest {
                 new ArrayList<>());
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
+
+        // Can't init cache without main user
+        assertThrows(IllegalStateException.class, () -> cache.init());
+
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        List<User> cachedFriends = cache.setMainUser(user)
+                .init().getFriends()
+                .blockingFirst();
+        // Check if main user is set correctly
+        assertTrue(cache.isMainUser(user._id()));
+        assertFalse(cache.isMainUser(other._id()));
+
         // Check if no friends are cached
         assertEquals(0, cachedFriends.size());
-        // initialise cache with user
-        cachedFriends = cache.init(user).blockingFirst();
-        // Check if no friends are cached
-        assertEquals(0, cachedFriends.size());
-        // check if cache was reset between initialisations
-        verify(cache).reset();
+        assertEquals(ICache.Status.INITIALIZED, cache.getStatus());
+        // Throw exception if cache is already initialised
+        assertThrows(IllegalStateException.class, () -> cache.init());
+        cache.destroy();
+        assertEquals(ICache.Status.DESTROYED, cache.getStatus());
+        // Check if cache is now destroyed
+        assertThrows(IllegalStateException.class, () -> cache.getFriends().blockingFirst().size());
     }
 
     @Test
@@ -233,13 +254,25 @@ class FriendCacheTest {
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user, friendFirst, friendSecond)));
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        cache.setMainUser(user);
+        cache.init();
+        List<User> cachedFriends = cache.getFriends().blockingFirst();
         assertEquals(0, cachedFriends.size());
         user.friends().add(friendFirst._id());
         user.friends().add(friendSecond._id());
         cachedFriends = cache.updateFriends(user).blockingFirst();
         // Check if friends are cached
         assertEquals(2, cachedFriends.size());
+        // Update existing friends value
+        cache.updateValue(new User(
+                "1",
+                "Test",
+                "online",
+                "picture",
+                new ArrayList<>()));
+        // Check if friends value is updated
+        assertTrue(cache.getValue("1").isPresent());
+        assertEquals("online", cache.getValue("1").get().status());
     }
 
     @Test
@@ -260,7 +293,7 @@ class FriendCacheTest {
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
         when(userApiService.getUsers(anyList())).thenReturn(Observable.just(List.of(friendFirst)));
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        List<User> cachedFriends = cache.setMainUser(user).init().getFriends().blockingFirst();
         assertEquals(0, cachedFriends.size());
         user.friends().add(friendFirst._id());
         cachedFriends = cache.updateFriends(user).blockingFirst();
@@ -283,20 +316,20 @@ class FriendCacheTest {
                 "picture",
                 new ArrayList<>());
 
-        when(userApiService.getUsers()).thenReturn(Observable.just(List.of(friend)));
+        when(userApiService.getUsers()).thenReturn(Observable.just(List.of(user)));
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        cache.setMainUser(user).init();
         List<User> lastUsers = new ArrayList<>();
-        Disposable disposable = cache.getUsers().subscribe(newUsers -> {
+        Disposable disposable = cache.getValues().subscribe(newUsers -> {
             lastUsers.clear();
             lastUsers.addAll(newUsers);
         });
         // Check if friends are cached
         assertEquals(1, lastUsers.size());
-        cache.addUser(user);
+        cache.addValue(friend);
         // Check if friends are cached
         assertEquals(2, lastUsers.size());
-        assertEquals(2, cache.getUsers().blockingFirst().size());
+        assertEquals(2, cache.getValues().blockingFirst().size());
 
         disposable.dispose();
     }
@@ -318,15 +351,15 @@ class FriendCacheTest {
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of(friend, user)));
         // initialise cache with user
-        List<User> cachedFriends = cache.init(user).blockingFirst();
+        cache.setMainUser(user).init();
         List<User> lastUsers = new ArrayList<>();
-        Disposable disposable = cache.getUsers().subscribe(newUsers -> {
+        Disposable disposable = cache.getValues().subscribe(newUsers -> {
             lastUsers.clear();
             lastUsers.addAll(newUsers);
         });
         // Check if friends are cached
         assertEquals(2, lastUsers.size());
-        cache.removeUser(user);
+        cache.removeValue(user);
         // Check if friends are cached
         assertEquals(1, lastUsers.size());
 

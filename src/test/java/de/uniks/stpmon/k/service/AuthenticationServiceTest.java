@@ -7,9 +7,11 @@ import de.uniks.stpmon.k.models.ErrorResponse;
 import de.uniks.stpmon.k.models.LoginResult;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
-import de.uniks.stpmon.k.service.storage.IFriendCache;
+import de.uniks.stpmon.k.service.dummies.CacheManagerDummy;
+import de.uniks.stpmon.k.service.dummies.FriendCacheDummy;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,14 +24,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import retrofit2.Response;
 
-import java.util.List;
 import java.util.prefs.Preferences;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -41,8 +41,8 @@ public class AuthenticationServiceTest {
     UserStorage userStorage;
     @Mock
     AuthenticationApiService authApiService;
-    @Mock
-    IFriendCache friendCache;
+    @Spy
+    CacheManager cacheManager = new CacheManagerDummy();
     @Mock
     Preferences prefs;
 
@@ -51,10 +51,10 @@ public class AuthenticationServiceTest {
 
     @Test
     void testLogin() {
+        CacheManagerDummy.init(cacheManager, FriendCacheDummy::new);
         // define mocks:
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         Mockito.doNothing().when(prefs).put(ArgumentMatchers.eq("refreshToken"), captor.capture());
-        when(friendCache.init(any())).thenReturn(Observable.just(List.of()));
         Mockito.when(authApiService.login(any()))
                 .thenReturn(Observable.just(new LoginResult("i", "n", "s", "a", null, "a", "r")));
 
@@ -109,10 +109,10 @@ public class AuthenticationServiceTest {
 
     @Test
     void testRefresh() {
+        CacheManagerDummy.init(cacheManager, FriendCacheDummy::new);
         // define mocks:
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         Mockito.doCallRealMethod().when(tokenStorage).setToken(captor.capture());
-        when(friendCache.init(any())).thenReturn(Observable.just(List.of()));
         Mockito.when(authApiService.refresh(any()))
                 .thenReturn(Observable.just(new LoginResult("i", "n", "s", "a", null, "a", "r")));
         Mockito.when(prefs.get("refreshToken", null)).thenReturn("r"); // mock the pref get call
