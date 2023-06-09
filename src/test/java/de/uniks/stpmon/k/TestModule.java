@@ -32,8 +32,31 @@ public class TestModule {
         return new EffectContext()
                 .setSkipLoading(true)
                 .setSkipLoadImages(true)
-                .setSkipAnimations(true);
+                .setSkipAnimations(true)
+                .setWalkingSpeed(1);
     }
+
+//    @Provides
+//    @Singleton
+//    static WorldStorage worldStorage() {
+//        //TODO: remove if we find a way to mock the tilemap for testing
+//        WorldSet world = DummyLazy.INSTANCE.getWorldSet();
+//        return new WorldStorage() {
+//            @Override
+//            public void setWorld(WorldSet world) {
+//            }
+//
+//            @Override
+//            public WorldSet getWorld() {
+//                return world;
+//            }
+//
+//            @Override
+//            public boolean isEmpty() {
+//                return false;
+//            }
+//        };
+//    }
 
     @Provides
     @Singleton

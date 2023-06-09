@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
@@ -8,8 +9,6 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.service.world.TileMapService;
-import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -21,11 +20,9 @@ public class RegionService {
     @Inject
     RegionApiService regionApiService;
     @Inject
-    RegionStorage regionStorage;
-    @Inject
-    TileMapService worldLoader;
-    @Inject
     UserStorage userStorage;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     public RegionService() {
@@ -40,6 +37,16 @@ public class RegionService {
 
     public Observable<List<Trainer>> getTrainers(String regionId, String areaId) {
         return regionApiService.getTrainers(regionId, areaId, userStorage.getUser()._id());
+    }
+
+    public Observable<Trainer> getMainTrainer(String regionId) {
+        return regionApiService.getMainTrainers(regionId, userStorage.getUser()._id())
+                .flatMap((trainers) -> {
+                    if (trainers.isEmpty()) {
+                        return Observable.just(NoneConstants.NONE_TRAINER);
+                    }
+                    return Observable.just(trainers.get(0));
+                });
     }
 
     public Observable<Trainer> getTrainer(String regionID, String trainerId) {
@@ -57,20 +64,6 @@ public class RegionService {
 
     public Observable<Region> getRegion(String id) {
         return regionApiService.getRegion(id);
-    }
-
-    public Observable<World> enterRegion(Region region) {
-        if (region.spawn() == null) {
-            return Observable.error(new Exception("Region has no spawn."));
-        }
-        if (region.spawn().area() == null) {
-            return Observable.error(new Exception("Spawn has no area."));
-        }
-        return getArea(region._id(), region.spawn().area()).flatMap(area -> {
-            regionStorage.setRegion(region);
-            regionStorage.setArea(area);
-            return worldLoader.loadTilemap();
-        });
     }
 
     //---------------- Region Areas ------------------------------

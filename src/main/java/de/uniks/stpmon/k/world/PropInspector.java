@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.world;
+package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
@@ -147,9 +147,9 @@ public class PropInspector {
     public boolean checkConnection(int tileX, int tileY, BufferedImage image, Direction dir, Direction otherDir) {
         int meetThresholds = 0;
         int emptyCount = 0;
-        // Iterate over each pixel in the images and compare the edges
-        for (int i = 0; i < TILE_SIZE; i++) {
-            for (int dist = 0; dist < CHECKED_PIXELS; dist++) {
+        for (int dist = 0; dist < CHECKED_PIXELS; dist++) {
+            // Iterate over each pixel in the images and compare the edges
+            for (int i = 0; i < TILE_SIZE; i++) {
                 int firstX = tileX * TILE_SIZE + dir.imageX(i, dist);
                 int firstY = tileY * TILE_SIZE + dir.imageY(i, dist);
                 int secondX = (tileX + dir.tileX()) * TILE_SIZE + otherDir.imageX(i, dist);
@@ -177,6 +177,9 @@ public class PropInspector {
                 if (Math.abs(intensity1 - intensity2) <= RGB_THRESHOLD) {
                     meetThresholds += 1;
                 }
+            }
+            if (dist == 0 && emptyCount == TILE_SIZE) {
+                return false;
             }
         }
         meetThresholds /= CHECKED_PIXELS;

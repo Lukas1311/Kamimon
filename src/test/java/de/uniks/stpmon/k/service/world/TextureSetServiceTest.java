@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.map;
+package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
@@ -7,10 +7,9 @@ import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.world.TileMap;
-import de.uniks.stpmon.k.service.world.TileMapService;
-import de.uniks.stpmon.k.service.world.Tileset;
+import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.world.TileMap;
+import de.uniks.stpmon.k.world.Tileset;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,19 +27,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TileMapServiceTest {
+public class TextureSetServiceTest {
 
     @Mock
-    PresetService presetService;
+    IResourceService resourceService;
 
     @InjectMocks
-    TileMapService msgService;
+    TextureSetService msgService;
 
     private TileMapData createDummyMap() {
-        ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3), 2, 2, 0, 0);
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), 0, 0, 2, 2, 0, 0, "tilelayer", true, List.of());
+        ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
+                2, 2,
+                0, 0);
+        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk),
+                0, 0,
+                2, 2,
+                0, 0, "tilelayer", true, List.of());
         return new TileMapData(
-                2, 2, false, List.of(layer),
+                2, 2,
+                false, List.of(layer),
                 1, 1,
                 List.of(new TilesetSource(1, "grass.json")),
                 "map");
@@ -48,8 +53,11 @@ public class TileMapServiceTest {
 
     @Test
     public void renderMap() {
-        when(presetService.getTileset("grass.json")).thenReturn(Observable.just(new TilesetData(
-                2, "grass.png", 2, 2, 0, "grass", 0, 1, 1, 1, List.of(), "", List.of()
+        when(resourceService.getTilesetData("grass.json")).thenReturn(Observable.just(new TilesetData(
+                2, "grass.png",
+                2, 2,
+                0, "grass", 0, 1,
+                1, 1, List.of(), ""
         )));
 
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
@@ -58,7 +66,7 @@ public class TileMapServiceTest {
         image.setRGB(1, 0, Color.BLUE.getRGB());
         image.setRGB(1, 1, Color.GREEN.getRGB());
 
-        when(presetService.getImage("grass.png")).thenReturn(Observable.just(image));
+        when(resourceService.getTilesetImage("grass.png")).thenReturn(Observable.just(image));
 
         TileMapData map = createDummyMap();
         Region region = new Region("1", "2", new Spawn("1", 0, 0), map);

@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.di;
 
 import dagger.Module;
 import dagger.Provides;
+import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.Area;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -52,7 +55,6 @@ public class RegionTestModule {
                 regions.add(region1);
 
                 initDummyAreas();
-
             }
 
             /**
@@ -65,8 +67,7 @@ public class RegionTestModule {
                     for (int i = 0; i < 2; i++) {
                         String id = region._id() + "_" + i;
                         String name = region.name() + "DummyArea" + i;
-                        //TODO: Add mock for map
-                        Area area = new Area(id, region._id(), name, null);
+                        Area area = new Area(id, region._id(), name, DummyConstants.AREA_MAP_DATA);
                         areas.add(area);
                     }
                     areasHashMap.put(region._id(), areas);
@@ -111,7 +112,7 @@ public class RegionTestModule {
                 for (Region region : regions) {
                     for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
-                        String trainerImage = "TrainerImage" + trainerIdCount;
+                        String trainerImage = "trainer_" + trainerIdCount + ".png";
                         Trainer trainer = new Trainer(
                                 Integer.toString(trainerIdCount),
                                 region._id(),
@@ -158,7 +159,7 @@ public class RegionTestModule {
                         trainerDto.name(),
                         trainerDto.image(),
                         0,
-                        String.valueOf(area),
+                        area._id(),
                         0,
                         0,
                         0,
@@ -181,12 +182,16 @@ public class RegionTestModule {
             }
 
             @Override
+            public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
+                return getTrainer("", "4")
+                        .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
+                        .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
+            }
+
+            @Override
             public Observable<Trainer> getTrainer(String regionId, String trainerId) {
                 Trainer trainer = getTrainerById(trainerId);
-                if (trainer != null) {
-                    return Observable.just(trainer);
-                }
-                return Observable.error(new Throwable("404 Not found"));
+                return Observable.just(Objects.requireNonNullElse(trainer, NoneConstants.NONE_TRAINER));
             }
 
             @Override

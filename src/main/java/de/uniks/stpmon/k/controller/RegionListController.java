@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
@@ -35,8 +36,6 @@ public class RegionListController extends PortalController {
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
-    protected boolean doesTrainerExist = false;
-
     @Inject
     public RegionListController() {
 
@@ -56,6 +55,7 @@ public class RegionListController extends PortalController {
 
     @Override
     public void init() {
+        super.init();
         colIndex = 0;
         ListChangeListener<Region> listener = c -> addRegionToGridPane();
         regions.addListener(listener);
@@ -74,16 +74,19 @@ public class RegionListController extends PortalController {
         return parent;
     }
 
-    public boolean trainerExists() {
-        return doesTrainerExist;
-    }
-
     public void createNewTrainer(Region region) {
-        createTrainerController.setChosenRegion(region);
-        Parent createTrainer = createTrainerController.render();
-        if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
-            regionListWrappingVox.getChildren().clear();
-            regionListWrappingVox.getChildren().add(createTrainer);
-        }
+        subscribe(regionService.getMainTrainer(region._id()), (trainer) -> {
+            if (trainer == NoneConstants.NONE_TRAINER) {
+                createTrainerController.setChosenRegion(region);
+                Parent createTrainer = createTrainerController.render();
+                if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
+                    regionListWrappingVox.getChildren().clear();
+                    regionListWrappingVox.getChildren().add(createTrainer);
+                }
+            } else {
+                enterRegion(region);
+            }
+        });
+
     }
 }

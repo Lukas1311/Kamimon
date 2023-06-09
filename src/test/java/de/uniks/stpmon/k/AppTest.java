@@ -1,12 +1,9 @@
 package de.uniks.stpmon.k;
 
-import de.uniks.stpmon.k.controller.LoadingScreenController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.World;
+import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,9 +17,6 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -33,22 +27,17 @@ class AppTest extends ApplicationTest {
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     private final MessageApiDummy messageApi = component.messageApi();
-    private final HybridController hybridController = component.hybridController();
-    private final LoadingScreenController loadingScreen = component.loadingScreenController();
-    private final WorldStorage worldStorage = component.worldStorage();
 
     @Override
     public void start(Stage stage) throws Exception {
-        //TODO: remove if we find a way to mock the tilemap for testing
-        BufferedImage images = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        //--------------------
-        worldStorage.setWorld(new World(images, images, new ArrayList<>()));
         app.start(stage);
         stage.requestFocus();
     }
 
     @Test
     void criticalPathV1() {
+        MovementDummy.addMovementDummy(component.eventListener());
+
         app.show(component.loginController());
 
         //put in username and password
@@ -148,13 +137,7 @@ class AppTest extends ApplicationTest {
 
         clickOn("#regionImage");
 
-        // create a new trainer
-        clickOn("#createTrainerInput");
-        write("Tom");
-        clickOn("#createTrainerButton");
-        clickOn("#approveButton");
-        waitForFxEvents();
-
+        // enter with already created trainer
         verifyThat("#ingame", Node::isVisible);
     }
 }
