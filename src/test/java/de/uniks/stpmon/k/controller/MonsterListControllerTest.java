@@ -1,9 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.MonsterService;
-import javafx.application.Platform;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -15,17 +18,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterListControllerTest extends ApplicationTest {
     @Mock
-    MonsterService monsterService;
+    MonsterCache monsterCache;
 
     @Spy
     App app = new App(null);
@@ -36,11 +41,24 @@ public class MonsterListControllerTest extends ApplicationTest {
 
     @InjectMocks
     MonsterListController monsterListController;
+    @Mock
+    TrainerStorage trainerStorage;
+    @Mock
+    CacheManager cacheManager;
+
 
     @Override
     public void start(Stage stage) throws Exception {
         // show app
         app.start(stage);
+        when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER);
+        when(cacheManager.requestMonsters(any())).thenReturn(monsterCache);
+        // Set up mock
+        when(monsterCache.getValues()).thenReturn(Observable.just(
+                List.of(new Monster("1", null, null, null, null, null, null, null),
+                        new Monster("2", null, null, null, null, null, null, null),
+                        new Monster("3", null, null, null, null, null, null, null))));
+
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(monsterListController);
         stage.requestFocus();
@@ -48,18 +66,6 @@ public class MonsterListControllerTest extends ApplicationTest {
 
     @Test
     public void testShowMonsterList() throws InterruptedException {
-        // Set up mock
-        when(monsterService.getMonster("1")).thenReturn(new Monster("1", null, null, null, null, null, null, null));
-        when(monsterService.getMonster("2")).thenReturn(new Monster("2", null, null, null, null, null, null, null));
-        when(monsterService.getMonster("3")).thenReturn(new Monster("3", null, null, null, null, null, null, null));
-        when(monsterService.getMonster("4")).thenReturn(null);
-        when(monsterService.getMonster("5")).thenReturn(null);
-        when(monsterService.getMonster("6")).thenReturn(null);
-
-        Thread.sleep(1000);
-
-        Platform.runLater(() -> monsterListController.showMonsterList());
-
         waitForFxEvents();
 
         // Verify the size of monsterListVBox
@@ -72,7 +78,5 @@ public class MonsterListControllerTest extends ApplicationTest {
         assertEquals("<free>", ((Label) monsterListController.monsterListVBox.getChildren().get(3)).getText());
         assertEquals("<free>", ((Label) monsterListController.monsterListVBox.getChildren().get(4)).getText());
         assertEquals("<free>", ((Label) monsterListController.monsterListVBox.getChildren().get(5)).getText());
-
-        Thread.sleep(1000);
     }
 }
