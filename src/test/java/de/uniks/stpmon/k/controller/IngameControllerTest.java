@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class IngameControllerTest extends ApplicationTest {
 
-    @Spy
+    @Mock
     Provider<HybridController> hybridControllerProvider;
     @Spy
     @SuppressWarnings("unused")
@@ -59,8 +59,7 @@ public class IngameControllerTest extends ApplicationTest {
         app.show(ingameController);
         stage.requestFocus();
 
-        final HybridController hybridController = Mockito.mock(HybridController.class);
-        when(hybridControllerProvider.get()).thenReturn(hybridController);
+
     }
 
     @Test
@@ -72,6 +71,8 @@ public class IngameControllerTest extends ApplicationTest {
     @Test
     void showBackPackMenu() {
         //mock
+        final HybridController hybridController = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(hybridController);
         BackpackMenuController backpackMenuController = Mockito.mock(BackpackMenuController.class);
         when(backpackMenuControllerProvider.get()).thenReturn(backpackMenuController);
 
