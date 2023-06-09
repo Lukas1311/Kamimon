@@ -111,7 +111,7 @@ public class ChatController extends PortalController {
                                 case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
                             }
                             if (event.suffix().equals("created")) {
-                                messagesListView.scrollTo(msg);
+                                messagesListView.scrollTo(messagesListView.getItems().size()-1);
                             }
                         }, this::handleError
                 )
@@ -136,7 +136,7 @@ public class ChatController extends PortalController {
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         messagesListView.getStyleClass().add("chat-list");
         // scrolls to the bottom of the listview
-        messagesListView.scrollTo(1);
+        messagesListView.scrollTo(0);
 
         messagesListView.getSelectionModel()
                 .selectedItemProperty()
@@ -230,7 +230,7 @@ public class ChatController extends PortalController {
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
-                            .subscribe(msg -> messagesListView.scrollTo(msg),
+                            .subscribe(msg -> messagesListView.scrollTo(messagesListView.getItems().size() -1),
                                     this::handleError)
                     );
                     regionPicker.getSelectionModel().clearSelection();
@@ -245,7 +245,7 @@ public class ChatController extends PortalController {
                     .observeOn(FX_SCHEDULER)
                     .subscribe(msg -> {
                                 messageField.clear();
-                                messagesListView.scrollTo(msg);
+                                messagesListView.scrollTo(messagesListView.getItems().size() -1);
                             }, this::handleError
                     )
             );
