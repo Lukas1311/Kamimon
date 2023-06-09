@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -14,7 +15,7 @@ import javax.inject.Singleton;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
-public class IngameController extends Controller {
+public class IngameController extends PortalController {
 
     @FXML
     public StackPane ingameStack;
@@ -39,6 +40,9 @@ public class IngameController extends Controller {
     BackpackController backpackController;
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
+    @Inject
+    TrainerStorage trainerStorage;
+
     @Inject
     protected WorldController worldController;
 
