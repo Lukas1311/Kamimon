@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.service.cache;
+package de.uniks.stpmon.k.service.storage.cache;
 
+import de.uniks.stpmon.k.service.ILifecycleService;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
  *
  * @param <T> The data type to store.
  */
-public interface ICache<T> {
+public interface ICache<T> extends ILifecycleService {
     /**
      * Destroy the cache and all its values.
      * <p>
@@ -29,10 +30,15 @@ public interface ICache<T> {
      * <p>
      * The provided onDestroy runnable is executed when the cache is destroyed.
      * And can be used to clean up other dependencies.
-     *
-     * @param onDestroy The runnable to execute when the cache is destroyed.
      */
-    void init(Runnable onDestroy);
+    ICache<T> init();
+
+    /**
+     * Add a runnable that will be executed when the cache is destroyed.
+     *
+     * @param onDestroy The runnable to execute.
+     */
+    void addOnDestroy(Runnable onDestroy);
 
     /**
      * Retrieves a completable that completes when the cache is initialized
@@ -41,6 +47,43 @@ public interface ICache<T> {
      * @return A completable that completes when the cache is initialized.
      */
     Completable onInitialized();
+
+    /**
+     * Retrieve the id of the value.
+     *
+     * @param value The value to retrieve the id from.
+     * @return The id of the value.
+     */
+    String getId(T value);
+
+    /**
+     * Check if the cache has a value with the given id.
+     *
+     * @param id The id to check.
+     * @return True if the cache has a value with the given id.
+     */
+    boolean hasValue(String id);
+
+    /**
+     * Add a value to the cache.
+     *
+     * @param value The value to add.
+     */
+    void addValue(T value);
+
+    /**
+     * Update a value in the cache.
+     *
+     * @param value The value to update.
+     */
+    void updateValue(T value);
+
+    /**
+     * Remove a value from the cache.
+     *
+     * @param value The value to remove.
+     */
+    void removeValue(T value);
 
     /**
      * Retrieve a value by its id.
@@ -57,4 +100,18 @@ public interface ICache<T> {
      * @return An observable of all values in the cache.
      */
     Observable<List<T>> getValues();
+
+    /**
+     * Retrieve the status of the cache.
+     *
+     * @return The status of the cache.
+     */
+    Status getStatus();
+
+    enum Status {
+        UNINITIALIZED,
+        INITIALIZED,
+        DESTROYED
+    }
+
 }

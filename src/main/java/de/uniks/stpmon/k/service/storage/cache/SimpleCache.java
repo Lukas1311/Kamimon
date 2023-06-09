@@ -1,22 +1,18 @@
-package de.uniks.stpmon.k.service.cache;
+package de.uniks.stpmon.k.service.storage.cache;
 
-import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.net.Socket;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
-public abstract class CacheStorage<T> implements ICache<T> {
+public abstract class SimpleCache<T> implements ICache<T> {
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
     protected final Map<String, T> valuesById = new LinkedHashMap<>();
     protected final CompositeDisposable disposables = new CompositeDisposable();
@@ -24,10 +20,7 @@ public abstract class CacheStorage<T> implements ICache<T> {
      * A completable that completes when the cache is initialized.
      */
     protected Completable initialized = Completable.never();
-    protected boolean destroyed = false;
-
-    @Inject
-    public EventListener eventListener;
+    protected Status status = Status.UNINITIALIZED;
 
     /**
      * Retrieve the initial values from the server.
@@ -37,61 +30,60 @@ public abstract class CacheStorage<T> implements ICache<T> {
     protected abstract Observable<List<T>> getInitialValues();
 
     /**
-     * Retrieve the class of the data type.
-     *
-     * @return The class of the data type.
-     */
-    protected abstract Class<? extends T> getDataClass();
-
-    /**
-     * Retrieve the event name to listen to.
-     *
-     * @return The event name to listen to.
-     */
-    protected abstract String getEventName();
-
-    /**
      * Retrieve the id of the value.
      *
      * @param value The value to retrieve the id from.
      * @return The id of the value.
      */
-    protected abstract String getId(T value);
+    public abstract String getId(T value);
 
     public void destroy() {
         subject.onComplete();
         disposables.dispose();
-        destroyed = true;
+        status = Status.DESTROYED;
     }
 
-    public void init(Runnable onDestroy) {
-        if (destroyed) {
-            throw new IllegalStateException("Cache already destroyed");
+    public ICache<T> init() {
+        if (status != Status.UNINITIALIZED) {
+            throw new IllegalStateException("Cache already destroyed or was already initialized");
         }
-        disposables.add(Disposable.fromRunnable(onDestroy));
-        Observable<List<T>> observable = getInitialValues();
+        Observable<List<T>> observable = getInitialValues().cache();
         initialized = Completable.fromObservable(observable);
         disposables.add(observable.subscribe(values -> {
             values.forEach(value -> valuesById.put(getId(value), value));
             subject.onNext(new ArrayList<>(valuesById.values()));
         }));
-        disposables.add(eventListener.listen(Socket.WS, getEventName(), getDataClass())
-                .subscribe(event -> {
-                            final T user = event.data();
-                            switch (event.suffix()) {
-                                case "created" -> addValue(user);
-                                case "updated" -> updateValue(user);
-                                case "deleted" -> removeValue(user);
-                            }
-                        }
-                ));
+        status = Status.INITIALIZED;
+        return this;
+    }
+
+    /**
+     * Add a runnable that will be executed when the cache is destroyed.
+     *
+     * @param onDestroy The runnable to execute.
+     */
+    public void addOnDestroy(Runnable onDestroy) {
+        if (status != Status.UNINITIALIZED) {
+            throw new IllegalStateException("Cache already destroyed or was already initialized");
+        }
+        disposables.add(Disposable.fromRunnable(onDestroy));
     }
 
     public Completable onInitialized() {
-        if (destroyed) {
+        if (status == Status.DESTROYED) {
             return Completable.error(new IllegalStateException("Cache already destroyed"));
         }
         return initialized;
+    }
+
+    protected void addValues(List<T> values) {
+        values.forEach(value -> valuesById.put(getId(value), value));
+        subject.onNext(new ArrayList<>(valuesById.values()));
+    }
+
+    @Override
+    public boolean hasValue(String id) {
+        return valuesById.containsKey(id);
     }
 
     /**
@@ -99,7 +91,7 @@ public abstract class CacheStorage<T> implements ICache<T> {
      *
      * @param value The value to add.
      */
-    private void addValue(T value) {
+    public void addValue(T value) {
         valuesById.put(getId(value), value);
         subject.onNext(new ArrayList<>(valuesById.values()));
     }
@@ -109,7 +101,7 @@ public abstract class CacheStorage<T> implements ICache<T> {
      *
      * @param value The value to update.
      */
-    private void updateValue(T value) {
+    public void updateValue(T value) {
         valuesById.put(getId(value), value);
         subject.onNext(new ArrayList<>(valuesById.values()));
     }
@@ -119,23 +111,30 @@ public abstract class CacheStorage<T> implements ICache<T> {
      *
      * @param value The value to remove.
      */
-    private void removeValue(T value) {
+    public void removeValue(T value) {
         valuesById.remove(getId(value));
         subject.onNext(new ArrayList<>(valuesById.values()));
     }
 
     public Optional<T> getValue(String id) {
-        if (destroyed) {
+        if (id == null) {
+            throw new IllegalArgumentException("id must not be null");
+        }
+        if (status == Status.DESTROYED) {
             throw new IllegalStateException("Cache already destroyed");
         }
         return Optional.ofNullable(valuesById.get(id));
     }
 
-
     public Observable<List<T>> getValues() {
-        if (destroyed) {
+        if (status == Status.DESTROYED) {
             return Observable.error(new IllegalStateException("Cache already destroyed"));
         }
         return subject;
+    }
+
+    @Override
+    public Status getStatus() {
+        return status;
     }
 }

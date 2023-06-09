@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.service.cache;
+package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.RegionService;
@@ -7,7 +7,13 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class MonsterCache extends CacheStorage<Monster> {
+/**
+ * Cache which stores all monsters of a trainer.
+ * The trainerId is set by the {@link CacheManager}.
+ * <p>
+ * Do not use this cache directly, use {@link CacheManager} instead.
+ */
+public class MonsterCache extends ListenerCache<Monster> {
 
     private String trainerId;
     @Inject
@@ -19,6 +25,14 @@ public class MonsterCache extends CacheStorage<Monster> {
 
     public void setTrainerId(String trainerId) {
         this.trainerId = trainerId;
+    }
+
+    @Override
+    public ICache<Monster> init() {
+        if (trainerId == null) {
+            throw new IllegalStateException("TrainerId is not set");
+        }
+        return super.init();
     }
 
     @Override
@@ -37,7 +51,7 @@ public class MonsterCache extends CacheStorage<Monster> {
     }
 
     @Override
-    protected String getId(Monster value) {
+    public String getId(Monster value) {
         return value._id();
     }
 }

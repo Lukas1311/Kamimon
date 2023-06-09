@@ -9,7 +9,6 @@ import de.uniks.stpmon.k.service.ILifecycleService;
 import de.uniks.stpmon.k.service.InputHandler;
 import fr.brouillard.oss.cssfx.CSSFX;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -74,8 +73,6 @@ public class App extends Application {
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
         loadingScreen.startLoading(this::onFinishedLoading);
-
-        disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
     }
 
     public void addInputHandler(MainComponent component) {
