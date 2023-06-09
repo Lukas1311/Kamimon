@@ -32,6 +32,9 @@ public class PresetsTestModule {
              * is called but no characters are in the list
              */
             private void initDummyCharacters() {
+                if (characters.size() > 0) {
+                    throw new IllegalStateException("Characters already initialized");
+                }
                 String[] c = {"trainer_0.png", "trainer_1.png", "trainer_2.png", "trainer_3.png", "Premade_Character_01.png"};
                 characters.addAll(Arrays.stream(c).toList());
             }
@@ -44,6 +47,9 @@ public class PresetsTestModule {
              * TestMonster2 of type grass
              */
             private void initDummyMonsters() {
+                if (monsters.size() > 0) {
+                    throw new IllegalStateException("Monsters already initialized");
+                }
                 int amount = 3;
 
                 for (int i = 0; i < amount; i++) {
@@ -99,7 +105,7 @@ public class PresetsTestModule {
             @Override
             public Observable<List<MonsterTypeDto>> getMonsters() {
                 if (monsters.size() == 0) {
-                    initDummyCharacters();
+                    initDummyMonsters();
                 }
                 return Observable.just(monsters);
             }
