@@ -212,6 +212,8 @@ class FriendCacheTest {
         // Can't init cache without main user
         assertThrows(IllegalStateException.class, () -> cache.init());
 
+        Runnable onDestroy = mock(Runnable.class);
+        cache.addOnDestroy(onDestroy);
         // initialise cache with user
         List<User> cachedFriends = cache.setMainUser(user)
                 .init().getFriends()
@@ -220,15 +222,21 @@ class FriendCacheTest {
         assertTrue(cache.isMainUser(user._id()));
         assertFalse(cache.isMainUser(other._id()));
 
+        assertThrows(IllegalStateException.class, () -> cache.addOnDestroy(onDestroy));
+        assertThrows(IllegalArgumentException.class, () -> cache.getValue(null));
+
         // Check if no friends are cached
         assertEquals(0, cachedFriends.size());
         assertEquals(ICache.Status.INITIALIZED, cache.getStatus());
         // Throw exception if cache is already initialised
         assertThrows(IllegalStateException.class, () -> cache.init());
         cache.destroy();
+        verify(onDestroy, times(1)).run();
+        assertThrows(IllegalStateException.class, () -> cache.getValue(""));
         assertEquals(ICache.Status.DESTROYED, cache.getStatus());
         // Check if cache is now destroyed
         assertThrows(IllegalStateException.class, () -> cache.getFriends().blockingFirst().size());
+        cache.onInitialized().test().assertError(IllegalStateException.class);
     }
 
     @Test
