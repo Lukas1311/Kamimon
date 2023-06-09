@@ -26,8 +26,7 @@ import retrofit2.Response;
 
 import java.util.prefs.Preferences;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -100,6 +99,7 @@ public class AuthenticationServiceTest {
 
         // check values:
         assertEquals(200, response.code());
+        assertNotNull(response.body());
         assertEquals("e", response.body().error());
         assertEquals("m", response.body().message());
 

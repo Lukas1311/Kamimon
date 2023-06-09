@@ -26,10 +26,6 @@ public abstract class BoundTestModule {
 
     @Binds
     @IntoSet
-    public abstract ILifecycleService trainerManager(CacheManager manager);
-
-    @Binds
-    @Singleton
-    @IntoSet
-    public abstract ILifecycleService friendCacheLifecycle(FriendCacheDummy cache);
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService cacheManager(CacheManager manager);
 }

@@ -68,7 +68,7 @@ class FriendCacheTest {
         when(eventListener.<User>listen(eq(Socket.WS), eq("users.*.*"), any())).thenReturn(userEvents);
 
         // initialise cache with user
-        List<User> cachedFriends = cache.setMainUser(user).init().getFriends().blockingFirst();
+        cache.setMainUser(user).init();
         assertEquals(1, cache.getValues().blockingFirst().size());
 
         userEvents.onNext(new Event<>("users.1.created", created));
