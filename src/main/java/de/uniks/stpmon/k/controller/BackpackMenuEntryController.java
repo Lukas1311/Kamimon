@@ -35,7 +35,7 @@ public class BackpackMenuEntryController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         setIds();
-        backpackMenuText.setText(translateString(entry.toString()));
+        backpackMenuText.setText(backpackMenuController.translateString(entry.toString()));
         Platform.runLater(() -> backpackMenuController.setHeight(backpackMenuHbox.heightProperty().get() + 10));
         parent.setOnMouseClicked(e -> openOption());
 
@@ -44,9 +44,9 @@ public class BackpackMenuEntryController extends Controller {
 
     private void setIds() {
         //only set id's once
-        backpackMenuText.setId("backpackMenuText" + backpackMenuController.getCellId());
-        backpackMenuSelectedLabel.setId("backpackMenuSelectedLabel" + backpackMenuController.getCellId());
-        backpackMenuController.incrementCellId();
+        int id = backpackMenuController.getId(entry);
+        backpackMenuText.setId("backpackMenuText" + id);
+        backpackMenuSelectedLabel.setId("backpackMenuSelectedLabel" + id);
     }
 
     private void openOption() {

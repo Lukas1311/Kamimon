@@ -15,7 +15,7 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,9 +27,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
-
-    @Spy
-    IngameController ingameController;
 
     @InjectMocks
     BackpackMenuController backpackMenuController;
@@ -43,18 +40,23 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     }
 
     @Test
-    void showMenu() {
-        //ingameController = Mockito.mock(IngameController.class);
-        ingameController.render();
-        clickOn("#backpackImage");
+    void isVisible() {
+        boolean isVisible = backpackMenuController.isVisible();
+        assertTrue(isVisible);
+    }
+
+    @Test
+    void setVisabiltiy() {
+        backpackMenuController.setVisability(false);
+        assertFalse(backpackMenuController.backpackMenuHbox.isVisible());
     }
 
     @Test
     void hoverOver() {
-        Label label = lookup("#backpackMenuSelectedLabel3").query();
+        Label label = lookup("#backpackMenuSelectedLabel0").query();
         moveTo(label);
         assertEquals(">", label.getText());
-        Label label2 = lookup("#backpackMenuSelectedLabel4").query();
+        Label label2 = lookup("#backpackMenuSelectedLabel1").query();
         moveTo(label2);
         assertEquals("", label.getText());
     }

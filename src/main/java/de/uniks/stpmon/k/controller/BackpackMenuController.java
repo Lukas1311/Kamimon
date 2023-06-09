@@ -26,8 +26,6 @@ public class BackpackMenuController extends Controller {
     @FXML
     public HBox backpackMenuHbox;
 
-    int cellId = 0;
-
     @Inject
     public BackpackMenuController() {
 
@@ -73,18 +71,10 @@ public class BackpackMenuController extends Controller {
         backpackMenuHbox.setVisible(isVisible);
     }
 
-    public int getCellId() {
-        return this.cellId;
-    }
-
-    public void incrementCellId() {
-        this.cellId++;
+    public int getId(BackpackMenuOption option) {
+        return backpackMenuOptions.indexOf(option);
     }
 
     private void dummyMethod() {
-    }
-
-    public String getString(BackpackMenuOption backpackMenuOption) {
-        return translateString(backpackMenuOption.toString());
     }
 }
