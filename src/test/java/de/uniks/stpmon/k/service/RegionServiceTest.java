@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -283,13 +284,12 @@ class RegionServiceTest {
         List<Monster> monsters = new ArrayList<>();
         monsters.add(monster);
         //define mocks
-        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.getMonsters(any(String.class)))
+        when(regionApiService.getMonsters(anyString(), anyString()))
                 .thenReturn(Observable.just(monsters));
 
         //action
         final List<Monster> returnMonsters = regionService
-                .getMonsters("trainerId")
+                .getMonsters("regionId", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -298,20 +298,18 @@ class RegionServiceTest {
         assertEquals("trainerId", returnMonsters.get(0).trainer());
 
         //check mocks
-        verify(regionApiService).getMonsters(captor.capture());
+        verify(regionApiService).getMonsters(anyString(), anyString());
     }
 
     @Test
     void getMonster() {
         Monster monster = makeMonster();
         //define mocks
-        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(regionApiService.getMonster(any(String.class)))
+        when(regionApiService.getMonster(anyString(), anyString()))
                 .thenReturn(Observable.just(monster));
 
         //action
-        final Monster returnMonster = regionService
-                .getMonster("trainerId")
+        final Monster returnMonster = regionService.getMonster("regionId", "monsterId")
                 .blockingFirst();
 
         //check values
@@ -319,7 +317,7 @@ class RegionServiceTest {
         assertEquals("trainerId", returnMonster.trainer());
 
         //check mocks
-        verify(regionApiService).getMonster(captor.capture());
+        verify(regionApiService).getMonster(anyString(), anyString());
 
     }
 
