@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -18,6 +19,8 @@ public class MonsterCache extends ListenerCache<Monster> {
     private String trainerId;
     @Inject
     protected RegionService regionService;
+    @Inject
+    protected RegionStorage regionStorage;
 
     @Inject
     public MonsterCache() {
@@ -32,12 +35,15 @@ public class MonsterCache extends ListenerCache<Monster> {
         if (trainerId == null) {
             throw new IllegalStateException("TrainerId is not set");
         }
+        if (regionStorage == null || regionStorage.getRegion() == null) {
+            throw new IllegalStateException("Region is not set");
+        }
         return super.init();
     }
 
     @Override
     protected Observable<List<Monster>> getInitialValues() {
-        return regionService.getMonsters(trainerId);
+        return regionService.getMonsters(regionStorage.getRegion()._id(), trainerId);
     }
 
     @Override

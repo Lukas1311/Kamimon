@@ -23,6 +23,10 @@ public class CacheManager implements ILifecycleService {
     protected Provider<MonsterCache> monsterCacheProvider;
     @Inject
     protected Provider<IFriendCache> friendCacheProvider;
+    @Inject
+    protected AbilityCache abilityCache;
+    @Inject
+    protected MonsterTypeCache monsterTypeCache;
 
     @Inject
     public CacheManager() {
@@ -121,6 +125,32 @@ public class CacheManager implements ILifecycleService {
         return friendCache != null && friendCache.isMainUser(userId);
     }
 
+    /**
+     * Acquires the ability cache.
+     * If the cache does not exist yet, it will be created.
+     *
+     * @return A cache for abilities
+     */
+    public AbilityCache abilityCache() {
+        if (abilityCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            abilityCache.init();
+        }
+        return abilityCache;
+    }
+
+    /**
+     * Acquires the monster type cache.
+     * If the cache does not exist yet, it will be created.
+     *
+     * @return A cache for monster types
+     */
+    public MonsterTypeCache monsterTypeCache() {
+        if (monsterTypeCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            monsterTypeCache.init();
+        }
+        return monsterTypeCache;
+    }
+
     @Override
     public void destroy() {
         for (MonsterCache cache : monsters.values()) {
@@ -130,6 +160,12 @@ public class CacheManager implements ILifecycleService {
         monsters.clear();
         if (friendCache != null) {
             friendCache.destroy();
+        }
+        if (abilityCache != null) {
+            abilityCache.destroy();
+        }
+        if (monsterTypeCache != null) {
+            monsterTypeCache.destroy();
         }
     }
 }

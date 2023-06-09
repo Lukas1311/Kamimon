@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -21,8 +20,6 @@ public class RegionService {
     RegionApiService regionApiService;
     @Inject
     UserStorage userStorage;
-    @Inject
-    RegionStorage regionStorage;
 
     @Inject
     public RegionService() {
@@ -76,11 +73,11 @@ public class RegionService {
     }
 
     //------------- Trainer Monsters -------------------------------
-    public Observable<List<Monster>> getMonsters(String trainerId) {
-        return regionApiService.getMonsters(trainerId);
+    public Observable<List<Monster>> getMonsters(String regionId, String trainerId) {
+        return regionApiService.getMonsters(regionId, trainerId);
     }
 
-    public Observable<Monster> getMonster(String monsterId) {
-        return regionApiService.getMonster(monsterId);
+    public Observable<Monster> getMonster(String regionId, String monsterId) {
+        return regionApiService.getMonster(regionId, monsterId);
     }
 }
