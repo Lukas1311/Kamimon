@@ -4,16 +4,16 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.storage.IFriendCache;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 public class UserService {
 
@@ -22,7 +22,7 @@ public class UserService {
     @Inject
     UserApiService userApiService;
     @Inject
-    Provider<IFriendCache> friendCache;
+    CacheManager cacheManager;
 
     @Inject
     public UserService() {
@@ -32,6 +32,10 @@ public class UserService {
         return userApiService.addUser(
                 new CreateUserDto(username, null, password)
         );
+    }
+
+    private IFriendCache friendCache() {
+        return cacheManager.requestFriends(userStorage.getUser()._id());
     }
 
     /**
@@ -87,14 +91,14 @@ public class UserService {
     }
 
     public Observable<List<User>> searchFriend(String name) {
-        return friendCache.get().getUsers()
+        return friendCache().getValues()
                 .map((e) -> {
                     if (name.isEmpty()) {
                         return new ArrayList<User>();
                     }
                     return e;
                 })
-                .flatMap(old -> friendCache.get().getFriends().map((e) -> old))
+                .flatMap(old -> friendCache().getFriends().map((e) -> old))
                 .map(users -> {
                     final User user = userStorage.getUser();
                     return users.stream()
@@ -137,31 +141,22 @@ public class UserService {
                     if (e.friends().isEmpty()) {
                         return Observable.<List<User>>fromSupplier(ArrayList::new);
                     }
-                    return friendCache.get().updateFriends(e);
+                    return friendCache().updateFriends(e);
                 }).concatMap(f -> f);
     }
 
     public Observable<List<User>> getFriends() {
-        return friendCache.get().getFriends();
+        return friendCache().getFriends();
     }
 
     public Observable<List<User>> filterFriends(String name) {
         return getFriends().map(e -> e.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())).toList());
     }
 
-    /**
-     * gets a user and all its attributes by a given user id
-     *
-     * @param userId the id of a user object
-     * @return the user found by id
-     */
-    public Observable<User> getUserById(String userId) {
-        return Observable.just(friendCache.get().getUser(userId));
-    }
-
     public Observable<List<User>> getUsers(List<String> ids) {
-        List<User> users = ids.stream().map(id -> friendCache.get().getUser(id))
-                .filter(Objects::nonNull)
+        List<User> users = ids.stream().map(id -> friendCache().getValue(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .toList();
         return Observable.just(users);
     }

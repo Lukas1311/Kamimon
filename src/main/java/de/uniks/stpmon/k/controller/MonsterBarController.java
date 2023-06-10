@@ -26,6 +26,17 @@ public class MonsterBarController extends Controller {
     }
 
     @Override
+    public void init() {
+        super.init();
+
+        if (monsterListController == null) {
+            return;
+        }
+        monsterListController.init();
+        onDestroy(monsterListController::destroy);
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
         createMonsterSlots();
@@ -50,9 +61,10 @@ public class MonsterBarController extends Controller {
 
     /**
      * Set the monster status for a given slot based on the current and maximum health points of the monster
-     * @param slot The slot index of the monster
+     *
+     * @param slot      The slot index of the monster
      * @param currentHP The current HP of the monster
-     * @param maxHP The maximum HP of the monster
+     * @param maxHP     The maximum HP of the monster
      */
     public void setMonsterStatus(int slot, int currentHP, int maxHP) {
         if (slot < 0 || slot >= monsterSlots.length) {
@@ -60,7 +72,7 @@ public class MonsterBarController extends Controller {
         }
 
         ImageView monsterSlot = monsterSlots[slot];
-        if(currentHP <= 0) {
+        if (currentHP <= 0) {
             loadImage(monsterSlot, "healthPointsZero.png");
         } else if (currentHP < maxHP * 0.2) {
             loadImage(monsterSlot, "healthPointsLow.png");
@@ -86,6 +98,7 @@ public class MonsterBarController extends Controller {
 
     @Override
     public void destroy() {
+        super.destroy();
         monsterSlotsHBox.getChildren().clear();
     }
 }

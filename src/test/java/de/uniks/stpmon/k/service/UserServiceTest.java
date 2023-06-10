@@ -4,10 +4,13 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
+import de.uniks.stpmon.k.service.dummies.CacheManagerDummy;
 import de.uniks.stpmon.k.service.dummies.FriendCacheDummy;
-import de.uniks.stpmon.k.service.storage.IFriendCache;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +35,15 @@ class UserServiceTest {
     UserApiService userApiService;
     @InjectMocks
     IFriendCache friendCache = new FriendCacheDummy();
-    @Mock
-    Provider<IFriendCache> friendCacheProvider;
+    @Spy
+    CacheManager cacheManager = new CacheManagerDummy();
     @InjectMocks
     UserService userService;
+
+    @BeforeEach
+    void setUp() {
+        CacheManagerDummy.init(cacheManager, () -> friendCache);
+    }
 
     @Test
     void addUser() {
@@ -194,7 +201,6 @@ class UserServiceTest {
         userStorage.setUser(user);
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of()));
-        when(friendCacheProvider.get()).thenReturn(friendCache);
         //action
         List<User> emptyList = userService.searchFriend("").blockingFirst();
 
@@ -207,7 +213,6 @@ class UserServiceTest {
      */
     @Test
     void searchFriend() {
-        when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
                 "0",
@@ -268,8 +273,6 @@ class UserServiceTest {
 
     @Test
     void addNewFriend() {
-
-        when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend = new User(
                 "1",
                 "Test2",
@@ -388,7 +391,6 @@ class UserServiceTest {
 
     @Test
     void getFriends() {
-        when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend = new User(
                 "1",
                 "Test2",
@@ -428,8 +430,6 @@ class UserServiceTest {
      */
     @Test
     void getEmptyFriends() {
-
-        when(friendCacheProvider.get()).thenReturn(friendCache);
         //setting up user which will be updated
         User user = new User(
                 "0",
@@ -449,8 +449,6 @@ class UserServiceTest {
 
     @Test
     void filterFriends() {
-
-        when(friendCacheProvider.get()).thenReturn(friendCache);
         User friend1 = new User(
                 "1",
                 "Test2",

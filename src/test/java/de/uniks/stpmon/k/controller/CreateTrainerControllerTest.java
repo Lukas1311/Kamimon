@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -47,13 +48,15 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     Provider<IngameController> ingameControllerProvider;
     @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     RegionStorage regionStorage;
     @Mock
-    LoadingScreenController loadingScreen;
+    WorldLoader worldLoader;
 
     @Spy
     @InjectMocks
@@ -94,12 +97,12 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         // prep.
         NPCInfo npcInfo = new NPCInfo(false);
         Trainer dummyTrainer = new Trainer("1", "r", "0", "n", "i.png", 0, "0", 0, 0, 0, npcInfo);
-        final PopUpController popupMock = Mockito.mock(PopUpController.class); 
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
 
         // define mocks:
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
+        when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
         when(popUpControllerProvider.get()).thenReturn(popupMock);
-        doNothing().when(loadingScreen).startLoading(any());
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
             callback.onModalResult(true);
@@ -114,18 +117,18 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(createTrainerController).createTrainer();
         verify(popupMock).showModal(any());
         verify(regionService).createTrainer("1", "Tom", "Premade_Character_01.png");
-        verify(loadingScreen).startLoading(any());
+        verify(worldLoader).tryEnterRegion(any());
     }
 
     @Test
     public void testCreateTrainerInvalid() {
 
         HybridController hybridMock = Mockito.mock(HybridController.class);
-        PopUpController popupMock = Mockito.mock(PopUpController.class); 
+        PopUpController popupMock = Mockito.mock(PopUpController.class);
 
         write("\t");
         write("Nom".repeat(11));
-        
+
         Button createTrainerButton = lookup("#createTrainerButton").queryButton();
         assertTrue(createTrainerButton.isDisabled());
         Label trainerNameInfo = lookup("#trainerNameInfo").queryAs(Label.class);

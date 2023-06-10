@@ -27,7 +27,7 @@ public class UDPReceiver implements SocketReceiver {
 
     @Override
     public boolean isOpen() {
-        return socket != null && socket.isConnected();
+        return socket != null && !socket.isClosed();
     }
 
     public void sendMessage(String message) {
@@ -57,7 +57,7 @@ public class UDPReceiver implements SocketReceiver {
         final byte[] buf = new byte[508];
         thread = new Thread(() -> {
             boolean active = true;
-            while (active && isOpen()) {
+            while (active && !socket.isClosed()) {
                 try {
                     DatagramPacket packet = new DatagramPacket(buf, buf.length);
                     socket.receive(packet);
