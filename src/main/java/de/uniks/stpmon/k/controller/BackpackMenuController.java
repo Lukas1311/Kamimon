@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.views.BackpackMenuCellFactory;
+import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -40,8 +40,7 @@ public class BackpackMenuController extends Controller {
         backpackMenuOptions.add(MAP);
         backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
 
-        BackpackMenuCellFactory cellFactory = new BackpackMenuCellFactory(this);
-        backpackMenuListView.setCellFactory(cellFactory);
+        backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
 
         backpackMenuListView.minHeightProperty().bind(backpackMenuListView.prefHeightProperty());
         backpackMenuListView.maxHeightProperty().bind(backpackMenuListView.prefHeightProperty());
