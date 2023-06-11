@@ -3,12 +3,13 @@ package de.uniks.stpmon.k.di;
 import dagger.Component;
 import de.uniks.stpmon.k.TestModule;
 import de.uniks.stpmon.k.UserTestModule;
+import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.views.world.WorldView;
 
 import javax.inject.Singleton;
 
@@ -29,7 +30,9 @@ public interface TestComponent extends MainComponent {
 
     MessageApiDummy messageApi();
 
-    WorldView worldView();
+    WorldController worldController();
+
+    TrainerStorage trainerStorage();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {

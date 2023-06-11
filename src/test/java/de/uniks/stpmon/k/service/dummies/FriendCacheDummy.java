@@ -2,13 +2,15 @@ package de.uniks.stpmon.k.service.dummies;
 
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.storage.IFriendCache;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 public class FriendCacheDummy implements IFriendCache {
 
@@ -23,18 +25,18 @@ public class FriendCacheDummy implements IFriendCache {
     }
 
     @Override
-    public Observable<List<User>> init(User user) {
-        return getUsers();
+    public IFriendCache init() {
+        return this;
     }
 
     @Override
-    public void reset() {
+    public void destroy() {
         // do nothing
     }
 
     @Override
-    public User getUser(String id) {
-        return userApiService.getUser(id).blockingFirst();
+    public Optional<User> getValue(String id) {
+        return Optional.of(userApiService.getUser(id).blockingFirst());
     }
 
     @Override
@@ -45,27 +47,10 @@ public class FriendCacheDummy implements IFriendCache {
     }
 
     @Override
-    public Observable<List<User>> getUsers() {
+    public Observable<List<User>> getValues() {
         return userApiService.getUsers();
     }
 
-    @Override
-    public void addUser(User user) {
-    }
-
-    @Override
-    public void updateUser(User user) {
-    }
-
-
-    @Override
-    public void removeUser(User user) {
-    }
-
-    @Override
-    public void notifyUpdateFriends(User user) {
-
-    }
 
     @Override
     public Observable<List<User>> getFriends() {
@@ -78,5 +63,56 @@ public class FriendCacheDummy implements IFriendCache {
             }
         }
         return friends;
+    }
+
+    @Override
+    public void addOnDestroy(Runnable onDestroy) {
+        // do nothing
+    }
+
+    @Override
+    public Completable onInitialized() {
+        return Completable.complete();
+    }
+
+    @Override
+    public String getId(User value) {
+        return value._id();
+    }
+
+    @Override
+    public boolean hasValue(String id) {
+        return false;
+    }
+
+    @Override
+    public void addValue(User value) {
+        // do nothing
+    }
+
+    @Override
+    public void updateValue(User value) {
+        // do nothing
+    }
+
+    @Override
+    public void removeValue(User value) {
+        // do nothing
+    }
+
+    @Override
+    public IFriendCache setMainUser(String mainUser) {
+        return this;
+    }
+
+    @Override
+    public boolean isMainUser(String userId) {
+        // should not be important for tests
+        return false;
+    }
+
+    @Override
+    public Status getStatus() {
+        return Status.INITIALIZED;
     }
 }

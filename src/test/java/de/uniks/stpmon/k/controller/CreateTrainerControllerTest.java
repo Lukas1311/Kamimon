@@ -10,7 +10,10 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.WorldLoader;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,24 +23,15 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Provider;
-
-import javafx.scene.control.Label;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateTrainerControllerTest extends ApplicationTest {
@@ -54,12 +48,15 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     Provider<IngameController> ingameControllerProvider;
     @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     RegionStorage regionStorage;
-
+    @Mock
+    WorldLoader worldLoader;
 
     @Spy
     @InjectMocks
@@ -100,14 +97,12 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         // prep.
         NPCInfo npcInfo = new NPCInfo(false);
         Trainer dummyTrainer = new Trainer("1", "r", "0", "n", "i.png", 0, "0", 0, 0, 0, npcInfo);
-        final HybridController hybridMock = Mockito.mock(HybridController.class);
-        final PopUpController popupMock = Mockito.mock(PopUpController.class); 
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
 
         // define mocks:
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
-        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+        when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
         when(popUpControllerProvider.get()).thenReturn(popupMock);
-        doNothing().when(hybridMock).openMain(any());
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
             callback.onModalResult(true);
@@ -115,28 +110,25 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         }).when(popupMock).showModal(any());
 
         // action:
-        write("Tom");
+        write("\tTom");
         clickOn("#createTrainerButton");
-        sleep(2000);
 
         // verify mocks:
         verify(createTrainerController).createTrainer();
         verify(popupMock).showModal(any());
         verify(regionService).createTrainer("1", "Tom", "Premade_Character_01.png");
-        verify(hybridMock).openMain(any());
+        verify(worldLoader).tryEnterRegion(any());
     }
 
     @Test
     public void testCreateTrainerInvalid() {
 
         HybridController hybridMock = Mockito.mock(HybridController.class);
-        PopUpController popupMock = Mockito.mock(PopUpController.class); 
-        // when(hybridControllerProvider.get()).thenReturn(hybridMock);
-        // when(popUpControllerProvider.get()).thenReturn(popUpMock);
-        // doNothing().when(hybridMock).openMain(any());
+        PopUpController popupMock = Mockito.mock(PopUpController.class);
 
+        write("\t");
         write("Nom".repeat(11));
-        
+
         Button createTrainerButton = lookup("#createTrainerButton").queryButton();
         assertTrue(createTrainerButton.isDisabled());
         Label trainerNameInfo = lookup("#trainerNameInfo").queryAs(Label.class);
@@ -149,5 +141,21 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Test
     public void createSprite() {
 
+    }
+
+    @Test
+    void testCloseWindow() {
+        // define mocks:
+        HybridController hybridMock = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(hybridMock);
+
+        // action:
+        clickOn("#closeButton");
+
+        // values to check:
+
+        // verify mocks:
+        verify(createTrainerController).closeWindow();
+        verify(hybridMock).openMain(MainWindow.LOBBY);
     }
 }

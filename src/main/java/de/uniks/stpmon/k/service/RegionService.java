@@ -1,15 +1,13 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.service.world.TileMapService;
-import de.uniks.stpmon.k.service.world.World;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -20,10 +18,6 @@ import java.util.List;
 public class RegionService {
     @Inject
     RegionApiService regionApiService;
-    @Inject
-    RegionStorage regionStorage;
-    @Inject
-    TileMapService worldLoader;
     @Inject
     UserStorage userStorage;
 
@@ -42,12 +36,22 @@ public class RegionService {
         return regionApiService.getTrainers(regionId, areaId, userStorage.getUser()._id());
     }
 
-    public Observable<Trainer> getTrainer(String trainerId) {
-        return regionApiService.getTrainer(trainerId);
+    public Observable<Trainer> getMainTrainer(String regionId) {
+        return regionApiService.getMainTrainers(regionId, userStorage.getUser()._id())
+                .flatMap((trainers) -> {
+                    if (trainers.isEmpty()) {
+                        return Observable.just(NoneConstants.NONE_TRAINER);
+                    }
+                    return Observable.just(trainers.get(0));
+                });
     }
 
-    public Observable<Trainer> deleteTrainer(String trainerId) {
-        return regionApiService.deleteTrainer(trainerId);
+    public Observable<Trainer> getTrainer(String regionID, String trainerId) {
+        return regionApiService.getTrainer(regionID, trainerId);
+    }
+
+    public Observable<Trainer> deleteTrainer(String regionId, String trainerId) {
+        return regionApiService.deleteTrainer(regionId, trainerId);
     }
 
     //------------------- Regions ---------------------------------
@@ -57,20 +61,6 @@ public class RegionService {
 
     public Observable<Region> getRegion(String id) {
         return regionApiService.getRegion(id);
-    }
-
-    public Observable<World> enterRegion(Region region) {
-        if (region.spawn() == null) {
-            return Observable.error(new Exception("Region has no spawn."));
-        }
-        if (region.spawn().area() == null) {
-            return Observable.error(new Exception("Spawn has no area."));
-        }
-        return getArea(region._id(), region.spawn().area()).flatMap(area -> {
-            regionStorage.setRegion(region);
-            regionStorage.setArea(area);
-            return worldLoader.loadTilemap();
-        });
     }
 
     //---------------- Region Areas ------------------------------
@@ -83,11 +73,11 @@ public class RegionService {
     }
 
     //------------- Trainer Monsters -------------------------------
-    public Observable<List<Monster>> getMonsters(String trainerId) {
-        return regionApiService.getMonsters(trainerId);
+    public Observable<List<Monster>> getMonsters(String regionId, String trainerId) {
+        return regionApiService.getMonsters(regionId, trainerId);
     }
 
-    public Observable<Monster> getMonster(String monsterId) {
-        return regionApiService.getMonster(monsterId);
+    public Observable<Monster> getMonster(String regionId, String monsterId) {
+        return regionApiService.getMonster(regionId, monsterId);
     }
 }

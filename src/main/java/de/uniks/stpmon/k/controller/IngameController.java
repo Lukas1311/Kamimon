@@ -1,11 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.views.world.WorldView;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.SubScene;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -15,7 +17,7 @@ import javax.inject.Singleton;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
-public class IngameController extends Controller {
+public class IngameController extends PortalController {
 
     @FXML
     public StackPane ingameStack;
@@ -40,7 +42,10 @@ public class IngameController extends Controller {
     BackpackController backPack;
 
     @Inject
-    protected WorldView worldView;
+    TrainerStorage trainerStorage;
+
+    @Inject
+    protected WorldController worldController;
 
     @Inject
     public IngameController() {
@@ -50,7 +55,7 @@ public class IngameController extends Controller {
     public void init() {
         super.init();
 
-        worldView.init();
+        worldController.init();
         monsterBar.init();
         miniMap.init();
         backPack.init();
@@ -60,7 +65,7 @@ public class IngameController extends Controller {
     public void destroy() {
         super.destroy();
 
-        worldView.destroy();
+        worldController.destroy();
         monsterBar.destroy();
         miniMap.destroy();
         backPack.destroy();
@@ -70,15 +75,10 @@ public class IngameController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        SubScene scene = worldView.renderScene();
-        if (scene != null) {
-            ingameStack.getChildren().add(0, scene);
-
-            // Scale the scene to the parent
-            scene.widthProperty()
-                    .bind(((Region) parent).widthProperty());
-            scene.heightProperty()
-                    .bind(((Region) parent).heightProperty());
+        Parent world = this.worldController.render();
+        // Null if unit testing world view
+        if (world != null) {
+            ingameStack.getChildren().add(0, world);
         }
         Parent monsterBar = this.monsterBar.render();
         // Null if unit testing world view

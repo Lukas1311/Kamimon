@@ -40,12 +40,14 @@ public class MeshUtils {
                 -w / 2f, h, 0,
                 w / 2f, h, 0
         };
-        // top not at 0 because of texture flickering
+        // Offset to reduce texture bleeding
+        float uPadding = 1 / 512f;
+        float vPadding = 1 / 512f;
         float[] texCoords = {
-                0f, 0.005f,
-                1f, 0.005f,
-                0f, 1f,
-                1f, 1f
+                0f + uPadding, 0f + vPadding,
+                1f - uPadding, 0f + vPadding,
+                0f + uPadding, 1f - vPadding,
+                1f - uPadding, 1f - vPadding
         };
         int[] faces = {
                 3, 3, 1, 1, 2, 2,

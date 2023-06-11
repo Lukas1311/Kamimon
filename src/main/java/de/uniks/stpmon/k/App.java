@@ -5,13 +5,15 @@ import de.uniks.stpmon.k.controller.LoadingScreenController;
 import de.uniks.stpmon.k.di.DaggerMainComponent;
 import de.uniks.stpmon.k.di.MainComponent;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.ILifecycleService;
+import de.uniks.stpmon.k.service.InputHandler;
 import fr.brouillard.oss.cssfx.CSSFX;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
@@ -55,10 +57,7 @@ public class App extends Application {
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/style.css")).toExternalForm());
         CSSFX.start(scene);
 
-
         stage.setScene(scene);
-
-
 
         stage.show();
 
@@ -70,11 +69,18 @@ public class App extends Application {
         if (component == null) {
             return;
         }
+        addInputHandler(component);
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
         loadingScreen.startLoading(this::onFinishedLoading);
+    }
 
-        disposables.add(Disposable.fromAction(() -> component.friendCache().reset()));
+    public void addInputHandler(MainComponent component) {
+        if (component == null) {
+            return;
+        }
+        InputHandler inputHandler = component.inputHandler();
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
     }
 
     private void onFinishedLoading() {
@@ -82,7 +88,8 @@ public class App extends Application {
         if (authService.isRememberMe()) {
             disposables.add(authService
                     .refresh()
-                    .subscribe(lr -> show(component.hybridController()), err -> show(component.loginController())));
+                    .subscribe(lr -> show(component.hybridController()),
+                            err -> show(component.loginController())));
         } else {
             show(component.loginController());
         }
@@ -116,6 +123,14 @@ public class App extends Application {
     public void stop() {
         cleanup();
         disposables.dispose();
+        if (component == null) {
+            return;
+        }
+
+        // destroy all lifecycle services
+        for (ILifecycleService service : component.lifecycleServices()) {
+            service.destroy();
+        }
     }
 
     public void show(Controller controller) {

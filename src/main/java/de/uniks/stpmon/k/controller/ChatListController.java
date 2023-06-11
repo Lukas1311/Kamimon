@@ -9,10 +9,12 @@ import de.uniks.stpmon.k.views.ChatCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -80,6 +82,7 @@ public class ChatListController extends TabController {
             openChat(groups.getSelectionModel().getSelectedItem());
         });
         chatList.getChildren().add(groups);
+        VBox.setVgrow(groups, Priority.ALWAYS);
         return parent;
     }
 
