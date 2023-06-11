@@ -340,6 +340,7 @@ public class ChatControllerTest extends ApplicationTest {
 
         // Activate invitation button
         press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         // Verify error toast
         verify(toastController).openToast(any());
 
@@ -355,12 +356,6 @@ public class ChatControllerTest extends ApplicationTest {
 
         // Check if the region was entered
         verify(worldLoader).tryEnterRegion(any());
-    }
-
-    @Test
-    void handleRegionError() {
-        when(regionService.getRegion("i")).thenReturn(ExceptionHelper.justHttp(404));
-        verify(toastController).openToast(any());
     }
 
     @Test
