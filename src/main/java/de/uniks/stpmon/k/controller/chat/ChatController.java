@@ -226,9 +226,7 @@ public class ChatController extends ToastedController {
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
                             .subscribe(msg -> messagesListView.scrollTo(messagesListView.getItems().size() -1),
-                            //.subscribe(msg -> messagesListView.scrollTo(0),
-                            //.subscribe(msg -> {},
-                                    this::handleError)
+                                this::handleError)
                     );
                     regionPicker.getSelectionModel().clearSelection();
                 }
@@ -243,7 +241,6 @@ public class ChatController extends ToastedController {
                     .subscribe(msg -> {
                                 messageField.clear();
                                 messagesListView.scrollTo(messagesListView.getItems().size() -1);
-                                //messagesListView.scrollTo(0);
                             }, this::handleError
                     )
             );
