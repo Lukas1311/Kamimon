@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
+import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;
@@ -108,9 +109,7 @@ public class ChatController extends ToastedController {
                                 case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
                                 case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
                             }
-                            if (event.suffix().equals("created")) {
-                                messagesListView.scrollTo(msg);
-                            }
+                            messagesListView.scrollTo(messagesListView.getItems().size()-1);
                         }, this::handleError
                 )
         );
@@ -134,13 +133,13 @@ public class ChatController extends ToastedController {
         messagesListView.prefWidthProperty().bind(messageArea.widthProperty());
         messagesListView.getStyleClass().add("chat-list");
         // scrolls to the bottom of the listview
-        messagesListView.scrollTo(1);
+        messagesListView.scrollTo(0);
 
         messagesListView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        if (newValue.body().startsWith("JoinInvitation")) {
+                        if (newValue.body().startsWith(InvitationController.INVITATION_START_PATTERN)) {
                             Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
                             return;
                         }
@@ -163,9 +162,7 @@ public class ChatController extends ToastedController {
                 sendMessage();
             }
         });
-
         messageArea.getChildren().setAll(messagesListView);
-
         return parent;
     }
 
@@ -223,13 +220,13 @@ public class ChatController extends ToastedController {
                 if (regionOptional.isPresent()) {
                     String regionId = regionOptional.get()._id();
 
-                    String invitationText = "JoinInvitation " + regionId;
+                    String invitationText = InvitationController.INVITATION_START_PATTERN + " " + regionId;
 
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
-                            .subscribe(msg -> messagesListView.scrollTo(msg),
-                                    this::handleError)
+                            .subscribe(msg -> messagesListView.scrollTo(messagesListView.getItems().size() -1),
+                                this::handleError)
                     );
                     regionPicker.getSelectionModel().clearSelection();
                 }
@@ -243,7 +240,7 @@ public class ChatController extends ToastedController {
                     .observeOn(FX_SCHEDULER)
                     .subscribe(msg -> {
                                 messageField.clear();
-                                messagesListView.scrollTo(msg);
+                                messagesListView.scrollTo(messagesListView.getItems().size() -1);
                             }, this::handleError
                     )
             );
@@ -261,9 +258,11 @@ public class ChatController extends ToastedController {
     }
 
     public void openRegion(String regionId) {
-        subscribe(regionService.getRegion(regionId).flatMap(worldLoader::tryEnterRegion),
+        subscribe(regionService.getRegion(regionId)
+                        .flatMap(worldLoader::tryEnterRegion),
                 (r) -> {
-                }, this::handleError);
+                },
+                this::handleError);
     }
 
     @Override

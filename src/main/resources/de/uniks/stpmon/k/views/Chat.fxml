@@ -1,89 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import org.kordamp.ikonli.javafx.*?>
-
-<VBox fx:id="chatScreen" alignment="CENTER" maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" styleClass="chat-tab" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatController">
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
+<VBox fx:id="chatScreen" alignment="CENTER" maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" styleClass="chat-tab"
+      stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.chat.ChatController">
     <HBox alignment="CENTER" prefHeight="50.0" prefWidth="370.0" styleClass="chat-holders">
-        <VBox alignment="CENTER" maxHeight="45.0" maxWidth="76.0" minHeight="45.0" minWidth="76.0" prefHeight="45.0" prefWidth="76.0" styleClass="chat-holders">
-            <Button fx:id="backButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" stylesheets="@css/style.css">
+        <VBox alignment="CENTER" maxHeight="45.0" maxWidth="76.0" minHeight="45.0" minWidth="76.0" prefHeight="45.0"
+              prefWidth="76.0" styleClass="chat-holders">
+            <Button fx:id="backButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                    prefHeight="42.0" prefWidth="42.0" stylesheets="@css/style.css">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
+                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
                 </VBox.margin>
                 <graphic>
-                    <FontIcon iconLiteral="fa-mail-forward" />
+                    <FontIcon iconLiteral="fa-mail-forward"/>
                 </graphic>
-                <tooltip><Tooltip text="%back" /></tooltip>
-            <styleClass>
-               <String fx:value="chat-back-button" />
-               <String fx:value="kgm-general-button-white" />
-            </styleClass>
+                <tooltip>
+                    <Tooltip text="%back"/>
+                </tooltip>
+                <styleClass>
+                    <String fx:value="chat-back-button"/>
+                    <String fx:value="kgm-general-button-white"/>
+                </styleClass>
             </Button>
         </VBox>
         <VBox alignment="CENTER" maxHeight="58.0" minHeight="13.0" minWidth="175.0" prefHeight="13.0" prefWidth="175.0">
-            <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="" wrappingWidth="220.0">
-                <font>
-                    <Font size="20.0" />
-                </font>
-            </Text>
-         <styleClass>
-            <String fx:value="chat-holders" />
-            <String fx:value="chat-title" />
-         </styleClass>
+            <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="" wrappingWidth="220.0"/>
+            <styleClass>
+                <String fx:value="chat-holders"/>
+                <String fx:value="chat-title"/>
+            </styleClass>
         </VBox>
         <VBox alignment="CENTER_RIGHT" prefHeight="45.0" prefWidth="87.0" styleClass="chat-holders">
-            <Button fx:id="settingsButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#openSettings" prefHeight="42.0" prefWidth="42.0" stylesheets="@css/style.css">
+            <Button fx:id="settingsButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                    onAction="#openSettings" prefHeight="42.0" prefWidth="42.0" stylesheets="@css/style.css">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="10.0" right="15.0" top="5.0" />
+                    <Insets bottom="5.0" left="10.0" right="15.0" top="5.0"/>
                 </VBox.margin>
                 <graphic>
-                    <FontIcon iconLiteral="mdmz-settings" />
+                    <FontIcon iconLiteral="mdmz-settings"/>
                 </graphic>
-                <tooltip><Tooltip text="%editGroup" /></tooltip>
-            <styleClass>
-               <String fx:value="chat-settings-button" />
-               <String fx:value="kgm-general-button-white" />
-            </styleClass>
+                <tooltip>
+                    <Tooltip text="%editGroup"/>
+                </tooltip>
+                <styleClass>
+                    <String fx:value="chat-settings-button"/>
+                    <String fx:value="kgm-general-button-white"/>
+                </styleClass>
             </Button>
         </VBox>
     </HBox>
-      <VBox fx:id="messageArea" fillWidth="false" prefHeight="600.0" prefWidth="370.0" styleClass="chat-list-holder" stylesheets="@css/style.css">
-      <VBox.margin>
-         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-      </VBox.margin></VBox>
+    <VBox fx:id="messageArea" fillWidth="false" prefHeight="600.0" prefWidth="370.0" styleClass="chat-list-holder"
+          stylesheets="@css/style.css">
+        <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </VBox.margin>
+    </VBox>
     <VBox prefHeight="120.0" prefWidth="370.0" styleClass="chat-holders">
-        <HBox alignment="CENTER_LEFT" maxHeight="50.0" maxWidth="370.0" minHeight="50.0" minWidth="370.0" prefHeight="50.0" prefWidth="370.0" styleClass="chat-holders">
-            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="289.0" promptText="%enter.message..." styleClass="chat-text-input">
+        <HBox alignment="CENTER_LEFT" maxHeight="50.0" maxWidth="370.0" minHeight="50.0" minWidth="370.0"
+              prefHeight="50.0" prefWidth="370.0" styleClass="chat-holders">
+            <TextField fx:id="messageField" prefHeight="50.0" prefWidth="289.0" promptText="%enter.message..."
+                       styleClass="chat-text-input">
                 <HBox.margin>
-                    <Insets left="10.0" right="10.0" />
+                    <Insets left="10.0" right="10.0"/>
                 </HBox.margin>
                 <font>
-                    <Font size="15.0" />
+                    <Font size="15.0"/>
                 </font>
             </TextField>
-            <Button fx:id="sendButton" maxHeight="44.0" maxWidth="44.0" minHeight="44.0" minWidth="44.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="44.0" prefWidth="44.0" styleClass="kgm-general-button-blue" textFill="WHITE">
+            <Button fx:id="sendButton" maxHeight="44.0" maxWidth="44.0" minHeight="44.0" minWidth="44.0"
+                    mnemonicParsing="false" onAction="#sendMessage" prefHeight="44.0" prefWidth="44.0"
+                    styleClass="kgm-general-button-blue" textFill="WHITE">
                 <graphic>
-                    <FontIcon iconColor="white" iconLiteral="mdral-greater_than" iconSize="40" />
+                    <FontIcon iconColor="white" iconLiteral="mdral-greater_than" iconSize="40"/>
                 </graphic>
                 <HBox.margin>
-                    <Insets right="10.0" />
+                    <Insets right="10.0"/>
                 </HBox.margin>
-                <tooltip><Tooltip text="%sendMessage" /></tooltip>
+                <tooltip>
+                    <Tooltip text="%sendMessage"/>
+                </tooltip>
             </Button>
-         <VBox.margin>
-            <Insets left="5.0" />
-         </VBox.margin>
+            <VBox.margin>
+                <Insets left="5.0"/>
+            </VBox.margin>
         </HBox>
         <HBox alignment="CENTER" prefHeight="53.0" prefWidth="370.0" styleClass="chat-holders">
-            <ChoiceBox fx:id="regionPicker" maxHeight="35.0" maxWidth="344.0" minHeight="35.0" minWidth="344.0" prefHeight="35.0" prefWidth="344.0" styleClass="chat-region-selection">
+            <ChoiceBox fx:id="regionPicker" maxHeight="35.0" maxWidth="344.0" minHeight="35.0" minWidth="344.0"
+                       prefHeight="35.0" prefWidth="344.0" styleClass="chat-region-selection">
                 <HBox.margin>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                 </HBox.margin>
-                <tooltip><Tooltip text="%chooseRegionForInvitation" /></tooltip>
+                <tooltip>
+                    <Tooltip text="%chooseRegionForInvitation"/>
+                </tooltip>
             </ChoiceBox>
         </HBox>
     </VBox>
