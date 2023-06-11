@@ -29,7 +29,7 @@
          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
    </HBox>
-   <StackPane prefHeight="150.0" prefWidth="200.0">
+   <StackPane fx:id="spriteContainer" prefHeight="150.0" prefWidth="200.0">
       <children>
          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
             <Image url="@../controller/spriteContainer.png" />
@@ -68,9 +68,9 @@
          <padding>
             <Insets bottom="30.0" />
          </padding>
-         <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="%editTrainer">
+         <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="kgm-general-button-blue" text="%editTrainer">
          </Button>
-         <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="%editUser">
+         <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="kgm-general-button-blue" text="%editUser">
          </Button>
       </VBox>
    </HBox>
