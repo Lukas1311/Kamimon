@@ -30,6 +30,7 @@ public class ChatEntryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("entry_" + name);
         chatName.setText(name);
         chatEntry.setId(name);
         parent.setOnMouseClicked(e -> openChat());
