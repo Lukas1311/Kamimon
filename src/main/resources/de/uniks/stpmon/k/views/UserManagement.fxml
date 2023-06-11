@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.*?>
 
-<VBox fx:id="userManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-   prefHeight="720.0" prefWidth="370.0" styleClass="intro-screen" stylesheets="@css/style.css"
-   xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.UserManagementController">
+<VBox fx:id="userManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.UserManagementController">
 
    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
-      <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="↩">
+      <Button fx:id="backButton" mnemonicParsing="false">
          <VBox.margin>
-            <Insets bottom="5.0" left="25.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
          </VBox.margin>
+         <graphic>
+            <FontIcon iconLiteral="fa-mail-forward" />
+         </graphic>
+         <tooltip><Tooltip text="%back" /></tooltip>
+         <styleClass>
+            <String fx:value="chat-back-button" />
+            <String fx:value="kgm-general-button-white" />
+         </styleClass>
       </Button>
       <VBox.margin>
          <Insets />
@@ -28,29 +32,29 @@
    </HBox>
 
    <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
-         <Text fx:id="usernameText" strokeType="OUTSIDE" strokeWidth="0.0" text="%username" underline="true">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="65.0">
+         <Text fx:id="usernameText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="settings-text" text="%username" underline="true">
            </Text>
-         <Text fx:id="passwordText" strokeType="OUTSIDE" strokeWidth="0.0" text="%password" underline="true">
+         <Text fx:id="passwordText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="settings-text" text="%password" underline="true">
             </Text>
          <padding>
             <Insets left="30.0" />
          </padding>
       </VBox>
 
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
          <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0">
             <Label fx:id="usernameInfo" text="" />
-            <TextField fx:id="usernameInput" promptText="%enterName">
+            <TextField fx:id="usernameInput" promptText="%enterName" styleClass="settings-text-input">
                </TextField>
          </VBox>
          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
-            <TextField fx:id="passwordInput" promptText="%enterPassword" styleClass="text-input">
+            <TextField fx:id="passwordInput" promptText="%enterPassword" styleClass="settings-text-input">
                </TextField>
             <Label fx:id="passwordInfo" text="" />
          </VBox>
          <padding>
-            <Insets right="30.0" />
+            <Insets right="15.0" />
          </padding>
       </VBox>
    </HBox>

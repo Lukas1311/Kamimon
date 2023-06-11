@@ -796,6 +796,15 @@ Load fonts
 	-fx-border-width: 3;
 }
 
+.settings-button {
+	-fx-pref-width: 330;
+	-fx-pref-height: 35;
+	-fx-min-width: 330;
+	-fx-min-height: 35;
+	-fx-max-width: 330;
+	-fx-max-height: 35;
+}
+
 .settings-text {
 
 }
@@ -804,6 +813,14 @@ Load fonts
 
 }
 
+.settings-text-input {
+	-fx-text-fill: black;
+	-fx-background-color: white;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+}
 
 
 /* -------------------- Create Trainer -------------------- */

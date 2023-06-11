@@ -64,10 +64,16 @@
          <padding>
             <Insets bottom="30.0" />
          </padding>
-         <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="kgm-general-button-blue" text="%editTrainer">
-         </Button>
-         <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="kgm-general-button-blue" text="%editUser">
-         </Button>
+         <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="%editTrainer">
+            <styleClass>
+               <String fx:value="kgm-general-button-blue" />
+               <String fx:value="settings-button" />
+            </styleClass></Button>
+         <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="%editUser">
+            <styleClass>
+               <String fx:value="kgm-general-button-blue" />
+               <String fx:value="settings-button" />
+            </styleClass></Button>
       </VBox>
    </HBox>
 </VBox>
