@@ -780,8 +780,6 @@ Load fonts
 	-fx-font-size: 12;
 }
 
-
-
 /* -------------------- Settings -------------------- */
 .settings-tab {
 	-fx-pref-width: 370;
@@ -832,3 +830,36 @@ Load fonts
 	-fx-border-color: black; /* Border color */
 	-fx-border-width: 10px; /* Border width */
 }
+
+
+/* -------------------- PopUp -------------------- */
+.popup-close-button {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-font-size: 20px;
+}
+
+.popup-close-button .ikonli-font-icon{
+	-fx-icon-color: black;
+	-fx-icon-size: 30px;
+}
+
+.popup-background {
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+	-fx-border-radius: 0;
+
+	-fx-background-color: white;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+.popup-text{
+	-fx-font-size: 20px;
+}
+
+
+
+
