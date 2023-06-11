@@ -800,3 +800,8 @@ Load fonts
 	-fx-border-color: black; /* Border color */
 	-fx-border-width: 10px; /* Border width */
 }
+
+/* -------------------- Loading to Region -------------------- */
+.progress-bar {
+    -fx-accent: black;
+}
