@@ -1,5 +1,7 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.MessageController;
 import de.uniks.stpmon.k.models.Message;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -26,13 +28,10 @@ public class InvitationController extends Controller {
 
     ChatController chatController;
 
-
     private final Message message;
     private final String username;
     private final String region;
     private final boolean ownMessage;
-
-
 
     public InvitationController(Message msg, String senderUsername, String region, ChatController chatController, Provider<ResourceBundle> resources, boolean ownMessage) {
         this.message = msg;

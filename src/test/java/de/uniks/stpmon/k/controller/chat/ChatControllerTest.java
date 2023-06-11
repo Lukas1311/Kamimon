@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
@@ -363,5 +363,15 @@ public class ChatControllerTest extends ApplicationTest {
         // check mocks:
         Group retrievedGroup = chatController.getGroup();
         assertEquals(group, retrievedGroup);
+    }
+
+    @Test
+    void testInvitation() {
+
+    }
+
+    @Test
+    void testInvitationWithMessage() {
+
     }
 }

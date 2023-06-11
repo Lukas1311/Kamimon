@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import org.kordamp.ikonli.javafx.*?>
-
-<VBox fx:id="chatScreen" alignment="CENTER" maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" styleClass="chat-tab" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ChatController">
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
+<VBox fx:id="chatScreen" alignment="CENTER" maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" styleClass="chat-tab"
+      stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.chat.ChatController">
     <HBox alignment="CENTER" prefHeight="50.0" prefWidth="370.0" styleClass="chat-holders">
-        <VBox alignment="CENTER" maxHeight="45.0" maxWidth="76.0" minHeight="45.0" minWidth="76.0" prefHeight="45.0" prefWidth="76.0" styleClass="chat-holders">
-            <Button fx:id="backButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" stylesheets="@css/style.css">
+        <VBox alignment="CENTER" maxHeight="45.0" maxWidth="76.0" minHeight="45.0" minWidth="76.0" prefHeight="45.0"
+              prefWidth="76.0" styleClass="chat-holders">
+            <Button fx:id="backButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                    prefHeight="42.0" prefWidth="42.0" stylesheets="@css/style.css">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
+                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
                 </VBox.margin>
                 <graphic>
-                    <FontIcon iconLiteral="fa-mail-forward" />
+                    <FontIcon iconLiteral="fa-mail-forward"/>
                 </graphic>
-                <tooltip><Tooltip text="%back" /></tooltip>
+                <tooltip>
+                    <Tooltip text="%back"/>
+                </tooltip>
             <styleClass>
                <String fx:value="chat-back-button" />
                <String fx:value="kgm-general-button-white" />

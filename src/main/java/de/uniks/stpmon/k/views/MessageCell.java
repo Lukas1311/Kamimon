@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.ChatController;
-import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.controller.MessageController;
+import de.uniks.stpmon.k.controller.chat.ChatController;
+import de.uniks.stpmon.k.controller.chat.InvitationController;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import javafx.geometry.Pos;

@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
+import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.Message;

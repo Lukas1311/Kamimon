@@ -1,6 +1,7 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.ToastController;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.net.EventListener;
