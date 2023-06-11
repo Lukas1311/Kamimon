@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 
@@ -51,6 +52,8 @@ public class SettingsController extends Controller {
     @Inject
     TrainerService trainerService;
     @Inject
+    RegionStorage regionStorage;
+    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<UserManagementController> userManagementControllerProvider;
@@ -87,9 +90,8 @@ public class SettingsController extends Controller {
         if (trainerService.getMe() != null) {
             trainerProperty.set(trainerService.getMe().name());
             userTrainerValue.textProperty().bind(trainerProperty);
-            regionProperty.set(trainerService.getMe().region());
+            regionProperty.set(regionStorage.getRegion().name());
             userRegionValue.textProperty().bind(regionProperty);
-
         }
 
         backButton.setOnAction(click -> backToMainScreen());
