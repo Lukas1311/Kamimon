@@ -32,7 +32,7 @@
    <StackPane fx:id="spriteContainer" prefHeight="150.0" prefWidth="200.0">
       <children>
          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-            <Image url="@../controller/spriteContainer.png" />
+            <Image url="@../controller/spriteBackground.png" />
          </ImageView>
          <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
             <Image url="@../controller/spritePlacehoder.png" />
