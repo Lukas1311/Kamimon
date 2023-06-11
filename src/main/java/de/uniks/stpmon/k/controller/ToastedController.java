@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 public class ToastedController extends Controller {
     @Inject
-    ToastController toastController;
+    protected ToastController toastController;
 
     protected void handleError(Throwable error) {
         if (!(error instanceof HttpException http)) {
