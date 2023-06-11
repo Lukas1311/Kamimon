@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -20,7 +21,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class SettingsController extends Controller {
+public class SettingsController extends ToastedController {
 
     @FXML
     public VBox settingsScreen;
@@ -51,6 +52,8 @@ public class SettingsController extends Controller {
     @Inject
     TrainerService trainerService;
     @Inject
+    PresetService presetService;
+    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<UserManagementController> userManagementControllerProvider;
@@ -80,6 +83,7 @@ public class SettingsController extends Controller {
         userTrainer.visibleProperty().bind(trainerLoaded);
         userRegion.visibleProperty().bind(trainerLoaded);
         userRegionValue.visibleProperty().bind(trainerLoaded);
+        userSprite.visibleProperty().bind(trainerLoaded);
 
         usernameProperty.set(user.name());
         usernameValue.textProperty().bind(usernameProperty);
@@ -89,6 +93,12 @@ public class SettingsController extends Controller {
             userTrainerValue.textProperty().bind(trainerProperty);
             regionProperty.set(trainerService.getMe().region());
             userRegionValue.textProperty().bind(regionProperty);
+
+            subscribe(
+                presetService.getCharacterFile(trainerStorage.getTrainer().image()),
+                response -> setFrontalSpriteImage(userSprite, 20, 56, response),
+                this::handleError
+            );
 
         }
 
