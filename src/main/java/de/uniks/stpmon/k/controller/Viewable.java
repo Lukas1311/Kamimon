@@ -263,6 +263,10 @@ public abstract class Viewable {
      * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image 
      */
     public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
+        
         final Double SCALE = 4.0; // this is a good scale for sharp images
         final int SPRITE_WIDTH = 16; // width of sprite, you could say X-value
         final int SPRITE_HEIGHT = 32; // height of sprite, you could say Y-value
