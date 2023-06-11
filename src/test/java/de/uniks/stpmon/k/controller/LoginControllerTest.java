@@ -248,9 +248,7 @@ public class LoginControllerTest extends ApplicationTest {
             when(authService.login(any(), any(), anyBoolean())).thenReturn(Observable.error(new HttpException(response)));
 
             // action:
-            Platform.runLater(() -> {
-                loginController.login();
-            });
+            Platform.runLater(() -> loginController.login());
             waitForFxEvents();
 
             // check error label text

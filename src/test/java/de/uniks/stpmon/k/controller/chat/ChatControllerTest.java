@@ -123,6 +123,8 @@ public class ChatControllerTest extends ApplicationTest {
         stage.requestFocus();
     }
 
+    // suppress: Value is never used as Publisher
+    @SuppressWarnings("all")
     private <T> void mockSend(T methodCall, String type, Message msg) {
         when(methodCall).thenAnswer((invocation) -> {
             events.onNext(new Event<>("groups.g_id.messages.1." + type, msg));
