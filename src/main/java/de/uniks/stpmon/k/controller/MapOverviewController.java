@@ -22,6 +22,8 @@ public class MapOverviewController extends Controller {
     @FXML
     ImageView mapOverviewImage;
     @FXML
+    VBox mapContainer;
+    @FXML
     Text buildingDescription;
 
     
