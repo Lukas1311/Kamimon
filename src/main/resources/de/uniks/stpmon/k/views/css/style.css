@@ -783,6 +783,28 @@ Load fonts
 
 
 /* -------------------- Settings -------------------- */
+.settings-tab {
+	-fx-pref-width: 370;
+	-fx-pref-height: 720;
+	-fx-min-width: 370;
+	-fx-min-height: 70;
+
+	-fx-background-color: -fx-color-kgm-yellow-transparent;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+}
+
+.settings-text {
+
+}
+
+.settings-text-value {
+
+}
+
+
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
