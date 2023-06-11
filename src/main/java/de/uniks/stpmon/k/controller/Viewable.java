@@ -256,24 +256,26 @@ public abstract class Viewable {
     /**
      * Processes the ResponseBody containing the image data for a trainer sprite
      * 
+     * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
      * @param sprite is the ImageView of the fxml where you want the image data to be loaded in
-     * @param width is the width of the sprite
-     * @param height the height of the sprite
+     * @param tileRow is the row of the tile you want to extract (most cases one of 0,1,2)
+     * @param tileIndex the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
      * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image 
      */
-    public void setFrontalSpriteImage(ImageView sprite, int width, int height, ResponseBody responseBody) {
+    public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody) {
         final Double SCALE = 4.0; // this is a good scale for sharp images
+        final int SPRITE_WIDTH = 16; // width of sprite, you could say X-value
+        final int SPRITE_HEIGHT = 32; // height of sprite, you could say Y-value
+        int spriteOffsetX = tileIndex * SPRITE_WIDTH;
+        int spriteOffsetY = tileRow * SPRITE_HEIGHT;
         if (responseBody != null) {
             try (responseBody) {
                 // Read the image data from the response body and create a BufferedImage
                 ByteArrayInputStream inputStream = new ByteArrayInputStream(responseBody.bytes());
                 BufferedImage bufferedImage = ImageIO.read(inputStream);
-                int spriteWidth = width;
-                int spriteHeight = height;
-                int spriteX = 48;
-                int spriteY = 0;
-                // Extract the sprite from the original image
-                BufferedImage image = bufferedImage.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
+
+                // Extract the sprite from the original tiled image set
+                BufferedImage image = bufferedImage.getSubimage(spriteOffsetX, spriteOffsetY, SPRITE_WIDTH, SPRITE_HEIGHT);
 
                 // Scale the image
                 BufferedImage scaledImage = ImageUtils.scaledImage(image, SCALE);
@@ -283,11 +285,14 @@ public abstract class Viewable {
 
                 // Set the image
                 sprite.setImage(fxImage);
-                sprite.setFitHeight(260);
+                sprite.setFitHeight(150);
                 sprite.setFitWidth(300);
 
-                // Place the sprite in the center of the screen
-                StackPane.setMargin(sprite, new Insets(0, 0, 0, 35));
+
+                spriteContainer.setPrefSize(sprite.getFitWidth(), sprite.getFitHeight());
+                // sprite center: set bottom margins so the sprite goes a little bit up
+                StackPane.setMargin(sprite, new Insets(0, 0, 35, 0));
+                spriteContainer.getChildren().add(sprite);
             } catch (IOException e) {
                 System.err.println("Error: I/O Exception");
             }

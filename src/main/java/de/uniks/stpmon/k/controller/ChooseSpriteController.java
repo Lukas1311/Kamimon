@@ -4,29 +4,20 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import okhttp3.ResponseBody;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -42,6 +33,8 @@ public class ChooseSpriteController extends ToastedController {
     public Text chooseTrainer;
     @FXML
     public Button spriteLeft;
+    @FXML
+    public StackPane spriteContainer;
     @FXML
     public ImageView spriteImage;
     @FXML
@@ -112,7 +105,7 @@ public class ChooseSpriteController extends ToastedController {
     public void loadSprite(String selectedCharacter) {
         subscribe(
             presetService.getCharacterFile(selectedCharacter),
-            response -> setFrontalSpriteImage(spriteImage, 20, 35, response),
+            response -> setSpriteImage(spriteContainer, spriteImage, 0, 3, response),
             this::handleError
         );
     }

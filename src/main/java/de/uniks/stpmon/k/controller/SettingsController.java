@@ -15,8 +15,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -32,6 +32,8 @@ public class SettingsController extends ToastedController {
     public Button editUserButton;
     @FXML
     public Button editTrainerButton;
+    @FXML
+    public StackPane spriteContainer;
     @FXML
     public ImageView userSprite;
     @FXML
@@ -74,10 +76,6 @@ public class SettingsController extends ToastedController {
         final Parent parent = super.render();
         settingsScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        Rectangle rectangle = new Rectangle(0, 0, 200, 150);
-        rectangle.setArcWidth(20);
-        rectangle.setArcHeight(20);
-        userSprite.setClip(rectangle);
 
         User user = userStorage.getUser();
         SimpleBooleanProperty trainerLoaded = trainerStorage.getTrainerLoaded();
@@ -87,7 +85,7 @@ public class SettingsController extends ToastedController {
         userTrainer.visibleProperty().bind(trainerLoaded);
         userRegion.visibleProperty().bind(trainerLoaded);
         userRegionValue.visibleProperty().bind(trainerLoaded);
-        userSprite.visibleProperty().bind(trainerLoaded);
+        spriteContainer.visibleProperty().bind(trainerLoaded);
 
         usernameProperty.set(user.name());
         usernameValue.textProperty().bind(usernameProperty);
@@ -100,7 +98,7 @@ public class SettingsController extends ToastedController {
 
             subscribe(
                 presetService.getCharacterFile(trainerStorage.getTrainer().image()),
-                response -> setFrontalSpriteImage(userSprite, 20, 56, response),
+                response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
                 this::handleError
             );
         }
