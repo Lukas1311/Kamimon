@@ -39,6 +39,14 @@ public class RegionService {
         return regionApiService.getTrainers(regionId, areaId, userStorage.getUser()._id());
     }
 
+    public Observable<List<Trainer>> getNPCs(String regionId) {
+        return regionApiService.getNPCTrainers(regionId)
+                .flatMap(Observable::fromIterable)
+                .filter(trainer -> trainer.npc() != null)
+                .toList()
+                .toObservable();
+    }
+
     public Observable<Trainer> getMainTrainer(String regionId) {
         return regionApiService.getMainTrainers(regionId, userStorage.getUser()._id())
                 .flatMap((trainers) -> {
