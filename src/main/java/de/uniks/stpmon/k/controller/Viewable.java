@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
@@ -11,13 +12,18 @@ import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.SVGPath;
+import okhttp3.ResponseBody;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -26,8 +32,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -241,5 +251,46 @@ public abstract class Viewable {
         // render the group onto our writeableImage
         vectorGroup.snapshot(snapshotParams, image);
         imageView.setImage(image);
+    }
+
+    /**
+     * Processes the ResponseBody containing the image data for a trainer sprite
+     * 
+     * @param sprite is the ImageView of the fxml where you want the image data to be loaded in
+     * @param width is the width of the sprite
+     * @param height the height of the sprite
+     * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image 
+     */
+    public void setFrontalSpriteImage(ImageView sprite, int width, int height, ResponseBody responseBody) {
+        final Double SCALE = 4.0; // this is a good scale for sharp images
+        if (responseBody != null) {
+            try (responseBody) {
+                // Read the image data from the response body and create a BufferedImage
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(responseBody.bytes());
+                BufferedImage bufferedImage = ImageIO.read(inputStream);
+                int spriteWidth = width;
+                int spriteHeight = height;
+                int spriteX = 48;
+                int spriteY = 0;
+                // Extract the sprite from the original image
+                BufferedImage image = bufferedImage.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
+
+                // Scale the image
+                BufferedImage scaledImage = ImageUtils.scaledImage(image, SCALE);
+
+                // Convert the BufferedImage to JavaFX Image
+                Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
+
+                // Set the image
+                sprite.setImage(fxImage);
+                sprite.setFitHeight(260);
+                sprite.setFitWidth(300);
+
+                // Place the sprite in the center of the screen
+                StackPane.setMargin(sprite, new Insets(0, 0, 0, 35));
+            } catch (IOException e) {
+                System.err.println("Error: I/O Exception");
+            }
+        }
     }
 }
