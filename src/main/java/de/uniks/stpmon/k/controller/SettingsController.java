@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 
@@ -54,6 +55,9 @@ public class SettingsController extends ToastedController {
     @Inject
     PresetService presetService;
     @Inject
+    RegionStorage regionStorage;
+
+    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<UserManagementController> userManagementControllerProvider;
@@ -91,7 +95,7 @@ public class SettingsController extends ToastedController {
         if (trainerService.getMe() != null) {
             trainerProperty.set(trainerService.getMe().name());
             userTrainerValue.textProperty().bind(trainerProperty);
-            regionProperty.set(trainerService.getMe().region());
+            regionProperty.set(regionStorage.getRegion().name());
             userRegionValue.textProperty().bind(regionProperty);
 
             subscribe(
@@ -99,7 +103,6 @@ public class SettingsController extends ToastedController {
                 response -> setFrontalSpriteImage(userSprite, 20, 56, response),
                 this::handleError
             );
-
         }
 
         backButton.setOnAction(click -> backToMainScreen());
