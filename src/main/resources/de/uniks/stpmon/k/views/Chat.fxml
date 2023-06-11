@@ -34,11 +34,7 @@
             </Button>
         </VBox>
         <VBox alignment="CENTER" maxHeight="58.0" minHeight="13.0" minWidth="175.0" prefHeight="13.0" prefWidth="175.0">
-            <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="220.0">
-                <font>
-                    <Font size="20.0"/>
-                </font>
-            </Text>
+            <Text fx:id="groupName" strokeType="OUTSIDE" strokeWidth="0.0" text="" wrappingWidth="220.0"/>
             <styleClass>
                 <String fx:value="chat-holders"/>
                 <String fx:value="chat-title"/>

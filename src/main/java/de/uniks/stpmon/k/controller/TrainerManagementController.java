@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -44,6 +45,9 @@ public class TrainerManagementController extends Controller {
     public Button backButton;
     @FXML
     public ImageView trainerSprite;
+
+    @FXML
+    public Text trainerNameText;
 
     @Inject
     RegionService regionService;
