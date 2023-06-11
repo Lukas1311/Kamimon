@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import javafx.beans.binding.Bindings;
@@ -19,7 +20,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -28,7 +31,7 @@ import java.util.List;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
-public class TrainerManagementController extends Controller {
+public class TrainerManagementController extends ToastedController {
     @FXML
     public VBox trainerManagementScreen;
     @FXML
@@ -39,11 +42,15 @@ public class TrainerManagementController extends Controller {
     public Button deleteTrainerButton;
     @FXML
     public Button saveChangesButton;
-
     @FXML
     public Button backButton;
     @FXML
     public ImageView trainerSprite;
+    @FXML
+    public StackPane spriteContainer;
+
+    @FXML
+    public Text trainerNameText;
 
     @Inject
     RegionService regionService;
@@ -53,6 +60,8 @@ public class TrainerManagementController extends Controller {
     Provider<PopUpController> popUpControllerProvider;
     @Inject
     TrainerService trainerService;
+    @Inject
+    PresetService presetService;
     @Inject
     Provider<LoginController> loginControllerProvider;
     @Inject
@@ -78,6 +87,14 @@ public class TrainerManagementController extends Controller {
 
         currentTrainer = trainerService.getMe();
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
+
+        trainerNameInput.setPromptText(currentTrainer.name());
+
+        subscribe(
+            presetService.getCharacterFile(currentTrainer.image()),
+            response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
+            this::handleError
+        );
 
         trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);

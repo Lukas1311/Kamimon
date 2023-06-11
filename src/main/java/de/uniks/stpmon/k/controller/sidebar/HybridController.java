@@ -1,6 +1,17 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.*;
+import de.uniks.stpmon.k.controller.ChooseSpriteController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.FriendListController;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.LobbyController;
+import de.uniks.stpmon.k.controller.PauseController;
+import de.uniks.stpmon.k.controller.SettingsController;
+import de.uniks.stpmon.k.controller.TrainerManagementController;
+import de.uniks.stpmon.k.controller.UserManagementController;
+import de.uniks.stpmon.k.controller.chat.ChatController;
+import de.uniks.stpmon.k.controller.chat.ChatListController;
+import de.uniks.stpmon.k.controller.chat.CreateChatController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;

@@ -25,7 +25,7 @@ public class IntroductionController extends Controller {
     public Button back;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-    final Image[] images = new Image[4];
+    final Image[] images = new Image[8];
     private final IntegerProperty indexProperty = new SimpleIntegerProperty(0);
 
     @Inject
@@ -36,10 +36,14 @@ public class IntroductionController extends Controller {
     @Override
     public void init() {
         super.init();
-        loadImage(images, 0, "introductionSheetOne.png");
-        loadImage(images, 1, "introductionSheetTwo.png");
-        loadImage(images, 2, "introductionSheetThree.png");
-        loadImage(images, 3, "introductionSheetFour.png");
+        loadImage(images, 0, "introduction/intro_00.png");
+        loadImage(images, 1, "introduction/intro_01.png");
+        loadImage(images, 2, "introduction/intro_02.png");
+        loadImage(images, 3, "introduction/intro_03.png");
+        loadImage(images, 4, "introduction/intro_04.png");
+        loadImage(images, 5, "introduction/intro_05.png");
+        loadImage(images, 6, "introduction/intro_06.png");
+        loadImage(images, 7, "introduction/intro_07.png");
     }
 
     @Override

@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.ChatEntryController;
-import de.uniks.stpmon.k.controller.ChatListController;
+import de.uniks.stpmon.k.controller.chat.ChatEntryController;
+import de.uniks.stpmon.k.controller.chat.ChatListController;
 import de.uniks.stpmon.k.models.Group;
 import javafx.scene.control.ListCell;
 

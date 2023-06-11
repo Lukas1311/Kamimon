@@ -61,6 +61,10 @@ class AppTest extends ApplicationTest {
         clickOn("#further");
         clickOn("#further");
         clickOn("#further");
+        clickOn("#further");
+        clickOn("#further");
+        clickOn("#further");
+        clickOn("#further");
         //open friend list
         clickOn("#friends");
 

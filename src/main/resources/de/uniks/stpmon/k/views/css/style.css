@@ -780,9 +780,39 @@ Load fonts
 	-fx-font-size: 12;
 }
 
-
-
 /* -------------------- Settings -------------------- */
+.settings-tab {
+	-fx-pref-width: 370;
+	-fx-pref-height: 720;
+	-fx-min-width: 370;
+	-fx-min-height: 70;
+
+	-fx-background-color: -fx-color-kgm-yellow-transparent;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+}
+
+.settings-button {
+	-fx-pref-width: 330;
+	-fx-pref-height: 35;
+	-fx-min-width: 330;
+	-fx-min-height: 35;
+	-fx-max-width: 330;
+	-fx-max-height: 35;
+}
+
+
+.settings-text-input {
+	-fx-text-fill: black;
+	-fx-background-color: white;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+}
+
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
@@ -801,7 +831,35 @@ Load fonts
 	-fx-border-width: 10px; /* Border width */
 }
 
-/* -------------------- Loading to Region -------------------- */
-.progress-bar {
-    -fx-accent: black;
+
+/* -------------------- PopUp -------------------- */
+.popup-close-button {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-font-size: 20px;
 }
+
+.popup-close-button .ikonli-font-icon{
+	-fx-icon-color: black;
+	-fx-icon-size: 30px;
+}
+
+.popup-background {
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+	-fx-border-radius: 0;
+
+	-fx-background-color: white;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+.popup-text{
+	-fx-font-size: 20px;
+}
+
+
+
+

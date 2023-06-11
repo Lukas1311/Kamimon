@@ -1,16 +1,17 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.ToastController;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.GroupService;
+import de.uniks.stpmon.k.utils.ExceptionHelper;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import javafx.stage.Stage;
-import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,8 +19,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-import retrofit2.HttpException;
-import retrofit2.Response;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -48,7 +47,6 @@ class ChatListControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
-
     @Spy
     @InjectMocks
     ToastController toastController;
@@ -71,7 +69,7 @@ class ChatListControllerTest extends ApplicationTest {
     }
 
     @Test
-    void openChat() {
+    void updateList() {
         verifyThat("#chatListView", hasItems(1));
 
         // Create new group
@@ -93,8 +91,7 @@ class ChatListControllerTest extends ApplicationTest {
 
     @Test
     void handleError() {
-        Response<Object> response = Response.error(429, ResponseBody.create(null, "test"));
-        when(groupService.getOwnGroups()).thenReturn(Observable.error(new HttpException(response)));
+        when(groupService.getOwnGroups()).thenReturn(ExceptionHelper.justHttp(429));
         app.show(chatListController);
         verify(toastController).openToast(any());
     }
