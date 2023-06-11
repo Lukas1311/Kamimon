@@ -28,15 +28,6 @@ public class ChatEntryController extends Controller {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
         chatName.setText(name);

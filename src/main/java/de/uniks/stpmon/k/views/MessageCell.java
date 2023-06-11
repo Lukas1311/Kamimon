@@ -35,10 +35,11 @@ public class MessageCell extends ListCell<Message> {
             setText(null);
         } else {
             String sender = groupUsers.get(item.sender());
-            if (item.body().startsWith("JoinInvitation")) {
+            if (item.body().startsWith(InvitationController.INVITATION_START_PATTERN)) {
                 String regionId = item.body().substring(15);
 
-                final InvitationController invitationController = new InvitationController(item, sender, regionId, chatController, resources, isOwnMessage(item));
+                final InvitationController invitationController = new InvitationController(item, sender, regionId,
+                        chatController, resources, isOwnMessage(item));
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {

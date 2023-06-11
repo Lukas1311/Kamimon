@@ -13,6 +13,8 @@ import javax.inject.Provider;
 import java.util.ResourceBundle;
 
 public class InvitationController extends Controller {
+
+    public static final String INVITATION_START_PATTERN = "JoinInvitation";
     @FXML
     public VBox messageBox;
     @FXML
@@ -26,14 +28,14 @@ public class InvitationController extends Controller {
     @FXML
     public VBox invitationHolder;
 
-    ChatController chatController;
-
+    private final ChatController chatController;
     private final Message message;
     private final String username;
     private final String region;
     private final boolean ownMessage;
 
-    public InvitationController(Message msg, String senderUsername, String region, ChatController chatController, Provider<ResourceBundle> resources, boolean ownMessage) {
+    public InvitationController(Message msg, String senderUsername, String region, ChatController chatController,
+                                Provider<ResourceBundle> resources, boolean ownMessage) {
         this.message = msg;
         this.username = senderUsername;
         this.chatController = chatController;

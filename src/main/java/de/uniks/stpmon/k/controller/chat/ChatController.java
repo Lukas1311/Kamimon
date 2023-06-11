@@ -141,7 +141,7 @@ public class ChatController extends ToastedController {
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
-                        if (newValue.body().startsWith("JoinInvitation")) {
+                        if (newValue.body().startsWith(InvitationController.INVITATION_START_PATTERN)) {
                             Platform.runLater(() -> messagesListView.getSelectionModel().clearSelection());
                             return;
                         }
@@ -224,7 +224,7 @@ public class ChatController extends ToastedController {
                 if (regionOptional.isPresent()) {
                     String regionId = regionOptional.get()._id();
 
-                    String invitationText = "JoinInvitation " + regionId;
+                    String invitationText = InvitationController.INVITATION_START_PATTERN + " " + regionId;
 
                     disposables.add(msgService
                             .sendMessage(invitationText, GROUPS, group._id())
@@ -262,9 +262,11 @@ public class ChatController extends ToastedController {
     }
 
     public void openRegion(String regionId) {
-        subscribe(regionService.getRegion(regionId).flatMap(worldLoader::tryEnterRegion),
+        subscribe(regionService.getRegion(regionId)
+                        .flatMap(worldLoader::tryEnterRegion),
                 (r) -> {
-                }, this::handleError);
+                },
+                this::handleError);
     }
 
     @Override
