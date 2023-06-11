@@ -30,12 +30,14 @@
       </padding>
    </HBox>
    <StackPane prefHeight="150.0" prefWidth="200.0">
-      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@../controller/spriteContainer.png" />
-      </ImageView>
-      <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@../controller/spritePlacehoder.png" />
-      </ImageView>
+      <children>
+         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@../controller/spriteContainer.png" />
+         </ImageView>
+         <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@../controller/spritePlacehoder.png" />
+         </ImageView>
+      </children>
    </StackPane>
    <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
