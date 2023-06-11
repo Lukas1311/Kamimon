@@ -108,9 +108,7 @@ public class ChatController extends ToastedController {
                                 case "updated" -> this.messages.replaceAll(m -> m._id().equals(msg._id()) ? msg : m);
                                 case "deleted" -> this.messages.removeIf(m -> m._id().equals(msg._id()));
                             }
-                            if (event.suffix().equals("created")) {
-                                messagesListView.scrollTo(messagesListView.getItems().size()-1);
-                            }
+                            messagesListView.scrollTo(messagesListView.getItems().size()-1);
                         }, this::handleError
                 )
         );
@@ -163,9 +161,7 @@ public class ChatController extends ToastedController {
                 sendMessage();
             }
         });
-
         messageArea.getChildren().setAll(messagesListView);
-
         return parent;
     }
 
@@ -229,6 +225,8 @@ public class ChatController extends ToastedController {
                             .sendMessage(invitationText, GROUPS, group._id())
                             .observeOn(FX_SCHEDULER)
                             .subscribe(msg -> messagesListView.scrollTo(messagesListView.getItems().size() -1),
+                            //.subscribe(msg -> messagesListView.scrollTo(0),
+                            //.subscribe(msg -> {},
                                     this::handleError)
                     );
                     regionPicker.getSelectionModel().clearSelection();
@@ -244,6 +242,7 @@ public class ChatController extends ToastedController {
                     .subscribe(msg -> {
                                 messageField.clear();
                                 messagesListView.scrollTo(messagesListView.getItems().size() -1);
+                                //messagesListView.scrollTo(0);
                             }, this::handleError
                     )
             );
