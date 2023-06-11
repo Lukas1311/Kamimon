@@ -38,7 +38,7 @@ public class IngameController extends PortalController {
     @Inject
     MinimapController miniMap;
     @Inject
-    Provider<MapOverviewController> mapOverviewControllerProvider;
+    MapOverviewController mapOverview;
     @Inject
     BackpackController backPack;
     @Inject
@@ -60,6 +60,7 @@ public class IngameController extends PortalController {
         worldController.init();
         monsterBar.init();
         miniMap.init();
+        mapOverview.init();
         backPack.init();
     }
 
@@ -70,6 +71,7 @@ public class IngameController extends PortalController {
         worldController.destroy();
         monsterBar.destroy();
         miniMap.destroy();
+        mapOverview.destroy();
         backPack.destroy();
     }
 
@@ -95,17 +97,25 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(miniMap);
         }
 
+        Parent mapOverview = this.mapOverview.render();
+
+
         Parent backPack = this.backPack.render();
         // Null if unit testing world view
         if (backPack != null) {
             rightVbox.getChildren().add(backPack);
         }
 
-        miniMap.setOnMouseClicked(click -> {
-            // TODO: block inputs while big map is open? (e.g. walking?)
-            Parent mapOverview = mapOverviewControllerProvider.get().render();
+        if (mapOverview != null) {
             ingameStack.getChildren().add(mapOverview);
             ingameStack.setAlignment(Pos.CENTER);
+            mapOverview.setVisible(false);
+        }
+
+        miniMap.setOnMouseClicked(click -> {
+            // TODO: block inputs while big map is open? (e.g. walking?)
+            mapOverview.setVisible(true);
+            System.out.println("map opened");
         });
 
         return parent;
