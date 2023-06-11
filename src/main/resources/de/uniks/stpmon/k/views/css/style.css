@@ -783,6 +783,38 @@ Load fonts
 
 
 /* -------------------- Settings -------------------- */
+.settings-tab {
+	-fx-pref-width: 370;
+	-fx-pref-height: 720;
+	-fx-min-width: 370;
+	-fx-min-height: 70;
+
+	-fx-background-color: -fx-color-kgm-yellow-transparent;
+	-fx-background-radius: 0;
+	-fx-border-color: black;
+	-fx-border-radius: 0;
+	-fx-border-width: 3;
+}
+
+.settings-button {
+	-fx-pref-width: 330;
+	-fx-pref-height: 35;
+	-fx-min-width: 330;
+	-fx-min-height: 35;
+	-fx-max-width: 330;
+	-fx-max-height: 35;
+}
+
+
+.settings-text-input {
+	-fx-text-fill: black;
+	-fx-background-color: white;
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+}
+
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
