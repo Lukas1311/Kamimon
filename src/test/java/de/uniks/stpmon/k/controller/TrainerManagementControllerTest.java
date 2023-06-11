@@ -7,9 +7,12 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
+
 import io.reactivex.rxjava3.core.Observable;
+import okhttp3.ResponseBody;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -50,6 +53,8 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     Provider<LobbyController> lobbyControllerProvider;
     @Mock
     TrainerService trainerService;
+    @Mock
+    PresetService presetService;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
@@ -62,13 +67,15 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
     NPCInfo npcInfo = new NPCInfo(false);
     Trainer dummytrainer = new Trainer(
-            "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
+            "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo
+    );
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
+        when(presetService.getCharacterFile(any())).thenReturn(Observable.just(ResponseBody.create(null, "test")));
         app.show(trainerManagementController);
         stage.requestFocus();
     }

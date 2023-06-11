@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -14,14 +15,14 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class SettingsController extends Controller {
+public class SettingsController extends ToastedController {
 
     @FXML
     public VBox settingsScreen;
@@ -31,6 +32,8 @@ public class SettingsController extends Controller {
     public Button editUserButton;
     @FXML
     public Button editTrainerButton;
+    @FXML
+    public StackPane spriteContainer;
     @FXML
     public ImageView userSprite;
     @FXML
@@ -52,7 +55,10 @@ public class SettingsController extends Controller {
     @Inject
     TrainerService trainerService;
     @Inject
+    PresetService presetService;
+    @Inject
     RegionStorage regionStorage;
+
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
@@ -70,10 +76,6 @@ public class SettingsController extends Controller {
         final Parent parent = super.render();
         settingsScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        Rectangle rectangle = new Rectangle(0, 0, 200, 150);
-        rectangle.setArcWidth(20);
-        rectangle.setArcHeight(20);
-        userSprite.setClip(rectangle);
 
         User user = userStorage.getUser();
         SimpleBooleanProperty trainerLoaded = trainerStorage.getTrainerLoaded();
@@ -83,6 +85,7 @@ public class SettingsController extends Controller {
         userTrainer.visibleProperty().bind(trainerLoaded);
         userRegion.visibleProperty().bind(trainerLoaded);
         userRegionValue.visibleProperty().bind(trainerLoaded);
+        spriteContainer.visibleProperty().bind(trainerLoaded);
 
         usernameProperty.set(user.name());
         usernameValue.textProperty().bind(usernameProperty);
@@ -92,6 +95,12 @@ public class SettingsController extends Controller {
             userTrainerValue.textProperty().bind(trainerProperty);
             regionProperty.set(regionStorage.getRegion().name());
             userRegionValue.textProperty().bind(regionProperty);
+
+            subscribe(
+                presetService.getCharacterFile(trainerStorage.getTrainer().image()),
+                response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
+                this::handleError
+            );
         }
 
         backButton.setOnAction(click -> backToMainScreen());
