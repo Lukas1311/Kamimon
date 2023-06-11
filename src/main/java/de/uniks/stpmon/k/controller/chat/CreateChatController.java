@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.controller.sidebar.TabController;
 import de.uniks.stpmon.k.models.Group;

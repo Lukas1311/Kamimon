@@ -1,6 +1,8 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.controller.ToastController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Group;
@@ -14,9 +16,12 @@ import de.uniks.stpmon.k.rest.GroupApiService;
 import de.uniks.stpmon.k.service.MessageService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.UserService;
+import de.uniks.stpmon.k.service.world.WorldLoader;
+import de.uniks.stpmon.k.utils.ExceptionHelper;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import io.reactivex.rxjava3.subjects.Subject;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -78,6 +83,11 @@ public class ChatControllerTest extends ApplicationTest {
 
     @InjectMocks
     ChatController chatController;
+    @Mock
+    WorldLoader worldLoader;
+    @Spy
+    @InjectMocks
+    ToastController toastController;
 
     Subject<Event<Message>> events = BehaviorSubject.create();
 
@@ -113,6 +123,8 @@ public class ChatControllerTest extends ApplicationTest {
         stage.requestFocus();
     }
 
+    // suppress: Value is never used as Publisher
+    @SuppressWarnings("all")
     private <T> void mockSend(T methodCall, String type, Message msg) {
         when(methodCall).thenAnswer((invocation) -> {
             events.onNext(new Event<>("groups.g_id.messages.1." + type, msg));
@@ -283,11 +295,17 @@ public class ChatControllerTest extends ApplicationTest {
     }
 
     @Test
+    @SuppressWarnings({"unchecked"})
     void testSendInvite() {
         // define mocks:
-        Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "join");
+        Message msg = new Message("2023-05-15T00:00:00.000Z", "2023-05-15T00:00:00.000Z", "b_msg_id", "b_id", "JoinInvitation i");
         // this simulates the send message call and the listener in one action
         mockSend(msgService.sendMessage(any(), any(), any()), "created", msg);
+        when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
+        when(regionService.getRegion("i")).thenReturn(ExceptionHelper.justHttp(404), Observable.just(
+                new Region("i", "reg", new Spawn("0", 0, 0), null)
+        ));
+
 
         final ListView<Message> listView = lookup("#messageArea .list-view").queryListView();
         verifyThat(listView, ListViewMatchers.hasItems(2));
@@ -313,7 +331,31 @@ public class ChatControllerTest extends ApplicationTest {
         Message joinMessage = items.get(items.size() - 1);
 
         // check mocks:
-        verifyThat(joinMessage.body(), TextMatchers.hasText("join"));
+        assertEquals("JoinInvitation i", joinMessage.body());
+        // Navigate to invitation button
+        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
+
+        Button joinButton = lookup("#joinButton").query();
+        assertThat(joinButton).isFocused();
+
+        // Activate invitation button
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
+        // Verify error toast
+        verify(toastController).openToast(any());
+
+        // Toast is show on different stage, so we have to request focus on the main stage again
+        Platform.runLater(app.getStage()::requestFocus);
+        waitForFxEvents();
+
+        // check if still focused
+        assertThat(joinButton).isFocused();
+
+        // Activate invitation button
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+
+        // Check if the region was entered
+        verify(worldLoader).tryEnterRegion(any());
     }
 
     @Test

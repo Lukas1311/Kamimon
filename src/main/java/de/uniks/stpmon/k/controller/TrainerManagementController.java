@@ -22,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -47,6 +48,9 @@ public class TrainerManagementController extends ToastedController {
     public ImageView trainerSprite;
     @FXML
     public StackPane spriteContainer;
+
+    @FXML
+    public Text trainerNameText;
 
     @Inject
     RegionService regionService;
