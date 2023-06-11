@@ -805,13 +805,6 @@ Load fonts
 	-fx-max-height: 35;
 }
 
-.settings-text {
-
-}
-
-.settings-text-value {
-
-}
 
 .settings-text-input {
 	-fx-text-fill: black;
