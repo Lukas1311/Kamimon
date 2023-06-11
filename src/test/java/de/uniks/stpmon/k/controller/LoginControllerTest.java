@@ -54,8 +54,10 @@ public class LoginControllerTest extends ApplicationTest {
     @Mock
     AuthenticationService authService;
     @Mock
+    @SuppressWarnings("unused")
     TokenStorage tokenStorage;
     @Mock
+    @SuppressWarnings("unused")
     NetworkAvailability netAvailability;
     @Mock
     Provider<HybridController> hybridControllerProvider;
@@ -66,8 +68,8 @@ public class LoginControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
-    EffectContext effectContext = new EffectContext()
-            .setSkipLoadImages(true);
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Spy
     App app = new App(null);
@@ -225,7 +227,7 @@ public class LoginControllerTest extends ApplicationTest {
         verify(loginController).setDe();
         verify(loginController).setEn();
     }
-    
+
     @Test
     void testGetErrorMessage() {
         // prep:
@@ -246,9 +248,7 @@ public class LoginControllerTest extends ApplicationTest {
             when(authService.login(any(), any(), anyBoolean())).thenReturn(Observable.error(new HttpException(response)));
 
             // action:
-            Platform.runLater(() -> {
-                loginController.login();
-            });
+            Platform.runLater(() -> loginController.login());
             waitForFxEvents();
 
             // check error label text

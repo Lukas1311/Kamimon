@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Group;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -14,8 +15,6 @@ public class ChatEntryController extends Controller {
     public Text chatName;
     @FXML
     public VBox chatEntry;
-    @Inject
-    ChatController chatController;
 
     private final ChatListController chatListController;
     private final Group group;
@@ -29,17 +28,9 @@ public class ChatEntryController extends Controller {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("entry_" + name);
         chatName.setText(name);
         chatEntry.setId(name);
         parent.setOnMouseClicked(e -> openChat());

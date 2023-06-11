@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.*?>
 
-<VBox fx:id="trainerManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="sidebar-content" stylesheets="@css/sidebar.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.TrainerManagementController">
+<VBox fx:id="trainerManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.TrainerManagementController">
 
    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
-      <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0" styleClass="kgm-general-button-white" stylesheets="@css/style.css" text="↩">
+      <Button fx:id="backButton" mnemonicParsing="false" stylesheets="@css/style.css">
          <VBox.margin>
-            <Insets bottom="5.0" left="25.0" right="5.0" top="5.0" />
+            <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
          </VBox.margin>
+         <graphic>
+            <FontIcon iconLiteral="fa-mail-forward" />
+         </graphic>
+         <styleClass>
+            <String fx:value="kgm-general-button-white" />
+            <String fx:value="chat-back-button" />
+         </styleClass>
       </Button>
       <VBox.margin>
          <Insets />
@@ -23,38 +32,41 @@
    </HBox>
 
    <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefWidth="370.0">
-      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
-         <Text fx:id="trainerNameText" underline="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Trainer">
+      <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100" spacing="45.0">
+         <Text fx:id="trainerNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Trainer" underline="true">
             </Text>
          <padding>
-            <Insets left="30.0" />
+            <Insets left="15" />
          </padding>
       </VBox>
-
-      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="185.0">
-         <TextField fx:id="trainerNameInput" text="Bob">
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="270">
+         <TextField fx:id="trainerNameInput" prefHeight="35.0" styleClass="settings-text-input" text="Bob">
             <Label fx:id="trainerNameInfo" text="Label" />
            </TextField>
          <padding>
-            <Insets right="30.0" />
+            <Insets left="20.0" right="15.0" />
          </padding>
       </VBox>
    </HBox>
 
     <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="370.0">
-        <ImageView fx:id="trainerSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../spritePlacehoder.png" />
-            </image>
-        </ImageView>
+       <ImageView fx:id="trainerSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+          <Image url="@../spritePlacehoder.png" />
+       </ImageView>
     </HBox>
 
    <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
       <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" HBox.hgrow="ALWAYS">
-         <Button fx:id="saveChangesButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="settings-button, general-button" text="%saveChanges">
-         </Button>
-         <Button fx:id="deleteTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" styleClass="remove-button, general-button" text="%deleteTrainer">
-         </Button>
+         <Button fx:id="saveChangesButton" mnemonicParsing="false" stylesheets="@css/style.css" text="%saveChanges">
+            <styleClass>
+               <String fx:value="kgm-general-button-blue" />
+               <String fx:value="settings-button" />
+            </styleClass></Button>
+         <Button fx:id="deleteTrainerButton" mnemonicParsing="false" text="%deleteTrainer">
+            <styleClass>
+               <String fx:value="kgm-general-button-red" />
+               <String fx:value="settings-button" />
+            </styleClass></Button>
          <padding>
             <Insets bottom="30.0" />
          </padding>
