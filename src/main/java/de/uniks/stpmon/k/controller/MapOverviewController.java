@@ -43,9 +43,8 @@ public class MapOverviewController extends ToastedController {
     TextDeliveryService textDeliveryService;
 
 
-    private BufferedImage renderedMap;
     private Image map;
-    private Region currentRegion = regionStorage.getRegion();
+    private Region currentRegion;
     
     @Inject
     public MapOverviewController() {
@@ -55,18 +54,9 @@ public class MapOverviewController extends ToastedController {
     public void init() {
         super.init();
 
-        subscribe(
-            textureSetService.createMap(currentRegion),
-            tileMap -> {
-                System.out.println(tileMap);
-                renderedMap = tileMap.renderMap();
-                System.out.println("map is rendered");
+        currentRegion = regionStorage.getRegion();
 
-            }, err -> {
-                handleError(err);
-                System.out.println(err);
-            }
-        );
+
 
         subscribe(
             textDeliveryService.getRouteTextData(currentRegion),
@@ -84,12 +74,24 @@ public class MapOverviewController extends ToastedController {
         
         regionNameLabel.setText(currentRegion.name());
 
-        map = SwingFXUtils.toFXImage(renderedMap, null);
-        mapOverviewImage.setImage(map);
-        mapOverviewImage.setFitHeight(300);
-        mapOverviewImage.setFitWidth(500);
-        mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
+
+        subscribe(
+            textureSetService.createMap(currentRegion),
+            tileMap -> {
+                BufferedImage renderedMap = tileMap.renderMap();
+                map = SwingFXUtils.toFXImage(renderedMap, null);
+                mapOverviewImage.setImage(map);
+                mapOverviewImage.setFitHeight(300);
+                mapOverviewImage.setFitWidth(500);
+                mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
+            }, err -> {
+                handleError(err);
+                System.out.println(err);
+            }
+        );
         mapOverviewContent.setStyle("-fx-background-color: black");
+
+        System.out.println("test");
 
         closeButton.setOnAction(click -> closeMap());
         return parent;
