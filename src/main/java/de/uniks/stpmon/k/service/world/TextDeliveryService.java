@@ -24,7 +24,7 @@ public class TextDeliveryService {
     }
 
 
-    public Observable<RouteText> getTileMapData(IMapProvider mapProvider) {
+    public Observable<RouteText> getRouteTextData(IMapProvider mapProvider) {
         TileMapData mapData = mapProvider.map();
         Observable<RouteText> routeTextObservable = Observable.empty();
         System.out.println(mapData.tilesets());

@@ -69,7 +69,7 @@ public class MapOverviewController extends ToastedController {
         );
 
         subscribe(
-            textDeliveryService.getTileMapData(currentRegion),
+            textDeliveryService.getRouteTextData(currentRegion),
             data -> {
                 System.out.println(data);
             }, err -> {
