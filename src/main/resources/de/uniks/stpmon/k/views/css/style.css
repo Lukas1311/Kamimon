@@ -860,6 +860,11 @@ Load fonts
 	-fx-font-size: 20px;
 }
 
+/* -------------------- Loading Screen for Region -------------------- */
+.progress-bar {
+    -fx-accent: black;
+}
+
 
 
 
