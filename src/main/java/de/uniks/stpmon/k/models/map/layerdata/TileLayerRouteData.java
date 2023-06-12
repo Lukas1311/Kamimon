@@ -2,7 +2,9 @@ package de.uniks.stpmon.k.models.map.layerdata;
 
 import java.util.List;
 
-public record LayerDataRoute(
+import de.uniks.stpmon.k.models.map.Property;
+
+public record TileLayerRouteData(
     int id,
     String name,
     List<ObjectData> objects,
@@ -13,4 +15,4 @@ public record LayerDataRoute(
     boolean visible,
     String draworder,
     List<Property> properties
-) implements ITileLayerData {}
+) {}

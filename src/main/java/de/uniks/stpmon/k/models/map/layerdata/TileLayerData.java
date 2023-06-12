@@ -1,6 +1,8 @@
-package de.uniks.stpmon.k.models.map;
+package de.uniks.stpmon.k.models.map.layerdata;
 
 import java.util.List;
+
+import de.uniks.stpmon.k.models.map.Property;
 
 /**
  * @param chunks     Array of chunks (optional). tilelayer only.
