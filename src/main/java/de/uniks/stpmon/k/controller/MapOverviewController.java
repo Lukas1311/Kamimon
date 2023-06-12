@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
@@ -41,13 +42,10 @@ public class MapOverviewController extends ToastedController {
     @Inject
     TextDeliveryService textDeliveryService;
 
-    // private BufferedImage renderedMap;
+
+    private BufferedImage renderedMap;
     private Image map;
-
-    private final String REGION_TEXT = "Welcome to the enchanting region of Albertania! "
-                                     + "This beautiful area is renowned for its breathtaking "
-                                     + "landscapes and rich diversity of Kamimon.";
-
+    private Region currentRegion = regionStorage.getRegion();
     
     @Inject
     public MapOverviewController() {
@@ -57,25 +55,12 @@ public class MapOverviewController extends ToastedController {
     public void init() {
         super.init();
 
-        System.out.println("init");
-    }
-
-    @Override
-    public Parent render() {
-        final Parent parent = super.render();
-        mapOverviewContent.setStyle("-fx-background-color: black");
-
         subscribe(
-            textureSetService.createMap(regionStorage.getRegion()),
+            textureSetService.createMap(currentRegion),
             tileMap -> {
                 System.out.println(tileMap);
-                BufferedImage renderedMap = tileMap.renderMap();
+                renderedMap = tileMap.renderMap();
                 System.out.println("map is rendered");
-                map = SwingFXUtils.toFXImage(renderedMap, null);
-                mapOverviewImage.setImage(map);
-                mapOverviewImage.setFitHeight(300);
-                mapOverviewImage.setFitWidth(500);
-                mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());        
 
             }, err -> {
                 handleError(err);
@@ -84,15 +69,27 @@ public class MapOverviewController extends ToastedController {
         );
 
         subscribe(
-            textDeliveryService.getTileMapData(regionStorage.getRegion()),
+            textDeliveryService.getTileMapData(currentRegion),
             data -> {
                 System.out.println(data);
             }, err -> {
                 System.out.println(err);
             }
         );
+    }
 
-        regionDescription.setText(REGION_TEXT);
+    @Override
+    public Parent render() {
+        final Parent parent = super.render();
+        
+        regionNameLabel.setText(currentRegion.name());
+
+        map = SwingFXUtils.toFXImage(renderedMap, null);
+        mapOverviewImage.setImage(map);
+        mapOverviewImage.setFitHeight(300);
+        mapOverviewImage.setFitWidth(500);
+        mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
+        mapOverviewContent.setStyle("-fx-background-color: black");
 
         closeButton.setOnAction(click -> closeMap());
         return parent;
