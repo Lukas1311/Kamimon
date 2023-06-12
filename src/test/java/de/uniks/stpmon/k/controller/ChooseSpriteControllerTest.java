@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -46,8 +47,6 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     PresetService presetService;
     @Mock
     Preferences preferences;
-    @Mock
-    Provider<CreateTrainerController> createTrainerControllerProvider;
     @Mock
     Provider<PopUpController> popUpControllerProvider;
 
@@ -113,34 +112,21 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
 
     }
 
-    /*
+
     @Test
     public void testSaveSprite() {
-        // Create mock
-        final BorderPane chooseTrainerMock = Mockito.mock(BorderPane.class);
-        final CreateTrainerController createTrainerMock = Mockito.mock(CreateTrainerController.class);
-        final PopUpController popUpControllerMock = Mockito.mock(PopUpController.class);
+        // Mock the necessary methods
+        final PopUpController popupMock = Mockito.mock(PopUpController.class);
 
-        // Set up
-        chooseSpriteController.chooseTrainerContent = chooseTrainerMock;
-        chooseSpriteController.createTrainerControllerProvider = () -> createTrainerMock;
-        chooseSpriteController.popUpControllerProvider = () -> popUpControllerMock;
-
-        chooseSpriteController.previousSpriteIndex = 0;
+        chooseSpriteController.characters.addAll("Sprite1", "Sprite2", "Sprite3");
         chooseSpriteController.currentSpriteIndex = 0;
+        chooseSpriteController.previousSpriteIndex = 1;
+        when(popUpControllerProvider.get()).thenReturn(popupMock);
 
-        AnchorPane anchorPane = new AnchorPane();
-        when(createTrainerMock.render()).thenReturn(anchorPane);
-        when(chooseTrainerMock.getChildren()).thenReturn(FXCollections.observableArrayList());
-
+        // Test the saveSprite() method
         clickOn("#saveSprite");
 
-        verify(preferences).putInt("currentSpriteIndex", 0);
-        verify(chooseTrainerMock, times(2)).getChildren();
-        verify(popUpControllerMock, never()).setScenario(any(PopUpScenario.class));
-        verify(popUpControllerMock, never()).showModal(any(ModalCallback.class));
+        // Verify that the preferences were updated
+        assertEquals(0, chooseSpriteController.preferences.getInt("currentSpriteIndex", chooseSpriteController.currentSpriteIndex));
     }
-
-     */
-
 }

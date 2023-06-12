@@ -25,7 +25,7 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <StackPane prefHeight="244.0" prefWidth="244.0">
+            <StackPane fx:id="spriteContainer" prefHeight="244.0" prefWidth="244.0">
                   <ImageView fx:id="spriteImage" pickOnBounds="true" preserveRatio="true" />
             </StackPane>
             <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#toRight" prefHeight="30.0" prefWidth="40.0" styleClass="kgm-general-button-white" text="&gt;" HBox.hgrow="NEVER">

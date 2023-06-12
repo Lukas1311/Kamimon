@@ -3,30 +3,24 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import okhttp3.ResponseBody;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -43,6 +37,8 @@ public class ChooseSpriteController extends ToastedController {
     @FXML
     public Button spriteLeft;
     @FXML
+    public StackPane spriteContainer;
+    @FXML
     public ImageView spriteImage;
     @FXML
     public Button spriteRight;
@@ -55,11 +51,15 @@ public class ChooseSpriteController extends ToastedController {
     PresetService presetService;
     @Inject
     Preferences preferences;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     Provider<CreateTrainerController> createTrainerControllerProvider;
     @Inject
     Provider<PopUpController> popUpControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     @Inject
     public ChooseSpriteController() {
@@ -110,45 +110,13 @@ public class ChooseSpriteController extends ToastedController {
      * Set up a subscription to fetch the character file for the selected character using the presetService
      */
     public void loadSprite(String selectedCharacter) {
-        disposables.add(presetService.getCharacterFile(selectedCharacter)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(this::setSpriteImage, this::handleError));
+        subscribe(
+            presetService.getCharacterFile(selectedCharacter),
+            response -> setSpriteImage(spriteContainer, spriteImage, 0, 3, response),
+            this::handleError
+        );
     }
 
-    /**
-     * Processes the ResponseBody containing the image data for the sprite
-     */
-    public void setSpriteImage(ResponseBody responseBody) {
-        if (responseBody != null) {
-            try (responseBody) {
-                // Read the image data from the response body and create a BufferedImage
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(responseBody.bytes());
-                BufferedImage bufferedImage = ImageIO.read(inputStream);
-                int spriteWidth = 20;
-                int spriteHeight = 35;
-                int spriteX = 48;
-                int spriteY = 0;
-                // Extract the sprite from the original image
-                BufferedImage image = bufferedImage.getSubimage(spriteX, spriteY, spriteWidth, spriteHeight);
-
-                // Scale the image
-                BufferedImage scaledImage = ImageUtils.scaledImage(image, IMAGE_SCALE);
-
-                // Convert the BufferedImage to JavaFX Image
-                Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
-
-                // Set the image
-                spriteImage.setImage(fxImage);
-                spriteImage.setFitHeight(260);
-                spriteImage.setFitWidth(300);
-
-                // Place the sprite in the center of the screen
-                StackPane.setMargin(spriteImage, new Insets(0, 0, 0, 35));
-            } catch (IOException e) {
-                handleError(e);
-            }
-        }
-    }
 
     /**
      * Navigate to the previous sprite character
@@ -195,15 +163,26 @@ public class ChooseSpriteController extends ToastedController {
                 // Save the currentSpriteIndex to the preferences
                 preferences.putInt("currentSpriteIndex", currentSpriteIndex);
                 // Render the createTrainerController
-                chooseTrainerContent.getChildren().clear();
-                chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+                if (regionStorage.getRegion() == null) {
+                    chooseTrainerContent.getChildren().clear();
+                    chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+                } else {
+                    chooseTrainerContent.getChildren().clear();
+                    hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+
+                }
             });
         } else {
             // Save the previousSpriteIndex to the preferences
             preferences.putInt("currentSpriteIndex", previousSpriteIndex);
             // Render the createTrainerController
-            chooseTrainerContent.getChildren().clear();
-            chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+            if (regionStorage.getRegion() == null) {
+                chooseTrainerContent.getChildren().clear();
+                chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+            } else {
+                chooseTrainerContent.getChildren().clear();
+                hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+            }
         }
     }
 
