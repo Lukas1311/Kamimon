@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="mapOverviewContent" prefHeight="450.0" prefWidth="750.0" maxHeight="450.0" maxWidth="750.0"  xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="mapOverviewContent" maxHeight="450.0" maxWidth="750.0" prefHeight="450.0" prefWidth="750.0"
+   xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
    fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
    <top>
       <StackPane prefHeight="25.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -43,8 +44,11 @@
       </VBox>
    </center>
    <bottom>
-      <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <Text fx:id="regionDescription" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: lightgrey;" BorderPane.alignment="CENTER">
+         <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="50.0" right="50.0" />
+         </BorderPane.margin>
       </HBox>
    </bottom>
 </BorderPane>
