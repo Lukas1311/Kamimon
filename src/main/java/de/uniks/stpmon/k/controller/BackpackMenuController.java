@@ -40,20 +40,18 @@ public class BackpackMenuController extends Controller {
             backpackMenuOptions.add(MONSTERS);
             backpackMenuOptions.add(MAP);
         }
-
-        backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
         backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
+        double totalHeight = (backpackMenuOptions.size()) * 33;
+        backpackMenuListView.setPrefHeight(totalHeight);
 
         backpackMenuListView.minHeightProperty().bind(backpackMenuListView.prefHeightProperty());
         backpackMenuListView.maxHeightProperty().bind(backpackMenuListView.prefHeightProperty());
+        backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
+
 
         return parent;
     }
 
-    public void setHeight(double height) {
-        double totalHeight = (backpackMenuOptions.size()) * height;
-        backpackMenuListView.setPrefHeight(totalHeight);
-    }
 
     protected void openOption(BackpackMenuOption option) {
         switch (option) {
@@ -62,14 +60,6 @@ public class BackpackMenuController extends Controller {
             case MONSTERS -> dummyMethod();
             case MAP -> dummyMethod();
         }
-    }
-
-    public boolean isVisible() {
-        return backpackMenuHbox.isVisible();
-    }
-
-    public void setVisability(boolean isVisible) {
-        backpackMenuHbox.setVisible(isVisible);
     }
 
     public int getId(BackpackMenuOption option) {

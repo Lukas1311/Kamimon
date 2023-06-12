@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -17,7 +16,7 @@ public class BackpackMenuEntryController extends Controller {
     @FXML
     public Text backpackMenuText;
     @FXML
-    public HBox backpackMenuHbox;
+    public HBox backpackMenuEntryHbox;
     final BackpackMenuOption entry;
     final BackpackMenuController backpackMenuController;
 
@@ -32,16 +31,10 @@ public class BackpackMenuEntryController extends Controller {
     }
 
     @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
         setIds();
         backpackMenuText.setText(backpackMenuController.translateString(entry.toString()));
-        Platform.runLater(() -> backpackMenuController.setHeight(backpackMenuHbox.heightProperty().get() + 10));
         parent.setOnMouseClicked(e -> openOption());
 
         return parent;

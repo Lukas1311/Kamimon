@@ -15,7 +15,7 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,18 +37,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(backpackMenuController);
         stage.requestFocus();
-    }
-
-    @Test
-    void isVisible() {
-        boolean isVisible = backpackMenuController.isVisible();
-        assertTrue(isVisible);
-    }
-
-    @Test
-    void setVisabiltiy() {
-        backpackMenuController.setVisability(false);
-        assertFalse(backpackMenuController.backpackMenuHbox.isVisible());
     }
 
     @Test

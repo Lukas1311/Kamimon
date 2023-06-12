@@ -18,8 +18,9 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -34,10 +35,11 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MinimapController minimapController;
     @Spy
-    @SuppressWarnings("unused")
     BackpackController backpackController;
-    @Mock
+    @Spy
     Provider<BackpackMenuController> backpackMenuControllerProvider;
+    @Mock
+    Provider<IngameController> ingameControllerProvider;
     @Mock
     @SuppressWarnings("unused")
     WorldController worldController;
@@ -58,7 +60,36 @@ public class IngameControllerTest extends ApplicationTest {
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(ingameController);
         stage.requestFocus();
+    }
 
+    @Test
+    void showBackPackMenu() {
+        //mock
+        final HybridController hybridController = Mockito.mock(HybridController.class);
+        when(hybridControllerProvider.get()).thenReturn(hybridController);
+
+        backpackController.backpackMenuControllerProvider = backpackMenuControllerProvider;
+        backpackController.ingameControllerProvider = ingameControllerProvider;
+
+        BackpackMenuController backpackMenuController = Mockito.mock(BackpackMenuController.class);
+        when(backpackController.backpackMenuControllerProvider.get()).thenReturn(backpackMenuController);
+
+        when(backpackMenuController.render()).thenReturn(new HBox());
+
+        when(backpackController.ingameControllerProvider.get()).thenReturn(ingameController);
+
+        //check if backpackController appears
+        assertEquals(1, ingameController.ingameWrappingHBox.getChildren().size());
+        //action
+        clickOn("#backpackImage");
+        assertEquals(2, ingameController.ingameWrappingHBox.getChildren().size());
+
+
+        clickOn("#backpackImage");
+
+        //assertFalse(backMenuHbox.isVisible());
+
+        assertEquals(1, ingameController.ingameWrappingHBox.getChildren().size());
 
     }
 
@@ -68,32 +99,4 @@ public class IngameControllerTest extends ApplicationTest {
         assertNotNull(ingame);
     }
 
-    @Test
-    void showBackPackMenu() {
-        //mock
-        final HybridController hybridController = Mockito.mock(HybridController.class);
-        when(hybridControllerProvider.get()).thenReturn(hybridController);
-        BackpackMenuController backpackMenuController = Mockito.mock(BackpackMenuController.class);
-        when(backpackMenuControllerProvider.get()).thenReturn(backpackMenuController);
-
-        when(backpackMenuController.render()).thenReturn(new HBox());
-
-        //check if backpackController appears
-        assertEquals(1, ingameController.ingameWrappingHBox.getChildren().size());
-        //action
-        clickOn("#backpackImage");
-        assertEquals(2, ingameController.ingameWrappingHBox.getChildren().size());
-
-        //check for visibility
-        HBox backMenuHbox = (HBox) ingameController.ingameWrappingHBox.getChildren().get(0);
-        doAnswer(invocation -> {
-            backMenuHbox.setVisible(false);
-            return null;
-        }).when(backpackMenuController).setVisability(anyBoolean());
-
-        clickOn("#backpackImage");
-
-        assertFalse(backMenuHbox.isVisible());
-
-    }
 }
