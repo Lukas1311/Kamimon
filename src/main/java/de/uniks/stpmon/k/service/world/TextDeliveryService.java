@@ -5,7 +5,6 @@ import javax.inject.Singleton;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.world.RouteText;
@@ -23,21 +22,16 @@ public class TextDeliveryService {
 
     }
 
-
     public Observable<RouteText> getRouteTextData(IMapProvider mapProvider) {
         TileMapData mapData = mapProvider.map();
-        Observable<RouteText> routeTextObservable = Observable.empty();
-        System.out.println(mapData.tilesets());
         TileLayerData routeLayerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
         
-        for (ObjectData obj : routeLayerData.objects()) {
-            RouteText.Builder builder = RouteText.builder().setData(obj);
-            RouteText routeText = builder.build();
-            routeTextObservable = routeTextObservable.concatWith(Observable.just(routeText));
-        }
-        return routeTextObservable;
+        return Observable.fromIterable(routeLayerData.objects())
+            .flatMap(obj -> {
+                RouteText.Builder builder = RouteText.builder().setData(obj);
+                return Observable.just(builder.build());
+            });
     }
-
 
     public String getRouteText() {
         System.out.println("test");
