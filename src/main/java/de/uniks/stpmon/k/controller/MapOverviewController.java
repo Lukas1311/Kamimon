@@ -56,14 +56,17 @@ public class MapOverviewController extends ToastedController {
 
         currentRegion = regionStorage.getRegion();
 
-
-
         subscribe(
-            textDeliveryService.getRouteTextData(currentRegion),
-            data -> {
-                System.out.println(data);
+            textDeliveryService.getRouteData(currentRegion),
+            route -> {
+                // TODO: here you could filter each route for id or whatever
+                // and then calculate the position on the map with the given values inside the data
+                // e.g. the 3 little isles on the left of Albertania are the "Coupe Archipelago"
+                // and they have these values height=0, width=0, x=16, y=112
+                System.out.println(route);
             }, err -> {
                 System.out.println(err);
+                // TODO: if you need to set fxelements with text then better put this whole method into render
             }
         );
     }
