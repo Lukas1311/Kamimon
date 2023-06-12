@@ -5,7 +5,7 @@ import javax.inject.Singleton;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.layerdata.TileLayerRouteData;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.PresetService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -22,13 +22,13 @@ public class TextDeliveryService {
     }
 
 
-    public Observable<TileLayerRouteData> getTileMapData(IMapProvider mapProvider) {
+    public Observable<TileLayerData> getTileMapData(IMapProvider mapProvider) {
         TileMapData mapData = mapProvider.map();
         System.out.println(mapData.tilesets());
-        TileLayerRouteData layerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
+        TileLayerData layerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
         System.out.println(layerData);
 
-        Observable<TileLayerRouteData> layerObservable = Observable.empty();
+        Observable<TileLayerData> layerObservable = Observable.empty();
         return layerObservable;
     }
 
