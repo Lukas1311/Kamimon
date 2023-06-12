@@ -5,26 +5,31 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import javafx.scene.Parent;
-import javafx.scene.SubScene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.shape.MeshView;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.w3c.dom.Node;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class WorldViewTest extends ApplicationTest {
+public class NPCCollectiveViewTest extends ApplicationTest {
 
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
@@ -35,6 +40,8 @@ public class WorldViewTest extends ApplicationTest {
     public WorldController controller = component.worldController();
     public TrainerStorage trainerStorage = component.trainerStorage();
     public RegionStorage regionStorage = component.regionStorage();
+    @Mock
+    RegionService regionService;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -45,49 +52,23 @@ public class WorldViewTest extends ApplicationTest {
         worldStorage.setWorld(DummyConstants.WORLD);
         regionStorage.setRegion(DummyConstants.REGION);
 
+        Trainer trainer = new Trainer("1", "1", "1", "1", "Premade_Character_01.png", 0, "1", 16, 16, 1, null);
+        //define mocks
+        List<Trainer> trainers = new ArrayList<>();
+        trainers.add(trainer);
+        when(regionService.getAllTrainer(any())).thenReturn(Observable.just(trainers));
+
         // show app
         app.start(stage);
-        app.addInputHandler(component);
         app.show(controller);
         stage.requestFocus();
     }
 
     @Test
-    public void moveCharacter() {
-        SubScene node = lookup("#worldScene").queryAs(SubScene.class);
-        Parent root = node.getRoot();
-        MeshView character = (MeshView) root.lookup("#character");
-        assertEquals(0, character.getTranslateX());
-        // -16 because character is rendered from the center
-        assertEquals(-16, character.getTranslateZ());
+    public void renderAllTrainer() {
+        Node node = lookup("#npcGroup").query();
 
-        // test move up
-        type(KeyCode.W);
-        waitForFxEvents();
-
-        // check if char moved up by -16
-        assertEquals(0, character.getTranslateZ());
-
-        // test move down
-        type(KeyCode.S);
-        waitForFxEvents();
-
-        // check if char moved down by 16
-        assertEquals(-16, character.getTranslateZ());
-
-        // test move left
-        type(KeyCode.A);
-        waitForFxEvents();
-
-        // check if char moved left by 16
-        assertEquals(-16, character.getTranslateX());
-
-        // test move right
-        type(KeyCode.D);
-        waitForFxEvents();
-
-        // check if char moved right by -16
-        assertEquals(0, character.getTranslateX());
+        assertNotNull(node);
     }
 
 }

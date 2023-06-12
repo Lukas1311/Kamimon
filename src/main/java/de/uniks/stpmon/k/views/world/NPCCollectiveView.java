@@ -43,6 +43,7 @@ public class NPCCollectiveView extends EntityView {
                         NPCView npcV = getNPCView();
                         npcV.getProvider().setTrainer(npc);
                         npcV.init();
+                        npcGroup.setId("npcGroup");
                         npcGroup.getChildren().add(npcV.render());
                     }
                 })));
