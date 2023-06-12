@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -59,6 +60,8 @@ public class ChooseSpriteController extends ToastedController {
     RegionStorage regionStorage;
     @Inject
     TrainerService trainerService;
+    @Inject
+    TrainerStorage trainerStorage;
 
     @Inject
     Provider<CreateTrainerController> createTrainerControllerProvider;
@@ -174,7 +177,7 @@ public class ChooseSpriteController extends ToastedController {
                 if (!result) return;
                 // Save the currentSpriteIndex to the preferences
                 preferences.putInt("currentSpriteIndex", currentSpriteIndex);
-                createTrainerControllerProvider.get().setTrainerImage(characters.get(currentSpriteIndex));
+                closeAndReturn();
                 disposables.add(
                         trainerService.setImage(characters.get(currentSpriteIndex))
                                 .observeOn(FX_SCHEDULER)
