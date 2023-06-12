@@ -1,10 +1,11 @@
 package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
-import de.uniks.stpmon.k.models.map.ChunkData;
-import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.ITileLayerData;
+import de.uniks.stpmon.k.models.map.layerdata.LayerDataMap;
 import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.*;
@@ -29,7 +30,7 @@ public class TileMap {
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
-        TileLayerData layer = data.layers().isEmpty() ? null : data.layers().get(0);
+        LayerDataMap layer = (LayerDataMap) (data.layers().isEmpty() ? null : data.layers().get(0));
         this.width = layer != null ? layer.width() : 0;
         this.height = layer != null ? layer.height() : 0;
     }
@@ -69,7 +70,8 @@ public class TileMap {
         BufferedImage mergedImage = createImage(
                 width, height);
         Graphics2D graphics = mergedImage.createGraphics();
-        for (TileLayerData layer : data.layers()) {
+        for (ITileLayerData tileLayer : data.layers()) {
+            LayerDataMap layer = (LayerDataMap) tileLayer;
             if (layer.chunks() == null) {
                 continue;
             }
@@ -81,7 +83,7 @@ public class TileMap {
         return mergedImage;
     }
 
-    public BufferedImage renderLayer(TileLayerData layer) {
+    public BufferedImage renderLayer(LayerDataMap layer) {
         int width = layer.width();
         int height = layer.height();
         BufferedImage chunkImage = createImage(

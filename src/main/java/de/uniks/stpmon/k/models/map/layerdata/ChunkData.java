@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.models.map;
+package de.uniks.stpmon.k.models.map.layerdata;
 
 import java.util.List;
 

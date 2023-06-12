@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.world;
 
-import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.Tile;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.layerdata.Property;
 import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
