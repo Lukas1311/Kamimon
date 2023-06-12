@@ -2,9 +2,6 @@ package de.uniks.stpmon.k.models.map;
 
 import java.util.List;
 
-import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
-import de.uniks.stpmon.k.models.map.layerdata.Property;
-
 /**
  * @param chunks     Array of chunks (optional). tilelayer only.
  * @param height     Row count. Same as map height for fixed-size maps. tilelayer only.

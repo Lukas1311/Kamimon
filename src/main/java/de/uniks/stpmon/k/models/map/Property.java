@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.models.map.layerdata;
+package de.uniks.stpmon.k.models.map;
 
 /**
  * @param name  Name of the property
