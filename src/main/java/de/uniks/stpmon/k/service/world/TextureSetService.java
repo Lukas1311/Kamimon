@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,12 +38,12 @@ public class TextureSetService {
                 .map((body) -> new CharacterSet(name, body));
     }
 
-    public Observable<Map<String, CharacterSet>> createAllCharacters() {
+    public Observable<List<CharacterSet>> createAllCharacters() {
         return presetService.getCharacters()
                 .map((characters) -> characters.stream()
                         .map(this::createCharacter)
                         .collect(Collectors.toList())).flatMap(Observable::merge)
-                .collect(Collectors.toMap(CharacterSet::name, Function.identity()))
+                .collect(Collectors.toList())
                 .toObservable().onErrorResumeNext((error) -> createAllCharacters()
                         .delaySubscription(1, TimeUnit.MINUTES));
     }

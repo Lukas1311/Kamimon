@@ -14,7 +14,6 @@ import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.world.WorldSet;
 
 import java.awt.image.BufferedImage;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -138,6 +137,5 @@ public class DummyConstants {
     public static final WorldSet WORLD = new WorldSet(
             new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
             new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
-            List.of(),
-            Collections.emptyMap());
+            List.of());
 }
