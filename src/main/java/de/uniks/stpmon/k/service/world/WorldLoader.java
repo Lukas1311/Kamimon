@@ -11,6 +11,8 @@ import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
 import de.uniks.stpmon.k.world.PropMap;
 import de.uniks.stpmon.k.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
@@ -35,6 +37,8 @@ public class WorldLoader {
     WorldStorage worldStorage;
     @Inject
     TextureSetService textureSetService;
+    @Inject
+    CacheManager cacheManager;
 
     @Inject
     public WorldLoader() {
@@ -67,13 +71,14 @@ public class WorldLoader {
         if (area == null || area.map() == null) {
             return Observable.empty();
         }
-        return textureSetService.createAllCharacters().flatMap(
-                (trainers) -> textureSetService.createMap(area).map((tileMap) -> {
-                    BufferedImage image = tileMap.renderMap();
-                    PropMap propMap = new PropMap(tileMap);
-                    List<TileProp> props = propMap.createProps();
-                    return new WorldSet(tileMap.getLayers().get(0), image, props, trainers);
-                }));
+        // Init cache
+        CharacterSetCache cache = cacheManager.characterSetCache();
+        return cache.onInitialized().andThen(textureSetService.createMap(area).map((tileMap) -> {
+            BufferedImage image = tileMap.renderMap();
+            PropMap propMap = new PropMap(tileMap);
+            List<TileProp> props = propMap.createProps();
+            return new WorldSet(tileMap.getLayers().get(0), image, props);
+        }));
     }
 
     public Observable<Trainer> tryEnterRegion(Region region) {
