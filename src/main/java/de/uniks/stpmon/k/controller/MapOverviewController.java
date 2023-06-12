@@ -32,7 +32,7 @@ public class MapOverviewController extends ToastedController {
     @FXML
     VBox mapContainer;
     @FXML
-    Text buildingDescription;
+    Text regionDescription;
 
     @Inject
     TextureSetService textureSetService;
@@ -43,6 +43,10 @@ public class MapOverviewController extends ToastedController {
 
     // private BufferedImage renderedMap;
     private Image map;
+
+    private final String REGION_TEXT = "Welcome to the enchanting region of Albertania! "
+                                     + "This beautiful area is renowned for its breathtaking "
+                                     + "landscapes and rich diversity of Kamimon.";
 
     
     @Inject
@@ -87,15 +91,8 @@ public class MapOverviewController extends ToastedController {
                 System.out.println(err);
             }
         );
-        // System.out.println("test");
 
-
-
-        // mapOverviewImage.setImage(map);
-
-        // System.out.println("test");
-
-        // mapContainer.getChildren().add(mapOverviewImage);
+        regionDescription.setText(REGION_TEXT);
 
         closeButton.setOnAction(click -> closeMap());
         return parent;

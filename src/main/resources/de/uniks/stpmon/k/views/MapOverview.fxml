@@ -44,7 +44,7 @@
    </center>
    <bottom>
       <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <Text fx:id="buildingDescription" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+         <Text fx:id="regionDescription" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       </HBox>
    </bottom>
 </BorderPane>
