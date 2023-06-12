@@ -12,10 +12,14 @@
                     </HBox>
                 </top>
             <right>
-                    <VBox fx:id="rightVbox" prefHeight="310.0" prefWidth="120" BorderPane.alignment="CENTER">
-                  <BorderPane.margin>
-                     <Insets top="-40.0" />
-                  </BorderPane.margin></VBox>
+
+                <VBox fx:id="rightVbox" prefHeight="310.0" prefWidth="120" BorderPane.alignment="CENTER">
+                    <HBox fx:id="ingameWrappingHBox"></HBox>
+                    <BorderPane.margin>
+                        <Insets top="-40.0"/>
+                    </BorderPane.margin>
+                </VBox>
+
             </right>
             </BorderPane>
         </StackPane>

@@ -3,11 +3,9 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -29,18 +27,17 @@ public class IngameController extends PortalController {
     public Text inGameText;
     @FXML
     public VBox rightVbox;
+    @FXML
+    public HBox ingameWrappingHBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
-    MonsterBarController monsterBar;
-
+    MonsterBarController monsterBarController;
     @Inject
-    MinimapController miniMap;
-
+    MinimapController minimapController;
     @Inject
-    BackpackController backPack;
-
+    BackpackController backpackController;
     @Inject
     TrainerStorage trainerStorage;
 
@@ -56,9 +53,9 @@ public class IngameController extends PortalController {
         super.init();
 
         worldController.init();
-        monsterBar.init();
-        miniMap.init();
-        backPack.init();
+        monsterBarController.init();
+        minimapController.init();
+        backpackController.init();
     }
 
     @Override
@@ -66,9 +63,9 @@ public class IngameController extends PortalController {
         super.destroy();
 
         worldController.destroy();
-        monsterBar.destroy();
-        miniMap.destroy();
-        backPack.destroy();
+        monsterBarController.destroy();
+        minimapController.destroy();
+        backpackController.destroy();
     }
 
     @Override
@@ -80,23 +77,24 @@ public class IngameController extends PortalController {
         if (world != null) {
             ingameStack.getChildren().add(0, world);
         }
-        Parent monsterBar = this.monsterBar.render();
+        Parent monsterBar = this.monsterBarController.render();
         // Null if unit testing world view
         if (monsterBar != null) {
             pane.getChildren().add(monsterBar);
         }
 
 
-        Parent miniMap = this.miniMap.render();
+        Parent miniMap = this.minimapController.render();
         // Null if unit testing world view
         if (miniMap != null) {
-            rightVbox.getChildren().add(miniMap);
+            rightVbox.getChildren().add(0, miniMap);
         }
 
-        Parent backPack = this.backPack.render();
+        Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
-            rightVbox.getChildren().add(backPack);
+            ingameWrappingHBox.getChildren().add(backPack);
+            ingameStack.setAlignment(Pos.TOP_RIGHT);
         }
 
         return parent;
@@ -105,4 +103,13 @@ public class IngameController extends PortalController {
     public void closeSidebar() {
         hybridControllerProvider.get().forceTab(NONE);
     }
+
+    public void addBackpackMenu(HBox backpackMenu) {
+        ingameWrappingHBox.getChildren().add(0, backpackMenu);
+    }
+
+    public void removeBackpackMenu(HBox backpackMenu) {
+        ingameWrappingHBox.getChildren().remove(backpackMenu);
+    }
+
 }
