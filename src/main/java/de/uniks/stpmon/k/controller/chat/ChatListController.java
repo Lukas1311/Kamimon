@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.controller.sidebar.TabController;
 import de.uniks.stpmon.k.models.Group;
@@ -9,7 +9,6 @@ import de.uniks.stpmon.k.views.ChatCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -18,7 +17,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +32,6 @@ public class ChatListController extends TabController {
     VBox chatList;
     @Inject
     GroupService groupService;
-    @Inject
-    Provider<ChatController> chatControllerProvider;
     @Inject
     EventListener eventListener;
 

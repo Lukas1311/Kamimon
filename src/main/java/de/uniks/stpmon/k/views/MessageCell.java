@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.ChatController;
-import de.uniks.stpmon.k.controller.InvitationController;
 import de.uniks.stpmon.k.controller.MessageController;
+import de.uniks.stpmon.k.controller.chat.ChatController;
+import de.uniks.stpmon.k.controller.chat.InvitationController;
 import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import javafx.geometry.Pos;
@@ -35,10 +35,11 @@ public class MessageCell extends ListCell<Message> {
             setText(null);
         } else {
             String sender = groupUsers.get(item.sender());
-            if (item.body().startsWith("JoinInvitation")) {
+            if (item.body().startsWith(InvitationController.INVITATION_START_PATTERN)) {
                 String regionId = item.body().substring(15);
 
-                final InvitationController invitationController = new InvitationController(item, sender, regionId, chatController, resources, isOwnMessage(item));
+                final InvitationController invitationController = new InvitationController(item, sender, regionId,
+                        chatController, resources, isOwnMessage(item));
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {

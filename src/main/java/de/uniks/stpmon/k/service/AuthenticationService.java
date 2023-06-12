@@ -6,15 +6,18 @@ import de.uniks.stpmon.k.models.ErrorResponse;
 import de.uniks.stpmon.k.models.LoginResult;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
-import de.uniks.stpmon.k.service.storage.IFriendCache;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.prefs.Preferences;
 
+@Singleton
 public class AuthenticationService {
     @Inject
     TokenStorage tokenStorage;
@@ -23,12 +26,25 @@ public class AuthenticationService {
     @Inject
     UserStorage userStorage;
     @Inject
-    IFriendCache friendCache;
+    CacheManager cacheManager;
     @Inject
     Preferences preferences;
+    // Do not inject this, it is retrieved from cacheManager
+    private IFriendCache friendCache;
 
     @Inject
     public AuthenticationService() {
+    }
+
+    private Observable<LoginResult> setupCache(LoginResult old, User user) {
+        friendCache = cacheManager.requestFriends(user._id());
+        //init cache
+        return friendCache
+                // wait for cache to be initialized
+                .onInitialized()
+                // return old login result
+                .andThen(Observable.just(old));
+
     }
 
     public Observable<LoginResult> login(String username, String password, boolean rememberMe) {
@@ -40,12 +56,15 @@ public class AuthenticationService {
             //Add User to UserStorage
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
             return lr;
-        }).concatMap(old -> friendCache.init(userStorage.getUser()).map((ignore) -> old));
+        }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
 
     public Observable<Response<ErrorResponse>> logout() {
         return authApiService.logout().map(res -> {
-            friendCache.reset();
+            if (friendCache != null) {
+                friendCache.destroy();
+                friendCache = null;
+            }
             return res;
         });
     }
@@ -59,6 +78,6 @@ public class AuthenticationService {
             tokenStorage.setToken(lr.accessToken());
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
             return lr;
-        }).concatMap(old -> friendCache.init(userStorage.getUser()).map((ignore) -> old));
+        }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
 }
