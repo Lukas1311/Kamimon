@@ -15,6 +15,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,8 @@ public class TextureSetService {
                         .map(this::createCharacter)
                         .collect(Collectors.toList())).flatMap(Observable::merge)
                 .collect(Collectors.toMap(CharacterSet::name, Function.identity()))
-                .toObservable();
+                .toObservable().onErrorResumeNext((error) -> createAllCharacters()
+                        .delaySubscription(1, TimeUnit.MINUTES));
     }
 
     private static String escapeTileUrl(String str) {
