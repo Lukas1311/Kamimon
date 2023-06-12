@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.sources.IPortalController;
@@ -11,7 +12,9 @@ import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.world.PropMap;
+import de.uniks.stpmon.k.world.TileMap;
 import de.uniks.stpmon.k.world.WorldSet;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -58,6 +61,16 @@ public class WorldLoader {
         });
     }
 
+    private PropMap createProps(TileMap tileMap) {
+        List<BufferedImage> decorationLayers = tileMap.renderDecorations();
+        if (decorationLayers.isEmpty()) {
+            return new PropMap(List.of(), new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB));
+        }
+        TileMapData data = tileMap.getData();
+        PropInspector inspector = new PropInspector(data.width(), data.height());
+        return inspector.work(decorationLayers);
+    }
+
     public Observable<WorldSet> loadWorld() {
         Region region = regionStorage.getRegion();
         if (region == null) {
@@ -70,9 +83,9 @@ public class WorldLoader {
         return textureSetService.createAllCharacters().flatMap(
                 (trainers) -> textureSetService.createMap(area).map((tileMap) -> {
                     BufferedImage image = tileMap.renderMap();
-                    PropMap propMap = new PropMap(tileMap);
-                    List<TileProp> props = propMap.createProps();
-                    return new WorldSet(tileMap.getLayers().get(0), image, props, trainers);
+                    PropMap propMap = createProps(tileMap);
+                    List<TileProp> props = propMap.props();
+                    return new WorldSet(tileMap.renderFloor(), image, props, trainers);
                 }));
     }
 

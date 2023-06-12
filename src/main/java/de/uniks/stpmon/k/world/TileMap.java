@@ -12,12 +12,16 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
+    private final Set<TileLayerData> floorLayers;
+    private final Set<TileLayerData> decorationLayers;
     private final int tileWidth;
     private final int tileHeight;
     private final int width;
@@ -29,9 +33,27 @@ public class TileMap {
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
-        TileLayerData layer = data.layers().isEmpty() ? null : data.layers().get(0);
-        this.width = layer != null ? layer.width() : 0;
-        this.height = layer != null ? layer.height() : 0;
+        int width = 0;
+        int height = 0;
+
+        this.floorLayers = new HashSet<>();
+        this.decorationLayers = new HashSet<>();
+        List<TileLayerData> layerData = data.layers();
+        for (TileLayerData layer : layerData) {
+            width = Math.max(width, layer.width());
+            height = Math.max(width, layer.height());
+            if (layer.chunks() == null) {
+                continue;
+            }
+            if (layer.name().equals(TileLayerData.GROUND_TYPE) || layer.name().equals(TileLayerData.Walls_TYPE)) {
+                floorLayers.add(layer);
+            } else {
+                decorationLayers.add(layer);
+            }
+
+        }
+        this.width = width;
+        this.height = height;
     }
 
     public TileMapData getData() {
@@ -48,6 +70,40 @@ public class TileMap {
 
     public List<BufferedImage> getLayers() {
         return layers;
+    }
+
+    public BufferedImage renderFloor() {
+        if (layers.isEmpty()) {
+            renderMap();
+        }
+        BufferedImage floorImage = createImage(
+                width, height);
+        Graphics2D floor = floorImage.createGraphics();
+        for (TileLayerData layer : floorLayers) {
+            if (layer.chunks() == null) {
+                continue;
+            }
+            BufferedImage layerImage = renderLayer(layer);
+            floor.drawImage(layerImage, layer.startx(), layer.starty(), null);
+        }
+        floor.dispose();
+        return floorImage;
+    }
+
+    public List<BufferedImage> renderDecorations() {
+        if (layers.isEmpty()) {
+            renderMap();
+        }
+        List<BufferedImage> result = new ArrayList<>();
+        List<TileLayerData> layersed = data.layers();
+        for (int i = 0; i < layersed.size(); i++) {
+            TileLayerData layer = layersed.get(i);
+            if (!decorationLayers.contains(layer)) {
+                continue;
+            }
+            result.add(layers.get(i));
+        }
+        return result;
     }
 
     public int getHeight() {

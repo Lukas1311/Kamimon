@@ -30,7 +30,12 @@ public class PropInspector {
         return new HashSet<>(groups.values());
     }
 
-    public List<TileProp> work(BufferedImage image) {
+    public PropMap work(BufferedImage image) {
+        return work(List.of(image));
+    }
+
+    public PropMap work(List<BufferedImage> decorationLayers) {
+        BufferedImage image = decorationLayers.get(0);
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = 0; y < grid.getHeight(); y++) {
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
@@ -59,7 +64,7 @@ public class PropInspector {
         return createProps(image);
     }
 
-    private List<TileProp> createProps(BufferedImage image) {
+    private PropMap createProps(BufferedImage image) {
         List<TileProp> props = new ArrayList<>();
         for (HashSet<Integer> group : uniqueGroups()) {
             int minX = Integer.MAX_VALUE;
@@ -90,7 +95,7 @@ public class PropInspector {
 
             props.add(new TileProp(img, minX, minY, width, height));
         }
-        return props;
+        return new PropMap(props, image);
     }
 
     public void tryMergeGroups(int x, int y, int otherX, int otherY) {

@@ -53,7 +53,7 @@ public class PropInspectionTest {
         assertEquals(32, sourceImage.getWidth());
         assertEquals(48, sourceImage.getHeight());
 
-        List<TileProp> props = propInspector.work(sourceImage);
+        List<TileProp> props = propInspector.work(sourceImage).props();
         assertEquals(1, props.size());
         TileProp prop = props.get(0);
         assertEquals(0, prop.x());
