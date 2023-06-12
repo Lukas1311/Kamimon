@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -22,19 +23,18 @@ public class TextDeliveryService {
 
     }
 
-    public Observable<RouteText> getRouteTextData(IMapProvider mapProvider) {
+    public Observable<RouteData> getRouteData(IMapProvider mapProvider) {
         TileMapData mapData = mapProvider.map();
         TileLayerData routeLayerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
         
         return Observable.fromIterable(routeLayerData.objects())
-            .flatMap(obj -> {
-                RouteText.Builder builder = RouteText.builder().setData(obj);
-                return Observable.just(builder.build());
+            .map(obj -> {
+                RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
+                return routeDataBuilder.build();
             });
     }
 
     public String getRouteText() {
-        System.out.println("test");
         System.out.println("test");
         return "";
     }
