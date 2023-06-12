@@ -6,9 +6,12 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -61,6 +64,11 @@ public class TrainerManagementController extends ToastedController {
     @Inject
     TrainerService trainerService;
     @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    IResourceService resourceService;
+
+    @Inject
     PresetService presetService;
     @Inject
     Provider<LoginController> loginControllerProvider;
@@ -82,19 +90,27 @@ public class TrainerManagementController extends ToastedController {
     }
 
     @Override
+    public void init(){
+        super.init();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
 
         currentTrainer = trainerService.getMe();
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        trainerNameInput.setPromptText(currentTrainer.name());
+        subscribe(trainerStorage.onTrainer(), trainer -> {
+            trainerNameInput.setPromptText(trainer.name());
+            currentTrainer = trainer;
 
-        subscribe(
-            presetService.getCharacterFile(currentTrainer.image()),
-            response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
-            this::handleError
-        );
+            subscribe(
+                    presetService.getCharacterFile(trainer.image()),
+                    response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
+                    this::handleError
+            );
+        });
 
         trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
@@ -105,6 +121,8 @@ public class TrainerManagementController extends ToastedController {
                 changesSaved = false;
             }
         });
+
+
 
         trainerNameInput.textProperty().bindBidirectional(trainerName);
         trainerNameInfo.textProperty().bind(
