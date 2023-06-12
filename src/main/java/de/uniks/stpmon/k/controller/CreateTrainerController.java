@@ -23,7 +23,9 @@ import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class CreateTrainerController extends PortalController {
     @FXML
     public TextField createTrainerInput;
@@ -111,7 +113,6 @@ public class CreateTrainerController extends PortalController {
                     .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(trainer -> {
-                                System.out.println(trainer);
                                 enterRegion(chosenRegion);
                             }, err -> {
                                 err.printStackTrace();

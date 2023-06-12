@@ -4,8 +4,8 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 public class ChooseSpriteController extends ToastedController {
+
     public static final double IMAGE_SCALE = 4.0;
     protected final ObservableList<String> characters = FXCollections.observableArrayList();
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+
 
     protected int currentSpriteIndex;
     protected int previousSpriteIndex;
@@ -53,6 +55,8 @@ public class ChooseSpriteController extends ToastedController {
     Preferences preferences;
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    TrainerService trainerService;
 
     @Inject
     Provider<CreateTrainerController> createTrainerControllerProvider;
@@ -74,9 +78,11 @@ public class ChooseSpriteController extends ToastedController {
 
         // Retrieve the sprite index from the preferences
         currentSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
-        previousSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
+        previousSpriteIndex = currentSpriteIndex;
+
         // Load the list of available sprites
         loadSpriteList();
+
 
         return parent;
     }
@@ -87,7 +93,12 @@ public class ChooseSpriteController extends ToastedController {
     public void loadSpriteList() {
         disposables.add(presetService.getCharacters()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(this::getCharactersList, this::handleError));
+                .subscribe(response -> {
+                            getCharactersList(response);
+                            currentSpriteIndex %= characters.size();
+                            previousSpriteIndex %= characters.size();
+                        }
+                        , this::handleError));
     }
 
     /**
@@ -111,9 +122,9 @@ public class ChooseSpriteController extends ToastedController {
      */
     public void loadSprite(String selectedCharacter) {
         subscribe(
-            presetService.getCharacterFile(selectedCharacter),
-            response -> setSpriteImage(spriteContainer, spriteImage, 0, 3, response),
-            this::handleError
+                presetService.getCharacterFile(selectedCharacter),
+                response -> setSpriteImage(spriteContainer, spriteImage, 0, 3, response),
+                this::handleError
         );
     }
 
@@ -154,36 +165,20 @@ public class ChooseSpriteController extends ToastedController {
      * Check if the selected character is different from the previous character and shows a pop-up for confirmation
      */
     public void saveSprite() {
-        String selectedCharacter = characters.get(currentSpriteIndex);
-        String previousCharacter = characters.get(previousSpriteIndex);
-        if (!selectedCharacter.equals(previousCharacter)) {
+        if (currentSpriteIndex != previousSpriteIndex) {
             // Show a pop-up
             showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
                 if (!result) return;
                 // Save the currentSpriteIndex to the preferences
                 preferences.putInt("currentSpriteIndex", currentSpriteIndex);
-                // Render the createTrainerController
-                if (regionStorage.getRegion() == null) {
-                    chooseTrainerContent.getChildren().clear();
-                    chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
-                } else {
-                    chooseTrainerContent.getChildren().clear();
-                    hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
-
-                }
+                disposables.add(
+                        trainerService.setImage(characters.get(currentSpriteIndex))
+                                .observeOn(FX_SCHEDULER)
+                                .subscribe(trainer -> {
+                                }, this::handleError));
             });
-        } else {
-            // Save the previousSpriteIndex to the preferences
-            preferences.putInt("currentSpriteIndex", previousSpriteIndex);
-            // Render the createTrainerController
-            if (regionStorage.getRegion() == null) {
-                chooseTrainerContent.getChildren().clear();
-                chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
-            } else {
-                chooseTrainerContent.getChildren().clear();
-                hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
-            }
         }
+        closeAndReturn();
     }
 
     /**
@@ -196,4 +191,16 @@ public class ChooseSpriteController extends ToastedController {
         popUp.showModal(callback);
         isPopUpShown.set(false);
     }
+
+    private void closeAndReturn() {
+        if (regionStorage.getRegion() == null) {
+            chooseTrainerContent.getChildren().clear();
+            chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+        } else {
+            chooseTrainerContent.getChildren().clear();
+            //hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+            hybridControllerProvider.get().popTab();
+        }
+    }
+
 }
