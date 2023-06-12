@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,8 +36,8 @@ public class TileMap {
         int width = 0;
         int height = 0;
 
-        this.floorLayers = new HashSet<>();
-        this.decorationLayers = new HashSet<>();
+        this.floorLayers = new LinkedHashSet<>();
+        this.decorationLayers = new LinkedHashSet<>();
         List<TileLayerData> layerData = data.layers();
         for (TileLayerData layer : layerData) {
             width = Math.max(width, layer.width());
@@ -45,7 +45,7 @@ public class TileMap {
             if (layer.chunks() == null) {
                 continue;
             }
-            if (layer.name().equals(TileLayerData.GROUND_TYPE) || layer.name().equals(TileLayerData.Walls_TYPE)) {
+            if (layer.name().equals(TileLayerData.GROUND_TYPE) || layer.name().equals(TileLayerData.WALLS_TYPE)) {
                 floorLayers.add(layer);
             } else {
                 decorationLayers.add(layer);
@@ -66,10 +66,6 @@ public class TileMap {
 
     public BufferedImage renderMap() {
         return renderMap(width, height);
-    }
-
-    public List<BufferedImage> getLayers() {
-        return layers;
     }
 
     public BufferedImage renderFloor() {

@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,13 +65,26 @@ public class PropInspector {
         return createProps(image);
     }
 
+    /**
+     * Extracts the props from the image and returns them in a prop map.
+     * Each prop has its own image, position and size.
+     * The decorations image is modified to remove the props and also contained in the map.
+     *
+     * @param image Image of all decorations
+     * @return A map that contains the props and the modified decorations image.
+     */
     private PropMap createProps(BufferedImage image) {
+        BufferedImage floorDecorations = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics2D graphics = floorDecorations.createGraphics();
+        graphics.setBackground(new Color(0, 0, 0, 0));
+        graphics.drawImage(image, 0, 0, null);
         List<TileProp> props = new ArrayList<>();
         for (HashSet<Integer> group : uniqueGroups()) {
             int minX = Integer.MAX_VALUE;
             int minY = Integer.MAX_VALUE;
             int maxX = Integer.MIN_VALUE;
             int maxY = Integer.MIN_VALUE;
+            //Find min and max x and y values of the group
             for (int i : group) {
                 int x = i % grid.getWidth();
                 int y = i / grid.getWidth();
@@ -80,6 +94,7 @@ public class PropInspector {
                 maxY = Math.max(maxY, y);
             }
 
+            // Calculate bounds of the prop
             int width = maxX - minX + 1;
             int height = maxY - minY + 1;
             BufferedImage img = new BufferedImage(width * TILE_SIZE, height * TILE_SIZE,
@@ -87,15 +102,20 @@ public class PropInspector {
             for (int i : group) {
                 int x = i % grid.getWidth();
                 int y = i / grid.getWidth();
+                // Copy pixels from the decoration image to the prop image
                 ImageUtils.copyData(img.getRaster(), image,
                         (x - minX) * TILE_SIZE, (y - minY) * TILE_SIZE,
                         x * TILE_SIZE, y * TILE_SIZE,
+                        TILE_SIZE, TILE_SIZE);
+                // Remove pixels from the decoration image
+                graphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
                         TILE_SIZE, TILE_SIZE);
             }
 
             props.add(new TileProp(img, minX, minY, width, height));
         }
-        return new PropMap(props, image);
+        graphics.dispose();
+        return new PropMap(props, floorDecorations);
     }
 
     public void tryMergeGroups(int x, int y, int otherX, int otherY) {

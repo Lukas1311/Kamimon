@@ -32,8 +32,6 @@ public record TileLayerData(
         List<Property> properties
 ) {
     public static final String GROUND_TYPE = "Ground";
-    public static final String Walls_TYPE = "Walls";
-    public static final String Interior_TYPE = "Interior";
-    public static final String Buildings_TYPE = "Buildings";
+    public static final String WALLS_TYPE = "Walls";
 
 }

@@ -20,6 +20,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -85,7 +86,12 @@ public class WorldLoader {
                     BufferedImage image = tileMap.renderMap();
                     PropMap propMap = createProps(tileMap);
                     List<TileProp> props = propMap.props();
-                    return new WorldSet(tileMap.renderFloor(), image, props, trainers);
+                    BufferedImage propsImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g = propsImage.createGraphics();
+                    g.drawImage(tileMap.renderFloor(), 0, 0, null);
+                    g.drawImage(propMap.decorations(), 0, 0, null);
+                    g.dispose();
+                    return new WorldSet(propsImage, image, props, trainers);
                 }));
     }
 
