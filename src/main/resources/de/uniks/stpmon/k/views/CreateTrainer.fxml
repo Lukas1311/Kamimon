@@ -57,12 +57,17 @@
             </HBox>
                   </VBox>
             </HBox>
-            <ImageView fx:id="trainerSprite" fitHeight="155.0" fitWidth="150.0" onMouseClicked="#trainerSprite" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../spritePlacehoder.png" />
-               <VBox.margin>
+          <StackPane fx:id="spriteContainer" maxHeight="130.0" prefHeight="130.0">
+              <ImageView fitHeight="130.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+                  <Image url="@../controller/spriteBackground.png" />
+              </ImageView>
+              <ImageView fx:id="trainerSprite" fitHeight="130.0" fitWidth="130.0" onMouseClicked="#trainerSprite" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+                  <Image url="@../controller/spritePlacehoder.png" />
+              </ImageView>
+              <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-            </ImageView>
+              </VBox.margin>
+          </StackPane>
             <Button fx:id="createSpriteButton" mnemonicParsing="false" onAction="#createSprite" prefHeight="35.0" prefWidth="155.0" styleClass="kgm-general-button-blue" text="%createSprite">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

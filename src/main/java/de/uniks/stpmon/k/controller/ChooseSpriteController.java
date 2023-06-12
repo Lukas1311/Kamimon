@@ -34,6 +34,8 @@ public class ChooseSpriteController extends ToastedController {
     protected int currentSpriteIndex;
     protected int previousSpriteIndex;
 
+    private String SpriteID;
+
     @FXML
     public Text chooseTrainer;
     @FXML
@@ -64,6 +66,7 @@ public class ChooseSpriteController extends ToastedController {
     Provider<PopUpController> popUpControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+
 
     @Inject
     public ChooseSpriteController() {
@@ -171,6 +174,7 @@ public class ChooseSpriteController extends ToastedController {
                 if (!result) return;
                 // Save the currentSpriteIndex to the preferences
                 preferences.putInt("currentSpriteIndex", currentSpriteIndex);
+                createTrainerControllerProvider.get().setTrainerImage(characters.get(currentSpriteIndex));
                 disposables.add(
                         trainerService.setImage(characters.get(currentSpriteIndex))
                                 .observeOn(FX_SCHEDULER)
@@ -194,11 +198,11 @@ public class ChooseSpriteController extends ToastedController {
 
     private void closeAndReturn() {
         if (regionStorage.getRegion() == null) {
+            createTrainerControllerProvider.get().setTrainerImage(characters.get(currentSpriteIndex));
             chooseTrainerContent.getChildren().clear();
             chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
         } else {
             chooseTrainerContent.getChildren().clear();
-            //hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
             hybridControllerProvider.get().popTab();
         }
     }

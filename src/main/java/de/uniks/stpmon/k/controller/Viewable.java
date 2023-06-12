@@ -263,10 +263,25 @@ public abstract class Viewable {
      * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image 
      */
     public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody) {
+        setSpriteImage(spriteContainer, sprite, tileRow, tileIndex, responseBody, 150, 155);
+    }
+
+
+    /**
+     * Processes the ResponseBody containing the image data for a trainer sprite
+     * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
+     * @param sprite is the ImageView of the fxml where you want the image data to be loaded in
+     * @param tileRow is the row of the tile you want to extract (most cases one of 0,1,2)
+     * @param tileIndex the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
+     * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image
+     * @param viewWidth is the fitWidth property of the imageview
+     * @param viewHeight is the fitHeight property of the imageview
+     */
+    public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody, int viewWidth, int viewHeight) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return;
         }
-        
+
         final Double SCALE = 4.0; // this is a good scale for sharp images
         final int SPRITE_WIDTH = 16; // width of sprite, you could say X-value
         final int SPRITE_HEIGHT = 32; // height of sprite, you could say Y-value
@@ -289,8 +304,8 @@ public abstract class Viewable {
 
                 // Set the image
                 sprite.setImage(fxImage);
-                sprite.setFitHeight(150);
-                sprite.setFitWidth(300);
+                sprite.setFitHeight(viewHeight);
+                sprite.setFitWidth(viewWidth);
 
 
                 spriteContainer.setPrefSize(sprite.getFitWidth(), sprite.getFitHeight());
