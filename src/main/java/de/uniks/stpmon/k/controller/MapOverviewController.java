@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import java.awt.image.BufferedImage;
 
@@ -37,6 +38,8 @@ public class MapOverviewController extends ToastedController {
     TextureSetService textureSetService;
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    TextDeliveryService textDeliveryService;
 
     // private BufferedImage renderedMap;
     private Image map;
@@ -75,6 +78,18 @@ public class MapOverviewController extends ToastedController {
                 System.out.println(err);
             }
         );
+
+        subscribe(
+            textDeliveryService.getTileMapData(regionStorage.getRegion()),
+            data -> {
+                System.out.println(data);
+            }, err -> {
+                System.out.println(err);
+            }
+        );
+        // System.out.println("test");
+
+
 
         // mapOverviewImage.setImage(map);
 
