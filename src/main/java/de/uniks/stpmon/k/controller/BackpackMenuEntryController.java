@@ -32,6 +32,11 @@ public class BackpackMenuEntryController extends Controller {
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
         setIds();

@@ -35,11 +35,13 @@ public class BackpackMenuController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        backpackMenuOptions.add(MONSTER_LIST);
-        backpackMenuOptions.add(MONSTERS);
-        backpackMenuOptions.add(MAP);
-        backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
+        if (backpackMenuOptions.isEmpty()) {
+            backpackMenuOptions.add(MONSTER_LIST);
+            backpackMenuOptions.add(MONSTERS);
+            backpackMenuOptions.add(MAP);
+        }
 
+        backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
         backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
 
         backpackMenuListView.minHeightProperty().bind(backpackMenuListView.prefHeightProperty());

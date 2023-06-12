@@ -39,14 +39,10 @@ public class IngameController extends PortalController {
     @Inject
     BackpackController backpackController;
     @Inject
-    Provider<BackpackMenuController> backpackMenuControllerProvider;
-    @Inject
     TrainerStorage trainerStorage;
 
     @Inject
     protected WorldController worldController;
-
-    Parent backpackMenu;
 
     @Inject
     public IngameController() {
@@ -98,18 +94,7 @@ public class IngameController extends PortalController {
         // Null if unit testing world view
         if (backPack != null) {
             ingameWrappingHBox.getChildren().add(backPack);
-            backPack.setOnMouseClicked(click -> {
-                if (backpackMenu == null) {
-                    backpackMenu = backpackMenuControllerProvider.get().render();
-                    ingameWrappingHBox.getChildren().add(0, backpackMenu);
-                    ingameStack.setAlignment(Pos.TOP_RIGHT);
-                } else {
-                    backpackMenuControllerProvider.get().setVisability(
-                            !backpackMenuControllerProvider.get().isVisible());
-                }
-
-
-            });
+            ingameStack.setAlignment(Pos.TOP_RIGHT);
         }
 
         return parent;
@@ -118,4 +103,13 @@ public class IngameController extends PortalController {
     public void closeSidebar() {
         hybridControllerProvider.get().forceTab(NONE);
     }
+
+    public void addBackpackMenu(HBox backpackMenu) {
+        ingameWrappingHBox.getChildren().add(0, backpackMenu);
+    }
+
+    public void removeBackpackMenu(HBox backpackMenu) {
+        ingameWrappingHBox.getChildren().remove(backpackMenu);
+    }
+
 }
