@@ -112,8 +112,7 @@ public class TileMap {
 
     private BufferedImage createImage(int width, int height) {
         return new BufferedImage(
-                width * tileWidth,
-                height * tileHeight,
+                width * tileWidth, height * tileHeight,
                 BufferedImage.TYPE_4BYTE_ABGR);
     }
 

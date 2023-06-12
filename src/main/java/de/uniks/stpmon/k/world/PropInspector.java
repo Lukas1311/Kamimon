@@ -3,28 +3,48 @@ package de.uniks.stpmon.k.world;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.world.rules.ImageConnectionRule;
+import de.uniks.stpmon.k.world.rules.ImageEmptyRule;
+import de.uniks.stpmon.k.world.rules.PropInfo;
+import de.uniks.stpmon.k.world.rules.PropRule;
+import de.uniks.stpmon.k.world.rules.RuleResult;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 public class PropInspector {
-    public static final int RGB_THRESHOLD = 45;
-    public static final int CONNECT_THRESHOLD = 5;
-    public static final int CHECKED_PIXELS = 3;
     public static final int TILE_SIZE = 16;
     private final PropGrid grid;
     private int groupId = 1;
     private final Map<Integer, HashSet<Integer>> groups;
+    private final List<PropRule> connectionRules = new ArrayList<>();
+    private final List<PropRule> tileRules = new ArrayList<>();
 
     public PropInspector(int width, int height) {
         grid = new PropGrid(width, height);
         groups = new HashMap<>();
+        addConnectionRule(new ImageConnectionRule());
+        addTileRule(new ImageEmptyRule());
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public PropInspector addTileRule(PropRule rule) {
+        tileRules.add(rule);
+        return this;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public PropInspector addConnectionRule(PropRule rule) {
+        connectionRules.add(rule);
+        return this;
     }
 
     public Set<HashSet<Integer>> uniqueGroups() {
@@ -35,10 +55,24 @@ public class PropInspector {
         return work(List.of(image));
     }
 
+    private RuleResult applyRules(Collection<PropRule> rules, PropInfo info, BufferedImage image) {
+        for (PropRule rule : rules) {
+            RuleResult result = rule.apply(info, image);
+            if (result == RuleResult.NO_MATCH_STOP) {
+                break;
+            }
+            if (result != RuleResult.NO_MATCH) {
+                return result;
+            }
+        }
+        return RuleResult.NO_MATCH;
+    }
+
     public PropMap work(List<BufferedImage> decorationLayers) {
         BufferedImage image = decorationLayers.get(0);
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = 0; y < grid.getHeight(); y++) {
+                boolean marked = false;
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
@@ -53,13 +87,29 @@ public class PropInspector {
                             || grid.hasVisited(otherX, otherY, otherDir)) {
                         continue;
                     }
+                    RuleResult result = applyRules(connectionRules,
+                            new PropInfo(x, y, -1, dir, otherDir), image
+                    );
                     // Check if the tiles are connected
-                    if (checkConnection(x, y, image, dir, otherDir)) {
+                    if (result == RuleResult.MATCH_CONNECTION) {
                         tryMergeGroups(x, y, otherX, otherY);
+                        marked = true;
                     }
+//                    if(result == RuleResult.MATCH_SINGLE) {
+//                        createIfAbsent(x, y, null);
+//                    }
                     grid.setVisited(x, y, dir);
                     grid.setVisited(otherX, otherY, otherDir);
                 }
+                if (marked) {
+                    continue;
+                }
+                RuleResult result = applyRules(tileRules,
+                        new PropInfo(x, y, -1, null, null), image
+                );
+//                if (result == RuleResult.MATCH_SINGLE) {
+//                    createIfAbsent(x, y, null);
+//                }
             }
         }
         return createProps(image);
@@ -80,6 +130,7 @@ public class PropInspector {
         graphics.drawImage(image, 0, 0, null);
         List<TileProp> props = new ArrayList<>();
         for (HashSet<Integer> group : uniqueGroups()) {
+            graphics.setColor(getRandomColor());
             int minX = Integer.MAX_VALUE;
             int minY = Integer.MAX_VALUE;
             int maxX = Integer.MIN_VALUE;
@@ -108,14 +159,21 @@ public class PropInspector {
                         x * TILE_SIZE, y * TILE_SIZE,
                         TILE_SIZE, TILE_SIZE);
                 // Remove pixels from the decoration image
-                graphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
-                        TILE_SIZE, TILE_SIZE);
+//                graphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
+//                        TILE_SIZE, TILE_SIZE);
+                graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
 
             props.add(new TileProp(img, minX, minY, width, height));
         }
         graphics.dispose();
-        return new PropMap(props, floorDecorations);
+        return new PropMap(List.of(), floorDecorations);
+    }
+
+    Random rand = new Random();
+
+    private Color getRandomColor() {
+        return new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256), 99);
     }
 
     public void tryMergeGroups(int x, int y, int otherX, int otherY) {
@@ -167,53 +225,5 @@ public class PropInspector {
             grid.setGroup(x, y, groupIndex);
         }
         return tiles;
-    }
-
-    public boolean checkConnection(int tileX, int tileY, BufferedImage image, Direction dir, Direction otherDir) {
-        int meetThresholds = 0;
-        int emptyCount = 0;
-        for (int dist = 0; dist < CHECKED_PIXELS; dist++) {
-            // Iterate over each pixel in the images and compare the edges
-            for (int i = 0; i < TILE_SIZE; i++) {
-                int firstX = tileX * TILE_SIZE + dir.imageX(i, dist);
-                int firstY = tileY * TILE_SIZE + dir.imageY(i, dist);
-                int secondX = (tileX + dir.tileX()) * TILE_SIZE + otherDir.imageX(i, dist);
-                int secondY = (tileY + dir.tileY()) * TILE_SIZE + otherDir.imageY(i, dist);
-                int first = image.getRGB(firstX, firstY);
-                int second = image.getRGB(secondX, secondY);
-                int firstAlpha = (first >> 24 & 0xFF);
-                int secondAlpha = (second >> 24 & 0xFF);
-                // Skip if any pixel is transparent
-                if (first == 0 || second == 0 || firstAlpha == 0 || secondAlpha == 0) {
-                    emptyCount++;
-                    continue;
-                }
-
-                // Calculate the grayscale intensity of each pixel
-                double intensity1 = (firstAlpha +
-                        (first >> 16 & 0xFF) +
-                        (first >> 8 & 0xFF) +
-                        ((first) & 0xFF)) / 4.0;
-                double intensity2 = (secondAlpha +
-                        (second >> 16 & 0xFF) +
-                        (second >> 8 & 0xFF) +
-                        ((second) & 0xFF)) / 4.0;
-                // Compare the intensities and check if the difference is above the threshold
-                if (Math.abs(intensity1 - intensity2) <= RGB_THRESHOLD) {
-                    meetThresholds += 1;
-                }
-            }
-            if (dist == 0 && emptyCount == TILE_SIZE) {
-                return false;
-            }
-        }
-        meetThresholds /= CHECKED_PIXELS;
-        emptyCount /= CHECKED_PIXELS;
-        // If more than 100% of the pixels are transparent, return false
-        if (emptyCount >= TILE_SIZE) {
-            return false;
-        }
-
-        return meetThresholds >= CONNECT_THRESHOLD;
     }
 }
