@@ -83,7 +83,7 @@ public class SettingsController extends ToastedController {
         subscribe(trainerStorage.onTrainer(), trainer -> {
             trainerProperty.set(trainer.name());
             userTrainerValue.textProperty().bind(trainerProperty);
-            regionProperty.set(trainer.region());
+            regionProperty.set(regionStorage.getRegion().name());
             userRegionValue.textProperty().bind(regionProperty);
 
             subscribe(
