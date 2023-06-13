@@ -115,7 +115,7 @@ class RegionServiceTest {
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer);
-        when(regionApiService.getTrainers(any(), any(), any(String.class)))
+        when(regionApiService.getTrainers(any(), any()))
                 .thenReturn(Observable.just(trainers));
 
         //action
@@ -129,7 +129,7 @@ class RegionServiceTest {
         assertEquals("TestTrainer", returnTrainers.get(0).name());
 
         //check mocks
-        verify(regionApiService).getTrainers(any(), any(), captor.capture());
+        verify(regionApiService).getTrainers(any(), any());
     }
 
     @Test

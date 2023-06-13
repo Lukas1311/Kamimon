@@ -173,7 +173,7 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<List<Trainer>> getTrainers(String regionId, String areaId, String userId) {
+            public Observable<List<Trainer>> getTrainers(String regionId, String areaId) {
                 List<Trainer> trainerList = trainersHashMap.get(areaId);
                 if (trainerList != null) {
                     return Observable.just(trainerList);
