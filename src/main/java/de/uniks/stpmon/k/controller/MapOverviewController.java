@@ -23,6 +23,7 @@ import de.uniks.stpmon.k.service.world.TextureSetService;
 import java.awt.image.BufferedImage;
 
 
+@Singleton
 public class MapOverviewController extends ToastedController {
 
     @FXML
@@ -50,7 +51,6 @@ public class MapOverviewController extends ToastedController {
     private Region currentRegion;
     
     @Inject
-    @Singleton
     public MapOverviewController() {
     }
 
