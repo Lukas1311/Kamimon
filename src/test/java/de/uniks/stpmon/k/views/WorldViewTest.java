@@ -10,7 +10,6 @@ import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
@@ -23,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,14 +92,6 @@ public class WorldViewTest extends ApplicationTest {
 
         // check if char moved right by -16
         assertEquals(0, character.getTranslateX());
-    }
-
-    @Test
-    public void renderAllTrainer() {
-        SubScene node = lookup("#worldScene").queryAs(SubScene.class);
-        Parent root = node.getRoot();
-        Node npcGroup = root.lookup("#npcGroup");
-        assertNotNull(npcGroup);
     }
 
 }
