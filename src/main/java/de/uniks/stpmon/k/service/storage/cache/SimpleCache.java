@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service.storage.cache;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public abstract class SimpleCache<T> implements ICache<T> {
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
     protected final Map<String, T> valuesById = new LinkedHashMap<>();
+    protected final Map<String, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
     protected final CompositeDisposable disposables = new CompositeDisposable();
     /**
      * A completable that completes when the cache is initialized.
@@ -49,10 +51,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         }
         Observable<List<T>> observable = getInitialValues().cache();
         initialized = Completable.fromObservable(observable);
-        disposables.add(observable.subscribe(values -> {
-            values.forEach(value -> valuesById.put(getId(value), value));
-            subject.onNext(new ArrayList<>(valuesById.values()));
-        }));
+        disposables.add(observable.subscribe(this::addValues));
         status = Status.INITIALIZED;
         return this;
     }
@@ -77,8 +76,19 @@ public abstract class SimpleCache<T> implements ICache<T> {
     }
 
     protected void addValues(List<T> values) {
-        values.forEach(value -> valuesById.put(getId(value), value));
+        values.stream().filter(this::isCacheable)
+                .forEach(value -> valuesById.put(getId(value), value));
         subject.onNext(new ArrayList<>(valuesById.values()));
+    }
+
+    /**
+     * Checks if the value should be cached.
+     *
+     * @param value The value to check.
+     * @return True if the value should be cached, false otherwise.
+     */
+    protected boolean isCacheable(T value) {
+        return true;
     }
 
     @Override
@@ -92,8 +102,17 @@ public abstract class SimpleCache<T> implements ICache<T> {
      * @param value The value to add.
      */
     public void addValue(T value) {
+        if (value == null) {
+            throw new IllegalArgumentException("value must not be null");
+        }
+        if (!isCacheable(value)) {
+            return;
+        }
+        String id = getId(value);
         valuesById.put(getId(value), value);
         subject.onNext(new ArrayList<>(valuesById.values()));
+        Optional.ofNullable(listenersById.get(id))
+                .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
     }
 
     /**
@@ -102,8 +121,17 @@ public abstract class SimpleCache<T> implements ICache<T> {
      * @param value The value to update.
      */
     public void updateValue(T value) {
-        valuesById.put(getId(value), value);
+        if (value == null) {
+            throw new IllegalArgumentException("value must not be null");
+        }
+        if (!isCacheable(value)) {
+            return;
+        }
+        String id = getId(value);
+        valuesById.put(id, value);
         subject.onNext(new ArrayList<>(valuesById.values()));
+        Optional.ofNullable(listenersById.get(id))
+                .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
     }
 
     /**
@@ -112,8 +140,26 @@ public abstract class SimpleCache<T> implements ICache<T> {
      * @param value The value to remove.
      */
     public void removeValue(T value) {
-        valuesById.remove(getId(value));
+        if (!isCacheable(value)) {
+            return;
+        }
+        String id = getId(value);
+        valuesById.remove(id);
         subject.onNext(new ArrayList<>(valuesById.values()));
+        Optional.ofNullable(listenersById.get(id))
+                .ifPresent(emitter -> {
+                    emitter.onNext(Optional.empty());
+                });
+    }
+
+    @Override
+    public Observable<Optional<T>> listenValue(String id) {
+        return Observable.create((emitter -> {
+            listenersById.put(id, emitter);
+            emitter.onNext(getValue(id));
+            disposables.add(Disposable.fromRunnable(emitter::onComplete));
+            emitter.setCancellable(() -> listenersById.remove(id));
+        }));
     }
 
     public Optional<T> getValue(String id) {
