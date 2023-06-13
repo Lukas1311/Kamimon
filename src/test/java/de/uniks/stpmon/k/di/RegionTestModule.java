@@ -189,12 +189,10 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<List<Trainer>> getAllTrainer(String regionId) {
-                List<Trainer> trainerList = trainersHashMap.get(regionId);
-                if (trainerList != null) {
-                    return Observable.just(trainerList);
-                }
-                return Observable.empty();
+            public Observable<List<Trainer>> getAllTrainer(String regionId, String areaId) {
+                return getTrainer("", "5")
+                        .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
+                        .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
             }
 
             @Override
