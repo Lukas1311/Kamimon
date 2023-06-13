@@ -181,38 +181,45 @@ public class CacheManager implements ILifecycleService {
             throw new IllegalStateException("Region storage is empty!");
         }
         String regionId = regionStorage.getRegion()._id();
-        String areaId = regionStorage.getArea()._id();
-        return trainerCache(regionId, areaId);
+        return trainerCache(regionId);
     }
 
-    public TrainerCache trainerCache(String regionId, String areaId) {
+    public TrainerCache trainerCache(String regionId) {
         ensureRegionSubscription();
-        if (regionId == null || areaId == null) {
+        if (regionId == null) {
             throw new IllegalStateException("Region id or area id is null!");
         }
-        if (trainerCache != null && !trainerCache.areSetupValues(regionId, areaId)) {
+        if (trainerCache != null && !trainerCache.areSetupValues(regionId)) {
             throw new IllegalStateException("Region not empty but new trainer cache requested!");
         }
         if (trainerCache == null) {
             trainerCache = trainerCacheProvider.get();
-            trainerCache.setup(regionId, areaId);
+            trainerCache.setup(regionId);
             trainerCache.addOnDestroy(() -> trainerCache = null);
             trainerCache.init();
         }
         return trainerCache;
     }
 
+    public TrainerAreaCache trainerAreaCache() {
+        if (regionStorage.isEmpty()) {
+            throw new IllegalStateException("Region storage is empty!");
+        }
+        String regionId = regionStorage.getRegion()._id();
+        String areaId = regionStorage.getArea()._id();
+        return trainerAreaCache(regionId, areaId);
+    }
+
+    public TrainerAreaCache trainerAreaCache(String regionId, String areaId) {
+        return trainerCache(regionId)
+                .areaCache(areaId);
+    }
+
     private void ensureRegionSubscription() {
         if (regionSubscription == null) {
             regionSubscription = regionStorage.onEvents().subscribe(event -> {
-                if (trainerCache != null) {
+                if (event.isEmpty() && trainerCache != null) {
                     trainerCache.destroy();
-                }
-                if (event.changedArea()) {
-                    String regionId = event.region()._id();
-                    String areaId = event.area()._id();
-                    // Recreate the trainer cache
-                    trainerCache(regionId, areaId);
                 }
             });
         }

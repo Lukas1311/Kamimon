@@ -29,6 +29,9 @@ public interface RegionApiService {
                                           @Query("area") String areaId);
 
     @GET("regions/{region}/trainers")
+    Observable<List<Trainer>> getTrainers(@Path("region") String regionId);
+
+    @GET("regions/{region}/trainers")
     Observable<List<Trainer>> getMainTrainers(@Path("region") String regionId,
                                               @Query("user") String userId);
 

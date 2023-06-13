@@ -1,0 +1,92 @@
+package de.uniks.stpmon.k.service.storage.cache;
+
+import de.uniks.stpmon.k.dto.MoveTrainerDto;
+import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
+import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import io.reactivex.rxjava3.core.Observable;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+
+public class TrainerAreaCache extends SimpleCache<Trainer> {
+
+    private TrainerCache trainerCache;
+    @Inject
+    RegionService regionService;
+    @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    protected EventListener listener;
+
+    private String regionId;
+    private String areaId;
+
+    @Inject
+    public TrainerAreaCache() {
+    }
+
+    public TrainerAreaCache setup(TrainerCache trainerCache, String areaId) {
+        this.trainerCache = trainerCache;
+        this.regionId = trainerCache.getRegionId();
+        this.areaId = areaId;
+        return this;
+    }
+
+    public boolean areSetupValues(String regionId, String areaId) {
+        return this.regionId.equals(regionId) && this.areaId.equals(areaId);
+    }
+
+    @Override
+    public ICache<Trainer> init() {
+        super.init();
+        disposables.add(listener.listen(Socket.UDP, String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
+                .subscribe(event -> {
+                            final MoveTrainerDto dto = event.data();
+                            Optional<Trainer> trainerOptional = getValue(dto._id());
+                            // Should never happen, trainer moves before he exists
+                            if (trainerOptional.isEmpty()) {
+                                return;
+                            }
+                            Trainer trainer = trainerOptional.get();
+                            Trainer newTrainer = new Trainer(trainer._id(),
+                                    trainer.region(),
+                                    trainer.user(),
+                                    trainer.name(),
+                                    trainer.image(),
+                                    trainer.coins(),
+                                    dto.area(),
+                                    dto.x(),
+                                    dto.y(),
+                                    dto.direction(),
+                                    trainer.npc());
+                            if (!isCacheable(newTrainer)) {
+                                removeValue(trainer);
+                                return;
+                            }
+                            updateValue(newTrainer);
+                        }
+                ));
+        return this;
+    }
+
+    @Override
+    protected boolean isCacheable(Trainer value) {
+        Trainer trainer = trainerStorage.getTrainer();
+        return areaId.equals(value.area())
+                || trainer != null && trainer._id().equals(value._id());
+    }
+
+    @Override
+    protected Observable<List<Trainer>> getInitialValues() {
+        return trainerCache.onInitialized().andThen(trainerCache.getValues());
+    }
+
+    @Override
+    public String getId(Trainer value) {
+        return value._id();
+    }
+}

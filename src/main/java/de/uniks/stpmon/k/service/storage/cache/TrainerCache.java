@@ -1,15 +1,14 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
-import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.List;
-import java.util.Optional;
 
 public class TrainerCache extends ListenerCache<Trainer> {
 
@@ -17,62 +16,42 @@ public class TrainerCache extends ListenerCache<Trainer> {
     RegionService regionService;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    RegionStorage regionStorage;
+    @Inject
+    Provider<TrainerAreaCache> trainerCacheProvider;
+
+    private TrainerAreaCache areaCache;
 
     private String regionId;
-    private String areaId;
 
     @Inject
     public TrainerCache() {
     }
 
-    public TrainerCache setup(String regionId, String areaId) {
+    public TrainerCache setup(String regionId) {
         this.regionId = regionId;
-        this.areaId = areaId;
         return this;
     }
 
-    public boolean areSetupValues(String regionId, String areaId) {
-        return this.regionId.equals(regionId) && this.areaId.equals(areaId);
+    public boolean areSetupValues(String regionId) {
+        return this.regionId.equals(regionId);
     }
 
     @Override
     public ICache<Trainer> init() {
         super.init();
-        disposables.add(listener.listen(Socket.UDP, String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
-                .subscribe(event -> {
-                            final MoveTrainerDto dto = event.data();
-                            Optional<Trainer> trainerOptional = getValue(dto._id());
-                            // Should never happen, trainer moves before he exists
-                            if (trainerOptional.isEmpty()) {
-                                return;
-                            }
-                            Trainer trainer = trainerOptional.get();
-                            Trainer newTrainer = new Trainer(trainer._id(),
-                                    trainer.region(),
-                                    trainer.user(),
-                                    trainer.name(),
-                                    trainer.image(),
-                                    trainer.coins(),
-                                    dto.area(),
-                                    dto.x(),
-                                    dto.y(),
-                                    dto.direction(),
-                                    trainer.npc());
-                            if (!isCacheable(newTrainer)) {
-                                removeValue(trainer);
-                                return;
-                            }
-                            updateValue(newTrainer);
-                        }
-                ));
+        disposables.add(regionStorage.onEvents().subscribe(event -> {
+            if (areaCache != null) {
+                areaCache.destroy();
+            }
+            if (event.changedArea()) {
+                String areaId = event.area()._id();
+                // Recreate the trainer cache
+                areaCache(areaId);
+            }
+        }));
         return this;
-    }
-
-    @Override
-    protected boolean isCacheable(Trainer value) {
-        Trainer trainer = trainerStorage.getTrainer();
-        return areaId.equals(value.area())
-                || trainer != null && trainer._id().equals(value._id());
     }
 
     @Override
@@ -87,9 +66,38 @@ public class TrainerCache extends ListenerCache<Trainer> {
         );
     }
 
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public TrainerAreaCache areaCache(String areaId) {
+        if (areaCache != null && !areaCache.areSetupValues(regionId, areaId)) {
+            throw new IllegalStateException("Region not empty but new trainer cache requested!");
+        }
+        if (areaCache == null) {
+            areaCache = trainerCacheProvider.get();
+            childCaches.add(areaCache);
+            areaCache.setup(this, areaId);
+            areaCache.addOnDestroy(() -> {
+                childCaches.remove(areaCache);
+                areaCache = null;
+            });
+            areaCache.init();
+        }
+        return areaCache;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (areaCache != null) {
+            areaCache.destroy();
+        }
+    }
+
     @Override
     protected Observable<List<Trainer>> getInitialValues() {
-        return regionService.getTrainers(regionId, areaId);
+        return regionService.getTrainers(regionId);
     }
 
     @Override

@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
+import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -23,7 +23,7 @@ public class MovementHandler {
     protected EventListener listener;
     @Inject
     protected WorldLoader worldLoader;
-    protected TrainerCache trainerCache;
+    protected TrainerAreaCache trainerCache;
     @Inject
     protected CacheManager cacheManager;
     // not injected, provider by parent user
@@ -49,7 +49,7 @@ public class MovementHandler {
                 trainer.area(),
                 trainer._id());
         this.trainerId = trainer._id();
-        trainerCache = cacheManager.trainerCache();
+        trainerCache = cacheManager.trainerAreaCache();
     }
 
     public Observable<Trainer> onMovements() {
@@ -58,6 +58,8 @@ public class MovementHandler {
         }
         return trainerCache
                 .listenValue(trainerId)
+                // Skip initial value
+                .skip(1)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .flatMap(this::onMoveReceived);

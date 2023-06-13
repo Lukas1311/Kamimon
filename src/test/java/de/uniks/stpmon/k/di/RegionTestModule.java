@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Module
 public class RegionTestModule {
@@ -179,6 +180,13 @@ public class RegionTestModule {
                     return Observable.just(trainerList);
                 }
                 return Observable.empty();
+            }
+
+            @Override
+            public Observable<List<Trainer>> getTrainers(String regionId) {
+                return Observable.just(trainersHashMap.values()
+                        .stream().flatMap(List::stream)
+                        .collect(Collectors.toList()));
             }
 
             @Override
