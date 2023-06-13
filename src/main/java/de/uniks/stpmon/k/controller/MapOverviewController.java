@@ -9,10 +9,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Window;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -48,6 +50,7 @@ public class MapOverviewController extends ToastedController {
     private Region currentRegion;
     
     @Inject
+    @Singleton
     public MapOverviewController() {
     }
 
@@ -84,6 +87,7 @@ public class MapOverviewController extends ToastedController {
         final Parent parent = super.render();
         
         regionNameLabel.setText(currentRegion.name());
+        regionNameLabel.setFont(new Font(20));
 
         if (currentRegion.map() != null) {
             subscribe(
@@ -92,8 +96,8 @@ public class MapOverviewController extends ToastedController {
                     BufferedImage renderedMap = tileMap.renderMap();
                     map = SwingFXUtils.toFXImage(renderedMap, null);
                     mapImageView.setImage(map);
-                    mapOverviewImage.setFitHeight(300);
-                    mapOverviewImage.setFitWidth(500);
+                    mapImageView.fitWidthProperty().bind(mapOverviewContent.widthProperty().multiply(MAP_OVERVIEW_SCALE));
+                    mapImageView.fitHeightProperty().bind(mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
                     mapContainer.setPrefSize(mapImageView.getFitWidth(), mapImageView.getFitHeight());
                 }, err -> {
                     handleError(err);
