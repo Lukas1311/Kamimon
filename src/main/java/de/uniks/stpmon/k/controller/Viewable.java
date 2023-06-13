@@ -3,6 +3,8 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.utils.SVGData;
+
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
@@ -136,32 +138,6 @@ public abstract class Viewable {
             return;
         }
         view.setImage(loadImage(image));
-    }
-
-    private class SVGData {
-
-        private List<SVGPath> svgPaths;
-        private Double width;
-        private Double height;
-
-        private SVGData(List<SVGPath> svgPaths, Double width, Double height) {
-            this.svgPaths = svgPaths;
-            this.width = width;
-            this.height = height;
-        }
-
-        private List<SVGPath> getSVGPaths() {
-            return this.svgPaths;
-        }
-
-        private Double getWidth() {
-            return this.width;
-        }
-
-        private Double getHeight() {
-            return this.height;
-        }
-
     }
 
     private SVGData loadVectorImage(String filename) {
