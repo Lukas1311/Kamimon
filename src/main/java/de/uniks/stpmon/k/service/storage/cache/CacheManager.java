@@ -179,7 +179,7 @@ public class CacheManager implements ILifecycleService {
     public TrainerCache trainerCache() {
         ensureRegionSubscription();
         if (regionStorage.isEmpty()) {
-            throw new IllegalArgumentException("Region storage must not be empty!");
+            throw new IllegalStateException("Region storage must not be empty!");
         }
         if (trainerCache == null) {
             String regionId = regionStorage.getRegion()._id();

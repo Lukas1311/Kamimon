@@ -112,7 +112,6 @@ class RegionServiceTest {
         initUser();
         Trainer trainer = getDummyTrainer();
         //define mocks
-        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         List<Trainer> trainers = new ArrayList<>();
         trainers.add(trainer);
         when(regionApiService.getTrainers(any(), any()))

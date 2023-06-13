@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
     protected final Map<String, T> valuesById = new LinkedHashMap<>();
     protected final Map<String, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
+    protected final PublishSubject<T> onCreate = PublishSubject.create();
     protected final CompositeDisposable disposables = new CompositeDisposable();
     /**
      * A completable that completes when the cache is initialized.
@@ -113,6 +115,8 @@ public abstract class SimpleCache<T> implements ICache<T> {
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
                 .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
+
+        onCreate.onNext(value);
     }
 
     /**
@@ -124,10 +128,10 @@ public abstract class SimpleCache<T> implements ICache<T> {
         if (value == null) {
             throw new IllegalArgumentException("value must not be null");
         }
-        if (!isCacheable(value)) {
+        String id = getId(value);
+        if (!hasValue(id)) {
             return;
         }
-        String id = getId(value);
         valuesById.put(id, value);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
@@ -140,10 +144,13 @@ public abstract class SimpleCache<T> implements ICache<T> {
      * @param value The value to remove.
      */
     public void removeValue(T value) {
-        if (!isCacheable(value)) {
-            return;
+        if (value == null) {
+            throw new IllegalArgumentException("value must not be null");
         }
         String id = getId(value);
+        if (!hasValue(id)) {
+            return;
+        }
         valuesById.remove(id);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
@@ -158,6 +165,11 @@ public abstract class SimpleCache<T> implements ICache<T> {
             disposables.add(Disposable.fromRunnable(emitter::onComplete));
             emitter.setCancellable(() -> listenersById.remove(id));
         }));
+    }
+
+    @Override
+    public Observable<T> onCreation() {
+        return onCreate;
     }
 
     public Optional<T> getValue(String id) {

@@ -53,27 +53,6 @@ public class WorldLoaderTest {
         loadingSource.setPortalController(portalController);
     }
 
-//    @Test
-//    void loadNewWorld() {
-//        // Set the region and area, required for loading the world
-//        regionStorage.setRegion(DummyConstants.REGION);
-//        regionStorage.setArea(DummyConstants.AREA);
-//
-//        TileMap tileMap = new TileMap(DummyConstants.AREA, Collections.emptyMap());
-//        when(textureSetService.createMap(DummyConstants.AREA)).thenReturn(Observable.just(tileMap));
-//        when(textureSetService.createAllCharacters())
-//                .thenReturn(Observable.just(Map.of("test", new CharacterSet("test", null))));
-//        // Check if the world is null
-//        assertNull(worldStorage.getWorld());
-//
-//        Observable<WorldSet> world = worldLoader.loadWorld();
-//        TestObserver<WorldSet> testObserver = world.test();
-//        // Check if the world was loaded
-//        testObserver.assertValue(worldStorage.getWorld());
-//        // Check if the world is null
-//        assertNull(worldStorage.getWorld());
-//    }
-
     @Test
     void loadNewWorldNoRegion() {
         // Check if the world is null

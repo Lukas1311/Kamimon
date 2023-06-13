@@ -45,6 +45,11 @@ public class FriendCacheDummy implements IFriendCache {
     }
 
     @Override
+    public Observable<User> onCreation() {
+        return Observable.empty();
+    }
+
+    @Override
     public Observable<List<User>> updateFriends(User user) {
         friends.onNext(userApiService.getUsers(userStorage.getUser().friends())
                 .blockingFirst());

@@ -102,6 +102,13 @@ public interface ICache<T> extends ILifecycleService {
     Observable<Optional<T>> listenValue(String id);
 
     /**
+     * Retrieve an observable that emits the value when they are first added to the cache.
+     *
+     * @return The observable.
+     */
+    Observable<T> onCreation();
+
+    /**
      * Retrieve all values in the cache.
      * If the values are updated the observable will emit a new list.
      *
