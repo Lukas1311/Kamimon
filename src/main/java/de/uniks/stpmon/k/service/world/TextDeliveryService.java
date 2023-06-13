@@ -35,7 +35,7 @@ public class TextDeliveryService {
     }
 
     public String getRouteText() {
-        System.out.println("test");
+        // TODO: dummy yet
         return "";
     }
 }

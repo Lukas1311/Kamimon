@@ -119,7 +119,6 @@ public class IngameController extends PortalController {
             // TODO: block inputs while big map is open? (e.g. walking?)
             boolean isMapVisible = mapToggle.toggle();
             mapOverview.setVisible(isMapVisible);
-            System.out.println("map" + (isMapVisible ? " opened" : " closed"));
         });
         mapOverviewController.closeButton.setOnAction(click -> {
             mapToggle.reset();

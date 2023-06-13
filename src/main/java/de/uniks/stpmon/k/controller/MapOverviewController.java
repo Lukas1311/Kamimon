@@ -63,9 +63,7 @@ public class MapOverviewController extends ToastedController {
                 // and then calculate the position on the map with the given values inside the data
                 // e.g. the 3 little isles on the left of Albertania are the "Coupe Archipelago"
                 // and they have these values height=0, width=0, x=16, y=112
-                System.out.println(route);
             }, err -> {
-                System.out.println(err);
                 // TODO: if you need to set fxelements with text then better put this whole method into render
             }
         );
@@ -89,12 +87,9 @@ public class MapOverviewController extends ToastedController {
                 mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
             }, err -> {
                 handleError(err);
-                System.out.println(err);
             }
         );
         mapOverviewContent.setStyle("-fx-background-color: black");
-
-        System.out.println("test");
 
         closeButton.setOnAction(click -> closeMap());
         return parent;

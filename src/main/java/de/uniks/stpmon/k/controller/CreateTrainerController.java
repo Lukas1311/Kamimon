@@ -111,7 +111,6 @@ public class CreateTrainerController extends PortalController {
                     .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
                     .observeOn(FX_SCHEDULER)
                     .subscribe(trainer -> {
-                                System.out.println(trainer);
                                 enterRegion(chosenRegion);
                             }, err -> {
                                 err.printStackTrace();
