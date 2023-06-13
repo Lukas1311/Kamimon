@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service.world;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,16 +23,19 @@ public class TextDeliveryService {
     }
 
     public Observable<List<RouteData>> getRouteData(IMapProvider mapProvider) {
-        TileMapData mapData = mapProvider.map();
-        TileLayerData routeLayerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
-        
-        List<RouteData> routeDataList = new ArrayList<>();
-        for (ObjectData obj : routeLayerData.objects()) {
-            RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
-            RouteData routeData = routeDataBuilder.build();
-            routeDataList.add(routeData);
+        if (mapProvider.map() != null) {
+            TileMapData mapData = mapProvider.map();
+            TileLayerData routeLayerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
+            
+            List<RouteData> routeDataList = new ArrayList<>();
+            for (ObjectData obj : routeLayerData.objects()) {
+                RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
+                RouteData routeData = routeDataBuilder.build();
+                routeDataList.add(routeData);
+            }
+            return Observable.just(routeDataList);
         }
-        return Observable.just(routeDataList);
+        return Observable.just(Collections.emptyList());
     }
 
     public String getRouteText() {
