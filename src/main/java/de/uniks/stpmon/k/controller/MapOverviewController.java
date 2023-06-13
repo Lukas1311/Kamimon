@@ -85,20 +85,21 @@ public class MapOverviewController extends ToastedController {
         
         regionNameLabel.setText(currentRegion.name());
 
-
-        subscribe(
-            textureSetService.createMap(currentRegion),
-            tileMap -> {
-                BufferedImage renderedMap = tileMap.renderMap();
-                map = SwingFXUtils.toFXImage(renderedMap, null);
-                mapOverviewImage.setImage(map);
-                mapOverviewImage.setFitHeight(300);
-                mapOverviewImage.setFitWidth(500);
-                mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
-            }, err -> {
-                handleError(err);
-            }
-        );
+        if (currentRegion.map() != null) {
+            subscribe(
+                textureSetService.createMap(currentRegion),
+                tileMap -> {
+                    BufferedImage renderedMap = tileMap.renderMap();
+                    map = SwingFXUtils.toFXImage(renderedMap, null);
+                    mapOverviewImage.setImage(map);
+                    mapOverviewImage.setFitHeight(300);
+                    mapOverviewImage.setFitWidth(500);
+                    mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
+                }, err -> {
+                    handleError(err);
+                }
+            );
+        }
         
         Window parentWindow = app.getStage().getScene().getWindow();
         mapOverviewContent.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
