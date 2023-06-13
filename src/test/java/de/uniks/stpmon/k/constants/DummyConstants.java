@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.world.WorldSet;
 
@@ -76,6 +77,7 @@ public class DummyConstants {
 
                                     )
                             ),
+                            List.of(new ObjectData(0, null, null, null, false, 0, 0, 0, 0, 0)),
                             0, 0,
                             16, 16,
                             0, 0,
