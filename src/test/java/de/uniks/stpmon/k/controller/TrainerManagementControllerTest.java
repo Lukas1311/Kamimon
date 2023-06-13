@@ -11,7 +11,10 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import javafx.beans.property.SimpleBooleanProperty;
 import okhttp3.ResponseBody;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -54,6 +57,8 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @Mock
     TrainerService trainerService;
     @Mock
+    TrainerStorage trainerStorage;
+    @Mock
     PresetService presetService;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
@@ -75,6 +80,9 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
+        //when(trainerStorage.getTrainer()).thenReturn(dummytrainer);
+        //when(trainerStorage.getTrainerLoaded()).thenReturn(new SimpleBooleanProperty(true));
+        when(trainerStorage.onTrainer()).thenReturn(Observable.just(dummytrainer));
         when(presetService.getCharacterFile(any())).thenReturn(Observable.just(ResponseBody.create(null, "test")));
         app.show(trainerManagementController);
         stage.requestFocus();
