@@ -30,7 +30,7 @@ public class MapOverviewController extends ToastedController {
     @FXML
     public Button closeButton;
     @FXML
-    ImageView mapOverviewImage;
+    ImageView mapImageView;
     @FXML
     VBox mapContainer;
     @FXML
@@ -91,10 +91,10 @@ public class MapOverviewController extends ToastedController {
                 tileMap -> {
                     BufferedImage renderedMap = tileMap.renderMap();
                     map = SwingFXUtils.toFXImage(renderedMap, null);
-                    mapOverviewImage.setImage(map);
+                    mapImageView.setImage(map);
                     mapOverviewImage.setFitHeight(300);
                     mapOverviewImage.setFitWidth(500);
-                    mapContainer.setPrefSize(mapOverviewImage.getFitWidth(), mapOverviewImage.getFitHeight());
+                    mapContainer.setPrefSize(mapImageView.getFitWidth(), mapImageView.getFitHeight());
                 }, err -> {
                     handleError(err);
                 }

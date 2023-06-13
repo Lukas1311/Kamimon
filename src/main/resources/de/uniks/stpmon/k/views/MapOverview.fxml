@@ -27,13 +27,10 @@
    </top>
    <center>
       <VBox fx:id="mapContainer" alignment="CENTER" prefHeight="450.0" prefWidth="700.0" BorderPane.alignment="CENTER">
-         <ImageView fx:id="mapOverviewImage" fitHeight="300.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
             <VBox.margin>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </VBox.margin>
-            <image>
-               <Image url="@images/mapOverviewPlaceholder.jpg" />
-            </image>
          </ImageView>
       </VBox>
    </center>
