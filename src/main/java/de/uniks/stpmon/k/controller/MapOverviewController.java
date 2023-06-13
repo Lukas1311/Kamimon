@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
+import javafx.stage.Window;
 
 import javax.inject.Inject;
 
@@ -43,7 +43,7 @@ public class MapOverviewController extends ToastedController {
     @Inject
     TextDeliveryService textDeliveryService;
 
-    private final double MAP_OVERVIEW_SCALE = 0.85;
+    private final double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
     private Image map;
     private Region currentRegion;
     
@@ -94,12 +94,15 @@ public class MapOverviewController extends ToastedController {
                 handleError(err);
             }
         );
+        
+        Window parentWindow = app.getStage().getScene().getWindow();
+        mapOverviewContent.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
+        mapOverviewContent.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
 
-        double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        double contentWidth = screenWidth * MAP_OVERVIEW_SCALE;
-        double contentHeight = screenHeight * MAP_OVERVIEW_SCALE;
-        mapOverviewContent.setPrefSize(contentWidth, contentHeight);
+        mapOverviewImage.fitWidthProperty().bind(mapContainer.widthProperty());
+        mapOverviewImage.fitHeightProperty().bind(mapContainer.heightProperty());
+
+
         mapOverviewContent.setStyle("-fx-background-color: black");
         System.out.println("test");
 

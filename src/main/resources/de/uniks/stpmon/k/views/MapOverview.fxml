@@ -11,24 +11,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="mapOverviewContent" maxHeight="450.0" maxWidth="750.0" prefHeight="450.0" prefWidth="750.0"
-   xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="mapOverviewContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
    fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
    <top>
       <StackPane prefHeight="25.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" />
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="regionNameLabel" text="Label" textFill="WHITE" underline="true" />
-               </children>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button fx:id="closeButton" mnemonicParsing="false" text="X" />
-               </children>
-            </HBox>
-         </children>
+         <HBox prefHeight="100.0" prefWidth="200.0" />
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <Label fx:id="regionNameLabel" text="Label" textFill="WHITE" underline="true" />
+         </HBox>
+         <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
+            <Button fx:id="closeButton" mnemonicParsing="false" text="X" />
+         </HBox>
       </StackPane>
    </top>
    <center>
