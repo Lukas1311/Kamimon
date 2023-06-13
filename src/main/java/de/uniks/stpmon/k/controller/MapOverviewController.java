@@ -58,7 +58,10 @@ public class MapOverviewController extends ToastedController {
 
         subscribe(
             textDeliveryService.getRouteData(currentRegion),
-            route -> {
+            routeListData -> {
+                    routeListData.stream()
+                        .filter(routeData -> routeData.id() == 65) // e.g. id = 3
+                        .forEach(System.out::println);
                 // TODO: here you could filter each route for id or whatever
                 // and then calculate the position on the map with the given values inside the data
                 // e.g. the 3 little isles on the left of Albertania are the "Coupe Archipelago"
@@ -68,6 +71,7 @@ public class MapOverviewController extends ToastedController {
             }
         );
     }
+
 
     @Override
     public Parent render() {
