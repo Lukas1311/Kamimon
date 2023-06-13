@@ -35,6 +35,8 @@ public class WorldView extends Viewable {
     protected FloorView floorView;
     @Inject
     protected PropView propView;
+    @Inject
+    protected NPCCollectiveView npcCollectiveView;
 
     @Inject
     protected CameraStorage cameraStorage;
@@ -63,12 +65,13 @@ public class WorldView extends Viewable {
         Node character = characterView.render();
         Node floor = floorView.render();
         Node props = propView.render();
+        Node npc = npcCollectiveView.render();
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        return new Group(floor, ambient, props, character);
+        return new Group(floor, ambient, props, character, npc);
     }
 
     public SubScene createScene() {
@@ -98,6 +101,7 @@ public class WorldView extends Viewable {
         characterView.init();
         floorView.init();
         propView.init();
+        npcCollectiveView.init();
     }
 
     @Override
@@ -107,5 +111,6 @@ public class WorldView extends Viewable {
         characterView.destroy();
         floorView.destroy();
         propView.destroy();
+        npcCollectiveView.destroy();
     }
 }
