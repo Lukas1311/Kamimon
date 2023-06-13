@@ -33,7 +33,8 @@ public class TestModule {
                 .setSkipLoading(true)
                 .setSkipLoadImages(true)
                 .setSkipAnimations(true)
-                .setWalkingSpeed(1);
+                .setWalkingSpeed(1)
+                .setTextureScale(1.0d);
     }
 
 //    @Provides
