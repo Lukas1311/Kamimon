@@ -120,21 +120,21 @@ public class SVGUtils {
         private double width;
         private double height;
 
-        public SVGData(List<SVGPath> svgPaths, double width, double height) {
+        private SVGData(List<SVGPath> svgPaths, double width, double height) {
             this.svgPaths = svgPaths;
             this.width = width;
             this.height = height;
         }
 
-        public List<SVGPath> getSVGPaths() {
+        private List<SVGPath> getSVGPaths() {
             return this.svgPaths;
         }
 
-        public double getWidth() {
+        private double getWidth() {
             return this.width;
         }
 
-        public double getHeight() {
+        private double getHeight() {
             return this.height;
         }
     }
