@@ -34,6 +34,9 @@ public class NPCCollectiveView extends EntityView {
     @Override
     public Node render() {
         Group npcGroup = new Group();
+        if (regionStorage.isEmpty()) {
+            return npcGroup;
+        }
         disposables.add(regionService.getAllTrainer(regionStorage.getRegion()._id(), regionStorage.getArea()._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(((npcs) -> {
