@@ -775,14 +775,20 @@ Load fonts
 }
 
 .edit-chat-error-text {
-	-fx-text-fill: -fx-color-red;
-	-fx-text-overrun: ellipsis;
-	-fx-font-size: 12;
+    -fx-text-fill: -fx-color-red;
+    -fx-text-overrun: ellipsis;
+    -fx-font-size: 12;
 }
 
-
-
 /* -------------------- Settings -------------------- */
+.bordered-listView {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
+
+.ingameSettings-hox {
+    -fx-padding: 12 0 0 0;
+}
 .settings-tab {
 	-fx-pref-width: 370;
 	-fx-pref-height: 720;
@@ -818,13 +824,13 @@ Load fonts
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
 
 .create-trainer-text-input {
-	-fx-text-fill: black;
-	-fx-background-color: white;
-	-fx-border-color: black;
+    -fx-text-fill: black;
+    -fx-background-color: white;
+    -fx-border-color: black;
 	-fx-border-width: 3px;
 }
 /* -------------------- Border for RegionPane -------------------- */
@@ -832,3 +838,41 @@ Load fonts
 	-fx-border-color: black; /* Border color */
 	-fx-border-width: 10px; /* Border width */
 }
+
+
+/* -------------------- PopUp -------------------- */
+.popup-close-button {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-font-size: 20px;
+}
+
+.popup-close-button .ikonli-font-icon{
+	-fx-icon-color: black;
+	-fx-icon-size: 30px;
+}
+
+.popup-background {
+	-fx-border-color: black;
+	-fx-border-width: 3px;
+	-fx-border-radius: 0;
+
+	-fx-background-color: white;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+.popup-text{
+	-fx-font-size: 20px;
+}
+
+/* -------------------- Loading Screen for Region -------------------- */
+.progress-bar {
+    -fx-accent: black;
+}
+
+
+
+

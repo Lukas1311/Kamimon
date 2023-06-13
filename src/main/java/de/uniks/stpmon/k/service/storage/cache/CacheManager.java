@@ -27,6 +27,8 @@ public class CacheManager implements ILifecycleService {
     protected AbilityCache abilityCache;
     @Inject
     protected MonsterTypeCache monsterTypeCache;
+    @Inject
+    protected CharacterSetCache characterSetCache;
 
     @Inject
     public CacheManager() {
@@ -151,6 +153,20 @@ public class CacheManager implements ILifecycleService {
         return monsterTypeCache;
     }
 
+
+    /**
+     * Acquires the character set cache.
+     * If the cache does not exist yet, it will be created.
+     *
+     * @return A cache for character sets
+     */
+    public CharacterSetCache characterSetCache() {
+        if (characterSetCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            characterSetCache.init();
+        }
+        return characterSetCache;
+    }
+
     @Override
     public void destroy() {
         for (MonsterCache cache : monsters.values()) {
@@ -166,6 +182,9 @@ public class CacheManager implements ILifecycleService {
         }
         if (monsterTypeCache != null) {
             monsterTypeCache.destroy();
+        }
+        if (characterSetCache != null) {
+            characterSetCache.destroy();
         }
     }
 }
