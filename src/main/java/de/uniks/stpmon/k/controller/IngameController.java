@@ -40,7 +40,7 @@ public class IngameController extends PortalController {
     @Inject
     MinimapController miniMap;
     @Inject
-    MapOverviewController mapOverview;
+    MapOverviewController mapOverviewController;
     @Inject
     BackpackController backPack;
     @Inject
@@ -62,7 +62,7 @@ public class IngameController extends PortalController {
         worldController.init();
         monsterBar.init();
         miniMap.init();
-        mapOverview.init();
+        mapOverviewController.init();
         backPack.init();
     }
 
@@ -73,7 +73,7 @@ public class IngameController extends PortalController {
         worldController.destroy();
         monsterBar.destroy();
         miniMap.destroy();
-        mapOverview.destroy();
+        mapOverviewController.destroy();
         backPack.destroy();
     }
 
@@ -99,7 +99,7 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(miniMap);
         }
 
-        Parent mapOverview = this.mapOverview.render();
+        Parent mapOverview = this.mapOverviewController.render();
 
 
         Parent backPack = this.backPack.render();
@@ -120,6 +120,10 @@ public class IngameController extends PortalController {
             boolean isMapVisible = mapToggle.toggle();
             mapOverview.setVisible(isMapVisible);
             System.out.println("map" + (isMapVisible ? " opened" : " closed"));
+        });
+        mapOverviewController.closeButton.setOnAction(click -> {
+            mapToggle.reset();
+            mapOverview.setVisible(false);
         });
 
         return parent;

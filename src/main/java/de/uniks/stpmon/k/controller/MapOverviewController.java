@@ -27,7 +27,7 @@ public class MapOverviewController extends ToastedController {
     @FXML
     Label regionNameLabel;
     @FXML
-    Button closeButton;
+    public Button closeButton;
     @FXML
     ImageView mapOverviewImage;
     @FXML
@@ -104,6 +104,6 @@ public class MapOverviewController extends ToastedController {
     }
 
     public void closeMap() {
-        mapOverviewContent.setVisible(false);
+        // mapOverviewContent.setVisible(false); // TODO: unused (used already in ingame)
     }
 }
