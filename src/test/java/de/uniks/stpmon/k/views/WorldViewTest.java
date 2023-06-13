@@ -5,7 +5,9 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import javafx.scene.Parent;
@@ -33,6 +35,8 @@ public class WorldViewTest extends ApplicationTest {
     @InjectMocks
     public WorldController controller = component.worldController();
     public TrainerStorage trainerStorage = component.trainerStorage();
+    public RegionStorage regionStorage = component.regionStorage();
+    public RegionService regionService = component.regionService();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -41,6 +45,9 @@ public class WorldViewTest extends ApplicationTest {
         MovementDummy.addMovementDummy(component.eventListener());
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         worldStorage.setWorld(DummyConstants.WORLD);
+        regionStorage.setRegion(DummyConstants.REGION);
+        regionStorage.setArea(regionService.getArea("id0", "id0_0").blockingFirst());
+
 
         // show app
         app.start(stage);
@@ -86,4 +93,5 @@ public class WorldViewTest extends ApplicationTest {
         // check if char moved right by -16
         assertEquals(0, character.getTranslateX());
     }
+
 }

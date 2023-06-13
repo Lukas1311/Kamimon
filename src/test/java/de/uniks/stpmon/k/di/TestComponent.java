@@ -6,7 +6,9 @@ import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
@@ -33,6 +35,10 @@ public interface TestComponent extends MainComponent {
     WorldController worldController();
 
     TrainerStorage trainerStorage();
+
+    RegionStorage regionStorage();
+
+    RegionService regionService();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {

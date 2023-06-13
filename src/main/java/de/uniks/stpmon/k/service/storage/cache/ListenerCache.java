@@ -9,7 +9,7 @@ import javax.inject.Inject;
 public abstract class ListenerCache<T> extends SimpleCache<T> {
 
     @Inject
-    public EventListener eventListener;
+    protected EventListener listener;
 
     /**
      * Retrieve the class of the data type.
@@ -25,16 +25,18 @@ public abstract class ListenerCache<T> extends SimpleCache<T> {
      */
     protected abstract String getEventName();
 
-
     public ICache<T> init() {
         super.init();
-        disposables.add(eventListener.listen(Socket.WS, getEventName(), getDataClass())
+        disposables.add(listener.listen(Socket.WS, getEventName(), getDataClass())
                 .subscribe(event -> {
-                            final T user = event.data();
+                            final T value = event.data();
+                            if (!isCacheable(value)) {
+                                return;
+                            }
                             switch (event.suffix()) {
-                                case "created" -> addValue(user);
-                                case "updated" -> updateValue(user);
-                                case "deleted" -> removeValue(user);
+                                case "created" -> addValue(value);
+                                case "updated" -> updateValue(value);
+                                case "deleted" -> removeValue(value);
                             }
                         }
                 ));
