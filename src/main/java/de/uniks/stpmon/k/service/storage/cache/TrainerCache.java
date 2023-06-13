@@ -72,7 +72,7 @@ public class TrainerCache extends ListenerCache<Trainer> {
 
     public TrainerAreaCache areaCache(String areaId) {
         if (areaCache != null && !areaCache.areSetupValues(regionId, areaId)) {
-            throw new IllegalStateException("Region not empty but new trainer cache requested!");
+            throw new IllegalStateException("Area cache already setup for different area!");
         }
         if (areaCache == null) {
             areaCache = trainerCacheProvider.get();

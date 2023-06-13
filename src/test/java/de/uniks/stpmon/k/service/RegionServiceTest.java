@@ -108,7 +108,7 @@ class RegionServiceTest {
     }
 
     @Test
-    void getTrainers() {
+    void getAreaTrainers() {
         initUser();
         Trainer trainer = getDummyTrainer();
         //define mocks
@@ -129,6 +129,29 @@ class RegionServiceTest {
 
         //check mocks
         verify(regionApiService).getTrainers(any(), any());
+    }
+
+    @Test
+    void getRegionTrainers() {
+        initUser();
+        Trainer trainer = getDummyTrainer();
+        //define mocks
+        List<Trainer> trainers = new ArrayList<>();
+        trainers.add(trainer);
+        when(regionApiService.getTrainers(any())).thenReturn(Observable.just(trainers));
+
+        //action
+        final List<Trainer> returnTrainers = regionService
+                .getTrainers("regionId")
+                .blockingFirst();
+
+        //check values
+        assertEquals(1, returnTrainers.size());
+        assertEquals("0", returnTrainers.get(0)._id());
+        assertEquals("TestTrainer", returnTrainers.get(0).name());
+
+        //check mocks
+        verify(regionApiService).getTrainers(any());
     }
 
     @Test

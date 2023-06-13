@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -15,8 +14,6 @@ import java.util.Optional;
 public class TrainerAreaCache extends SimpleCache<Trainer> {
 
     private TrainerCache trainerCache;
-    @Inject
-    RegionService regionService;
     @Inject
     TrainerStorage trainerStorage;
     @Inject
