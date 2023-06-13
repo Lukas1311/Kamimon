@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 
 import javax.inject.Inject;
 
@@ -42,7 +43,7 @@ public class MapOverviewController extends ToastedController {
     @Inject
     TextDeliveryService textDeliveryService;
 
-
+    private final double MAP_OVERVIEW_SCALE = 0.85;
     private Image map;
     private Region currentRegion;
     
@@ -60,7 +61,7 @@ public class MapOverviewController extends ToastedController {
             textDeliveryService.getRouteData(currentRegion),
             routeListData -> {
                     routeListData.stream()
-                        .filter(routeData -> routeData.id() == 65) // e.g. id = 3
+                        .filter(routeData -> routeData.id() == 65) // e.g. id = 65 for Coupe Archipelago
                         .forEach(System.out::println);
                 // TODO: here you could filter each route for id or whatever
                 // and then calculate the position on the map with the given values inside the data
@@ -93,7 +94,15 @@ public class MapOverviewController extends ToastedController {
                 handleError(err);
             }
         );
+
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getBounds().getHeight();
+        double contentWidth = screenWidth * MAP_OVERVIEW_SCALE;
+        double contentHeight = screenHeight * MAP_OVERVIEW_SCALE;
+        mapOverviewContent.setPrefSize(contentWidth, contentHeight);
         mapOverviewContent.setStyle("-fx-background-color: black");
+        System.out.println("test");
+
 
         closeButton.setOnAction(click -> closeMap());
         return parent;
