@@ -1,10 +1,10 @@
 package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
-import de.uniks.stpmon.k.models.map.ChunkData;
-import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.*;

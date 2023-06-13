@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.models.map;
 
 import java.util.List;
 
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
+
 /**
  * @param height           Number of tile rows
  * @param infinite         Whether the map has infinite dimensions

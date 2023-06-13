@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.utils.UiToggle;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -33,6 +35,8 @@ public class IngameController extends PortalController {
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
+    MapOverviewController mapOverviewController;
+    @Inject
     MonsterBarController monsterBarController;
     @Inject
     MinimapController minimapController;
@@ -43,6 +47,8 @@ public class IngameController extends PortalController {
 
     @Inject
     protected WorldController worldController;
+
+
 
     @Inject
     public IngameController() {
@@ -55,6 +61,7 @@ public class IngameController extends PortalController {
         worldController.init();
         monsterBarController.init();
         minimapController.init();
+        mapOverviewController.init();
         backpackController.init();
     }
 
@@ -65,6 +72,7 @@ public class IngameController extends PortalController {
         worldController.destroy();
         monsterBarController.destroy();
         minimapController.destroy();
+        mapOverviewController.destroy();
         backpackController.destroy();
     }
 
@@ -90,12 +98,30 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(0, miniMap);
         }
 
+        Parent mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
             ingameWrappingHBox.getChildren().add(backPack);
             ingameStack.setAlignment(Pos.TOP_RIGHT);
         }
+
+        if (mapOverview != null) {
+            ingameStack.getChildren().add(mapOverview);
+            ingameStack.setAlignment(Pos.CENTER);
+            mapOverview.setVisible(false);
+        }
+
+        UiToggle mapToggle = new UiToggle(false);
+        miniMap.setOnMouseClicked(click -> {
+            // TODO: block inputs while big map is open? (e.g. walking?)
+            boolean isMapVisible = mapToggle.toggle();
+            mapOverview.setVisible(isMapVisible);
+        });
+        mapOverviewController.closeButton.setOnAction(click -> {
+            mapToggle.reset();
+            mapOverview.setVisible(false);
+        });
 
         return parent;
     }
