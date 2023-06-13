@@ -1,16 +1,18 @@
 package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
-import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import java.util.Objects;
+import java.util.Optional;
 
 public class MovementHandler {
 
@@ -21,8 +23,12 @@ public class MovementHandler {
     protected EventListener listener;
     @Inject
     protected WorldLoader worldLoader;
+    protected TrainerCache trainerCache;
+    @Inject
+    protected CacheManager cacheManager;
     // not injected, provider by parent user
     private TrainerProvider trainerProvider;
+    private String trainerId;
     private String eventName;
 
     @Inject
@@ -42,32 +48,26 @@ public class MovementHandler {
         this.eventName = String.format("areas.%s.trainers.%s.moved",
                 trainer.area(),
                 trainer._id());
+        this.trainerId = trainer._id();
+        trainerCache = cacheManager.trainerCache();
     }
 
     public Observable<Trainer> onMovements() {
         if (trainerProvider == null) {
             return Observable.error(new IllegalStateException("Trainer provider not set"));
         }
-        return listener.listen(Socket.UDP, eventName, MoveTrainerDto.class)
-                .map(Event::data)
+        return trainerCache
+                .listenValue(trainerId)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .flatMap(this::onMoveReceived);
     }
 
-    private Observable<Trainer> onMoveReceived(MoveTrainerDto dto) {
+    private Observable<Trainer> onMoveReceived(Trainer newTrainer) {
         Trainer trainer = trainerProvider.getTrainer();
-        Trainer newTrainer = new Trainer(trainer._id(),
-                trainer.region(),
-                trainer.user(),
-                trainer.name(),
-                trainer.image(),
-                trainer.coins(),
-                dto.area(),
-                dto.x(),
-                dto.y(),
-                dto.direction(),
-                trainer.npc());
         // Check if area changed
-        if (!Objects.equals(newTrainer.area(), trainer.area())) {
+        if (trainerProvider.isMain()
+                && !Objects.equals(newTrainer.area(), trainer.area())) {
             movementBlocked = true;
             return worldLoader.tryEnterArea(newTrainer)
                     .doOnComplete(() -> movementBlocked = false);

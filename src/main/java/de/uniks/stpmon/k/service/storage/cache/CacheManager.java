@@ -177,13 +177,23 @@ public class CacheManager implements ILifecycleService {
     }
 
     public TrainerCache trainerCache() {
-        ensureRegionSubscription();
         if (regionStorage.isEmpty()) {
-            throw new IllegalStateException("Region storage must not be empty!");
+            throw new IllegalStateException("Region storage is empty!");
+        }
+        String regionId = regionStorage.getRegion()._id();
+        String areaId = regionStorage.getArea()._id();
+        return trainerCache(regionId, areaId);
+    }
+
+    public TrainerCache trainerCache(String regionId, String areaId) {
+        ensureRegionSubscription();
+        if (regionId == null || areaId == null) {
+            throw new IllegalStateException("Region id or area id is null!");
+        }
+        if (trainerCache != null && !trainerCache.areSetupValues(regionId, areaId)) {
+            throw new IllegalStateException("Region not empty but new trainer cache requested!");
         }
         if (trainerCache == null) {
-            String regionId = regionStorage.getRegion()._id();
-            String areaId = regionStorage.getArea()._id();
             trainerCache = trainerCacheProvider.get();
             trainerCache.setup(regionId, areaId);
             trainerCache.addOnDestroy(() -> trainerCache = null);
@@ -199,8 +209,10 @@ public class CacheManager implements ILifecycleService {
                     trainerCache.destroy();
                 }
                 if (event.changedArea()) {
+                    String regionId = event.region()._id();
+                    String areaId = event.area()._id();
                     // Recreate the trainer cache
-                    trainerCache();
+                    trainerCache(regionId, areaId);
                 }
             });
         }

@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -14,6 +15,8 @@ public class TrainerCache extends ListenerCache<Trainer> {
 
     @Inject
     RegionService regionService;
+    @Inject
+    TrainerStorage trainerStorage;
 
     private String regionId;
     private String areaId;
@@ -67,7 +70,9 @@ public class TrainerCache extends ListenerCache<Trainer> {
 
     @Override
     protected boolean isCacheable(Trainer value) {
-        return areaId.equals(value.area());
+        Trainer trainer = trainerStorage.getTrainer();
+        return areaId.equals(value.area())
+                || trainer != null && trainer._id().equals(value._id());
     }
 
     @Override
