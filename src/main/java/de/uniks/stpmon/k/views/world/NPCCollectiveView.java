@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.views.world;
 
+import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
@@ -37,7 +38,7 @@ public class NPCCollectiveView extends EntityView {
                 .observeOn(FX_SCHEDULER)
                 .subscribe(((npcs) -> {
                     for (Trainer npc : npcs) {
-                        if (Objects.equals(npc._id(), trainerService.getMe()._id())) {
+                        if (Objects.equals(npc._id(), trainerService.getMe()._id()) || npc == NoneConstants.NONE_TRAINER) {
                             continue;
                         }
                         NPCView npcV = getNPCView();
