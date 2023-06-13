@@ -9,17 +9,12 @@ import javax.inject.Singleton;
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
-import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import io.reactivex.rxjava3.core.Observable;
 
 @Singleton
 public class TextDeliveryService {
-    
-    @Inject
-    PresetService presetService;
-
 
     @Inject
     public TextDeliveryService() {
