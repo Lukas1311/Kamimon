@@ -99,10 +99,6 @@ public class MapOverviewController extends ToastedController {
         mapOverviewContent.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
         mapOverviewContent.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
 
-        mapOverviewImage.fitWidthProperty().bind(mapContainer.widthProperty());
-        mapOverviewImage.fitHeightProperty().bind(mapContainer.heightProperty());
-
-
         mapOverviewContent.setStyle("-fx-background-color: black");
         System.out.println("test");
 
