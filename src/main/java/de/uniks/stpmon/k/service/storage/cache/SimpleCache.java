@@ -118,7 +118,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
             return;
         }
         String id = getId(value);
-        valuesById.put(getId(value), value);
+        valuesById.put(id, value);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
                 .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
@@ -139,7 +139,14 @@ public abstract class SimpleCache<T> implements ICache<T> {
             throw new IllegalArgumentException("value must not be null");
         }
         String id = getId(value);
+        // Add if value is not already cached
         if (!hasValue(id)) {
+            addValue(value);
+            return;
+        }
+        // If new value is not cacheable, remove the old value from the cache
+        if (!isCacheable(value)) {
+            removeValue(value);
             return;
         }
         valuesById.put(id, value);

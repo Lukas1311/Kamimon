@@ -45,30 +45,26 @@ public class TrainerAreaCache extends SimpleCache<Trainer> {
         super.init();
         disposables.add(listener.listen(Socket.UDP, String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
                 .subscribe(event -> {
-                    final MoveTrainerDto dto = event.data();
-                    // Get trainer from parent cache to get trainers which changed area
-                    Optional<Trainer> trainerOptional = trainerCache.getValue(dto._id());
-                    // Should never happen, trainer moves before he exists
-                    if (trainerOptional.isEmpty()) {
-                        return;
-                    }
-                    Trainer trainer = trainerOptional.get();
-                    Trainer newTrainer = new Trainer(trainer._id(),
-                            trainer.region(),
-                            trainer.user(),
-                            trainer.name(),
-                            trainer.image(),
+                            final MoveTrainerDto dto = event.data();
+                            // Get trainer from parent cache to get trainers which changed area
+                            Optional<Trainer> trainerOptional = trainerCache.getValue(dto._id());
+                            // Should never happen, trainer moves before he exists
+                            if (trainerOptional.isEmpty()) {
+                                return;
+                            }
+                            Trainer trainer = trainerOptional.get();
+                            Trainer newTrainer = new Trainer(trainer._id(),
+                                    trainer.region(),
+                                    trainer.user(),
+                                    trainer.name(),
+                                    trainer.image(),
                                     trainer.coins(),
                                     dto.area(),
                                     dto.x(),
                                     dto.y(),
                                     dto.direction(),
                                     trainer.npc());
-                            if (!isCacheable(newTrainer)) {
-                                removeValue(trainer);
-                                return;
-                            }
-                            updateValue(newTrainer);
+                            trainerCache.updateValue(newTrainer);
                         }
                 ));
         return this;
@@ -83,7 +79,10 @@ public class TrainerAreaCache extends SimpleCache<Trainer> {
 
     @Override
     protected Observable<List<Trainer>> getInitialValues() {
-        return trainerCache.onInitialized().andThen(trainerCache.getValues());
+        return trainerCache.onInitialized()
+                .andThen(trainerCache.getValues()
+                        // just take the first values
+                        .take(1));
     }
 
     @Override
