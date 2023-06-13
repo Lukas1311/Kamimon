@@ -67,6 +67,7 @@ public class MapOverviewController extends ToastedController {
                         routeListData.stream()
                             .filter(routeData -> routeData.id() == 65) // e.g. id = 65 for Coupe Archipelago
                             .forEach(System.out::println);
+                    // TODO: @halber01 maybe you can also calculate the current position of the player and show him on the map
                     // TODO: here you could filter each route for id or whatever
                     // and then calculate the position on the map with the given values inside the data
                     // e.g. the 3 little isles on the left of Albertania are the "Coupe Archipelago"
