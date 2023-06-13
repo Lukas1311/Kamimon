@@ -6,11 +6,12 @@ import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.models.map.ChunkData;
-import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.world.WorldSet;
 
 import java.awt.image.BufferedImage;
@@ -76,6 +77,7 @@ public class DummyConstants {
 
                                     )
                             ),
+                            List.of(new ObjectData(0, null, null, null, false, 0, 0, 0, 0, 0)),
                             0, 0,
                             16, 16,
                             0, 0,
