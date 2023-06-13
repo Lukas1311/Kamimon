@@ -11,7 +11,6 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -35,6 +34,7 @@ import java.util.List;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
 public class TrainerManagementController extends ToastedController {
+
     @FXML
     public VBox trainerManagementScreen;
     @FXML
@@ -90,7 +90,7 @@ public class TrainerManagementController extends ToastedController {
     }
 
     @Override
-    public void init(){
+    public void init() {
         super.init();
     }
 
@@ -121,7 +121,6 @@ public class TrainerManagementController extends ToastedController {
                 changesSaved = false;
             }
         });
-
 
 
         trainerNameInput.textProperty().bindBidirectional(trainerName);
@@ -155,7 +154,7 @@ public class TrainerManagementController extends ToastedController {
         }
         hybridControllerProvider.get().popTab();
     }
-    
+
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
     }
@@ -216,4 +215,5 @@ public class TrainerManagementController extends ToastedController {
         popUp.setScenario(scenario);
         popUp.showModal(callback);
     }
+
 }

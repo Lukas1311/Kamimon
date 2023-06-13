@@ -13,8 +13,6 @@ import de.uniks.stpmon.k.service.TrainerService;
 
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.subjects.BehaviorSubject;
-import javafx.beans.property.SimpleBooleanProperty;
 import okhttp3.ResponseBody;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -43,16 +41,19 @@ import static org.mockito.Mockito.*;
 public class TrainerManagementControllerTest extends ApplicationTest {
 
     @Mock
+    @SuppressWarnings("unused")
     RegionService regionService;
     @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Mock
+    @SuppressWarnings("unused")
     ChooseSpriteController chooseSpriteController;
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     Provider<LobbyController> lobbyControllerProvider;
     @Mock
     TrainerService trainerService;
@@ -71,17 +72,13 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     TrainerManagementController trainerManagementController;
 
     NPCInfo npcInfo = new NPCInfo(false);
-    Trainer dummytrainer = new Trainer(
-            "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo
-    );
+    Trainer dummytrainer = new Trainer("1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
-        //when(trainerStorage.getTrainer()).thenReturn(dummytrainer);
-        //when(trainerStorage.getTrainerLoaded()).thenReturn(new SimpleBooleanProperty(true));
         when(trainerStorage.onTrainer()).thenReturn(Observable.just(dummytrainer));
         when(presetService.getCharacterFile(any())).thenReturn(Observable.just(ResponseBody.create(null, "test")));
         app.show(trainerManagementController);
@@ -98,7 +95,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -124,7 +121,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -152,7 +149,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -281,4 +278,5 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         assertEquals("Bob2", trainerNameCaptor.getValue());
         //TODO: add method for sprite save here
     }
+
 }

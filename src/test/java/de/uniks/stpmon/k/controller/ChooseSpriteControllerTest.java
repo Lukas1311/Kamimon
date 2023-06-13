@@ -4,18 +4,11 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -63,6 +56,7 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     Provider<CreateTrainerController> createTrainerControllerProvider;
     @Mock
     RegionStorage regionStorage;
@@ -141,7 +135,6 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     public void testSaveSprite() {
         // Mock the necessary methods
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
-        final CreateTrainerController createTrainerController = Mockito.mock(CreateTrainerController.class);
         final HybridController hybridController = Mockito.mock(HybridController.class);
 
         chooseSpriteController.characters.addAll("Sprite1", "Sprite2", "Sprite3");
@@ -161,11 +154,6 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
         when(hybridControllerProvider.get()).thenReturn(hybridController);
         doNothing().when(hybridController).popTab();
 
-        //when(createTrainerControllerProvider.get()).thenReturn(createTrainerController);
-        //doNothing().when(createTrainerController).setTrainerImage(anyString());
-
-        //when(createTrainerController.render()).thenReturn(new BorderPane());
-
         when(trainerService.setImage(anyString())).thenReturn(Observable.empty());
 
         // Test the saveSprite() method
@@ -176,4 +164,5 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
         verify(trainerService).setImage("Sprite1");
 
     }
+
 }

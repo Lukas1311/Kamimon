@@ -122,4 +122,5 @@ public class SettingsController extends ToastedController {
     public void editTrainer() {
         hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
     }
+
 }

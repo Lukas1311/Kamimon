@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CreateTrainerController extends PortalController {
+
     @FXML
     public TextField createTrainerInput;
     @FXML
@@ -122,7 +123,7 @@ public class CreateTrainerController extends PortalController {
     }
 
     // set file ID of the chosen sprite
-    public void setTrainerImage(String id){
+    public void setTrainerImage(String id) {
         chosenSprite = id;
         loadSprite(chosenSprite);
     }
@@ -155,5 +156,6 @@ public class CreateTrainerController extends PortalController {
     public void closeWindow() {
         hybridControllerProvider.get().openMain(MainWindow.LOBBY);
     }
+
 }
 

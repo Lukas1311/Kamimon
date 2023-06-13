@@ -139,6 +139,7 @@ public abstract class Viewable {
     }
 
     private class SVGData {
+
         private List<SVGPath> svgPaths;
         private Double width;
         private Double height;
@@ -160,6 +161,7 @@ public abstract class Viewable {
         private Double getHeight() {
             return this.height;
         }
+
     }
 
     private SVGData loadVectorImage(String filename) {
@@ -167,7 +169,7 @@ public abstract class Viewable {
         List<SVGPath> svgPaths = new ArrayList<>();
         Double svgWidth = 0.0, svgHeight = 0.0;
         try {
-            DocumentBuilderFactory  factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             // parse the svg
             Document document = builder.parse(svgUrl.openStream());
@@ -231,9 +233,9 @@ public abstract class Viewable {
 
     /**
      * Method to load vector files (.svg) created with Adobe Illustrator and put them into an ImageView object.
-     * 
+     *
      * @param imageView takes the ImageView object where you want to put the vector graphic inside
-     * @param filename takes the filename of the vector image e.g. kamimonLetterling.svg
+     * @param filename  takes the filename of the vector image e.g. kamimonLetterling.svg
      */
     protected void setVectorImage(ImageView imageView, String filename) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
@@ -246,7 +248,7 @@ public abstract class Viewable {
         Group vectorGroup = new Group(svgPaths.toArray(new SVGPath[0]));
         SnapshotParameters snapshotParams = new SnapshotParameters();
         snapshotParams.setFill(Color.TRANSPARENT);
-        
+
         WritableImage image = new WritableImage(svgData.getWidth().intValue(), svgData.getHeight().intValue());
         // render the group onto our writeableImage
         vectorGroup.snapshot(snapshotParams, image);
@@ -255,12 +257,12 @@ public abstract class Viewable {
 
     /**
      * Processes the ResponseBody containing the image data for a trainer sprite
-     * 
+     *
      * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
-     * @param sprite is the ImageView of the fxml where you want the image data to be loaded in
-     * @param tileRow is the row of the tile you want to extract (most cases one of 0,1,2)
-     * @param tileIndex the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
-     * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image 
+     * @param sprite          is the ImageView of the fxml where you want the image data to be loaded in
+     * @param tileRow         is the row of the tile you want to extract (most cases one of 0,1,2)
+     * @param tileIndex       the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
+     * @param responseBody    is the reponse body from the api call to the preset-service that contains the direct link to the image
      */
     public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody) {
         setSpriteImage(spriteContainer, sprite, tileRow, tileIndex, responseBody, 150, 155);
@@ -269,13 +271,14 @@ public abstract class Viewable {
 
     /**
      * Processes the ResponseBody containing the image data for a trainer sprite
+     *
      * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
-     * @param sprite is the ImageView of the fxml where you want the image data to be loaded in
-     * @param tileRow is the row of the tile you want to extract (most cases one of 0,1,2)
-     * @param tileIndex the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
-     * @param responseBody is the reponse body from the api call to the preset-service that contains the direct link to the image
-     * @param viewWidth is the fitWidth property of the imageview
-     * @param viewHeight is the fitHeight property of the imageview
+     * @param sprite          is the ImageView of the fxml where you want the image data to be loaded in
+     * @param tileRow         is the row of the tile you want to extract (most cases one of 0,1,2)
+     * @param tileIndex       the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
+     * @param responseBody    is the reponse body from the api call to the preset-service that contains the direct link to the image
+     * @param viewWidth       is the fitWidth property of the imageview
+     * @param viewHeight      is the fitHeight property of the imageview
      */
     public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody, int viewWidth, int viewHeight) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
@@ -317,4 +320,5 @@ public abstract class Viewable {
             }
         }
     }
+
 }

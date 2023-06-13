@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.models.Trainer;
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -24,7 +22,7 @@ public class TrainerStorage extends TrainerProvider {
     public void setTrainer(Trainer trainer) {
         super.setTrainer(trainer);
         trainerLoaded.set(trainer != null);
-        if(trainer != null) {
+        if (trainer != null) {
             trainerSubject.onNext(trainer);
         }
     }
@@ -41,4 +39,5 @@ public class TrainerStorage extends TrainerProvider {
     public boolean isMain() {
         return true;
     }
+
 }

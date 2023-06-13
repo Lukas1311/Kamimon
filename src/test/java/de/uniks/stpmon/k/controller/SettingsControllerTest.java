@@ -118,4 +118,5 @@ public class SettingsControllerTest extends ApplicationTest {
         clickOn("#editTrainerButton");
         verify(mock).pushTab(SidebarTab.TRAINER_MANAGEMENT);
     }
+
 }

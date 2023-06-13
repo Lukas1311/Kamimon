@@ -36,6 +36,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateTrainerControllerTest extends ApplicationTest {
+
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 
@@ -58,7 +59,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     RegionStorage regionStorage;
     @Mock
     WorldLoader worldLoader;
-
     @Mock
     PresetService presetService;
 
@@ -163,4 +163,5 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(createTrainerController).closeWindow();
         verify(hybridMock).openMain(MainWindow.LOBBY);
     }
+
 }

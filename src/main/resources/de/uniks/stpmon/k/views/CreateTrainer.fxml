@@ -8,75 +8,83 @@
 <?import javafx.scene.shape.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<AnchorPane fx:id="createTrainerContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="450.0" prefWidth="500.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.CreateTrainerController">
-   <styleClass>
-      <String fx:value="root" />
-      <String fx:value="create-trainer-background" />
-   </styleClass>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fcf1d0" height="440.0" layoutY="11.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="2.0" width="500.0" />
-      <VBox alignment="TOP_CENTER" prefHeight="450.0" prefWidth="500.0" AnchorPane.topAnchor="0.0">
-      <HBox alignment="TOP_CENTER" maxHeight="70.0" minHeight="70.0" prefHeight="70.0" prefWidth="500.0" VBox.vgrow="ALWAYS">
-         <children>
+<AnchorPane fx:id="createTrainerContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="450.0" prefWidth="500.0"
+            stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.CreateTrainerController">
+    <styleClass>
+        <String fx:value="root"/>
+        <String fx:value="create-trainer-background"/>
+    </styleClass>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fcf1d0" height="440.0" layoutY="11.0" stroke="BLACK"
+               strokeType="INSIDE" strokeWidth="2.0" width="500.0"/>
+    <VBox alignment="TOP_CENTER" prefHeight="450.0" prefWidth="500.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="TOP_CENTER" maxHeight="70.0" minHeight="70.0" prefHeight="70.0" prefWidth="500.0"
+              VBox.vgrow="ALWAYS">
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <opaqueInsets>
+                <Insets/>
+            </opaqueInsets>
             <HBox prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                     <Label styleClass="create-trainer-background" text="%createTrainer" />
-               </children>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-               <padding>
-                  <Insets left="15.0" />
-               </padding>
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
+                <padding>
+                    <Insets left="15.0"/>
+                </padding>
+                <Label styleClass="create-trainer-background" text="%createTrainer"/>
             </HBox>
-             <HBox alignment="TOP_RIGHT" prefHeight="70.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-                 <padding>
-                     <Insets right="15.0" top="20.0" />
-                 </padding>
-                 <Button fx:id="closeButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="35" maxWidth="35" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" styleClass="kgm-general-button-white" textAlignment="CENTER">
-                     <graphic>
-                         <FontIcon iconLiteral="mdral-clear" iconSize="30" />
-                     </graphic>
-                 </Button>
-             </HBox>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </HBox>
-            <HBox alignment="CENTER" prefHeight="75.0" prefWidth="500.0">
-                  <HBox maxHeight="75.0" minHeight="75.0" prefHeight="75.0" prefWidth="230.0">
-                        <Label text="Trainer:" underline="true" />
-                  </HBox>
-                  <VBox alignment="TOP_RIGHT" maxHeight="75.0" prefHeight="75.0" prefWidth="230.0">
-                        <TextField fx:id="createTrainerInput" prefHeight="23.0" prefWidth="197.0" promptText="%enterName" styleClass="create-trainer-text-input" />
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
-                  <Label fx:id="trainerNameInfo" text="" />
+            <HBox alignment="TOP_RIGHT" prefHeight="70.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets right="15.0" top="20.0"/>
+                </padding>
+                <Button fx:id="closeButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="35" maxWidth="35"
+                        minHeight="35.0" minWidth="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0"
+                        styleClass="kgm-general-button-white" textAlignment="CENTER">
+                    <graphic>
+                        <FontIcon iconLiteral="mdral-clear" iconSize="30"/>
+                    </graphic>
+                </Button>
             </HBox>
-                  </VBox>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="75.0" prefWidth="500.0">
+            <HBox maxHeight="75.0" minHeight="75.0" prefHeight="75.0" prefWidth="230.0">
+                <Label text="Trainer:" underline="true"/>
             </HBox>
-          <StackPane fx:id="spriteContainer" maxHeight="130.0" prefHeight="130.0">
-              <ImageView fitHeight="130.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-                  <Image url="@../controller/spriteBackground.png" />
-              </ImageView>
-              <ImageView fx:id="trainerSprite" fitHeight="130.0" fitWidth="130.0" onMouseClicked="#trainerSprite" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-                  <Image url="@../controller/spritePlacehoder.png" />
-              </ImageView>
-              <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-              </VBox.margin>
-          </StackPane>
-            <Button fx:id="createSpriteButton" mnemonicParsing="false" onAction="#createSprite" prefHeight="35.0" prefWidth="155.0" styleClass="kgm-general-button-blue" text="%createSprite">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-            </Button>
-            <Button fx:id="createTrainerButton" mnemonicParsing="false" onAction="#createTrainer" prefHeight="35.0" prefWidth="155.0" styleClass="kgm-general-button-blue" text="%createTrainer">
-               <VBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin>
-            </Button>
-      </VBox>
+            <VBox alignment="TOP_RIGHT" maxHeight="75.0" prefHeight="75.0" prefWidth="230.0">
+                <TextField fx:id="createTrainerInput" prefHeight="23.0" prefWidth="197.0" promptText="%enterName"
+                           styleClass="create-trainer-text-input"/>
+                <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <Label fx:id="trainerNameInfo"/>
+                </HBox>
+            </VBox>
+        </HBox>
+        <StackPane fx:id="spriteContainer" maxHeight="130.0" prefHeight="130.0">
+            <ImageView fitHeight="130.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true"
+                       StackPane.alignment="CENTER">
+                <Image url="@../controller/spriteBackground.png"/>
+            </ImageView>
+            <ImageView fx:id="trainerSprite" fitHeight="130.0" fitWidth="130.0" onMouseClicked="#trainerSprite"
+                       pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+                <Image url="@../controller/spritePlacehoder.png"/>
+            </ImageView>
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
+        </StackPane>
+        <Button fx:id="createSpriteButton" mnemonicParsing="false" onAction="#createSprite" prefHeight="35.0"
+                prefWidth="155.0" styleClass="kgm-general-button-blue" text="%createSprite">
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
+        </Button>
+        <Button fx:id="createTrainerButton" mnemonicParsing="false" onAction="#createTrainer" prefHeight="35.0"
+                prefWidth="155.0" styleClass="kgm-general-button-blue" text="%createTrainer">
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
+        </Button>
+    </VBox>
 </AnchorPane>
