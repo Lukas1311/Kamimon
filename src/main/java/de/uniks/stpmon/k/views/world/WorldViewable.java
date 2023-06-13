@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -12,13 +13,15 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+import javax.inject.Inject;
 import java.awt.image.BufferedImage;
 
 import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 public abstract class WorldViewable extends Viewable {
 
-    public static final double IMAGE_SCALE = 4.0;
+    @Inject
+    protected EffectContext effectContext;
 
     public abstract Node render();
 
@@ -29,11 +32,11 @@ public abstract class WorldViewable extends Viewable {
     }
 
     protected MeshView createPlaneScaled(BufferedImage image) {
-        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
+        Image scaledimage = scaledImageFX(image, effectContext.getTextureScale());
 
         return createPlane(scaledimage,
-                (int) (scaledimage.getWidth() / IMAGE_SCALE),
-                (int) (scaledimage.getHeight() / IMAGE_SCALE));
+                (int) (scaledimage.getWidth() / effectContext.getTextureScale()),
+                (int) (scaledimage.getHeight() / effectContext.getTextureScale()));
     }
 
     protected MeshView createPlane(Image image, int width, int height) {
@@ -47,15 +50,15 @@ public abstract class WorldViewable extends Viewable {
 
     @SuppressWarnings("SameParameterValue")
     protected MeshView createRectangleScaled(BufferedImage image, int angle) {
-        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
+        Image scaledimage = scaledImageFX(image, effectContext.getTextureScale());
         return createRectangle(scaledimage,
-                (int) (scaledimage.getWidth() / IMAGE_SCALE),
-                (int) (scaledimage.getHeight() / IMAGE_SCALE), angle);
+                (int) (scaledimage.getWidth() / effectContext.getTextureScale()),
+                (int) (scaledimage.getHeight() / effectContext.getTextureScale()), angle);
     }
 
     @SuppressWarnings("SameParameterValue")
     protected MeshView createRectangleScaled(BufferedImage image, int width, int height, int angle) {
-        Image scaledimage = scaledImageFX(image, IMAGE_SCALE);
+        Image scaledimage = scaledImageFX(image, effectContext.getTextureScale());
         return createRectangle(scaledimage,
                 width,
                 height, angle);
