@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Module
 public class RegionTestModule {
@@ -135,6 +136,9 @@ public class RegionTestModule {
             }
 
             private Trainer getTrainerById(String trainerId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 for (String areaId : trainersHashMap.keySet()) {
                     List<Trainer> trainers = trainersHashMap.get(areaId);
                     Optional<Trainer> trainerOp = trainers.stream().filter(t -> t._id().equals(trainerId)).findFirst();
@@ -182,15 +186,18 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
-                return getTrainer("", "4")
-                        .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
-                        .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
+            public Observable<List<Trainer>> getTrainers(String regionId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
+                return Observable.just(trainersHashMap.values()
+                        .stream().flatMap(List::stream)
+                        .collect(Collectors.toList()));
             }
 
             @Override
-            public Observable<List<Trainer>> getAllTrainer(String regionId, String areaId) {
-                return getTrainer("", "1")
+            public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
+                return getTrainer("", "4")
                         .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                         .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
             }
