@@ -33,7 +33,7 @@ public class TrainerStorage extends TrainerProvider {
         return trainerLoaded;
     }
 
-    public BehaviorSubject<Trainer> onTrainer() {
+    public Observable<Trainer> onTrainer() {
         return trainerSubject;
     }
 
