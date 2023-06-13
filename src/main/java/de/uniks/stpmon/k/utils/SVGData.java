@@ -7,10 +7,10 @@ import javafx.scene.shape.SVGPath;
 public class SVGData {
 
     private List<SVGPath> svgPaths;
-    private Double width;
-    private Double height;
+    private double width;
+    private double height;
 
-    public SVGData(List<SVGPath> svgPaths, Double width, Double height) {
+    public SVGData(List<SVGPath> svgPaths, double width, double height) {
         this.svgPaths = svgPaths;
         this.width = width;
         this.height = height;
@@ -20,11 +20,11 @@ public class SVGData {
         return this.svgPaths;
     }
 
-    public Double getWidth() {
+    public double getWidth() {
         return this.width;
     }
 
-    public Double getHeight() {
+    public double getHeight() {
         return this.height;
     }
 }

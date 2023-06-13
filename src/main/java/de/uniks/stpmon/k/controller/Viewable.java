@@ -143,7 +143,7 @@ public abstract class Viewable {
     private SVGData loadVectorImage(String filename) {
         URL svgUrl = Objects.requireNonNull(Viewable.class.getResource(filename));
         List<SVGPath> svgPaths = new ArrayList<>();
-        Double svgWidth = 0.0, svgHeight = 0.0;
+        double svgWidth = 0.0, svgHeight = 0.0;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -225,7 +225,7 @@ public abstract class Viewable {
         SnapshotParameters snapshotParams = new SnapshotParameters();
         snapshotParams.setFill(Color.TRANSPARENT);
 
-        WritableImage image = new WritableImage(svgData.getWidth().intValue(), svgData.getHeight().intValue());
+        WritableImage image = new WritableImage((int) svgData.getWidth(), (int) svgData.getHeight());
         // render the group onto our writeableImage
         vectorGroup.snapshot(snapshotParams, image);
         imageView.setImage(image);
@@ -261,7 +261,7 @@ public abstract class Viewable {
             return;
         }
 
-        final Double SCALE = 4.0; // this is a good scale for sharp images
+        final double SCALE = 4.0; // this is a good scale for sharp images
         final int SPRITE_WIDTH = 16; // width of sprite, you could say X-value
         final int SPRITE_HEIGHT = 32; // height of sprite, you could say Y-value
         int spriteOffsetX = tileIndex * SPRITE_WIDTH;
