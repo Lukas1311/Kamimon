@@ -147,9 +147,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         valuesById.remove(id);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
-                .ifPresent(emitter -> {
-                    emitter.onNext(Optional.empty());
-                });
+                .ifPresent(emitter -> emitter.onNext(Optional.empty()));
     }
 
     @Override
