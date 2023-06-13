@@ -1,10 +1,16 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import okhttp3.ResponseBody;
@@ -26,10 +32,10 @@ import java.util.prefs.Preferences;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ChooseSpriteControllerTest extends ApplicationTest {
@@ -49,6 +55,17 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     Preferences preferences;
     @Mock
     Provider<PopUpController> popUpControllerProvider;
+    @Mock
+    @SuppressWarnings("unused")
+    Provider<CreateTrainerController> createTrainerControllerProvider;
+    @Mock
+    RegionStorage regionStorage;
+
+    @Mock
+    Provider<HybridController> hybridControllerProvider;
+
+    @Mock
+    TrainerService trainerService;
 
 
     @Override
@@ -58,6 +75,7 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
 
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(preferences.getInt(anyString(), anyInt())).thenReturn(0);
+
 
         when(presetService.getCharacters()).thenReturn(characterList);
         app.show(chooseSpriteController);
@@ -117,16 +135,34 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     public void testSaveSprite() {
         // Mock the necessary methods
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
+        final HybridController hybridController = Mockito.mock(HybridController.class);
 
         chooseSpriteController.characters.addAll("Sprite1", "Sprite2", "Sprite3");
         chooseSpriteController.currentSpriteIndex = 0;
         chooseSpriteController.previousSpriteIndex = 1;
+        chooseSpriteController.chooseTrainerContent = new BorderPane();
+
         when(popUpControllerProvider.get()).thenReturn(popupMock);
+        doAnswer(invocation -> {
+            ModalCallback callback = invocation.getArgument(0);
+            callback.onModalResult(true);
+            return null;
+        }).when(popupMock).showModal(any());
+
+        when(regionStorage.getRegion()).thenReturn(new Region("0", "hallo", null, null));
+
+        when(hybridControllerProvider.get()).thenReturn(hybridController);
+        doNothing().when(hybridController).popTab();
+
+        when(trainerService.setImage(anyString())).thenReturn(Observable.empty());
 
         // Test the saveSprite() method
         clickOn("#saveSprite");
 
         // Verify that the preferences were updated
         assertEquals(0, chooseSpriteController.preferences.getInt("currentSpriteIndex", chooseSpriteController.currentSpriteIndex));
+        verify(trainerService).setImage("Sprite1");
+
     }
+
 }
