@@ -190,7 +190,7 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Trainer>> getAllTrainer(String regionId, String areaId) {
-                return getTrainer("", "5")
+                return getTrainer("", "1")
                         .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                         .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
             }
@@ -248,6 +248,9 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Area>> getAreas(String region) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 List<Area> areaList = areasHashMap.get(region);
                 if (areaList != null) {
                     return Observable.just(areaList);
@@ -257,7 +260,13 @@ public class RegionTestModule {
 
             @Override
             public Observable<Area> getArea(String region, String id) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 List<Area> areaList = areasHashMap.get(region);
+                if (areaList == null || areaList.isEmpty()) {
+                    return Observable.error(new Throwable("404 Not found"));
+                }
                 Optional<Area> areaOptional = areaList.stream().filter(a -> a._id().equals(id)).findFirst();
                 return areaOptional.map(Observable::just).orElseGet(Observable::empty);
             }

@@ -5,10 +5,12 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
@@ -21,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +38,7 @@ public class WorldViewTest extends ApplicationTest {
     public WorldController controller = component.worldController();
     public TrainerStorage trainerStorage = component.trainerStorage();
     public RegionStorage regionStorage = component.regionStorage();
+    public RegionService regionService = component.regionService();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -44,6 +48,8 @@ public class WorldViewTest extends ApplicationTest {
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         worldStorage.setWorld(DummyConstants.WORLD);
         regionStorage.setRegion(DummyConstants.REGION);
+        regionStorage.setArea(regionService.getArea("id0", "id0_0").blockingFirst());
+
 
         // show app
         app.start(stage);
@@ -88,6 +94,14 @@ public class WorldViewTest extends ApplicationTest {
 
         // check if char moved right by -16
         assertEquals(0, character.getTranslateX());
+    }
+
+    @Test
+    public void renderAllTrainer() {
+        SubScene node = lookup("#worldScene").queryAs(SubScene.class);
+        Parent root = node.getRoot();
+        Node npcGroup = root.lookup("#npcGroup");
+        assertNotNull(npcGroup);
     }
 
 }
