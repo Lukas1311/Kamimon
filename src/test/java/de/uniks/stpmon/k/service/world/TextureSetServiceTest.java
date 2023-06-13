@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.world.TileMap;
@@ -39,7 +40,8 @@ public class TextureSetServiceTest {
         ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
                 2, 2,
                 0, 0);
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk),
+        ObjectData object = new ObjectData(0, null, null, null, false, 0, 0, 0, 0, 0);
+        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), List.of(object),
                 0, 0,
                 2, 2,
                 0, 0, "tilelayer", true, List.of());
