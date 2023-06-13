@@ -3,7 +3,10 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -48,11 +51,15 @@ public class ChooseSpriteController extends ToastedController {
     PresetService presetService;
     @Inject
     Preferences preferences;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     Provider<CreateTrainerController> createTrainerControllerProvider;
     @Inject
     Provider<PopUpController> popUpControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     @Inject
     public ChooseSpriteController() {
@@ -156,15 +163,26 @@ public class ChooseSpriteController extends ToastedController {
                 // Save the currentSpriteIndex to the preferences
                 preferences.putInt("currentSpriteIndex", currentSpriteIndex);
                 // Render the createTrainerController
-                chooseTrainerContent.getChildren().clear();
-                chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+                if (regionStorage.getRegion() == null) {
+                    chooseTrainerContent.getChildren().clear();
+                    chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+                } else {
+                    chooseTrainerContent.getChildren().clear();
+                    hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+
+                }
             });
         } else {
             // Save the previousSpriteIndex to the preferences
             preferences.putInt("currentSpriteIndex", previousSpriteIndex);
             // Render the createTrainerController
-            chooseTrainerContent.getChildren().clear();
-            chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+            if (regionStorage.getRegion() == null) {
+                chooseTrainerContent.getChildren().clear();
+                chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
+            } else {
+                chooseTrainerContent.getChildren().clear();
+                hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
+            }
         }
     }
 
