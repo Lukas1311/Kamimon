@@ -10,17 +10,20 @@ import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.world.CharacterSet;
-import de.uniks.stpmon.k.world.WorldSet;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
 import java.util.Objects;
+
+import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 public abstract class EntityView extends WorldViewable {
 
@@ -55,8 +58,7 @@ public abstract class EntityView extends WorldViewable {
         if (trainer == null) {
             throw new IllegalStateException("Trainer cannot be null");
         }
-        WorldSet worldSet = worldStorage.getWorld();
-        characterSet = worldService.getCharacter(worldSet, trainer.image());
+        characterSet = worldService.getCharacter(trainer.image());
     }
 
     @Override
@@ -100,6 +102,13 @@ public abstract class EntityView extends WorldViewable {
         Trainer currentTrainer = trainerProvider.getTrainer();
         if (!currentTrainer.area().equals(trainer.area())) {
             return;
+        }
+        if (!Objects.equals(characterSet.name(), trainer.image())) {
+            characterSet = worldService.getCharacter(trainer.image());
+            if (entityNode.getMaterial() instanceof PhongMaterial) {
+                Image newTexture = scaledImageFX(characterSet.image(), effectContext.getTextureScale());
+                entityNode.setMaterial(createMaterial(newTexture));
+            }
         }
         if (moveTranslation != null &&
                 moveTranslation.getStatus() == Animation.Status.RUNNING) {
