@@ -119,10 +119,10 @@ Load fonts
 }
 
 .outstanding {
-	-fx-background-color: rgba(255, 255, 255, 0.5);
+	-fx-background-color: rgba(255, 255, 255, 0.8);
 	-fx-border-color: black;
-	-fx-border-width: 2px;
-	-fx-padding: 5 5 5 15;
+	-fx-border-width: 3px;
+	-fx-padding: 5 5 5 10;
 }
 
 /* -------------------- Scrollbar -------------------- */
@@ -871,6 +871,21 @@ Load fonts
 /* -------------------- Loading Screen for Region -------------------- */
 .progress-bar {
     -fx-accent: black;
+}
+
+/* -------------------- Monster Information -------------------- */
+.monster {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+}
+.monster-speed {
+    -fx-background-color: #9FC5F8;
+    -fx-text-fill: white;
+}
+.monster-type {
+    -fx-background-color: #5F3BDF;
+    -fx-text-fill: white;
 }
 
 
