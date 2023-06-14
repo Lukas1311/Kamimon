@@ -39,6 +39,26 @@ public class TrainerCache extends ListenerCache<Trainer> {
     }
 
     @Override
+    protected void updateValueFromSocket(Trainer value) {
+        Trainer oldTrainer = getValue(value._id()).orElse(null);
+        if (oldTrainer != null) {
+            // Keep old position because it is not updated by websocket
+            value = new Trainer(value._id(),
+                    value.region(),
+                    value.user(),
+                    value.name(),
+                    value.image(),
+                    value.coins(),
+                    value.area(),
+                    oldTrainer.x(),
+                    oldTrainer.y(),
+                    oldTrainer.direction(),
+                    value.npc());
+        }
+        updateValue(value);
+    }
+
+    @Override
     public ICache<Trainer> init() {
         super.init();
         disposables.add(regionStorage.onEvents().subscribe(event -> {
