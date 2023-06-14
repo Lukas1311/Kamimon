@@ -37,6 +37,8 @@ public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
                 }
             });
 
+            this.setOnMouseClicked(e -> backpackMenuController.openOption(entry));
+
         }
 
         if (isSelected()) {

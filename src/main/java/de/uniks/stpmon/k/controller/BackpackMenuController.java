@@ -60,7 +60,7 @@ public class BackpackMenuController extends Controller {
     }
 
 
-    protected void openOption(BackpackMenuOption option) {
+    public void openOption(BackpackMenuOption option) {
         backpackController.closeBackPackMenu();
         switch (option) {
             // delete dummy method after functionality is implemented
