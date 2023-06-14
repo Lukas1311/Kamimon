@@ -884,6 +884,9 @@ Load fonts
     -fx-text-fill: white;
 }
 .monster-type {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
     -fx-background-color: #5F3BDF;
     -fx-text-fill: white;
 }
