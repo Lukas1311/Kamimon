@@ -35,7 +35,7 @@ public class BackpackMenuEntryController extends Controller {
         final Parent parent = super.render();
         setIds();
         backpackMenuText.setText(backpackMenuController.translateString(entry.toString()));
-        parent.setOnMouseClicked(e -> openOption());
+        backpackMenuText.setOnMouseClicked(e -> openOption());
 
         return parent;
     }

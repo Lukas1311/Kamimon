@@ -27,6 +27,9 @@ public class BackpackMenuController extends Controller {
     @FXML
     public HBox backpackMenuHbox;
 
+
+    @Inject
+    BackpackController backpackController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
 
@@ -58,12 +61,14 @@ public class BackpackMenuController extends Controller {
 
 
     protected void openOption(BackpackMenuOption option) {
+        backpackController.closeBackPackMenu();
         switch (option) {
             // delete dummy method after functionality is implemented
             case MONSTER_LIST -> dummyMethod();
             case MONSTERS -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> dummyMethod();
         }
+
     }
 
     public int getId(BackpackMenuOption option) {

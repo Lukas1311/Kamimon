@@ -4,6 +4,9 @@ import de.uniks.stpmon.k.controller.BackpackMenuController;
 import de.uniks.stpmon.k.controller.BackpackMenuEntryController;
 import de.uniks.stpmon.k.controller.BackpackMenuOption;
 import javafx.scene.control.ListCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Color;
 
 public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
     private final BackpackMenuController backpackMenuController;
@@ -15,7 +18,6 @@ public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
     @Override
     protected void updateItem(BackpackMenuOption entry, boolean empty) {
         super.updateItem(entry, empty);
-
         if (empty || entry == null) {
             setText(null);
             setGraphic(null);
@@ -35,6 +37,10 @@ public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
                 }
             });
 
+        }
+
+        if (isSelected()) {
+            setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
         }
 
 
