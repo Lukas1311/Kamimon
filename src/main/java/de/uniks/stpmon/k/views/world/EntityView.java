@@ -11,6 +11,7 @@ import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.world.CharacterSet;
 import javafx.animation.Animation;
+import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
@@ -103,12 +104,19 @@ public abstract class EntityView extends WorldViewable {
         if (!currentTrainer.area().equals(trainer.area())) {
             return;
         }
+        boolean changedImage = false;
         if (!Objects.equals(characterSet.name(), trainer.image())) {
             characterSet = worldService.getCharacter(trainer.image());
             if (entityNode.getMaterial() instanceof PhongMaterial) {
                 Image newTexture = scaledImageFX(characterSet.image(), effectContext.getTextureScale());
                 entityNode.setMaterial(createMaterial(newTexture));
             }
+            changedImage = true;
+        }
+        if (Objects.equals(trainer.x(), currentTrainer.x())
+                && Objects.equals(trainer.y(), currentTrainer.y())
+                && !changedImage) {
+            return;
         }
         if (moveTranslation != null &&
                 moveTranslation.getStatus() == Animation.Status.RUNNING) {
@@ -172,7 +180,8 @@ public abstract class EntityView extends WorldViewable {
             this.characterSet = characterSet;
             this.direction = direction;
             this.isMoving = isMoving;
-            setCycleDuration(Duration.millis(effectContext.getWalkingAnimationSpeed()));
+            setInterpolator(Interpolator.LINEAR);
+            setCycleDuration(Duration.millis(effectContext.getWalkingAnimationSpeed() * (isMoving ? 1 : 2)));
 
         }
 
