@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -30,6 +31,7 @@ import java.awt.image.BufferedImage;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -39,6 +41,10 @@ import javafx.stage.Stage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
@@ -82,8 +88,8 @@ public class MapOverviewControllerTest extends ApplicationTest {
                 List.of(new TilesetSource(1, "grass.json")),
                 "map");
     }
-    TileMapData map = createDummyMap();
-    Region dummyRegion = new Region("1", "reg", null, map);
+    TileMapData dummyMap = createDummyMap();
+    Region dummyRegion = new Region("1", "reg", null, dummyMap);
 
     Map<TilesetSource, Tileset> tilesetMap = new HashMap<>() {{
         TilesetData tilesetData = new TilesetData(
@@ -132,7 +138,21 @@ public class MapOverviewControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
+        // prep:
+        TileMap tileMap = Mockito.mock(TileMap.class);
+        BufferedImage renderedMap = Mockito.mock(BufferedImage.class);
+        Image map = Mockito.mock(Image.class);
+        // ImageView mapImageViewMock = Mockito.mock(ImageView.class);
+        ImageView mapImageView = lookup("#mapImageView").queryAs(ImageView.class);
 
+        // define mocks:
+        when(tileMap.renderMap()).thenReturn(renderedMap);
+        // Image map = Mockito.mock(Image.class);
+        // final Image[] mockImage = new Image[1];
+        // doAnswer(invocation -> {
+        //     mockImage[0] = Mockito.mock(Image.class);
+        //     return null;
+        // }).when(mapImageView).setImage(any());
         // action:
         // render is automatically called
 
@@ -141,7 +161,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
         assertEquals("reg", regionNameLabel.getText());
         BorderPane mapOverviewContent = lookup("#mapOverviewContent").queryAs(BorderPane.class);
         Button closeButton = lookup("#closeButton").queryButton();
-        ImageView mapImageView = lookup("#mapImageView").queryAs(ImageView.class);
         VBox mapContainer = lookup("#mapContainer").queryAs(VBox.class);
         Text regionDescription = lookup("#regionDescription").queryText();
 
@@ -150,6 +169,15 @@ public class MapOverviewControllerTest extends ApplicationTest {
         assertNotNull(mapImageView);
         assertNotNull(mapContainer);
         assertNotNull(regionDescription);
+
+
+        // verify mocks:
+        // Verify the expected interactions
+        // verify(mapImageView).setImage(any());
+        // verify(mapImageView.fitWidthProperty()).bind(any());
+        // verify(mapImageView.fitHeightProperty()).bind(any());
+        // verify(mapContainerMock).setPrefSize(anyDouble(), anyDouble());
+        verifyNoMoreInteractions(mapImageView, mapContainer);
     }
 
     @Test
