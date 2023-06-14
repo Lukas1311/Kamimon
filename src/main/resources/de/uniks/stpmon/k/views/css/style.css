@@ -887,7 +887,29 @@ Load fonts
     -fx-background-color: #5F3BDF;
     -fx-text-fill: white;
 }
-
+.ability-name-type-box {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+    -fx-pref-width: 180;
+}
+.ability-type {
+    -fx-background-color: #CF2A27;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-pref-width: 65;
+}
+.ability-uses {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+    -fx-text-fill: white;
+    -fx-text-align: center;
+    -fx-pref-width: 55;
+}
 
 
 

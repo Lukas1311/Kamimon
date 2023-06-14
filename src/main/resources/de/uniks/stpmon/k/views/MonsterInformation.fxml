@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" styleClass="outstanding" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonsterInformationController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="370.0" styleClass="outstanding" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonsterInformationController">
    <VBox alignment="TOP_CENTER" prefHeight="286.0" prefWidth="90.0">
       <HBox.margin>
          <Insets right="10.0" />
@@ -19,14 +19,14 @@
       </VBox>
       <HBox alignment="CENTER" prefHeight="25.0" prefWidth="97.0">
          <styleClass>
-            <String fx:value="monster"/>
-            <String fx:value="monster-speed"/>
+            <String fx:value="monster" />
+            <String fx:value="monster-speed" />
          </styleClass>
          <VBox.margin>
-            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
          </VBox.margin>
-         <Label text="speed: "/>
-         <Label fx:id="speedLabel"/>
+         <Label text="speed: " />
+         <Label fx:id="speedLabel" />
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="90.0">
          <VBox.margin>
@@ -60,9 +60,16 @@
          <Text fx:id="monsterNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" underline="true" wrappingWidth="82.25775146484375" />
          <HBox fx:id="typeListHBox" prefHeight="100.0" prefWidth="200.0" />
       </HBox>
-      <HBox fx:id="abilitiesHBox" prefHeight="170.0" prefWidth="222.0" />
-      <TextFlow fx:id="descriptionTextFlow" prefHeight="110.0" prefWidth="236.0">
+      <VBox fx:id="abilitiesVBox" prefHeight="230.0" prefWidth="222.0">
+         <padding>
+            <Insets bottom="5.0" top="5.0" />
+         </padding>
+      </VBox>
+      <TextFlow fx:id="descriptionTextFlow" prefHeight="140.0" prefWidth="222.0">
          <Text fx:id="descriptionText" strokeType="OUTSIDE" strokeWidth="0.0" text="Description" />
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
       </TextFlow>
    </VBox>
 </HBox>
