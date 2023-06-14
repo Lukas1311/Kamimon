@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class BackpackMenuController extends Controller {
     public Polygon backpackMenuArrow;
     @FXML
     public HBox backpackMenuHbox;
+
+    @Inject
+    Provider<MonsterBarController> monsterBarControllerProvider;
 
     @Inject
     public BackpackMenuController() {
@@ -57,7 +61,7 @@ public class BackpackMenuController extends Controller {
         switch (option) {
             // delete dummy method after functionality is implemented
             case MONSTER_LIST -> dummyMethod();
-            case MONSTERS -> dummyMethod();
+            case MONSTERS -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> dummyMethod();
         }
     }
