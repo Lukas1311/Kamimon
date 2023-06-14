@@ -124,16 +124,9 @@ public class PresetsTestModule {
             }
 
             @Override
-            public Observable<String> getMonsterImage(String id) {
-                if (monsters.size() == 0) {
-                    initDummyMonsters();
-                }
-                Optional<MonsterTypeDto> returnMonster = monsters.stream()
-                        .filter(m -> Integer.parseInt(id) == m.id())
-                        .findFirst();
-
-                return returnMonster.map(r -> Observable.just(returnMonster.get().image())).orElseGet(()
-                        -> Observable.error(new Throwable("404 Not found")));
+            public Observable<ResponseBody> getMonsterImage(String id) {
+                // Provider in resource service
+                return Observable.empty();
             }
 
             @Override

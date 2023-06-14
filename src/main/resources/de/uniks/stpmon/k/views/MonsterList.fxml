@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Polygon?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonsterListController">
-      <Polygon fill="#ffffff80" points="-45.999813079833984, -42.0, -17.999794006347656, -42.0, -31.999807357788086, -60.0" stroke="BLACK" strokeType="INSIDE">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0"
+      prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.MonsterListController">
+   <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
+         prefWidth="120.0">
+      <Polygon fill="#ffffff80"
+               points="-45.999813079833984, -42.0, -17.999794006347656, -42.0, -31.999807357788086, -60.0"
+               stroke="BLACK" strokeType="INSIDE">
          <VBox.margin>
-            <Insets left="10.0" />
+            <Insets left="10.0"/>
          </VBox.margin>
       </Polygon>
-      <VBox fx:id="monsterListVBox" prefHeight="200.0" prefWidth="100.0" styleClass="outstanding" stylesheets="@css/style.css" />
-</VBox>
+      <VBox fx:id="monsterListVBox" prefHeight="200.0" prefWidth="120.0" styleClass="outstanding"
+            stylesheets="@css/style.css">
+         <VBox.margin>
+            <Insets/>
+         </VBox.margin>
+      </VBox>
+   </VBox>
+   <VBox fx:id="monsterInformation" prefHeight="200.0" prefWidth="200.0">
+      <HBox.margin>
+         <Insets top="18.0"/>
+      </HBox.margin>
+   </VBox>
+</HBox>
