@@ -13,6 +13,8 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MovementHandler {
 
@@ -30,10 +32,26 @@ public class MovementHandler {
     private TrainerProvider trainerProvider;
     private String trainerId;
     private String eventName;
+    private final Timer timer = new Timer();
+    private long timeLastMove = 0;
 
     @Inject
     public MovementHandler() {
 
+    }
+
+    public void initDummyMove() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long current = System.currentTimeMillis();
+                if((current - timeLastMove) > 250) {
+                    Trainer trainer = trainerProvider.getTrainer();
+                    MoveTrainerDto dto = createMoveDto(0, 0, trainer.direction());
+                    move(dto);
+                }
+            }
+        }, 200, 100);
     }
 
     public void setInitialTrainer(TrainerProvider trainerProvider) {
@@ -85,6 +103,7 @@ public class MovementHandler {
     }
 
     private void move(MoveTrainerDto dto) {
+        timeLastMove = System.currentTimeMillis();
         if (movementBlocked) {
             return;
         }

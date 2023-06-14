@@ -59,6 +59,7 @@ public class CharacterView extends EntityView {
     @Override
     public void init() {
         super.init();
+        movementHandler.initDummyMove();
         onDestroy(inputHandler.addKeyHandler(this::keyPressed));
     }
 

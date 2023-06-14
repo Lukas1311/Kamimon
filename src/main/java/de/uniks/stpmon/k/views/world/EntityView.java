@@ -103,12 +103,19 @@ public abstract class EntityView extends WorldViewable {
         if (!currentTrainer.area().equals(trainer.area())) {
             return;
         }
+        boolean changedImage = false;
         if (!Objects.equals(characterSet.name(), trainer.image())) {
             characterSet = worldService.getCharacter(trainer.image());
             if (entityNode.getMaterial() instanceof PhongMaterial) {
                 Image newTexture = scaledImageFX(characterSet.image(), effectContext.getTextureScale());
                 entityNode.setMaterial(createMaterial(newTexture));
             }
+            changedImage = true;
+        }
+        if(Objects.equals(trainer.x(), currentTrainer.x())
+                && Objects.equals(trainer.y(), currentTrainer.y())
+                && !changedImage){
+            return;
         }
         if (moveTranslation != null &&
                 moveTranslation.getStatus() == Animation.Status.RUNNING) {
