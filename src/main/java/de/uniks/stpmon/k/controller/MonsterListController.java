@@ -56,6 +56,8 @@ public class MonsterListController extends Controller {
         }
         monsterCache = cacheManager.requestMonsters(trainer._id());
         subscribe(monsterCache.getValues(), this::showMonsterList);
+
+        updateMonsterStatus();
     }
 
     @Override
@@ -70,7 +72,8 @@ public class MonsterListController extends Controller {
      * Set the list of monsters in the monsterListVBox
      */
     public void showMonsterList(List<Monster> monsters) {
-        // Not loaded yet
+        updateMonsterStatus();
+
         if (monsterListVBox == null) {
             return;
         }
@@ -108,6 +111,16 @@ public class MonsterListController extends Controller {
             monsterInformation.getChildren().setAll(monsterInformationContent);
             monsterInformation.setVisible(true);
             monsterLabel.setText("> " + monsterLabel.getText());
+        }
+    }
+
+    public void updateMonsterStatus() {
+        List<Monster> monsters = monsterCache.getValues().blockingFirst();
+        for (int slot = 0; slot < monsters.size(); slot++) {
+            Monster monster = monsters.get(slot);
+            int currentHP = monster.currentAttributes().health();
+            int maxHP = monster.attributes().health();
+            monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP);
         }
     }
 
