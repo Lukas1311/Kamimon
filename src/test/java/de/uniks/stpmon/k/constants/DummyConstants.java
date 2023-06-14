@@ -34,7 +34,7 @@ public class DummyConstants {
             null
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
-            "0",
+            "1",
             "region_0",
             "user_0",
             "Test Trainer",

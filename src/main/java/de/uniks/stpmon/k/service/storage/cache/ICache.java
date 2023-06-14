@@ -109,6 +109,13 @@ public interface ICache<T> extends ILifecycleService {
     Observable<T> onCreation();
 
     /**
+     * Retrieve an observable that emits the value when they are removed from the cache.
+     *
+     * @return The observable.
+     */
+    Observable<T> onDeletion();
+
+    /**
      * Retrieve all values in the cache.
      * If the values are updated the observable will emit a new list.
      *

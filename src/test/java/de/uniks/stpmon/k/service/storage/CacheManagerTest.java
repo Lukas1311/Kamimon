@@ -1,8 +1,6 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
@@ -48,7 +46,6 @@ class CacheManagerTest {
         // Mock region storage
         when(regionStorage.onEvents()).thenReturn(Observable.empty());
         when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
-        when(regionStorage.getArea()).thenReturn(DummyConstants.AREA);
 
         IFriendCache friends = cacheManager.requestFriends("test1");
         MonsterCache monsters = cacheManager.requestMonsters("test1");
@@ -166,9 +163,6 @@ class CacheManagerTest {
 
     @Test
     public void trainerCacheEmpty() {
-        Subject<RegionStorage.RegionEvent> events = PublishSubject.create();
-        when(regionStorage.onEvents()).thenReturn(events);
-
         when(regionStorage.isEmpty()).thenReturn(true);
         assertThrows(IllegalStateException.class, () -> cacheManager.trainerCache());
     }
@@ -180,7 +174,6 @@ class CacheManagerTest {
         Subject<RegionStorage.RegionEvent> events = PublishSubject.create();
         when(regionStorage.onEvents()).thenReturn(events);
         when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
-        when(regionStorage.getArea()).thenReturn(DummyConstants.AREA);
         TrainerCache cache = Mockito.mock(TrainerCache.class);
         when(trainerCacheProvider.get()).thenReturn(cache);
         when(regionStorage.isEmpty()).thenReturn(false);
