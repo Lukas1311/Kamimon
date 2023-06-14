@@ -2,9 +2,12 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.utils.ResponseUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -50,6 +53,8 @@ public class MonsterInformationController extends ToastedController {
     }
 
     public void loadMonsterTypeDto(String id) {
+        final double SCALE = 4.0;
+
         disposables.add(presetService.getMonster(id)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(monsterTypeDto -> {
@@ -62,9 +67,15 @@ public class MonsterInformationController extends ToastedController {
                     descriptionTextFlow.getChildren().clear();
                     descriptionTextFlow.getChildren().add(descriptionText);
                 }));
+
+        disposables.add(ResponseUtils.readImage(presetService.getMonsterImage(id))
+                .observeOn(FX_SCHEDULER)
+                .subscribe(imageUrl -> {
+                    Image image = ImageUtils.scaledImageFX(imageUrl, SCALE);
+
+                    monsterImage.setImage(image);
+                }));
     }
-
-
 
     private void updateTypeList(List<String> types) {
         typeListHBox.getChildren().clear();
