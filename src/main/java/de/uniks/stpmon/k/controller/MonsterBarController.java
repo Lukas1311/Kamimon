@@ -16,7 +16,7 @@ public class MonsterBarController extends Controller {
     @FXML
     public VBox monsterList;
 
-    protected ImageView[] monsterSlots;
+    protected ImageView[] monsterSlots = new ImageView[6];
 
     @Inject
     MonsterListController monsterListController;
@@ -48,8 +48,7 @@ public class MonsterBarController extends Controller {
      */
     public void createMonsterSlots() {
         monsterSlotsHBox.getChildren().clear();
-        monsterSlots = new ImageView[6];
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < monsterSlots.length; i++) {
             ImageView monsterSlot = new ImageView();
             monsterSlot.setFitHeight(30);
             monsterSlot.setFitWidth(30);
