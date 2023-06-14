@@ -16,7 +16,7 @@ public class BackpackMenuEntryController extends Controller {
     @FXML
     public Text backpackMenuText;
     @FXML
-    public HBox backpackMenuEntryHbox;
+    public HBox backpackMenuEntryHBox;
     final BackpackMenuOption entry;
     final BackpackMenuController backpackMenuController;
 

@@ -88,11 +88,11 @@ public class MessageService {
     }
 
     /**
-     * this method returns the last 100 or less messages
+     * this method returns the last 100 or fewer messages
      *
      * @param namespace is one of "global", "regions", "groups"
      * @param parent    is the id of the chosen namespace (e.g. id of a group where you want to send a message to)
-     * @return the last 100 or less messages (100 is default value)
+     * @return the last 100 or fewer messages (100 is default value)
      */
     public Observable<ArrayList<Message>> getAllMessages(MessageNamespace namespace, String parent) {
         return messageApiService.getMessages(
@@ -105,7 +105,7 @@ public class MessageService {
     }
 
     /**
-     * returns equal or less messages by the given limit
+     * returns equal or fewer messages by the given limit
      *
      * @param namespace is one of "global", "regions", "groups"
      * @param parent    is the id of the chosen namespace (e.g. id of a group where you want to send a message to)

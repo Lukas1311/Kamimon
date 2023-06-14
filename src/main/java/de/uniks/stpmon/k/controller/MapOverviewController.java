@@ -100,9 +100,7 @@ public class MapOverviewController extends ToastedController {
                     mapImageView.fitWidthProperty().bind(mapOverviewContent.widthProperty().multiply(MAP_OVERVIEW_SCALE));
                     mapImageView.fitHeightProperty().bind(mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
                     mapContainer.setPrefSize(mapImageView.getFitWidth(), mapImageView.getFitHeight());
-                }, err -> {
-                    handleError(err);
-                }
+                }, this::handleError
             );
         }
         

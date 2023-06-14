@@ -19,8 +19,7 @@ public class DummyController extends Controller {
 
     @Override
     public Parent render() {
-        final Parent parent = super.render();
         // do dummy stuff here
-        return parent;
+        return super.render();
     }
 }

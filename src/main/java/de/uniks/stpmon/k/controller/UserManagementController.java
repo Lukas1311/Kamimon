@@ -57,9 +57,7 @@ public class UserManagementController extends Controller {
     private final SimpleStringProperty password = new SimpleStringProperty();
     private StringProperty usernameError;
     private StringProperty passwordError;
-    private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
-    private BooleanBinding passwordTooShort;
-    private BooleanBinding usernameTooLong;
+    private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private BooleanBinding usernameInvalid;
     private BooleanBinding passwordInvalid;
     private Boolean changesSaved = false;
@@ -79,8 +77,8 @@ public class UserManagementController extends Controller {
         userManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         // bindings:
-        usernameTooLong = username.length().greaterThan(32);
-        passwordTooShort = password.length().lessThan(8);
+        BooleanBinding usernameTooLong = username.length().greaterThan(32);
+        BooleanBinding passwordTooShort = password.length().lessThan(8);
         usernameInvalid = username.isEmpty().or(usernameTooLong);
         passwordInvalid = passwordTooShort;
         changesMade = usernameInvalid.not().or(passwordInvalid.not());
@@ -187,9 +185,7 @@ public class UserManagementController extends Controller {
                 .subscribe(usr -> {
                     PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
                     deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
-                    showPopUp(deleteConfirmScenario, innerResult -> {
-                        app.show(loginControllerProvider.get());
-                    });
+                    showPopUp(deleteConfirmScenario, innerResult -> app.show(loginControllerProvider.get()));
                 }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
                 )
             );

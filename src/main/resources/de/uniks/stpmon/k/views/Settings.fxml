@@ -37,7 +37,7 @@
          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
       </padding>
    </HBox>
-   <StackPane fx:id="spriteContainer" prefHeight="150.0" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="370.0">
+   <StackPane fx:id="spriteContainer" prefHeight="150.0" maxWidth="1.7976931348623157E308" prefWidth="370.0">
       <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
          <Image url="@../controller/spriteBackground.png" />
       </ImageView>
