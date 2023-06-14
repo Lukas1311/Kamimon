@@ -32,7 +32,7 @@ public class MovementHandler {
     private TrainerProvider trainerProvider;
     private String trainerId;
     private String eventName;
-    private final Timer timer = new Timer();
+    private Timer timer;
     private long timeLastMove = 0;
 
     @Inject
@@ -41,17 +41,31 @@ public class MovementHandler {
     }
 
     public void initDummyMove() {
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                Trainer trainer = trainerProvider.getTrainer();
+                if(trainer == null){
+                    cancel();
+                    return;
+                }
                 long current = System.currentTimeMillis();
-                if((current - timeLastMove) > 250) {
-                    Trainer trainer = trainerProvider.getTrainer();
-                    MoveTrainerDto dto = createMoveDto(0, 0, trainer.direction());
-                    move(dto);
+                if((current - timeLastMove) > 500) {
+                    // Send dummy to prevent the socket from hanging
+                    MoveTrainerDto dto = new MoveTrainerDto(trainer._id(), trainer.area(),
+                            0, 0, -6);
+                    move(dto, false);
                 }
             }
         }, 200, 100);
+    }
+
+    public void destroy() {
+        if(timer == null){
+            return;
+        }
+        timer.cancel();
     }
 
     public void setInitialTrainer(TrainerProvider trainerProvider) {
@@ -102,12 +116,14 @@ public class MovementHandler {
                 dir);
     }
 
-    private void move(MoveTrainerDto dto) {
+    private void move(MoveTrainerDto dto, boolean updateLast) {
         timeLastMove = System.currentTimeMillis();
         if (movementBlocked) {
             return;
         }
-        lastMovement = dto;
+        if(updateLast) {
+            lastMovement = dto;
+        }
         listener.send(Socket.UDP, eventName, dto);
     }
 
@@ -147,6 +163,6 @@ public class MovementHandler {
                 && Objects.equals(lastMovement.y(), dto.y())) {
             return;
         }
-        move(dto);
+        move(dto, true);
     }
 }
