@@ -33,7 +33,11 @@ public class RegionService {
     }
 
     public Observable<List<Trainer>> getTrainers(String regionId, String areaId) {
-        return regionApiService.getTrainers(regionId, areaId, userStorage.getUser()._id());
+        return regionApiService.getTrainers(regionId, areaId);
+    }
+
+    public Observable<List<Trainer>> getTrainers(String regionId) {
+        return regionApiService.getTrainers(regionId);
     }
 
     public Observable<Trainer> getMainTrainer(String regionId) {

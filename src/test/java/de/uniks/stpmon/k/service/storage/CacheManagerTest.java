@@ -1,9 +1,13 @@
-package de.uniks.stpmon.k.service;
+package de.uniks.stpmon.k.service.storage;
 
-import de.uniks.stpmon.k.service.storage.TrainerProvider;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,8 +20,7 @@ import javax.inject.Provider;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -29,13 +32,24 @@ class CacheManagerTest {
     protected Provider<MonsterCache> monsterCacheProvider;
     @Mock
     protected Provider<IFriendCache> friendCacheProvider;
+    @Mock
+    protected Provider<TrainerCache> trainerCacheProvider;
+    @Mock
+    protected RegionStorage regionStorage;
 
     @Test
     void destroy() {
+        // mock providers
         when(monsterCacheProvider.get()).thenAnswer((t) -> Mockito.mock(MonsterCache.class));
         when(friendCacheProvider.get()).thenAnswer(invocation -> Mockito.mock(IFriendCache.class));
+        when(trainerCacheProvider.get()).thenAnswer(invocation -> Mockito.mock(TrainerCache.class));
+        // Mock region storage
+        when(regionStorage.onEvents()).thenReturn(Observable.empty());
+        when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
+
         IFriendCache friends = cacheManager.requestFriends("test1");
         MonsterCache monsters = cacheManager.requestMonsters("test1");
+        TrainerCache trainerCache = cacheManager.trainerCache();
         cacheManager.requestTrainer("test1");
         cacheManager.destroy();
         // All caches should be destroyed
@@ -44,6 +58,7 @@ class CacheManagerTest {
         assertFalse(cacheManager.hasTrainer("test1"));
         verify(friends).destroy();
         verify(monsters).destroy();
+        verify(trainerCache).destroy();
     }
 
     @Test
@@ -144,5 +159,36 @@ class CacheManagerTest {
         assertTrue(cacheManager.hasFriends("test1"));
 
         assertThrows(IllegalArgumentException.class, () -> cacheManager.requestFriends(null));
+    }
+
+    @Test
+    public void trainerCacheEmpty() {
+        when(regionStorage.isEmpty()).thenReturn(true);
+        assertThrows(IllegalStateException.class, () -> cacheManager.trainerCache());
+    }
+
+    @Test
+    public void trainerCache() {
+        ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
+
+        Subject<RegionStorage.RegionEvent> events = PublishSubject.create();
+        when(regionStorage.onEvents()).thenReturn(events);
+        when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
+        TrainerCache cache = Mockito.mock(TrainerCache.class);
+        when(trainerCacheProvider.get()).thenReturn(cache);
+        when(regionStorage.isEmpty()).thenReturn(false);
+
+        assertEquals(cache, cacheManager.trainerCache());
+        verify(cache).init();
+        verify(cache).addOnDestroy(captor.capture());
+
+        // Destroy cache
+        cache.destroy();
+        // Simulate destroy
+        captor.getValue().run();
+
+        cacheManager.trainerCache();
+        // Check if new cache is created
+        verify(cache, times(2)).init();
     }
 }

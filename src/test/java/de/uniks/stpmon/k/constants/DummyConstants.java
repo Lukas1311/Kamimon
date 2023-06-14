@@ -6,15 +6,15 @@ import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.models.map.ChunkData;
-import de.uniks.stpmon.k.models.map.TileLayerData;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
+import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.world.WorldSet;
 
 import java.awt.image.BufferedImage;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -34,7 +34,7 @@ public class DummyConstants {
             null
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
-            "0",
+            "1",
             "region_0",
             "user_0",
             "Test Trainer",
@@ -77,6 +77,7 @@ public class DummyConstants {
 
                                     )
                             ),
+                            List.of(new ObjectData(0, null, null, null, false, 0, 0, 0, 0, 0)),
                             0, 0,
                             16, 16,
                             0, 0,
@@ -138,6 +139,5 @@ public class DummyConstants {
     public static final WorldSet WORLD = new WorldSet(
             new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
             new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
-            List.of(),
-            Collections.emptyMap());
+            List.of());
 }

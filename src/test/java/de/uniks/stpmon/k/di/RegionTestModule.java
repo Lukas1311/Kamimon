@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Module
 public class RegionTestModule {
@@ -135,6 +136,9 @@ public class RegionTestModule {
             }
 
             private Trainer getTrainerById(String trainerId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 for (String areaId : trainersHashMap.keySet()) {
                     List<Trainer> trainers = trainersHashMap.get(areaId);
                     Optional<Trainer> trainerOp = trainers.stream().filter(t -> t._id().equals(trainerId)).findFirst();
@@ -173,12 +177,22 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<List<Trainer>> getTrainers(String regionId, String areaId, String userId) {
+            public Observable<List<Trainer>> getTrainers(String regionId, String areaId) {
                 List<Trainer> trainerList = trainersHashMap.get(areaId);
                 if (trainerList != null) {
                     return Observable.just(trainerList);
                 }
                 return Observable.empty();
+            }
+
+            @Override
+            public Observable<List<Trainer>> getTrainers(String regionId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
+                return Observable.just(trainersHashMap.values()
+                        .stream().flatMap(List::stream)
+                        .collect(Collectors.toList()));
             }
 
             @Override
@@ -241,6 +255,9 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Area>> getAreas(String region) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 List<Area> areaList = areasHashMap.get(region);
                 if (areaList != null) {
                     return Observable.just(areaList);
@@ -250,7 +267,13 @@ public class RegionTestModule {
 
             @Override
             public Observable<Area> getArea(String region, String id) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 List<Area> areaList = areasHashMap.get(region);
+                if (areaList == null || areaList.isEmpty()) {
+                    return Observable.error(new Throwable("404 Not found"));
+                }
                 Optional<Area> areaOptional = areaList.stream().filter(a -> a._id().equals(id)).findFirst();
                 return areaOptional.map(Observable::just).orElseGet(Observable::empty);
             }

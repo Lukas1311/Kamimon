@@ -14,8 +14,10 @@ import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.prefs.Preferences;
 
+@Singleton
 public class AuthenticationService {
     @Inject
     TokenStorage tokenStorage;
@@ -61,6 +63,7 @@ public class AuthenticationService {
         return authApiService.logout().map(res -> {
             if (friendCache != null) {
                 friendCache.destroy();
+                friendCache = null;
             }
             return res;
         });

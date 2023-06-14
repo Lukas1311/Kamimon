@@ -13,6 +13,7 @@ public class EffectContext {
     private boolean skipLoading = false;
     private int walkingSpeed = EntityView.MOVEMENT_PERIOD;
     private int walkingAnimationSpeed = EntityView.WALKING_ANIMATION_PERIOD;
+    private double textureScale = 4.0d;
 
 
     /**
@@ -114,5 +115,24 @@ public class EffectContext {
      */
     public int getWalkingAnimationSpeed() {
         return walkingAnimationSpeed;
+    }
+
+    /**
+     * Sets the texture scale of the texture used in the world.
+     *
+     * @param textureScale Texture scale
+     */
+    public EffectContext setTextureScale(double textureScale) {
+        this.textureScale = textureScale;
+        return this;
+    }
+
+    /**
+     * Gets the texture scale of the texture used in the world.
+     *
+     * @return Texture scale
+     */
+    public double getTextureScale() {
+        return textureScale;
     }
 }

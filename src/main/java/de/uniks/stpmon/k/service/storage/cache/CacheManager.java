@@ -1,7 +1,9 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.service.ILifecycleService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -17,16 +19,25 @@ import java.util.Map;
 public class CacheManager implements ILifecycleService {
     private final Map<String, TrainerProvider> trainers = new HashMap<>();
     private final Map<String, MonsterCache> monsters = new HashMap<>();
-    private IFriendCache friendCache;
 
     @Inject
     protected Provider<MonsterCache> monsterCacheProvider;
     @Inject
-    protected Provider<IFriendCache> friendCacheProvider;
-    @Inject
     protected AbilityCache abilityCache;
     @Inject
     protected MonsterTypeCache monsterTypeCache;
+    @Inject
+    protected CharacterSetCache characterSetCache;
+
+    protected TrainerCache trainerCache;
+    @Inject
+    protected Provider<TrainerCache> trainerCacheProvider;
+    private IFriendCache friendCache;
+    @Inject
+    protected Provider<IFriendCache> friendCacheProvider;
+    @Inject
+    protected RegionStorage regionStorage;
+    private Disposable regionSubscription;
 
     @Inject
     public CacheManager() {
@@ -151,6 +162,69 @@ public class CacheManager implements ILifecycleService {
         return monsterTypeCache;
     }
 
+
+    /**
+     * Acquires the character set cache.
+     * If the cache does not exist yet, it will be created.
+     *
+     * @return A cache for character sets
+     */
+    public CharacterSetCache characterSetCache() {
+        if (characterSetCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            characterSetCache.init();
+        }
+        return characterSetCache;
+    }
+
+    public TrainerCache trainerCache() {
+        if (regionStorage.isEmpty()) {
+            throw new IllegalStateException("Region storage is empty!");
+        }
+        String regionId = regionStorage.getRegion()._id();
+        return trainerCache(regionId);
+    }
+
+    public TrainerCache trainerCache(String regionId) {
+        ensureRegionSubscription();
+        if (regionId == null) {
+            throw new IllegalStateException("Region id or area id is null!");
+        }
+        if (trainerCache != null && !trainerCache.areSetupValues(regionId)) {
+            throw new IllegalStateException("Region not empty but new trainer cache requested!");
+        }
+        if (trainerCache == null) {
+            trainerCache = trainerCacheProvider.get();
+            trainerCache.setup(regionId);
+            trainerCache.addOnDestroy(() -> trainerCache = null);
+            trainerCache.init();
+        }
+        return trainerCache;
+    }
+
+    public TrainerAreaCache trainerAreaCache() {
+        if (regionStorage.isEmpty()) {
+            throw new IllegalStateException("Region storage is empty!");
+        }
+        String regionId = regionStorage.getRegion()._id();
+        String areaId = regionStorage.getArea()._id();
+        return trainerAreaCache(regionId, areaId);
+    }
+
+    public TrainerAreaCache trainerAreaCache(String regionId, String areaId) {
+        return trainerCache(regionId)
+                .areaCache(areaId);
+    }
+
+    private void ensureRegionSubscription() {
+        if (regionSubscription == null) {
+            regionSubscription = regionStorage.onEvents().subscribe(event -> {
+                if (event.isEmpty() && trainerCache != null) {
+                    trainerCache.destroy();
+                }
+            });
+        }
+    }
+
     @Override
     public void destroy() {
         for (MonsterCache cache : monsters.values()) {
@@ -161,11 +235,20 @@ public class CacheManager implements ILifecycleService {
         if (friendCache != null) {
             friendCache.destroy();
         }
+        if (trainerCache != null) {
+            trainerCache.destroy();
+        }
         if (abilityCache != null) {
             abilityCache.destroy();
         }
         if (monsterTypeCache != null) {
             monsterTypeCache.destroy();
+        }
+        if (characterSetCache != null) {
+            characterSetCache.destroy();
+        }
+        if (regionSubscription != null) {
+            regionSubscription.dispose();
         }
     }
 }

@@ -3,17 +3,29 @@ package de.uniks.stpmon.k.controller;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
-public class BackpackController extends Controller{
+@Singleton
+public class BackpackController extends Controller {
 
     @FXML
     public ImageView backpackImage;
 
+    @Inject
+    Provider<BackpackMenuController> backpackMenuControllerProvider;
 
     @Inject
-    public BackpackController(){
+    Provider<IngameController> ingameControllerProvider;
+
+    HBox backpackMenu;
+
+
+    @Inject
+    public BackpackController() {
 
     }
 
@@ -28,14 +40,22 @@ public class BackpackController extends Controller{
         super.init();
     }
 
-    @Override
-    public void destroy() {
-        super.destroy();
+    public void openBackPackMenu() {
+        backpackMenu = (HBox) backpackMenuControllerProvider.get().render();
+        ingameControllerProvider.get().addBackpackMenu(backpackMenu);
     }
 
-    @Override
-    public void onDestroy(Runnable action) {
-        super.onDestroy(action);
+    public void closeBackPackMenu() {
+        ingameControllerProvider.get().removeBackpackMenu(backpackMenu);
+        backpackMenu = null;
     }
 
+
+    public void triggerBackPackMenu() {
+        if (backpackMenu == null) {
+            openBackPackMenu();
+        } else {
+            closeBackPackMenu();
+        }
+    }
 }
