@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.net;
 
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,11 @@ public class UDPSender extends UDPReceiver implements SocketSender {
         if (useEndpoint) {
             UDPReceiver endpoint = new UDPReceiver();
             endpoint.open();
+            try {
+                endpoint.socket.setSoTimeout(2000);
+            } catch (SocketException e) {
+                throw new RuntimeException(e);
+            }
             endpoint.sendMessage(message);
             endpoint.startReceive();
             endpoints.add(endpoint);
