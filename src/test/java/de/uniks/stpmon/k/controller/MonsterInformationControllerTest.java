@@ -22,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterInformationControllerTest extends ApplicationTest {
@@ -50,6 +51,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
 
         monsterInformationController.loadMonsterTypeDto(monsterTypeDto.id().toString());
+        waitForFxEvents();
 
         assertEquals("monster", monsterInformationController.monsterNameText.getText());
         assertEquals(2, monsterInformationController.typeListHBox.getChildren().size());
