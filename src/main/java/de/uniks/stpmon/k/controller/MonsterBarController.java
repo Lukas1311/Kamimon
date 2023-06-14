@@ -50,7 +50,7 @@ public class MonsterBarController extends Controller {
      */
     public void createMonsterSlots() {
         monsterSlotsHBox.getChildren().clear();
-        for (int i = 0; i < monsterSlots.length; i++) {
+        for (int i = monsterSlots.length - 1; i >= 0; i--) {
             ImageView monsterSlot = new ImageView();
             monsterSlot.setFitHeight(30);
             monsterSlot.setFitWidth(30);
