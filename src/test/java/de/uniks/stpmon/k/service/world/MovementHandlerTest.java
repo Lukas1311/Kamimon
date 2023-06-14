@@ -6,6 +6,9 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
@@ -16,7 +19,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.inject.Provider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,13 +37,17 @@ public class MovementHandlerTest {
     @Mock
     public WorldLoader worldLoader;
     @Mock
+    public CacheManager cacheManager;
+    @Mock
     protected EventListener listener;
-
-    @Test
-    void receiveNoInitial() {
-        TestObserver<Trainer> result = movementHandler.onMovements().test();
-        result.assertError(IllegalStateException.class);
-    }
+    @InjectMocks
+    protected TrainerAreaCache areaCache;
+    @Mock
+    protected Provider<TrainerAreaCache> areaCacheProvider;
+    @InjectMocks
+    protected TrainerCache trainerCache;
+    @Spy
+    protected TrainerStorage trainerStorage = new TrainerStorage();
 
     @Test
     void providerNull() {
@@ -48,8 +58,12 @@ public class MovementHandlerTest {
     void receiveMoves() {
         Subject<MoveTrainerDto> movements = ReplaySubject.create();
         when(listener.listen(any(), any(), any())).thenReturn(movements.map((dto) -> new Event<>("", dto)));
+        // Setup cache
+        when(areaCacheProvider.get()).thenReturn(areaCache);
+        trainerCache.areaCache("area_0");
+        when(cacheManager.trainerAreaCache()).thenReturn(areaCache);
+        trainerCache.addValue(DummyConstants.TRAINER);
 
-        TrainerStorage trainerStorage = new TrainerStorage();
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         movementHandler.setInitialTrainer(trainerStorage);
 
@@ -82,7 +96,13 @@ public class MovementHandlerTest {
         when(listener.listen(any(), any(), any())).thenReturn(movements.map((dto) -> new Event<>("", dto)));
         when(worldLoader.tryEnterArea(any())).thenReturn(Observable.empty());
 
-        TrainerStorage trainerStorage = new TrainerStorage();
+        // Setup cache
+        when(areaCacheProvider.get()).thenReturn(areaCache);
+        trainerCache.areaCache("area_0");
+        when(cacheManager.trainerAreaCache()).thenReturn(areaCache);
+        trainerCache.addValue(DummyConstants.TRAINER);
+
+
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         movementHandler.setInitialTrainer(trainerStorage);
 
@@ -111,11 +131,16 @@ public class MovementHandlerTest {
     void moveDirection() {
         ArgumentCaptor<MoveTrainerDto> captor = ArgumentCaptor.forClass(MoveTrainerDto.class);
         when(listener.send(any(), any(), captor.capture())).thenReturn(Observable.empty());
+        when(listener.listen(any(), any(), any())).thenReturn(Observable.empty());
 
         // should throw exception if initial trainer is not set
         assertThrows(IllegalStateException.class, () -> movementHandler.moveDirection(Direction.BOTTOM));
 
-        TrainerStorage trainerStorage = new TrainerStorage();
+        // Setup cache
+        when(areaCacheProvider.get()).thenReturn(areaCache);
+        trainerCache.areaCache("area_0");
+        when(cacheManager.trainerAreaCache()).thenReturn(areaCache);
+
         assertThrows(IllegalArgumentException.class, () -> movementHandler.setInitialTrainer(trainerStorage));
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         movementHandler.setInitialTrainer(trainerStorage);

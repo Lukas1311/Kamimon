@@ -177,30 +177,49 @@ public class CacheManager implements ILifecycleService {
     }
 
     public TrainerCache trainerCache() {
-        ensureRegionSubscription();
         if (regionStorage.isEmpty()) {
-            throw new IllegalStateException("Region storage must not be empty!");
+            throw new IllegalStateException("Region storage is empty!");
+        }
+        String regionId = regionStorage.getRegion()._id();
+        return trainerCache(regionId);
+    }
+
+    public TrainerCache trainerCache(String regionId) {
+        ensureRegionSubscription();
+        if (regionId == null) {
+            throw new IllegalStateException("Region id or area id is null!");
+        }
+        if (trainerCache != null && !trainerCache.areSetupValues(regionId)) {
+            throw new IllegalStateException("Region not empty but new trainer cache requested!");
         }
         if (trainerCache == null) {
-            String regionId = regionStorage.getRegion()._id();
-            String areaId = regionStorage.getArea()._id();
             trainerCache = trainerCacheProvider.get();
-            trainerCache.setup(regionId, areaId);
+            trainerCache.setup(regionId);
             trainerCache.addOnDestroy(() -> trainerCache = null);
             trainerCache.init();
         }
         return trainerCache;
     }
 
+    public TrainerAreaCache trainerAreaCache() {
+        if (regionStorage.isEmpty()) {
+            throw new IllegalStateException("Region storage is empty!");
+        }
+        String regionId = regionStorage.getRegion()._id();
+        String areaId = regionStorage.getArea()._id();
+        return trainerAreaCache(regionId, areaId);
+    }
+
+    public TrainerAreaCache trainerAreaCache(String regionId, String areaId) {
+        return trainerCache(regionId)
+                .areaCache(areaId);
+    }
+
     private void ensureRegionSubscription() {
         if (regionSubscription == null) {
             regionSubscription = regionStorage.onEvents().subscribe(event -> {
-                if (trainerCache != null) {
+                if (event.isEmpty() && trainerCache != null) {
                     trainerCache.destroy();
-                }
-                if (event.changedArea()) {
-                    // Recreate the trainer cache
-                    trainerCache();
                 }
             });
         }
