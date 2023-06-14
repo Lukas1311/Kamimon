@@ -18,8 +18,10 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 
+@Singleton
 public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @Inject
@@ -57,8 +59,7 @@ public class RegionListController extends PortalController {
     public void init() {
         super.init();
         colIndex = 0;
-        ListChangeListener<Region> listener = c -> addRegionToGridPane();
-        regions.addListener(listener);
+
         disposables.add(regionService.getRegions()
                 .observeOn(FX_SCHEDULER)
                 .subscribe(regions::setAll, this::handleError));
@@ -67,6 +68,8 @@ public class RegionListController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        ListChangeListener<Region> listener = c -> addRegionToGridPane();
+        regions.addListener(listener);
         //final Image imageKamimonLettering = loadImage("kamimonLettering.png");
         //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
 

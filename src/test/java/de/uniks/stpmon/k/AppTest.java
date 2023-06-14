@@ -2,6 +2,7 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import javafx.collections.ObservableList;
@@ -16,6 +17,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import java.util.ArrayList;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -143,5 +146,44 @@ class AppTest extends ApplicationTest {
 
         // enter with already created trainer
         verifyThat("#ingame", Node::isVisible);
+    }
+
+    @Test
+    void criticalPathV2() {
+        MovementDummy.addMovementDummy(component.eventListener());
+
+        app.show(component.hybridController());
+
+        //set User
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add("id1");
+        User user = new User(
+                "0",
+                "T",
+                "online",
+                null,
+                friends
+        );
+        component.userStorage().setUser(user);
+
+        //open Settings
+        write("\t\t");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+
+        //edit User
+        clickOn("#editUserButton");
+        clickOn("#usernameInput");
+        write("TT");
+        clickOn("#saveChangesButton");
+        clickOn("#approveButton");
+
+        clickOn("#settings");
+        clickOn("#settings");
+
+        Text username = lookup("#usernameValue").query();
+        verifyThat(username, hasText("TT"));
+
+        //change p
+
     }
 }
