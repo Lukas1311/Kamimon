@@ -7,12 +7,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.function.Consumer;
 
 public class UDPReceiver implements SocketReceiver {
     protected DatagramSocket socket;
     private Thread thread;
     private Consumer<String> handler;
+    private String subscribeMessage;
 
     @Override
     public void addMessageHandler(Consumer<String> msgHandler) {
@@ -31,6 +33,9 @@ public class UDPReceiver implements SocketReceiver {
     }
 
     public void sendMessage(String message) {
+        if (subscribeMessage == null) {
+            subscribeMessage = message;
+        }
         try {
             byte[] bytes = message.getBytes();
             DatagramPacket packet = new DatagramPacket(bytes, bytes.length, InetAddress.getByName(Main.UDP_URL), Main.UDP_PORT);
@@ -63,7 +68,11 @@ public class UDPReceiver implements SocketReceiver {
                     socket.receive(packet);
                     String received = new String(packet.getData());
                     handler.accept(received);
+                } catch (SocketTimeoutException ex) {
+                    // resend subscribe message
+                    sendMessage(subscribeMessage);
                 } catch (SocketException e) {
+                    // Close thread if socket is closed
                     active = false;
                 } catch (IOException e) {
                     e.printStackTrace();
