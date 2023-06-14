@@ -7,7 +7,7 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.BackpackController">
     <ImageView fx:id="backpackImage" fitHeight="50.0" fitWidth="50.0" layoutX="26.0" pickOnBounds="true"
                preserveRatio="true" smooth="false" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"
-               onMouseClicked="#openBackPackMenu">
+               onMouseClicked="#triggerBackPackMenu">
         <Image url="@images/backpack.png"/>
     </ImageView>
 </AnchorPane>

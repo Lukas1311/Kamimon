@@ -7,7 +7,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MonsterBarController extends Controller {
     @FXML
     public VBox monsterBar;
