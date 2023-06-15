@@ -109,7 +109,7 @@ public class MapOverviewController extends ToastedController {
                                 polygon.getPoints().addAll(Double.valueOf(routeData.x() + point.x()), Double.valueOf(routeData.y() + point.y()));
                             }
                             polygon.setFill(Paint.valueOf("#ffffff"));
-                            polygon.setOpacity(0.1);
+                            polygon.setOpacity(0.25);
                             polygon.setOnMouseClicked(event -> regionDescription.setText(routeData.routeText().description()));
                             highlightPane.getChildren().add(polygon);
                             return;
@@ -119,7 +119,7 @@ public class MapOverviewController extends ToastedController {
                         }
                         Rectangle rectangle = new Rectangle(routeData.x(), routeData.y(), routeData.width(), routeData.height());
                         rectangle.setFill(Paint.valueOf("#ffffff"));
-                        rectangle.setOpacity(0.1);
+                        rectangle.setOpacity(0.25);
                         highlightPane.getChildren().add(rectangle);
                         rectangle.setOnMouseClicked(event -> regionDescription.setText(routeData.routeText().description()));
                     }));
