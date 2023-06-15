@@ -40,7 +40,7 @@ public class TextureSetServiceTest {
         ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
                 2, 2,
                 0, 0);
-        ObjectData object = new ObjectData(0, null, null, null, false, 0, 0, 0, 0, 0);
+        ObjectData object = new ObjectData(0, null, List.of(),null, null, false, 0, 0, 0, 0, 0);
         TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), List.of(object),
                 0, 0,
                 2, 2,
