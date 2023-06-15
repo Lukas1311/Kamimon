@@ -31,14 +31,11 @@ import io.reactivex.rxjava3.core.Observable;
 import java.awt.image.BufferedImage;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -48,9 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -148,55 +142,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
         app.show(mapOverviewController);
         stage.requestFocus();
     }
-
-    // @Test
-    // void testRender() {
-    //     // prep:
-    //     TileMap tileMapMock = Mockito.mock(TileMap.class);
-    //     BufferedImage renderedMapMock = Mockito.mock(BufferedImage.class);
-    //     Image mapMock = Mockito.mock(Image.class);
-    //     // ImageView mapImageViewMock = Mockito.mock(ImageView.class);
-    //     ImageView mapImageView = lookup("#mapImageView").queryAs(ImageView.class);
-
-    //     // define mocks:
-    //     when(dummyTileMap.renderMap()).thenReturn(renderedMapMock);
-
-
-    //     when(mapMock.getWidth()).thenReturn(100.0);
-    //     when(mapMock.getHeight()).thenReturn(100.0);
-
-    //     // Image map = Mockito.mock(Image.class);
-    //     // final Image[] mockImage = new Image[1];
-    //     // doAnswer(invocation -> {
-    //     //     mockImage[0] = Mockito.mock(Image.class);
-    //     //     return null;
-    //     // }).when(mapImageView).setImage(any());
-    //     // action:
-    //     // render is automatically called
-
-    //     // check values:
-    //     Label regionNameLabel = lookup("#regionNameLabel").queryAs(Label.class);
-    //     assertEquals("reg", regionNameLabel.getText());
-    //     BorderPane mapOverviewContent = lookup("#mapOverviewContent").queryAs(BorderPane.class);
-    //     Button closeButton = lookup("#closeButton").queryButton();
-    //     VBox mapContainer = lookup("#mapContainer").queryAs(VBox.class);
-    //     Text regionDescription = lookup("#regionDescription").queryText();
-
-    //     assertNotNull(mapOverviewContent);
-    //     assertNotNull(closeButton);
-    //     assertNotNull(mapImageView);
-    //     assertNotNull(mapContainer);
-    //     assertNotNull(regionDescription);
-
-
-    //     // verify mocks:
-    //     // Verify the expected interactions
-    //     // verify(mapImageView).setImage(any());
-    //     // verify(mapImageView.fitWidthProperty()).bind(any());
-    //     // verify(mapImageView.fitHeightProperty()).bind(any());
-    //     // verify(mapContainerMock).setPrefSize(anyDouble(), anyDouble());
-    //     // verifyNoMoreInteractions(mapImageView, mapContainer);
-    // }
 
     @Test
     void testRender() {
