@@ -21,6 +21,12 @@ public class MonsterInformationController extends ToastedController {
     @FXML
     public ImageView monsterImage;
     @FXML
+    public Label healthLabel;
+    @FXML
+    public Label attackLabel;
+    @FXML
+    public Label defenseLabel;
+    @FXML
     public Label speedLabel;
     @FXML
     public Label currentHPLabel;
@@ -40,8 +46,6 @@ public class MonsterInformationController extends ToastedController {
     public HBox typeListHBox;
     @FXML
     public VBox abilitiesVBox;
-    @FXML
-    public HBox monsterInformationWrappingHBox;
 
     @Inject
     PresetService presetService;
@@ -95,8 +99,16 @@ public class MonsterInformationController extends ToastedController {
     }
 
     public void loadMonster(Monster monster) {
+        int currentHealth = (int)(((double)monster.currentAttributes().health() / monster.attributes().health()) * 100);
+        int currentAttack= (int)(((double)monster.currentAttributes().attack() / monster.attributes().attack()) * 100);
+        int currentDefense = (int)(((double)monster.currentAttributes().defense() / monster.attributes().defense()) * 100);
+        int currentSpeed = (int)(((double)monster.currentAttributes().speed() / monster.attributes().speed()) * 100);
+
         // Set all labels
-        speedLabel.setText(String.valueOf(monster.currentAttributes().speed()));
+        healthLabel.setText(String.valueOf(currentHealth));
+        attackLabel.setText(String.valueOf(currentAttack));
+        defenseLabel.setText(String.valueOf(currentDefense));
+        speedLabel.setText(String.valueOf(currentSpeed));
         maxHPLabel.setText(String.valueOf(monster.attributes().health()));
         currentHPLabel.setText(String.valueOf(monster.currentAttributes().health()));
         levelLabel.setText(String.valueOf(monster.level()));
@@ -133,6 +145,7 @@ public class MonsterInformationController extends ToastedController {
         amountUsesBox.getChildren().addAll(currentUsesLabel, slash , maxUsesLabel);
 
         // Apply CSS styles
+        abilityBox.getStyleClass().add("ability");
         nameAndTypeBox.getStyleClass().add("ability-name-type-box");
         abilityTypeLabel.getStyleClass().add("ability-type");
         amountUsesBox.getStyleClass().add("ability-uses");
