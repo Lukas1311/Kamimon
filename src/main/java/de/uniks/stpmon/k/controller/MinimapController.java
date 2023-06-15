@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
+import javafx.scene.transform.Rotate;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -63,7 +64,10 @@ public class MinimapController extends Controller {
                     }
             );
         }
-
+        double centerX = playerDart.getBoundsInLocal().getCenterX();
+        double centerY = playerDart.getBoundsInLocal().getCenterY();
+        Rotate rotate = new Rotate(0, centerX, centerY);
+        playerDart.getTransforms().add(rotate);
         subscribe(
                 trainerStorage.onTrainer(),
                 trainer -> {
@@ -80,7 +84,7 @@ public class MinimapController extends Controller {
                             case 3 -> 180;
                             default -> 0;
                         };
-                        playerDart.setStyle("-fx-rotate: " + rotation + "deg;");
+                        rotate.setAngle(rotation);
                     }
                 });
 
