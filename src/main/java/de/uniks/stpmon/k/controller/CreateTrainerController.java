@@ -120,6 +120,7 @@ public class CreateTrainerController extends PortalController {
     }
 
     public void createSprite() {
+        chooseSpriteController.setCreationMode(true);
         createTrainerContent.getChildren().clear();
         createTrainerContent.getChildren().addAll(chooseSpriteController.render());
     }
