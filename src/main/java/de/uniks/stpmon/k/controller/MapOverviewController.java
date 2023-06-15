@@ -119,6 +119,6 @@ public class MapOverviewController extends ToastedController {
     }
 
     public void closeMap() {
-        // mapOverviewContent.setVisible(false); // TODO: unused (used already in ingame)
+        mapOverviewContent.setVisible(false);
     }
 }

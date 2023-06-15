@@ -112,17 +112,12 @@ public class IngameController extends PortalController {
             mapOverview.setVisible(false);
         }
 
-        UiToggle mapToggle = new UiToggle(false);
+
         miniMap.setOnMouseClicked(click -> {
             // TODO: block inputs while big map is open? (e.g. walking?)
-            boolean isMapVisible = mapToggle.toggle();
-            mapOverview.setVisible(isMapVisible);
-        });
-        mapOverviewController.closeButton.setOnAction(click -> {
-            mapToggle.reset();
-            mapOverview.setVisible(false);
-        });
 
+            mapOverview.setVisible(true);
+        });
         return parent;
     }
 
