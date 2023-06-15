@@ -159,9 +159,7 @@ public class TrainerManagementController extends ToastedController {
     }
 
     public void openTrainerSpriteEditor() {
-        disableEdit.set(true);
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
-        // TODO Enable Buttons after focus returend
     }
 
     public void saveChanges() {
