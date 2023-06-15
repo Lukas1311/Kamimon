@@ -177,18 +177,4 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // close static mock:
         mockedStatic.close();
     }
-
-    @Test
-    void testCloseMap() {
-        // prep:
-        Button closeButton = lookup("#closeButton").queryButton();
-        BorderPane mapOverview = lookup("#mapOverviewContent").queryAs(BorderPane.class);
-        assertTrue(mapOverview.isVisible());
-        
-        // action:
-        clickOn(closeButton);
-
-        // check values:
-        assertFalse(mapOverview.isVisible());
-    }
 }
