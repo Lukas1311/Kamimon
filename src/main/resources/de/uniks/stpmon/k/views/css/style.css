@@ -910,7 +910,7 @@ Load fonts
     -fx-border-width: 3px;
     -fx-border-radius: 0;
     -fx-text-fill: white;
-    -fx-text-align: center;
+    -fx-alignment: center;
     -fx-pref-width: 55;
 }
 

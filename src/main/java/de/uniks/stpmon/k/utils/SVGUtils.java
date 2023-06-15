@@ -59,7 +59,7 @@ public class SVGUtils {
                     String styleContent = pathElement.getTextContent();
 
                     // regex with two match groups to extract the path group and the path color as HEX
-                    Pattern regex = Pattern.compile("\\.(\\w+)\\{fill:(#[\\da-fA-F]{6});\\}");
+                    Pattern regex = Pattern.compile("\\.(\\w+)\\{fill:(#[\\da-fA-F]{6});}");
                     Matcher matcher = regex.matcher(styleContent);
 
                     while (matcher.find()) {
@@ -79,7 +79,7 @@ public class SVGUtils {
                     SVGPath path = new SVGPath();
                     path.setContent(pathData);
                     if (!fillColors.isEmpty()) {
-                        // sets the correct path color dependant on the path class
+                        // sets the correct path color dependent on the path class
                         path.setFill(Color.web(fillColors.get(pathClass)));
                     }
                     svgPaths.add(path);
@@ -107,35 +107,17 @@ public class SVGUtils {
         SnapshotParameters snapshotParams = new SnapshotParameters();
         snapshotParams.setFill(Color.TRANSPARENT);
 
-        WritableImage image = new WritableImage((int) svgData.getWidth(), (int) svgData.getHeight());
+        WritableImage image = new WritableImage((int) svgData.width(), (int) svgData.height());
         // render the group onto our writeableImage
         vectorGroup.snapshot(snapshotParams, image);
         imageView.setImage(image);
     }
 
 
-    private static class SVGData {
-
-        private List<SVGPath> svgPaths;
-        private double width;
-        private double height;
-
-        private SVGData(List<SVGPath> svgPaths, double width, double height) {
-            this.svgPaths = svgPaths;
-            this.width = width;
-            this.height = height;
-        }
+    private record SVGData(List<SVGPath> svgPaths, double width, double height) {
 
         private List<SVGPath> getSVGPaths() {
-            return this.svgPaths;
+                return this.svgPaths;
+            }
         }
-
-        private double getWidth() {
-            return this.width;
-        }
-
-        private double getHeight() {
-            return this.height;
-        }
-    }
 }

@@ -50,7 +50,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -290,7 +289,7 @@ public class ChatControllerTest extends ApplicationTest {
 
         // check values:
         waitForFxEvents();
-        // messages have to be count of one now
+        // messages have to be counted of one now
         verifyThat(listView, ListViewMatchers.hasItems(1));
     }
 

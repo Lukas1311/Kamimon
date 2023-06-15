@@ -7,8 +7,6 @@ import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import okhttp3.ResponseBody;

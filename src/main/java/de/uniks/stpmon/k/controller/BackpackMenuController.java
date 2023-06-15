@@ -25,7 +25,7 @@ public class BackpackMenuController extends Controller {
     @FXML
     public Polygon backpackMenuArrow;
     @FXML
-    public HBox backpackMenuHbox;
+    public HBox backpackMenuHBox;
 
 
     @Inject

@@ -26,16 +26,12 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 public class ChooseSpriteController extends ToastedController {
-
-    public static final double IMAGE_SCALE = 4.0;
     protected final ObservableList<String> characters = FXCollections.observableArrayList();
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
 
     protected int currentSpriteIndex;
     protected int previousSpriteIndex;
-
-    private String SpriteID;
 
     @FXML
     public Text chooseTrainer;

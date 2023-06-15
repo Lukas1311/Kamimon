@@ -26,11 +26,10 @@ public class TrainerAreaCache extends SimpleCache<Trainer> {
     public TrainerAreaCache() {
     }
 
-    public TrainerAreaCache setup(TrainerCache trainerCache, String areaId) {
+    public void setup(TrainerCache trainerCache, String areaId) {
         this.trainerCache = trainerCache;
         this.regionId = trainerCache.getRegionId();
         this.areaId = areaId;
-        return this;
     }
 
     public boolean areSetupValues(String regionId, String areaId) {
