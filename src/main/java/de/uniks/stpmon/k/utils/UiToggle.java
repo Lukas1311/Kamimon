@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.utils;
 
 public class UiToggle {
     private boolean value;
-    private boolean initialValue;
+    private final boolean initialValue;
 
 
     public UiToggle(boolean initialValue) {

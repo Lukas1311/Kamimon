@@ -53,8 +53,8 @@ public class PortalController extends ToastedController implements IPortalContro
     @Override
     public void loadWorld() {
         Platform.runLater(() ->
-                loadingRegionController.startLoading(() ->
-                        loadingRegionController.subscribe(worldLoader.getOrLoadWorld(),
+                loadingScreen.startLoading(() ->
+                        loadingScreen.subscribe(worldLoader.getOrLoadWorld(),
                                 (area) -> {
                             app.show(hybridControllerProvider.get());
                             hybridControllerProvider.get().openMain(INGAME);

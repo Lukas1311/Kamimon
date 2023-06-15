@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
@@ -28,8 +27,6 @@ class PresetServiceTest {
     @Mock
     PresetApiService presetApiService;
 
-    @Mock
-    ObjectMapper objectMapper;
     @InjectMocks
     PresetService presetService;
 

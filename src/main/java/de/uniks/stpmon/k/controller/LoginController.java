@@ -77,8 +77,6 @@ public class LoginController extends Controller {
     IntroductionController introductionController;
 
     private BooleanBinding isInvalid;
-    private BooleanBinding passwordTooShort;
-    private BooleanBinding usernameTooLong;
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
     private StringProperty errorText;
@@ -96,8 +94,8 @@ public class LoginController extends Controller {
 
         errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
-        passwordTooShort = password.length().lessThan(8);
-        usernameTooLong = username.length().greaterThan(32);
+        BooleanBinding passwordTooShort = password.length().lessThan(8);
+        BooleanBinding usernameTooLong = username.length().greaterThan(32);
 
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
@@ -182,9 +180,7 @@ public class LoginController extends Controller {
                     } else {
                         app.show(introductionController);
                     }
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                }));
+                }, error -> errorText.set(getErrorMessage(error))));
     }
 
     public void register() {
@@ -197,9 +193,7 @@ public class LoginController extends Controller {
                     errorLabel.setTextFill(Color.GREEN);
                     //Login
                     loginWithCredentials(user.name(), password.get(), rememberMe.isSelected(), false);
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                }));
+                }, error -> errorText.set(getErrorMessage(error))));
     }
 
     private String getErrorMessage(Throwable error) {

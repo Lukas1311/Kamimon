@@ -78,7 +78,6 @@ public class TrainerManagementController extends ToastedController {
     private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
-    private BooleanBinding trainerNameTooLong;
     private BooleanBinding trainerNameInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
@@ -112,7 +111,7 @@ public class TrainerManagementController extends ToastedController {
             );
         });
 
-        trainerNameTooLong = trainerName.length().greaterThan(32);
+        BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
         changesMade = trainerNameInvalid.not();
         changesMade.addListener((observable, oldValue, newValue) -> {

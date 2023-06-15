@@ -34,7 +34,7 @@ public class MessageController extends Controller {
     private final Message message;
     private final String username;
 
-    private boolean isOwnMessage;
+    private final boolean isOwnMessage;
 
     public MessageController(Message msg, String senderUsername, User me, boolean isOwnMessage) {
         this.message = msg;
