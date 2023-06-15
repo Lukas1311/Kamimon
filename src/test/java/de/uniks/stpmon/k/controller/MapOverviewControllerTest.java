@@ -186,11 +186,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testIfMapNull() {
-
-    }
-
-    @Test
     void testCloseMap() {
         // prep:
         Button closeButton = lookup("#closeButton").queryButton();
