@@ -117,7 +117,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
             .setSource(tilesetSource)
             .build();
     }};
-    TileMap dummyTileMap = new TileMap(dummyRegion, tilesetMap);
     TileMap tileMapMock = mock(TileMap.class);
 
 
@@ -128,9 +127,11 @@ public class MapOverviewControllerTest extends ApplicationTest {
 
         when(regionStorage.getRegion()).thenReturn(dummyRegion);
         RouteData dummyData = new RouteData(1, new RouteText("Route 66", "HiWay", "Route"), 1, 2, 16, 32, List.of(new PolygonPoint(1, 2)));
-        when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData)));
+        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay", "Route"), 1, 2, 20, 34, List.of());
+        RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay", "Route"), 0, 2, 20, 34, List.of());
+        when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData, dummyData2, dummyData3)));
         when(textureSetService.createMap(any()))
-            .thenReturn(Observable.just(tileMapMock));
+                .thenReturn(Observable.just(tileMapMock));
         app.show(mapOverviewController);
         stage.requestFocus();
     }
