@@ -20,6 +20,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 
+import static java.util.function.Predicate.not;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -165,7 +166,6 @@ class AppTest extends ApplicationTest {
         component.userStorage().setUser(user);
 
         //open Settings
-        /*
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
 
@@ -183,26 +183,11 @@ class AppTest extends ApplicationTest {
         verifyThat(username, hasText("TT"));
 
         clickOn("#settings");
-        */
+
 
         //join region
         clickOn("#regionVBox");
         waitForFxEvents();
-
-        /*
-        //create trainer
-        clickOn("#createTrainerInput");
-        write("t");
-        verifyThat(lookup("#createTrainerInput"), hasText("t"));
-        clickOn("#trainerSprite");
-        clickOn("#spriteRight");
-        clickOn("#saveSprite");
-        clickOn("#approveButton");\
-
-
-        waitForFxEvents();
-
-        press(KeyCode.D).release(KeyCode.D);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", Node::isVisible);
@@ -223,7 +208,28 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackImage");
         verifyThat("#backpackMenuHBox", Node::isVisible);
         clickOn("#backpackImage");
-        */
-        clickOn("settings");
+
+        clickOn("#settings");
+        clickOn("#editTrainerButton");
+        clickOn("#trainerNameInput");
+        write("ttt");
+        clickOn("#saveChangesButton");
+        clickOn("#approveButton");
+        clickOn("#settings");
+        clickOn("#settings");
+        verifyThat("#userTrainerValue", hasText("ttt"));
+
+        clickOn("#editTrainerButton");
+        clickOn("#deleteTrainerButton");
+        clickOn("#approveButton");
+        clickOn("#approveButton");
+        verifyThat("#lobbyPane", Node::isVisible);
+        clickOn("#settings");
+
+        clickOn("#editUserButton");
+        clickOn("#deleteUserButton");
+        clickOn("#approveButton");
+        verifyThat("#registerButton", Node::isVisible);
+
     }
 }

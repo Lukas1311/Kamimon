@@ -12,7 +12,7 @@ import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 public class LobbyController extends Controller {
     @FXML
-    public Pane pane;
+    public Pane lobbyPane;
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
@@ -31,7 +31,7 @@ public class LobbyController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        pane.getChildren().add(regionListController.render());
+        lobbyPane.getChildren().add(regionListController.render());
 
         return parent;
     }
