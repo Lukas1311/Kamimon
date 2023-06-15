@@ -6,26 +6,12 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.MonsterAttributes;
-import de.uniks.stpmon.k.models.NPCInfo;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Module
@@ -50,10 +36,10 @@ public class RegionTestModule {
              */
             private void initDummyRegions() {
                 Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), null);
-                Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), null);
+                //Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), null);
 
                 regions.add(region0);
-                regions.add(region1);
+                //regions.add(region1);
 
                 initDummyAreas();
             }
@@ -197,6 +183,10 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
+                if (userId.equals("00")) {
+                    List<Trainer> t = trainersHashMap.get("id0_0");
+                    return Observable.just(t);
+                }
                 return getTrainer("", "4")
                         .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                         .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));

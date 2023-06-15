@@ -68,10 +68,13 @@ public class RegionListController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        for (Region region : regions) {
+            addRegionToGridPane();
+        }
         ListChangeListener<Region> listener = c -> addRegionToGridPane();
         regions.addListener(listener);
-        //final Image imageKamimonLettering = loadImage("kamimonLettering.png");
-        //imageViewKamimonLetteringRegion.setImage(imageKamimonLettering);
+
+        loadImage(imageViewKamimonLetteringRegion, "kamimonLettering.png");
 
         regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
         return parent;

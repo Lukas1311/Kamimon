@@ -158,7 +158,7 @@ class AppTest extends ApplicationTest {
         ArrayList<String> friends = new ArrayList<>();
         friends.add("id1");
         User user = new User(
-                "0",
+                "00",
                 "T",
                 "online",
                 null,
@@ -167,6 +167,7 @@ class AppTest extends ApplicationTest {
         component.userStorage().setUser(user);
 
         //open Settings
+        /*
         write("\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
 
@@ -183,7 +184,29 @@ class AppTest extends ApplicationTest {
         Text username = lookup("#usernameValue").query();
         verifyThat(username, hasText("TT"));
 
-        //change p
+        clickOn("#settings");
+        */
+
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        /*
+        //create trainer
+        clickOn("#createTrainerInput");
+        write("t");
+        verifyThat(lookup("#createTrainerInput"), hasText("t"));
+        clickOn("#trainerSprite");
+        clickOn("#spriteRight");
+        clickOn("#saveSprite");
+        clickOn("#approveButton");\
+
+         */
+        waitForFxEvents();
+
+        press(KeyCode.D).release(KeyCode.D);
+
+        clickOn("#monsterBar");
 
     }
 }
