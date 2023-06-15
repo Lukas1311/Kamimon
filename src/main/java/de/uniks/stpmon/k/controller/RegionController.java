@@ -26,7 +26,7 @@ public class RegionController extends Controller {
     public RegionController(Region region, RegionListController listController) {
         this.region = region;
         this.listController = listController;
-
+        this.effectContext = listController.effectContext;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RegionController extends Controller {
         int borderSize = 10;
         regionVBox.setMaxWidth(vboxWidth);
         regionNameText.setText(region.name());
-        //regionImage.setImage(loadImage("dummyRegionImage.png"));
+        loadImage(regionImage, "dummyRegionImage.png");
         regionVBox.setOnMouseClicked(event -> listController.createNewTrainer(region));
         regionImage.setFitWidth(vboxWidth - borderSize * 2);
         imageWrappingPane.setPrefWidth(400);
