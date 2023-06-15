@@ -39,14 +39,12 @@ public record Tileset(
         private Builder() {
         }
 
-        public Builder setData(TilesetData data) {
+        public void setData(TilesetData data) {
             this.data = data;
-            return this;
         }
 
-        public Builder setImage(BufferedImage image) {
+        public void setImage(BufferedImage image) {
             this.image = image;
-            return this;
         }
 
         public Builder setSource(TilesetSource source) {

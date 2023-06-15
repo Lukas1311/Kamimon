@@ -7,7 +7,9 @@ import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class BackpackController extends Controller {
 
     @FXML
@@ -39,13 +41,21 @@ public class BackpackController extends Controller {
     }
 
     public void openBackPackMenu() {
-        if (backpackMenu == null) {
-            backpackMenu = (HBox) backpackMenuControllerProvider.get().render();
-            ingameControllerProvider.get().addBackpackMenu(backpackMenu);
-        } else {
-            ingameControllerProvider.get().removeBackpackMenu(backpackMenu);
-            backpackMenu = null;
+        backpackMenu = (HBox) backpackMenuControllerProvider.get().render();
+        ingameControllerProvider.get().addBackpackMenu(backpackMenu);
+    }
 
+    public void closeBackPackMenu() {
+        ingameControllerProvider.get().removeBackpackMenu(backpackMenu);
+        backpackMenu = null;
+    }
+
+
+    public void triggerBackPackMenu() {
+        if (backpackMenu == null) {
+            openBackPackMenu();
+        } else {
+            closeBackPackMenu();
         }
     }
 }

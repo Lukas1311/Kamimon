@@ -2,8 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -17,7 +15,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -40,8 +37,6 @@ public class IngameControllerTest extends ApplicationTest {
     MinimapController minimapController;
     @Mock
     MapOverviewController mapOverviewController;
-    @Mock
-    RegionStorage regionStorage;
     @Spy
     BackpackController backpackController;
     @Spy
@@ -66,8 +61,6 @@ public class IngameControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        // RegionStorage regionStorage = mapOverviewController.regionStorage;
-        // when(regionStorage.getRegion()).thenReturn(new Region("1", "a", null, null));
         mapOverviewController.closeButton = new Button("");
         app.show(ingameController);
         stage.requestFocus();
@@ -103,7 +96,7 @@ public class IngameControllerTest extends ApplicationTest {
 
         clickOn("#backpackImage");
 
-        //assertFalse(backMenuHbox.isVisible());
+        //assertFalse(backMenuHBox.isVisible());
 
         assertEquals(1, ingameController.ingameWrappingHBox.getChildren().size());
 

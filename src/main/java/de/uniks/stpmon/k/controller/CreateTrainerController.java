@@ -66,8 +66,6 @@ public class CreateTrainerController extends PortalController {
     private String chosenSprite = "Premade_Character_01.png";
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
-    private BooleanBinding trainerNameTooLong;
-    private BooleanBinding trainerNameInvalid;
 
     @Inject
     public CreateTrainerController() {
@@ -81,8 +79,8 @@ public class CreateTrainerController extends PortalController {
     public Parent render() {
         final Parent parent = super.render();
 
-        trainerNameTooLong = trainerName.length().greaterThan(32);
-        trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
+        BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
+        BooleanBinding trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
 
         createTrainerInput.textProperty().bindBidirectional(trainerName);
 
@@ -134,9 +132,7 @@ public class CreateTrainerController extends PortalController {
             disposables.add(regionService
                     .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(trainer -> {
-                                enterRegion(chosenRegion);
-                            }, err -> {
+                    .subscribe(trainer -> enterRegion(chosenRegion), err -> {
                                 err.printStackTrace();
                                 handleError(err);
                             }
