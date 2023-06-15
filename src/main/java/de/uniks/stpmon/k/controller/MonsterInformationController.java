@@ -123,7 +123,7 @@ public class MonsterInformationController extends ToastedController {
         // Create the container for displaying the current and maximum uses of the ability
         HBox amountUsesBox = new HBox();
         Label currentUsesLabel = new Label();
-        Label slash = new Label(" / ");
+        Label slash = new Label("/");
         Label maxUsesLabel = new Label();
 
         abilityBox.getChildren().addAll(nameAndTypeBox, amountUsesBox);
