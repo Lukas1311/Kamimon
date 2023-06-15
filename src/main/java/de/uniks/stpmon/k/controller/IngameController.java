@@ -5,7 +5,11 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,7 +46,6 @@ public class IngameController extends PortalController {
 
     @Inject
     protected WorldController worldController;
-
 
 
     @Inject
@@ -107,12 +110,10 @@ public class IngameController extends PortalController {
             mapOverview.setVisible(false);
         }
 
+        if (miniMap != null) {
+            miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+        }
 
-        miniMap.setOnMouseClicked(click -> {
-            // TODO: block inputs while big map is open? (e.g. walking?)
-
-            mapOverview.setVisible(true);
-        });
         return parent;
     }
 

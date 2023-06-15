@@ -96,8 +96,6 @@ public class IngameControllerTest extends ApplicationTest {
 
         clickOn("#backpackImage");
 
-        //assertFalse(backMenuHbox.isVisible());
-
         assertEquals(1, ingameController.ingameWrappingHBox.getChildren().size());
 
     }
