@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -9,13 +10,19 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MinimapController">
    <center>
-       <StackPane BorderPane.alignment="CENTER">
-           <ImageView fx:id="miniMap" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+       <StackPane fx:id="miniMapStackPane" BorderPane.alignment="CENTER">
+           <ImageView fx:id="miniMap" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
               <viewport>
                   <Rectangle2D />
               </viewport>
            </ImageView>
          <Polygon fx:id="playerDart" fill="#64048a" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE" />
+           <ImageView fx:id="miniMapBorder" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <viewport>
+                   <Rectangle2D />
+               </viewport>
+               <Image url="@images/emptyMinimap.png" />
+           </ImageView>
          <BorderPane.margin>
             <Insets right="30.0" top="30.0" />
          </BorderPane.margin>
