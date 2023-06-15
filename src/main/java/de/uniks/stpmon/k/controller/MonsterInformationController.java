@@ -40,6 +40,8 @@ public class MonsterInformationController extends ToastedController {
     public HBox typeListHBox;
     @FXML
     public VBox abilitiesVBox;
+    @FXML
+    public HBox monsterInformationWrappingHBox;
 
     @Inject
     PresetService presetService;

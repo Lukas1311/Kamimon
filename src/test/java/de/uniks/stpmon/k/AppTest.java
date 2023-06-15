@@ -20,6 +20,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 
+import static java.util.function.Predicate.not;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -68,10 +69,9 @@ class AppTest extends ApplicationTest {
         clickOn("#further");
         clickOn("#further");
         clickOn("#further");
+
         //open friend list
         clickOn("#friends");
-
-
         ScrollPane scrollPane = lookup("#scrollPane").query();
         VBox userList = (VBox) scrollPane.getContent();
         VBox friendView = (VBox) userList.lookup("#friendSection");
@@ -116,7 +116,6 @@ class AppTest extends ApplicationTest {
         verifyThat("#bodyText", hasText("t"));
         //potential invite here
         //...
-
 
         //close friends sidebar
         clickOn("#friends");
@@ -207,6 +206,15 @@ class AppTest extends ApplicationTest {
         press(KeyCode.D).release(KeyCode.D);
 
         clickOn("#monsterBar");
+        verifyThat("#monsterList", Node::isVisible);
 
+        clickOn("#monster_label_0");
+        //clickOn("#monster_label_0");
+        verifyThat("#monsterInformation", Node::isVisible);
+
+        clickOn("#monsterBar");
+        verifyThat("#monsterList", not(Node::isVisible));
+
+        //
     }
 }
