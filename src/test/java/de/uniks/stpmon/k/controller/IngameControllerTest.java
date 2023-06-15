@@ -16,7 +16,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -65,9 +64,6 @@ public class IngameControllerTest extends ApplicationTest {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         regionStorage = minimapController.regionStorage;
-
-        // RegionStorage regionStorage = mapOverviewController.regionStorage;
-        // when(regionStorage.getRegion()).thenReturn(new Region("1", "a", null, null));
         mapOverviewController.closeButton = new Button("");
         app.show(ingameController);
         stage.requestFocus();
@@ -75,8 +71,7 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void showBackPackMenu() {
-        //mock
-        // when(mapOverviewController.regionStorage.getRegion()).thenReturn(new Region("1", "a", null, null));
+
 
         final HybridController hybridController = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(hybridController);
