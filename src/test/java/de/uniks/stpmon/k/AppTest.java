@@ -20,7 +20,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 
-import static java.util.function.Predicate.not;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -200,7 +199,7 @@ class AppTest extends ApplicationTest {
         clickOn("#saveSprite");
         clickOn("#approveButton");\
 
-         */
+
         waitForFxEvents();
 
         press(KeyCode.D).release(KeyCode.D);
@@ -215,6 +214,16 @@ class AppTest extends ApplicationTest {
         clickOn("#monsterBar");
         verifyThat("#monsterList", not(Node::isVisible));
 
-        //
+        //check minimap
+        clickOn("#miniMap");
+        verifyThat("#mapOverviewContent", Node::isVisible);
+        clickOn("#miniMap");
+
+        //check backpack
+        clickOn("#backpackImage");
+        verifyThat("#backpackMenuHBox", Node::isVisible);
+        clickOn("#backpackImage");
+        */
+        clickOn("settings");
     }
 }
