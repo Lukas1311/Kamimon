@@ -149,20 +149,24 @@ class PresetServiceTest {
 
     @Test
     void getMonsterImage() {
-        MonsterTypeDto monster = getDummyMonsterTypeDto();
+        ResponseBody responseBody = getDummyResponseBody();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        when(presetApiService.getMonsterImage(monster.id().toString()))
-                .thenReturn(Observable.just("image"));
+        when(presetApiService.getMonsterImage(any(String.class)))
+                .thenReturn(Observable.just(responseBody));
 
         //action
-        String returnImage = presetService.getMonsterImage("0").blockingFirst();
+        try (ResponseBody returnResponseBody = presetService
+                .getMonsterImage("file")
+                .blockingFirst()) {
+            //check values
+            assertEquals("file", returnResponseBody.string());
 
-        //check values
-        assertEquals("image", returnImage);
-
-        //check mocks
-        verify(presetApiService).getMonsterImage(captor.capture());
+            //check mocks
+            verify(presetApiService).getMonsterImage(captor.capture());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

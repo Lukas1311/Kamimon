@@ -32,4 +32,8 @@ public class ResourceService implements IResourceService {
     public Observable<TilesetData> getTilesetData(String fileName) {
         return ResponseUtils.readJson(presetService.getFile(fileName), mapper, TilesetData.class);
     }
+
+    public Observable<BufferedImage> getMonsterImage(String fileName) {
+        return ResponseUtils.readImage(presetService.getMonsterImage(fileName));
+    }
 }

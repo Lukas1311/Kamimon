@@ -32,7 +32,7 @@ public interface PresetApiService {
     @GET("presets/monsters/{id}/image")
     @Streaming
         //TODO: save file
-    Observable<String> getMonsterImage(@Path("id") String id);
+    Observable<ResponseBody> getMonsterImage(@Path("id") String id);
 
     @GET("presets/abilities")
     Observable<List<AbilityDto>> getAbilities();
