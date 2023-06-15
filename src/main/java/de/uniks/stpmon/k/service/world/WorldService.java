@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.service.world;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
 import de.uniks.stpmon.k.world.CharacterSet;
-import de.uniks.stpmon.k.world.WorldSet;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -24,11 +23,8 @@ public class WorldService {
     public WorldService() {
     }
 
-    public CharacterSet getCharacter(WorldSet worldSet, String name) {
+    public CharacterSet getCharacter(String name) {
         if (name == null) {
-            return getCharacterPlaceholder();
-        }
-        if (worldSet == null) {
             return getCharacterPlaceholder();
         }
         CharacterSetCache characterSetCache = cacheManager.characterSetCache();

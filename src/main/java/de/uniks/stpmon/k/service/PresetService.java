@@ -38,7 +38,7 @@ public class PresetService {
         return presetApiService.getMonster(id);
     }
 
-    public Observable<String> getMonsterImage(String id) {
+    public Observable<ResponseBody> getMonsterImage(String id) {
         return presetApiService.getMonsterImage(id);
     }
 

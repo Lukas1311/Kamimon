@@ -23,8 +23,7 @@ public class MinimapController extends Controller{
 
     @Override
     public Parent render() {
-        final Parent parent = super.render();
-        return parent;
+        return super.render();
     }
 
     @Override

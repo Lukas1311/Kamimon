@@ -16,7 +16,7 @@ public class BackpackMenuEntryController extends Controller {
     @FXML
     public Text backpackMenuText;
     @FXML
-    public HBox backpackMenuEntryHbox;
+    public HBox backpackMenuEntryHBox;
     final BackpackMenuOption entry;
     final BackpackMenuController backpackMenuController;
 
@@ -35,7 +35,7 @@ public class BackpackMenuEntryController extends Controller {
         final Parent parent = super.render();
         setIds();
         backpackMenuText.setText(backpackMenuController.translateString(entry.toString()));
-        parent.setOnMouseClicked(e -> openOption());
+
 
         return parent;
     }
@@ -45,10 +45,6 @@ public class BackpackMenuEntryController extends Controller {
         int id = backpackMenuController.getId(entry);
         backpackMenuText.setId("backpackMenuText" + id);
         backpackMenuSelectedLabel.setId("backpackMenuSelectedLabel" + id);
-    }
-
-    private void openOption() {
-        backpackMenuController.openOption(entry);
     }
 
     public void setArrow() {

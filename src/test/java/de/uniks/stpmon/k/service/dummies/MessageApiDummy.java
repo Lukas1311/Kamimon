@@ -54,7 +54,7 @@ public class MessageApiDummy implements MessageApiService {
     /***
      * Initializes the mocking of the event listener for the events of the given group.
      *
-     * @param groupId Id of the group to mock the events for.
+     * @param groupId ID of the group to mock the events for.
      */
     public void mockEvents(String groupId) {
         this.groupId = groupId;

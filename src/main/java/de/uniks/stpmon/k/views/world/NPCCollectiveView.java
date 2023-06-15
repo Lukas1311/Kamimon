@@ -71,7 +71,8 @@ public class NPCCollectiveView extends WorldViewable {
     }
 
     private void addNpcView(Trainer trainer) {
-        if (Objects.equals(trainer._id(), trainerService.getMe()._id()) || trainer == NoneConstants.NONE_TRAINER) {
+        if (Objects.equals(trainer._id(), trainerService.getMe()._id())
+                || trainer == NoneConstants.NONE_TRAINER) {
             return;
         }
         NPCView npcV = getNPCView();
