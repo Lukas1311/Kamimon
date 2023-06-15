@@ -31,7 +31,7 @@ public class MapOverviewController extends ToastedController {
     @FXML
     Label regionNameLabel;
     @FXML
-    public Button closeButton;
+    Button closeButton;
     @FXML
     ImageView mapImageView;
     @FXML
