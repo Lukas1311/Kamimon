@@ -191,8 +191,10 @@ public class ChooseSpriteController extends ToastedController {
                                 .subscribe(trainer -> {
                                 }, this::handleError));
             });
+        } else {
+            closeAndReturn();
         }
-        closeAndReturn();
+
     }
 
     /**
