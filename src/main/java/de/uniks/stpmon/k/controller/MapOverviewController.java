@@ -31,7 +31,7 @@ public class MapOverviewController extends ToastedController {
     @FXML
     Label regionNameLabel;
     @FXML
-    public Button closeButton;
+    Button closeButton;
     @FXML
     ImageView mapImageView;
     @FXML
@@ -91,16 +91,17 @@ public class MapOverviewController extends ToastedController {
         regionNameLabel.setFont(new Font(20));
 
         if (currentRegion.map() != null) {
-            subscribe(
-                textureSetService.createMap(currentRegion),
-                tileMap -> {
-                    BufferedImage renderedMap = tileMap.renderMap();
-                    map = SwingFXUtils.toFXImage(renderedMap, null);
-                    mapImageView.setImage(map);
-                    mapImageView.fitWidthProperty().bind(mapOverviewContent.widthProperty().multiply(MAP_OVERVIEW_SCALE));
-                    mapImageView.fitHeightProperty().bind(mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
-                    mapContainer.setPrefSize(mapImageView.getFitWidth(), mapImageView.getFitHeight());
-                }, this::handleError
+            disposables.add(
+                textureSetService.createMap(currentRegion)
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(tileMap -> {
+                        BufferedImage renderedMap = tileMap.renderMap();
+                        map = SwingFXUtils.toFXImage(renderedMap, null);
+                        mapImageView.setImage(map);
+                        mapImageView.fitWidthProperty().bind(mapOverviewContent.widthProperty().multiply(MAP_OVERVIEW_SCALE));
+                        mapImageView.fitHeightProperty().bind(mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
+                        mapContainer.setPrefSize(mapImageView.getFitWidth(), mapImageView.getFitHeight());
+                    }, this::handleError)
             );
         }
         
@@ -109,8 +110,6 @@ public class MapOverviewController extends ToastedController {
         mapOverviewContent.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
 
         mapOverviewContent.setStyle("-fx-background-color: black");
-        System.out.println("test");
-
 
         closeButton.setOnAction(click -> closeMap());
         return parent;
@@ -120,6 +119,6 @@ public class MapOverviewController extends ToastedController {
     }
 
     public void closeMap() {
-        // mapOverviewContent.setVisible(false); // TODO: unused (used already in ingame)
+        mapOverviewContent.setVisible(false);
     }
 }

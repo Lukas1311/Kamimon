@@ -24,6 +24,7 @@ jobs:
           java-package: jdk
       - name: Set up fontconfig
         run: |
+          sudo sed -i '/download.opensuse.org\/repositories\/devel:kubic:libcontainers:unstable\/xUbuntu_20.04/d' /etc/apt/sources.list
           sudo apt-get update -y
           sudo apt-get install fontconfig libpangoft2-1.0-0 -y
       - name: Setup Gradle
