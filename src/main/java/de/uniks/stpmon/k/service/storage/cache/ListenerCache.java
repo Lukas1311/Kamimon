@@ -35,11 +35,15 @@ public abstract class ListenerCache<T> extends SimpleCache<T> {
                             }
                             switch (event.suffix()) {
                                 case "created" -> addValue(value);
-                                case "updated" -> updateValue(value);
+                                case "updated" -> updateValueFromSocket(value);
                                 case "deleted" -> removeValue(value);
                             }
                         }
                 ));
         return this;
+    }
+
+    protected void updateValueFromSocket(T value) {
+        updateValue(value);
     }
 }

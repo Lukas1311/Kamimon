@@ -4,13 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.Main;
-import de.uniks.stpmon.k.rest.AuthenticationApiService;
-import de.uniks.stpmon.k.rest.GroupApiService;
-import de.uniks.stpmon.k.rest.MessageApiService;
-import de.uniks.stpmon.k.rest.PresetApiService;
-import de.uniks.stpmon.k.rest.RegionApiService;
-import de.uniks.stpmon.k.rest.UserApiService;
-import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.rest.*;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,7 +37,7 @@ public class HttpModule {
     @Singleton
     Retrofit retrofit(OkHttpClient client, ObjectMapper mapper) {
         return new Retrofit.Builder()
-                .baseUrl(Main.API_URL.endsWith("/") ? Main.API_URL : Main.API_URL + "/")
+                .baseUrl(Main.API_URL + "/")
                 .client(client)
                 .addConverterFactory(JacksonConverterFactory.create(mapper)) //connection dagger & retrofit
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())

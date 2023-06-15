@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.views.world.WorldView;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
