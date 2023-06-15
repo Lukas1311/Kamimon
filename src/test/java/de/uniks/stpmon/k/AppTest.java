@@ -166,11 +166,11 @@ class AppTest extends ApplicationTest {
         component.userStorage().setUser(user);
 
         //open Settings
-        write("\t\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
-
+        clickOn("#settings");
+        waitForFxEvents();
         //edit User
         clickOn("#editUserButton");
+
         clickOn("#usernameInput");
         write("TT");
         clickOn("#saveChangesButton");

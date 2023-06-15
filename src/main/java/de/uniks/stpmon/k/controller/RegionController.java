@@ -26,7 +26,7 @@ public class RegionController extends Controller {
     public RegionController(Region region, RegionListController listController) {
         this.region = region;
         this.listController = listController;
-
+        this.effectContext = listController.effectContext;
     }
 
     @Override
