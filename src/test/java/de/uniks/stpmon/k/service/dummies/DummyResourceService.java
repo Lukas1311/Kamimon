@@ -17,6 +17,7 @@ import java.util.Objects;
 public class DummyResourceService implements IResourceService {
     private BufferedImage tileSetImage;
     private BufferedImage characterImage;
+    private BufferedImage monsterImage;
 
     @Inject
     public DummyResourceService() {
@@ -57,5 +58,10 @@ public class DummyResourceService implements IResourceService {
     @Override
     public Observable<TilesetData> getTilesetData(String fileName) {
         return Observable.just(DummyConstants.TILESET_DATA);
+    }
+
+    @Override
+    public Observable<BufferedImage> getMonsterImage(String fileName) {
+        return Observable.just(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
     }
 }

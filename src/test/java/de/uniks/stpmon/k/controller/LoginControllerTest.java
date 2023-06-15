@@ -39,10 +39,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -137,7 +135,7 @@ public class LoginControllerTest extends ApplicationTest {
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Registration successful"));
-        // app stays in login controller after registration call, only afterwards it will login into hybridController
+        // app stays in login controller after registration call, only afterward it will log in into hybridController
         verify(app).show(loginController);
     }
 
@@ -181,7 +179,7 @@ public class LoginControllerTest extends ApplicationTest {
         // click show password button and verify the show password
         write("\t");
         press(KeyCode.ENTER);
-        waitForFxEvents(); // not really necessary i guess
+        waitForFxEvents(); // not really necessary I guess
         // get password input field to verify the contents
 
         // check if prompt text matches the password that was written into password field before

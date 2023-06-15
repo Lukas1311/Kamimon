@@ -15,7 +15,7 @@
         </Button>
     </top>
     <center>
-        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="popup-text" text="" textAlignment="CENTER" wrappingWidth="430.0" BorderPane.alignment="CENTER" />
+        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="popup-text" textAlignment="CENTER" wrappingWidth="430.0" BorderPane.alignment="CENTER" />
     </center>
     <bottom>
         <GridPane fx:id="popUpButtonPane" BorderPane.alignment="CENTER">

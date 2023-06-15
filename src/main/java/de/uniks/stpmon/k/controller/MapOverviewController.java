@@ -28,6 +28,11 @@ import javafx.stage.Window;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.TextDeliveryService;
+import de.uniks.stpmon.k.service.world.TextureSetService;
 import java.awt.image.BufferedImage;
 
 
@@ -131,5 +136,9 @@ public class MapOverviewController extends ToastedController {
 
         }
         return parent;
+    }
+
+    public void closeMap() {
+        mapOverviewContent.setVisible(false);
     }
 }

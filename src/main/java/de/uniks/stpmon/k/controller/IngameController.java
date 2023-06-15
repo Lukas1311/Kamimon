@@ -2,13 +2,10 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.utils.UiToggle;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -25,8 +22,6 @@ public class IngameController extends PortalController {
     public BorderPane ingame;
     @FXML
     public Pane pane;
-    @FXML
-    public Text inGameText;
     @FXML
     public VBox rightVbox;
     @FXML
@@ -112,17 +107,12 @@ public class IngameController extends PortalController {
             mapOverview.setVisible(false);
         }
 
-        UiToggle mapToggle = new UiToggle(false);
+
         miniMap.setOnMouseClicked(click -> {
             // TODO: block inputs while big map is open? (e.g. walking?)
-            boolean isMapVisible = mapToggle.toggle();
-            mapOverview.setVisible(isMapVisible);
-        });
-        mapOverviewController.closeButton.setOnAction(click -> {
-            mapToggle.reset();
-            mapOverview.setVisible(false);
-        });
 
+            mapOverview.setVisible(true);
+        });
         return parent;
     }
 

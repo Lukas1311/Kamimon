@@ -21,7 +21,7 @@ public record RouteData(
 
     public static class Builder {
         private ObjectData data;
-        private RouteText.Builder routeTextBuilder;
+        private final RouteText.Builder routeTextBuilder;
 
         private Builder() {
             routeTextBuilder = RouteText.builder();

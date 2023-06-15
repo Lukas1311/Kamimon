@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -42,9 +44,12 @@ public class MonsterListControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+    @Mock
+    Provider<MonsterBarController> monsterBarControllerProvider;
 
     @InjectMocks
     MonsterListController monsterListController;
+
     @Mock
     TrainerStorage trainerStorage;
     @Mock
@@ -62,9 +67,9 @@ public class MonsterListControllerTest extends ApplicationTest {
         when(cacheManager.monsterTypeCache()).thenReturn(monsterTypeCache);
         // Set up mock
         when(monsterCache.getValues()).thenReturn(Observable.just(
-                List.of(new Monster("1", null, 1, null, null, null, null, null),
-                        new Monster("2", null, 2, null, null, null, null, null),
-                        new Monster("3", null, 2, null, null, null, null, null))));
+                List.of(new Monster("1", null, 1, null, null, null, new MonsterAttributes(10, null, null, null), new MonsterAttributes(10, null, null, null)),
+                        new Monster("2", null, 2, null, null, null, new MonsterAttributes(10, null, null, null), new MonsterAttributes(10, null, null, null)),
+                        new Monster("3", null, 2, null, null, null, new MonsterAttributes(10, null, null, null), new MonsterAttributes(10, null, null, null)))));
 
         when(monsterTypeCache.getValue("1"))
                 .thenReturn(Optional.of(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
@@ -72,6 +77,10 @@ public class MonsterListControllerTest extends ApplicationTest {
                 .thenReturn(Optional.of(new MonsterTypeDto(1, "Monster 2", "", List.of(), "")));
 
         when(resourceBundleProvider.get()).thenReturn(resources);
+
+        MonsterBarController mock = Mockito.mock(MonsterBarController.class);
+        when(monsterBarControllerProvider.get()).thenReturn(mock);
+
         app.show(monsterListController);
         stage.requestFocus();
     }
@@ -79,7 +88,6 @@ public class MonsterListControllerTest extends ApplicationTest {
     @Test
     public void testShowMonsterList() {
         waitForFxEvents();
-
         // Verify the size of monsterListVBox
         assertEquals(6, monsterListController.monsterListVBox.getChildren().size());
 
