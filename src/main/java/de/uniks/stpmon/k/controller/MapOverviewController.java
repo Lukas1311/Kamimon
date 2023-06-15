@@ -2,9 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
-import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import javafx.beans.binding.Bindings;
@@ -28,11 +26,6 @@ import javafx.stage.Window;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.world.TextDeliveryService;
-import de.uniks.stpmon.k.service.world.TextureSetService;
 import java.awt.image.BufferedImage;
 
 
@@ -62,10 +55,6 @@ public class MapOverviewController extends ToastedController {
     RegionStorage regionStorage;
     @Inject
     TextDeliveryService textDeliveryService;
-    @Inject
-    TrainerStorage trainerStorage;
-    @Inject
-    RegionService regionService;
 
     private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
     private final static int TILE_SIZE = 16;
@@ -84,6 +73,7 @@ public class MapOverviewController extends ToastedController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        closeButton.setOnAction(click -> closeMap());
         Region currentRegion = regionStorage.getRegion();
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
