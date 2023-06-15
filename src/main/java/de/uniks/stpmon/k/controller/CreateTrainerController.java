@@ -75,6 +75,10 @@ public class CreateTrainerController extends PortalController {
         this.chosenRegion = region;
     }
 
+    public Region getChosenRegion(){
+        return chosenRegion;
+    }
+
     @Override
     public Parent render() {
         final Parent parent = super.render();

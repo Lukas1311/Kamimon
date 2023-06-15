@@ -27,6 +27,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,7 +67,7 @@ public class SettingsControllerTest extends ApplicationTest {
         Trainer trainer = new Trainer(
                 "1", "RegionA", "TestUser", "Bob", "0", 0, "0", 0, 0, 0, npcInfo);
         lenient().when(trainerStorage.getTrainer()).thenReturn(trainer);
-        when(trainerStorage.onTrainer()).thenReturn(Observable.just(trainer));
+        when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(trainer)));
         when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
         // set user
         when(userStorage.getUser()).thenReturn(new User("1", "TestUser", "1", "1", new ArrayList<>()));

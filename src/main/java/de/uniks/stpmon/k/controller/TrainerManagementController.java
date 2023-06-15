@@ -101,14 +101,15 @@ public class TrainerManagementController extends ToastedController {
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         subscribe(trainerStorage.onTrainer(), trainer -> {
-            trainerNameInput.setPromptText(trainer.name());
-            currentTrainer = trainer;
-
-            subscribe(
-                    presetService.getCharacterFile(trainer.image()),
-                    response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
-                    this::handleError
-            );
+            if(trainer.isPresent()) {
+                trainerNameInput.setPromptText(trainer.get().name());
+                currentTrainer = trainer.get();
+                subscribe(
+                        presetService.getCharacterFile(trainer.get().image()),
+                        response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
+                        this::handleError
+                );
+            }
         });
 
         BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
@@ -200,7 +201,10 @@ public class TrainerManagementController extends ToastedController {
                     .subscribe(trainer -> {
                         PopUpScenario deleteConfirmScenario = PopUpScenario.DELETE_CONFIRMATION_TRAINER;
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
-                        showPopUp(deleteConfirmScenario, innerResult -> hybridControllerProvider.get().openMain(MainWindow.LOBBY));
+                        showPopUp(deleteConfirmScenario, innerResult -> {
+                            hybridControllerProvider.get().openMain(MainWindow.LOBBY);
+
+                        });
 
                     }, err -> hybridControllerProvider.get().openMain(MainWindow.LOBBY)));
         });
