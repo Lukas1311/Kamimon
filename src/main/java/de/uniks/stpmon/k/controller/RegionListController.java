@@ -50,6 +50,7 @@ public class RegionListController extends PortalController {
         ColumnConstraints column = new ColumnConstraints(300, 300, Double.MAX_VALUE);
         column.setHgrow(Priority.ALWAYS);
         column.setHalignment(HPos.CENTER);
+        regionListGridPane.getColumnConstraints().clear();
         regionListGridPane.getColumnConstraints().add(column);
         regionListGridPane.add(parent, colIndex, 0);
 
@@ -59,20 +60,18 @@ public class RegionListController extends PortalController {
     public void init() {
         super.init();
         colIndex = 0;
-
-        disposables.add(regionService.getRegions()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(regions::setAll, this::handleError));
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        for (Region region : regions) {
-            addRegionToGridPane();
-        }
+
         ListChangeListener<Region> listener = c -> addRegionToGridPane();
         regions.addListener(listener);
+
+        disposables.add(regionService.getRegions()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(regions::setAll, this::handleError));
 
         loadImage(imageViewKamimonLetteringRegion, "kamimonLettering.png");
 
