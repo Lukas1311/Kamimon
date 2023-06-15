@@ -2,16 +2,10 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.utils.UiToggle;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -48,6 +42,7 @@ public class IngameController extends PortalController {
 
     @Inject
     protected WorldController worldController;
+
 
 
     @Inject
@@ -112,20 +107,12 @@ public class IngameController extends PortalController {
             mapOverview.setVisible(false);
         }
 
-        UiToggle mapToggle = new UiToggle(false);
-        if(miniMap != null) {
-            miniMap.setOnMouseClicked(click -> {
-                boolean isMapVisible = mapToggle.toggle();
-                assert mapOverview != null;
-                mapOverview.setVisible(isMapVisible);
-            });
-        }
 
-        mapOverviewController.closeButton.setOnAction(click -> {
-            mapToggle.reset();
-            mapOverview.setVisible(false);
+        miniMap.setOnMouseClicked(click -> {
+            // TODO: block inputs while big map is open? (e.g. walking?)
+
+            mapOverview.setVisible(true);
         });
-
         return parent;
     }
 

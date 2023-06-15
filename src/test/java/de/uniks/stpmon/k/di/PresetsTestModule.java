@@ -142,6 +142,11 @@ public class PresetsTestModule {
                 if (abilities.size() == 0) {
                     initDummyAbilities();
                 }
+
+                if (id.equals("10") || id.equals("7")) {
+                    return Observable.just(abilities.get(0));
+                }
+
                 Optional<AbilityDto> returnAbility = abilities.stream()
                         .filter(a -> Integer.parseInt(id) == a.id())
                         .findFirst();

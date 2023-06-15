@@ -42,6 +42,7 @@ public class MonsterListController extends Controller {
     public void init() {
         super.init();
 
+
         if (cacheManager == null) {
             return;
         }
@@ -63,6 +64,7 @@ public class MonsterListController extends Controller {
     @Override
     public Parent render() {
         Parent render = super.render();
+        monsterInformation.setVisible(false);
         // Does not block, because the cache is already initialized
         showMonsterList(monsterCache.getValues().blockingFirst());
         return render;
@@ -98,7 +100,8 @@ public class MonsterListController extends Controller {
     }
 
     public void showMonsterInformation(Monster monster, Label monsterLabel) {
-        if (monsterInformation.isVisible()) {
+
+        if (monsterInformation.isVisible() && monsterInformation.isVisible()) {
             monsterInformation.setVisible(false);
             monsterLabel.setText(monsterTypeCache.getValue(String.valueOf(monster.type()))
                     .map(MonsterTypeDto::name)
