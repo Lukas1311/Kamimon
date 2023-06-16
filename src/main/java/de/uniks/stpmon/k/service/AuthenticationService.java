@@ -53,26 +53,24 @@ public class AuthenticationService {
     }
 
     public Observable<LoginResult> login(String username, String password, boolean rememberMe) {
-        return authApiService.login(new LoginDto(username, password)).map(lr -> {
+        return authApiService.login(new LoginDto(username, password)).flatMap(lr -> {
             tokenStorage.setToken(lr.accessToken());
             if (rememberMe) {
                 preferences.put("refreshToken", lr.refreshToken());
             }
             //Add User to UserStorage
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
-            userService.updateStatus(OnlineStatus.ONLINE);
-            return lr;
+            return userService.updateStatus(OnlineStatus.ONLINE).map(res -> lr);
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
 
     public Observable<Response<ErrorResponse>> logout() {
-        return authApiService.logout().map(res -> {
+        return authApiService.logout().flatMap(res -> {
             if (friendCache != null) {
                 friendCache.destroy();
                 friendCache = null;
             }
-            userService.updateStatus(OnlineStatus.OFFLINE);
-            return res;
+            return userService.updateStatus(OnlineStatus.OFFLINE).map(res2 -> res);
         });
     }
 
@@ -81,11 +79,10 @@ public class AuthenticationService {
     }
 
     public Observable<LoginResult> refresh() {
-        return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).map(lr -> {
+        return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).flatMap(lr -> {
             tokenStorage.setToken(lr.accessToken());
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
-            userService.updateStatus(OnlineStatus.ONLINE);
-            return lr;
+            return userService.updateStatus(OnlineStatus.ONLINE).map(res -> lr);
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
 }
