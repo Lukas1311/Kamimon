@@ -202,7 +202,7 @@ class AppTest extends ApplicationTest {
         //check minimap
         clickOn("#miniMap");
         verifyThat("#mapOverviewContent", Node::isVisible);
-        clickOn("#miniMap");
+        clickOn("#closeButton");
 
         //check backpack
         clickOn("#backpackImage");
