@@ -71,13 +71,13 @@ public class MinimapController extends Controller {
         subscribe(
                 trainerStorage.onTrainer(),
                 trainer -> {
-                    if (trainer != null) {
-                        int x = trainer.x() * TILE_SIZE - 144;
-                        int y = trainer.y() * TILE_SIZE - 144;
+                    if(trainer.isPresent()){
+                        int x = trainer.get().x() * TILE_SIZE - 144;
+                        int y = trainer.get().y() * TILE_SIZE - 144;
                         Rectangle2D viewPortRect = new Rectangle2D(x, y, 300, 300);
                         miniMap.setViewport(viewPortRect);
 
-                        int direction = trainer.direction();
+                        int direction = trainer.get().direction();
                         int rotation = switch (direction) {
                             case 0 -> 90;
                             case 2 -> 270;

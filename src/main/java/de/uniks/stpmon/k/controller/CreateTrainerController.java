@@ -75,6 +75,10 @@ public class CreateTrainerController extends PortalController {
         this.chosenRegion = region;
     }
 
+    public Region getChosenRegion(){
+        return chosenRegion;
+    }
+
     @Override
     public Parent render() {
         final Parent parent = super.render();
@@ -116,6 +120,7 @@ public class CreateTrainerController extends PortalController {
     }
 
     public void createSprite() {
+        chooseSpriteController.setCreationMode(true);
         createTrainerContent.getChildren().clear();
         createTrainerContent.getChildren().addAll(chooseSpriteController.render());
     }

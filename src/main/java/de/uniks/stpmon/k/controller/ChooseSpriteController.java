@@ -29,6 +29,8 @@ public class ChooseSpriteController extends ToastedController {
     protected final ObservableList<String> characters = FXCollections.observableArrayList();
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
+    private boolean isCreation = true;
+
 
     protected int currentSpriteIndex;
     protected int previousSpriteIndex;
@@ -88,6 +90,15 @@ public class ChooseSpriteController extends ToastedController {
 
         return parent;
     }
+
+    /**
+     * Set the creation mode. If true, the CreateTrainerCotnroller is shown after saving.
+     * @param isCreation
+     */
+    public void setCreationMode(boolean isCreation){
+        this.isCreation = isCreation;
+    }
+
 
     /**
      * Load the list of available sprites from the preset service
@@ -180,8 +191,10 @@ public class ChooseSpriteController extends ToastedController {
                                 .subscribe(trainer -> {
                                 }, this::handleError));
             });
+        } else {
+            closeAndReturn();
         }
-        closeAndReturn();
+
     }
 
     /**
@@ -196,7 +209,7 @@ public class ChooseSpriteController extends ToastedController {
     }
 
     private void closeAndReturn() {
-        if (regionStorage.getRegion() == null) {
+        if (isCreation) {
             createTrainerControllerProvider.get().setTrainerImage(characters.get(currentSpriteIndex));
             chooseTrainerContent.getChildren().clear();
             chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());

@@ -190,7 +190,9 @@ public class HybridController extends Controller {
             case SETTINGS -> pushController(settingsController, setup);
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
-            case CHOOSE_SPRITE -> pushController(chooseSpriteController, setup);
+            case CHOOSE_SPRITE -> {chooseSpriteController.setCreationMode(false);
+                pushController(chooseSpriteController, setup);
+            }
             case NONE -> {
             }
         }

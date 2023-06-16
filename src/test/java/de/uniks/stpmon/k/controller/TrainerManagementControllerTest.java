@@ -28,6 +28,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -77,7 +78,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
-        when(trainerStorage.onTrainer()).thenReturn(Observable.just(dummytrainer));
+        when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(dummytrainer)));
         when(presetService.getCharacterFile(any())).thenReturn(Observable.just(ResponseBody.create(null, "test")));
         app.show(trainerManagementController);
         stage.requestFocus();

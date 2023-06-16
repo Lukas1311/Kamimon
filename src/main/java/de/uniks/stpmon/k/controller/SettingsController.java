@@ -81,16 +81,18 @@ public class SettingsController extends ToastedController {
         SimpleBooleanProperty trainerLoaded = trainerStorage.getTrainerLoaded();
 
         subscribe(trainerStorage.onTrainer(), trainer -> {
-            trainerProperty.set(trainer.name());
-            userTrainerValue.textProperty().bind(trainerProperty);
-            regionProperty.set(regionStorage.getRegion().name());
-            userRegionValue.textProperty().bind(regionProperty);
+            if(trainer.isPresent()) {
+                trainerProperty.set(trainer.get().name());
+                userTrainerValue.textProperty().bind(trainerProperty);
+                regionProperty.set(regionStorage.getRegion().name());
+                userRegionValue.textProperty().bind(regionProperty);
 
-            subscribe(
-                    presetService.getCharacterFile(trainer.image()),
-                    response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
-                    this::handleError
-            );
+                subscribe(
+                        presetService.getCharacterFile(trainer.get().image()),
+                        response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
+                        this::handleError
+                );
+            }
         });
 
 

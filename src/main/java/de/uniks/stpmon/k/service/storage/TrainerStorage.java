@@ -7,13 +7,14 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @Singleton
 public class TrainerStorage extends TrainerProvider {
 
     private final SimpleBooleanProperty trainerLoaded = new SimpleBooleanProperty(false);
 
-    private final BehaviorSubject<Trainer> trainerSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Optional<Trainer>> trainerSubject = BehaviorSubject.create();
 
     @Inject
     public TrainerStorage() {
@@ -22,16 +23,14 @@ public class TrainerStorage extends TrainerProvider {
     public void setTrainer(Trainer trainer) {
         super.setTrainer(trainer);
         trainerLoaded.set(trainer != null);
-        if (trainer != null) {
-            trainerSubject.onNext(trainer);
-        }
+        trainerSubject.onNext(Optional.ofNullable(trainer));
     }
 
     public SimpleBooleanProperty getTrainerLoaded() {
         return trainerLoaded;
     }
 
-    public Observable<Trainer> onTrainer() {
+    public Observable<Optional<Trainer>> onTrainer() {
         return trainerSubject;
     }
 

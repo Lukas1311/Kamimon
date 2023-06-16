@@ -134,6 +134,7 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
         final HybridController hybridController = Mockito.mock(HybridController.class);
 
+        chooseSpriteController.setCreationMode(false);
         chooseSpriteController.characters.addAll("Sprite1", "Sprite2", "Sprite3");
         chooseSpriteController.currentSpriteIndex = 0;
         chooseSpriteController.previousSpriteIndex = 1;
@@ -145,8 +146,6 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
             callback.onModalResult(true);
             return null;
         }).when(popupMock).showModal(any());
-
-        when(regionStorage.getRegion()).thenReturn(new Region("0", "hallo", null, null));
 
         when(hybridControllerProvider.get()).thenReturn(hybridController);
         doNothing().when(hybridController).popTab();
