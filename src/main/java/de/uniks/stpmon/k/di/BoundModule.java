@@ -30,6 +30,7 @@ public abstract class BoundModule {
     public abstract ILifecycleService trainerManager(CacheManager manager);
 
     @Binds
+    @IntoSet
     @Singleton
     @SuppressWarnings("unused")
     public abstract ILifecycleService userService(UserService service);
