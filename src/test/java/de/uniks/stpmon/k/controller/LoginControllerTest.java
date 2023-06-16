@@ -6,9 +6,9 @@ import de.uniks.stpmon.k.models.LoginResult;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.EffectContext;
-import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
+
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -35,14 +35,21 @@ import retrofit2.Response;
 import javax.inject.Provider;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -57,10 +64,9 @@ public class LoginControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     TokenStorage tokenStorage;
     @Mock
-    @SuppressWarnings("unused")
-    NetworkAvailability netAvailability;
-    @Mock
     Provider<HybridController> hybridControllerProvider;
+    @Mock
+    Provider<IntroductionController> introductionControllerProvider;
     @Mock
     UserService userService;
     @Spy
@@ -117,10 +123,16 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testRegister() {
-        User bob = new User(null, "Bob", null, null, null);
-        when(userService.addUser(any(), any())).thenReturn(Observable.just(
-                bob
-        ));
+        // prep:
+        User bob = new User("1", "bob", "o", "a", new ArrayList<>(List.of("f")));
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+
+        // define mocks:
+        final IntroductionController introMock = Mockito.mock(IntroductionController.class);
+        when(introductionControllerProvider.get()).thenReturn(introMock);
+        when(userService.addUser(any(), any())).thenReturn(Observable.just(bob));
+        when(authService.login(any(), any(), anyBoolean())).thenReturn(Observable.just(new LoginResult(null, null, null, null, null, null, null)));
+        doNothing().when(app).show(introMock);
 
         // tab into username input field
         write("\t");
@@ -134,11 +146,17 @@ public class LoginControllerTest extends ApplicationTest {
         Button selectedButton = lookup("#registerButton").queryAs(Button.class);
         assertThat(selectedButton).isFocused();
         press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Registration successful"));
-        // app stays in login controller after registration call, only afterward it will log in into hybridController
-        verify(app).show(loginController);
+
+        verify(userService).addUser(captor.capture(), any());
+        assertEquals("Bob",captor.getValue());
+        verify(authService).login(captor.capture(), any(), anyBoolean());
+        assertEquals("bob",captor.getValue());
+        verify(introductionControllerProvider).get();
+        verify(app).show(introMock);
     }
 
     @Test
