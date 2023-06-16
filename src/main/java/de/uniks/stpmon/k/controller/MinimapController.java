@@ -51,6 +51,8 @@ public class MinimapController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        loadImage(miniMapBorder, "emptyMinimap.png");
+
         Area currentArea = regionStorage.getArea();
         miniMap.setPreserveRatio(false);
         miniMap.setClip(new Circle(75, 75, 75));

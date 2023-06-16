@@ -18,10 +18,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
 
 import javax.inject.Inject;
@@ -36,6 +37,8 @@ public class MapOverviewController extends ToastedController {
     public Pane highlightPane;
     @FXML
     public StackPane mapStackPane;
+    @FXML
+    public TextFlow textFlowRegionDescription;
     @FXML
     BorderPane mapOverviewContent;
     @FXML
@@ -59,6 +62,8 @@ public class MapOverviewController extends ToastedController {
     private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
     private final static int TILE_SIZE = 16;
     private Image map;
+
+    Rectangle activeRectangle;
 
     @Inject
     public MapOverviewController() {
@@ -93,6 +98,8 @@ public class MapOverviewController extends ToastedController {
                     mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
             mapStackPane.scaleXProperty().bind(binding.map(v -> v.doubleValue() / width));
             mapStackPane.scaleYProperty().bind(binding.map(v -> v.doubleValue() / height));
+            textFlowRegionDescription.prefWidthProperty().bind(mapOverviewContent.widthProperty());
+
         }
 
         Window parentWindow = app.getStage().getScene().getWindow();
@@ -108,7 +115,7 @@ public class MapOverviewController extends ToastedController {
                             for (PolygonPoint point : routeData.polygon()) {
                                 polygon.getPoints().addAll(Double.valueOf(routeData.x() + point.x()), Double.valueOf(routeData.y() + point.y()));
                             }
-                            polygon.setFill(Paint.valueOf("#ffffff"));
+                            polygon.setFill(Color.TRANSPARENT);
                             polygon.setOpacity(0.25);
                             polygon.setOnMouseClicked(event -> regionDescription.setText(routeData.routeText().description()));
                             highlightPane.getChildren().add(polygon);
@@ -118,13 +125,24 @@ public class MapOverviewController extends ToastedController {
                             return;
                         }
                         Rectangle rectangle = new Rectangle(routeData.x(), routeData.y(), routeData.width(), routeData.height());
-                        rectangle.setFill(Paint.valueOf("#ffffff"));
+                        rectangle.setFill(Color.TRANSPARENT);
                         rectangle.setOpacity(0.25);
                         highlightPane.getChildren().add(rectangle);
-                        rectangle.setOnMouseClicked(event -> regionDescription.setText(routeData.routeText().description()));
+                        rectangle.setOnMouseClicked(event -> {
+                            regionDescription.setText(routeData.routeText().description());
+                            if (activeRectangle != null) {
+                                activeRectangle.setOpacity(0);
+                            }
+                            rectangle.setStroke(Color.WHITE);
+                            rectangle.setStrokeWidth(3);
+                            rectangle.setOpacity(1);
+                            activeRectangle = rectangle;
+                        });
                     }));
 
         }
+
+
         return parent;
     }
 

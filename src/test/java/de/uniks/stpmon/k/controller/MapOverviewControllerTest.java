@@ -3,21 +3,19 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
-import de.uniks.stpmon.k.models.map.Tile;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
 import de.uniks.stpmon.k.world.TileMap;
-import de.uniks.stpmon.k.world.Tileset;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Button;
@@ -30,18 +28,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -64,6 +56,9 @@ public class MapOverviewControllerTest extends ApplicationTest {
     @Spy
     @InjectMocks
     MapOverviewController mapOverviewController;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
 
     private TileMapData createDummyMap() {
@@ -86,37 +81,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
     }
     TileMapData dummyMap = createDummyMap();
     Region dummyRegion = new Region("1", "reg", null, dummyMap);
-
-    Map<TilesetSource, Tileset> tilesetMap = new HashMap<>() {{
-        TilesetData tilesetData = new TilesetData(
-            1,
-            "i",
-            1,
-            1,
-            1,
-            "n",
-            1,
-            1,
-            1,
-            1,
-            List.of(
-                new Tile(
-                    1,
-                    List.of(
-                        new Property("Route 101","Route", "text")
-                    )
-                )
-            ),
-            "t"
-        );
-        BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
-        TilesetSource tilesetSource = new TilesetSource(1, "grass.json");
-        Tileset.builder()
-            .setData(tilesetData)
-            .setImage(image)
-            .setSource(tilesetSource)
-            .build();
-    }};
     TileMap tileMapMock = mock(TileMap.class);
 
 

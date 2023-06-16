@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
@@ -46,6 +47,10 @@ public class RegionListControllerTest extends ApplicationTest {
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
     public void start(Stage stage) throws Exception {
