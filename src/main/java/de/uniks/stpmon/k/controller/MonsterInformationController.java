@@ -52,6 +52,7 @@ public class MonsterInformationController extends ToastedController {
     @Inject
     IResourceService resourceService;
 
+
     @Inject
     public MonsterInformationController() {
     }
@@ -150,15 +151,18 @@ public class MonsterInformationController extends ToastedController {
         abilityTypeLabel.getStyleClass().add("ability-type");
         amountUsesBox.getStyleClass().add("ability-uses");
 
+
         // Subscribe to the ability information from the preset service
         disposables.add(presetService.getAbility(id)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(ability -> {
                         abilityTypeLabel.setText(ability.type());
                         abilityNameText.setText(ability.name());
-                        maxUsesLabel.setText(String.valueOf(ability.maxUses()));
+                    maxUsesLabel.setText(String.valueOf(ability.maxUses()));
+                    abilityBox.setOnMouseClicked(event -> descriptionText.setText(ability.description()));
                 }));
 
         return abilityBox;
     }
+
 }
