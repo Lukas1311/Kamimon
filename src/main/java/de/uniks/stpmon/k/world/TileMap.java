@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
@@ -10,18 +11,15 @@ import de.uniks.stpmon.k.utils.ImageUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
     private final Set<TileLayerData> floorLayers;
     private final Set<TileLayerData> decorationLayers;
+    private final List<DecorationLayer> decorations;
     private final int tileWidth;
     private final int tileHeight;
     private final int width;
@@ -38,6 +36,7 @@ public class TileMap {
 
         this.floorLayers = new LinkedHashSet<>();
         this.decorationLayers = new LinkedHashSet<>();
+        this.decorations = new LinkedList<>();
         List<TileLayerData> layerData = data.layers();
         for (TileLayerData layer : layerData) {
             width = Math.max(width, layer.width());
@@ -86,20 +85,11 @@ public class TileMap {
         return floorImage;
     }
 
-    public List<BufferedImage> renderDecorations() {
+    public List<DecorationLayer> renderDecorations() {
         if (layers.isEmpty()) {
             renderMap();
         }
-        List<BufferedImage> result = new ArrayList<>();
-        List<TileLayerData> layersed = data.layers();
-        for (int i = 0; i < layersed.size(); i++) {
-            TileLayerData layer = layersed.get(i);
-            if (!decorationLayers.contains(layer)) {
-                continue;
-            }
-            result.add(layers.get(i));
-        }
-        return result;
+        return decorations;
     }
 
     public int getHeight() {
@@ -120,13 +110,19 @@ public class TileMap {
         BufferedImage mergedImage = createImage(
                 width, height);
         Graphics2D graphics = mergedImage.createGraphics();
-        for (TileLayerData layer : data.layers()) {
+        List<TileLayerData> layersed = data.layers();
+        for (int i = 0; i < layersed.size(); i++) {
+            TileLayerData layer = layersed.get(i);
             if (layer.chunks() == null) {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
             graphics.drawImage(layerImage, layer.startx(), layer.starty(), null);
             layers.add(layerImage);
+
+            if (decorationLayers.contains(layer)) {
+                decorations.add(new DecorationLayer(layer, i, layerImage));
+            }
         }
         graphics.dispose();
         return mergedImage;

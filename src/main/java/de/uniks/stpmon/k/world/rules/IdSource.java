@@ -12,6 +12,19 @@ public abstract class IdSource implements Supplier<Collection<Integer>> {
         this.startIndex = startIndex;
     }
 
+
+    public static class Single extends IdSource {
+
+        public Single(int startIndex) {
+            super(startIndex);
+        }
+
+        @Override
+        public Collection<Integer> get() {
+            return List.of(startIndex);
+        }
+    }
+
     public static class Rectangle extends IdSource {
         private final int width;
         private final int height;

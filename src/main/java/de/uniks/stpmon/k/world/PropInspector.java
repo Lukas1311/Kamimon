@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.world;
 
+import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
@@ -43,7 +44,19 @@ public class PropInspector {
         // Lantern entangled
         addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
                 new IdSource.Rectangle(3001, 1, 4, 176)));
-        //addConnectionRule(new TileSetRule());
+        // house carpets
+        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Interiors_16x16.json",
+                new IdSource.Rectangle(8285 + 247, 4, 3, 16),
+                new IdSource.Rectangle(8285 + 173, 4, 14, 16),
+                new IdSource.Rectangle(8285 + 251, 2, 6, 16)));
+        // house counter
+        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Interiors_16x16.json",
+                new IdSource.Rectangle(8285 + 10, 5, 5, 16),
+                new IdSource.Single(8285 + 407),
+                new IdSource.Single(8285 + 60)));
+        // picnic
+        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
+                new IdSource.Rectangle(1135, 5, 8, 176)));
         addConnectionRule(new ImageConnectionRule());
         addTileRule(new ImageEmptyRule());
     }
@@ -64,9 +77,6 @@ public class PropInspector {
         return new HashSet<>(groups.values());
     }
 
-    public PropMap work(BufferedImage image, TileMapData data) {
-        return work(List.of(image), data);
-    }
 
     private RuleResult applyRules(Collection<PropRule> rules, PropInfo info, BufferedImage image) {
         for (PropRule rule : rules) {
@@ -78,12 +88,18 @@ public class PropInspector {
         return RuleResult.NO_MATCH;
     }
 
-    public PropMap work(List<BufferedImage> decorationLayers, TileMapData data) {
-        BufferedImage image = decorationLayers.get(0);
+    public PropMap work(DecorationLayer layer, TileMapData data) {
+        return work(List.of(layer), data);
+    }
+
+    public PropMap work(List<DecorationLayer> decorationLayers, TileMapData data) {
+        DecorationLayer layer = decorationLayers.get(0);
+        BufferedImage image = layer.image();
+        int layerIndex = layer.layerIndex();
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = 0; y < grid.getHeight(); y++) {
                 boolean marked = false;
-                int id = data.getId(x, y, 1);
+                int id = data.getId(x, y, layerIndex);
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
@@ -99,7 +115,7 @@ public class PropInspector {
                         marked = true;
                         continue;
                     }
-                    int otherId = data.getId(otherX, otherY, 1);
+                    int otherId = data.getId(otherX, otherY, layerIndex);
                     // Empty or invalid tile
                     if (id <= 0 || otherId <= 0) {
                         continue;

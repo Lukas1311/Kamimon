@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.RegionService;
@@ -67,7 +68,7 @@ public class WorldLoader {
     }
 
     private PropMap createProps(TileMap tileMap) {
-        List<BufferedImage> decorationLayers = tileMap.renderDecorations();
+        List<DecorationLayer> decorationLayers = tileMap.renderDecorations();
         if (decorationLayers.isEmpty()) {
             return new PropMap(List.of(), new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB));
         }
