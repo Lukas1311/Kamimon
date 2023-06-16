@@ -33,6 +33,8 @@ import retrofit2.HttpException;
 import retrofit2.Response;
 
 import javax.inject.Provider;
+
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -224,6 +226,23 @@ public class LoginControllerTest extends ApplicationTest {
 
         verify(loginController).setDe();
         verify(loginController).setEn();
+    }
+
+    @Test
+    void testLoginWithoutInternetConnection() {
+        // define mocks:
+        when(authService.login(any(), any(), anyBoolean())).thenReturn(Observable.error(new UnknownHostException()));
+
+        // action:
+        Platform.runLater(() -> loginController.login());
+        waitForFxEvents();
+
+        // check error label text
+        Label label = lookup("#errorLabel").queryAs(Label.class);
+        verifyThat(label, LabeledMatchers.hasText("No internet connection"));
+
+        // test has to be verified 5 times because we check 5 error codes
+        verify(authService, times(1)).login(any(), any(), anyBoolean());
     }
 
     @Test
