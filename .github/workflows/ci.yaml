@@ -25,10 +25,9 @@ jobs:
       - name: Set up fontconfig
         run: |
           sudo apt-get update -y
-          curl -LO http://archive.ubuntu.com/ubuntu/pool/main/f/fontconfig/libfontconfig1_2.13.1-4.2ubuntu2_amd64.deb
-          curl -LO http://archive.ubuntu.com/ubuntu/pool/main/p/pango1.0/libpangoft2-1.0-0_1.44.7-2ubuntu4_amd64.deb
-          sudo dpkg -i libfontconfig1_2.13.1-4.2ubuntu2_amd64.deb libpangoft2-1.0-0_1.44.7-2ubuntu4_amd64.deb
-          sudo apt-get install -f -y
+          echo "deb [trusted=yes] http://archive.ubuntu.com/ubuntu focal main universe" | sudo tee /etc/apt/sources.list.d/override.list
+          sudo apt-get update -y
+          sudo apt-get install -y fontconfig libpangoft2-1.0-0
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
