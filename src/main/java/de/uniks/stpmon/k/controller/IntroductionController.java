@@ -12,8 +12,9 @@ import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
-
+@Singleton
 public class IntroductionController extends Controller {
 
     @FXML
