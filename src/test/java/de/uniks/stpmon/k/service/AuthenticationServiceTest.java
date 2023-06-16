@@ -29,6 +29,7 @@ import java.util.prefs.Preferences;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +39,8 @@ public class AuthenticationServiceTest {
     TokenStorage tokenStorage;
     @Spy
     UserStorage userStorage;
+    @Mock
+    UserService userService;
     @Mock
     AuthenticationApiService authApiService;
     @Spy
@@ -56,7 +59,9 @@ public class AuthenticationServiceTest {
         Mockito.doNothing().when(prefs).put(ArgumentMatchers.eq("refreshToken"), captor.capture());
         Mockito.when(authApiService.login(any()))
                 .thenReturn(Observable.just(new LoginResult("i", "n", "s", "a", null, "a", "r")));
-
+        when(userService.updateStatus(any())).thenReturn(Observable.just(
+            new User("1", "b", "online", "a", null)
+        ));
         // action:
         final LoginResult result = authService.login("Alice", "12345678", true).blockingFirst();
 
@@ -70,6 +75,7 @@ public class AuthenticationServiceTest {
         // check mocks:
         verify(prefs).put("refreshToken", "r");
         verify(authApiService).login(new LoginDto("Alice", "12345678"));
+        verify(userService).updateStatus(any());
     }
 
     @Test
@@ -93,6 +99,9 @@ public class AuthenticationServiceTest {
         Mockito.when(authApiService.logout()).thenReturn(
                 Observable.just(Response.success(new ErrorResponse(200, "e", "m")))
         );
+        when(userService.updateStatus(any())).thenReturn(Observable.just(
+            new User("1", "b", "online", "a", null)
+        ));
 
         // action:
         final Response<ErrorResponse> response = authService.logout().blockingFirst();
@@ -105,6 +114,7 @@ public class AuthenticationServiceTest {
 
         // check mocks:
         verify(authApiService).logout();
+        verify(userService).updateStatus(any());
     }
 
     @Test
