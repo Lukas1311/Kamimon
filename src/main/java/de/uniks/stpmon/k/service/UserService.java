@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class UserService {
+public class UserService implements ILifecycleService{
 
     public enum OnlineStatus {
         ONLINE("online"),
@@ -42,6 +42,11 @@ public class UserService {
 
     @Inject
     public UserService() {
+    }
+
+    @Override
+    public void destroy() {
+        updateStatus(OnlineStatus.OFFLINE).blockingFirst();
     }
 
     public Observable<User> addUser(String username, String password) {
