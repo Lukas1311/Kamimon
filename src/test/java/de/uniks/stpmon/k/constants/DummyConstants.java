@@ -77,7 +77,7 @@ public class DummyConstants {
 
                                     )
                             ),
-                            List.of(new ObjectData(0, null, null, null, false, 0, 0, 0, 0, 0)),
+                            List.of(new ObjectData(0, null, List.of(),null, null, false, 0, 0, 0, 0, 0)),
                             0, 0,
                             16, 16,
                             0, 0,
