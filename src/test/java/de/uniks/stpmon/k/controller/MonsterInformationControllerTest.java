@@ -112,15 +112,9 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         waitForFxEvents();
 
         clickOn("#abilityBox1");
-
-
-        //Platform.runLater(() -> clickOn("#abilityBox1"));
-
-
         waitForFxEvents();
         assertEquals("AbilityDescription", monsterInformationController.descriptionText.getText());
 
-        //Platform.runLater(() -> assertEquals("AbilityDescription", monsterInformationController.descriptionText.getText()));
     }
 
 }
