@@ -121,7 +121,7 @@ public class ChooseSpriteController extends ToastedController {
     public void getCharactersList(List<String> charactersList) {
         List<String> preMadeCharacters = charactersList.subList(0, Math.min(charactersList.size(), 20));
 
-        this.characters.addAll(preMadeCharacters);
+        this.characters.setAll(preMadeCharacters);
 
         if (!charactersList.isEmpty()) {
             String selectedCharacter = charactersList.get(currentSpriteIndex);

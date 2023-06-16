@@ -83,7 +83,10 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         Platform.runLater(() -> {
             monsterInformationController.loadMonster(monster);
 
-            assertEquals("2", monsterInformationController.speedLabel.getText());
+            assertEquals("50", monsterInformationController.healthLabel.getText());
+            assertEquals("50", monsterInformationController.attackLabel.getText());
+            assertEquals("50", monsterInformationController.defenseLabel.getText());
+            assertEquals("50", monsterInformationController.speedLabel.getText());
             assertEquals("1", monsterInformationController.levelLabel.getText());
             assertEquals("5", monsterInformationController.currentHPLabel.getText());
             assertEquals("10", monsterInformationController.maxHPLabel.getText());
