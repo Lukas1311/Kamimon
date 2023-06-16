@@ -29,6 +29,8 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
@@ -158,9 +160,6 @@ public class LoginController extends Controller {
         if (isInvalid.get()) {
             return;
         }
-        if (!netAvailability.isInternetAvailable()) {
-            errorText.set(translateString("no.internet.connection"));
-        }
     }
 
     public void login() {
@@ -180,7 +179,9 @@ public class LoginController extends Controller {
                     } else {
                         app.show(introductionController);
                     }
-                }, error -> errorText.set(getErrorMessage(error))));
+                }, error -> {
+                    errorText.set(getErrorMessage(error));
+                }));
     }
 
     public void register() {
@@ -197,9 +198,19 @@ public class LoginController extends Controller {
     }
 
     private String getErrorMessage(Throwable error) {
-        if (!(error instanceof HttpException exception)) {
-            return errorText.get();
+        try {
+            throw error;
+        } catch (UnknownHostException unknownHostException) {
+            return translateString("no.internet.connection");
+        } catch (HttpException httpException) {
+            return handleHttpException(httpException);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            return "undefined error";
         }
+    }
+
+    private String handleHttpException(HttpException exception) {
         return switch (exception.code()) {
             case 400 -> translateString("validation.failed");
             case 401 -> translateString("invalid.username.or.password");
