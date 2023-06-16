@@ -154,8 +154,8 @@ class HybridControllerTest extends ApplicationTest {
 
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pane2 = lookup("#loginScreen").query();
-        assertNotNull(pane2);
+        VBox box = lookup("#loginScreen").query();
+        assertNotNull(box);
     }
 
     @Test
