@@ -7,7 +7,10 @@
 <?import javafx.scene.text.Text?>
 <VBox fx:id="regionVBox" alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.RegionController">
+
+
     <Text fx:id="regionNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+
     <BorderPane fx:id="imageWrappingPane" styleClass="region-pane-border" stylesheets="@css/style.css">
         <center>
             <ImageView fx:id="regionImage" pickOnBounds="true" preserveRatio="true"/>
