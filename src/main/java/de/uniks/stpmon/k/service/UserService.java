@@ -10,12 +10,28 @@ import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
 public class UserService {
+
+    public enum OnlineStatus {
+        ONLINE("online"),
+        OFFLINE("offline");
+        private final String status;
+
+        OnlineStatus(final String status) {
+            this.status = status;
+        }
+
+        @Override
+        public String toString() {
+            return status;
+        }
+    }
 
     @Inject
     UserStorage userStorage;
