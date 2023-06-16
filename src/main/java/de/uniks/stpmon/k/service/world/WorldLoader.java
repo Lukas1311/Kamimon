@@ -70,7 +70,7 @@ public class WorldLoader {
     private PropMap createProps(TileMap tileMap) {
         List<DecorationLayer> decorationLayers = tileMap.renderDecorations();
         if (decorationLayers.isEmpty()) {
-            return new PropMap(List.of(), new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB));
+            return new PropMap(List.of(), new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
         }
         TileMapData data = tileMap.getData();
         PropInspector inspector = new PropInspector(data.width(), data.height());
