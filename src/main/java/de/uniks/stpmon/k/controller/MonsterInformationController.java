@@ -159,6 +159,7 @@ public class MonsterInformationController extends ToastedController {
                         abilityTypeLabel.setText(ability.type());
                         abilityNameText.setText(ability.name());
                     maxUsesLabel.setText(String.valueOf(ability.maxUses()));
+                    abilityBox.setId("abilityBox" + ability.id());
                     abilityBox.setOnMouseClicked(event -> descriptionText.setText(ability.description()));
                 }));
 

@@ -95,4 +95,25 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         });
     }
 
+    @Test
+    public void testAbilityDescrition() {
+        SortedMap<String, Integer> abilities = new TreeMap<>();
+        abilities.put("1", 15);
+        abilities.put("2", 10);
+        AbilityDto abilityDto = new AbilityDto(1, "abilityName", "AbilityDescription", "abilityType", 20, null, null);
+        MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
+        MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
+        Monster monster = new Monster("id", null, 1, 1, 0, abilities, attributes, currentAttributes);
+
+        when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
+
+        Platform.runLater(() -> monsterInformationController.loadMonster(monster));
+
+        waitForFxEvents();
+
+        Platform.runLater(() -> clickOn("#abilityBox1"));
+
+        Platform.runLater(() -> assertEquals("AbilityDescription", monsterInformationController.descriptionText.getText()));
+    }
+
 }
