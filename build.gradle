@@ -33,6 +33,13 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+
 dependencies {
 
     // -------------------- Styling ------------------------------------
@@ -128,6 +135,8 @@ jacocoTestReport {
 }
 
 test {
+    systemProperty "file.encoding", "utf-8"
+
     useJUnitPlatform()
 
     testLogging {
