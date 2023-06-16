@@ -146,27 +146,6 @@ class HybridControllerTest extends ApplicationTest {
         assertNotNull(settings);
     }
 
-    // @Test
-    // public void logout() {
-    //     userStorage.setUser(new User("1", "Bob", "online", "a", new ArrayList<>()));
-
-    //     when(userService.updateStatus(any())).thenReturn(Observable.just(
-    //             new User("1","Bob","offline","a",new ArrayList<>())
-    //     ));
-    //     // pressing logout button and check if lobby is shown then login
-    //     toIngame();
-    //     write("\t\t\t\t");
-    //     press(KeyCode.ENTER).release(KeyCode.ENTER);
-    //     waitForFxEvents();
-    //     Pane pane = lookup("#pane").query();
-    //     assertNotNull(pane);
-
-    //     press(KeyCode.ENTER).release(KeyCode.ENTER);
-    //     waitForFxEvents();
-    //     VBox box = lookup("#loginScreen").query();
-    //     assertNotNull(box);
-    // }
-
     @Test
     public void closeSidebar() {
         // mock udp listener
