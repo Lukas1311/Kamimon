@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import io.reactivex.rxjava3.core.Observable;
@@ -41,6 +42,9 @@ public class MonsterInformationControllerTest extends ApplicationTest {
 
     @InjectMocks
     MonsterInformationController monsterInformationController;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -73,9 +77,9 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         SortedMap<String, Integer> abilities = new TreeMap<>();
         abilities.put("1", 15);
         abilities.put("2", 10);
-        AbilityDto abilityDto = new AbilityDto(1,"abilityName", null, "abilityType", 20, null, null);
-        MonsterAttributes attributes = new MonsterAttributes(10,8,6,4);
-        MonsterAttributes currentAttributes = new MonsterAttributes(5,4,3,2);
+        AbilityDto abilityDto = new AbilityDto(1, "abilityName", null, "abilityType", 20, null, null);
+        MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
+        MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
         Monster monster = new Monster("id", null, 1, 1, 0, abilities, attributes, currentAttributes);
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));

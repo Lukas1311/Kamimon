@@ -4,7 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -56,6 +56,7 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     Provider<CreateTrainerController> createTrainerControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     RegionStorage regionStorage;
 
     @Mock
@@ -63,7 +64,9 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
 
     @Mock
     TrainerService trainerService;
-
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
     public void start(Stage stage) throws Exception {

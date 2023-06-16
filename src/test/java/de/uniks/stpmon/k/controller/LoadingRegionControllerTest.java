@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -22,6 +23,9 @@ public class LoadingRegionControllerTest extends ApplicationTest {
     App app = new App(null);
     @InjectMocks
     LoadingRegionController loadingRegionController;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
 
     @Override
@@ -29,7 +33,7 @@ public class LoadingRegionControllerTest extends ApplicationTest {
         app.start(stage);
         loadingRegionController = new LoadingRegionController();
         regionStorage = mock(RegionStorage.class);
-        final Region currentRegion =  new Region("1", "r", null, null);
+        final Region currentRegion = new Region("1", "r", null, null);
         when(regionStorage.getRegion()).thenReturn(currentRegion);
 
         loadingRegionController.regionStorage = regionStorage;
