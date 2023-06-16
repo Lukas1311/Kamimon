@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import org.kordamp.ikonli.javafx.*?>
-
+<?import javafx.scene.shape.Rectangle?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.String?>
 <AnchorPane fx:id="createTrainerContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="450.0" prefWidth="500.0"
             stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
@@ -62,13 +61,12 @@
             </VBox>
         </HBox>
         <StackPane fx:id="spriteContainer" maxHeight="130.0" prefHeight="130.0">
-            <ImageView fitHeight="130.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true"
+            <ImageView fx:id="spriteBackground" fitHeight="130.0" fitWidth="130.0" pickOnBounds="true"
+                       preserveRatio="true"
                        StackPane.alignment="CENTER">
-                <Image url="@../controller/spriteBackground.png"/>
             </ImageView>
             <ImageView fx:id="trainerSprite" fitHeight="130.0" fitWidth="130.0" onMouseClicked="#trainerSprite"
                        pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-                <Image url="@../controller/spritePlacehoder.png"/>
             </ImageView>
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
