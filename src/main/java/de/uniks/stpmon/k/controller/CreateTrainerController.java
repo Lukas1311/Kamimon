@@ -46,6 +46,8 @@ public class CreateTrainerController extends PortalController {
     public AnchorPane createTrainerContent;
     @FXML
     public StackPane spriteContainer;
+    @FXML
+    public ImageView spriteBackground;
 
     @Inject
     RegionService regionService;
@@ -75,13 +77,12 @@ public class CreateTrainerController extends PortalController {
         this.chosenRegion = region;
     }
 
-    public Region getChosenRegion(){
-        return chosenRegion;
-    }
-
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        loadImage(spriteBackground, "spriteBackground.png");
+        loadImage(trainerSprite, "spritePlacehoder.png");
 
         BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
         BooleanBinding trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);

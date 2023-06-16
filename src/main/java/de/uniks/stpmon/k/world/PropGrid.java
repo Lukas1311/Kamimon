@@ -32,11 +32,20 @@ public class PropGrid {
     }
 
     public int getGroup(int x, int y) {
-        return grid[x][y] >> 4;
+        return grid[x][y] >> 5;
+    }
+
+    public void setIsEmpty(int x, int y, boolean empty) {
+        grid[x][y] = (grid[x][y] & ~0x10) | (empty ? 0x10 : 0);
+    }
+
+
+    public boolean isEmpty(int x, int y) {
+        return (grid[x][y] & 0x10) > 0;
     }
 
     public void setGroup(int x, int y, int group) {
-        grid[x][y] = (grid[x][y] & 0xF) | (group << 4);
+        grid[x][y] = (grid[x][y] & 0xF) | (group << 5);
     }
 
 }

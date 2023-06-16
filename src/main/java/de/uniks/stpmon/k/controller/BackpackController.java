@@ -34,7 +34,9 @@ public class BackpackController extends Controller {
 
     @Override
     public Parent render() {
-        return super.render();
+        Parent render = super.render();
+        loadImage(backpackImage, "backpack.png");
+        return render;
     }
 
     @Override
