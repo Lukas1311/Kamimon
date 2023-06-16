@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -202,17 +201,5 @@ class PresetServiceTest {
 
         //check mocks
         verify(presetApiService).getAbility(captor.capture());
-    }
-
-    @Test
-    void getImage() {
-        //TODO: implement test
-        BufferedImage image = new BufferedImage(1, 1, 1);
-
-    }
-
-    @Test
-    void getTileset() {
-        //TODO: implement test
     }
 }

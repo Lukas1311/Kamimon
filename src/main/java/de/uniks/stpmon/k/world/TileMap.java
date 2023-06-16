@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
@@ -10,14 +11,15 @@ import de.uniks.stpmon.k.utils.ImageUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
+    private final Set<TileLayerData> floorLayers;
+    private final Set<TileLayerData> decorationLayers;
+    private final List<DecorationLayer> decorations;
     private final int tileWidth;
     private final int tileHeight;
     private final int width;
@@ -29,9 +31,28 @@ public class TileMap {
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
-        TileLayerData layer = data.layers().isEmpty() ? null : data.layers().get(0);
-        this.width = layer != null ? layer.width() : 0;
-        this.height = layer != null ? layer.height() : 0;
+        int width = 0;
+        int height = 0;
+
+        this.floorLayers = new LinkedHashSet<>();
+        this.decorationLayers = new LinkedHashSet<>();
+        this.decorations = new LinkedList<>();
+        List<TileLayerData> layerData = data.layers();
+        for (TileLayerData layer : layerData) {
+            width = Math.max(width, layer.width());
+            height = Math.max(width, layer.height());
+            if (layer.chunks() == null) {
+                continue;
+            }
+            if (layer.name().equals(TileLayerData.GROUND_TYPE) || layer.name().equals(TileLayerData.WALLS_TYPE)) {
+                floorLayers.add(layer);
+            } else {
+                decorationLayers.add(layer);
+            }
+
+        }
+        this.width = width;
+        this.height = height;
     }
 
     public TileMapData getData() {
@@ -46,8 +67,29 @@ public class TileMap {
         return renderMap(width, height);
     }
 
-    public List<BufferedImage> getLayers() {
-        return layers;
+    public BufferedImage renderFloor() {
+        if (layers.isEmpty()) {
+            renderMap();
+        }
+        BufferedImage floorImage = createImage(
+                width, height);
+        Graphics2D floor = floorImage.createGraphics();
+        for (TileLayerData layer : floorLayers) {
+            if (layer.chunks() == null) {
+                continue;
+            }
+            BufferedImage layerImage = renderLayer(layer);
+            floor.drawImage(layerImage, layer.startx(), layer.starty(), null);
+        }
+        floor.dispose();
+        return floorImage;
+    }
+
+    public List<DecorationLayer> renderDecorations() {
+        if (layers.isEmpty()) {
+            renderMap();
+        }
+        return decorations;
     }
 
     public int getHeight() {
@@ -60,8 +102,7 @@ public class TileMap {
 
     private BufferedImage createImage(int width, int height) {
         return new BufferedImage(
-                width * tileWidth,
-                height * tileHeight,
+                width * tileWidth, height * tileHeight,
                 BufferedImage.TYPE_4BYTE_ABGR);
     }
 
@@ -69,13 +110,19 @@ public class TileMap {
         BufferedImage mergedImage = createImage(
                 width, height);
         Graphics2D graphics = mergedImage.createGraphics();
-        for (TileLayerData layer : data.layers()) {
+        List<TileLayerData> layersed = data.layers();
+        for (int i = 0; i < layersed.size(); i++) {
+            TileLayerData layer = layersed.get(i);
             if (layer.chunks() == null) {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
             graphics.drawImage(layerImage, layer.startx(), layer.starty(), null);
             layers.add(layerImage);
+
+            if (decorationLayers.contains(layer)) {
+                decorations.add(new DecorationLayer(layer, i, layerImage));
+            }
         }
         graphics.dispose();
         return mergedImage;

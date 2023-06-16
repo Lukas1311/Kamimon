@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.world;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileProp;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,7 +31,6 @@ public class PropInspectionTest {
     static void setUp() throws IOException {
         BufferedImage oldImage = ImageIO.read(Objects.requireNonNull(
                 PropInspectionTest.class.getResourceAsStream("layer.png")));
-        //TODO: Remove hack if rendering works correctly
         sourceImage = new BufferedImage(oldImage.getWidth(), oldImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         Graphics graphics = sourceImage.getGraphics();
         graphics.drawImage(oldImage, 0, 0, null);
@@ -53,7 +54,7 @@ public class PropInspectionTest {
         assertEquals(32, sourceImage.getWidth());
         assertEquals(48, sourceImage.getHeight());
 
-        List<TileProp> props = propInspector.work(sourceImage);
+        List<TileProp> props = propInspector.work(new DecorationLayer(null, 0, sourceImage), DummyConstants.AREA_MAP_DATA).props();
         assertEquals(1, props.size());
         TileProp prop = props.get(0);
         assertEquals(0, prop.x());

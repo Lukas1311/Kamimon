@@ -35,6 +35,7 @@ public record TileLayerData(
         boolean visible,
         List<Property> properties
 ) {
-
+    public static final String GROUND_TYPE = "Ground";
+    public static final String WALLS_TYPE = "Walls";
 
 }
