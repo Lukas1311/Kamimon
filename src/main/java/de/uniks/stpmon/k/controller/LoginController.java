@@ -192,6 +192,8 @@ public class LoginController extends Controller {
                 .subscribe(user -> {
                     errorText.set(translateString("registration.successful"));
                     errorLabel.setTextFill(Color.GREEN);
+                    // unbind because else the login successful will take precedence over registration successful
+                    errorLabel.textProperty().unbind();
                     //Login
                     loginWithCredentials(user.name(), password.get(), rememberMe.isSelected(), false);
                 }, error -> errorText.set(getErrorMessage(error))));
