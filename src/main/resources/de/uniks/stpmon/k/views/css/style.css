@@ -879,9 +879,11 @@ Load fonts
     -fx-border-width: 3px;
     -fx-border-radius: 0;
 }
-.monster-speed {
-    -fx-background-color: #9FC5F8;
-    -fx-text-fill: white;
+.monster-attributes {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
+    -fx-background-color: white;
 }
 .monster-type {
     -fx-border-color: black;
@@ -890,11 +892,14 @@ Load fonts
     -fx-background-color: #5F3BDF;
     -fx-text-fill: white;
 }
+.ability {
+    -fx-background-color: #C7C7C7;
+}
 .ability-name-type-box {
     -fx-border-color: black;
     -fx-border-width: 3px;
     -fx-border-radius: 0;
-    -fx-pref-width: 180;
+    -fx-pref-width: 177;
 }
 .ability-type {
     -fx-background-color: #CF2A27;
@@ -913,6 +918,3 @@ Load fonts
     -fx-alignment: center;
     -fx-pref-width: 55;
 }
-
-
-
