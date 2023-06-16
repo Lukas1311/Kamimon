@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.ErrorResponse;
 import de.uniks.stpmon.k.models.LoginResult;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.rest.AuthenticationApiService;
+import de.uniks.stpmon.k.service.UserService.OnlineStatus;
 import de.uniks.stpmon.k.service.dummies.CacheManagerDummy;
 import de.uniks.stpmon.k.service.dummies.FriendCacheDummy;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
@@ -30,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doCallRealMethod;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -122,10 +124,13 @@ public class AuthenticationServiceTest {
         CacheManagerDummy.init(cacheManager, FriendCacheDummy::new);
         // define mocks:
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        Mockito.doCallRealMethod().when(tokenStorage).setToken(captor.capture());
-        Mockito.when(authApiService.refresh(any()))
+        doCallRealMethod().when(tokenStorage).setToken(captor.capture());
+        when(authApiService.refresh(any()))
                 .thenReturn(Observable.just(new LoginResult("i", "n", "s", "a", null, "a", "r")));
-        Mockito.when(prefs.get("refreshToken", null)).thenReturn("r"); // mock the pref get call
+        when(prefs.get("refreshToken", null)).thenReturn("r"); // mock the pref get call
+        when(userService.updateStatus(any())).thenReturn(Observable.just(
+            new User("1", "b", "online", "a", null)
+        ));
 
         // action:
         final LoginResult result = authService.refresh().blockingFirst();
@@ -139,5 +144,9 @@ public class AuthenticationServiceTest {
         // check mocks:
         verify(tokenStorage).setToken("a");
         verify(authApiService).refresh(new RefreshDto("r"));
+        final ArgumentCaptor<OnlineStatus> statusCaptor = ArgumentCaptor.forClass(OnlineStatus.class);
+
+        verify(userService).updateStatus(statusCaptor.capture());
+        assertEquals(OnlineStatus.ONLINE, statusCaptor.getValue());
     }
 }
