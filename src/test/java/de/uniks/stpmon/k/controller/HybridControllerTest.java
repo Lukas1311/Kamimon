@@ -149,7 +149,7 @@ class HybridControllerTest extends ApplicationTest {
         write("\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pane = lookup("#pane").query();
+        Pane pane = lookup("#lobbyPane").query();
         assertNotNull(pane);
 
         press(KeyCode.ENTER).release(KeyCode.ENTER);
