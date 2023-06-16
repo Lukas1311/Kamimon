@@ -11,4 +11,6 @@ public interface IResourceService {
     Observable<BufferedImage> getTilesetImage(String fileName);
 
     Observable<TilesetData> getTilesetData(String fileName);
+
+    Observable<BufferedImage> getMonsterImage(String fileName);
 }

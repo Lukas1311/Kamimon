@@ -11,6 +11,7 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
 import javafx.scene.control.TextField;
@@ -27,32 +28,36 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerManagementControllerTest extends ApplicationTest {
 
     @Mock
+    @SuppressWarnings("unused")
     RegionService regionService;
     @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Mock
+    @SuppressWarnings("unused")
     ChooseSpriteController chooseSpriteController;
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
+    @SuppressWarnings("unused")
     Provider<LobbyController> lobbyControllerProvider;
     @Mock
     TrainerService trainerService;
+    @Mock
+    TrainerStorage trainerStorage;
     @Mock
     PresetService presetService;
     @Spy
@@ -66,15 +71,14 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     TrainerManagementController trainerManagementController;
 
     NPCInfo npcInfo = new NPCInfo(false);
-    Trainer dummytrainer = new Trainer(
-            "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo
-    );
+    Trainer dummytrainer = new Trainer("1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
+        when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(dummytrainer)));
         when(presetService.getCharacterFile(any())).thenReturn(Observable.just(ResponseBody.create(null, "test")));
         app.show(trainerManagementController);
         stage.requestFocus();
@@ -90,7 +94,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -116,7 +120,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -144,7 +148,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -273,4 +277,5 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         assertEquals("Bob2", trainerNameCaptor.getValue());
         //TODO: add method for sprite save here
     }
+
 }

@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.beans.binding.Bindings;
@@ -20,11 +21,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class CreateTrainerController extends PortalController {
+
     @FXML
     public TextField createTrainerInput;
     @FXML
@@ -37,7 +42,10 @@ public class CreateTrainerController extends PortalController {
     public Button createSpriteButton;
     @FXML
     public Button createTrainerButton;
+    @FXML
     public AnchorPane createTrainerContent;
+    @FXML
+    public StackPane spriteContainer;
 
     @Inject
     RegionService regionService;
@@ -51,13 +59,13 @@ public class CreateTrainerController extends PortalController {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    PresetService presetService;
 
     private Region chosenRegion;
-    private final String chosenSprite = "Premade_Character_01.png"; // TODO: hardcoded, remove afterwards
+    private String chosenSprite = "Premade_Character_01.png";
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
-    private BooleanBinding trainerNameTooLong;
-    private BooleanBinding trainerNameInvalid;
 
     @Inject
     public CreateTrainerController() {
@@ -67,12 +75,16 @@ public class CreateTrainerController extends PortalController {
         this.chosenRegion = region;
     }
 
+    public Region getChosenRegion(){
+        return chosenRegion;
+    }
+
     @Override
     public Parent render() {
         final Parent parent = super.render();
 
-        trainerNameTooLong = trainerName.length().greaterThan(32);
-        trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
+        BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
+        BooleanBinding trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
 
         createTrainerInput.textProperty().bindBidirectional(trainerName);
 
@@ -81,6 +93,8 @@ public class CreateTrainerController extends PortalController {
                         .then(translateString("trainername.too.long"))
                         .otherwise("")
         );
+
+        loadSprite(chosenSprite);
 
         // these three elements have to be disabled when pop up is shown
         trainerSprite.disableProperty().bind(isPopUpShown);
@@ -93,27 +107,37 @@ public class CreateTrainerController extends PortalController {
         return parent;
     }
 
-    public void trainerSprite() {
+    public void loadSprite(String selectedCharacter) {
+        subscribe(
+                presetService.getCharacterFile(selectedCharacter),
+                response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response, 120, 120),
+                this::handleError
+        );
     }
 
-    // TODO: some of these two methods have to return the sprite string also
-    // because the string is used in the create trainer call
+    public void trainerSprite() {
+        createSprite();
+    }
+
     public void createSprite() {
+        chooseSpriteController.setCreationMode(true);
         createTrainerContent.getChildren().clear();
         createTrainerContent.getChildren().addAll(chooseSpriteController.render());
+    }
+
+    // set file ID of the chosen sprite
+    public void setTrainerImage(String id) {
+        chosenSprite = id;
+        loadSprite(chosenSprite);
     }
 
     public void createTrainer() {
         showPopUp(PopUpScenario.CREATE_TRAINER, result -> {
             if (!result) return;
-            // TODO: get image id string of the sprite
             disposables.add(regionService
                     .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
                     .observeOn(FX_SCHEDULER)
-                    .subscribe(trainer -> {
-                                System.out.println(trainer);
-                                enterRegion(chosenRegion);
-                            }, err -> {
+                    .subscribe(trainer -> enterRegion(chosenRegion), err -> {
                                 err.printStackTrace();
                                 handleError(err);
                             }
@@ -133,5 +157,6 @@ public class CreateTrainerController extends PortalController {
     public void closeWindow() {
         hybridControllerProvider.get().openMain(MainWindow.LOBBY);
     }
+
 }
 

@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.WorldLoader;
@@ -29,12 +30,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateTrainerControllerTest extends ApplicationTest {
+
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 
@@ -57,6 +57,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     RegionStorage regionStorage;
     @Mock
     WorldLoader worldLoader;
+    @Mock
+    PresetService presetService;
 
     @Spy
     @InjectMocks
@@ -68,6 +70,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
+        when(presetService.getCharacterFile(anyString())).thenReturn(Observable.empty());
 
         createTrainerController.setChosenRegion(dummyRegion);
 
@@ -158,4 +161,5 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(createTrainerController).closeWindow();
         verify(hybridMock).openMain(MainWindow.LOBBY);
     }
+
 }

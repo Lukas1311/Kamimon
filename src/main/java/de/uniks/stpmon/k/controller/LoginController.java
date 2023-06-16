@@ -29,6 +29,8 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+
+import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
@@ -74,11 +76,9 @@ public class LoginController extends Controller {
     Preferences preferences;
 
     @Inject
-    IntroductionController introductionController;
+    Provider<IntroductionController> introductionControllerProvider;
 
     private BooleanBinding isInvalid;
-    private BooleanBinding passwordTooShort;
-    private BooleanBinding usernameTooLong;
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
     private StringProperty errorText;
@@ -96,8 +96,8 @@ public class LoginController extends Controller {
 
         errorLabel.setFont(new Font(10.0));
         errorLabel.setTextFill(Color.RED);
-        passwordTooShort = password.length().lessThan(8);
-        usernameTooLong = username.length().greaterThan(32);
+        BooleanBinding passwordTooShort = password.length().lessThan(8);
+        BooleanBinding usernameTooLong = username.length().greaterThan(32);
 
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
@@ -160,9 +160,6 @@ public class LoginController extends Controller {
         if (isInvalid.get()) {
             return;
         }
-        if (!netAvailability.isInternetAvailable()) {
-            errorText.set(translateString("no.internet.connection"));
-        }
     }
 
     public void login() {
@@ -180,11 +177,9 @@ public class LoginController extends Controller {
                     if (isRegistered) {
                         app.show(hybridControllerProvider.get());
                     } else {
-                        app.show(introductionController);
+                        app.show(introductionControllerProvider.get());
                     }
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                }));
+                }, error -> errorText.set(getErrorMessage(error))));
     }
 
     public void register() {
@@ -195,17 +190,27 @@ public class LoginController extends Controller {
                 .subscribe(user -> {
                     errorText.set(translateString("registration.successful"));
                     errorLabel.setTextFill(Color.GREEN);
+                    // unbind because else the login successful will take precedence over registration successful
+                    errorLabel.textProperty().unbind();
                     //Login
                     loginWithCredentials(user.name(), password.get(), rememberMe.isSelected(), false);
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                }));
+                }, error -> errorText.set(getErrorMessage(error))));
     }
 
     private String getErrorMessage(Throwable error) {
-        if (!(error instanceof HttpException exception)) {
-            return errorText.get();
+        try {
+            throw error;
+        } catch (UnknownHostException unknownHostException) {
+            return translateString("no.internet.connection");
+        } catch (HttpException httpException) {
+            return handleHttpException(httpException);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+            return "undefined error";
         }
+    }
+
+    private String handleHttpException(HttpException exception) {
         return switch (exception.code()) {
             case 400 -> translateString("validation.failed");
             case 401 -> translateString("invalid.username.or.password");

@@ -48,6 +48,7 @@ public class SettingsController extends ToastedController {
     public Text userRegion;
     @FXML
     public Text userTrainer;
+
     @Inject
     UserStorage userStorage;
     @Inject
@@ -76,9 +77,24 @@ public class SettingsController extends ToastedController {
         final Parent parent = super.render();
         settingsScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-
         User user = userStorage.getUser();
         SimpleBooleanProperty trainerLoaded = trainerStorage.getTrainerLoaded();
+
+        subscribe(trainerStorage.onTrainer(), trainer -> {
+            if(trainer.isPresent()) {
+                trainerProperty.set(trainer.get().name());
+                userTrainerValue.textProperty().bind(trainerProperty);
+                regionProperty.set(regionStorage.getRegion().name());
+                userRegionValue.textProperty().bind(regionProperty);
+
+                subscribe(
+                        presetService.getCharacterFile(trainer.get().image()),
+                        response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
+                        this::handleError
+                );
+            }
+        });
+
 
         editTrainerButton.disableProperty().bind(trainerLoaded.not());
         userTrainerValue.visibleProperty().bind(trainerLoaded);
@@ -89,19 +105,6 @@ public class SettingsController extends ToastedController {
 
         usernameProperty.set(user.name());
         usernameValue.textProperty().bind(usernameProperty);
-
-        if (trainerService.getMe() != null) {
-            trainerProperty.set(trainerService.getMe().name());
-            userTrainerValue.textProperty().bind(trainerProperty);
-            regionProperty.set(regionStorage.getRegion().name());
-            userRegionValue.textProperty().bind(regionProperty);
-
-            subscribe(
-                presetService.getCharacterFile(trainerStorage.getTrainer().image()),
-                response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
-                this::handleError
-            );
-        }
 
         backButton.setOnAction(click -> backToMainScreen());
         editUserButton.setOnAction(click -> editUser());
@@ -121,4 +124,5 @@ public class SettingsController extends ToastedController {
     public void editTrainer() {
         hybridControllerProvider.get().pushTab(SidebarTab.TRAINER_MANAGEMENT);
     }
+
 }

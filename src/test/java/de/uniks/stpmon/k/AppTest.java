@@ -2,6 +2,7 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import javafx.collections.ObservableList;
@@ -17,6 +18,9 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import java.util.ArrayList;
+
+import static java.util.function.Predicate.not;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -65,10 +69,9 @@ class AppTest extends ApplicationTest {
         clickOn("#further");
         clickOn("#further");
         clickOn("#further");
+
         //open friend list
         clickOn("#friends");
-
-
         ScrollPane scrollPane = lookup("#scrollPane").query();
         VBox userList = (VBox) scrollPane.getContent();
         VBox friendView = (VBox) userList.lookup("#friendSection");
@@ -114,7 +117,6 @@ class AppTest extends ApplicationTest {
         //potential invite here
         //...
 
-
         //close friends sidebar
         clickOn("#friends");
 
@@ -143,5 +145,91 @@ class AppTest extends ApplicationTest {
 
         // enter with already created trainer
         verifyThat("#ingame", Node::isVisible);
+    }
+
+    @Test
+    void criticalPathV2() {
+        MovementDummy.addMovementDummy(component.eventListener());
+
+        app.show(component.hybridController());
+
+        //set User
+        ArrayList<String> friends = new ArrayList<>();
+        friends.add("id1");
+        User user = new User(
+                "00",
+                "T",
+                "online",
+                null,
+                friends
+        );
+        component.userStorage().setUser(user);
+
+        //open Settings
+        clickOn("#settings");
+        waitForFxEvents();
+        //edit User
+        clickOn("#editUserButton");
+
+        clickOn("#usernameInput");
+        write("TT");
+        clickOn("#saveChangesButton");
+        clickOn("#approveButton");
+
+        clickOn("#settings");
+        clickOn("#settings");
+
+        Text username = lookup("#usernameValue").query();
+        verifyThat(username, hasText("TT"));
+
+        clickOn("#settings");
+
+
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        clickOn("#monsterBar");
+        verifyThat("#monsterList", Node::isVisible);
+
+        clickOn("#monster_label_0");
+        //clickOn("#monster_label_0");
+        verifyThat("#monsterInformation", Node::isVisible);
+
+        clickOn("#monsterBar");
+        verifyThat("#monsterList", not(Node::isVisible));
+
+        //check minimap
+        clickOn("#miniMap");
+        verifyThat("#mapOverviewContent", Node::isVisible);
+        clickOn("#closeButton");
+
+        //check backpack
+        clickOn("#backpackImage");
+        verifyThat("#backpackMenuHBox", Node::isVisible);
+        clickOn("#backpackImage");
+
+        clickOn("#settings");
+        clickOn("#editTrainerButton");
+        clickOn("#trainerNameInput");
+        write("ttt");
+        clickOn("#saveChangesButton");
+        clickOn("#approveButton");
+        clickOn("#settings");
+        clickOn("#settings");
+        verifyThat("#userTrainerValue", hasText("ttt"));
+
+        clickOn("#editTrainerButton");
+        clickOn("#deleteTrainerButton");
+        clickOn("#approveButton");
+        clickOn("#approveButton");
+        verifyThat("#lobbyPane", Node::isVisible);
+        clickOn("#settings");
+
+        clickOn("#editUserButton");
+        clickOn("#deleteUserButton");
+        clickOn("#approveButton");
+        verifyThat("#registerButton", Node::isVisible);
+
     }
 }

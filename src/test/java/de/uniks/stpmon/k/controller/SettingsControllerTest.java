@@ -1,14 +1,18 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -23,6 +27,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,6 +54,11 @@ public class SettingsControllerTest extends ApplicationTest {
     @InjectMocks
     SettingsController settingsController;
 
+    @Mock
+    RegionStorage regionStorage;
+    @Mock
+    PresetService presetService;
+
     @Override
 
     public void start(Stage stage) throws Exception {
@@ -57,11 +67,12 @@ public class SettingsControllerTest extends ApplicationTest {
         Trainer trainer = new Trainer(
                 "1", "RegionA", "TestUser", "Bob", "0", 0, "0", 0, 0, 0, npcInfo);
         lenient().when(trainerStorage.getTrainer()).thenReturn(trainer);
-
+        when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(trainer)));
+        when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
         // set user
         when(userStorage.getUser()).thenReturn(new User("1", "TestUser", "1", "1", new ArrayList<>()));
         when(trainerStorage.getTrainerLoaded()).thenReturn(new SimpleBooleanProperty(true));
-
+        when(presetService.getCharacterFile(anyString())).thenReturn(Observable.empty());
         // show app
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
@@ -108,4 +119,5 @@ public class SettingsControllerTest extends ApplicationTest {
         clickOn("#editTrainerButton");
         verify(mock).pushTab(SidebarTab.TRAINER_MANAGEMENT);
     }
+
 }

@@ -36,7 +36,10 @@ public class TrainerService {
         if (currentTrainer == null) {
             return Observable.empty();
         }
-        return regionApiService.deleteTrainer(currentTrainer.region(), currentTrainer._id());
+        return regionApiService.deleteTrainer(currentTrainer.region(), currentTrainer._id()).map(trainer->{
+            trainerStorage.setTrainer(null);
+            return trainer;
+        });
     }
 
     public Observable<Trainer> setTrainerName(String trainername) {

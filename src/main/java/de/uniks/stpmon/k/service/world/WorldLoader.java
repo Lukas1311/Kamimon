@@ -13,6 +13,8 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
 import de.uniks.stpmon.k.world.PropInspector;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
 import de.uniks.stpmon.k.world.PropMap;
 import de.uniks.stpmon.k.world.TileMap;
 import de.uniks.stpmon.k.world.WorldSet;
@@ -20,6 +22,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.awt.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -39,6 +42,8 @@ public class WorldLoader {
     WorldStorage worldStorage;
     @Inject
     TextureSetService textureSetService;
+    @Inject
+    CacheManager cacheManager;
 
     @Inject
     public WorldLoader() {
@@ -81,18 +86,19 @@ public class WorldLoader {
         if (area == null || area.map() == null) {
             return Observable.empty();
         }
-        return textureSetService.createAllCharacters().flatMap(
-                (trainers) -> textureSetService.createMap(area).map((tileMap) -> {
-                    BufferedImage image = tileMap.renderMap();
-                    PropMap propMap = createProps(tileMap);
-                    List<TileProp> props = propMap.props();
-                    BufferedImage propsImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D g = propsImage.createGraphics();
-                    g.drawImage(tileMap.renderFloor(), 0, 0, null);
-                    g.drawImage(propMap.decorations(), 0, 0, null);
-                    g.dispose();
-                    return new WorldSet(propsImage, image, props, trainers);
-                }));
+        // Init cache
+        CharacterSetCache cache = cacheManager.characterSetCache();
+        return cache.onInitialized().andThen(textureSetService.createMap(area).map((tileMap) -> {
+            BufferedImage image = tileMap.renderMap();
+            PropMap propMap = createProps(tileMap);
+            List<TileProp> props = propMap.props();
+            BufferedImage propsImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = propsImage.createGraphics();
+            g.drawImage(tileMap.renderFloor(), 0, 0, null);
+            g.drawImage(propMap.decorations(), 0, 0, null);
+            g.dispose();
+            return new WorldSet(propsImage, image, props);
+        }));
     }
 
     public Observable<Trainer> tryEnterRegion(Region region) {

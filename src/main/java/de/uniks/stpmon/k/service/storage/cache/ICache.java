@@ -94,6 +94,28 @@ public interface ICache<T> extends ILifecycleService {
     Optional<T> getValue(String id);
 
     /**
+     * Retrieves an observable that emits the value with the given id.
+     *
+     * @param id The id of the value to retrieve.
+     * @return An observable that observes the value.
+     */
+    Observable<Optional<T>> listenValue(String id);
+
+    /**
+     * Retrieve an observable that emits the value when they are first added to the cache.
+     *
+     * @return The observable.
+     */
+    Observable<T> onCreation();
+
+    /**
+     * Retrieve an observable that emits the value when they are removed from the cache.
+     *
+     * @return The observable.
+     */
+    Observable<T> onDeletion();
+
+    /**
      * Retrieve all values in the cache.
      * If the values are updated the observable will emit a new list.
      *

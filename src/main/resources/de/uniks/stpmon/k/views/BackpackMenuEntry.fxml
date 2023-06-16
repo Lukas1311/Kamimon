@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<HBox fx:id="backpackMenuEntryHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity"
+      prefWidth="100.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.BackpackMenuEntryController">
+    <Label fx:id="backpackMenuSelectedLabel" prefWidth="35" minWidth="35"/>
+    <Text fx:id="backpackMenuText" strokeType="OUTSIDE" strokeWidth="0.0"/>
+</HBox>

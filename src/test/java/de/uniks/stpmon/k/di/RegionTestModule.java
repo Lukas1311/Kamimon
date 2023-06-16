@@ -6,26 +6,13 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.MonsterAttributes;
-import de.uniks.stpmon.k.models.NPCInfo;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Module
 public class RegionTestModule {
@@ -135,6 +122,9 @@ public class RegionTestModule {
             }
 
             private Trainer getTrainerById(String trainerId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 for (String areaId : trainersHashMap.keySet()) {
                     List<Trainer> trainers = trainersHashMap.get(areaId);
                     Optional<Trainer> trainerOp = trainers.stream().filter(t -> t._id().equals(trainerId)).findFirst();
@@ -173,7 +163,7 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<List<Trainer>> getTrainers(String regionId, String areaId, String userId) {
+            public Observable<List<Trainer>> getTrainers(String regionId, String areaId) {
                 List<Trainer> trainerList = trainersHashMap.get(areaId);
                 if (trainerList != null) {
                     return Observable.just(trainerList);
@@ -182,7 +172,21 @@ public class RegionTestModule {
             }
 
             @Override
+            public Observable<List<Trainer>> getTrainers(String regionId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
+                return Observable.just(trainersHashMap.values()
+                        .stream().flatMap(List::stream)
+                        .collect(Collectors.toList()));
+            }
+
+            @Override
             public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
+                if (userId.equals("00")) {
+                    List<Trainer> t = trainersHashMap.get("id0_0");
+                    return Observable.just(t);
+                }
                 return getTrainer("", "4")
                         .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                         .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
@@ -241,6 +245,9 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Area>> getAreas(String region) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 List<Area> areaList = areasHashMap.get(region);
                 if (areaList != null) {
                     return Observable.just(areaList);
@@ -250,7 +257,13 @@ public class RegionTestModule {
 
             @Override
             public Observable<Area> getArea(String region, String id) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 List<Area> areaList = areasHashMap.get(region);
+                if (areaList == null || areaList.isEmpty()) {
+                    return Observable.error(new Throwable("404 Not found"));
+                }
                 Optional<Area> areaOptional = areaList.stream().filter(a -> a._id().equals(id)).findFirst();
                 return areaOptional.map(Observable::just).orElseGet(Observable::empty);
             }

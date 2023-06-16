@@ -4,7 +4,6 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -13,8 +12,9 @@ import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
-
+@Singleton
 public class IntroductionController extends Controller {
 
     @FXML
@@ -61,11 +61,11 @@ public class IntroductionController extends Controller {
         return parent;
     }
 
-    public void nextSheet(ActionEvent event) {
+    public void nextSheet() {
         openSheet(true);
     }
 
-    public void previousSheet(ActionEvent event) {
+    public void previousSheet() {
         openSheet(false);
     }
 

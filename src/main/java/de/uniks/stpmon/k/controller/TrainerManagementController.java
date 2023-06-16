@@ -6,9 +6,11 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -32,6 +34,7 @@ import java.util.List;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.CHOOSE_SPRITE;
 
 public class TrainerManagementController extends ToastedController {
+
     @FXML
     public VBox trainerManagementScreen;
     @FXML
@@ -61,6 +64,11 @@ public class TrainerManagementController extends ToastedController {
     @Inject
     TrainerService trainerService;
     @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    IResourceService resourceService;
+
+    @Inject
     PresetService presetService;
     @Inject
     Provider<LoginController> loginControllerProvider;
@@ -70,7 +78,6 @@ public class TrainerManagementController extends ToastedController {
     private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
-    private BooleanBinding trainerNameTooLong;
     private BooleanBinding trainerNameInvalid;
     private Boolean changesSaved = false;
     private BooleanBinding changesMade;
@@ -82,21 +89,30 @@ public class TrainerManagementController extends ToastedController {
     }
 
     @Override
+    public void init() {
+        super.init();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
 
         currentTrainer = trainerService.getMe();
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        trainerNameInput.setPromptText(currentTrainer.name());
+        subscribe(trainerStorage.onTrainer(), trainer -> {
+            if(trainer.isPresent()) {
+                trainerNameInput.setPromptText(trainer.get().name());
+                currentTrainer = trainer.get();
+                subscribe(
+                        presetService.getCharacterFile(trainer.get().image()),
+                        response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
+                        this::handleError
+                );
+            }
+        });
 
-        subscribe(
-            presetService.getCharacterFile(currentTrainer.image()),
-            response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
-            this::handleError
-        );
-
-        trainerNameTooLong = trainerName.length().greaterThan(32);
+        BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
         trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
         changesMade = trainerNameInvalid.not();
         changesMade.addListener((observable, oldValue, newValue) -> {
@@ -105,6 +121,7 @@ public class TrainerManagementController extends ToastedController {
                 changesSaved = false;
             }
         });
+
 
         trainerNameInput.textProperty().bindBidirectional(trainerName);
         trainerNameInfo.textProperty().bind(
@@ -137,15 +154,13 @@ public class TrainerManagementController extends ToastedController {
         }
         hybridControllerProvider.get().popTab();
     }
-    
+
     public Boolean hasUnsavedChanges() {
         return changesMade.get() && !changesSaved;
     }
 
     public void openTrainerSpriteEditor() {
-        disableEdit.set(true);
         hybridControllerProvider.get().pushTab(CHOOSE_SPRITE);
-        // TODO Enable Buttons after focus returend
     }
 
     public void saveChanges() {
@@ -186,7 +201,10 @@ public class TrainerManagementController extends ToastedController {
                     .subscribe(trainer -> {
                         PopUpScenario deleteConfirmScenario = PopUpScenario.DELETE_CONFIRMATION_TRAINER;
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
-                        showPopUp(deleteConfirmScenario, innerResult -> hybridControllerProvider.get().openMain(MainWindow.LOBBY));
+                        showPopUp(deleteConfirmScenario, innerResult -> {
+                            hybridControllerProvider.get().openMain(MainWindow.LOBBY);
+
+                        });
 
                     }, err -> hybridControllerProvider.get().openMain(MainWindow.LOBBY)));
         });
@@ -198,4 +216,5 @@ public class TrainerManagementController extends ToastedController {
         popUp.setScenario(scenario);
         popUp.showModal(callback);
     }
+
 }

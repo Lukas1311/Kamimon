@@ -116,6 +116,9 @@ public class HybridController extends Controller {
     @SuppressWarnings("unchecked")
     private <C extends Controller> void pushController(Controller controller, Consumer<C> setup) {
         ObservableList<Node> children = stackPane.getChildren();
+        if (tabStack.size() > 1) {
+            children.get(stackPane.getChildren().size() - 1).setVisible(false);
+        }
 
         if (setup != null) {
             setup.accept((C) controller);
@@ -187,7 +190,9 @@ public class HybridController extends Controller {
             case SETTINGS -> pushController(settingsController, setup);
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
-            case CHOOSE_SPRITE -> pushController(chooseSpriteController, setup);
+            case CHOOSE_SPRITE -> {chooseSpriteController.setCreationMode(false);
+                pushController(chooseSpriteController, setup);
+            }
             case NONE -> {
             }
         }
@@ -207,6 +212,10 @@ public class HybridController extends Controller {
      */
     public void popTab() {
         removeChildren(Math.max(tabStack.size() - 1, 1));
+        if (tabStack.size() > 1) {
+            ObservableList<Node> children = stackPane.getChildren();
+            children.get(stackPane.getChildren().size() - 1).setVisible(true);
+        }
     }
 
     private void applyTransition(boolean open, Runnable callback) {
