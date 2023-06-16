@@ -14,7 +14,6 @@ import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -149,7 +148,7 @@ class HybridControllerTest extends ApplicationTest {
         write("\t\t\t\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        Pane pane = lookup("#lobbyPane").query();
+        BorderPane pane = lookup("#lobbyPane").query();
         assertNotNull(pane);
 
         press(KeyCode.ENTER).release(KeyCode.ENTER);
