@@ -173,7 +173,7 @@ class HybridControllerTest extends ApplicationTest {
         assertEquals(2, stackPane.getChildren().size());
 
         // lobby: close sidebar by clicking inside the lobby
-        clickOn("#pane");
+        clickOn("#lobbyPane");
         waitForFxEvents();
 
         clickOn("#regionVBox");
