@@ -17,12 +17,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
 
+import static de.uniks.stpmon.k.service.UserService.OnlineStatus;
+
+
 @Singleton
 public class AuthenticationService {
     @Inject
     TokenStorage tokenStorage;
     @Inject
     AuthenticationApiService authApiService;
+    @Inject
+    UserService userService;
     @Inject
     UserStorage userStorage;
     @Inject
@@ -55,6 +60,7 @@ public class AuthenticationService {
             }
             //Add User to UserStorage
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
+            userService.updateStatus(OnlineStatus.ONLINE);
             return lr;
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
@@ -65,6 +71,7 @@ public class AuthenticationService {
                 friendCache.destroy();
                 friendCache = null;
             }
+            userService.updateStatus(OnlineStatus.OFFLINE);
             return res;
         });
     }

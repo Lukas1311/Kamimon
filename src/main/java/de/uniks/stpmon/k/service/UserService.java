@@ -106,7 +106,15 @@ public class UserService {
         return userApiService.updateUser(newUser._id(), dto);
     }
 
+    /**
+     * This method changes the status of the user
+     *
+     * @param status: new status of type OnlineStatus Enum
+     * @return Observable<User> of the updated user,
+     * null if no user in UserStorage
+     */
     public Observable<User> updateStatus(OnlineStatus status) {
+        System.out.println("update status is called");
         User oldUser = userStorage.getUser();
         if (oldUser == null) {
             return Observable.empty();
