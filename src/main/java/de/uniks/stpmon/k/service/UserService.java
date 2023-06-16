@@ -87,7 +87,18 @@ public class UserService {
         User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
         userStorage.setUser(newUser);
         UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
-        return userApiService.updateUser(oldUser._id(), dto);
+        return userApiService.updateUser(newUser._id(), dto);
+    }
+
+    public Observable<User> updateStatus(OnlineStatus status) {
+        User oldUser = userStorage.getUser();
+        if (oldUser == null) {
+            return Observable.empty();
+        }
+        User newUser = new User(oldUser._id(), oldUser.name(), status.toString(), oldUser.avatar(), oldUser.friends());
+        userStorage.setUser(newUser);
+        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), status.toString(), null, null, null);
+        return userApiService.updateUser(newUser._id(), dto);
     }
 
     public Observable<List<User>> searchFriend(String name) {
