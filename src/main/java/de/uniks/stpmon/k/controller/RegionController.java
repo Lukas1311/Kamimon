@@ -32,11 +32,12 @@ public class RegionController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        int vboxWidth = 400;
+        int vboxWidth = 330;
         int borderSize = 10;
         regionVBox.setMaxWidth(vboxWidth);
         regionNameText.setText(region.name());
-        loadImage(regionImage, "dummyRegionImage.png");
+        regionVBox.setSpacing(10);
+        loadImage(regionImage, "AlbertaniaMapLight.png");
         regionVBox.setOnMouseClicked(event -> listController.createNewTrainer(region));
         regionImage.setFitWidth(vboxWidth - borderSize * 2);
         imageWrappingPane.setPrefWidth(400);
