@@ -12,9 +12,9 @@ import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
+import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.world.PropMap;
 import de.uniks.stpmon.k.world.TileMap;
 import de.uniks.stpmon.k.world.WorldSet;
@@ -22,7 +22,6 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.awt.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -74,7 +73,7 @@ public class WorldLoader {
         }
         TileMapData data = tileMap.getData();
         PropInspector inspector = new PropInspector(data.width(), data.height());
-        return inspector.work(decorationLayers);
+        return inspector.work(decorationLayers, data);
     }
 
     public Observable<WorldSet> loadWorld() {
@@ -140,11 +139,11 @@ public class WorldLoader {
         if (loadingSource.isTeleporting()) {
             return Observable.empty();
         }
-        loadingSource.setTeleporting(true);
         Region region = regionStorage.getRegion();
         if (region == null) {
             return Observable.error(new IllegalStateException("No region in storage."));
         }
+        loadingSource.setTeleporting(true);
         return regionService.getArea(trainer.region(), trainer.area())
                 .map(area -> {
                     regionStorage.setArea(area);

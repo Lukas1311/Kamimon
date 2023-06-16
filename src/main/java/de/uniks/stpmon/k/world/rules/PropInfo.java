@@ -6,6 +6,8 @@ public record PropInfo(
         int tileX,
         int tileY,
         int tileId,
+        int otherTileId,
+        String tileSet,
         Direction dir,
         Direction otherDir) {
 }

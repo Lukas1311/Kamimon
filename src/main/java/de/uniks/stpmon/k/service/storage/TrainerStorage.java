@@ -24,6 +24,9 @@ public class TrainerStorage extends TrainerProvider {
         super.setTrainer(trainer);
         trainerLoaded.set(trainer != null);
         trainerSubject.onNext(Optional.ofNullable(trainer));
+        if (trainer != null) {
+            System.out.printf("x=%d,y=%d%n", trainer.x(), trainer.y());
+        }
     }
 
     public SimpleBooleanProperty getTrainerLoaded() {

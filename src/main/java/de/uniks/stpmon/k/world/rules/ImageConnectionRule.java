@@ -55,6 +55,6 @@ public class ImageConnectionRule extends PropRule {
             return RuleResult.NO_MATCH;
         }
 
-        return meetThresholds >= CONNECT_THRESHOLD ? RuleResult.MATCH_CONNECTION : RuleResult.NO_MATCH;
+        return RuleResult.MATCH_CONNECTION;
     }
 }

@@ -1,24 +1,15 @@
 package de.uniks.stpmon.k.world;
 
+import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import de.uniks.stpmon.k.world.rules.ImageConnectionRule;
-import de.uniks.stpmon.k.world.rules.ImageEmptyRule;
-import de.uniks.stpmon.k.world.rules.PropInfo;
-import de.uniks.stpmon.k.world.rules.PropRule;
-import de.uniks.stpmon.k.world.rules.RuleResult;
+import de.uniks.stpmon.k.world.rules.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class PropInspector {
     public static final int TILE_SIZE = 16;
@@ -31,6 +22,28 @@ public class PropInspector {
     public PropInspector(int width, int height) {
         grid = new PropGrid(width, height);
         groups = new HashMap<>();
+        // City Fence extraction
+        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
+                2141, 2143));
+        // modular fence extraction
+        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
+                32999, 33002, 33175, 33178));
+        // start house porch
+        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
+                new IdSource.Rectangle(10118, 8, 2, 176),
+                new IdSource.Rectangle(9422, 1, 6, 176)));
+        // City Fence entangled
+        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
+                new IdSource.Rectangle(2137, 8, 8, 176),
+                new IdSource.Rectangle(1789, 3, 2, 176),
+                new IdSource.Rectangle(382, 2, 9, 176)));
+        // Modular fence entangled
+        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
+                new IdSource.Rectangle(32294, 37, 7, 176)));
+        // Lantern entangled
+        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
+                new IdSource.Rectangle(3001, 1, 4, 176)));
+        //addConnectionRule(new TileSetRule());
         addConnectionRule(new ImageConnectionRule());
         addTileRule(new ImageEmptyRule());
     }
@@ -51,16 +64,13 @@ public class PropInspector {
         return new HashSet<>(groups.values());
     }
 
-    public PropMap work(BufferedImage image) {
-        return work(List.of(image));
+    public PropMap work(BufferedImage image, TileMapData data) {
+        return work(List.of(image), data);
     }
 
     private RuleResult applyRules(Collection<PropRule> rules, PropInfo info, BufferedImage image) {
         for (PropRule rule : rules) {
             RuleResult result = rule.apply(info, image);
-            if (result == RuleResult.NO_MATCH_STOP) {
-                break;
-            }
             if (result != RuleResult.NO_MATCH) {
                 return result;
             }
@@ -68,11 +78,12 @@ public class PropInspector {
         return RuleResult.NO_MATCH;
     }
 
-    public PropMap work(List<BufferedImage> decorationLayers) {
+    public PropMap work(List<BufferedImage> decorationLayers, TileMapData data) {
         BufferedImage image = decorationLayers.get(0);
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = 0; y < grid.getHeight(); y++) {
                 boolean marked = false;
+                int id = data.getId(x, y, 1);
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
@@ -85,31 +96,64 @@ public class PropInspector {
                     // Check visited
                     if (grid.hasVisited(x, y, dir)
                             || grid.hasVisited(otherX, otherY, otherDir)) {
+                        marked = true;
+                        continue;
+                    }
+                    int otherId = data.getId(otherX, otherY, 1);
+                    // Empty or invalid tile
+                    if (id <= 0 || otherId <= 0) {
                         continue;
                     }
                     RuleResult result = applyRules(connectionRules,
-                            new PropInfo(x, y, -1, dir, otherDir), image
+                            new PropInfo(x, y, id, otherId, data.getTileset(id).source(), dir, otherDir), image
                     );
+                    if (result == RuleResult.NO_MATCH_DECORATION) {
+                        marked = true;
+                        break;
+                    }
+                    if (result == RuleResult.NO_MATCH_STOP) {
+                        continue;
+                    }
                     // Check if the tiles are connected
                     if (result == RuleResult.MATCH_CONNECTION) {
                         tryMergeGroups(x, y, otherX, otherY);
                         marked = true;
+                        grid.setVisited(x, y, dir);
+                        grid.setVisited(otherX, otherY, otherDir);
                     }
-//                    if(result == RuleResult.MATCH_SINGLE) {
-//                        createIfAbsent(x, y, null);
-//                    }
-                    grid.setVisited(x, y, dir);
-                    grid.setVisited(otherX, otherY, otherDir);
                 }
                 if (marked) {
                     continue;
                 }
+                for (Direction dir : new Direction[]{Direction.LEFT, Direction.TOP}) {
+                    int otherX = x + dir.tileX();
+                    int otherY = y + dir.tileY();
+                    Direction otherDir = dir.opposite();
+                    // Check bounds
+                    if (otherX < 0 || otherX >= grid.getWidth()
+                            || otherY < 0 || otherY >= grid.getHeight()) {
+                        continue;
+                    }
+                    // Check visited
+                    if (grid.hasVisited(x, y, dir)
+                            || grid.hasVisited(otherX, otherY, otherDir)) {
+                        marked = true;
+                        break;
+                    }
+                }
+                if (marked) {
+                    continue;
+                }
+                // invalid or empty are skipped
+                if (id == -1 || id == 0) {
+                    continue;
+                }
                 RuleResult result = applyRules(tileRules,
-                        new PropInfo(x, y, -1, null, null), image
+                        new PropInfo(x, y, id, -1, data.getTileset(id).source(), null, null), image
                 );
-//                if (result == RuleResult.MATCH_SINGLE) {
-//                    createIfAbsent(x, y, null);
-//                }
+                if (result == RuleResult.MATCH_SINGLE) {
+                    createIfAbsent(x, y, null);
+                }
             }
         }
         return createProps(image);
@@ -159,15 +203,15 @@ public class PropInspector {
                         x * TILE_SIZE, y * TILE_SIZE,
                         TILE_SIZE, TILE_SIZE);
                 // Remove pixels from the decoration image
-//                graphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
-//                        TILE_SIZE, TILE_SIZE);
-                graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                graphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
+                        TILE_SIZE, TILE_SIZE);
+                //graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
 
             props.add(new TileProp(img, minX, minY, width, height));
         }
         graphics.dispose();
-        return new PropMap(List.of(), floorDecorations);
+        return new PropMap(props, floorDecorations);
     }
 
     Random rand = new Random();

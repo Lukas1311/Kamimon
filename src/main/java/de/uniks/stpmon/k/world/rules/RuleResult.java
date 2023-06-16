@@ -9,9 +9,13 @@ public enum RuleResult {
      */
     NO_MATCH,
     /**
-     * No match, stop with rules
+     * No match, stop with connection rules
      */
     NO_MATCH_STOP,
+    /**
+     * No match, stop with all rules, this tile is a decoration
+     */
+    NO_MATCH_DECORATION,
     /**
      * Match, stop with rules
      */
