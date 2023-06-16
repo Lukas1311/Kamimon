@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -63,6 +64,9 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Spy
     @InjectMocks
     CreateTrainerController createTrainerController;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     Region dummyRegion = new Region("1", "r", null, null);
 
