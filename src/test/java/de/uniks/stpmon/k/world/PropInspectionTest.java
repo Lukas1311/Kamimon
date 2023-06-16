@@ -31,7 +31,6 @@ public class PropInspectionTest {
     static void setUp() throws IOException {
         BufferedImage oldImage = ImageIO.read(Objects.requireNonNull(
                 PropInspectionTest.class.getResourceAsStream("layer.png")));
-        //TODO: Remove hack if rendering works correctly
         sourceImage = new BufferedImage(oldImage.getWidth(), oldImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         Graphics graphics = sourceImage.getGraphics();
         graphics.drawImage(oldImage, 0, 0, null);
