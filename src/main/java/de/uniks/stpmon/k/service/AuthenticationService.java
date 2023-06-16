@@ -84,6 +84,7 @@ public class AuthenticationService {
         return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).map(lr -> {
             tokenStorage.setToken(lr.accessToken());
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
+            userService.updateStatus(OnlineStatus.ONLINE);
             return lr;
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
