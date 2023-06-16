@@ -107,7 +107,7 @@ public class UserService implements ILifecycleService{
         }
         User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
         userStorage.setUser(newUser);
-        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
+        UpdateUserDto dto = new UpdateUserDto(null, null, avatar, null, null);
         return userApiService.updateUser(newUser._id(), dto);
     }
 
@@ -126,7 +126,7 @@ public class UserService implements ILifecycleService{
         }
         User newUser = new User(oldUser._id(), oldUser.name(), status.toString(), oldUser.avatar(), oldUser.friends());
         userStorage.setUser(newUser);
-        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), status.toString(), null, null, null);
+        UpdateUserDto dto = new UpdateUserDto(null, status.toString(), null, null, null);
         return userApiService.updateUser(newUser._id(), dto);
     }
 
