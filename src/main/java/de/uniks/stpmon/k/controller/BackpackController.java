@@ -14,6 +14,8 @@ public class BackpackController extends Controller {
 
     @FXML
     public ImageView backpackImage;
+    @FXML
+    HBox backpackMenu;
 
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
@@ -21,7 +23,7 @@ public class BackpackController extends Controller {
     @Inject
     Provider<IngameController> ingameControllerProvider;
 
-    HBox backpackMenu;
+
 
 
     @Inject
