@@ -76,7 +76,7 @@ public class LoginController extends Controller {
     Preferences preferences;
 
     @Inject
-    IntroductionController introductionController;
+    Provider<IntroductionController> introductionControllerProvider;
 
     private BooleanBinding isInvalid;
     private final SimpleStringProperty username = new SimpleStringProperty();
@@ -177,11 +177,9 @@ public class LoginController extends Controller {
                     if (isRegistered) {
                         app.show(hybridControllerProvider.get());
                     } else {
-                        app.show(introductionController);
+                        app.show(introductionControllerProvider.get());
                     }
-                }, error -> {
-                    errorText.set(getErrorMessage(error));
-                }));
+                }, error -> errorText.set(getErrorMessage(error))));
     }
 
     public void register() {
