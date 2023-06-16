@@ -45,6 +45,7 @@ public class UserService implements ILifecycleService{
     }
 
     @Override
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void destroy() {
         updateStatus(OnlineStatus.OFFLINE).blockingFirst();
     }
