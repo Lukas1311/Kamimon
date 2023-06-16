@@ -1,18 +1,17 @@
 package de.uniks.stpmon.k.service.world;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
+import de.uniks.stpmon.k.world.RouteData;
+import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import de.uniks.stpmon.k.dto.IMapProvider;
-import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
-import de.uniks.stpmon.k.world.RouteData;
-import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
-import io.reactivex.rxjava3.core.Observable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Singleton
 public class TextDeliveryService {
@@ -26,7 +25,9 @@ public class TextDeliveryService {
         if (mapProvider.map() != null) {
             TileMapData mapData = mapProvider.map();
             TileLayerData routeLayerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
-            
+            if (routeLayerData == null) {
+                return Observable.just(Collections.emptyList());
+            }
             List<RouteData> routeDataList = new ArrayList<>();
             for (ObjectData obj : routeLayerData.objects()) {
                 RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
@@ -36,10 +37,5 @@ public class TextDeliveryService {
             return Observable.just(routeDataList);
         }
         return Observable.just(Collections.emptyList());
-    }
-
-    public String getRouteText() {
-        // TODO: dummy yet
-        return "";
     }
 }

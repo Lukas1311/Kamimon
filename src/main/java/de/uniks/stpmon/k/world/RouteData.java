@@ -1,14 +1,18 @@
 package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
+import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 
-public record RouteData (
-    int id,
-    RouteText routeText,
-    int height,
-    int width,
-    int x,
-    int y
+import java.util.List;
+
+public record RouteData(
+        int id,
+        RouteText routeText,
+        int height,
+        int width,
+        int x,
+        int y,
+        List<PolygonPoint> polygon
 ) {
 
     public static RouteData.Builder builder() {
@@ -35,8 +39,9 @@ public record RouteData (
             int width = data.width();
             int x = data.x();
             int y = data.y();
+            List<PolygonPoint> polygon = data.polygon();
             RouteText routeText = routeTextBuilder.setData(data).build();
-            return new RouteData(id, routeText, height, width, x, y);
+            return new RouteData(id, routeText, height, width, x, y, polygon == null ? List.of() : polygon);
         }
     }
 }

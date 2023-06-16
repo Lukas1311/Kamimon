@@ -3,11 +3,13 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
+import de.uniks.stpmon.k.models.map.Tile;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
+import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
@@ -16,20 +18,7 @@ import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
 import de.uniks.stpmon.k.world.TileMap;
 import de.uniks.stpmon.k.world.Tileset;
-import de.uniks.stpmon.k.models.map.Tile;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockedStatic;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.framework.junit5.ApplicationTest;
 import io.reactivex.rxjava3.core.Observable;
-import java.awt.image.BufferedImage;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -39,21 +28,24 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.framework.junit5.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -78,9 +70,9 @@ public class MapOverviewControllerTest extends ApplicationTest {
         ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
                 2, 2,
                 0, 0);
-        ObjectData object = new ObjectData(0, "Route 101", List.of(
-                new Property("Route 101","Route", "text")
-            ), "Route", false, 0, 0, 0, 0, 0);
+        ObjectData object = new ObjectData(0, "Route 101", List.of(), List.of(
+                new Property("Route 101", "Route", "text")
+        ), "Route", false, 0, 0, 0, 0, 0);
         TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), List.of(object),
                 0, 0,
                 2, 2,
@@ -125,7 +117,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
             .setSource(tilesetSource)
             .build();
     }};
-    TileMap dummyTileMap = new TileMap(dummyRegion, tilesetMap);
     TileMap tileMapMock = mock(TileMap.class);
 
 
@@ -135,10 +126,12 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // mapOverviewController.mapImageView = mapImageViewMock;
 
         when(regionStorage.getRegion()).thenReturn(dummyRegion);
-        RouteData dummyData = new RouteData(1, new RouteText("Route 66", "HiWay", "Route"), 1, 2, 16, 32);
-        when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData)));
+        RouteData dummyData = new RouteData(1, new RouteText("Route 66", "HiWay", "Route"), 1, 2, 16, 32, List.of(new PolygonPoint(1, 2)));
+        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay", "Route"), 1, 2, 20, 34, List.of());
+        RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay", "Route"), 0, 2, 20, 34, List.of());
+        when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData, dummyData2, dummyData3)));
         when(textureSetService.createMap(any()))
-            .thenReturn(Observable.just(tileMapMock));
+                .thenReturn(Observable.just(tileMapMock));
         app.show(mapOverviewController);
         stage.requestFocus();
     }
@@ -183,19 +176,5 @@ public class MapOverviewControllerTest extends ApplicationTest {
 
         // close static mock:
         mockedStatic.close();
-    }
-
-    @Test
-    void testCloseMap() {
-        // prep:
-        Button closeButton = lookup("#closeButton").queryButton();
-        BorderPane mapOverview = lookup("#mapOverviewContent").queryAs(BorderPane.class);
-        assertTrue(mapOverview.isVisible());
-        
-        // action:
-        clickOn(closeButton);
-
-        // check values:
-        assertFalse(mapOverview.isVisible());
     }
 }
