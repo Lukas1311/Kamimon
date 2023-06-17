@@ -132,7 +132,7 @@ public class TileMap {
     public BufferedImage renderLayer(TileLayerData layer) {
         int width = layer.width();
         int height = layer.height();
-        if (layer.data() != null) {
+        if (layer.data() != null && !layer.data().isEmpty()) {
             return renderData(layer);
         }
         BufferedImage layerImage = createImage(width, height);
