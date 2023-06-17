@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
+import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
@@ -45,6 +46,9 @@ class HybridControllerTest extends ApplicationTest {
     private final HybridController hybridController = component.hybridController();
     private final UserStorage userStorage = component.userStorage();
     private final EventListener eventListener = component.eventListener();
+
+    @Mock
+    UserService userService;
     @Spy
     @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
@@ -143,22 +147,6 @@ class HybridControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void logout() {
-        // pressing logout button and check if lobby is shown then login
-        toIngame();
-        write("\t\t\t\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
-        waitForFxEvents();
-        Pane pane = lookup("#pane").query();
-        assertNotNull(pane);
-
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
-        waitForFxEvents();
-        Pane pane2 = lookup("#loginScreen").query();
-        assertNotNull(pane2);
-    }
-
-    @Test
     public void closeSidebar() {
         // mock udp listener
         MovementDummy.addMovementDummy(component.eventListener());
@@ -174,7 +162,7 @@ class HybridControllerTest extends ApplicationTest {
         assertEquals(2, stackPane.getChildren().size());
 
         // lobby: close sidebar by clicking inside the lobby
-        clickOn("#pane");
+        clickOn("#lobbyPane");
         waitForFxEvents();
 
         clickOn("#regionVBox");

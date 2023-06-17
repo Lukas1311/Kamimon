@@ -918,3 +918,17 @@ Load fonts
     -fx-alignment: center;
     -fx-pref-width: 55;
 }
+
+/* -------------------- Map Overview -------------------- */
+.map-overview-close-button {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+.map-overview-content {
+	-fx-background-color: black;
+}
