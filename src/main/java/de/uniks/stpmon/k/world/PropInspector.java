@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.world;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.world.rules.*;
@@ -14,18 +15,23 @@ import java.util.*;
 
 public class PropInspector {
     public static final int TILE_SIZE = 16;
-    private final PropGrid grid;
+    private final PropGrid[] grids;
+    private final int layerOffset;
     private int groupId = 1;
     private final Map<Integer, HashSet<Integer>> groups;
     private final List<PropRule> connectionRules = new ArrayList<>();
     private final List<PropRule> tileRules = new ArrayList<>();
 
-    public PropInspector(int width, int height) {
-        grid = new PropGrid(width, height);
+    public PropInspector(int width, int height, int layers) {
+        grids = new PropGrid[layers];
+        for (int i = 0; i < layers; i++) {
+            grids[i] = new PropGrid(width, height);
+        }
+        layerOffset = width * height;
         groups = new HashMap<>();
         // City Fence extraction
         addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
-                2141, 2143));
+                2141, 2143, 3194, 3193));
         // modular fence extraction
         addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
                 32999, 33002, 33175, 33178));
@@ -37,7 +43,7 @@ public class PropInspector {
         addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
                 new IdSource.Rectangle(2137, 8, 8, 176),
                 new IdSource.Rectangle(1789, 3, 2, 176),
-                new IdSource.Rectangle(382, 2, 9, 176)));
+                new IdSource.Rectangle(383, 2, 9, 176)));
         // Modular fence entangled
         addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
                 new IdSource.Rectangle(32294, 37, 7, 176)));
@@ -93,13 +99,18 @@ public class PropInspector {
     }
 
     public PropMap work(List<DecorationLayer> decorationLayers, TileMapData data) {
-        DecorationLayer layer = decorationLayers.get(0);
-        BufferedImage image = layer.image();
-        int layerIndex = layer.layerIndex();
+        DecorationLayer decoLayer = decorationLayers.get(0);
+        TileLayerData layer = decoLayer.layerData();
+        BufferedImage image = decoLayer.image();
+        PropGrid grid = grids[0];
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = 0; y < grid.getHeight(); y++) {
                 boolean marked = false;
-                int id = data.getId(x, y, layerIndex);
+                int id = layer.getId(x, y);
+                // Empty or invalid tile
+                if (id <= 0) {
+                    continue;
+                }
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
@@ -115,9 +126,9 @@ public class PropInspector {
                         marked = true;
                         continue;
                     }
-                    int otherId = data.getId(otherX, otherY, layerIndex);
+                    int otherId = layer.getId(otherX, otherY);
                     // Empty or invalid tile
-                    if (id <= 0 || otherId <= 0) {
+                    if (otherId <= 0) {
                         continue;
                     }
                     RuleResult result = applyRules(connectionRules,
@@ -132,7 +143,7 @@ public class PropInspector {
                     }
                     // Check if the tiles are connected
                     if (result == RuleResult.MATCH_CONNECTION) {
-                        tryMergeGroups(x, y, otherX, otherY);
+                        tryMergeGroups(grid, x, y, otherX, otherY);
                         marked = true;
                         grid.setVisited(x, y, dir);
                         grid.setVisited(otherX, otherY, otherDir);
@@ -160,20 +171,17 @@ public class PropInspector {
                 if (marked) {
                     continue;
                 }
-                // invalid or empty are skipped
-                if (id == -1 || id == 0) {
-                    continue;
-                }
                 RuleResult result = applyRules(tileRules,
                         new PropInfo(x, y, id, -1, data.getTileset(id).source(), null, null), image
                 );
                 if (result == RuleResult.MATCH_SINGLE) {
-                    createIfAbsent(x, y, null);
+                    createIfAbsent(grid, x, y, null);
                 }
             }
         }
-        return createProps(image);
+        return createProps(grid, image);
     }
+
 
     /**
      * Extracts the props from the image and returns them in a prop map.
@@ -183,22 +191,23 @@ public class PropInspector {
      * @param image Image of all decorations
      * @return A map that contains the props and the modified decorations image.
      */
-    private PropMap createProps(BufferedImage image) {
+    private PropMap createProps(PropGrid grid, BufferedImage image) {
         BufferedImage floorDecorations = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D graphics = floorDecorations.createGraphics();
         graphics.setBackground(new Color(0, 0, 0, 0));
         graphics.drawImage(image, 0, 0, null);
         List<TileProp> props = new ArrayList<>();
         for (HashSet<Integer> group : uniqueGroups()) {
-            graphics.setColor(getRandomColor());
             int minX = Integer.MAX_VALUE;
             int minY = Integer.MAX_VALUE;
             int maxX = Integer.MIN_VALUE;
             int maxY = Integer.MIN_VALUE;
             //Find min and max x and y values of the group
             for (int i : group) {
-                int x = i % grid.getWidth();
-                int y = i / grid.getWidth();
+                int layer = i / layerOffset;
+                int positionPart = i % layerOffset;
+                int x = positionPart % grid.getWidth();
+                int y = positionPart / grid.getWidth();
                 minX = Math.min(minX, x);
                 minY = Math.min(minY, y);
                 maxX = Math.max(maxX, x);
@@ -221,7 +230,6 @@ public class PropInspector {
                 // Remove pixels from the decoration image
                 graphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
                         TILE_SIZE, TILE_SIZE);
-                //graphics.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
 
             props.add(new TileProp(img, minX, minY, width, height));
@@ -230,13 +238,7 @@ public class PropInspector {
         return new PropMap(props, floorDecorations);
     }
 
-    Random rand = new Random();
-
-    private Color getRandomColor() {
-        return new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256), 99);
-    }
-
-    public void tryMergeGroups(int x, int y, int otherX, int otherY) {
+    public void tryMergeGroups(PropGrid grid, int x, int y, int otherX, int otherY) {
         int firstGroup = grid.getGroup(x, y);
         int secondGroup = grid.getGroup(otherX, otherY);
         HashSet<Integer> first = groups.get(firstGroup);
@@ -261,8 +263,8 @@ public class PropInspector {
             grid.setGroup(x, y, secondGroup);
             return;
         }
-        first = createIfAbsent(x, y, first);
-        second = createIfAbsent(otherX, otherY, second);
+        first = createIfAbsent(grid, x, y, first);
+        second = createIfAbsent(grid, otherX, otherY, second);
         firstGroup = grid.getGroup(x, y);
         secondGroup = grid.getGroup(otherX, otherY);
         if (firstGroup != secondGroup) {
@@ -276,7 +278,7 @@ public class PropInspector {
         }
     }
 
-    private HashSet<Integer> createIfAbsent(int x, int y, HashSet<Integer> tiles) {
+    private HashSet<Integer> createIfAbsent(PropGrid grid, int x, int y, HashSet<Integer> tiles) {
         if (tiles == null) {
             tiles = new HashSet<>();
             tiles.add(x + y * grid.getWidth());
