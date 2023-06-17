@@ -13,7 +13,7 @@ public class EffectContext {
     private boolean skipLoading = false;
     private int walkingSpeed = EntityView.MOVEMENT_PERIOD;
     private int walkingAnimationSpeed = EntityView.WALKING_ANIMATION_PERIOD;
-    private double textureScale = 4.0d;
+    private double textureScale = 3.0d;
 
 
     /**

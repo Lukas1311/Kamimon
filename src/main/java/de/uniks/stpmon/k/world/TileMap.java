@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
+import de.uniks.stpmon.k.models.map.layerdata.ITileDataProvider;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.utils.ImageUtils;
 
@@ -24,24 +25,24 @@ public class TileMap {
     private final int tileHeight;
     private final int width;
     private final int height;
-    private final List<BufferedImage> layers = new ArrayList<>();
+    private final Map<TileLayerData, BufferedImage> layers = new HashMap<>();
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.data = provider.map();
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
         this.tileWidth = data.tilewidth();
-        int width = 0;
-        int height = 0;
-
         this.floorLayers = new LinkedHashSet<>();
         this.decorationLayers = new LinkedHashSet<>();
         this.decorations = new LinkedList<>();
+
+        int width = 0;
+        int height = 0;
         List<TileLayerData> layerData = data.layers();
         for (TileLayerData layer : layerData) {
             width = Math.max(width, layer.width());
-            height = Math.max(width, layer.height());
-            if (layer.chunks() == null) {
+            height = Math.max(height, layer.height());
+            if (layer.chunks() == null && layer.data() == null) {
                 continue;
             }
             if (layer.name().equals(TileLayerData.GROUND_TYPE) || layer.name().equals(TileLayerData.WALLS_TYPE)) {
@@ -75,10 +76,10 @@ public class TileMap {
                 width, height);
         Graphics2D floor = floorImage.createGraphics();
         for (TileLayerData layer : floorLayers) {
-            if (layer.chunks() == null) {
+            if (!layers.containsKey(layer)) {
                 continue;
             }
-            BufferedImage layerImage = renderLayer(layer);
+            BufferedImage layerImage = layers.get(layer);
             floor.drawImage(layerImage, layer.startx(), layer.starty(), null);
         }
         floor.dispose();
@@ -113,12 +114,12 @@ public class TileMap {
         List<TileLayerData> layersed = data.layers();
         for (int i = 0; i < layersed.size(); i++) {
             TileLayerData layer = layersed.get(i);
-            if (layer.chunks() == null) {
+            if (layer.chunks() == null && layer.data() == null) {
                 continue;
             }
             BufferedImage layerImage = renderLayer(layer);
             graphics.drawImage(layerImage, layer.startx(), layer.starty(), null);
-            layers.add(layerImage);
+            layers.put(layer, layerImage);
 
             if (decorationLayers.contains(layer)) {
                 decorations.add(new DecorationLayer(layer, i, layerImage));
@@ -131,26 +132,30 @@ public class TileMap {
     public BufferedImage renderLayer(TileLayerData layer) {
         int width = layer.width();
         int height = layer.height();
-        BufferedImage chunkImage = createImage(
-                width, height);
+        if (layer.data() != null) {
+            return renderData(layer);
+        }
+        BufferedImage layerImage = createImage(width, height);
         for (ChunkData chunk : layer.chunks()) {
-            BufferedImage chunkImage1 = renderChunk(chunk);
-            ImageUtils.copyData(chunkImage.getRaster(),
+            int startX = (chunk.x() - layer.startx());
+            int startY = (chunk.y() - layer.starty());
+            BufferedImage chunkImage1 = renderData(chunk);
+            ImageUtils.copyData(layerImage.getRaster(),
                     chunkImage1,
-                    chunk.x() * tileWidth, chunk.y() * tileHeight,
+                    startX * tileWidth, startY * tileHeight,
                     0, 0,
                     chunk.width() * tileWidth, chunk.height() * tileHeight);
         }
-        return chunkImage;
+        return layerImage;
     }
 
-    public BufferedImage renderChunk(ChunkData chunk) {
-        BufferedImage chunkImage = createImage(chunk.width(), chunk.height());
+    public BufferedImage renderData(ITileDataProvider provider) {
+        BufferedImage chunkImage = createImage(provider.width(), provider.height());
         WritableRaster raster = chunkImage.getRaster();
 
-        for (int x = 0; x < chunk.width(); x++) {
-            for (int y = 0; y < chunk.height(); y++) {
-                int data = chunk.data().get(x + y * chunk.height());
+        for (int x = 0; x < provider.width(); x++) {
+            for (int y = 0; y < provider.height(); y++) {
+                int data = provider.data().get(x + y * provider.width());
                 if (data == 0) {
                     continue;
                 }

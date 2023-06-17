@@ -73,7 +73,7 @@ public class WorldLoader {
             return new PropMap(List.of(), new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
         }
         TileMapData data = tileMap.getData();
-        PropInspector inspector = new PropInspector(data.width(), data.height());
+        PropInspector inspector = new PropInspector(data.width(), data.height(), decorationLayers.size());
         return inspector.work(decorationLayers, data);
     }
 

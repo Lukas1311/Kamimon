@@ -50,7 +50,7 @@ public class PropInspectionTest {
 
     @Test
     public void test() throws IOException {
-        propInspector = new PropInspector(2, 3);
+        propInspector = new PropInspector(2, 3, 1);
         assertEquals(32, sourceImage.getWidth());
         assertEquals(48, sourceImage.getHeight());
 
