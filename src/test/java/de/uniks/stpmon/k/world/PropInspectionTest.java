@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.world;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileProp;
+import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,13 @@ public class PropInspectionTest {
         assertEquals(32, sourceImage.getWidth());
         assertEquals(48, sourceImage.getHeight());
 
-        List<TileProp> props = propInspector.work(new DecorationLayer(null, 0, sourceImage), DummyConstants.AREA_MAP_DATA).props();
+        TileLayerData layer = new TileLayerData(1, "Ground", List.of(),
+                List.of(1, 1, 1, 1), List.of(),
+                0, 0,
+                2, 2,
+                0, 0,
+                "tilelayer", true, List.of());
+        List<TileProp> props = propInspector.work(new DecorationLayer(layer, 0, sourceImage), DummyConstants.AREA_MAP_DATA).props();
         assertEquals(1, props.size());
         TileProp prop = props.get(0);
         assertEquals(0, prop.x());
