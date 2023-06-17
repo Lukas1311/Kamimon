@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -92,20 +93,23 @@ public class UserService {
 
     public Observable<List<User>> searchFriend(String name) {
         return friendCache().getValues()
-                .map((e) -> {
-                    if (name.isEmpty()) {
-                        return new ArrayList<User>();
-                    }
-                    return e;
-                })
+
                 .flatMap(old -> friendCache().getFriends().map((e) -> old))
                 .map(users -> {
                     final User user = userStorage.getUser();
                     return users.stream()
                             .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
                                     && !f._id().equals(user._id())) //do not show the searching user
-                            .filter(g -> !user.friends().contains(g._id())).toList();
+                            .toList();
                 });
+    }
+
+    public boolean isFriend(User user){
+        return userStorage.getUser().friends().contains(user._id());
+    }
+
+    public Observable<Boolean> isFriendObservable(User user){
+        return friendCache().getFriends().contains(user).toObservable();
     }
 
     public Observable<List<User>> addFriend(User friend) {
