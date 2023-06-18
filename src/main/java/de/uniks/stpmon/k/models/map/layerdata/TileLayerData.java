@@ -41,40 +41,7 @@ public record TileLayerData(
 
 
     public boolean checkBounds(int x, int y) {
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-            return false;
-        }
         return x >= startx() && x < startx() + width() && y >= starty() && y < starty() + height();
     }
 
-    public int getId(int x, int y) {
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-            return -1;
-        }
-        if (x < startx() || x >= startx() + width() || y < starty() || y >= starty() + height()) {
-            return -1;
-        }
-        if (data != null) {
-            int id = (y - starty()) * width() + (x - startx());
-            return data.get(id);
-        }
-
-        List<ChunkData> chunks = chunks();
-        int index = (int) Math.floor((x - startx()) / 16f) + (int) Math.floor((y - starty()) / 16f) * (width / 16);
-        // fewer chunks than expected, probably all empty
-        if (index < 0 || index >= chunks.size()) {
-            return -1;
-        }
-        ChunkData chunk = chunks.get(index);
-        return chunk.getId(x, y);
-    }
-
-//    public ChunkData getChunk(int x, int y) {
-//        for(ChunkData data : chunks) {
-//            if(data.x() == x && data.y() == y) {
-//                return data;
-//            }
-//        }
-//        return
-//    }
 }

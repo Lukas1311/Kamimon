@@ -4,7 +4,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 
 import java.util.List;
 
-public abstract class PropRule {
+public interface CandidateRule {
 
-    public abstract RuleResult apply(PropInfo info, List<DecorationLayer> layers);
+    PropInfo apply(List<PropInfo> candidates, List<DecorationLayer> layers);
 }

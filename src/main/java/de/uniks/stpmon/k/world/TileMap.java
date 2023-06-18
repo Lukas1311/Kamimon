@@ -117,8 +117,8 @@ public class TileMap {
             if (layer.chunks() == null && layer.data() == null) {
                 continue;
             }
-            BufferedImage layerImage = renderLayer(layer);
-            graphics.drawImage(layerImage, layer.startx(), layer.starty(), null);
+            BufferedImage layerImage = renderLayer(layer, width, height);
+            graphics.drawImage(layerImage, 0, 0, null);
             layers.put(layer, layerImage);
 
             if (decorationLayers.contains(layer)) {
@@ -129,16 +129,14 @@ public class TileMap {
         return mergedImage;
     }
 
-    public BufferedImage renderLayer(TileLayerData layer) {
-        int width = layer.width();
-        int height = layer.height();
+    public BufferedImage renderLayer(TileLayerData layer, int width, int height) {
         if (layer.data() != null && !layer.data().isEmpty()) {
             return renderData(layer);
         }
         BufferedImage layerImage = createImage(width, height);
         for (ChunkData chunk : layer.chunks()) {
-            int startX = (chunk.x() - layer.startx());
-            int startY = (chunk.y() - layer.starty());
+            int startX = chunk.x();
+            int startY = chunk.y();
             BufferedImage chunkImage1 = renderData(chunk);
             ImageUtils.copyData(layerImage.getRaster(),
                     chunkImage1,
