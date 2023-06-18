@@ -106,14 +106,14 @@ public class PropInspector {
             ChunkBuffer buffer = new ChunkBuffer(layerData);
             PropGrid grid = grids[layerIndex];
             for (int x = 0; x < grid.getWidth(); x++) {
-                for (int y = 0; y < grid.getHeight(); y++) {
+                for (int y = grid.getHeight() - 1; y >= 0; y--) {
                     boolean marked = false;
                     int id = buffer.getId(x, y);
                     // Empty or invalid tile
                     if (id <= 0) {
                         continue;
                     }
-                    for (Direction dir : new Direction[]{Direction.RIGHT, Direction.BOTTOM}) {
+                    for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
                         int otherX = x + dir.tileX();
                         int otherY = y + dir.tileY();
                         Direction otherDir = dir.opposite();
@@ -154,7 +154,7 @@ public class PropInspector {
                     if (marked) {
                         continue;
                     }
-                    for (Direction dir : new Direction[]{Direction.LEFT, Direction.TOP}) {
+                    for (Direction dir : new Direction[]{Direction.LEFT, Direction.BOTTOM}) {
                         int otherX = x + dir.tileX();
                         int otherY = y + dir.tileY();
                         Direction otherDir = dir.opposite();
