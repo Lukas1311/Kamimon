@@ -25,4 +25,9 @@ public record ChunkData(
     public int starty() {
         return y;
     }
+
+    public int getId(int x, int y) {
+        int id = (y - y()) * width() + (x - x());
+        return data().get(id);
+    }
 }
