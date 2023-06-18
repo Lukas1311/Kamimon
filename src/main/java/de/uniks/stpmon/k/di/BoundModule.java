@@ -6,6 +6,7 @@ import dagger.multibindings.IntoSet;
 import de.uniks.stpmon.k.service.ILifecycleService;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.FriendCache;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
@@ -27,4 +28,10 @@ public abstract class BoundModule {
     @IntoSet
     @SuppressWarnings("unused")
     public abstract ILifecycleService trainerManager(CacheManager manager);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService userService(UserService service);
 }
