@@ -10,12 +10,28 @@ import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class UserService {
+public class UserService implements ILifecycleService{
+
+    public enum OnlineStatus {
+        ONLINE("online"),
+        OFFLINE("offline");
+        private final String status;
+
+        OnlineStatus(final String status) {
+            this.status = status;
+        }
+
+        @Override
+        public String toString() {
+            return status;
+        }
+    }
 
     @Inject
     UserStorage userStorage;
@@ -26,6 +42,12 @@ public class UserService {
 
     @Inject
     public UserService() {
+    }
+
+    @Override
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void destroy() {
+        updateStatus(OnlineStatus.OFFLINE).blockingFirst();
     }
 
     public Observable<User> addUser(String username, String password) {
@@ -86,8 +108,26 @@ public class UserService {
         }
         User newUser = new User(oldUser._id(), oldUser.name(), oldUser.status(), avatar, oldUser.friends());
         userStorage.setUser(newUser);
-        UpdateUserDto dto = new UpdateUserDto(oldUser.name(), null, avatar, null, null);
-        return userApiService.updateUser(oldUser._id(), dto);
+        UpdateUserDto dto = new UpdateUserDto(null, null, avatar, null, null);
+        return userApiService.updateUser(newUser._id(), dto);
+    }
+
+    /**
+     * This method changes the status of the user
+     *
+     * @param status: new status of type OnlineStatus Enum
+     * @return Observable<User> of the updated user,
+     * null if no user in UserStorage
+     */
+    public Observable<User> updateStatus(OnlineStatus status) {
+        User oldUser = userStorage.getUser();
+        if (oldUser == null) {
+            return Observable.empty();
+        }
+        User newUser = new User(oldUser._id(), oldUser.name(), status.toString(), oldUser.avatar(), oldUser.friends());
+        userStorage.setUser(newUser);
+        UpdateUserDto dto = new UpdateUserDto(null, status.toString(), null, null, null);
+        return userApiService.updateUser(newUser._id(), dto);
     }
 
     public Observable<List<User>> searchFriend(String name) {
