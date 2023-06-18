@@ -19,6 +19,10 @@ public class ChunkBuffer {
         this.buffer = new int[layerData.width() * layerData.height() / 256];
         this.layerData = layerData;
         List<ChunkData> chunks = layerData.chunks();
+        // Don't buffer for data layers
+        if (chunks == null) {
+            return;
+        }
         for (int j = 0; j < chunks.size(); j++) {
             ChunkData chunk = chunks.get(j);
             int index = (int) Math.floor((chunk.x() - layerData.startx()) / 16f) +
@@ -30,6 +34,9 @@ public class ChunkBuffer {
     public int getId(int x, int y) {
         if (!layerData.checkBounds(x, y)) {
             return ID_INVALID;
+        }
+        if (layerData.data() != null) {
+            return layerData.getIdFromData(x, y);
         }
         ChunkData chunk = getChunk(x, y);
         if (chunk == null) {

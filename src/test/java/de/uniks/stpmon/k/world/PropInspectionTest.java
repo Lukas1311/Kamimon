@@ -58,7 +58,7 @@ public class PropInspectionTest {
         TileLayerData layer = new TileLayerData(1, "Ground", List.of(),
                 List.of(1, 1, 1, 1), List.of(),
                 0, 0,
-                2, 2,
+                32, 32,
                 0, 0,
                 "tilelayer", true, List.of());
         List<TileProp> props = propInspector.work(new DecorationLayer(layer, 0, sourceImage), DummyConstants.AREA_MAP_DATA).props();

@@ -44,4 +44,8 @@ public record TileLayerData(
         return x >= startx() && x < startx() + width() && y >= starty() && y < starty() + height();
     }
 
+    public int getIdFromData(int x, int y) {
+        int index = (x - startx()) + (y - starty()) * (width());
+        return data().get(index);
+    }
 }
