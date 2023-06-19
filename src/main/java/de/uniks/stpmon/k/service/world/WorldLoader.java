@@ -124,5 +124,6 @@ public class WorldLoader implements ILifecycleService {
         if (regionSubscription != null) {
             regionSubscription.dispose();
         }
+        worldRepository.reset(true);
     }
 }

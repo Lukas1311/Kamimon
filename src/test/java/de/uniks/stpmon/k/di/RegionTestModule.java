@@ -35,8 +35,8 @@ public class RegionTestModule {
              * names {"TestRegion0", "TestRegion1"}
              */
             private void initDummyRegions() {
-                Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), null);
-                Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), null);
+                Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
+                Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
 
                 regions.add(region0);
                 regions.add(region1);

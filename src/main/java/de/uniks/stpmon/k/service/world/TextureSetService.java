@@ -10,7 +10,6 @@ import de.uniks.stpmon.k.world.CharacterSet;
 import de.uniks.stpmon.k.world.TileMap;
 import de.uniks.stpmon.k.world.Tileset;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -69,7 +68,6 @@ public class TextureSetService {
                     }));
         }
         return imageObservable
-                .observeOn(Schedulers.io())
                 .collect(Collectors.toMap(Tileset::source, Function.identity()))
                 .map((images) -> new TileMap(mapProvider, images))
                 .toObservable();

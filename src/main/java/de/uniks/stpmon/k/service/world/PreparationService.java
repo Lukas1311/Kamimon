@@ -52,7 +52,7 @@ public class PreparationService {
     public Completable prepareWorld() {
         return tryCompleteWithRateLimit(this::loadCharacters)
                 .andThen(tryCompleteWithRateLimit(this::loadRegionMap))
-                .andThen(tryCompleteWithRateLimit(this::loadWorld));
+                .andThen(tryCompleteWithRateLimit(this::loadAreaAndProps));
     }
 
     /**
@@ -124,7 +124,7 @@ public class PreparationService {
     /**
      * Loads the floor texture and texture set from
      */
-    public Completable loadWorld() {
+    public Completable loadAreaAndProps() {
         Area area = regionStorage.getArea();
         return textureSetService.createMap(area).flatMapCompletable(
                 (tileMap) -> {

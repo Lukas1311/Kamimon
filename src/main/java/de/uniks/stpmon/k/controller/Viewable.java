@@ -59,7 +59,6 @@ public abstract class Viewable {
      *
      * @param completable the completable to subscribe to
      * @param onComplete  the consumer to call on each event
-     * @param <T>         the type of the items emitted by the Observable
      */
     protected void subscribe(Completable completable, Action onComplete) {
         disposables.add(completable.observeOn(FX_SCHEDULER).subscribe(onComplete));

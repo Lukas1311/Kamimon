@@ -3,14 +3,15 @@ package de.uniks.stpmon.k.service.storage;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class RegionStorage {
-    private final BehaviorSubject<RegionEvent> regionEvents = BehaviorSubject.createDefault(RegionEvent.EMPTY);
+    private final Subject<RegionEvent> regionEvents = PublishSubject.create();
     private Region region;
     private Area area;
 
