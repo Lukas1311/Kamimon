@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class CharacterSetCache extends SimpleCache<CharacterSet> {
+public class CharacterSetCache extends LazyCache<CharacterSet> {
     @Inject
     protected TextureSetService textureSetService;
 
@@ -18,6 +18,11 @@ public class CharacterSetCache extends SimpleCache<CharacterSet> {
     @Override
     protected Observable<List<CharacterSet>> getInitialValues() {
         return textureSetService.createAllCharacters();
+    }
+
+    @Override
+    protected Observable<CharacterSet> requestValue(String id) {
+        return textureSetService.createCharacter(id);
     }
 
     @Override
