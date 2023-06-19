@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.subjects.Subject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.CacheHint;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -52,7 +53,9 @@ public class FriendListController extends ToastedController {
     Provider<UserService> userServiceProvider;
 
 
-    private final ObservableList<User> users = FXCollections.observableArrayList();
+    private final ObservableList<User> friendSearchRes = FXCollections.observableArrayList();
+    private final ObservableList<User> allSearchRes = FXCollections.observableArrayList();
+    private ObservableList<User> users = FXCollections.observableArrayList();
 
     private Boolean allUsers = false;
 
@@ -70,6 +73,8 @@ public class FriendListController extends ToastedController {
         userList.getStyleClass().add("chat-ov-list"); //TODO: Add styleclass
         userList.setCellFactory(param -> new FriendCell(this, resources, userServiceProvider));
         friendListVbox.getChildren().add(userList);
+        userList.setCache(true);
+        userList.setCacheHint(CacheHint.SPEED);
         VBox.setVgrow(userList, Priority.ALWAYS);
 
         searchButton.setOnAction(e -> searchForFriend());
@@ -92,12 +97,24 @@ public class FriendListController extends ToastedController {
 
     @Override
     public void init() {
-        subscribe(searchUpdate.flatMap((text) -> allUsers ? userService.searchUser(text) : userService.filterFriends(text)), (values) -> {
-            for (User us : values) {
-                System.out.println(us.name());
+        subscribe(searchUpdate.flatMap((text) -> userService.searchUser(text)), (values) -> {
+           allSearchRes.setAll(values);
+            if(allUsers) {
+                //for (User us : values) {
+                //    System.out.println(us.name());
+                //}
+                users.setAll(values);
             }
-            users.clear();
-            users.addAll(values);
+        });
+
+        subscribe(searchUpdate.flatMap((text) -> userService.searchUser(text, true)), (values) -> {
+            friendSearchRes.setAll(values);
+            if(!allUsers) {
+                //for (User us : values) {
+                //    System.out.println(us.name());
+                //}
+                users.setAll(values);
+            }
         });
 
         //searchUpdate.onNext("");

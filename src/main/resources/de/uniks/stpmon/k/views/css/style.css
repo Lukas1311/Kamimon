@@ -2,23 +2,10 @@
 Load fonts
  */
 
-@font-face {
-    /*font family name: Balsamiq Sans*/
-    src: url("../fonts/BalsamiqSans-Regular.ttf");
-}
-@font-face {
-    /*font family name: Balsamiq Sans*/
-    src: url("../fonts/BalsamiqSans-Bold.ttf");
-}
-@font-face {
-    /*font family name: Balsamiq Sans*/
-    src: url("../fonts/BalsamiqSans-Italic.ttf");
-}
 
 .root{
-    -fx-font-family: "Balsamiq Sans";
+    -fx-font-family: "Comic Sans MS";
     -fx-font-size: 16;
-    -fx-font-smoothing-type: gray;
 
 	-fx-color-kgm-red: #ae2f34;
 	-fx-color-kgm-yellow: #fcf1d0;
