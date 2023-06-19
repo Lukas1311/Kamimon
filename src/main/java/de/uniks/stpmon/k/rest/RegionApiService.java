@@ -1,11 +1,9 @@
 package de.uniks.stpmon.k.rest;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
+import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.*;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -71,4 +69,37 @@ public interface RegionApiService {
 
     @GET("regions/{region}/trainers/{trainer}/monsters/{id}")
     Observable<Monster> getMonster(@Path("region") String region, @Path("id") String monsterId);
+
+    //------------- Region Encounters -------------------------------
+    @GET("regions/{region}/encounters")
+    Observable<List<Encounter>> getEncounters();
+
+    @GET("regions/{region}/encounters/{id}")
+    Observable<Encounter> getEncounter(@Path("region") String region,
+                                       @Path("id") String id);
+
+    //------------- Encounter Opponents -------------------------------
+    @GET("regions/{region}/trainers/{trainer}/opponents")
+    Observable<List<Opponent>> getTrainerOpponents(@Path("region") String region,
+                                                  @Path("trainer") String trainerId);
+
+    @GET("regions/{region}/encounters/{encounter}/opponents")
+    Observable<List<Opponent>> getEncounterOpponents(@Path("region") String region,
+                                                      @Path("encounter") String encounterId);
+
+    @GET("regions/{region}/encounters/{encounter}/opponents/{id}")
+    Observable<Opponent> getEncounterOpponent(@Path("region") String region,
+                                               @Path("encounter") String encounterId,
+                                               @Path("id") String id);
+
+    @PATCH("regions/{region}/encounters/{encounter}/opponents/{id}") //Make a move or switch monsters
+    Observable<Opponent> makeMove(@Path("region") String region,
+                                   @Path("encounter") String encounterId,
+                                   @Path("id") String id,
+                                   @Body UpdateOpponentDto opponentDto);
+
+    @DELETE("regions/{region}/encounters/{encounter}/opponents/{id}") // Flee from a wild encounter
+    Observable<Opponent> fleeEncounter(@Path("region") String region,
+                                        @Path("encounter") String encounterId,
+                                        @Path("id") String id);
 }
