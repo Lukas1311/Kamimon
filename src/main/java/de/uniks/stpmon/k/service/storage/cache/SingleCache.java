@@ -24,4 +24,12 @@ public class SingleCache<V> {
     public Observable<Optional<V>> onValue() {
         return value;
     }
+
+    public boolean isEmpty() {
+        return asOptional().isEmpty();
+    }
+
+    public void reset() {
+        value.onNext(Optional.empty());
+    }
 }

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -35,8 +36,8 @@ public class WorldService {
     public CharacterSet getCharacterPlaceholder() {
         if (characterPlaceholder == null) {
             BufferedImage image;
-            try {
-                image = ImageIO.read(Objects.requireNonNull(CharacterSet.class.getResourceAsStream("char.png")));
+            try (InputStream stream = CharacterSet.class.getResourceAsStream("char.png")) {
+                image = ImageIO.read(Objects.requireNonNull(stream));
             } catch (IOException e) {
                 image = new BufferedImage(384, 96, BufferedImage.TYPE_INT_RGB);
             }

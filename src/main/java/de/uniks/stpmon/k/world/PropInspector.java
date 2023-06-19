@@ -136,9 +136,6 @@ public class PropInspector {
                         }
                         List<PropInfo> candidates = new ArrayList<>();
                         for (int otherLayer = 0; otherLayer < decorationLayers.size(); otherLayer++) {
-                            if (otherX == 24 && otherY == 17 && otherLayer == 2) {
-                                System.out.println("here");
-                            }
                             PropGrid otherGrid = grids[otherLayer];
                             ChunkBuffer otherBuffer = buffers[otherLayer];
                             // Check visited

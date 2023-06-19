@@ -17,8 +17,8 @@ public abstract class LazyCache<T> extends SimpleCache<T> {
      * @return A list of all values that were loaded
      */
     public Observable<List<T>> getLazyValues(Collection<String> ids) {
-        return Observable.fromIterable(ids)
-                .flatMap(this::getLazyValue)
+        return Observable.just(ids.stream().map(this::getLazyValue).toList())
+                .flatMap(Observable::merge)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList()

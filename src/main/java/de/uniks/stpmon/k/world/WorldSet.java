@@ -5,8 +5,5 @@ import de.uniks.stpmon.k.models.map.TileProp;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public record WorldSet(
-        BufferedImage groundImage,
-        BufferedImage propsImage,
-        List<TileProp> props) {
+public record WorldSet(BufferedImage groundImage, List<TileProp> props) {
 }
