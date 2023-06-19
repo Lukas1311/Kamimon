@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" styleClass="friends-menu-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendListController">
+<VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" spacing="10.0" styleClass="friends-menu-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendListController">
     <VBox fx:id="friendListVbox" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" />
-    <CheckBox fx:id="checkBox" mnemonicParsing="false" text="CheckBox" />
+    <CheckBox fx:id="checkBox" mnemonicParsing="false" text="Search all users" />
     <VBox alignment="CENTER_LEFT" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" styleClass="friends-scroll-pane" VBox.vgrow="NEVER">
         <StackPane alignment="CENTER_LEFT" maxWidth="330.0" minWidth="330.0" prefWidth="330.0">
             <TextField fx:id="searchFriend" maxWidth="330.0" minWidth="330.0" prefHeight="38.0" prefWidth="330.0" promptText="%search.for.a.friend" styleClass="friends-text-input" StackPane.alignment="CENTER" />

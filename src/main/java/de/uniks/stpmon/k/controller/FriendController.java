@@ -45,7 +45,6 @@ public class FriendController extends Controller {
     private final boolean isFriend;
 
 
-
     public FriendController(User user, FriendListController friendListController, Provider<ResourceBundle> resources, Provider<UserService> userServiceProvider) {
         this.user = user;
         this.isFriend = userServiceProvider.get().isFriend(user);
@@ -64,18 +63,7 @@ public class FriendController extends Controller {
         userName.setText(user.name());
         messageButton.setTooltip(new Tooltip(translateString("chatWithFriend")));
 
-        // subscribe(isFriend, param -> {
-        //     removeFriendButton.setTooltip(new Tooltip(translateString(param ?  ("removeFriend") : ("addFriend"))));
-        //     if (param) {
-        //         removeFriendText.setIconLiteral("mdral-clear");
-        //         removeFriendText.setIconColor(Color.rgb(207, 42, 39));
-        //     } else {
-        //         removeFriendText.setIconLiteral("mdral-add");
-        //         removeFriendText.setIconColor(Color.rgb(106, 168, 79));
-        //     }
-        // });
-
-        removeFriendButton.setTooltip(new Tooltip(translateString(isFriend?  ("removeFriend") : ("addFriend"))));
+        removeFriendButton.setTooltip(new Tooltip(translateString(isFriend ? ("removeFriend") : ("addFriend"))));
         if (isFriend) {
             removeFriendText.setIconLiteral("mdral-clear");
             removeFriendText.setIconColor(Color.rgb(207, 42, 39));
@@ -112,4 +100,5 @@ public class FriendController extends Controller {
     public void handleFriend() {
         friendListController.handleFriend(user);
     }
+
 }

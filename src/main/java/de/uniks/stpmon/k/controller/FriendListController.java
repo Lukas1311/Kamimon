@@ -8,7 +8,6 @@ import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.FriendCell;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -26,8 +25,6 @@ import java.util.ResourceBundle;
 @Singleton
 public class FriendListController extends ToastedController {
 
-    //private final List<FriendController> friendControllers = new ArrayList<>();
-    //private final List<FriendController> userControllers = new ArrayList<>();
     private final Subject<String> searchUpdate = PublishSubject.create();
 
 
@@ -70,15 +67,16 @@ public class FriendListController extends ToastedController {
 
         final ListView<User> userList = new ListView<>(this.users);
         userList.setId("userListView");
-        //userList.getStyleClass().add("chat-ov-list"); //TODO: Add styleclass
+        userList.getStyleClass().add("chat-ov-list"); //TODO: Add styleclass
         userList.setCellFactory(param -> new FriendCell(this, resources, userServiceProvider));
         friendListVbox.getChildren().add(userList);
         VBox.setVgrow(userList, Priority.ALWAYS);
 
         searchButton.setOnAction(e -> searchForFriend());
+
+        allUsers = checkBox.isSelected();
         checkBox.setOnAction(e -> {
             allUsers = checkBox.isSelected();
-            searchForFriend();
         });
 
         searchFriend.setOnKeyPressed(e -> {
@@ -87,58 +85,27 @@ public class FriendListController extends ToastedController {
             }
         });
 
+        searchForFriend();
+
         return parent;
     }
 
-    //private void updateControllers(List<FriendController> controllers, List<User> users, VBox node, boolean newFriends) {
-    //    for (FriendController friendController : controllers) {
-    //        friendController.destroy();
-    //    }
-    //    controllers.clear();
-    //    node.getChildren().clear();
-    //    for (User user : users) {
-    //        FriendController controller = new FriendController(user,this, resources);
-    //        controller.init();
-    //        controllers.add(controller);
-    //        Parent parent = controller.render();
-    //        VBox.setMargin(parent, new Insets(3, 0, 3, 0));
-    //        node.getChildren().add(parent);
-    //    }
-    //}
-
     @Override
     public void init() {
-        subscribe(searchUpdate.flatMap((text) -> allUsers ? userService.searchFriend(text) : userService.filterFriends(text)),
-                (values) -> {
-                    for (User us:
-                         values) {
-                        System.out.println(us.name());
-                    }
-                    users.clear();
-                    users.addAll(values);
-                });
+        subscribe(searchUpdate.flatMap((text) -> allUsers ? userService.searchUser(text) : userService.filterFriends(text)), (values) -> {
+            for (User us : values) {
+                System.out.println(us.name());
+            }
+            users.clear();
+            users.addAll(values);
+        });
 
-        //subscribe(searchUpdate.flatMap((text) -> userService.filterFriends(text)), (values) -> {
-        //    updateControllers(friendControllers, values, friendSection, false);
-        //    userSeparator.setVisible(!values.isEmpty() && !userControllers.isEmpty());
-        //});
-        //subscribe(searchUpdate.flatMap((text) -> userService.searchFriend(text)), (values) -> {
-
-        //});
-        searchUpdate.onNext("");
+        //searchUpdate.onNext("");
     }
 
     @Override
     public void destroy() {
         super.destroy();
-
-        //for (FriendController friendController : userControllers) {
-        //    friendController.destroy();
-        //}
-
-        //for (FriendController friendController : friendControllers) {
-        //    friendController.destroy();
-        //}
     }
 
 
@@ -150,16 +117,9 @@ public class FriendListController extends ToastedController {
 
     public void handleFriend(User user) {
         if (userService.isFriend(user)) {
-            disposables.add(userService
-                    .removeFriend(user)
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(this::handleError)
-                    .subscribe());
+            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).doOnError(this::handleError).subscribe());
         } else {
-            disposables.add(userService.addFriend(user)
-                    .observeOn(FX_SCHEDULER)
-                    .doOnError(this::handleError)
-                    .subscribe());
+            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).doOnError(this::handleError).subscribe());
         }
     }
 

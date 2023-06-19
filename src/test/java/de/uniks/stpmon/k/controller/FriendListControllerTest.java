@@ -59,7 +59,7 @@ class FriendListControllerTest extends ApplicationTest {
         friends.add(new User(null, "Peter", "online", null, null));
         users.add(new User(null, "Alice", "online", null, null));
         when(userService.filterFriends(anyString())).thenReturn(updatedFriends);
-        when(userService.searchFriend(anyString())).thenReturn(filteredUsers);
+        when(userService.searchUser(anyString())).thenReturn(filteredUsers);
         app.show(friendListController);
         stage.requestFocus();
     }

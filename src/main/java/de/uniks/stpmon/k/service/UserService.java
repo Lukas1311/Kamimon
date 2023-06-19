@@ -8,7 +8,6 @@ import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -30,9 +29,7 @@ public class UserService {
     }
 
     public Observable<User> addUser(String username, String password) {
-        return userApiService.addUser(
-                new CreateUserDto(username, null, password)
-        );
+        return userApiService.addUser(new CreateUserDto(username, null, password));
     }
 
     private IFriendCache friendCache() {
@@ -91,25 +88,23 @@ public class UserService {
         return userApiService.updateUser(oldUser._id(), dto);
     }
 
-    public Observable<List<User>> searchFriend(String name) {
-        return friendCache().getValues()
-
-                .flatMap(old -> friendCache().getFriends().map((e) -> old))
-                .map(users -> {
-                    final User user = userStorage.getUser();
-                    return users.stream()
-                            .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
-                                    && !f._id().equals(user._id())) //do not show the searching user
-                            .toList();
-                });
+    /**
+     * This method filters all users, where the username begins with the given string.
+     * If the string is empty, all users get returned.
+     *
+     * @param name: the search term
+     * @return Observable list of users that match the search term
+     */
+    public Observable<List<User>> searchUser(String name) {
+        return friendCache().getValues().flatMap(old -> friendCache().getFriends().map((e) -> old)).map(users -> {
+            final User user = userStorage.getUser();
+            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())) //do not show the searching user
+                    .toList();
+        });
     }
 
-    public boolean isFriend(User user){
+    public boolean isFriend(User user) {
         return userStorage.getUser().friends().contains(user._id());
-    }
-
-    public Observable<Boolean> isFriendObservable(User user){
-        return friendCache().getFriends().contains(user).toObservable();
     }
 
     public Observable<List<User>> addFriend(User friend) {
@@ -131,22 +126,16 @@ public class UserService {
     }
 
     private Observable<List<User>> updateFriendList(User user, HashSet<String> friendList) {
-        UpdateUserDto dto = new UpdateUserDto(
-                null,
-                null,
-                null,
-                new ArrayList<>(friendList),
-                null);
+        UpdateUserDto dto = new UpdateUserDto(null, null, null, new ArrayList<>(friendList), null);
 
-        return userApiService.updateUser(user._id(), dto)
-                .map(e -> {
-                    userStorage.setUser(e);
-                    // is true, if last friend is removed
-                    if (e.friends().isEmpty()) {
-                        return Observable.<List<User>>fromSupplier(ArrayList::new);
-                    }
-                    return friendCache().updateFriends(e);
-                }).concatMap(f -> f);
+        return userApiService.updateUser(user._id(), dto).map(e -> {
+            userStorage.setUser(e);
+            // is true, if last friend is removed
+            if (e.friends().isEmpty()) {
+                return Observable.<List<User>>fromSupplier(ArrayList::new);
+            }
+            return friendCache().updateFriends(e);
+        }).concatMap(f -> f);
     }
 
     public Observable<List<User>> getFriends() {
@@ -158,10 +147,7 @@ public class UserService {
     }
 
     public Observable<List<User>> getUsers(List<String> ids) {
-        List<User> users = ids.stream().map(id -> friendCache().getValue(id))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+        List<User> users = ids.stream().map(id -> friendCache().getValue(id)).filter(Optional::isPresent).map(Optional::get).toList();
         return Observable.just(users);
     }
 
@@ -176,4 +162,5 @@ public class UserService {
         }
         return userApiService.deleteUser(currentUser._id());
     }
+
 }
