@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
@@ -19,13 +20,13 @@ import javax.inject.Inject;
 
 public class DialogueController extends ToastController {
     public static final int DIALOGUE_HEIGHT = 120;
+    private final Image[] stageImages = new Image[3];
     @FXML
     public ImageView background;
     @FXML
     public Text textContainer;
     @FXML
     public ImageView cursor;
-    private Parent dialogBox;
     @Inject
     EffectContext effectContext;
     @Inject
@@ -33,14 +34,11 @@ public class DialogueController extends ToastController {
     @Inject
     InteractionStorage interactionStorage;
 
+    private Parent dialogBox;
     private TranslateTransition transition;
-    /**
-     * True if the dialog is closing, false if it is opening
-     * Used instead of the visibility of the dialog box because visibility is changed differently in the animation
-     * itself and not after the animation is done.
-     */
-    private boolean isClosing;
+
     private boolean isPressed;
+    private boolean isHovered;
 
     private Dialogue dialogue;
     private DialogueOption option;
@@ -50,50 +48,65 @@ public class DialogueController extends ToastController {
     public DialogueController() {
     }
 
+    @Override
+    public String getResourcePath() {
+        return "interaction/";
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        index = 0;
+        if (dialogue != null) {
+            option = dialogue.options()[index];
+            textContainer.setText(option.getText());
+        }
+        State[] values = State.values();
+        for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
+            State state = values[i];
+            loadImage(stageImages, i, state.getTexture());
+        }
+        onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            if (event.getCode() != KeyCode.ENTER) {
+                return;
+            }
+
+            if (dialogue == null) {
+                Dialogue currentDialogue = interactionStorage.getDialogue();
+                if (currentDialogue == null || currentDialogue.isEmpty()) {
+                    return;
+                }
+                openDialogue(interactionStorage.getDialogue());
+                event.consume();
+                return;
+            }
+            onActionPressed(event);
+        }));
+        onDestroy(inputHandler.addReleasedKeyFilter(event -> {
+            if (event.getCode() != KeyCode.ENTER || dialogue == null) {
+                return;
+            }
+
+            onActionReleased(event);
+        }));
+    }
+
     public void setDialogue(Dialogue dialogue) {
         this.dialogue = dialogue;
+        if (dialogue == null) {
+            return;
+        }
         setIndex(0);
     }
 
-    public void openDialog(Dialogue dialogue) {
+    public void openDialogue(Dialogue dialogue) {
         setDialogue(dialogue);
-        boolean closingAnimation = true;
-        if (!dialogBox.isVisible()) {
-            dialogBox.setVisible(true);
-            isClosing = false;
-            closingAnimation = false;
-        } else {
-            isClosing = !isClosing;
-            if (!isClosing) {
-                closingAnimation = false;
-            }
-        }
-        TranslateTransition oldTransition = transition;
-        Duration currentTime = Duration.ZERO;
-        if (oldTransition != null) {
-            currentTime = oldTransition.getCurrentTime();
-            oldTransition.stop();
-        }
-        transition = new TranslateTransition();
-        transition.setNode(dialogBox);
-        transition.setDuration(Duration.millis(effectContext.getDialogAnimationSpeed()));
-        transition.setToY(closingAnimation ? DIALOGUE_HEIGHT : 0);
-        transition.setFromY(closingAnimation ? 0 : DIALOGUE_HEIGHT);
-        if (currentTime.greaterThan(Duration.ZERO)) {
-            // Invert the time to get the right time for the new transition
-            Duration invertedTime = Duration.millis(effectContext.getDialogAnimationSpeed())
-                    .subtract(currentTime);
-            transition.playFrom(invertedTime);
-        } else {
-            transition.playFromStart();
-        }
-        transition.setOnFinished(event -> {
-            if (isClosing) {
-                dialogBox.setVisible(false);
-                isClosing = false;
-            }
-            transition = null;
-        });
+        playAnimation(false);
+    }
+
+    public void closeDialogue() {
+        playAnimation(true);
+        setDialogue(null);
     }
 
     public void playAnimation(boolean closingAnimation) {
@@ -127,60 +140,30 @@ public class DialogueController extends ToastController {
         });
     }
 
-
-    @Override
-    public String getResourcePath() {
-        return "interaction/";
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        index = 0;
-        if (dialogue != null) {
-            option = dialogue.options()[index];
-            textContainer.setText(option.getText());
-        }
-        onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            if (event.getCode() != KeyCode.ENTER) {
-                return;
-            }
-
-            if (dialogue == null) {
-                Dialogue currentDialogue = interactionStorage.getDialogue();
-                if (currentDialogue == null || currentDialogue.isEmpty()) {
-                    return;
-                }
-                openDialog(interactionStorage.getDialogue());
-                event.consume();
-                return;
-            }
-            onActionPressed(event);
-        }));
-        onDestroy(inputHandler.addReleasedKeyFilter(event -> {
-            if (event.getCode() != KeyCode.ENTER || dialogue == null) {
-                return;
-            }
-
-            onActionReleased(event);
-        }));
-    }
-
     private boolean performAction() {
         if (option == null) {
             return false;
+        }
+        // Consume even if still in animation to prevent skipping an option
+        if (transition != null) {
+            return true;
         }
         Runnable action = option.getAction();
         if (action != null) {
             action.run();
         }
         // Close if there is no next option
-        if (!hasNext()) {
-            openDialog(dialogue);
-        } else {
-            setIndex(index + 1);
+        if (!doNext()) {
+            closeDialogue();
         }
         return true;
+    }
+
+    private void setState(State state) {
+        if (stageImages[state.ordinal()] == null) {
+            return;
+        }
+        cursor.setImage(stageImages[state.ordinal()]);
     }
 
     public void setIndex(int index) {
@@ -193,24 +176,22 @@ public class DialogueController extends ToastController {
         return option.getNext() != null;
     }
 
-    public void next() {
+    public boolean doNext() {
         if (!hasNext()) {
-            return;
+            return false;
         }
         setIndex(index + 1);
+        return true;
     }
 
     public void onActionPressed(InputEvent event) {
-        loadImage(cursor, "interaction/cursor_active.png");
+        setState(State.PRESSED);
         isPressed = true;
+        event.consume();
     }
 
     public void onActionReleased(InputEvent event) {
-        if (background.isHover()) {
-            loadImage(cursor, "interaction/cursor_hovered.png");
-        } else {
-            loadImage(cursor, "interaction/cursor_default.png");
-        }
+        setState(isHovered ? State.HOVERED : State.DEFAULT);
         if (isPressed && performAction()) {
             event.consume();
         }
@@ -222,15 +203,33 @@ public class DialogueController extends ToastController {
         Parent parent = super.render();
         dialogBox = parent;
         loadImage(background, "interaction/dialogue_background.png");
-        loadImage(cursor, "interaction/cursor_default.png");
+        setState(State.DEFAULT);
         parent.setOnMouseEntered(event -> {
-            loadImage(cursor, "interaction/cursor_hovered.png");
+            isHovered = true;
+            setState(State.HOVERED);
         });
         parent.setOnMouseExited(event -> {
-            loadImage(cursor, "interaction/cursor_default.png");
+            isHovered = false;
+            setState(State.DEFAULT);
         });
         parent.setOnMousePressed(this::onActionPressed);
         parent.setOnMouseReleased(this::onActionReleased);
         return parent;
+    }
+
+    private enum State {
+        DEFAULT("interaction/cursor_default.png"),
+        HOVERED("interaction/cursor_hovered.png"),
+        PRESSED("interaction/cursor_active.png");
+
+        private final String texture;
+
+        State(String texture) {
+            this.texture = texture;
+        }
+
+        public String getTexture() {
+            return texture;
+        }
     }
 }
