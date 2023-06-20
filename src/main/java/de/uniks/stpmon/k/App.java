@@ -15,14 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import okhttp3.OkHttpClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.net.URL;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class App extends Application {
     private final MainComponent component;
