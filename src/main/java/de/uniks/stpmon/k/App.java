@@ -86,6 +86,7 @@ public class App extends Application {
         InputHandler inputHandler = component.inputHandler();
         stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
         stage.addEventFilter(KeyEvent.KEY_PRESSED, inputHandler.keyPressedFilter());
+        stage.addEventFilter(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedFilter());
     }
 
     private void onFinishedLoading() {

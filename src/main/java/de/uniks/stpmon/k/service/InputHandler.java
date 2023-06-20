@@ -12,26 +12,33 @@ import java.util.function.Consumer;
 @Singleton
 public class InputHandler {
 
-    private final List<Consumer<? super KeyEvent>> keyHandlers = new ArrayList<>();
-    private final List<Consumer<? super KeyEvent>> keyFilters = new ArrayList<>();
+    private final List<Consumer<? super KeyEvent>> keyPressedHandlers = new ArrayList<>();
+    private final List<Consumer<? super KeyEvent>> keyPressedFilters = new ArrayList<>();
+    private final List<Consumer<? super KeyEvent>> keyReleasedFilters = new ArrayList<>();
 
     @Inject
     public InputHandler() {
     }
 
-    public Runnable addKeyHandler(Consumer<? super KeyEvent> handler) {
-        keyHandlers.add(handler);
-        return () -> keyHandlers.remove(handler);
+    public Runnable addPressedKeyHandler(Consumer<? super KeyEvent> handler) {
+        keyPressedHandlers.add(handler);
+        return () -> keyPressedHandlers.remove(handler);
     }
 
-    public Runnable addKeyFilter(Consumer<? super KeyEvent> handler) {
-        keyFilters.add(handler);
-        return () -> keyFilters.remove(handler);
+    public Runnable addPressedKeyFilter(Consumer<? super KeyEvent> handler) {
+        keyPressedFilters.add(handler);
+        return () -> keyPressedFilters.remove(handler);
+    }
+
+
+    public Runnable addReleasedKeyFilter(Consumer<? super KeyEvent> handler) {
+        keyReleasedFilters.add(handler);
+        return () -> keyReleasedFilters.remove(handler);
     }
 
     public EventHandler<KeyEvent> keyPressedHandler() {
         return event -> {
-            for (Consumer<? super KeyEvent> keyHandler : keyHandlers) {
+            for (Consumer<? super KeyEvent> keyHandler : keyPressedHandlers) {
                 keyHandler.accept(event);
                 if (event.isConsumed()) {
                     return;
@@ -42,7 +49,18 @@ public class InputHandler {
 
     public EventHandler<KeyEvent> keyPressedFilter() {
         return event -> {
-            for (Consumer<? super KeyEvent> keyHandler : keyFilters) {
+            for (Consumer<? super KeyEvent> keyHandler : keyPressedFilters) {
+                keyHandler.accept(event);
+                if (event.isConsumed()) {
+                    return;
+                }
+            }
+        };
+    }
+
+    public EventHandler<KeyEvent> keyReleasedFilter() {
+        return event -> {
+            for (Consumer<? super KeyEvent> keyHandler : keyReleasedFilters) {
                 keyHandler.accept(event);
                 if (event.isConsumed()) {
                     return;
