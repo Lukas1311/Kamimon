@@ -2,6 +2,9 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Dialogue;
+import de.uniks.stpmon.k.models.DialogueOption;
+import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -42,6 +45,8 @@ public class IngameController extends PortalController {
     BackpackController backpackController;
     @Inject
     DialogueController dialogueController;
+    @Inject
+    InteractionStorage interactionStorage;
 
     @Inject
     TrainerStorage trainerStorage;
@@ -64,6 +69,12 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
+        if (interactionStorage != null) {
+            interactionStorage.setDialogue(Dialogue.create(
+                    new DialogueOption("Hello Sven"),
+                    new DialogueOption("How are you doing?")));
+        }
+
     }
 
     @Override
@@ -120,7 +131,7 @@ public class IngameController extends PortalController {
             dialogue.setVisible(false);
         }
 
-        if (miniMap != null) {
+        if (miniMap != null && mapOverview != null) {
             miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
         }
 

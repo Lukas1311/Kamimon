@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<GridPane prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<GridPane fx:id="dialoguePane" prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController">
     <columnConstraints>
@@ -14,7 +14,8 @@
     <rowConstraints>
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
     </rowConstraints>
-    <ImageView fx:id="background" fitHeight="112.0" fitWidth="504.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fx:id="background" fitHeight="112.0" fitWidth="504.0" pickOnBounds="true" preserveRatio="true"
+               GridPane.valignment="TOP">
     </ImageView>
     <Pane prefHeight="200.0" prefWidth="200.0">
         <ImageView fx:id="cursor" fitHeight="22.0" fitWidth="18.0" layoutX="478.0" layoutY="54.0" pickOnBounds="true"

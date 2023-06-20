@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -27,6 +28,8 @@ public class DialogueController extends ToastController {
     public Text textContainer;
     @FXML
     public ImageView cursor;
+    @FXML
+    public GridPane dialoguePane;
     @Inject
     EffectContext effectContext;
     @Inject
@@ -34,7 +37,6 @@ public class DialogueController extends ToastController {
     @Inject
     InteractionStorage interactionStorage;
 
-    private Parent dialogBox;
     private TranslateTransition transition;
 
     private boolean isPressed;
@@ -57,10 +59,6 @@ public class DialogueController extends ToastController {
     public void init() {
         super.init();
         index = 0;
-        if (dialogue != null) {
-            option = dialogue.options()[index];
-            textContainer.setText(option.getText());
-        }
         State[] values = State.values();
         for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
             State state = values[i];
@@ -91,7 +89,7 @@ public class DialogueController extends ToastController {
         }));
     }
 
-    public void setDialogue(Dialogue dialogue) {
+    private void setDialogue(Dialogue dialogue) {
         this.dialogue = dialogue;
         if (dialogue == null) {
             return;
@@ -111,7 +109,7 @@ public class DialogueController extends ToastController {
 
     public void playAnimation(boolean closingAnimation) {
         if (!closingAnimation) {
-            dialogBox.setVisible(true);
+            dialoguePane.setVisible(true);
         }
         TranslateTransition oldTransition = transition;
         Duration currentTime = Duration.ZERO;
@@ -120,7 +118,7 @@ public class DialogueController extends ToastController {
             oldTransition.stop();
         }
         transition = new TranslateTransition();
-        transition.setNode(dialogBox);
+        transition.setNode(dialoguePane);
         transition.setDuration(Duration.millis(effectContext.getDialogAnimationSpeed()));
         transition.setToY(closingAnimation ? DIALOGUE_HEIGHT : 0);
         transition.setFromY(closingAnimation ? 0 : DIALOGUE_HEIGHT);
@@ -131,10 +129,11 @@ public class DialogueController extends ToastController {
             transition.playFrom(invertedTime);
         } else {
             transition.playFromStart();
+
         }
         transition.setOnFinished(event -> {
             if (closingAnimation) {
-                dialogBox.setVisible(false);
+                dialoguePane.setVisible(false);
             }
             transition = null;
         });
@@ -166,13 +165,13 @@ public class DialogueController extends ToastController {
         cursor.setImage(stageImages[state.ordinal()]);
     }
 
-    public void setIndex(int index) {
+    private void setIndex(int index) {
         this.index = index % dialogue.options().length;
         option = dialogue.options()[index];
         textContainer.setText(option.getText());
     }
 
-    public boolean hasNext() {
+    private boolean hasNext() {
         return option.getNext() != null;
     }
 
@@ -184,13 +183,13 @@ public class DialogueController extends ToastController {
         return true;
     }
 
-    public void onActionPressed(InputEvent event) {
+    private void onActionPressed(InputEvent event) {
         setState(State.PRESSED);
         isPressed = true;
         event.consume();
     }
 
-    public void onActionReleased(InputEvent event) {
+    private void onActionReleased(InputEvent event) {
         setState(isHovered ? State.HOVERED : State.DEFAULT);
         if (isPressed && performAction()) {
             event.consume();
@@ -201,7 +200,7 @@ public class DialogueController extends ToastController {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        dialogBox = parent;
+        parent.setVisible(false);
         loadImage(background, "interaction/dialogue_background.png");
         setState(State.DEFAULT);
         parent.setOnMouseEntered(event -> {
