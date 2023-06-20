@@ -1,10 +1,8 @@
 package de.uniks.stpmon.k.world.rules;
 
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import de.uniks.stpmon.k.models.map.DecorationLayer;
+
+import java.util.*;
 
 public class EntangledRule extends PropRule {
     private final String tileSet;
@@ -20,7 +18,7 @@ public class EntangledRule extends PropRule {
     }
 
     @Override
-    public RuleResult apply(PropInfo info, BufferedImage image) {
+    public RuleResult apply(PropInfo info, List<DecorationLayer> layers) {
         if (!tileSet.equals(info.tileSet())) {
             return RuleResult.NO_MATCH;
         }

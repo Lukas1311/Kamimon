@@ -1,6 +1,9 @@
 package de.uniks.stpmon.k.world.rules;
 
+import de.uniks.stpmon.k.models.map.DecorationLayer;
+
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class ImageConnectionRule extends PropRule {
 
@@ -8,7 +11,9 @@ public class ImageConnectionRule extends PropRule {
     public static final int TILE_SIZE = 16;
 
     @Override
-    public RuleResult apply(PropInfo info, BufferedImage image) {
+    public RuleResult apply(PropInfo info, List<DecorationLayer> layers) {
+        BufferedImage firstImage = layers.get(info.layer()).image();
+        BufferedImage secondImage = layers.get(info.otherLayer()).image();
         int emptyCount = 0;
         for (int dist = 0; dist < CHECKED_PIXELS; dist++) {
             // Iterate over each pixel in the images and compare the edges
@@ -17,8 +22,8 @@ public class ImageConnectionRule extends PropRule {
                 int firstY = info.tileY() * TILE_SIZE + info.dir().imageY(i, dist);
                 int secondX = (info.tileX() + info.dir().tileX()) * TILE_SIZE + info.otherDir().imageX(i, dist);
                 int secondY = (info.tileY() + info.dir().tileY()) * TILE_SIZE + info.otherDir().imageY(i, dist);
-                int first = image.getRGB(firstX, firstY);
-                int second = image.getRGB(secondX, secondY);
+                int first = firstImage.getRGB(firstX, firstY);
+                int second = secondImage.getRGB(secondX, secondY);
                 int firstAlpha = (first >> 24 & 0xFF);
                 int secondAlpha = (second >> 24 & 0xFF);
                 // Skip if any pixel is transparent

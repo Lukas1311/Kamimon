@@ -7,10 +7,10 @@ import de.uniks.stpmon.k.service.sources.IPortalController;
 import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
+import de.uniks.stpmon.k.service.world.PreparationService;
 import de.uniks.stpmon.k.service.world.WorldLoader;
-import de.uniks.stpmon.k.world.WorldSet;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +21,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,77 +34,61 @@ public class WorldLoaderTest {
     @Spy
     PortalSource loadingSource;
     @Spy
-    WorldStorage worldStorage;
+    WorldRepository worldRepository;
     @Mock
     RegionService regionService;
-    @Mock
-    @SuppressWarnings("unused")
-    TextureSetService textureSetService;
     @InjectMocks
     @Spy
     WorldLoader worldLoader;
     @Mock
     IPortalController portalController;
+    @Mock
+    PreparationService preparationService;
 
     @BeforeEach
     void setUp() {
         loadingSource.setPortalController(portalController);
     }
 
-    @Test
-    void loadNewWorldNoRegion() {
-        // Check if the world is null
-        assertNull(worldStorage.getWorld());
 
-        Observable<WorldSet> world = worldLoader.loadWorld();
-        TestObserver<WorldSet> testObserver = world.test();
-        // Check if nothing was loaded
-        testObserver.assertNoValues();
-        testObserver.assertNoErrors();
+    @Test
+    void loadWorldNoRegion() {
         // Check if the world is null
-        assertNull(worldStorage.getWorld());
+        assertNull(regionStorage.getRegion());
+
+        Completable world = worldLoader.loadWorld();
+        TestObserver<Void> testObserver = world.test();
+        // Check if nothing was loaded
+        testObserver.assertNotComplete();
+        testObserver.assertNoErrors();
     }
 
     @Test
-    void loadNewWorldNoArea() {
+    void loadWorldNoArea() {
         regionStorage.setRegion(DummyConstants.REGION);
+        assertNotNull(regionStorage.getRegion());
+        // Check if the area is null
+        assertNull(regionStorage.getArea());
 
-        // Check if the world is null
-        assertNull(worldStorage.getWorld());
-
-        Observable<WorldSet> world = worldLoader.loadWorld();
-        TestObserver<WorldSet> testObserver = world.test();
+        Completable world = worldLoader.loadWorld();
+        TestObserver<Void> testObserver = world.test();
         // Check if nothing was loaded
-        testObserver.assertNoValues();
+        testObserver.assertNotComplete();
         testObserver.assertNoErrors();
-        // Check if the world is null
-        assertNull(worldStorage.getWorld());
     }
 
     @Test
-    void getLoadedWorld() {
-        when(worldLoader.loadWorld()).thenReturn(Observable.just(DummyConstants.WORLD));
-        // Check if the world is null
-        assertNull(worldStorage.getWorld());
+    void loadWorld() {
+        when(preparationService.prepareWorld()).thenReturn(Completable.complete());
+        regionStorage.setRegion(DummyConstants.REGION);
+        regionStorage.setArea(DummyConstants.AREA);
+        assertNotNull(regionStorage.getRegion());
+        assertNotNull(regionStorage.getArea());
 
-        Observable<WorldSet> world = worldLoader.getOrLoadWorld();
-        TestObserver<WorldSet> testObserver = world.test();
-        // Check if the world is returned
-        testObserver.assertValue(DummyConstants.WORLD);
-        // Check if the world exists
-        assertEquals(DummyConstants.WORLD, worldStorage.getWorld());
-        //Check if world was loaded
-        verify(worldLoader).loadWorld();
-    }
-
-    @Test
-    void getStoredWorld() {
-        worldStorage.setWorld(DummyConstants.WORLD);
-        Observable<WorldSet> world = worldLoader.getOrLoadWorld();
-        // check if the world was loaded
-        assertEquals(DummyConstants.WORLD, world.blockingFirst());
-        // Check if tileMapService was not called
-        verify(worldLoader, never()).loadWorld();
+        Completable world = worldLoader.loadWorld();
+        TestObserver<Void> testObserver = world.test();
+        // Check if the preparation service was called
+        testObserver.assertComplete();
     }
 
     @Test
@@ -189,6 +172,11 @@ public class WorldLoaderTest {
         assertEquals(DummyConstants.REGION, regionStorage.getRegion());
         assertEquals(DummyConstants.AREA, regionStorage.getArea());
         verify(portalController).loadWorld();
+        // Reset after world is loaded
+        verify(worldRepository).reset(true);
+        worldLoader.destroy();
+        // Reset if world loader is destroyed
+        verify(worldRepository, times(2)).reset(true);
     }
 
     @Test
