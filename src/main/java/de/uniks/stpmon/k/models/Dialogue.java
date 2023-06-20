@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.models;
 
+import java.util.Arrays;
+
 public final class Dialogue {
     private final DialogueOption[] options;
 
@@ -21,8 +23,10 @@ public final class Dialogue {
 
     @Override
     public String toString() {
-        return "Dialogue[" +
-                "options=" + options + ']';
+        return "Dialogue[options=" + Arrays.toString(options) + ']';
     }
 
+    public boolean isEmpty() {
+        return options().length == 0;
+    }
 }

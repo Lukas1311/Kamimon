@@ -12,7 +12,7 @@ import java.util.*;
 
 public abstract class SimpleCache<T> implements ICache<T> {
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
-    protected final Map<String, T> valuesById = new LinkedHashMap<>();
+    protected final Map<String, T> valuesById = Collections.synchronizedMap(new LinkedHashMap<>());
     protected final Map<String, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
     protected final PublishSubject<T> onCreate = PublishSubject.create();
     protected final PublishSubject<T> onRemove = PublishSubject.create();

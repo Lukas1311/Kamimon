@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<GridPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-          prefWidth="504.0" prefHeight="92.0"
+<GridPane prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+          xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
@@ -18,8 +15,12 @@
         <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <ImageView fx:id="background" fitHeight="112.0" fitWidth="504.0" pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../controller/interaction/dialogue_background.png"/>
     </ImageView>
+    <Pane prefHeight="200.0" prefWidth="200.0">
+        <ImageView fx:id="cursor" fitHeight="22.0" fitWidth="18.0" layoutX="478.0" layoutY="54.0" pickOnBounds="true"
+                   preserveRatio="true">
+        </ImageView>
+    </Pane>
     <TextFlow prefHeight="92.0" prefWidth="432.0">
         <GridPane.margin>
             <Insets/>

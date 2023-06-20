@@ -2,16 +2,10 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.Dialogue;
-import de.uniks.stpmon.k.models.DialogueOption;
-import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 
 import javax.inject.Inject;
@@ -55,9 +49,6 @@ public class IngameController extends PortalController {
     @Inject
     WorldController worldController;
 
-    @Inject
-    InputHandler inputHandler;
-
 
     @Inject
     public IngameController() {
@@ -73,21 +64,6 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
-
-        inputHandler.addKeyFilter(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                ObservableList<Node> children = dialogueBox.getChildren();
-                if (children.isEmpty()) {
-                    return;
-                }
-                Node node = children.get(0);
-                // node.setVisible(!node.isVisible());
-                dialogueController.openDialog(node, Dialogue.create(new DialogueOption("Hello Sven"),
-                        new DialogueOption("How are you doing?")));
-                // next();
-                event.consume();
-            }
-        });
     }
 
     @Override
