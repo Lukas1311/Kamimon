@@ -46,7 +46,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.setProperty("prism.lcdtext", "false");
-        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
         stage = primaryStage;
         //initial window size
         stage.setWidth(1280);
