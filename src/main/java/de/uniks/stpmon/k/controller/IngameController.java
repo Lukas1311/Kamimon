@@ -1,15 +1,18 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Dialogue;
+import de.uniks.stpmon.k.models.DialogueOption;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,6 +33,8 @@ public class IngameController extends PortalController {
     public VBox rightVbox;
     @FXML
     public HBox ingameWrappingHBox;
+    @FXML
+    public HBox dialogueBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -42,10 +47,16 @@ public class IngameController extends PortalController {
     @Inject
     BackpackController backpackController;
     @Inject
+    DialogueController dialogueController;
+
+    @Inject
     TrainerStorage trainerStorage;
 
     @Inject
-    protected WorldController worldController;
+    WorldController worldController;
+
+    @Inject
+    InputHandler inputHandler;
 
 
     @Inject
@@ -61,6 +72,22 @@ public class IngameController extends PortalController {
         minimapController.init();
         mapOverviewController.init();
         backpackController.init();
+        dialogueController.init();
+
+        inputHandler.addKeyFilter(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                ObservableList<Node> children = dialogueBox.getChildren();
+                if (children.isEmpty()) {
+                    return;
+                }
+                Node node = children.get(0);
+                // node.setVisible(!node.isVisible());
+                dialogueController.openDialog(node, Dialogue.create(new DialogueOption("Hello Sven"),
+                        new DialogueOption("How are you doing?")));
+                // next();
+                event.consume();
+            }
+        });
     }
 
     @Override
@@ -72,6 +99,7 @@ public class IngameController extends PortalController {
         minimapController.destroy();
         mapOverviewController.destroy();
         backpackController.destroy();
+        dialogueController.destroy();
     }
 
     @Override
@@ -88,7 +116,6 @@ public class IngameController extends PortalController {
         if (monsterBar != null) {
             pane.getChildren().add(monsterBar);
         }
-
 
         Parent miniMap = this.minimapController.render();
         // Null if unit testing world view
@@ -108,6 +135,13 @@ public class IngameController extends PortalController {
             ingameStack.getChildren().add(mapOverview);
             ingameStack.setAlignment(Pos.CENTER);
             mapOverview.setVisible(false);
+        }
+
+        Parent dialogue = this.dialogueController.render();
+        if (dialogue != null) {
+            dialogueBox.getChildren().clear();
+            dialogueBox.getChildren().add(dialogue);
+            dialogue.setVisible(false);
         }
 
         if (miniMap != null) {

@@ -15,11 +15,14 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import okhttp3.OkHttpClient;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.net.URL;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class App extends Application {
     private final MainComponent component;
@@ -43,6 +46,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.setProperty("prism.lcdtext", "false");
+        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
         stage = primaryStage;
         //initial window size
         stage.setWidth(1280);
@@ -81,6 +85,7 @@ public class App extends Application {
         }
         InputHandler inputHandler = component.inputHandler();
         stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, inputHandler.keyPressedFilter());
     }
 
     private void onFinishedLoading() {

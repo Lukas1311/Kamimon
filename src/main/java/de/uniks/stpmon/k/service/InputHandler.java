@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 public class InputHandler {
 
     private final List<Consumer<? super KeyEvent>> keyHandlers = new ArrayList<>();
+    private final List<Consumer<? super KeyEvent>> keyFilters = new ArrayList<>();
 
     @Inject
     public InputHandler() {
@@ -23,10 +24,29 @@ public class InputHandler {
         return () -> keyHandlers.remove(handler);
     }
 
+    public Runnable addKeyFilter(Consumer<? super KeyEvent> handler) {
+        keyFilters.add(handler);
+        return () -> keyFilters.remove(handler);
+    }
+
     public EventHandler<KeyEvent> keyPressedHandler() {
         return event -> {
             for (Consumer<? super KeyEvent> keyHandler : keyHandlers) {
                 keyHandler.accept(event);
+                if (event.isConsumed()) {
+                    return;
+                }
+            }
+        };
+    }
+
+    public EventHandler<KeyEvent> keyPressedFilter() {
+        return event -> {
+            for (Consumer<? super KeyEvent> keyHandler : keyFilters) {
+                keyHandler.accept(event);
+                if (event.isConsumed()) {
+                    return;
+                }
             }
         };
     }
