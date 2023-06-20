@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.rest.RegionApiService;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -34,9 +33,6 @@ public class EncounterService {
 
     @Inject
     RegionApiService regionApiService;
-
-    @Inject
-    MonsterCache monsterCache;
 
     @Inject
     public EncounterService() {
