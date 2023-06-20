@@ -23,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -58,7 +57,7 @@ public class TextureSetServiceTest {
         when(resourceService.getTilesetData("grass.json")).thenReturn(Observable.just(new TilesetData(
                 2, "grass.png",
                 2, 2,
-                0, "grass", 0, 1,
+                0, "grass", 0, 4,
                 1, 1, List.of(), ""
         )));
 
@@ -79,14 +78,12 @@ public class TextureSetServiceTest {
         Map<TilesetSource, Tileset> tilesets = tileMap.getTilesets();
         assertEquals(1, tilesets.size());
 
-        assertDoesNotThrow(() -> {
-            BufferedImage resultImage = tileMap.renderMap();
-            assertEquals(2, resultImage.getWidth());
-            assertEquals(2, resultImage.getHeight());
-            assertEquals(Color.GREEN.getRGB(), resultImage.getRGB(0, 0));
-            assertEquals(Color.BLUE.getRGB(), resultImage.getRGB(1, 0));
-            assertEquals(Color.RED.getRGB(), resultImage.getRGB(0, 1));
-            assertEquals(Color.BLACK.getRGB(), resultImage.getRGB(1, 1));
-        });
+        BufferedImage resultImage = tileMap.renderMap();
+        assertEquals(2, resultImage.getWidth());
+        assertEquals(2, resultImage.getHeight());
+        assertEquals(Color.GREEN.getRGB(), resultImage.getRGB(0, 0));
+        assertEquals(Color.BLUE.getRGB(), resultImage.getRGB(1, 0));
+        assertEquals(Color.RED.getRGB(), resultImage.getRGB(0, 1));
+        assertEquals(Color.BLACK.getRGB(), resultImage.getRGB(1, 1));
     }
 }

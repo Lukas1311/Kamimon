@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
-import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.world.WorldSet;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
+import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
 public class FloorView extends WorldViewable {
 
     @Inject
-    protected WorldStorage storage;
+    protected WorldRepository repository;
 
     @Inject
     public FloorView() {
@@ -23,11 +23,11 @@ public class FloorView extends WorldViewable {
 
     @Override
     public Node render() {
-        WorldSet world = storage.getWorld();
-        if (world == null) {
+        SingleCache<BufferedImage> floorCache = repository.floorImage();
+        if (floorCache.isEmpty()) {
             return new Group();
         }
-        BufferedImage mapImage = world.groundImage();
+        BufferedImage mapImage = floorCache.asNullable();
         MeshView floor = createPlaneScaled(mapImage);
         floor.setId("floor");
         Bounds bounds = floor.getBoundsInLocal();
