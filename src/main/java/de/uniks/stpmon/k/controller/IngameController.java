@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
-import de.uniks.stpmon.k.models.dialogue.DialogueItem;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
@@ -70,9 +69,12 @@ public class IngameController extends PortalController {
         backpackController.init();
         dialogueController.init();
         if (interactionStorage != null) {
-            interactionStorage.setDialogue(Dialogue.create(
-                    new DialogueItem("Hello Sven"),
-                    new DialogueItem("How are you doing?")));
+            interactionStorage.setDialogue(
+                    Dialogue.builder()
+                            .addItem("Hello Sven")
+                            .addItem("How are you doing?")
+                            .create()
+            );
         }
 
     }

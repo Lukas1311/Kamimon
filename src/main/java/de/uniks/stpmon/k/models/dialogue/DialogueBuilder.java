@@ -6,13 +6,9 @@ import java.util.Objects;
 
 public class DialogueBuilder {
 
-    public static DialogueBuilder create() {
-        return new DialogueBuilder();
-    }
-
     private final List<DialogueItem> items = new LinkedList<>();
 
-    private DialogueBuilder() {
+    DialogueBuilder() {
     }
 
     private void add(DialogueItem item) {
@@ -23,11 +19,15 @@ public class DialogueBuilder {
         return new ItemBuilder(this);
     }
 
-    public Dialogue build() {
+    public DialogueBuilder addItem(String text) {
+        return addItem().setText(text).endItem();
+    }
+
+    public Dialogue create() {
         return Dialogue.create(items.toArray(new DialogueItem[0]));
     }
 
-    private static class ItemBuilder {
+    public static class ItemBuilder {
         private final DialogueBuilder parent;
         private final List<DialogueOption> options = new LinkedList<>();
         private String text = "";
@@ -55,7 +55,7 @@ public class DialogueBuilder {
             return new OptionBuilder(this);
         }
 
-        public DialogueBuilder build() {
+        public DialogueBuilder endItem() {
             parent.add(new DialogueItem(text, action, options.toArray(new DialogueOption[0])));
             return parent;
         }
@@ -65,7 +65,7 @@ public class DialogueBuilder {
         }
     }
 
-    private static class OptionBuilder {
+    public static class OptionBuilder {
         private final ItemBuilder parent;
 
         private String text = "";
@@ -98,7 +98,7 @@ public class DialogueBuilder {
             return this;
         }
 
-        public ItemBuilder create() {
+        public ItemBuilder endOption() {
             parent.add(new DialogueOption(text, action, selection));
             return parent;
         }

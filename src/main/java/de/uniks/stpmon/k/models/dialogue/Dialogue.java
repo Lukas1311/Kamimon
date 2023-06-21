@@ -13,6 +13,10 @@ public final class Dialogue {
         return dialogue;
     }
 
+    public static DialogueBuilder builder() {
+        return new DialogueBuilder();
+    }
+
     private Dialogue(DialogueItem[] items) {
         this.items = items;
     }

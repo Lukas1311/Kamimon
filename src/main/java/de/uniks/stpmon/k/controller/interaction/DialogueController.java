@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.models.dialogue.DialogueItem;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.InteractionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -36,6 +37,8 @@ public class DialogueController extends ToastController {
     InputHandler inputHandler;
     @Inject
     InteractionStorage interactionStorage;
+    @Inject
+    InteractionService interactionService;
 
     private TranslateTransition transition;
 
@@ -70,6 +73,10 @@ public class DialogueController extends ToastController {
             }
 
             if (dialogue == null) {
+                if (interactionService != null) {
+                    interactionService.tryUpdateDialogue();
+                }
+
                 Dialogue currentDialogue = interactionStorage.getDialogue();
                 if (currentDialogue == null || currentDialogue.isEmpty()) {
                     return;
