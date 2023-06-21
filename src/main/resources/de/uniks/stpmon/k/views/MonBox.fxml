@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.MonBox">
+            fx:controller="de.uniks.stpmon.k.controller.MonBoxController">
    <center>
       <StackPane fx:id="monBoxStackPane" BorderPane.alignment="CENTER">
          <VBox alignment="TOP_CENTER">
