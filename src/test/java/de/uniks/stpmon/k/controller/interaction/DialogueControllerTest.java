@@ -2,9 +2,9 @@ package de.uniks.stpmon.k.controller.interaction;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
-import de.uniks.stpmon.k.models.dialogue.DialogueItem;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.InteractionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -31,6 +32,8 @@ class DialogueControllerTest extends ApplicationTest {
     InputHandler inputHandler;
     @Spy
     InteractionStorage interactionStorage;
+    @Mock
+    InteractionService interactionService;
     @InjectMocks
     DialogueController controller;
     @Spy
@@ -54,7 +57,7 @@ class DialogueControllerTest extends ApplicationTest {
         // Precondition: Dialog invisible at start
         verifyThat("#dialoguePane", not(Node::isVisible));
 
-        interactionStorage.setDialogue(Dialogue.create(new DialogueItem("First")));
+        interactionStorage.setDialogue(Dialogue.builder().addItem("First").create());
 
         // Open dialog
         type(KeyCode.ENTER);
@@ -98,9 +101,12 @@ class DialogueControllerTest extends ApplicationTest {
         verifyThat("#dialoguePane", not(Node::isVisible));
 
         Runnable action = Mockito.mock(Runnable.class);
-        interactionStorage.setDialogue(Dialogue.create(
-                new DialogueItem("First"),
-                new DialogueItem("Second", action)));
+        interactionStorage.setDialogue(
+                Dialogue.builder()
+                        .addItem("First")
+                        .addItem().setText("Second").addAction(action).endItem()
+                        .create()
+        );
         // Open dialog with enter
         type(KeyCode.ENTER);
         waitForFxEvents();

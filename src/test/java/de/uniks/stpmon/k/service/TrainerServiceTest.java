@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
-import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -28,9 +28,8 @@ public class TrainerServiceTest {
 
     @Test
     public void getMe() {
-        NPCInfo npcInfo = new NPCInfo(false);
         Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
+                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         Trainer test = trainerService.getMe();
@@ -46,9 +45,8 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //test when oldTrainer is not null
-        NPCInfo npcInfo = new NPCInfo(false);
         Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
+                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         when(regionApiService.deleteTrainer("0", "1")).thenReturn(Observable.just(trainer));
@@ -71,16 +69,15 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up trainer which will be updated
-        NPCInfo npcInfo = new NPCInfo(false);
         Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
+                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         //define mock
         final ArgumentCaptor<UpdateTrainerDto> captor = ArgumentCaptor.forClass(UpdateTrainerDto.class);
         when(regionApiService.updateTrainer(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), captor.capture()))
                 .thenReturn(Observable.just(
-                        new Trainer("1", "0", "0", "Bob", "0", 0, "0", 0, 0, 0, npcInfo)
+                        new Trainer("1", "0", "0", "Bob", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO)
                 ));
 
         //action
@@ -101,16 +98,15 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up trainer which will be updated
-        NPCInfo npcInfo = new NPCInfo(false);
         Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
+                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         //define mock
         final ArgumentCaptor<UpdateTrainerDto> captor = ArgumentCaptor.forClass(UpdateTrainerDto.class);
         when(regionApiService.updateTrainer(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), captor.capture()))
                 .thenReturn(Observable.just(
-                        new Trainer("1", "0", "0", "0", "101", 0, "0", 0, 0, 0, npcInfo)
+                        new Trainer("1", "0", "0", "0", "101", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO)
                 ));
 
         //action
