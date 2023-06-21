@@ -32,6 +32,10 @@ public class BackpackMenuController extends Controller {
     BackpackController backpackController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<MonBoxController> monBoxControllerProvider;
 
     @Inject
     public BackpackMenuController() {
@@ -64,7 +68,7 @@ public class BackpackMenuController extends Controller {
         backpackController.closeBackPackMenu();
         switch (option) {
             // delete dummy method after functionality is implemented
-            case MONSTER_LIST -> dummyMethod();
+            case MONSTER_LIST -> openMonBox();
             case MONSTERS -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> dummyMethod();
         }
@@ -76,5 +80,9 @@ public class BackpackMenuController extends Controller {
     }
 
     private void dummyMethod() {
+    }
+
+    private void openMonBox() {
+        ingameControllerProvider.get().ingameWrappingHBox.getChildren().add(monBoxControllerProvider.get().render());
     }
 }

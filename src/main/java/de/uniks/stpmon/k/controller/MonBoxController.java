@@ -31,7 +31,7 @@ public class MonBoxController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        loadImage(monBoxImage, "monBox.png");
+        loadImage(monBoxImage, "monGrid_v4.png");
 
 
         return parent;

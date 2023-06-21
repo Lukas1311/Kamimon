@@ -129,4 +129,7 @@ public class IngameController extends PortalController {
         ingameWrappingHBox.getChildren().remove(backpackMenu);
     }
 
+    public void openMonbox() {
+    }
+
 }
