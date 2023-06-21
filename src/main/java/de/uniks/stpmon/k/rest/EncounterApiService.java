@@ -16,7 +16,7 @@ public interface EncounterApiService {
 
     @GET("regions/{region}/encounters/{id}")
     Observable<Encounter> getEncounter(@Path("region") String regionId,
-                                       @Path("id") String id);
+                                       @Path("id") String encounterId);
 
     //------------- Encounter Opponents -------------------------------
     @GET("regions/{region}/trainers/{trainer}/opponents")
@@ -30,16 +30,16 @@ public interface EncounterApiService {
     @GET("regions/{region}/encounters/{encounter}/opponents/{id}")
     Observable<Opponent> getEncounterOpponent(@Path("region") String regionId,
                                               @Path("encounter") String encounterId,
-                                              @Path("id") String id);
+                                              @Path("id") String opponentId);
 
     @PATCH("regions/{region}/encounters/{encounter}/opponents/{id}") //Make a move or switch monsters
     Observable<Opponent> makeMove(@Path("region") String regionId,
                                   @Path("encounter") String encounterId,
-                                  @Path("id") String id,
+                                  @Path("id") String opponentId,
                                   @Body UpdateOpponentDto opponentDto);
 
     @DELETE("regions/{region}/encounters/{encounter}/opponents/{id}") // Flee from a wild encounter
     Observable<Opponent> fleeEncounter(@Path("region") String regionId,
                                        @Path("encounter") String encounterId,
-                                       @Path("id") String id);
+                                       @Path("id") String opponentId);
 }

@@ -19,7 +19,6 @@ public record Opponent(
 
         String monster, // Can be patched when set to undefined/null. This happens after the monster died. You then have to patch a new monster ID to change the monster without expending your move.
 
-
         IMove move,
 
         Result result, // The results of the last round.
