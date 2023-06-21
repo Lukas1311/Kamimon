@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.controller.interaction;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.models.Dialogue;
-import de.uniks.stpmon.k.models.DialogueOption;
+import de.uniks.stpmon.k.models.dialogue.Dialogue;
+import de.uniks.stpmon.k.models.dialogue.DialogueItem;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
@@ -54,7 +54,7 @@ class DialogueControllerTest extends ApplicationTest {
         // Precondition: Dialog invisible at start
         verifyThat("#dialoguePane", not(Node::isVisible));
 
-        interactionStorage.setDialogue(Dialogue.create(new DialogueOption("First")));
+        interactionStorage.setDialogue(Dialogue.create(new DialogueItem("First")));
 
         // Open dialog
         type(KeyCode.ENTER);
@@ -99,8 +99,8 @@ class DialogueControllerTest extends ApplicationTest {
 
         Runnable action = Mockito.mock(Runnable.class);
         interactionStorage.setDialogue(Dialogue.create(
-                new DialogueOption("First"),
-                new DialogueOption("Second", action)));
+                new DialogueItem("First"),
+                new DialogueItem("Second", action)));
         // Open dialog with enter
         type(KeyCode.ENTER);
         waitForFxEvents();

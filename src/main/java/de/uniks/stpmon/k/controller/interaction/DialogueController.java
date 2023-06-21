@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.controller.interaction;
 
 import de.uniks.stpmon.k.controller.ToastController;
-import de.uniks.stpmon.k.models.Dialogue;
-import de.uniks.stpmon.k.models.DialogueOption;
+import de.uniks.stpmon.k.models.dialogue.Dialogue;
+import de.uniks.stpmon.k.models.dialogue.DialogueItem;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
@@ -43,7 +43,7 @@ public class DialogueController extends ToastController {
     private boolean isHovered;
 
     private Dialogue dialogue;
-    private DialogueOption option;
+    private DialogueItem item;
     private int index;
 
     @Inject
@@ -140,14 +140,14 @@ public class DialogueController extends ToastController {
     }
 
     private boolean performAction() {
-        if (option == null) {
+        if (item == null) {
             return false;
         }
         // Consume even if still in animation to prevent skipping an option
         if (transition != null) {
             return true;
         }
-        Runnable action = option.getAction();
+        Runnable action = item.getAction();
         if (action != null) {
             action.run();
         }
@@ -166,13 +166,13 @@ public class DialogueController extends ToastController {
     }
 
     private void setIndex(int index) {
-        this.index = index % dialogue.options().length;
-        option = dialogue.options()[index];
-        textContainer.setText(option.getText());
+        this.index = index % dialogue.getItems().length;
+        item = dialogue.getItems()[index];
+        textContainer.setText(item.getText());
     }
 
     private boolean hasNext() {
-        return option.getNext() != null;
+        return item.getNext() != null;
     }
 
     public boolean doNext() {

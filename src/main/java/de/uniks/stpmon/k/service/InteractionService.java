@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.models.Dialogue;
-import de.uniks.stpmon.k.models.DialogueOption;
+import de.uniks.stpmon.k.models.dialogue.Dialogue;
+import de.uniks.stpmon.k.models.dialogue.DialogueItem;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
@@ -32,7 +32,7 @@ public class InteractionService implements ILifecycleService {
     public Dialogue getDialogue(Trainer trainer) {
         NPCInfo info = trainer.npc();
         if(info.canHeal()){
-            return Dialogue.create(new DialogueOption("Can heal ?"));
+            return Dialogue.create(new DialogueItem("Can heal ?"));
         }
         return null;
     }
