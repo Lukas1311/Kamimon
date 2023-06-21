@@ -14,13 +14,14 @@ import java.util.Optional;
 public class TrainerAreaCache extends SimpleCache<Trainer, String> {
 
     private TrainerCache trainerCache;
+    private String regionId;
+    private String areaId;
+    private PositionCache positionCache;
+
     @Inject
     TrainerStorage trainerStorage;
     @Inject
-    protected EventListener listener;
-
-    private String regionId;
-    private String areaId;
+    EventListener listener;
 
     @Inject
     public TrainerAreaCache() {
@@ -39,6 +40,8 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
     @Override
     public ICache<Trainer, String> init() {
         super.init();
+        positionCache = new PositionCache(this);
+        positionCache.init();
         disposables.add(listener.listen(Socket.UDP,
                         String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
                 .subscribe(event -> {
@@ -85,5 +88,38 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
     @Override
     public String getId(Trainer value) {
         return value._id();
+    }
+
+    private static int getPositionIndex(int x, int y) {
+        return x << 0xF | y;
+    }
+
+    public Optional<Trainer> getTrainerAt(int x, int y) {
+        if(x < 0 || y < 0){
+            return Optional.empty();
+        }
+        return positionCache.getValue(getPositionIndex(x, y));
+    }
+
+    private static class PositionCache extends SimpleCache<Trainer, Integer> {
+
+        private final TrainerAreaCache trainerAreaCache;
+
+        public PositionCache(TrainerAreaCache trainerAreaCache) {
+            this.trainerAreaCache = trainerAreaCache;
+        }
+
+        @Override
+        protected Observable<List<Trainer>> getInitialValues() {
+            return trainerAreaCache.onInitialized()
+                    .andThen(trainerAreaCache.getValues()
+                            // just take the first values
+                            .take(1));
+        }
+
+        @Override
+        public Integer getId(Trainer value) {
+            return getPositionIndex(value.x(), value.y());
+        }
     }
 }
