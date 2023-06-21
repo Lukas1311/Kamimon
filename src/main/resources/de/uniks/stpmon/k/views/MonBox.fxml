@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.MonBox">
+   <center>
+      <StackPane fx:id="monBoxStackPane" BorderPane.alignment="CENTER">
+         <VBox alignment="TOP_CENTER">
+            <Pane prefHeight="28.0" prefWidth="432.0"/>
+            <GridPane fx:id="monTeam">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="-Infinity" minHeight="69.0" vgrow="SOMETIMES"/>
+               </rowConstraints>
+               <VBox.margin>
+                  <Insets/>
+               </VBox.margin>
+               <padding>
+                  <Insets left="9.0"/>
+               </padding>
+            </GridPane>
+            <Pane prefHeight="8.0" prefWidth="432.0"/>
+            <GridPane fx:id="monStorage">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
+                  <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
+                  <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
+                  <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
+                  <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
+               </rowConstraints>
+               <padding>
+                  <Insets left="9.0"/>
+               </padding>
+            </GridPane>
+         </VBox>
+         <ImageView fx:id="monBoxImage" fitHeight="461.0" fitWidth="432.0" pickOnBounds="true" preserveRatio="true"/>
+      </StackPane>
+   </center>
+</BorderPane>
