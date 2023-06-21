@@ -39,16 +39,18 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
 
     @Override
     public ICache<Trainer, String> init() {
-        super.init();
         positionCache = new PositionCache(this);
+        childCaches.add(positionCache);
+
+        super.init();
         positionCache.init();
         disposables.add(listener.listen(Socket.UDP,
                         String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
                 .subscribe(event -> {
-                            final MoveTrainerDto dto = event.data();
-                            // Get trainer from parent cache to get trainers which changed area
-                            Optional<Trainer> trainerOptional = trainerCache.getValue(dto._id());
-                            // Should never happen, trainer moves before he exists
+                    final MoveTrainerDto dto = event.data();
+                    // Get trainer from parent cache to get trainers which changed area
+                    Optional<Trainer> trainerOptional = trainerCache.getValue(dto._id());
+                    // Should never happen, trainer moves before he exists
                             if (trainerOptional.isEmpty()) {
                                 return;
                             }
@@ -115,6 +117,20 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
                     .andThen(trainerAreaCache.getValues()
                             // just take the first values
                             .take(1));
+        }
+
+        @Override
+        public void beforeAdd(Trainer value) {
+            Optional<Trainer> oldTrainer = trainerAreaCache.getValue(value._id());
+            // Remove old trainer if he exists
+            oldTrainer.ifPresent(this::removeValue);
+        }
+
+        @Override
+        public void beforeUpdate(Trainer value) {
+            Optional<Trainer> oldTrainer = trainerAreaCache.getValue(value._id());
+            // Remove old trainer if he exists
+            oldTrainer.ifPresent(this::removeValue);
         }
 
         @Override

@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  * @param <T> The data type to store.
  */
-public interface ICache<T, K> extends ILifecycleService {
+public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
     /**
      * Destroy the cache and all its values.
      * <p>
@@ -63,27 +63,6 @@ public interface ICache<T, K> extends ILifecycleService {
      * @return True if the cache has a value with the given id.
      */
     boolean hasValue(K id);
-
-    /**
-     * Add a value to the cache.
-     *
-     * @param value The value to add.
-     */
-    void addValue(T value);
-
-    /**
-     * Update a value in the cache.
-     *
-     * @param value The value to update.
-     */
-    void updateValue(T value);
-
-    /**
-     * Remove a value from the cache.
-     *
-     * @param value The value to remove.
-     */
-    void removeValue(T value);
 
     /**
      * Retrieve a value by its id.

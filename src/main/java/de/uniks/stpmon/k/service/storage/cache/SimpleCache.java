@@ -81,7 +81,7 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
                 .forEach(value -> valuesById.put(getId(value), value));
         subject.onNext(new ArrayList<>(valuesById.values()));
         for (SimpleCache<T, ?> childCache : childCaches) {
-            childCache.addValues(values);
+            childCache.addValues(subject.getValue());
         }
     }
 
@@ -113,6 +113,11 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             return;
         }
         K id = getId(value);
+
+        for (SimpleCache<T, ?> childCache : childCaches) {
+            childCache.beforeAdd(value);
+        }
+
         valuesById.put(id, value);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
@@ -144,6 +149,11 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             removeValue(value);
             return;
         }
+
+        for (SimpleCache<T, ?> childCache : childCaches) {
+            childCache.beforeUpdate(value);
+        }
+
         valuesById.put(id, value);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
@@ -166,6 +176,11 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         if (!hasValue(id)) {
             return;
         }
+
+        for (SimpleCache<T, ?> childCache : childCaches) {
+            childCache.beforeRemove(value);
+        }
+
         valuesById.remove(id);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
