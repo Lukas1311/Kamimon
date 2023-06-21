@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Result;
-import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.rest.EncounterApiService;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class EncounterServiceTest {
     @Mock
-    RegionApiService regionApiService;
+    EncounterApiService encounterApiService;
     @InjectMocks
     EncounterService encounterService;
 
@@ -89,7 +89,7 @@ class EncounterServiceTest {
         //define mock
         List<Encounter> encounterList = new ArrayList<>();
         encounterList.add(encounter);
-        when(regionApiService.getEncounters(any()))
+        when(encounterApiService.getEncounters(any()))
                 .thenReturn(Observable.just(encounterList));
 
         //action
@@ -103,7 +103,7 @@ class EncounterServiceTest {
         assertEquals(false, returnEncounters.get(0).isWild());
 
         //check mock
-        verify(regionApiService).getEncounters(any());
+        verify(encounterApiService).getEncounters(any());
     }
 
     @Test
@@ -111,7 +111,7 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
 
         //define mock
-        when(regionApiService.getEncounter(any(), any()))
+        when(encounterApiService.getEncounter(any(), any()))
                 .thenReturn(Observable.just(encounter));
 
         //action
@@ -125,7 +125,7 @@ class EncounterServiceTest {
         assertEquals(false, returnEncounter.isWild());
 
         // check mock
-        verify(regionApiService).getEncounter(any(), any());
+        verify(encounterApiService).getEncounter(any(), any());
     }
 
     //---------------- Encounters Opponents ----------------------------
@@ -137,7 +137,7 @@ class EncounterServiceTest {
         //define mock
         List<Opponent> opponentList = new ArrayList<>();
         opponentList.add(trainerOpponent);
-        when(regionApiService.getTrainerOpponents(any(), any()))
+        when(encounterApiService.getTrainerOpponents(any(), any()))
                 .thenReturn(Observable.just(opponentList));
 
         //action
@@ -159,7 +159,7 @@ class EncounterServiceTest {
         assertEquals(0, returnOpponents.get(0).coins());
 
         //check mock
-        verify(regionApiService).getTrainerOpponents(any(), any());
+        verify(encounterApiService).getTrainerOpponents(any(), any());
     }
 
     @Test
@@ -169,7 +169,7 @@ class EncounterServiceTest {
         //define mock
         List<Opponent> opponentList = new ArrayList<>();
         opponentList.add(encounterOpponent);
-        when(regionApiService.getEncounterOpponents(any(), any()))
+        when(encounterApiService.getEncounterOpponents(any(), any()))
                 .thenReturn(Observable.just(opponentList));
 
         //action
@@ -191,7 +191,7 @@ class EncounterServiceTest {
         assertEquals(1, returnOpponents.get(0).coins());
 
         //check mock
-        verify(regionApiService).getEncounterOpponents(any(), any());
+        verify(encounterApiService).getEncounterOpponents(any(), any());
     }
 
     @Test
@@ -199,7 +199,7 @@ class EncounterServiceTest {
         Opponent opponent = getDummyOpponents().get(0);
 
         //define mock
-        when(regionApiService.getEncounterOpponent(any(), any(), any()))
+        when(encounterApiService.getEncounterOpponent(any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
         //action
@@ -220,7 +220,7 @@ class EncounterServiceTest {
         assertEquals(0, returnOpponent.coins());
 
         // check mock
-        verify(regionApiService).getEncounterOpponent(any(), any(), any());
+        verify(encounterApiService).getEncounterOpponent(any(), any(), any());
     }
 
     @Test
@@ -236,7 +236,7 @@ class EncounterServiceTest {
         Monster target = new Monster("1", null, null, null, null, null, null, null);
 
         //define mock
-        when(regionApiService.makeMove(any(), any(), any(), any()))
+        when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
         //action
@@ -257,7 +257,7 @@ class EncounterServiceTest {
         assertEquals(0, returnOpponent.coins());
 
         //check mock
-        verify(regionApiService).makeMove(any(), any(), any(), any());
+        verify(encounterApiService).makeMove(any(), any(), any(), any());
     }
 
     @Test
@@ -269,7 +269,7 @@ class EncounterServiceTest {
         Monster nextMonster = new Monster("1", null, null, null, null, null, null, null);
 
         //define mock
-        when(regionApiService.makeMove(any(), any(), any(), any()))
+        when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
         //action
@@ -290,7 +290,7 @@ class EncounterServiceTest {
         assertEquals(1, returnOpponent.coins());
 
         //check mock
-        verify(regionApiService).makeMove(any(), any(), any(), any());
+        verify(encounterApiService).makeMove(any(), any(), any(), any());
     }
 
     @Test
@@ -298,7 +298,7 @@ class EncounterServiceTest {
         Opponent opponent = getDummyOpponents().get(1);
 
         //define mock
-        when(regionApiService.fleeEncounter(any(), any(), any()))
+        when(encounterApiService.fleeEncounter(any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
         //action
@@ -319,6 +319,6 @@ class EncounterServiceTest {
         assertEquals(1, returnOpponent.coins());
 
         //check mock
-        verify(regionApiService).fleeEncounter(any(), any(), any());
+        verify(encounterApiService).fleeEncounter(any(), any(), any());
     }
 }

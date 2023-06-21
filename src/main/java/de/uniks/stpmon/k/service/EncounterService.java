@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.rest.EncounterApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class EncounterService {
     }
 
     @Inject
-    RegionApiService regionApiService;
+    EncounterApiService encounterApiService;
 
     @Inject
     public EncounterService() {
@@ -41,38 +41,38 @@ public class EncounterService {
     //---------------- Region Encounters ----------------------------
 
     public Observable<List<Encounter>> getEncounters(String regionId) {
-        return regionApiService.getEncounters(regionId);
+        return encounterApiService.getEncounters(regionId);
     }
 
     public Observable<Encounter> getEncounter(String regionId, String encounterId) {
-        return regionApiService.getEncounter(regionId, encounterId);
+        return encounterApiService.getEncounter(regionId, encounterId);
     }
 
     //---------------- Encounters Opponents ----------------------------
 
     public Observable<List<Opponent>> getTrainerOpponents(String regionId, String trainerId) {
-        return regionApiService.getTrainerOpponents(regionId, trainerId);
+        return encounterApiService.getTrainerOpponents(regionId, trainerId);
     }
 
     public Observable<List<Opponent>> getEncounterOpponents(String regionId, String encounterId) {
-        return regionApiService.getEncounterOpponents(regionId, encounterId);
+        return encounterApiService.getEncounterOpponents(regionId, encounterId);
     }
 
     public Observable<Opponent> getEncounterOpponent(String regionId, String encounterId, String id) {
-        return regionApiService.getEncounterOpponent(regionId, encounterId, id);
+        return encounterApiService.getEncounterOpponent(regionId, encounterId, id);
     }
 
     public Observable<Opponent> makeAbilityMove(String regionId, String encounterId, String id, Monster attacker, int ability, Monster target) {
         UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(Moves.ABILITY.toString(), ability , target._id()),null);
-        return regionApiService.makeMove(regionId, encounterId, id, dto);
+        return encounterApiService.makeMove(regionId, encounterId, id, dto);
     }
 
     public Observable<Opponent> makeChangeMonsterMove(String regionId, String encounterId, String id, Monster currentMonster, Monster nextMonster) {
         UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), null, new ChangeMonsterMove(Moves.CHANGE_MONSTER.toString(), nextMonster._id()));
-        return regionApiService.makeMove(regionId, encounterId, id, dto);
+        return encounterApiService.makeMove(regionId, encounterId, id, dto);
     }
 
     public Observable<Opponent> fleeEncounter(String regionId, String encounterId, String id) {
-        return regionApiService.fleeEncounter(regionId, encounterId, id);
+        return encounterApiService.fleeEncounter(regionId, encounterId, id);
     }
 }
