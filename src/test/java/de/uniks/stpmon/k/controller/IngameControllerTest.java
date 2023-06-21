@@ -1,9 +1,15 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Dialogue;
+import de.uniks.stpmon.k.models.DialogueOption;
+import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -20,9 +26,11 @@ import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
+import static org.testfx.api.FxAssert.verifyThat;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -47,8 +55,10 @@ public class IngameControllerTest extends ApplicationTest {
     Provider<IngameController> ingameControllerProvider;
     @Mock
     @SuppressWarnings("unused")
+    DialogueController dialogueController;
+    @Mock
+    @SuppressWarnings("unused")
     WorldController worldController;
-
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
@@ -71,8 +81,6 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void showBackPackMenu() {
-
-
         final HybridController hybridController = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(hybridController);
 
