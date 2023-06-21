@@ -2,16 +2,15 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
-import de.uniks.stpmon.k.models.Encounter;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.models.Result;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.rest.EncounterApiService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,17 +27,30 @@ import static org.mockito.Mockito.when;
 class EncounterServiceTest {
     @Mock
     EncounterApiService encounterApiService;
+    @Spy
+    RegionStorage regionStorage;
     @InjectMocks
     EncounterService encounterService;
 
-    private Encounter getDummyEncounters() {
-        return new Encounter(
+    private void initRegion() {
+        regionStorage.setRegion(new Region(
                 "0",
+                null,
+                null,
+                null
+        ));
+    }
+
+    private Encounter getDummyEncounters() {
+        initRegion();
+        return new Encounter(
+                regionStorage.getRegion()._id(),
                 "regionId",
                 false);
     }
 
     private List<Opponent> getDummyOpponents() {
+        initRegion();
         Opponent opponent1 = new Opponent(
                 "0",
                 "encounter1Id",
@@ -52,7 +63,6 @@ class EncounterServiceTest {
                         0,
                         "targetId"
                 ),
-                null,
                 new Result(
                         "ability-success",
                         0,
@@ -66,7 +76,6 @@ class EncounterServiceTest {
                 true,
                 true,
                 "monster2Id",
-                null,
                 new ChangeMonsterMove(
                         "change-monster",
                         "monster3Id"
@@ -94,7 +103,7 @@ class EncounterServiceTest {
 
         //action
         final List<Encounter> returnEncounters = encounterService
-                .getEncounters("regionId")
+                .getEncounters()
                 .blockingFirst();
 
         //check values
@@ -116,7 +125,7 @@ class EncounterServiceTest {
 
         //action
         final Encounter returnEncounter = encounterService
-                .getEncounter("regionId", "id")
+                .getEncounter("id")
                 .blockingFirst();
 
         //check values
@@ -142,7 +151,7 @@ class EncounterServiceTest {
 
         //action
         final List<Opponent> returnOpponents = encounterService
-                .getTrainerOpponents("regionId", "trainerId")
+                .getTrainerOpponents("trainerId")
                 .blockingFirst();
 
         //check values
@@ -153,8 +162,7 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponents.get(0).isAttacker());
         assertEquals(false, returnOpponents.get(0).isNPC());
         assertEquals("monster1Id", returnOpponents.get(0).monster());
-        assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponents.get(0).abilityMove());
-        assertNull(returnOpponents.get(0).changeMonsterMove());
+        assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponents.get(0).move());
         assertEquals(new Result("ability-success", 0, "effective"), returnOpponents.get(0).result());
         assertEquals(0, returnOpponents.get(0).coins());
 
@@ -174,7 +182,7 @@ class EncounterServiceTest {
 
         //action
         final List<Opponent> returnOpponents = encounterService
-                .getEncounterOpponents("regionId", "encounterId")
+                .getEncounterOpponents("encounterId")
                 .blockingFirst();
 
         //check values
@@ -185,8 +193,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponents.get(0).isAttacker());
         assertEquals(true, returnOpponents.get(0).isNPC());
         assertEquals("monster2Id", returnOpponents.get(0).monster());
-        assertNull(returnOpponents.get(0).abilityMove());
-        assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponents.get(0).changeMonsterMove());
+        assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponents.get(0).move());
         assertEquals(new Result("monster-changed", null, null), returnOpponents.get(0).result());
         assertEquals(1, returnOpponents.get(0).coins());
 
@@ -204,7 +211,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .getEncounterOpponent("regionId", "encounterId", "id")
+                .getEncounterOpponent("encounterId", "id")
                 .blockingFirst();
 
         //check value
@@ -214,8 +221,7 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponent.isAttacker());
         assertEquals(false, returnOpponent.isNPC());
         assertEquals("monster1Id", returnOpponent.monster());
-        assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.abilityMove());
-        assertNull(returnOpponent.changeMonsterMove());
+        assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.move());
         assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.result());
         assertEquals(0, returnOpponent.coins());
 
@@ -241,7 +247,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .makeAbilityMove("regionId", "encounterId", "id", attacker, attacker.abilities().get("Tackle"), target)
+                .makeAbilityMove("encounterId", "id", attacker, attacker.abilities().get("Tackle"), target)
                 .blockingFirst();
 
         //check value
@@ -251,8 +257,7 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponent.isAttacker());
         assertEquals(false, returnOpponent.isNPC());
         assertEquals("monster1Id", returnOpponent.monster());
-        assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.abilityMove());
-        assertNull(returnOpponent.changeMonsterMove());
+        assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.move());
         assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.result());
         assertEquals(0, returnOpponent.coins());
 
@@ -274,7 +279,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .makeChangeMonsterMove("regionId", "encounterId", "id", attacker, nextMonster)
+                .makeChangeMonsterMove("encounterId", "id", attacker, nextMonster)
                 .blockingFirst();
 
         //check value
@@ -284,8 +289,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponent.isAttacker());
         assertEquals(true, returnOpponent.isNPC());
         assertEquals("monster2Id", returnOpponent.monster());
-        assertNull(returnOpponent.abilityMove());
-        assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.changeMonsterMove());
+        assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.move());
         assertEquals(new Result("monster-changed", null, null), returnOpponent.result());
         assertEquals(1, returnOpponent.coins());
 
@@ -303,7 +307,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .fleeEncounter("regionId", "encounterId", "id")
+                .fleeEncounter("encounterId", "id")
                 .blockingFirst();
 
         //check values
@@ -313,8 +317,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponent.isAttacker());
         assertEquals(true, returnOpponent.isNPC());
         assertEquals("monster2Id", returnOpponent.monster());
-        assertNull(returnOpponent.abilityMove());
-        assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.changeMonsterMove());
+        assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.move());
         assertEquals(new Result("monster-changed", null, null), returnOpponent.result());
         assertEquals(1, returnOpponent.coins());
 

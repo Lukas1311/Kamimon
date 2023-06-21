@@ -8,5 +8,5 @@ public record AbilityMove(
 
         String target // Opponent ID
 
-) {
+) implements IMove {
 }

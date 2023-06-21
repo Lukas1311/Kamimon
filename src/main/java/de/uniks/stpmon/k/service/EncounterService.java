@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.rest.EncounterApiService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -33,46 +34,49 @@ public class EncounterService {
 
     @Inject
     EncounterApiService encounterApiService;
-
+    
+    @Inject
+    RegionStorage regionStorage;
+    
     @Inject
     public EncounterService() {
     }
 
     //---------------- Region Encounters ----------------------------
 
-    public Observable<List<Encounter>> getEncounters(String regionId) {
-        return encounterApiService.getEncounters(regionId);
+    public Observable<List<Encounter>> getEncounters() {
+        return encounterApiService.getEncounters(regionStorage.getRegion()._id());
     }
 
-    public Observable<Encounter> getEncounter(String regionId, String encounterId) {
-        return encounterApiService.getEncounter(regionId, encounterId);
+    public Observable<Encounter> getEncounter(String encounterId) {
+        return encounterApiService.getEncounter(regionStorage.getRegion()._id(), encounterId);
     }
 
     //---------------- Encounters Opponents ----------------------------
 
-    public Observable<List<Opponent>> getTrainerOpponents(String regionId, String trainerId) {
-        return encounterApiService.getTrainerOpponents(regionId, trainerId);
+    public Observable<List<Opponent>> getTrainerOpponents(String trainerId) {
+        return encounterApiService.getTrainerOpponents(regionStorage.getRegion()._id(), trainerId);
     }
 
-    public Observable<List<Opponent>> getEncounterOpponents(String regionId, String encounterId) {
-        return encounterApiService.getEncounterOpponents(regionId, encounterId);
+    public Observable<List<Opponent>> getEncounterOpponents(String encounterId) {
+        return encounterApiService.getEncounterOpponents(regionStorage.getRegion()._id(), encounterId);
     }
 
-    public Observable<Opponent> getEncounterOpponent(String regionId, String encounterId, String id) {
-        return encounterApiService.getEncounterOpponent(regionId, encounterId, id);
+    public Observable<Opponent> getEncounterOpponent(String encounterId, String id) {
+        return encounterApiService.getEncounterOpponent(regionStorage.getRegion()._id(), encounterId, id);
     }
 
-    public Observable<Opponent> makeAbilityMove(String regionId, String encounterId, String id, Monster attacker, int ability, Monster target) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(Moves.ABILITY.toString(), ability , target._id()),null);
-        return encounterApiService.makeMove(regionId, encounterId, id, dto);
+    public Observable<Opponent> makeAbilityMove(String encounterId, String id, Monster attacker, int ability, Monster target) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(Moves.ABILITY.toString(), ability , target._id()));
+        return encounterApiService.makeMove(regionStorage.getRegion()._id(), encounterId, id, dto);
     }
 
-    public Observable<Opponent> makeChangeMonsterMove(String regionId, String encounterId, String id, Monster currentMonster, Monster nextMonster) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), null, new ChangeMonsterMove(Moves.CHANGE_MONSTER.toString(), nextMonster._id()));
-        return encounterApiService.makeMove(regionId, encounterId, id, dto);
+    public Observable<Opponent> makeChangeMonsterMove(String encounterId, String id, Monster currentMonster, Monster nextMonster) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), new ChangeMonsterMove(Moves.CHANGE_MONSTER.toString(), nextMonster._id()));
+        return encounterApiService.makeMove(regionStorage.getRegion()._id(), encounterId, id, dto);
     }
 
-    public Observable<Opponent> fleeEncounter(String regionId, String encounterId, String id) {
-        return encounterApiService.fleeEncounter(regionId, encounterId, id);
+    public Observable<Opponent> fleeEncounter(String encounterId, String id) {
+        return encounterApiService.fleeEncounter(regionStorage.getRegion()._id(), encounterId, id);
     }
 }

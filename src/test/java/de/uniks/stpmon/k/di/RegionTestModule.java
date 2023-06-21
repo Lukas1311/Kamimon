@@ -5,7 +5,6 @@ import dagger.Provides;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.rest.RegionApiService;
@@ -29,10 +28,10 @@ public class RegionTestModule {
             //String is regionId
             final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
             final Map<String, List<Trainer>> trainersHashMap = new HashMap<>();
-            final Map<String, List<Encounter>> encounterHashMap = new HashMap<>();
+
             final List<Monster> monsters = new ArrayList<>();
-            final List<Opponent> trainerOpponents = new ArrayList<>();
-            final List<Opponent> encounterOpponents = new ArrayList<>();
+
+
 
             /**
              * Adds 2 DummyRegions to the regions list with ids {"id0", "id1"} and
@@ -285,61 +284,6 @@ public class RegionTestModule {
                 return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()
                         -> Observable.error(new Throwable("404 Not found")));
             }
-
-            @Override
-            public Observable<List<Encounter>> getEncounters(String regionId) {
-                if (regions.isEmpty()) {
-                    initDummyRegions();
-                }
-                List<Encounter> encounterList = encounterHashMap.get(regionId);
-                if (encounterList != null) {
-                    return Observable.just(encounterList);
-                }
-                return Observable.empty();
-            }
-
-            @Override
-            public Observable<Encounter> getEncounter(String region, String id) {
-                if (regions.isEmpty()) {
-                    initDummyRegions();
-                }
-                List<Encounter> encounterList = encounterHashMap.get(region);
-                if (encounterList == null || encounterList.isEmpty()) {
-                    return Observable.error(new Throwable("404 Not found"));
-                }
-                Optional<Encounter> encounterOptional = encounterList.stream().filter(a -> a._id().equals(id)).findFirst();
-                return encounterOptional.map(Observable::just).orElseGet(Observable::empty);
-            }
-
-            @Override
-            public Observable<List<Opponent>> getTrainerOpponents(String region, String trainerId) {
-                return Observable.just(trainerOpponents.stream().filter(m -> m.trainer().equals(trainerId)).toList());
-            }
-
-            @Override
-            public Observable<List<Opponent>> getEncounterOpponents(String region, String encounterId) {
-                return Observable.just(encounterOpponents.stream().filter(m -> m.encounter().equals(encounterId)).toList());
-            }
-
-            @Override
-            public Observable<Opponent> getEncounterOpponent(String region, String encounterId, String id) {
-                Optional<Opponent> opponentOptional = encounterOpponents
-                        .stream().filter(m -> m._id().equals(id)).findFirst();
-                return opponentOptional.map(m -> Observable.just(opponentOptional.get())).orElseGet(()
-                        -> Observable.error(new Throwable("404 Not found")));
-            }
-
-            @Override
-            public Observable<Opponent> makeMove(String region, String encounterId, String id, UpdateOpponentDto opponentDto) {
-                return null;
-            }
-
-            @Override
-            public Observable<Opponent> fleeEncounter(String region, String encounterId, String id) {
-                return null;
-            }
         };
     }
-
-
 }
