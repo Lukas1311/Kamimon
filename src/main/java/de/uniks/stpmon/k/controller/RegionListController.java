@@ -74,7 +74,7 @@ public class RegionListController extends PortalController {
                 .subscribe(regions::setAll, this::handleError));
 
 
-        loadImage(imageViewKamimonLetteringRegion, "kamimonLettering.png");
+        loadImage(imageViewKamimonLetteringRegion, "kamimonLettering_new.png");
 
         regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
         return parent;

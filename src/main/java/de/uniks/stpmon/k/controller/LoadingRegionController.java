@@ -42,7 +42,8 @@ public class LoadingRegionController extends Controller {
         regionLabel.setText(currentRegion.name());
         progressBar.setProgress(0);
         progressBar.getStyleClass().add("progress-bar");
-        setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
+        //setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
+        loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");
         imageViewKamimonLettering.setPreserveRatio(true);
         return parent;
     }
