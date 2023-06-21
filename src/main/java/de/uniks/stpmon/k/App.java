@@ -97,7 +97,7 @@ public class App extends Application {
 
     private URL getIconUrl() {
         //requireNonNull was not shown in Lecture, but is needed to eliminate warning
-        return Objects.requireNonNull(App.class.getResource("icon_256.png"));
+        return Objects.requireNonNull(App.class.getResource("icon_500_new.png"));
     }
 
     private void setAppIcon(Stage stage) {
