@@ -2,16 +2,14 @@ package de.uniks.stpmon.k.di;
 
 import dagger.Module;
 import dagger.Provides;
+import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
-import de.uniks.stpmon.k.models.Encounter;
-import de.uniks.stpmon.k.models.Event;
-import de.uniks.stpmon.k.models.Message;
-import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableOperator;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import io.reactivex.rxjava3.subjects.Subject;
 import org.mockito.Mockito;
@@ -30,18 +28,111 @@ public class EncounterTestModule {
             final Map<String, List<Encounter>> encounterHashMap = new HashMap<>();
             final List<Opponent> encounterOpponents = new ArrayList<>();
             final List<Opponent> trainerOpponents = new ArrayList<>();
-            final Subject<Event<Opponent>> events = PublishSubject.create();
+            final Subject<Event<Monster>> monsterEvents = PublishSubject.create();
+            final Subject<Event<Opponent>> opponentEvents = PublishSubject.create();
             @Inject
             EventListener eventListener;
             String opponentId = "0";
 
+            private class EncounterWrapper {
+                private final Encounter encounter;
+                private final List<Opponent> opponentList;
+                private final List<Monster> monsterList;
 
-            private Encounter initDummyEncounter(String regionId) {
-                return new Encounter(
+                public EncounterWrapper(Encounter encounter, String opponentId) {
+                    this.encounter = encounter;
+                    this.opponentList = initDummyOpponent(encounter, opponentId);
+                    this.monsterList = initDummyMonsters();
+                }
+
+                public Encounter getEncounter() {
+                    return encounter;
+                }
+
+                private List<Opponent> initDummyOpponent(Encounter encounter, String opponentId) {
+                    Opponent opponent0 = new Opponent(
+                            opponentId,
+                            encounter._id(),
+                            "trainerId",
+                            true,
+                            false,
+                            monsterList.get(0)._id(),
+                            new AbilityMove(
+                                    "ability",
+                                    0,
+                                    "targetId"
+                            ),
+                            new Result(
+                                    "ability-success",
+                                    0,
+                                    "effective"
+                            ),
+                            0
+                    );
+                    Opponent opponent1 = new Opponent(
+                            "1",
+                            encounter._id(),
+                            "trainer1Id",
+                            false,
+                            true,
+                            monsterList.get(1)._id(),
+                            new ChangeMonsterMove(
+                                    "change-monster",
+                                    "monster2Id"
+                            ),
+                            new Result(
+                                    "monster-changed",
+                                    null,
+                                    null
+                            ),
+                            0
+                    );
+                    return List.of(opponent0, opponent1);
+                }
+
+                private List<Monster> initDummyMonsters() {
+                    //dummy ability
+                    SortedMap<String, Integer> abilities = new TreeMap<>();
+                    abilities.put("Tackle", 20);
+
+                    Monster monster1 = new Monster(
+                            "0",
+                            "0",
+                            1,
+                            1,
+                            1,
+                            abilities,
+                            null,
+                            new MonsterAttributes(
+                                    20,
+                                    20,
+                                    20,
+                                    20));
+                    Monster monster2 = new Monster(
+                            "1",
+                            "1",
+                            2,
+                            2,
+                            2,
+                            null,
+                            null,
+                            new MonsterAttributes(
+                                    20,
+                                    20,
+                                    20,
+                                    20));
+                    return List.of(monster1, monster2);
+                }
+            }
+
+
+
+            private EncounterWrapper initDummyEncounter(String regionId, String opponentId) {
+                return new EncounterWrapper(new Encounter(
                         "0",
                         regionId,
                         false
-                );
+                ), opponentId);
             }
 
             @Override
@@ -97,29 +188,72 @@ public class EncounterTestModule {
                 this.opponentId = opponentId;
 
                 Mockito.when(eventListener.listen(Socket.WS, "encounter.%s.opponents.*.*".formatted(opponentId), Opponent.class))
-                        .thenReturn(events);
+                        .thenReturn(opponentEvents);
+
+                Mockito.when(eventListener.listen(Socket.WS, "trainers.%s.monsters.*.*".formatted(opponentId), Monster.class))
+                        .thenReturn(monsterEvents);
             }
 
             @Override
             public Observable<Opponent> makeMove(String regionId, String encounterId, String opponentId, UpdateOpponentDto opponentDto) {
-                if (regionId.isEmpty()) {
-                    return Observable.error(new Throwable(regionId + "does not exist"));
+                EncounterWrapper encounterWrapper = initDummyEncounter(regionId, opponentId);
+                if (regionId.isEmpty() || encounterId.isEmpty()) {
+                    return Observable.error(new Throwable(regionId + " or " + encounterId + " is empty"));
                 }
-                Opponent opponent = new Opponent(opponentId,
-                        encounterId,
-                        "0",
-                        false,
-                        false,
-                        "monster0",
-                        null,
-                        null,
-                        0
-                        );
-                return null;
+
+                // we only mock 1 v 1 encounters
+                //TODO: check if it is a abilityMove
+                if (encounterWrapper.opponentList.get(0)._id().equals(opponentId) && encounterWrapper.opponentList.get(0).move() instanceof AbilityMove) {
+                    //TODO: manipulate the monster (reduce the remaining uses of used ability)
+                    //manipulate the uses of the first ability by replacing it with the same ability but less uses -> dont know if this is the right way
+                    encounterWrapper.monsterList.get(0).abilities().replace("Tackle", 19);
+
+                    //TODO: reduce hp of monster that is attacked (get it via the encounter)
+                    Monster updatedTarget = new Monster("1",
+                            "1",
+                            2,
+                            2,
+                            2,
+                            null,
+                            null,
+                            new MonsterAttributes(
+                                    19,
+                                    20,
+                                    20,
+                                    20));
+                    monsterEvents.onNext(new Event<>("trainers.%s.monsters.%s.updated".formatted(
+                            encounterWrapper.monsterList.get(0).trainer(),
+                            encounterWrapper.monsterList.get(0)),
+                            updatedTarget));
+
+                    //TODO: create result (with ability-success)
+                    Result result = new Result(
+                            "ability-success",
+                            0,
+                            "normal"
+                    );
+
+                    Opponent opponent = new Opponent(opponentId,
+                            encounterId,
+                            "0",
+                            false,
+                            false,
+                            opponentDto.monster(),
+                            opponentDto.move(),
+                            result,
+                            1
+                    );
+                    return Observable.just(opponent);
+                }
+
+
+                return Observable.error(new Throwable("404 Not found"));
             }
 
-            public Observable<Opponent> makeOpponentMove() {
-                //fake ws
+            public Observable<Opponent> makeServerMove() {
+                //TODO: use the makeMove method do attack with the monster of
+                // the other participant the monster of the user
+                // and send the result via websocket
                 return null;
             }
 
@@ -128,8 +262,14 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-
-                return null;
+                Optional<Opponent> opponentOptional = encounterOpponents
+                        .stream().filter(m -> m._id().equals(opponentId)).findFirst();
+                if (opponentOptional.isPresent()) {
+                    encounterOpponents.remove(opponentOptional.get());
+                    Opponent opponent = opponentOptional.get();
+                    opponentEvents.onNext(new Event<>("encounter.%s.opponents.%s.updated".formatted(opponentId, opponent._id()), opponent));
+                }
+                return Observable.error(new Throwable("404 Not found"));
             }
         };
     }
