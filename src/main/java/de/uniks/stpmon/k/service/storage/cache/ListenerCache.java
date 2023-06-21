@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.net.Socket;
 import javax.inject.Inject;
 
 
-public abstract class ListenerCache<T> extends SimpleCache<T> {
+public abstract class ListenerCache<T, K> extends SimpleCache<T, K> {
 
     @Inject
     protected EventListener listener;
@@ -25,7 +25,7 @@ public abstract class ListenerCache<T> extends SimpleCache<T> {
      */
     protected abstract String getEventName();
 
-    public ICache<T> init() {
+    public ICache<T, K> init() {
         super.init();
         disposables.add(listener.listen(Socket.WS, getEventName(), getDataClass())
                 .subscribe(event -> {

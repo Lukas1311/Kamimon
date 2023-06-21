@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  * @param <T> The data type to store.
  */
-public interface ICache<T> extends ILifecycleService {
+public interface ICache<T, K> extends ILifecycleService {
     /**
      * Destroy the cache and all its values.
      * <p>
@@ -31,7 +31,7 @@ public interface ICache<T> extends ILifecycleService {
      * The provided onDestroy runnable is executed when the cache is destroyed.
      * And can be used to clean up other dependencies.
      */
-    ICache<T> init();
+    ICache<T, K> init();
 
     /**
      * Add a runnable that will be executed when the cache is destroyed.
@@ -54,7 +54,7 @@ public interface ICache<T> extends ILifecycleService {
      * @param value The value to retrieve the id from.
      * @return The id of the value.
      */
-    String getId(T value);
+    K getId(T value);
 
     /**
      * Check if the cache has a value with the given id.
@@ -62,7 +62,7 @@ public interface ICache<T> extends ILifecycleService {
      * @param id The id to check.
      * @return True if the cache has a value with the given id.
      */
-    boolean hasValue(String id);
+    boolean hasValue(K id);
 
     /**
      * Add a value to the cache.
@@ -91,7 +91,7 @@ public interface ICache<T> extends ILifecycleService {
      * @param id The id of the value to retrieve.
      * @return The value with the given id as an optional.
      */
-    Optional<T> getValue(String id);
+    Optional<T> getValue(K id);
 
     /**
      * Retrieves an observable that emits the value with the given id.
@@ -99,7 +99,7 @@ public interface ICache<T> extends ILifecycleService {
      * @param id The id of the value to retrieve.
      * @return An observable that observes the value.
      */
-    Observable<Optional<T>> listenValue(String id);
+    Observable<Optional<T>> listenValue(K id);
 
     /**
      * Retrieve an observable that emits the value when they are first added to the cache.
@@ -107,6 +107,13 @@ public interface ICache<T> extends ILifecycleService {
      * @return The observable.
      */
     Observable<T> onCreation();
+
+    /**
+     * Retrieve an observable that emits the value when values are updated in the cache.
+     *
+     * @return The observable.
+     */
+    Observable<T> onUpdate();
 
     /**
      * Retrieve an observable that emits the value when they are removed from the cache.

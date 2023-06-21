@@ -14,7 +14,7 @@ import java.util.List;
  * <p>
  * Do not use this cache directly, use {@link CacheManager} instead.
  */
-public class MonsterCache extends ListenerCache<Monster> {
+public class MonsterCache extends ListenerCache<Monster, String> {
 
     private String trainerId;
     @Inject
@@ -31,7 +31,7 @@ public class MonsterCache extends ListenerCache<Monster> {
     }
 
     @Override
-    public ICache<Monster> init() {
+    public ICache<Monster, String> init() {
         if (trainerId == null) {
             throw new IllegalStateException("TrainerId is not set");
         }

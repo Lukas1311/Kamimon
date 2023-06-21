@@ -10,14 +10,15 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.util.*;
 
-public abstract class SimpleCache<T> implements ICache<T> {
+public abstract class SimpleCache<T, K> implements ICache<T, K> {
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
-    protected final Map<String, T> valuesById = Collections.synchronizedMap(new LinkedHashMap<>());
-    protected final Map<String, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
+    protected final Map<K, T> valuesById = Collections.synchronizedMap(new LinkedHashMap<>());
+    protected final Map<K, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
     protected final PublishSubject<T> onCreate = PublishSubject.create();
+    protected final PublishSubject<T> onUpdate = PublishSubject.create();
     protected final PublishSubject<T> onRemove = PublishSubject.create();
     protected final CompositeDisposable disposables = new CompositeDisposable();
-    protected final Set<SimpleCache<T>> childCaches = new LinkedHashSet<>();
+    protected final Set<SimpleCache<T, ?>> childCaches = new LinkedHashSet<>();
     /**
      * A completable that completes when the cache is initialized.
      */
@@ -37,7 +38,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
      * @param value The value to retrieve the id from.
      * @return The id of the value.
      */
-    public abstract String getId(T value);
+    public abstract K getId(T value);
 
     public void destroy() {
         subject.onComplete();
@@ -45,7 +46,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         status = Status.DESTROYED;
     }
 
-    public ICache<T> init() {
+    public ICache<T, K> init() {
         if (status != Status.UNINITIALIZED) {
             throw new IllegalStateException("Cache already destroyed or was already initialized");
         }
@@ -79,7 +80,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         values.stream().filter(this::isCacheable)
                 .forEach(value -> valuesById.put(getId(value), value));
         subject.onNext(new ArrayList<>(valuesById.values()));
-        for (SimpleCache<T> childCache : childCaches) {
+        for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.addValues(values);
         }
     }
@@ -95,7 +96,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
     }
 
     @Override
-    public boolean hasValue(String id) {
+    public boolean hasValue(K id) {
         return valuesById.containsKey(id);
     }
 
@@ -111,14 +112,14 @@ public abstract class SimpleCache<T> implements ICache<T> {
         if (!isCacheable(value)) {
             return;
         }
-        String id = getId(value);
+        K id = getId(value);
         valuesById.put(id, value);
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
                 .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
 
         onCreate.onNext(value);
-        for (SimpleCache<T> childCache : childCaches) {
+        for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.addValue(value);
         }
     }
@@ -132,7 +133,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         if (value == null) {
             throw new IllegalArgumentException("value must not be null");
         }
-        String id = getId(value);
+        K id = getId(value);
         // Add if value is not already cached
         if (!hasValue(id)) {
             addValue(value);
@@ -147,7 +148,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         subject.onNext(new ArrayList<>(valuesById.values()));
         Optional.ofNullable(listenersById.get(id))
                 .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
-        for (SimpleCache<T> childCache : childCaches) {
+        for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.updateValue(value);
         }
     }
@@ -161,7 +162,7 @@ public abstract class SimpleCache<T> implements ICache<T> {
         if (value == null) {
             throw new IllegalArgumentException("value must not be null");
         }
-        String id = getId(value);
+        K id = getId(value);
         if (!hasValue(id)) {
             return;
         }
@@ -172,13 +173,13 @@ public abstract class SimpleCache<T> implements ICache<T> {
 
         onRemove.onNext(value);
 
-        for (SimpleCache<T> childCache : childCaches) {
+        for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.removeValue(value);
         }
     }
 
     @Override
-    public Observable<Optional<T>> listenValue(String id) {
+    public Observable<Optional<T>> listenValue(K id) {
         return Observable.create((emitter -> {
             listenersById.put(id, emitter);
             emitter.onNext(getValue(id));
@@ -192,12 +193,16 @@ public abstract class SimpleCache<T> implements ICache<T> {
         return onCreate;
     }
 
+    public Observable<T> onUpdate() {
+        return onUpdate;
+    }
+
     @Override
     public Observable<T> onDeletion() {
         return onRemove;
     }
 
-    public Optional<T> getValue(String id) {
+    public Optional<T> getValue(K id) {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }

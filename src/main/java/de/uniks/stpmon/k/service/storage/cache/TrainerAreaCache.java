@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-public class TrainerAreaCache extends SimpleCache<Trainer> {
+public class TrainerAreaCache extends SimpleCache<Trainer, String> {
 
     private TrainerCache trainerCache;
     @Inject
@@ -37,9 +37,10 @@ public class TrainerAreaCache extends SimpleCache<Trainer> {
     }
 
     @Override
-    public ICache<Trainer> init() {
+    public ICache<Trainer, String> init() {
         super.init();
-        disposables.add(listener.listen(Socket.UDP, String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
+        disposables.add(listener.listen(Socket.UDP,
+                        String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
                 .subscribe(event -> {
                             final MoveTrainerDto dto = event.data();
                             // Get trainer from parent cache to get trainers which changed area
