@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -194,6 +195,9 @@ public class DialogueController extends ToastController {
         if (action != null) {
             action.run();
         }
+        if (option != null && option.getAction() != null) {
+            option.getAction().run();
+        }
         // Close if there is no next option
         if (!doNext()) {
             closeDialogue();
@@ -229,6 +233,10 @@ public class DialogueController extends ToastController {
         optionIndex = (optionIndex + item.getOptions().length) % item.getOptions().length;
         this.optionIndex = optionIndex;
         option = item.getOptions()[optionIndex];
+        Runnable onSelection = option.getSelection();
+        if (onSelection != null) {
+            onSelection.run();
+        }
         if (oldIndex != optionIndex) {
             // Reset old option
             optionTexts[oldIndex].onDeselected();
@@ -246,11 +254,7 @@ public class DialogueController extends ToastController {
         // Amount of spacings in the row
         int spacings = options.length + 1;
         for (int i = 0; i < options.length; i++) {
-            DialogueOptionController controller = optionTexts[i];
-            controller.init();
-            Parent parent = controller.render();
-            children.add(parent);
-            controller.apply(options[i]);
+            Parent parent = createOption(children, options, i);
             optionWidth += parent.getLayoutBounds().getWidth();
         }
         // Size needed per spacing
@@ -260,6 +264,22 @@ public class DialogueController extends ToastController {
         for (int j = options.length; j < optionTexts.length; j++) {
             optionTexts[j].destroy();
         }
+    }
+
+    private Parent createOption(ObservableList<Node> children, DialogueOption[] options, int i) {
+        DialogueOptionController controller = optionTexts[i];
+        controller.init();
+        Parent parent = controller.render();
+        parent.setId("option_" + i);
+        parent.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                setOptionIndex(i);
+                performAction();
+            }
+        });
+        children.add(parent);
+        controller.apply(options[i]);
+        return parent;
     }
 
     private boolean hasNext() {

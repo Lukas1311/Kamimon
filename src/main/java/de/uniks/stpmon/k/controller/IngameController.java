@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
@@ -68,15 +67,6 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
-        if (interactionStorage != null) {
-            interactionStorage.setDialogue(
-                    Dialogue.builder()
-                            .addItem("Hello Sven")
-                            .addItem("How are you doing?")
-                            .create()
-            );
-        }
-
     }
 
     @Override
