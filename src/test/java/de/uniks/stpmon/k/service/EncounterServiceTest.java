@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.rest.EncounterApiService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,8 @@ class EncounterServiceTest {
     EncounterApiService encounterApiService;
     @Spy
     RegionStorage regionStorage;
+    @Spy
+    EncounterStorage encounterStorage;
     @InjectMocks
     EncounterService encounterService;
 
@@ -44,8 +47,8 @@ class EncounterServiceTest {
     private Encounter getDummyEncounters() {
         initRegion();
         return new Encounter(
+                "0",
                 regionStorage.getRegion()._id(),
-                "regionId",
                 false);
     }
 
@@ -123,14 +126,16 @@ class EncounterServiceTest {
         when(encounterApiService.getEncounter(any(), any()))
                 .thenReturn(Observable.just(encounter));
 
+        when(encounterStorage.getEncounter()).thenReturn(encounter);
+
         //action
         final Encounter returnEncounter = encounterService
-                .getEncounter("id")
+                .getEncounter()
                 .blockingFirst();
 
         //check values
         assertEquals("0", returnEncounter._id());
-        assertEquals("regionId", returnEncounter.region());
+        assertEquals("0", returnEncounter.region());
         assertEquals(false, returnEncounter.isWild());
 
         // check mock
@@ -180,9 +185,12 @@ class EncounterServiceTest {
         when(encounterApiService.getEncounterOpponents(any(), any()))
                 .thenReturn(Observable.just(opponentList));
 
+        Encounter encounter = getDummyEncounters();
+        when(encounterStorage.getEncounter()).thenReturn(encounter);
+
         //action
         final List<Opponent> returnOpponents = encounterService
-                .getEncounterOpponents("encounterId")
+                .getEncounterOpponents()
                 .blockingFirst();
 
         //check values
@@ -209,10 +217,11 @@ class EncounterServiceTest {
         when(encounterApiService.getEncounterOpponent(any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
+        Encounter encounter = getDummyEncounters();
+        when(encounterStorage.getEncounter()).thenReturn(encounter);
+
         //action
-        final Opponent returnOpponent = encounterService
-                .getEncounterOpponent("encounterId", "id")
-                .blockingFirst();
+        final Opponent returnOpponent = encounterService.getEncounterOpponent("id").blockingFirst();
 
         //check value
         assertEquals("0", returnOpponent._id());
@@ -245,9 +254,12 @@ class EncounterServiceTest {
         when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
+        Encounter encounter = getDummyEncounters();
+        when(encounterStorage.getEncounter()).thenReturn(encounter);
+
         //action
         final Opponent returnOpponent = encounterService
-                .makeAbilityMove("encounterId", "id", attacker, attacker.abilities().get("Tackle"), target)
+                .makeAbilityMove("id", attacker, attacker.abilities().get("Tackle"), target)
                 .blockingFirst();
 
         //check value
@@ -277,9 +289,12 @@ class EncounterServiceTest {
         when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
+        Encounter encounter = getDummyEncounters();
+        when(encounterStorage.getEncounter()).thenReturn(encounter);
+
         //action
         final Opponent returnOpponent = encounterService
-                .makeChangeMonsterMove("encounterId", "id", attacker, nextMonster)
+                .makeChangeMonsterMove("id", attacker, nextMonster)
                 .blockingFirst();
 
         //check value
@@ -305,9 +320,12 @@ class EncounterServiceTest {
         when(encounterApiService.fleeEncounter(any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
+        Encounter encounter = getDummyEncounters();
+        when(encounterStorage.getEncounter()).thenReturn(encounter);
+
         //action
         final Opponent returnOpponent = encounterService
-                .fleeEncounter("encounterId", "id")
+                .fleeEncounter("id")
                 .blockingFirst();
 
         //check values
