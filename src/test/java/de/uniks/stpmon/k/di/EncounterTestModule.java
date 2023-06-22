@@ -33,6 +33,8 @@ public class EncounterTestModule {
             @Inject
             EventListener eventListener;
             String opponentId = "0";
+            final String regionId = "0";
+            final EncounterWrapper encounterWrapper = initDummyEncounter(regionId, opponentId);
 
             private class EncounterWrapper {
                 private final Encounter encounter;
@@ -125,8 +127,6 @@ public class EncounterTestModule {
                 }
             }
 
-
-
             private EncounterWrapper initDummyEncounter(String regionId, String opponentId) {
                 return new EncounterWrapper(new Encounter(
                         "0",
@@ -196,19 +196,15 @@ public class EncounterTestModule {
 
             @Override
             public Observable<Opponent> makeMove(String regionId, String encounterId, String opponentId, UpdateOpponentDto opponentDto) {
-                EncounterWrapper encounterWrapper = initDummyEncounter(regionId, opponentId);
                 if (regionId.isEmpty() || encounterId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + " or " + encounterId + " is empty"));
                 }
 
                 // we only mock 1 v 1 encounters
-                //TODO: check if it is a abilityMove
                 if (encounterWrapper.opponentList.get(0)._id().equals(opponentId) && encounterWrapper.opponentList.get(0).move() instanceof AbilityMove) {
-                    //TODO: manipulate the monster (reduce the remaining uses of used ability)
-                    //manipulate the uses of the first ability by replacing it with the same ability but less uses -> dont know if this is the right way
+                    //manipulate the uses of the first ability by replacing it with the same ability but less uses -> don't know if this is the right way
                     encounterWrapper.monsterList.get(0).abilities().replace("Tackle", 19);
 
-                    //TODO: reduce hp of monster that is attacked (get it via the encounter)
                     Monster updatedTarget = new Monster("1",
                             "1",
                             2,
@@ -226,7 +222,6 @@ public class EncounterTestModule {
                             encounterWrapper.monsterList.get(0)),
                             updatedTarget));
 
-                    //TODO: create result (with ability-success)
                     Result result = new Result(
                             "ability-success",
                             0,
@@ -236,7 +231,7 @@ public class EncounterTestModule {
                     Opponent opponent = new Opponent(opponentId,
                             encounterId,
                             "0",
-                            false,
+                            true,
                             false,
                             opponentDto.monster(),
                             opponentDto.move(),
@@ -244,17 +239,53 @@ public class EncounterTestModule {
                             1
                     );
                     return Observable.just(opponent);
+                //this is for the server move
+                } else if (encounterWrapper.opponentList.get(1)._id().equals(opponentId)) {
+                    Monster updatedTarget = new Monster("0",
+                            "0",
+                            1,
+                            1,
+                            1,
+                            null,
+                            null,
+                            new MonsterAttributes(
+                                    19,
+                                    20,
+                                    20,
+                                    20));
+                    monsterEvents.onNext(new Event<>("trainers.%s.monsters.%s.updated".formatted(
+                            encounterWrapper.monsterList.get(1).trainer(),
+                            encounterWrapper.monsterList.get(1)),
+                            updatedTarget));
+
+                    Result result = new Result(
+                            "ability-success",
+                            0,
+                            "normal"
+                    );
+
+                    Opponent opponent = new Opponent(encounterWrapper.opponentList.get(1)._id(),
+                            encounterId,
+                            encounterWrapper.opponentList.get(1).trainer(),
+                            true,
+                            true,
+                            opponentDto.monster(),
+                            opponentDto.move(),
+                            result,
+                            1
+                    );
+                    return Observable.just(opponent);
                 }
-
-
                 return Observable.error(new Throwable("404 Not found"));
             }
 
             public Observable<Opponent> makeServerMove() {
-                //TODO: use the makeMove method do attack with the monster of
-                // the other participant the monster of the user
-                // and send the result via websocket
-                return null;
+                //use get(1) to get the server opponent
+                Opponent opponent = makeMove(encounterWrapper.encounter.region(), encounterWrapper.encounter._id(), encounterWrapper.opponentList.get(1)._id(), null).blockingFirst();
+
+                opponentEvents.onNext(new Event<>("encounter.%s.opponents.%s.updated".formatted(encounterWrapper.opponentList.get(1)._id(), opponent._id()), opponent));
+
+                return Observable.just(opponent);
             }
 
             @Override
@@ -267,7 +298,9 @@ public class EncounterTestModule {
                 if (opponentOptional.isPresent()) {
                     encounterOpponents.remove(opponentOptional.get());
                     Opponent opponent = opponentOptional.get();
-                    opponentEvents.onNext(new Event<>("encounter.%s.opponents.%s.updated".formatted(opponentId, opponent._id()), opponent));
+                    //deleted is used for fleeing
+                    opponentEvents.onNext(new Event<>("encounter.%s.opponents.%s.deleted".formatted(opponentId, opponent._id()), opponent));
+                    return Observable.just(opponent);
                 }
                 return Observable.error(new Throwable("404 Not found"));
             }
