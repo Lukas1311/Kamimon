@@ -25,30 +25,26 @@ public class EncounterTestModule {
     @Singleton
     static EncounterApiService encounterApiService() {
         return new EncounterApiService() {
-            final Map<String, List<Encounter>> encounterHashMap = new HashMap<>();
-            final List<Opponent> encounterOpponents = new ArrayList<>();
-            final List<Opponent> trainerOpponents = new ArrayList<>();
             final Subject<Event<Monster>> monsterEvents = PublishSubject.create();
             final Subject<Event<Opponent>> opponentEvents = PublishSubject.create();
             @Inject
             EventListener eventListener;
             String opponentId = "0";
-            final String regionId = "0";
-            final EncounterWrapper encounterWrapper = initDummyEncounter(regionId, opponentId);
+            final EncounterWrapper encounterWrapper = initDummyEncounter(opponentId);
 
             private class EncounterWrapper {
                 private final Encounter encounter;
                 private final List<Opponent> opponentList;
                 private final List<Monster> monsterList;
+                @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+                final Map<String, List<Encounter>> encounterHashMap = new HashMap<>();
+                @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+                final List<Opponent> trainerOpponents = new ArrayList<>();
 
                 public EncounterWrapper(Encounter encounter, String opponentId) {
                     this.encounter = encounter;
                     this.opponentList = initDummyOpponent(encounter, opponentId);
                     this.monsterList = initDummyMonsters();
-                }
-
-                public Encounter getEncounter() {
-                    return encounter;
                 }
 
                 private List<Opponent> initDummyOpponent(Encounter encounter, String opponentId) {
@@ -127,10 +123,10 @@ public class EncounterTestModule {
                 }
             }
 
-            private EncounterWrapper initDummyEncounter(String regionId, String opponentId) {
+            private EncounterWrapper initDummyEncounter(String opponentId) {
                 return new EncounterWrapper(new Encounter(
                         "0",
-                        regionId,
+                        "0",
                         false
                 ), opponentId);
             }
@@ -140,7 +136,7 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                List<Encounter> encounterList = encounterHashMap.get(regionId);
+                List<Encounter> encounterList = encounterWrapper.encounterHashMap.get(regionId);
                 if (encounterList != null) {
                     return Observable.just(encounterList);
                 }
@@ -152,7 +148,7 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                List<Encounter> encounterList = encounterHashMap.get(regionId);
+                List<Encounter> encounterList = encounterWrapper.encounterHashMap.get(regionId);
                 if (encounterList == null || encounterList.isEmpty()) {
                     return Observable.error(new Throwable("404 Not found"));
                 }
@@ -165,7 +161,7 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                return Observable.just(trainerOpponents.stream().filter(m -> m.trainer().equals(trainerId)).toList());
+                return Observable.just(encounterWrapper.trainerOpponents.stream().filter(m -> m.trainer().equals(trainerId)).toList());
             }
 
             @Override
@@ -173,17 +169,19 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                return Observable.just(encounterOpponents.stream().filter(m -> m.encounter().equals(encounterId)).toList());
+                return Observable.just(encounterWrapper.opponentList.stream().filter(m -> m.encounter().equals(encounterId)).toList());
             }
 
             @Override
             public Observable<Opponent> getEncounterOpponent(String regionId, String encounterId, String opponentId) {
-                Optional<Opponent> opponentOptional = encounterOpponents
+                Optional<Opponent> opponentOptional = encounterWrapper.opponentList
                         .stream().filter(m -> m._id().equals(opponentId)).findFirst();
                 return opponentOptional.map(m -> Observable.just(opponentOptional.get())).orElseGet(()
                         -> Observable.error(new Throwable("404 Not found")));
             }
 
+            //unused can be removed as soon as it gets called in the critical path v3
+            @SuppressWarnings("unused")
             public void mockEvents(String opponentId) {
                 this.opponentId = opponentId;
 
@@ -202,7 +200,7 @@ public class EncounterTestModule {
 
                 // we only mock 1 v 1 encounters
                 if (encounterWrapper.opponentList.get(0)._id().equals(opponentId) && encounterWrapper.opponentList.get(0).move() instanceof AbilityMove) {
-                    //manipulate the uses of the first ability by replacing it with the same ability but less uses -> don't know if this is the right way
+                    //manipulate the uses of the first ability by replacing it with the same ability but fewer uses -> don't know if this is the right way
                     encounterWrapper.monsterList.get(0).abilities().replace("Tackle", 19);
 
                     Monster updatedTarget = new Monster("1",
@@ -279,6 +277,8 @@ public class EncounterTestModule {
                 return Observable.error(new Throwable("404 Not found"));
             }
 
+            //unused can be removed as soon as it gets called in the critical path v3
+            @SuppressWarnings("unused")
             public Observable<Opponent> makeServerMove() {
                 //use get(1) to get the server opponent
                 Opponent opponent = makeMove(encounterWrapper.encounter.region(), encounterWrapper.encounter._id(), encounterWrapper.opponentList.get(1)._id(), null).blockingFirst();
@@ -293,10 +293,11 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                Optional<Opponent> opponentOptional = encounterOpponents
+                Optional<Opponent> opponentOptional = encounterWrapper.opponentList
                         .stream().filter(m -> m._id().equals(opponentId)).findFirst();
                 if (opponentOptional.isPresent()) {
-                    encounterOpponents.remove(opponentOptional.get());
+                    //noinspection DataFlowIssue
+                    encounterWrapper.opponentList.remove(opponentOptional.get());
                     Opponent opponent = opponentOptional.get();
                     //deleted is used for fleeing
                     opponentEvents.onNext(new Event<>("encounter.%s.opponents.%s.deleted".formatted(opponentId, opponent._id()), opponent));
