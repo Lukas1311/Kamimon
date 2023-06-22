@@ -3,18 +3,22 @@ package de.uniks.stpmon.k.controller.interaction;
 import de.uniks.stpmon.k.controller.ToastController;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.models.dialogue.DialogueItem;
+import de.uniks.stpmon.k.models.dialogue.DialogueOption;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.InteractionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import javafx.animation.TranslateTransition;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -31,6 +35,13 @@ public class DialogueController extends ToastController {
     public ImageView cursor;
     @FXML
     public GridPane dialoguePane;
+    @FXML
+    public HBox optionContainer;
+    private final DialogueOptionController[] optionTexts = new DialogueOptionController[]{
+            new DialogueOptionController(),
+            new DialogueOptionController(),
+            new DialogueOptionController(),
+    };
     @Inject
     EffectContext effectContext;
     @Inject
@@ -47,7 +58,9 @@ public class DialogueController extends ToastController {
 
     private Dialogue dialogue;
     private DialogueItem item;
-    private int index;
+    private int itemIndex;
+    private DialogueOption option;
+    private int optionIndex;
 
     @Inject
     public DialogueController() {
@@ -61,13 +74,21 @@ public class DialogueController extends ToastController {
     @Override
     public void init() {
         super.init();
-        index = 0;
+        itemIndex = 0;
         State[] values = State.values();
         for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
             State state = values[i];
             loadImage(stageImages, i, state.getTexture());
         }
+        // use filters to prevent the event from being consumed by the sidebar
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            if (dialogue != null) {
+                switch (event.getCode()) {
+                    case A, D, W, S ->
+                        // Block movement
+                            event.consume();
+                }
+            }
             if (event.getCode() != KeyCode.ENTER) {
                 return;
             }
@@ -88,6 +109,21 @@ public class DialogueController extends ToastController {
             onActionPressed(event);
         }));
         onDestroy(inputHandler.addReleasedKeyFilter(event -> {
+            if (dialogue != null) {
+                switch (event.getCode()) {
+                    case A -> {
+                        setOptionIndex(optionIndex - 1);
+                        event.consume();
+                    }
+                    case D -> {
+                        setOptionIndex(optionIndex + 1);
+                        event.consume();
+                    }
+                    case W, S ->
+                        // Block movement
+                            event.consume();
+                }
+            }
             if (event.getCode() != KeyCode.ENTER || dialogue == null) {
                 return;
             }
@@ -101,7 +137,7 @@ public class DialogueController extends ToastController {
         if (dialogue == null) {
             return;
         }
-        setIndex(0);
+        setItemIndex(0);
     }
 
     public void openDialogue(Dialogue dialogue) {
@@ -172,10 +208,58 @@ public class DialogueController extends ToastController {
         cursor.setImage(stageImages[state.ordinal()]);
     }
 
-    private void setIndex(int index) {
-        this.index = index % dialogue.getItems().length;
-        item = dialogue.getItems()[index];
+    private void setItemIndex(int itemIndex) {
+        this.itemIndex = itemIndex % dialogue.getItems().length;
+        item = dialogue.getItems()[itemIndex];
         textContainer.setText(item.getText());
+        optionContainer.setVisible(item.getOptions().length > 0);
+        if (item.getOptions().length > 0) {
+            applyOptions(item.getOptions());
+            setOptionIndex(0);
+        }
+    }
+
+    private void setOptionIndex(int optionIndex) {
+        if (item == null || option == null && item.getOptions().length == 0) {
+            return;
+        }
+
+        int oldIndex = this.optionIndex;
+        // add length to prevent negative values
+        optionIndex = (optionIndex + item.getOptions().length) % item.getOptions().length;
+        this.optionIndex = optionIndex;
+        option = item.getOptions()[optionIndex];
+        if (oldIndex != optionIndex) {
+            // Reset old option
+            optionTexts[oldIndex].onDeselected();
+        }
+        // Set new option
+        optionTexts[optionIndex].onSelected();
+    }
+
+    private void applyOptions(DialogueOption[] options) {
+        this.optionIndex = 0;
+        ObservableList<Node> children = optionContainer.getChildren();
+        children.clear();
+        // width used for all options
+        int optionWidth = 0;
+        // Amount of spacings in the row
+        int spacings = options.length + 1;
+        for (int i = 0; i < options.length; i++) {
+            DialogueOptionController controller = optionTexts[i];
+            controller.init();
+            Parent parent = controller.render();
+            children.add(parent);
+            controller.apply(options[i]);
+            optionWidth += parent.getLayoutBounds().getWidth();
+        }
+        // Size needed per spacing
+        int spacing = ((int) optionContainer.getWidth() - optionWidth) / spacings;
+        optionContainer.setSpacing(spacing);
+        // Destroy unused option controllers
+        for (int j = options.length; j < optionTexts.length; j++) {
+            optionTexts[j].destroy();
+        }
     }
 
     private boolean hasNext() {
@@ -186,7 +270,7 @@ public class DialogueController extends ToastController {
         if (!hasNext()) {
             return false;
         }
-        setIndex(index + 1);
+        setItemIndex(itemIndex + 1);
         return true;
     }
 

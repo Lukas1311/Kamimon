@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<GridPane fx:id="dialoguePane" prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<GridPane fx:id="dialoguePane" prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/19"
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController">
     <columnConstraints>
@@ -22,13 +22,21 @@
                    preserveRatio="true">
         </ImageView>
     </Pane>
-    <TextFlow prefHeight="92.0" prefWidth="432.0">
+    <VBox prefWidth="504.0">
         <GridPane.margin>
             <Insets/>
         </GridPane.margin>
         <padding>
             <Insets bottom="10.0" left="22.0" right="40.0" top="18.0"/>
         </padding>
-        <Text fx:id="textContainer" strokeType="OUTSIDE" strokeWidth="0.0" text=" At vero"/>
-    </TextFlow>
+        <TextFlow prefWidth="442.0" VBox.vgrow="ALWAYS">
+            <Text fx:id="textContainer" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"/>
+        </TextFlow>
+        <HBox fx:id="optionContainer" alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="70.0">
+            <VBox.margin>
+                <Insets bottom="14.0"/>
+            </VBox.margin>
+        </HBox>
+    </VBox>
 </GridPane>
