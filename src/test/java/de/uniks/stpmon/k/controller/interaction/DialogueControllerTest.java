@@ -19,9 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import static java.util.function.Predicate.not;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.matcher.base.ParentMatchers.hasChildren;
 import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -33,6 +33,7 @@ class DialogueControllerTest extends ApplicationTest {
     @Spy
     InteractionStorage interactionStorage;
     @Mock
+    @SuppressWarnings("unused")
     InteractionService interactionService;
     @InjectMocks
     DialogueController controller;
@@ -96,6 +97,144 @@ class DialogueControllerTest extends ApplicationTest {
     }
 
     @Test
+    void openOptions() {
+        // Dialog invisible at start
+        verifyThat("#dialoguePane", not(Node::isVisible));
+
+        Runnable firstSelection = Mockito.mock(Runnable.class);
+        Runnable secondSelection = Mockito.mock(Runnable.class);
+        Runnable action = Mockito.mock(Runnable.class);
+        interactionStorage.setDialogue(
+                Dialogue.builder()
+                        .addItem().setText("FirstText")
+
+                        .addOption().setText("FirstOption")
+                        .addSelection(firstSelection)
+                        .addAction(action)
+                        .endOption()
+
+                        .addOption()
+                        .setText("SecondOption")
+                        .addSelection(secondSelection)
+                        .endOption()
+                        .endItem()
+
+                        .create()
+        );
+
+        // Open dialog with enter
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        // Dialog should be visible now
+        verifyThat("#dialoguePane", Node::isVisible);
+        verifyThat("#textContainer", hasText("FirstText"));
+        verifyThat("#optionContainer", Node::isVisible);
+        verifyThat("#optionContainer", hasChildren(2));
+        verifyThat("#optionContainer #option_0 #text", hasText("FirstOption"));
+        verifyThat("#optionContainer #option_1 #text", hasText("SecondOption"));
+
+        // First option should be selected
+        verifyThat("#optionContainer #option_0 #indicator", Node::isVisible);
+        verifyThat("#optionContainer #option_1 #indicator", not(Node::isVisible));
+        verify(firstSelection).run();
+        verify(secondSelection, never()).run();
+
+        // Select second option selection
+        type(KeyCode.D);
+        // Check if selection was performed
+        verifyThat("#optionContainer #option_0 #indicator", not(Node::isVisible));
+        verifyThat("#optionContainer #option_1 #indicator", Node::isVisible);
+        verify(firstSelection).run();
+        verify(secondSelection).run();
+
+        // Select first option selection again
+        type(KeyCode.A);
+
+        verifyThat("#optionContainer #option_0 #indicator", Node::isVisible);
+        verifyThat("#optionContainer #option_1 #indicator", not(Node::isVisible));
+        verify(firstSelection, times(2)).run();
+        verify(secondSelection).run();
+
+        // Select second option selection again (left out of bounds)
+        type(KeyCode.A);
+
+        verifyThat("#optionContainer #option_0 #indicator", not(Node::isVisible)
+        );
+        verifyThat("#optionContainer #option_1 #indicator", Node::isVisible);
+        verify(firstSelection, times(2)).run();
+        verify(secondSelection, times(2)).run();
+
+        // Select first option selection again (right out of bounds)
+        type(KeyCode.D);
+
+        verifyThat("#optionContainer #option_0 #indicator", Node::isVisible);
+        verifyThat("#optionContainer #option_1 #indicator", not(Node::isVisible));
+        verify(firstSelection, times(3)).run();
+        verify(secondSelection, times(2)).run();
+
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        // Action should be performed after selection
+        verify(action).run();
+
+        // Dialog be closed again
+        verifyThat("#dialoguePane", not(Node::isVisible));
+    }
+
+    @Test
+    void clickOnOption() {
+        // Dialog invisible at start
+        verifyThat("#dialoguePane", not(Node::isVisible));
+
+        Runnable selection = Mockito.mock(Runnable.class);
+        Runnable action = Mockito.mock(Runnable.class);
+        interactionStorage.setDialogue(
+                Dialogue.builder()
+                        .addItem().setText("FirstText")
+
+                        .addOption().setText("FirstOption")
+                        .addSelection(selection)
+                        .addAction(action)
+                        .endOption()
+
+                        .addOption()
+                        .setText("SecondOption")
+                        .endOption()
+                        .endItem()
+
+                        .create()
+        );
+
+        // Open dialog with enter
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        // Dialog should be visible now
+        verifyThat("#dialoguePane", Node::isVisible);
+        verifyThat("#textContainer", hasText("FirstText"));
+        verifyThat("#optionContainer", Node::isVisible);
+        verifyThat("#optionContainer", hasChildren(2));
+        verifyThat("#optionContainer #option_0 #text", hasText("FirstOption"));
+        verifyThat("#optionContainer #option_1 #text", hasText("SecondOption"));
+        // Should be selected by default
+        verify(selection, times(1)).run();
+
+        // First option should be pressed
+        clickOn("#optionContainer #option_0");
+        waitForFxEvents();
+        // Check if selection was performed again
+        verify(selection, times(2)).run();
+
+        // Action should be performed after selection
+        verify(action).run();
+
+        // Dialog be closed again
+        verifyThat("#dialoguePane", not(Node::isVisible));
+    }
+
+    @Test
     void openDialogue() {
         // Dialog invisible at start
         verifyThat("#dialoguePane", not(Node::isVisible));
@@ -113,8 +252,10 @@ class DialogueControllerTest extends ApplicationTest {
 
         // Dialog should be visible now
         verifyThat("#dialoguePane", Node::isVisible);
-        // Shout display first text
+        // Should display first text
         verifyThat("#textContainer", hasText("First"));
+        // No option should be visible
+        verifyThat("#optionContainer", not(Node::isVisible));
         // Try invalid input
         type(KeyCode.CONTROL);
         waitForFxEvents();
@@ -126,7 +267,7 @@ class DialogueControllerTest extends ApplicationTest {
         type(KeyCode.ENTER);
         waitForFxEvents();
 
-        // Shout display second text
+        // Should display second text
         verifyThat("#textContainer", hasText("Second"));
 
         // Close dialog

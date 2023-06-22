@@ -5,11 +5,15 @@ import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +27,8 @@ public class TrainerServiceTest {
     TrainerStorage trainerStorage;
     @Mock
     RegionApiService regionApiService;
+    @Mock
+    CacheManager cacheManager;
     @InjectMocks
     TrainerService trainerService;
 
@@ -117,5 +123,41 @@ public class TrainerServiceTest {
 
         //check mocks
         verify(regionApiService).updateTrainer("0", "1", captor.getValue());
+    }
+
+    @Test
+    void checkSurrounding() {
+        TrainerAreaCache trainerCache = Mockito.mock(TrainerAreaCache.class);
+        when(cacheManager.trainerAreaCache()).thenReturn(trainerCache);
+
+        // Default direction is right
+        trainerStorage.setTrainer(DummyConstants.TRAINER);
+
+        Trainer firstTrainer = new Trainer(
+                "1", "0", "0", "0", "0", 0, "0", 2, 0, 0, DummyConstants.NPC_INFO);
+        Trainer secondTrainer = new Trainer(
+                "1", "0", "0", "0", "0", 0, "0", 1, 0, 0, DummyConstants.NPC_INFO);
+        // First no trainer returned
+        when(trainerCache.getTrainerAt(2, 0)).thenReturn(Optional.empty());
+        when(trainerCache.getTrainerAt(1, 0)).thenReturn(Optional.empty());
+        // Optional should be empty
+        Optional<Trainer> emptyNpc = trainerService.getFacingTrainer();
+        assertTrue(emptyNpc.isEmpty());
+
+        // Return which is two steps away
+        when(trainerCache.getTrainerAt(2, 0)).thenReturn(Optional.of(firstTrainer));
+
+        Optional<Trainer> firstNpc = trainerService.getFacingTrainer();
+        assertTrue(firstNpc.isPresent());
+        assertEquals(firstTrainer, firstNpc.get());
+
+        // Return which is one steps away
+        when(trainerCache.getTrainerAt(1, 0)).thenReturn(Optional.of(secondTrainer));
+
+        // second trainer should be returned because it is closer
+        Optional<Trainer> secondNpc = trainerService.getFacingTrainer();
+        assertTrue(secondNpc.isPresent());
+        assertEquals(secondTrainer, secondNpc.get());
+
     }
 }
