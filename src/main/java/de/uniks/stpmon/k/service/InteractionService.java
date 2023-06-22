@@ -23,6 +23,9 @@ public class InteractionService implements ILifecycleService {
 
     public Dialogue getDialogue(Trainer trainer) {
         NPCInfo info = trainer.npc();
+        if (info == null) {
+            return null;
+        }
         if (info.canHeal()) {
             return Dialogue.builder().addItem("Can heal ?").create();
         }
