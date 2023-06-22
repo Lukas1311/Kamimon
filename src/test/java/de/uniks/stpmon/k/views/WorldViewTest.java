@@ -16,6 +16,7 @@ import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.MeshView;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,6 +56,12 @@ public class WorldViewTest extends ApplicationTest {
         app.addInputHandler(component);
         app.show(controller);
         stage.requestFocus();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Remove event handlers
+        app.removeInputHandler(component);
     }
 
     @Test

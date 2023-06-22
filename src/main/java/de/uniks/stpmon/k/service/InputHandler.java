@@ -1,11 +1,12 @@
 package de.uniks.stpmon.k.service;
 
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -19,11 +20,11 @@ import java.util.function.Consumer;
  * If a filter or handler consumes any other handler or filter will not be called.
  */
 @Singleton
-public class InputHandler {
+public class InputHandler implements ILifecycleService {
 
-    private final List<Consumer<? super KeyEvent>> keyPressedHandlers = new ArrayList<>();
-    private final List<Consumer<? super KeyEvent>> keyPressedFilters = new ArrayList<>();
-    private final List<Consumer<? super KeyEvent>> keyReleasedFilters = new ArrayList<>();
+    private final MultiHandler<KeyEvent> keyPressedHandlers = new MultiHandler<>();
+    private final MultiHandler<KeyEvent> keyPressedFilters = new MultiHandler<>();
+    private final MultiHandler<KeyEvent> keyReleasedFilters = new MultiHandler<>();
 
     @Inject
     public InputHandler() {
@@ -81,14 +82,7 @@ public class InputHandler {
      * If a handler consumes the event, the remaining handlers will not be called.
      */
     public EventHandler<KeyEvent> keyPressedHandler() {
-        return event -> {
-            for (Consumer<? super KeyEvent> keyHandler : keyPressedHandlers) {
-                keyHandler.accept(event);
-                if (event.isConsumed()) {
-                    return;
-                }
-            }
-        };
+        return keyPressedHandlers;
     }
 
     /**
@@ -97,14 +91,7 @@ public class InputHandler {
      * If a handler consumes the event, the remaining handlers will not be called.
      */
     public EventHandler<KeyEvent> keyPressedFilter() {
-        return event -> {
-            for (Consumer<? super KeyEvent> keyHandler : keyPressedFilters) {
-                keyHandler.accept(event);
-                if (event.isConsumed()) {
-                    return;
-                }
-            }
-        };
+        return keyPressedFilters;
     }
 
     /**
@@ -113,13 +100,40 @@ public class InputHandler {
      * If a handler consumes the event, the remaining handlers will not be called.
      */
     public EventHandler<KeyEvent> keyReleasedFilter() {
-        return event -> {
-            for (Consumer<? super KeyEvent> keyHandler : keyReleasedFilters) {
+        return keyReleasedFilters;
+    }
+
+    @Override
+    public void destroy() {
+        // Clear all registered handlers and filters
+        keyPressedFilters.clear();
+        keyPressedHandlers.clear();
+        keyReleasedFilters.clear();
+    }
+
+    private static class MultiHandler<T extends Event> implements EventHandler<T> {
+        private final List<Consumer<? super T>> handlers = new LinkedList<>();
+
+        void add(Consumer<? super T> handler) {
+            handlers.add(handler);
+        }
+
+        void remove(Consumer<? super T> handler) {
+            handlers.remove(handler);
+        }
+
+        public void clear() {
+            handlers.clear();
+        }
+
+        @Override
+        public void handle(T event) {
+            for (Consumer<? super T> keyHandler : handlers) {
                 keyHandler.accept(event);
                 if (event.isConsumed()) {
                     return;
                 }
             }
-        };
+        }
     }
 }

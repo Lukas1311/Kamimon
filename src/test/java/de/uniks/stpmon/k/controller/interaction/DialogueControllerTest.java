@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,12 @@ class DialogueControllerTest extends ApplicationTest {
         app.show(controller);
         app.addInputHandler(inputHandler);
         stage.requestFocus();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Remove event handlers
+        app.removeInputHandler(inputHandler);
     }
 
     @Test

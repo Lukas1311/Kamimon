@@ -44,4 +44,10 @@ public abstract class BoundModule {
     @Singleton
     @SuppressWarnings("unused")
     public abstract ILifecycleService interactionService(InteractionService loader);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService input(InputHandler handler);
 }
