@@ -35,13 +35,13 @@ public class EncounterService {
 
     @Inject
     EncounterApiService encounterApiService;
-    
+
     @Inject
     RegionStorage regionStorage;
 
     @Inject
     EncounterStorage encounterStorage;
-    
+
     @Inject
     public EncounterService() {
     }
@@ -53,7 +53,10 @@ public class EncounterService {
     }
 
     public Observable<Encounter> getEncounter() {
-        return encounterApiService.getEncounter(regionStorage.getRegion()._id(), encounterStorage.getEncounter()._id());
+        return encounterApiService.getEncounter(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id()
+        );
     }
 
     //---------------- Encounters Opponents ----------------------------
@@ -63,24 +66,52 @@ public class EncounterService {
     }
 
     public Observable<List<Opponent>> getEncounterOpponents() {
-        return encounterApiService.getEncounterOpponents(regionStorage.getRegion()._id(), encounterStorage.getEncounter()._id());
+        return encounterApiService.getEncounterOpponents(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id()
+        );
     }
 
     public Observable<Opponent> getEncounterOpponent() {
-        return encounterApiService.getEncounterOpponent(regionStorage.getRegion()._id(), encounterStorage.getEncounter()._id(), encounterStorage.getOpponentList().get(0)._id());
+        return encounterApiService.getEncounterOpponent(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                encounterStorage.getOpponentList().get(0)._id()
+        );
     }
 
     public Observable<Opponent> makeAbilityMove(Monster attacker, int ability, Monster target) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(Moves.ABILITY.toString(), ability , target._id()));
-        return encounterApiService.makeMove(regionStorage.getRegion()._id(), encounterStorage.getEncounter()._id(), encounterStorage.getOpponentList().get(0)._id(), dto);
+        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(
+                Moves.ABILITY.toString(),
+                ability,
+                target._id())
+        );
+        return encounterApiService.makeMove(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                encounterStorage.getOpponentList().get(0)._id(),
+                dto
+        );
     }
 
     public Observable<Opponent> makeChangeMonsterMove(Monster currentMonster, Monster nextMonster) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), new ChangeMonsterMove(Moves.CHANGE_MONSTER.toString(), nextMonster._id()));
-        return encounterApiService.makeMove(regionStorage.getRegion()._id(), encounterStorage.getEncounter()._id(), encounterStorage.getOpponentList().get(0)._id(), dto);
+        UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), new ChangeMonsterMove(
+                Moves.CHANGE_MONSTER.toString(),
+                nextMonster._id())
+        );
+        return encounterApiService.makeMove(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                encounterStorage.getOpponentList().get(0)._id(),
+                dto
+        );
     }
 
     public Observable<Opponent> fleeEncounter() {
-        return encounterApiService.fleeEncounter(regionStorage.getRegion()._id(), encounterStorage.getEncounter()._id(), encounterStorage.getOpponentList().get(0)._id());
+        return encounterApiService.fleeEncounter(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                encounterStorage.getOpponentList().get(0)._id()
+        );
     }
 }
