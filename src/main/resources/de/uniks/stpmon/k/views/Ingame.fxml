@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
-<BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IngameController">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IngameController">
     <center>
         <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
             <BorderPane>
@@ -13,10 +18,10 @@
                 </top>
             <right>
 
-                <VBox fx:id="rightVbox" prefHeight="310.0" prefWidth="120" BorderPane.alignment="CENTER">
-                    <HBox fx:id="ingameWrappingHBox"/>
+                <VBox fx:id="rightVbox" alignment="TOP_RIGHT" prefHeight="310.0" prefWidth="120.0" BorderPane.alignment="CENTER">
+                    <HBox fx:id="ingameWrappingHBox" alignment="TOP_RIGHT" />
                     <BorderPane.margin>
-                        <Insets top="-40.0"/>
+                        <Insets top="-40.0" />
                     </BorderPane.margin>
                 </VBox>
 

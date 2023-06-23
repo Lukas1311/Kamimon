@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Polygon;
 
@@ -26,7 +27,6 @@ public class BackpackMenuController extends Controller {
     public Polygon backpackMenuArrow;
     @FXML
     public HBox backpackMenuHBox;
-
 
     @Inject
     BackpackController backpackController;
@@ -83,6 +83,7 @@ public class BackpackMenuController extends Controller {
     }
 
     private void openMonBox() {
-        ingameControllerProvider.get().ingameWrappingHBox.getChildren().add(monBoxControllerProvider.get().render());
+        BorderPane monBox = (BorderPane) monBoxControllerProvider.get().render();
+        ingameControllerProvider.get().addMonBox(monBox);
     }
 }

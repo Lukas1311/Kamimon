@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import java.util.Objects;
+
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
@@ -77,6 +79,7 @@ public class IngameController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        ingameWrappingHBox.setSpacing(10);
 
         Parent world = this.worldController.render();
         // Null if unit testing world view
@@ -97,6 +100,7 @@ public class IngameController extends PortalController {
         }
 
         Parent mapOverview = this.mapOverviewController.render();
+
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
@@ -111,7 +115,7 @@ public class IngameController extends PortalController {
         }
 
         if (miniMap != null) {
-            miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+            miniMap.setOnMouseClicked(click -> Objects.requireNonNull(mapOverview).setVisible(true));
         }
 
         return parent;
@@ -122,14 +126,21 @@ public class IngameController extends PortalController {
     }
 
     public void addBackpackMenu(HBox backpackMenu) {
-        ingameWrappingHBox.getChildren().add(0, backpackMenu);
+        if (ingameWrappingHBox.getChildren().size() == 2) {
+            ingameWrappingHBox.getChildren().add(1, backpackMenu);
+        } else {
+            ingameWrappingHBox.getChildren().add(0, backpackMenu);
+        }
+
+
     }
 
     public void removeBackpackMenu(HBox backpackMenu) {
         ingameWrappingHBox.getChildren().remove(backpackMenu);
     }
 
-    public void openMonbox() {
+    public void addMonBox(BorderPane monBox) {
+        ingameWrappingHBox.getChildren().add(0, monBox);
     }
 
 }
