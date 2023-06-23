@@ -220,8 +220,10 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
+        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
         //action
-        final Opponent returnOpponent = encounterService.getEncounterOpponent("id").blockingFirst();
+        final Opponent returnOpponent = encounterService.getEncounterOpponent().blockingFirst();
 
         //check value
         assertEquals("0", returnOpponent._id());
@@ -257,9 +259,11 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
+        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
         //action
         final Opponent returnOpponent = encounterService
-                .makeAbilityMove("id", attacker, attacker.abilities().get("Tackle"), target)
+                .makeAbilityMove(attacker, attacker.abilities().get("Tackle"), target)
                 .blockingFirst();
 
         //check value
@@ -292,9 +296,11 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
+        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
         //action
         final Opponent returnOpponent = encounterService
-                .makeChangeMonsterMove("id", attacker, nextMonster)
+                .makeChangeMonsterMove(attacker, nextMonster)
                 .blockingFirst();
 
         //check value
@@ -323,9 +329,11 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
+        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
         //action
         final Opponent returnOpponent = encounterService
-                .fleeEncounter("id")
+                .fleeEncounter()
                 .blockingFirst();
 
         //check values
