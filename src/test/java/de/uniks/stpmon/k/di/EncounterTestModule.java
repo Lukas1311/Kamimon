@@ -36,15 +36,13 @@ public class EncounterTestModule {
                 private final Encounter encounter;
                 private final List<Opponent> opponentList;
                 private final List<Monster> monsterList;
-                @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
                 final Map<String, List<Encounter>> encounterHashMap = new HashMap<>();
-                @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-                final List<Opponent> trainerOpponents = new ArrayList<>();
 
                 public EncounterWrapper(Encounter encounter, String opponentId) {
                     this.encounter = encounter;
                     this.opponentList = initDummyOpponent(encounter, opponentId);
                     this.monsterList = initDummyMonsters();
+                    this.encounterHashMap.put(encounter.region(), List.of(encounter));
                 }
 
                 private List<Opponent> initDummyOpponent(Encounter encounter, String opponentId) {
@@ -161,7 +159,12 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                return Observable.just(encounterWrapper.trainerOpponents.stream().filter(m -> m.trainer().equals(trainerId)).toList());
+                for (Opponent trainerOpponent : encounterWrapper.opponentList) {
+                    if (trainerOpponent._id().equals(trainerId)) {
+                        return Observable.just(encounterWrapper.opponentList.stream().filter(m -> m.trainer().equals(trainerId)).toList());
+                    }
+                }
+                return Observable.empty();
             }
 
             @Override
