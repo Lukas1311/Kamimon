@@ -159,12 +159,10 @@ public class EncounterTestModule {
                 if (regionId.isEmpty()) {
                     return Observable.error(new Throwable(regionId + "does not exist"));
                 }
-                for (Opponent trainerOpponent : encounterWrapper.opponentList) {
-                    if (trainerOpponent._id().equals(trainerId)) {
-                        return Observable.just(encounterWrapper.opponentList.stream().filter(m -> m.trainer().equals(trainerId)).toList());
-                    }
+                if (encounterWrapper.opponentList.stream().anyMatch(m -> m.trainer().equals(trainerId))) {
+                    return Observable.just(encounterWrapper.opponentList.stream().filter(m -> m.trainer().equals(trainerId)).toList());
                 }
-                return Observable.empty();
+                return Observable.just(new ArrayList<>());
             }
 
             @Override
@@ -240,7 +238,7 @@ public class EncounterTestModule {
                             1
                     );
                     return Observable.just(opponent);
-                //this is for the server move
+                    //this is for the server move
                 } else if (encounterWrapper.opponentList.get(1)._id().equals(opponentId)) {
                     Monster updatedTarget = new Monster("0",
                             "0",
