@@ -217,9 +217,12 @@ public class DialogueController extends ToastController {
         item = dialogue.getItems()[itemIndex];
         textContainer.setText(item.getText());
         optionContainer.setVisible(item.getOptions().length > 0);
+        option = null;
         if (item.getOptions().length > 0) {
             applyOptions(item.getOptions());
             setOptionIndex(0);
+        } else {
+            optionContainer.getChildren().clear();
         }
     }
 
@@ -275,6 +278,7 @@ public class DialogueController extends ToastController {
             if (event.getButton() == MouseButton.PRIMARY) {
                 setOptionIndex(i);
                 performAction();
+                event.consume();
             }
         });
         children.add(parent);
@@ -287,6 +291,10 @@ public class DialogueController extends ToastController {
     }
 
     public boolean doNext() {
+        if (option != null && option.hasNext()) {
+            setDialogue(option.getNext());
+            return true;
+        }
         if (!hasNext()) {
             return false;
         }

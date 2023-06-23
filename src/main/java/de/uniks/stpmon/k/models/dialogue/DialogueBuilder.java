@@ -77,6 +77,7 @@ public class DialogueBuilder {
          * Action performed on activation of the option.
          */
         private Runnable action;
+        private Dialogue nextDialogue;
 
         public OptionBuilder(ItemBuilder parent) {
             this.parent = parent;
@@ -98,8 +99,13 @@ public class DialogueBuilder {
             return this;
         }
 
+        public OptionBuilder setNext(Dialogue nextDialogue) {
+            this.nextDialogue = nextDialogue;
+            return this;
+        }
+
         public ItemBuilder endOption() {
-            parent.add(new DialogueOption(text, action, selection));
+            parent.add(new DialogueOption(text, action, selection, nextDialogue));
             return parent;
         }
     }

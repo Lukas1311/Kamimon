@@ -39,10 +39,12 @@ public class InteractionService implements ILifecycleService {
                     .addOption().setText("Flamingo")
                     .addSelection(() -> interactionStorage.selectedStarter().setValue("Flamingo"))
                     .addAction(() -> interactionStorage.selectedStarter().reset())
+                    .setNext(Dialogue.builder().addItem("you chose a flamingo!").create())
                     .endOption()
                     .addOption().setText("Elephant")
                     .addSelection(() -> interactionStorage.selectedStarter().setValue("Elephant"))
                     .addAction(() -> interactionStorage.selectedStarter().reset())
+                    .setNext(Dialogue.builder().addItem("you chose an elephant!").create())
                     .endOption()
                     .endItem()
 

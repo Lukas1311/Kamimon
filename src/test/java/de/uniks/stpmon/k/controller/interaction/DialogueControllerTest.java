@@ -126,6 +126,9 @@ class DialogueControllerTest extends ApplicationTest {
                         .endOption()
                         .endItem()
 
+
+                        .addItem("SecondText")
+
                         .create()
         );
 
@@ -186,8 +189,86 @@ class DialogueControllerTest extends ApplicationTest {
         // Action should be performed after selection
         verify(action).run();
 
+        // Second text should be displayed
+        verifyThat("#textContainer", hasText("SecondText"));
+        verifyThat("#dialoguePane", Node::isVisible);
+
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        // Action of option should not have been performed again
+        verify(action, times(1)).run();
+
         // Dialog be closed again
         verifyThat("#dialoguePane", not(Node::isVisible));
+    }
+
+    @Test
+    void openOptionNext() {
+        // Dialog invisible at start
+        verifyThat("#dialoguePane", not(Node::isVisible));
+
+        Dialogue firstOption = Dialogue.builder().addItem("FirstSelected").create();
+        Dialogue secondOption = Dialogue.builder().addItem("SecondSelected").create();
+        interactionStorage.setDialogue(
+                Dialogue.builder()
+                        .addItem().setText("FirstText")
+
+                        .addOption().setText("FirstOption")
+                        .setNext(firstOption)
+                        .endOption()
+
+                        .addOption()
+                        .setText("SecondOption")
+                        .setNext(secondOption)
+                        .endOption()
+                        .endItem()
+
+                        .create()
+        );
+
+        // Open dialog with enter
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        // Dialog should be visible now
+        verifyThat("#dialoguePane", Node::isVisible);
+        verifyThat("#textContainer", hasText("FirstText"));
+
+        // First option should be selected
+        verifyThat("#optionContainer #option_0 #indicator", Node::isVisible);
+        verifyThat("#optionContainer #option_1 #indicator", not(Node::isVisible));
+
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+        // Next dialogue of first option should be displayed
+        verifyThat("#textContainer", hasText("FirstSelected"));
+
+        // Close dialog
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+        verifyThat("#dialoguePane", not(Node::isVisible));
+
+        // Dialog should be still in storage, so open again
+        type(KeyCode.ENTER);
+        verifyThat("#dialoguePane", Node::isVisible);
+
+        // Dialog should be visible again
+        verifyThat("#dialoguePane", Node::isVisible);
+        verifyThat("#textContainer", hasText("FirstText"));
+
+        // Select second option
+        type(KeyCode.A);
+        waitForFxEvents();
+        // Check if selection was performed
+        verifyThat("#optionContainer #option_0 #indicator", not(Node::isVisible));
+        verifyThat("#optionContainer #option_1 #indicator", Node::isVisible);
+
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        // Next dialogue of second option should be displayed
+        verifyThat("#textContainer", hasText("SecondSelected"));
     }
 
     @Test

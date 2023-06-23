@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.models.dialogue;
 
-import java.util.Objects;
-
 public class DialogueOption {
     private final String text;
     /**
@@ -12,12 +10,14 @@ public class DialogueOption {
      * Action performed on activation of the option.
      */
     private final Runnable action;
+    private final Dialogue nextDialogue;
     private DialogueItem parent;
 
-    DialogueOption(String text, Runnable action, Runnable selection) {
+    DialogueOption(String text, Runnable action, Runnable selection, Dialogue nextDialogue) {
         this.selection = selection;
         this.text = text;
         this.action = action;
+        this.nextDialogue = nextDialogue;
     }
 
     public void setup(DialogueItem parent) {
@@ -32,6 +32,10 @@ public class DialogueOption {
         return selection;
     }
 
+    public Dialogue getNext() {
+        return nextDialogue;
+    }
+
     public String getText() {
         return text;
     }
@@ -40,4 +44,7 @@ public class DialogueOption {
         return parent;
     }
 
+    public boolean hasNext() {
+        return nextDialogue != null;
+    }
 }
