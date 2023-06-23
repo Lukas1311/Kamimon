@@ -28,7 +28,10 @@ public class RegionTestModule {
             //String is regionId
             final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
             final Map<String, List<Trainer>> trainersHashMap = new HashMap<>();
+
             final List<Monster> monsters = new ArrayList<>();
+
+
 
             /**
              * Adds 2 DummyRegions to the regions list with ids {"id0", "id1"} and
@@ -283,5 +286,4 @@ public class RegionTestModule {
             }
         };
     }
-
 }
