@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 
 @Component(modules = {TestModule.class, AuthTestModule.class, GroupTestModule.class,
         MessageTestModule.class, RegionTestModule.class, UserTestModule.class,
-        BoundTestModule.class, PresetsTestModule.class})
+        BoundTestModule.class, PresetsTestModule.class, EncounterTestModule.class})
 
 @Singleton
 public interface TestComponent extends MainComponent {
