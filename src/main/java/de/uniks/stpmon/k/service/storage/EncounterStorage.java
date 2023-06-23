@@ -26,10 +26,12 @@ public class EncounterStorage {
     }
 
     public List<Opponent> getOpponentList() {
-        //opponnentList.get(0) is representing the user
         return opponentList;
     }
 
+    /**
+     * @param opponentList: is the list of all opponents, the user trainer should always be the first element
+     */
     public void setOpponentList(List<Opponent> opponentList) {
         this.opponentList = opponentList;
     }
