@@ -35,7 +35,7 @@ public class BackpackMenuController extends Controller {
     @Inject
     Provider<IngameController> ingameControllerProvider;
     @Inject
-    Provider<MonBoxController> monBoxControllerProvider;
+    MonBoxController monBoxController;
 
     @Inject
     public BackpackMenuController() {
@@ -83,7 +83,7 @@ public class BackpackMenuController extends Controller {
     }
 
     private void openMonBox() {
-        BorderPane monBox = (BorderPane) monBoxControllerProvider.get().render();
+        BorderPane monBox = (BorderPane) monBoxController.render();
         ingameControllerProvider.get().addMonBox(monBox);
     }
 }

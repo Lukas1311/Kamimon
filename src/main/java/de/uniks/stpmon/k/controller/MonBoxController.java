@@ -1,8 +1,9 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.utils.ImageUtils;
@@ -15,8 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class MonBoxController extends Controller {
@@ -31,12 +32,14 @@ public class MonBoxController extends Controller {
     public ImageView monBoxImage;
     @FXML
     public BorderPane monBoxBorderPane;
+
     @Inject
-    Provider<TrainerService> trainerServiceProvider;
+    CacheManager cacheManager;
     @Inject
-    Provider<CacheManager> cacheManagerProvider;
+    TrainerStorage trainerStorage;
     @Inject
     IResourceService resourceService;
+    MonsterCache monsterCache;
 
 
     @Inject
@@ -44,28 +47,38 @@ public class MonBoxController extends Controller {
     }
 
     @Override
+    public void init() {
+        super.init();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
-
         loadImage(monBoxImage, "monGrid_v4.png");
-
-        Trainer trainer = trainerServiceProvider.get().getMe();
-        MonsterCache monsterCache = cacheManagerProvider.get().requestMonsters(trainer._id());
-        subscribe(monsterCache.getValues(), monsters -> monsters.forEach(monster -> {
-            ImageView monsterImage = new ImageView();
-            monsterImage.setFitHeight(67);
-            monsterImage.setFitWidth(67);
-
-
-            subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), image -> {
-                Image monsterImagePNG = ImageUtils.scaledImageFX(image, 4);
-                monsterImage.setImage(monsterImagePNG);
-            });
-            monTeam.add(monsterImage, 0, 0);
-        }));
-
+        Trainer trainer = trainerStorage.getTrainer();
+        monsterCache = cacheManager.requestMonsters(trainer._id());
+        subscribe(monsterCache.getValues(), this::showMonsterList);
 
         return parent;
+    }
+
+    private void showMonsterList(List<Monster> monsters) {
+        for (Monster monster : monsters) {
+            showMonster(monster);
+        }
+    }
+
+    private void showMonster(Monster monster) {
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(67);
+        imageView.setFitWidth(67);
+        subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
+            // Scale and set the image
+            Image image = ImageUtils.scaledImageFX(imageUrl, 2);
+            imageView.setImage(image);
+        });
+        monTeam.add(imageView, 0, 0);
+        monTeam.toFront();
     }
 
     @Override
