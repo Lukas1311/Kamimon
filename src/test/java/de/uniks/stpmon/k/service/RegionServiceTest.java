@@ -1,13 +1,8 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.NPCInfo;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -60,7 +55,7 @@ class RegionServiceTest {
                 0,
                 0,
                 0,
-                new NPCInfo(true)
+                DummyConstants.NPC_INFO
         );
     }
 

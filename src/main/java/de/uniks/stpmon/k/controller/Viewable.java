@@ -5,13 +5,14 @@ import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.SVGUtils;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
@@ -20,11 +21,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import okhttp3.ResponseBody;
 
-
-
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -59,8 +57,19 @@ public abstract class Viewable {
      * Subscribes to an observable on the FX thread.
      * This method is only a utility method to avoid boilerplate code.
      *
+     * @param completable the completable to subscribe to
+     * @param onComplete  the consumer to call on each event
+     */
+    protected void subscribe(Completable completable, Action onComplete) {
+        disposables.add(completable.observeOn(FX_SCHEDULER).subscribe(onComplete));
+    }
+
+    /**
+     * Subscribes to an observable on the FX thread.
+     * This method is only a utility method to avoid boilerplate code.
+     *
      * @param observable the observable to subscribe to
-     * @param onNext     the consumer to call on each event
+     * @param onNext     the action to call on completion
      * @param <T>        the type of the items emitted by the Observable
      */
     protected <@NonNull T> void subscribe(Observable<T> observable, Consumer<T> onNext) {

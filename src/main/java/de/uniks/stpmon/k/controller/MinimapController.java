@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -17,7 +18,6 @@ import javafx.scene.transform.Rotate;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.awt.image.BufferedImage;
 
 public class MinimapController extends Controller {
 
@@ -29,7 +29,6 @@ public class MinimapController extends Controller {
     public ImageView miniMapBorder;
     @FXML
     public StackPane miniMapStackPane;
-
     @Inject
     Provider<MapOverviewController> mapOverviewControllerProvider;
     @Inject
@@ -38,6 +37,8 @@ public class MinimapController extends Controller {
     RegionStorage regionStorage;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    WorldRepository worldRepository;
 
     private Image map;
     private final static int TILE_SIZE = 16;
@@ -58,10 +59,12 @@ public class MinimapController extends Controller {
         miniMap.setClip(new Circle(75, 75, 75));
         if (currentArea != null) {
             subscribe(
-                    textureSetService.createMap(currentArea),
-                    tileMap -> {
-                        BufferedImage renderedMap = tileMap.renderMap();
-                        map = SwingFXUtils.toFXImage(renderedMap, null);
+                    worldRepository.minimapImage().onValue(),
+                    renderedMap -> {
+                        if (renderedMap.isEmpty()) {
+                            return;
+                        }
+                        map = SwingFXUtils.toFXImage(renderedMap.get(), null);
                         miniMap.setImage(map);
                     }
             );
@@ -73,7 +76,7 @@ public class MinimapController extends Controller {
         subscribe(
                 trainerStorage.onTrainer(),
                 trainer -> {
-                    if(trainer.isPresent()){
+                    if (trainer.isPresent()) {
                         int x = trainer.get().x() * TILE_SIZE - 144;
                         int y = trainer.get().y() * TILE_SIZE - 144;
                         Rectangle2D viewPortRect = new Rectangle2D(x, y, 300, 300);

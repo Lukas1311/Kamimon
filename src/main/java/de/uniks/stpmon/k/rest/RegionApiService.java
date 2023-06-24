@@ -1,11 +1,9 @@
 package de.uniks.stpmon.k.rest;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
+import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.*;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;

@@ -3,14 +3,8 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
-import de.uniks.stpmon.k.world.WorldSet;
-import javafx.scene.AmbientLight;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
+import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -30,7 +24,7 @@ public class WorldView extends Viewable {
     @Inject
     protected CharacterView characterView;
     @Inject
-    protected WorldStorage storage;
+    protected WorldRepository storage;
     @Inject
     protected FloorView floorView;
     @Inject
@@ -58,8 +52,7 @@ public class WorldView extends Viewable {
     }
 
     protected Group render() {
-        WorldSet world = storage.getWorld();
-        if (world == null) {
+        if (storage.isEmpty()) {
             return new Group();
         }
         Node character = characterView.render();

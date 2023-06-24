@@ -11,13 +11,13 @@ import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 
 import javax.inject.Singleton;
 
 @Component(modules = {TestModule.class, AuthTestModule.class, GroupTestModule.class,
         MessageTestModule.class, RegionTestModule.class, UserTestModule.class,
-        BoundTestModule.class, PresetsTestModule.class})
+        BoundTestModule.class, PresetsTestModule.class, EncounterTestModule.class})
 
 @Singleton
 public interface TestComponent extends MainComponent {
@@ -26,7 +26,7 @@ public interface TestComponent extends MainComponent {
 
     UserStorage userStorage();
 
-    WorldStorage worldStorage();
+    WorldRepository worldStorage();
 
     EventListener eventListener();
 
