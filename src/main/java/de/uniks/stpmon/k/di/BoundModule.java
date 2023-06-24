@@ -3,10 +3,7 @@ package de.uniks.stpmon.k.di;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import de.uniks.stpmon.k.service.ILifecycleService;
-import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.ResourceService;
-import de.uniks.stpmon.k.service.UserService;
+import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.FriendCache;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
@@ -41,4 +38,16 @@ public abstract class BoundModule {
     @Singleton
     @SuppressWarnings("unused")
     public abstract ILifecycleService worldLoader(WorldLoader loader);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService interactionService(InteractionService loader);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService input(InputHandler handler);
 }

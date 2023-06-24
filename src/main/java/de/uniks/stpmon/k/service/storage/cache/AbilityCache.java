@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class AbilityCache extends SimpleCache<AbilityDto> {
+public class AbilityCache extends SimpleCache<AbilityDto, String> {
     @Inject
     protected PresetService presetService;
 

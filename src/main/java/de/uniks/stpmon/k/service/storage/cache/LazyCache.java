@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class LazyCache<T> extends SimpleCache<T> {
+public abstract class LazyCache<T, K> extends SimpleCache<T, K> {
 
-    protected abstract Observable<T> requestValue(String id);
+    protected abstract Observable<T> requestValue(K id);
 
     /**
      * Loads all values from the cache or requests them from the server if they are not cached yet.
@@ -16,7 +16,7 @@ public abstract class LazyCache<T> extends SimpleCache<T> {
      * @param ids All values to be loaded
      * @return A list of all values that were loaded
      */
-    public Observable<List<T>> getLazyValues(Collection<String> ids) {
+    public Observable<List<T>> getLazyValues(Collection<K> ids) {
         return Observable.just(ids.stream().map(this::getLazyValue).toList())
                 .flatMap(Observable::merge)
                 .filter(Optional::isPresent)
@@ -25,7 +25,7 @@ public abstract class LazyCache<T> extends SimpleCache<T> {
                 .toObservable();
     }
 
-    public Observable<Optional<T>> getLazyValue(String id) {
+    public Observable<Optional<T>> getLazyValue(K id) {
         if (id == null) {
             throw new IllegalArgumentException("id must not be null");
         }

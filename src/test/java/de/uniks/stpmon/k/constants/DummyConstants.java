@@ -38,7 +38,7 @@ public class DummyConstants {
             0,
             0,
             0,
-            new NPCInfo(true)
+            DummyConstants.NPC_INFO
     );
 
     public static final Trainer TRAINER_OTHER_REGION = new Trainer(
@@ -52,7 +52,7 @@ public class DummyConstants {
             0,
             0,
             0,
-            new NPCInfo(true)
+            DummyConstants.NPC_INFO
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,
@@ -150,4 +150,5 @@ public class DummyConstants {
             null,
             null
     );
+    public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
 }
