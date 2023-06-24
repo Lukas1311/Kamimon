@@ -144,7 +144,6 @@ public class RegionTestModule {
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
                 Area area = areasHashMap.get(regionId).get(0);
-                NPCInfo npcInfo = new NPCInfo(true);
                 Trainer trainer = new Trainer(
                         String.valueOf(trainerIdCount),
                         regionId,
@@ -156,7 +155,7 @@ public class RegionTestModule {
                         0,
                         0,
                         0,
-                        npcInfo
+                        DummyConstants.NPC_INFO
                 );
                 trainerIdCount++;
                 List<Trainer> trainers = trainersHashMap.get(area._id());

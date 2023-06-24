@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class CharacterSetCache extends LazyCache<CharacterSet> {
+public class CharacterSetCache extends LazyCache<CharacterSet, String> {
     @Inject
     protected TextureSetService textureSetService;
 

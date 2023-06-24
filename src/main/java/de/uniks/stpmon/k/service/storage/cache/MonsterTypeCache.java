@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class MonsterTypeCache extends SimpleCache<MonsterTypeDto> {
+public class MonsterTypeCache extends SimpleCache<MonsterTypeDto, String> {
 
     @Inject
     protected PresetService presetService;

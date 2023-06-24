@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.utils;
 
+import de.uniks.stpmon.k.models.Trainer;
+
 import static de.uniks.stpmon.k.world.PropInspector.TILE_SIZE;
 
 public enum Direction {
@@ -7,6 +9,13 @@ public enum Direction {
     TOP,
     LEFT,
     BOTTOM;
+
+    public static Direction from(Trainer trainer) {
+        if (trainer.direction() < 0 || trainer.direction() >= Direction.values().length) {
+            throw new IllegalArgumentException("Invalid direction: " + trainer.direction());
+        }
+        return Direction.values()[trainer.direction()];
+    }
 
     public int imageX(int i, int dist) {
         return switch (this) {

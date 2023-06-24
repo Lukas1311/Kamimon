@@ -115,6 +115,7 @@ public abstract class EntityView extends WorldViewable {
         }
         if (Objects.equals(trainer.x(), currentTrainer.x())
                 && Objects.equals(trainer.y(), currentTrainer.y())
+                && Objects.equals(trainer.direction(), currentTrainer.direction())
                 && !changedImage) {
             return;
         }
