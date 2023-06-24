@@ -34,6 +34,10 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     BackpackController backpackController;
     @Spy
     Provider<MonsterBarController> monsterBarControllerProvider;
+    @Spy
+    Provider<MonBoxController> monBoxControllerProvider;
+    @Spy
+    Provider<IngameController> ingameControllerProvider;
 
     @InjectMocks
     BackpackMenuController backpackMenuController;
@@ -67,5 +71,17 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         clickOn(text);
         verify(monsterBarController).showMonsters();
 
+    }
+
+    @Test
+    void clickOnMonster_List() {
+        MonBoxController monBoxController = Mockito.mock(MonBoxController.class);
+        when(monBoxControllerProvider.get()).thenReturn(monBoxController);
+        IngameController ingameController = Mockito.mock(IngameController.class);
+        when(ingameControllerProvider.get()).thenReturn(ingameController);
+
+        Text text = lookup("#backpackMenuText0").query();
+        clickOn(text);
+        verify(monBoxController).render();
     }
 }

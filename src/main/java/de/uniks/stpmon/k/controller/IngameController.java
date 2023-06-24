@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-
 import java.util.Objects;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
@@ -140,7 +139,11 @@ public class IngameController extends PortalController {
     }
 
     public void addMonBox(BorderPane monBox) {
-        ingameWrappingHBox.getChildren().add(0, monBox);
+        if (ingameWrappingHBox.getChildren().size() == 2) {
+            ingameWrappingHBox.getChildren().remove(0);
+        } else {
+            ingameWrappingHBox.getChildren().add(0, monBox);
+        }
     }
 
 }
