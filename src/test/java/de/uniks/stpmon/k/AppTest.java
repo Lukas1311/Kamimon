@@ -232,4 +232,41 @@ class AppTest extends ApplicationTest {
         verifyThat("#registerButton", Node::isVisible);
 
     }
+
+
+    @Test
+    void criticalPathV3() {
+        MovementDummy.addMovementDummy(component.eventListener());
+
+        app.show(component.hybridController());
+
+        //set user
+        User user = new User(
+                "00",
+                "T",
+                "online",
+                null,
+                null
+        );
+        component.userStorage().setUser(user);
+
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        //check backpack
+        clickOn("#backpackImage");
+        verifyThat("#backpackMenuHBox", Node::isVisible);
+
+
+        //open MonBox
+        clickOn("#backpackMenuText0");
+        waitForFxEvents();
+        verifyThat("#monBoxBorderPane", Node::isVisible);
+        clickOn("#backpackImage");
+        verifyThat("#backpackMenuHBox", Node::isVisible);
+        clickOn("#backpackMenuText0");
+        waitForFxEvents();
+
+    }
 }

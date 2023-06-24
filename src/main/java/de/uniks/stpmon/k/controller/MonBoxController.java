@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
@@ -28,6 +29,8 @@ public class MonBoxController extends Controller {
     public GridPane monStorage;
     @FXML
     public ImageView monBoxImage;
+    @FXML
+    public BorderPane monBoxBorderPane;
     @Inject
     Provider<TrainerService> trainerServiceProvider;
     @Inject

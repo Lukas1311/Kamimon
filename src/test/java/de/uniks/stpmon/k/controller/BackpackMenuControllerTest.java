@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class BackpackMenuControllerTest extends ApplicationTest {
@@ -36,7 +37,7 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     Provider<MonsterBarController> monsterBarControllerProvider;
     @Spy
     Provider<MonBoxController> monBoxControllerProvider;
-    @Spy
+    @Mock
     Provider<IngameController> ingameControllerProvider;
 
     @InjectMocks
@@ -82,6 +83,7 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
         Text text = lookup("#backpackMenuText0").query();
         clickOn(text);
+        waitForFxEvents();
         verify(monBoxController).render();
     }
 }
