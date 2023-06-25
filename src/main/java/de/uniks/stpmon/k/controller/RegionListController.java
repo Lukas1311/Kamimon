@@ -9,6 +9,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -24,6 +25,8 @@ import javax.inject.Singleton;
 @Singleton
 public class RegionListController extends PortalController {
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
+    @FXML
+    public VBox regionListWrapping;
     @Inject
     RegionService regionService;
     @Inject
@@ -78,6 +81,15 @@ public class RegionListController extends PortalController {
 
         regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
         return parent;
+    }
+
+    public void removeLettering(){
+
+    }
+
+    public void addLettering(){
+        regionListWrapping.getChildren().remove(imageViewKamimonLetteringRegion);
+        regionListWrapping.setAlignment(Pos.CENTER);
     }
 
     public void createNewTrainer(Region region) {
