@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import static de.uniks.stpmon.k.service.MessageService.MessageNamespace.GROUPS;
+import static de.uniks.stpmon.k.utils.StringUtils.filterChatName;
 
 public class ChatController extends ToastedController {
     @FXML
@@ -123,7 +124,7 @@ public class ChatController extends ToastedController {
 
         settingsButton.setOnAction(e -> openSettings());
 
-        groupName.setText(group.name());
+        groupName.setText(filterChatName(group.name(), userService.getMe().name()));
         addRegionsToChoiceBox();
 
         // the factory creates the initial message list in the chat ui

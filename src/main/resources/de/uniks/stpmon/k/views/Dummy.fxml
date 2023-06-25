@@ -2,4 +2,5 @@
 
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane fx:id="dummyPane" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.DummyController" />
+<BorderPane fx:id="dummyPane" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.DummyController"/>

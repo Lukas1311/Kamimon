@@ -8,10 +8,10 @@
            style="-fx-background-color: gainsboro; -fx-background-radius: 4; -fx-border-radius: 4; -fx-border-color: black;"
            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="de.uniks.stpmon.k.controller.ToastController">
-   <Text fx:id="text" strokeType="OUTSIDE" strokeWidth="0.0" text="TextTextTextTextTextTextTextTextTextText"
-         StackPane.alignment="CENTER">
-      <StackPane.margin>
-         <Insets bottom="16.0" left="8.0" right="8.0" top="16.0"/>
-      </StackPane.margin>
-   </Text>
+    <Text fx:id="text" strokeType="OUTSIDE" strokeWidth="0.0" text="TextTextTextTextTextTextTextTextTextText"
+          StackPane.alignment="CENTER">
+        <StackPane.margin>
+            <Insets bottom="16.0" left="8.0" right="8.0" top="16.0"/>
+        </StackPane.margin>
+    </Text>
 </StackPane>

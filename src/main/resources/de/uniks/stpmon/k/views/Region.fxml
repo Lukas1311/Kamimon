@@ -11,7 +11,7 @@
 
     <Text fx:id="regionNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
 
-    <BorderPane fx:id="imageWrappingPane" styleClass="region-pane-border" stylesheets="@css/style.css">
+    <BorderPane fx:id="imageWrappingPane" styleClass="region-pane-border" stylesheets="@css/generalStyle.css">
         <center>
             <ImageView fx:id="regionImage" pickOnBounds="true" preserveRatio="true"/>
         </center>
