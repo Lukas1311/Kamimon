@@ -893,8 +893,14 @@ Load fonts
 }
 
 /* -------------------- Loading Screen for Region -------------------- */
-.progress-bar {
-    -fx-accent: black;
+.loading-progress-bar {
+    -fx-accent: -fx-color-kgm-red;
+}
+
+.loading-label {
+	-fx-font-size: 45px;
+	-fx-font-family: "Pokémon DS Font";
+	-fx-font-weight: bolder;
 }
 
 /* -------------------- Monster Information -------------------- */
