@@ -1,16 +1,17 @@
 package de.uniks.stpmon.k.controller.encounter;
 
+import de.uniks.stpmon.k.controller.Controller;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 
-public class OpponentMonsterStatusController {
-    //TODO: remove Image form fxml and set it in the controller
+public class OpponentMonsterStatusController extends Controller {
     @FXML
-    public ImageView opponentMonsterView;
+    public ImageView opponentMonsterStatusView;
     @FXML
     public ProgressBar opponentHpBar;
     @FXML
@@ -19,9 +20,16 @@ public class OpponentMonsterStatusController {
     public Text opponentMonsterLevel;
 
 
-
     @Inject
     public OpponentMonsterStatusController() {}
 
+    @Override
+    public void init() {
+        loadImage(opponentMonsterStatusView, "encounter/opponentMonsterStatus.png");
+    }
 
+    @Override
+    public Parent render() {
+        return super.render();
+    }
 }

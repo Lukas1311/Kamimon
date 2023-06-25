@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -11,8 +10,7 @@
       xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.encounter.OpponentMonsterStatusController">
     <StackPane>
-        <ImageView fx:id="opponentMonsterView" fitHeight="54.0" fitWidth="199.0">
-            <Image url="@../../../../../../../../../../../../../../SharedResources/Release_03_Ressources/03_Encounter/opponentMonsterStatus.png"/>
+        <ImageView fx:id="opponentMonsterStatusView" fitHeight="54.0" fitWidth="199.0">
         </ImageView>
         <ProgressBar fx:id="opponentHpBar" prefHeight="5.0" prefWidth="95.0" progress="0.0">
             <StackPane.margin>
