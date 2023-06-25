@@ -68,7 +68,6 @@ public class LoadingScreenController extends Controller {
         imageViewKamimonLettering.setPreserveRatio(true);
         imageViewKamimonLettering.setFitWidth(900);
 
-
         setVectorImage(imageViewDeadBirdsSociety, "deadBirdsSocietyLogo.svg");
         imageViewDeadBirdsSociety.setPreserveRatio(true);
         imageViewDeadBirdsSociety.setFitHeight(250.0);
@@ -78,4 +77,5 @@ public class LoadingScreenController extends Controller {
         imageViewKgmLogo.setFitWidth(250);
         return parent;
     }
+
 }
