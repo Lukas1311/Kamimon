@@ -296,12 +296,42 @@ Load fonts
 	-fx-max-width: 110;
 	-fx-max-height: 30;
 }
+.radio-button .radio {
+	-fx-border-color: black;
+	-fx-border-width: 2px;
+	-fx-background-color: transparent;
+	-fx-border-radius: 15px;
+	-fx-padding: 4px
+}
+
+.radio-button:selected .radio {
+	-fx-background-color: transparent;
+}
+
+.radio-button:armed .radio {
+	-fx-background-color: transparent;
+}
+
+.radio-button:determinate .radio {
+	-fx-background-color: transparent;
+}
+
+.radio-button:indeterminate .radio {
+	-fx-background-color: transparent;
+}
+
+.radio-button .dot {
+	-fx-mark-highlight-color: black;
+	-fx-mark-color: black;
+	-fx-background-radius: 6px;
+}
 
 .login-error-text {
 	-fx-text-fill: -fx-color-red;
 	-fx-text-overrun: ellipsis;
 	-fx-font-size: 12;
 }
+
 
 /* -------------------- Introduction -------------------- */
 .intro-screen {
