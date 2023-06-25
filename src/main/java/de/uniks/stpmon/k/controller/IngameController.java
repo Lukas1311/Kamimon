@@ -151,7 +151,7 @@ public class IngameController extends PortalController {
         ingameWrappingHBox.getChildren().remove(backpackMenu);
     }
 
-    public void addMonBox(BorderPane monBox) {
+    public void addMonBox(StackPane monBox) {
         if (ingameWrappingHBox.getChildren().size() == 2) {
             ingameWrappingHBox.getChildren().remove(0);
         } else {

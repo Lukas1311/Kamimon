@@ -11,9 +11,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,7 +31,7 @@ public class MonBoxController extends Controller {
     @FXML
     public ImageView monBoxImage;
     @FXML
-    public BorderPane monBoxBorderPane;
+    public VBox monBoxVbox;
 
     @Inject
     CacheManager cacheManager;
@@ -74,11 +74,11 @@ public class MonBoxController extends Controller {
         imageView.setFitWidth(67);
         subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
             // Scale and set the image
-            Image image = ImageUtils.scaledImageFX(imageUrl, 2);
+            Image image = ImageUtils.scaledImageFX(imageUrl, 1);
             imageView.setImage(image);
         });
         monTeam.add(imageView, 0, 0);
-        monTeam.toFront();
+        monBoxVbox.toFront();
     }
 
     @Override

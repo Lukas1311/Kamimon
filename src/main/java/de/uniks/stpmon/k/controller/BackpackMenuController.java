@@ -5,8 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
@@ -83,7 +83,7 @@ public class BackpackMenuController extends Controller {
     }
 
     private void openMonBox() {
-        BorderPane monBox = (BorderPane) monBoxController.render();
+        StackPane monBox = (StackPane) monBoxController.render();
         ingameControllerProvider.get().addMonBox(monBox);
     }
 }
