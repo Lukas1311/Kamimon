@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<HBox fx:id="container" alignment="BOTTOM_CENTER" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueOptionController">
+    <Text fx:id="indicator" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt; "/>
+    <Text fx:id="text" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+</HBox>

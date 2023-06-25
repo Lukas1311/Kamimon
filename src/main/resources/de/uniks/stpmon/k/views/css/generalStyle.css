@@ -3,20 +3,44 @@ Load fonts
  */
 
 @font-face {
-    /*font family name: Balsamiq Sans*/
-    src: url("../fonts/BalsamiqSans-Regular.ttf");
-}
-@font-face {
-    /*font family name: Balsamiq Sans*/
-    src: url("../fonts/BalsamiqSans-Bold.ttf");
-}
-@font-face {
-    /*font family name: Balsamiq Sans*/
-    src: url("../fonts/BalsamiqSans-Italic.ttf");
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Bold.ttf");
 }
 
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-BoldItalic.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Italic.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Light.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-LightItalic.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Regular.ttf");
+}
+
+@font-face {
+	/*font family name: Pokémon DS Font*/
+	src: url("../fonts/pokemon-ds-font.ttf");
+}
+
+
+
 .root{
-    -fx-font-family: "Balsamiq Sans";
+    -fx-font-family: "Comic Neue Bold";
     -fx-font-size: 16;
     -fx-font-smoothing-type: gray;
 
@@ -869,8 +893,14 @@ Load fonts
 }
 
 /* -------------------- Loading Screen for Region -------------------- */
-.progress-bar {
-    -fx-accent: black;
+.loading-progress-bar {
+    -fx-accent: -fx-color-kgm-red;
+}
+
+.loading-label {
+	-fx-font-size: 45px;
+	-fx-font-family: "Pokémon DS Font";
+	-fx-font-weight: bolder;
 }
 
 /* -------------------- Monster Information -------------------- */

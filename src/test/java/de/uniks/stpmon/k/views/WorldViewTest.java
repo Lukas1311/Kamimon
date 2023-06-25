@@ -7,14 +7,16 @@ import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.dummies.WorldDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.MeshView;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +32,7 @@ public class WorldViewTest extends ApplicationTest {
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
 
-    WorldStorage worldStorage = component.worldStorage();
+    WorldRepository worldRepository = component.worldStorage();
 
     @InjectMocks
     public WorldController controller = component.worldController();
@@ -44,7 +46,7 @@ public class WorldViewTest extends ApplicationTest {
 
         MovementDummy.addMovementDummy(component.eventListener());
         trainerStorage.setTrainer(DummyConstants.TRAINER);
-        worldStorage.setWorld(DummyConstants.WORLD);
+        WorldDummy.addWorldDummy(worldRepository);
         regionStorage.setRegion(DummyConstants.REGION);
         regionStorage.setArea(regionService.getArea("id0", "id0_0").blockingFirst());
 
@@ -54,6 +56,12 @@ public class WorldViewTest extends ApplicationTest {
         app.addInputHandler(component);
         app.show(controller);
         stage.requestFocus();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Remove event handlers
+        app.removeInputHandler(component);
     }
 
     @Test

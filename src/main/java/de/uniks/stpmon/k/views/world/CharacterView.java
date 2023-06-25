@@ -59,7 +59,7 @@ public class CharacterView extends EntityView {
     @Override
     public void init() {
         super.init();
-        onDestroy(inputHandler.addKeyHandler(this::keyPressed));
+        onDestroy(inputHandler.addPressedKeyHandler(this::keyPressed));
     }
 
 }

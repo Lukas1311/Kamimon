@@ -159,6 +159,10 @@ public class TileMap {
                 }
                 TilesetSource source = getSource(data);
                 Tileset tileset = tilesetBySource.get(source);
+                // Index out of bounds for all tile sets
+                if ((data - source.firstgid()) > tileset.data().tilecount()) {
+                    continue;
+                }
                 tileset.setTile(raster, x, y, data);
             }
         }

@@ -5,9 +5,10 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.dummies.WorldDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.stage.Stage;
@@ -24,7 +25,7 @@ public class WorldControllerTest extends ApplicationTest {
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     WorldController worldController = component.worldController();
-    WorldStorage worldStorage = component.worldStorage();
+    WorldRepository worldRepository = component.worldStorage();
     TrainerStorage trainerStorage = component.trainerStorage();
 
     RegionStorage regionStorage = component.regionStorage();
@@ -55,7 +56,8 @@ public class WorldControllerTest extends ApplicationTest {
 
     @Test
     public void worldExists() {
-        worldStorage.setWorld(DummyConstants.WORLD);
+        WorldDummy.addWorldDummy(worldRepository);
+
         app.show(worldController);
 
         SubScene node = lookup("#worldScene").queryAs(SubScene.class);

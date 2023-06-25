@@ -24,7 +24,7 @@ public class TextDeliveryService {
     public Observable<List<RouteData>> getRouteData(IMapProvider mapProvider) {
         if (mapProvider.map() != null) {
             TileMapData mapData = mapProvider.map();
-            TileLayerData routeLayerData = (mapData.layers().isEmpty() ? null : mapData.layers().get(2));
+            TileLayerData routeLayerData = (mapData.layers().isEmpty() || mapData.layers().size() < 2 ? null : mapData.layers().get(2));
             if (routeLayerData == null) {
                 return Observable.just(Collections.emptyList());
             }

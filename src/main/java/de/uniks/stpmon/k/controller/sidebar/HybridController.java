@@ -1,14 +1,6 @@
 package de.uniks.stpmon.k.controller.sidebar;
 
-import de.uniks.stpmon.k.controller.ChooseSpriteController;
-import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.FriendListController;
-import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.LobbyController;
-import de.uniks.stpmon.k.controller.PauseController;
-import de.uniks.stpmon.k.controller.SettingsController;
-import de.uniks.stpmon.k.controller.TrainerManagementController;
-import de.uniks.stpmon.k.controller.UserManagementController;
+import de.uniks.stpmon.k.controller.*;
 import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.controller.chat.ChatListController;
 import de.uniks.stpmon.k.controller.chat.CreateChatController;
@@ -190,7 +182,8 @@ public class HybridController extends Controller {
             case SETTINGS -> pushController(settingsController, setup);
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
-            case CHOOSE_SPRITE -> {chooseSpriteController.setCreationMode(false);
+            case CHOOSE_SPRITE -> {
+                chooseSpriteController.setCreationMode(false);
                 pushController(chooseSpriteController, setup);
             }
             case NONE -> {

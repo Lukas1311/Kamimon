@@ -1,11 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
-import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
@@ -68,8 +68,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    NPCInfo npcInfo = new NPCInfo(false);
-    Trainer dummytrainer = new Trainer("1", "0", "0", "0", "0", 0, "0", 0, 0, 0, npcInfo);
+    Trainer dummytrainer = new Trainer("1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
 
     @Override
     public void start(Stage stage) throws Exception {

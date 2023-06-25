@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class FriendCache extends ListenerCache<User> implements IFriendCache, ILifecycleService {
+public class FriendCache extends ListenerCache<User, String> implements IFriendCache, ILifecycleService {
     private final InternalFriends friends = new InternalFriends();
 
     @Inject
@@ -125,7 +125,7 @@ public class FriendCache extends ListenerCache<User> implements IFriendCache, IL
         return Objects.equals(mainUser, userId);
     }
 
-    private static class InternalFriends extends SimpleCache<User> {
+    private static class InternalFriends extends SimpleCache<User, String> {
 
         private FriendCache friendCache;
 

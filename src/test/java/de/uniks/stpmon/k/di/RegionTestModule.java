@@ -28,15 +28,18 @@ public class RegionTestModule {
             //String is regionId
             final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
             final Map<String, List<Trainer>> trainersHashMap = new HashMap<>();
+
             final List<Monster> monsters = new ArrayList<>();
+
+
 
             /**
              * Adds 2 DummyRegions to the regions list with ids {"id0", "id1"} and
              * names {"TestRegion0", "TestRegion1"}
              */
             private void initDummyRegions() {
-                Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), null);
-                Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), null);
+                Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
+                Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
 
                 regions.add(region0);
                 regions.add(region1);
@@ -141,7 +144,6 @@ public class RegionTestModule {
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
                 Area area = areasHashMap.get(regionId).get(0);
-                NPCInfo npcInfo = new NPCInfo(true);
                 Trainer trainer = new Trainer(
                         String.valueOf(trainerIdCount),
                         regionId,
@@ -153,7 +155,7 @@ public class RegionTestModule {
                         0,
                         0,
                         0,
-                        npcInfo
+                        DummyConstants.NPC_INFO
                 );
                 trainerIdCount++;
                 List<Trainer> trainers = trainersHashMap.get(area._id());
@@ -283,5 +285,4 @@ public class RegionTestModule {
             }
         };
     }
-
 }

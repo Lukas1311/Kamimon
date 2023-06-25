@@ -5,27 +5,30 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" styleClass="intro-screen" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IntroductionController">
-   <center>
-      <VBox alignment="CENTER" maxHeight="500.0" maxWidth="900.0" prefHeight="618.0" prefWidth="1109.0"
-            styleClass="intro-container" BorderPane.alignment="CENTER">
-         <VBox alignment="CENTER" prefHeight="255.0" prefWidth="650.0" VBox.vgrow="ALWAYS">
-            <ImageView id="image1" fx:id="imageIntroduction" fitHeight="487.0" fitWidth="801.0" preserveRatio="true">
-            </ImageView>
-         </VBox>
-         <HBox prefHeight="33.0" prefWidth="898.0">
-            <VBox.margin>
-               <Insets bottom="20.0" left="20.0" right="20.0"/>
-            </VBox.margin>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <Button fx:id="back" mnemonicParsing="false" onAction="#previousSheet"
-                       styleClass="kgm-general-button-blue" text="%previous"/>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="1000.0" styleClass="intro-screen" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IntroductionController">
+    <center>
+        <VBox alignment="CENTER" maxHeight="500.0" maxWidth="900.0" prefHeight="618.0" prefWidth="1109.0"
+              styleClass="intro-container" BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER" prefHeight="255.0" prefWidth="650.0" VBox.vgrow="ALWAYS">
+                <ImageView id="image1" fx:id="imageIntroduction" fitHeight="487.0" fitWidth="801.0"
+                           preserveRatio="true">
+                </ImageView>
+            </VBox>
+            <HBox prefHeight="33.0" prefWidth="898.0">
+                <VBox.margin>
+                    <Insets bottom="20.0" left="20.0" right="20.0"/>
+                </VBox.margin>
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                    <Button fx:id="back" mnemonicParsing="false" onAction="#previousSheet"
+                            styleClass="kgm-general-button-blue" text="%previous"/>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                    <Button fx:id="further" mnemonicParsing="false" onAction="#nextSheet"
+                            styleClass="kgm-general-button-blue" text="%further"/>
+                </HBox>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <Button fx:id="further" mnemonicParsing="false" onAction="#nextSheet"
-                       styleClass="kgm-general-button-blue" text="%further"/>
-            </HBox>
-         </HBox>
-      </VBox>
-   </center>
+        </VBox>
+    </center>
 </BorderPane>

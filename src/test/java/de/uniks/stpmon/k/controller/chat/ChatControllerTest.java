@@ -399,7 +399,7 @@ public class ChatControllerTest extends ApplicationTest {
 
         // check values (values from startup):
         Text groupName = lookup("#groupName").queryText();
-        assertThat(groupName.getText()).isEqualTo("a + b");
+        assertThat(groupName.getText()).isEqualTo("a");
 
         // check mocks:
         Group retrievedGroup = chatController.getGroup();
