@@ -66,15 +66,18 @@ public class LoadingScreenController extends Controller {
         final Parent parent = super.render();
         loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");
         imageViewKamimonLettering.setPreserveRatio(true);
-        imageViewKamimonLettering.setFitWidth(900);
+        imageViewKamimonLettering.setFitWidth(1100.0);
+        imageViewKamimonLettering.setFitHeight(250);
 
         setVectorImage(imageViewDeadBirdsSociety, "deadBirdsSocietyLogo.svg");
         imageViewDeadBirdsSociety.setPreserveRatio(true);
-        imageViewDeadBirdsSociety.setFitHeight(250.0);
+        imageViewDeadBirdsSociety.setFitWidth(200.0);
+        imageViewDeadBirdsSociety.setFitHeight(200.0);
 
         setVectorImage(imageViewKgmLogo, "kgmLogo.svg");
         imageViewKgmLogo.setPreserveRatio(true);
-        imageViewKgmLogo.setFitWidth(250);
+        imageViewKgmLogo.setFitWidth(200.0);
+        imageViewKgmLogo.setFitHeight(200.0);
         return parent;
     }
 
