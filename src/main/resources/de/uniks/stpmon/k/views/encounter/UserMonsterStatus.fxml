@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.encounter.UserMonsterStatusController">
+    <StackPane>
+        <ImageView fx:id="userMonsterView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../../../../../../../../../../../../../SharedResources/Release_03_Ressources/03_Encounter/userMonsterStatus.png"/>
+        </ImageView>
+        <ProgressBar fx:id="userHpBar" prefHeight="5.0" prefWidth="96.0" progress="0.0">
+            <StackPane.margin>
+                <Insets right="19.0" top="2.0"/>
+            </StackPane.margin>
+        </ProgressBar>
+        <HBox alignment="TOP_CENTER">
+            <Text fx:id="userMonsterName" strokeType="OUTSIDE" strokeWidth="0.0" text="Octi">
+                <HBox.margin>
+                    <Insets left="18.0" top="12.0"/>
+                </HBox.margin>
+                <font>
+                    <Font size="8.0"/>
+                </font>
+            </Text>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Text fx:id="userMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+                <HBox.margin>
+                    <Insets right="65.0" top="12.0"/>
+                </HBox.margin>
+                <font>
+                    <Font size="8.0"/>
+                </font>
+            </Text>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="200.0">
+            <Text fx:id="userMonsterHp" strokeType="OUTSIDE" strokeWidth="0.0" text="7/11">
+                <font>
+                    <Font size="8.0"/>
+                </font>
+                <HBox.margin>
+                    <Insets right="38.0"/>
+                </HBox.margin>
+            </Text>
+        </HBox>
+        <ProgressBar fx:id="userExperienceBar" prefHeight="4.0" prefWidth="98.0" progress="0.0">
+            <StackPane.margin>
+                <Insets right="5.0" top="32.0"/>
+            </StackPane.margin>
+        </ProgressBar>
+    </StackPane>
+</VBox>
