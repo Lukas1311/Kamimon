@@ -84,11 +84,12 @@ public class RegionListController extends PortalController {
     }
 
     public void removeLettering(){
-
+        regionListWrapping.getChildren().remove(imageViewKamimonLetteringRegion);
+        regionListWrapping.setAlignment(Pos.CENTER);
     }
 
     public void addLettering(){
-        regionListWrapping.getChildren().remove(imageViewKamimonLetteringRegion);
+        regionListWrapping.getChildren().add(0,imageViewKamimonLetteringRegion);
         regionListWrapping.setAlignment(Pos.CENTER);
     }
 
