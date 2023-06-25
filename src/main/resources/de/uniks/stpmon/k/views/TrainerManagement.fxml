@@ -9,12 +9,12 @@
 <?import org.kordamp.ikonli.javafx.*?>
 
 <VBox fx:id="trainerManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/style.css"
+      minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css"
       xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.TrainerManagementController">
 
     <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
-        <Button fx:id="backButton" mnemonicParsing="false" stylesheets="@css/style.css">
+        <Button fx:id="backButton" mnemonicParsing="false">
             <VBox.margin>
                 <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
             </VBox.margin>
@@ -67,7 +67,7 @@
           prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
         <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
               spacing="20.0" HBox.hgrow="ALWAYS">
-            <Button fx:id="saveChangesButton" mnemonicParsing="false" stylesheets="@css/style.css" text="%saveChanges">
+            <Button fx:id="saveChangesButton" mnemonicParsing="false" text="%saveChanges">
                 <styleClass>
                     <String fx:value="kgm-general-button-blue"/>
                     <String fx:value="settings-button"/>

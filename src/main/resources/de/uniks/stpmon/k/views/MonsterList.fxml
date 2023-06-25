@@ -18,7 +18,7 @@
          </VBox.margin>
       </Polygon>
       <VBox fx:id="monsterListVBox" prefHeight="200.0" prefWidth="120.0" styleClass="outstanding"
-            stylesheets="@css/style.css">
+            stylesheets="@css/generalStyle.css">
          <VBox.margin>
             <Insets/>
          </VBox.margin>

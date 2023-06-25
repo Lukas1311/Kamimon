@@ -54,7 +54,8 @@ public class App extends Application {
         //set scene for loading screen
         final Scene scene = new Scene(new Label("Loading"));
 
-        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/style.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/generalStyle.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/ingameStyle.css")).toExternalForm());
         CSSFX.start(scene);
 
         stage.setScene(scene);

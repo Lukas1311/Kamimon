@@ -8,23 +8,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="loading-screen" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoadingRegionController">
-   <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-            <ImageView fx:id="imageViewKamimonLettering" fitHeight="200.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
-               <VBox.margin>
-                  <Insets bottom="50.0" />
-               </VBox.margin>
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="loading-screen"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.LoadingRegionController">
+    <center>
+        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <ImageView fx:id="imageViewKamimonLettering" fitHeight="200.0" fitWidth="400.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <VBox.margin>
+                    <Insets bottom="50.0"/>
+                </VBox.margin>
             </ImageView>
             <Label fx:id="regionLabel" alignment="CENTER" prefHeight="73.0" prefWidth="250.0" text="Region">
-               <font>
-                  <Font size="45.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="30.0" />
-               </VBox.margin>
+                <font>
+                    <Font size="45.0"/>
+                </font>
+                <VBox.margin>
+                    <Insets bottom="30.0"/>
+                </VBox.margin>
             </Label>
-            <ProgressBar fx:id="progressBar" prefHeight="17.0" prefWidth="387.0" progress="0.0" />
-      </VBox>
-   </center>
+            <ProgressBar fx:id="progressBar" prefHeight="17.0" prefWidth="387.0" progress="0.0"/>
+        </VBox>
+    </center>
 </BorderPane>
