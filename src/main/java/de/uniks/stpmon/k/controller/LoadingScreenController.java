@@ -64,31 +64,18 @@ public class LoadingScreenController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        //setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
-        //setVectorImage(imageViewKamimonLettering, "kamimonLettering_new.svg");
         loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");
         imageViewKamimonLettering.setPreserveRatio(true);
-        imageViewKamimonLettering.fitWidthProperty().bind(hBoxCompanies.widthProperty().multiply(0.5));
-        imageViewKamimonLettering.fitHeightProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
+        imageViewKamimonLettering.setFitWidth(900);
+
 
         setVectorImage(imageViewDeadBirdsSociety, "deadBirdsSocietyLogo.svg");
         imageViewDeadBirdsSociety.setPreserveRatio(true);
-        imageViewDeadBirdsSociety.fitWidthProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
-        imageViewDeadBirdsSociety.fitHeightProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
+        imageViewDeadBirdsSociety.setFitHeight(250.0);
+
         setVectorImage(imageViewKgmLogo, "kgmLogo.svg");
         imageViewKgmLogo.setPreserveRatio(true);
-        imageViewKgmLogo.fitWidthProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
-        imageViewKgmLogo.fitHeightProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
+        imageViewKgmLogo.setFitWidth(250);
         return parent;
     }
 }
