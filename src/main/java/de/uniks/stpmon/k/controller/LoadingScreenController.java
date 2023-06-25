@@ -74,7 +74,7 @@ public class LoadingScreenController extends Controller {
         imageViewDeadBirdsSociety.setFitWidth(200.0);
         imageViewDeadBirdsSociety.setFitHeight(200.0);
 
-        setVectorImage(imageViewKgmLogo, "kgmLogo.svg");
+        setVectorImage(imageViewKgmLogo, "kgmLogo2.svg");
         imageViewKgmLogo.setPreserveRatio(true);
         imageViewKgmLogo.setFitWidth(200.0);
         imageViewKgmLogo.setFitHeight(200.0);
