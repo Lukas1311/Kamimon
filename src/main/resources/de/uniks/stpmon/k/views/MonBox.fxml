@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <StackPane fx:id="monBoxStackPane" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/19"
@@ -45,8 +44,5 @@
    </VBox>
    <ImageView fx:id="monBoxImage" fitHeight="461.0" fitWidth="432.0" nodeOrientation="INHERIT" pickOnBounds="true"
               preserveRatio="true">
-      <image>
-         <Image url="@../controller/monGrid_v4.png"/>
-      </image>
    </ImageView>
 </StackPane>
