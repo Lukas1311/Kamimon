@@ -1,32 +1,78 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.ICache;
+import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
+import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
-public class MonsterService {
-    private final Map<String, Monster> monsters;
+public class MonsterService extends BaseLifecycleService {
+    private boolean isInitialized = false;
+    @Inject
+    CacheManager cacheManager;
+    @Inject
+    TrainerStorage trainerStorage;
+
+    private MonsterCache monsterCache;
 
     @Inject
     public MonsterService() {
-        monsters = new HashMap<>();
+
     }
 
-    public void addMonster(Monster monster) {
-        monsters.put(monster._id(), monster);
+    private void init() {
+        if (isInitialized) {
+            return;
+        }
+        // listen to trainer changes and update monster cache
+        onDestroy(
+                trainerStorage.onTrainer().subscribe(
+                        trainer -> monsterCache = trainer
+                                .map(value -> cacheManager.requestMonsters(value._id()))
+                                .orElse(null)
+                )
+        );
+        isInitialized = true;
     }
 
-    public void removeMonster(String id) {
-        monsters.remove(id);
+    public Observable<List<Monster>> getTeam() {
+        init();
+        if (monsterCache == null) {
+            return Observable.empty();
+        }
+        return getTeamCache().getValues();
     }
 
-    public Monster getMonster(String id) {
-        return monsters.get(id);
+    public Observable<Optional<Monster>> getMonster(String id) {
+        init();
+        if (monsterCache == null) {
+            return Observable.empty();
+        }
+        return getMonsterCache().listenValue(id);
     }
 
-    public int getMonsterList() {
-        return monsters.size();
+    public Observable<List<Monster>> getMonsters() {
+        init();
+        if (monsterCache == null) {
+            return Observable.empty();
+        }
+        return getMonsterCache().getValues();
+    }
+
+    public ICache<Monster, String> getTeamCache() {
+        return getMonsterCache().getTeam();
+    }
+
+    public MonsterCache getMonsterCache() {
+        init();
+        if (monsterCache == null) {
+            throw new IllegalStateException("MonsterCache is not initialized, probably trainer not set");
+        }
+        return monsterCache;
     }
 }

@@ -91,8 +91,8 @@ public class MonsterCacheTest {
     void updateTeam() {
         regionStorage.setRegion(DummyConstants.REGION);
         Monster first = MonsterBuilder.builder().setId(0).create();
-        Monster second = MonsterBuilder.builder().setId(1).create();
-        Monster third = MonsterBuilder.builder().setId(2).create();
+        Monster second = MonsterBuilder.builder(first).setId(1).create();
+        Monster third = MonsterBuilder.builder(first).setId(2).create();
         when(regionService.getMonsters(any(), any())).thenReturn(Observable.just(
                 List.of(
                         first,
