@@ -243,19 +243,34 @@ Load fonts
 	-fx-background-color: white;
 	-fx-focus-color: transparent;
 	-fx-faint-focus-color: transparent;
+	-fx-opacity: 1.0;
+}
+
+.login-text-input:disabled {
+	-fx-opacity: 1.0;
 }
 
 .login-password-button {
-	-fx-pref-width: 45;
+	-fx-pref-width: 40;
 	-fx-pref-height: 35;
-	-fx-min-width: 45;
+	-fx-min-width: 40;
 	-fx-min-height: 35;
-	-fx-max-width: 45;
+	-fx-max-width: 40;
 	-fx-max-height: 35;
 	-fx-focus-color: transparent;
 	-fx-faint-focus-color: transparent;
 	-fx-background-color: transparent;
-	-fx-icon-size: 24;
+	-fx-alignment: center;
+}
+
+.login-password-button-visible .ikonli-font-icon{
+	-fx-icon-code: "mdmz-visibility";
+	-fx-icon-size: 24px;
+}
+
+.login-password-button-invisible .ikonli-font-icon{
+	-fx-icon-code: "mdmz-visibility_off";
+	-fx-icon-size: 24px;
 }
 
 .login-check-box {
