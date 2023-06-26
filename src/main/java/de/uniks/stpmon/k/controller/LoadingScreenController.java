@@ -64,29 +64,21 @@ public class LoadingScreenController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
+        loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");
         imageViewKamimonLettering.setPreserveRatio(true);
-        imageViewKamimonLettering.fitWidthProperty().bind(hBoxCompanies.widthProperty().multiply(0.5));
-        imageViewKamimonLettering.fitHeightProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
+        imageViewKamimonLettering.setFitWidth(1100.0);
+        imageViewKamimonLettering.setFitHeight(250);
 
         setVectorImage(imageViewDeadBirdsSociety, "deadBirdsSocietyLogo.svg");
         imageViewDeadBirdsSociety.setPreserveRatio(true);
-        imageViewDeadBirdsSociety.fitWidthProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
-        imageViewDeadBirdsSociety.fitHeightProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
-        setVectorImage(imageViewKgmLogo, "kgmLogo.svg");
+        imageViewDeadBirdsSociety.setFitWidth(200.0);
+        imageViewDeadBirdsSociety.setFitHeight(200.0);
+
+        setVectorImage(imageViewKgmLogo, "kgmLogo2.svg");
         imageViewKgmLogo.setPreserveRatio(true);
-        imageViewKgmLogo.fitWidthProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
-        imageViewKgmLogo.fitHeightProperty().bind(
-                hBoxCompanies.heightProperty().multiply(0.5)
-        );
+        imageViewKgmLogo.setFitWidth(200.0);
+        imageViewKgmLogo.setFitHeight(200.0);
         return parent;
     }
+
 }

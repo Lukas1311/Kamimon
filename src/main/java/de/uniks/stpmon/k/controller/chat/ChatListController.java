@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.GroupService;
+import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.ChatCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,8 @@ public class ChatListController extends TabController {
     VBox chatList;
     @Inject
     GroupService groupService;
+    @Inject
+    UserService userService;
     @Inject
     EventListener eventListener;
 
@@ -96,5 +99,14 @@ public class ChatListController extends TabController {
      */
     public void createChat() {
         pushTab(CHAT_CREATE);
+    }
+
+
+    /**
+     * returns the username from the current user
+     * @return username of current user
+     */
+    public String getCurrentUsername() {
+        return userService.getMe().name();
     }
 }
