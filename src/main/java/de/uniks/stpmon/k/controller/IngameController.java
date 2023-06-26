@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
@@ -52,6 +53,11 @@ public class IngameController extends PortalController {
     @Inject
     WorldController worldController;
 
+    @Inject
+    InputHandler inputHandler;
+
+    private Parent mapOverview;
+
 
     @Inject
     public IngameController() {
@@ -67,6 +73,35 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
+
+        inputHandler.addPressedKeyFilter(event -> {
+            if (mapOverview != null) {
+                switch (event.getCode()) {
+                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B -> {
+                        // Block movement and backpack, if map overview is shown
+                        if (mapOverview.isVisible()) {
+                            event.consume();
+                        }
+                    }
+                    case M -> {
+                        if (mapOverview.isVisible()) {
+                            mapOverview.setVisible(false);
+                        } else {
+                            mapOverview.setVisible(true);
+                        }
+                        event.consume();
+                    }
+
+                    case ESCAPE -> {
+                        if(mapOverview.isVisible()){
+                            mapOverview.setVisible(false);
+                            event.consume();
+                        }
+                    }
+
+                }
+            }
+        });
     }
 
     @Override
@@ -102,7 +137,7 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(0, miniMap);
         }
 
-        Parent mapOverview = this.mapOverviewController.render();
+        mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
