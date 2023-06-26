@@ -28,7 +28,7 @@ public class RegionTestModule {
             final List<Region> regions = new ArrayList<>();
             //String is regionId
             final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
-            final Map<String, List<Trainer>> trainersHashMap = new HashMap<>();
+            final Map<String, List<Trainer>> trainersHashMap = new LinkedHashMap<>();
 
             final List<Monster> monsters = new ArrayList<>();
 
@@ -100,6 +100,7 @@ public class RegionTestModule {
              * Adds 1 Trainer to each area
              */
             private void initDummyTrainers() {
+                int monsterIdCount = 0;
                 for (Region region : regions) {
                     for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
@@ -111,6 +112,7 @@ public class RegionTestModule {
                                 .setName(name)
                                 .setImage(trainerImage)
                                 .setUser(USER_ID)
+                                .addTeam(Integer.toString(monsterIdCount++))
                                 .create();
                         ArrayList<Trainer> trainers = new ArrayList<>();
                         trainers.add(trainer);
@@ -264,7 +266,6 @@ public class RegionTestModule {
             @Override
             public Observable<List<Monster>> getMonsters(String regionId, String trainerId) {
                 return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
-
             }
 
             @Override
