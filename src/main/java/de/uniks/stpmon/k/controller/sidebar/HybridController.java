@@ -89,14 +89,18 @@ public class HybridController extends Controller {
 
         //use filter to consume ingame events, if in lobby
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            if(currentWindow == MainWindow.LOBBY){
+            if(currentWindow == MainWindow.LOBBY || currentWindow == MainWindow.PAUSE){
                 switch (event.getCode()) {
                     case W, A, S, D, M, B, N, ENTER, LEFT, RIGHT, UP, DOWN ->
                         //Block ingame control
                             event.consume();
-                    case P ->
-                        //Block Pause
+                    case P -> {
+                        //Block Pause, if in Lobby
+                        if(currentWindow == MainWindow.LOBBY) {
                             event.consume();
+                        }
+                    }
+
                 }
             }
         }));
@@ -145,8 +149,9 @@ public class HybridController extends Controller {
     }
 
     private void openMain(Controller controller) {
-        removeChildren(0);
-
+        if(!(controller instanceof PauseController)){
+            removeChildren(0);
+        }
         pushController(controller, null);
     }
 
