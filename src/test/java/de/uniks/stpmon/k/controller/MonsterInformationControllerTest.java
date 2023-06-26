@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -80,7 +81,13 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         AbilityDto abilityDto = new AbilityDto(1, "abilityName", null, "abilityType", 20, null, null);
         MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
         MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
-        Monster monster = new Monster("id", null, 1, 1, 0, abilities, attributes, currentAttributes);
+        Monster monster = MonsterBuilder.builder().setId("id")
+                .setType(1)
+                .setLevel(1)
+                .setAbilities(abilities)
+                .setAttributes(attributes)
+                .setCurrentAttributes(currentAttributes)
+                .create();
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
 
@@ -107,7 +114,13 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         AbilityDto abilityDto = new AbilityDto(1, "abilityName", "AbilityDescription", "abilityType", 20, null, null);
         MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
         MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
-        Monster monster = new Monster("id", null, 1, 1, 0, abilities, attributes, currentAttributes);
+        Monster monster = MonsterBuilder.builder().setId("id")
+                .setType(1)
+                .setLevel(1)
+                .setAbilities(abilities)
+                .setAttributes(attributes)
+                .setCurrentAttributes(currentAttributes)
+                .create();
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
 

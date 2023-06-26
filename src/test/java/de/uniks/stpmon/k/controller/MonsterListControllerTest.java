@@ -3,8 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
@@ -67,9 +66,10 @@ public class MonsterListControllerTest extends ApplicationTest {
         when(cacheManager.monsterTypeCache()).thenReturn(monsterTypeCache);
         // Set up mock
         when(monsterCache.getValues()).thenReturn(Observable.just(
-                List.of(new Monster("1", null, 1, null, null, null, new MonsterAttributes(10, null, null, null), new MonsterAttributes(10, null, null, null)),
-                        new Monster("2", null, 2, null, null, null, new MonsterAttributes(10, null, null, null), new MonsterAttributes(10, null, null, null)),
-                        new Monster("3", null, 2, null, null, null, new MonsterAttributes(10, null, null, null), new MonsterAttributes(10, null, null, null)))));
+                List.of(MonsterBuilder.builder().setId("1").setType(1).create(),
+                        MonsterBuilder.builder().setId("2").setType(2).create(),
+                        MonsterBuilder.builder().setId("3").setType(2).create()
+                )));
 
         when(monsterTypeCache.getValue("1"))
                 .thenReturn(Optional.of(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));

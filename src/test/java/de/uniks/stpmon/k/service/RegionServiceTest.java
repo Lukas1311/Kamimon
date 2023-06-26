@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -71,16 +72,11 @@ class RegionServiceTest {
     }
 
     private Monster makeMonster() {
-        return new Monster(
-                "monsterId",
-                "trainerId",
-                1,
-                0,
-                0,
-                null,
-                null,
-                null
-        );
+        return MonsterBuilder.builder()
+                .setId("monsterId")
+                .setTrainer("trainerId")
+                .setType(1)
+                .create();
     }
 
     //---------------- Region Trainers ----------------------------
