@@ -15,6 +15,30 @@ import java.util.stream.IntStream;
 @SuppressWarnings("unused")
 public class DummyConstants {
 
+    public static final User USER_ALICE = new User(
+            "id_alice",
+            "Alice",
+            null,
+            null,
+            null
+    );
+
+    public static final User USER_BOB = new User(
+            "id_bob",
+            "Bob",
+            null,
+            null,
+            null
+    );
+
+    public static final User USER_EVE = new User(
+            "id_eve",
+            "Eve",
+            null,
+            null,
+            null
+    );
+
     public static final Trainer TRAINER = new Trainer(
             "0",
             "region_0",
@@ -155,4 +179,5 @@ public class DummyConstants {
             null
     );
     public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
+
 }

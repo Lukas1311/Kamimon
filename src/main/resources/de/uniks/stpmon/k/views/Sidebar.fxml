@@ -4,50 +4,59 @@
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<GridPane fx:id="grid" alignment="TOP_CENTER" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="500.0" prefWidth="50.0" styleClass="sidebar-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.sidebar.SidebarController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS" />
-      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS" />
-   </rowConstraints>
-   <VBox alignment="TOP_CENTER" prefWidth="50.0" GridPane.hgrow="ALWAYS" GridPane.valignment="TOP">
-      <Button fx:id="chat" mnemonicParsing="false" onAction="#openChat" prefHeight="50.0" prefWidth="50.0" styleClass="sidebar-button" stylesheets="@css/style.css">
-         <graphic>
-            <FontIcon iconLiteral="mdmz-message"/>
-         </graphic>
-         <tooltip>
-            <Tooltip text="%chat" />
-         </tooltip>
-      </Button>
-      <Button fx:id="friends" mnemonicParsing="false" onAction="#openFriends" prefHeight="50.0" prefWidth="50.0" styleClass="sidebar-button" stylesheets="@css/style.css">
-         <graphic>
-            <FontIcon iconLiteral="mdal-group" />
-         </graphic>
-         <tooltip>
-            <Tooltip text="%friends" />
-         </tooltip>
-      </Button>
-   </VBox>
-   <VBox alignment="BOTTOM_CENTER" prefWidth="50.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-      <Button fx:id="pause" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#toPause" prefHeight="50.0" prefWidth="50.0" styleClass="sidebar-button" stylesheets="@css/style.css">
-         <graphic>
-            <FontIcon iconLiteral="mdi-play-pause" />
-         </graphic>
-      </Button>
-      <Button fx:id="settings" mnemonicParsing="false" onAction="#openSettings" prefHeight="50.0" prefWidth="50.0" styleClass="sidebar-button" stylesheets="@css/style.css">
-         <graphic>
-            <FontIcon iconLiteral="mdmz-settings" />
-         </graphic>
-         <tooltip>
-            <Tooltip text="%settings" />
-         </tooltip>
-      </Button>
-      <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="50.0" styleClass="sidebar-button" stylesheets="@css/style.css">
-         <graphic>
-            <FontIcon iconLiteral="mdal-home" />
-         </graphic>
-      </Button>
-   </VBox>
+<GridPane fx:id="grid" alignment="TOP_CENTER" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="500.0"
+          prefWidth="50.0" styleClass="sidebar-holder" stylesheets="@css/generalStyle.css"
+          xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="de.uniks.stpmon.k.controller.sidebar.SidebarController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS"/>
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="100.0" vgrow="ALWAYS"/>
+    </rowConstraints>
+    <VBox alignment="TOP_CENTER" prefWidth="50.0" GridPane.hgrow="ALWAYS" GridPane.valignment="TOP">
+        <Button fx:id="chat" mnemonicParsing="false" onAction="#openChat" prefHeight="50.0" prefWidth="50.0"
+                styleClass="sidebar-button">
+            <graphic>
+                <FontIcon iconLiteral="mdmz-message"/>
+            </graphic>
+            <tooltip>
+                <Tooltip text="%chat"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="friends" mnemonicParsing="false" onAction="#openFriends" prefHeight="50.0" prefWidth="50.0"
+                styleClass="sidebar-button">
+            <graphic>
+                <FontIcon iconLiteral="mdal-group"/>
+            </graphic>
+            <tooltip>
+                <Tooltip text="%friends"/>
+            </tooltip>
+        </Button>
+    </VBox>
+    <VBox alignment="BOTTOM_CENTER" prefWidth="50.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+          GridPane.valignment="BOTTOM">
+        <Button fx:id="pause" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#toPause"
+                prefHeight="50.0" prefWidth="50.0" styleClass="sidebar-button">
+            <graphic>
+                <FontIcon iconLiteral="mdi-play-pause"/>
+            </graphic>
+        </Button>
+        <Button fx:id="settings" mnemonicParsing="false" onAction="#openSettings" prefHeight="50.0" prefWidth="50.0"
+                styleClass="sidebar-button">
+            <graphic>
+                <FontIcon iconLiteral="mdmz-settings"/>
+            </graphic>
+            <tooltip>
+                <Tooltip text="%settings"/>
+            </tooltip>
+        </Button>
+        <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="50.0"
+                styleClass="sidebar-button">
+            <graphic>
+                <FontIcon iconLiteral="mdal-home"/>
+            </graphic>
+        </Button>
+    </VBox>
 </GridPane>

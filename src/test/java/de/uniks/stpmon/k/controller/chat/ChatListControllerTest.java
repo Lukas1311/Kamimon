@@ -1,12 +1,14 @@
 package de.uniks.stpmon.k.controller.chat;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.ToastController;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.GroupService;
+import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.utils.ExceptionHelper;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -42,6 +44,8 @@ class ChatListControllerTest extends ApplicationTest {
     @Mock
     GroupService groupService;
     @Mock
+    UserService userService;
+    @Mock
     EventListener eventListener;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
@@ -64,6 +68,7 @@ class ChatListControllerTest extends ApplicationTest {
         groups.add(new Group(null, null, "0", "Peter", null));
         when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(groupEvents);
         when(groupService.getOwnGroups()).thenReturn(Observable.just(groups));
+        when(userService.getMe()).thenReturn(DummyConstants.USER_ALICE);
         app.show(chatListController);
         stage.requestFocus();
     }

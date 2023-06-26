@@ -38,7 +38,10 @@ public class RegionController extends Controller {
         regionNameText.setText(region.name());
         regionVBox.setSpacing(10);
         loadImage(regionImage, "AlbertaniaMapLight.png");
-        regionVBox.setOnMouseClicked(event -> listController.createNewTrainer(region));
+        regionVBox.setOnMouseClicked(event -> {
+            listController.removeLettering();
+            listController.createNewTrainer(region);
+        });
         regionImage.setFitWidth(vboxWidth - borderSize * 2);
         imageWrappingPane.setPrefWidth(400);
         imageWrappingPane.setPrefHeight(regionImage.getFitHeight() + borderSize * 2);

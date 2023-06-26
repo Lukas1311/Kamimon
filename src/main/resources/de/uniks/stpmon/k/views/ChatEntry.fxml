@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <VBox fx:id="chatEntry" alignment="CENTER" maxHeight="-Infinity" maxWidth="370.0" styleClass="chat-element"
-      stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.chat.ChatEntryController">
     <padding>
         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>

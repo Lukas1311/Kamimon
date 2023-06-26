@@ -7,8 +7,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<BorderPane fx:id="mapOverviewContent" styleClass="map-overview-content" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/19"
+<BorderPane fx:id="mapOverviewContent" styleClass="map-overview-content" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
+            minWidth="-Infinity" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
     <top>
         <StackPane prefHeight="25.0" prefWidth="200.0" BorderPane.alignment="CENTER">
