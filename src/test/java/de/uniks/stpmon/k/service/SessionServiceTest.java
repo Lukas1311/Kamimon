@@ -44,11 +44,12 @@ class SessionServiceTest {
     void loadEncounter() {
         trainerStorage.setTrainer(TrainerBuilder.builder().setId("0").create());
         encounterStorage.setEncounter(new Encounter("", "", false));
+        Opponent battleOpponent = OpponentBuilder.builder().setId("0").create();
         List<Opponent> opponents = List.of(
-                OpponentBuilder.builder().setId("0").create(),
-                OpponentBuilder.builder().setId("1").create(),
-                OpponentBuilder.builder().setId("2").create(),
-                OpponentBuilder.builder().setId("3").create()
+                battleOpponent,
+                OpponentBuilder.builder(battleOpponent).setId("1").create(),
+                OpponentBuilder.builder(battleOpponent).setId("2").create(),
+                OpponentBuilder.builder(battleOpponent).setId("3").create()
         );
         OpponentCache cache = Mockito.mock(OpponentCache.class);
         when(cache.getValues()).thenReturn(Observable.just(opponents));
