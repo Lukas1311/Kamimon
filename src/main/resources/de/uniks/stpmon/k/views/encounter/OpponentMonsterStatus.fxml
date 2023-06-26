@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -11,18 +10,14 @@
       prefHeight="105.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.encounter.OpponentMonsterStatusController">
     <StackPane>
-        <ImageView fx:id="opponentMonsterStatusView" fitHeight="105.0" fitWidth="386.0">
-            <image>
-                <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/opponentMonsterStatus.png"/>
-            </image>
-        </ImageView>
+        <ImageView fx:id="opponentMonsterStatusView" fitHeight="105.0" fitWidth="386.0"/>
         <ProgressBar fx:id="opponentHpBar" prefHeight="7.0" prefWidth="184.0" progress="0.0">
             <StackPane.margin>
                 <Insets left="23.0" top="15.0"/>
             </StackPane.margin>
         </ProgressBar>
         <HBox alignment="TOP_CENTER">
-            <Text fx:id="opponentMonsterName" strokeType="OUTSIDE" strokeWidth="0.0" text="Rootix">
+            <Text fx:id="opponentMonsterName" strokeType="OUTSIDE" strokeWidth="0.0">
                 <HBox.margin>
                     <Insets left="65.0" top="12.0"/>
                 </HBox.margin>
@@ -31,7 +26,7 @@
                 </font>
             </Text>
             <HBox HBox.hgrow="ALWAYS"/>
-            <Text fx:id="opponentMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+            <Text fx:id="opponentMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0">
                 <HBox.margin>
                     <Insets right="95.0" top="12.0"/>
                 </HBox.margin>

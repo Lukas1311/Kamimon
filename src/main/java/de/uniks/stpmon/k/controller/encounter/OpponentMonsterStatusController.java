@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.models.Monster;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
@@ -20,17 +21,23 @@ public class OpponentMonsterStatusController extends Controller {
     public Text opponentMonsterLevel;
 
 
-    @Inject
-    public OpponentMonsterStatusController() {}
+    private final Monster monster;
 
-    @Override
-    public void init() {
-        loadImage(opponentMonsterStatusView, "encounter/opponentMonsterStatus.png");
+    @Inject
+    public OpponentMonsterStatusController(Monster monster) {
+        this.monster = monster;
     }
 
     @Override
     public Parent render() {
-        return super.render();
+        final Parent parent = super.render();
+
+        loadImage(opponentMonsterStatusView, "encounter/opponentMonsterStatus.png");
+
+        opponentMonsterName.setText(monster._id());
+        opponentMonsterLevel.setText("Lvl. " + monster.level().toString());
+
+        return parent;
     }
 
     @Override

@@ -17,7 +17,7 @@ public class EncounterOverviewController extends Controller {
     public VBox userMonsters;
     public VBox opponentMonsters;
 
-    List<Monster> dummyMonster = new ArrayList<>();
+    List<Monster> dummyMonsters = new ArrayList<>();
 
     @Inject
     public EncounterOverviewController() {
@@ -25,7 +25,50 @@ public class EncounterOverviewController extends Controller {
 
     @Override
     public void init() {
-
+        Monster amogus = new Monster(
+                "Amogus",
+                "testTrainer",
+                0,
+                1,
+                1,
+                null,
+                null,
+                null
+        );
+        Monster zuendorn = new Monster(
+                "Zuendorn",
+                "testTrainer",
+                0,
+                2,
+                2,
+                null,
+                null,
+                null
+        );
+        Monster angrian = new Monster(
+                "Angrian",
+                "opponentTrainer",
+                0,
+                3,
+                3,
+                null,
+                null,
+                null
+        );
+        Monster sanddorm = new Monster(
+                "Sanddorm",
+                "opponentTrainer",
+                0,
+                4,
+                4,
+                null,
+                null,
+                null
+        );
+        dummyMonsters.add(amogus);
+        dummyMonsters.add(zuendorn);
+        dummyMonsters.add(angrian);
+        dummyMonsters.add(sanddorm);
     }
 
     @Override
@@ -34,12 +77,23 @@ public class EncounterOverviewController extends Controller {
 
         loadImage(background, "encounter/FOREST.png");
 
-        UserMonsterStatusController userMonsterStatusController = new UserMonsterStatusController();
-        UserMonsterStatusController userMonsterStatusController2 = new UserMonsterStatusController();
-        userMonsters.getChildren().add(userMonsterStatusController.render());
-        userMonsters.getChildren().add(userMonsterStatusController2.render());
+        renderMonsters();
 
         return parent;
+    }
+
+    private void renderMonsters() {
+        for (Monster monster : dummyMonsters) {
+            if (monster.trainer().equals("testTrainer")) {
+                UserMonsterStatusController userMonsterStatusController = new UserMonsterStatusController(monster);
+                userMonsterStatusController.init();
+                userMonsters.getChildren().add(userMonsterStatusController.render());
+            } else {
+                OpponentMonsterStatusController opponentMonsterStatusController = new OpponentMonsterStatusController(monster);
+                opponentMonsterStatusController.init();
+                opponentMonsters.getChildren().add(opponentMonsterStatusController.render());
+            }
+        }
     }
 
     @Override

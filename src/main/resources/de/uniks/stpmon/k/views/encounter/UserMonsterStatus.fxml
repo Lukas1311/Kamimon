@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -11,18 +10,14 @@
       fx:controller="de.uniks.stpmon.k.controller.encounter.UserMonsterStatusController">
     <StackPane>
         <ImageView fx:id="userMonsterStatusView" fitHeight="117.0" fitWidth="386.0" pickOnBounds="true"
-                   preserveRatio="true">
-            <image>
-                <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/userMonsterStatus.png"/>
-            </image>
-        </ImageView>
+                   preserveRatio="true"/>
         <ProgressBar fx:id="userHpBar" prefHeight="8.0" prefWidth="185.0" progress="0.0">
             <StackPane.margin>
                 <Insets right="37.0" top="5.0"/>
             </StackPane.margin>
         </ProgressBar>
         <HBox alignment="TOP_CENTER">
-            <Text fx:id="userMonsterName" strokeType="OUTSIDE" strokeWidth="0.0" text="Octi">
+            <Text fx:id="userMonsterName" strokeType="OUTSIDE" strokeWidth="0.0">
                 <HBox.margin>
                     <Insets left="35.0" top="12.0"/>
                 </HBox.margin>
@@ -31,7 +26,7 @@
                 </font>
             </Text>
             <HBox HBox.hgrow="ALWAYS"/>
-            <Text fx:id="userMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+            <Text fx:id="userMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0">
                 <HBox.margin>
                     <Insets right="125.0" top="12.0"/>
                 </HBox.margin>
