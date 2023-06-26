@@ -992,3 +992,8 @@ Load fonts
 .map-overview-content {
 	-fx-background-color: black;
 }
+
+.starter {
+    -fx-background-image: url("../images/starter-choice-box.png");
+	-fx-background-size: cover;
+}

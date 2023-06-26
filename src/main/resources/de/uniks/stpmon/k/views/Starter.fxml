@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="starterBox" alignment="TOP_CENTER" prefHeight="332.0" prefWidth="250.0" styleClass="starter"
+      stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.StarterController">
+   <ImageView fx:id="starterImage" fitHeight="160.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+      <VBox.margin>
+         <Insets bottom="60.0" top="40.0"/>
+      </VBox.margin>
+   </ImageView>
+   <Label fx:id="monsterNameLabel" textFill="WHITE"/>
+</VBox>
