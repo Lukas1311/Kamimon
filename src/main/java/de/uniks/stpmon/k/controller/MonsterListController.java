@@ -35,9 +35,9 @@ public class MonsterListController extends Controller {
     public void init() {
         super.init();
 
-        subscribe(monsterService.getTeam(), this::showMonsterList);
+        subscribe(monsterService.getTeam(), this::updateListContent);
 
-        updateMonsterStatus();
+        updateStatus();
     }
 
     @Override
@@ -45,15 +45,15 @@ public class MonsterListController extends Controller {
         Parent render = super.render();
         monsterInformation.setVisible(false);
         // Does not block, because the cache is already initialized
-        showMonsterList(monsterService.getTeam().blockingFirst());
+        updateListContent(monsterService.getTeam().blockingFirst());
         return render;
     }
 
     /**
-     * Set the list of monsters in the monsterListVBox
+     * Updates the container text in the monster list.
      */
-    public void showMonsterList(List<Monster> monsters) {
-        updateMonsterStatus();
+    public void updateListContent(List<Monster> monsters) {
+        updateStatus();
 
         if (monsterListVBox == null) {
             return;
@@ -67,7 +67,7 @@ public class MonsterListController extends Controller {
             if (monster != null) {
                 subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
                     monsterLabel.setText(type.name());
-                    monsterLabel.setOnMouseClicked(event -> showMonsterInformation(monster, monsterLabel));
+                    monsterLabel.setOnMouseClicked(event -> showInformation(monster, monsterLabel));
                 });
             } else {
                 // Display "<free>" if no monster exists
@@ -77,7 +77,7 @@ public class MonsterListController extends Controller {
         }
     }
 
-    public void showMonsterInformation(Monster monster, Label monsterLabel) {
+    public void showInformation(Monster monster, Label monsterLabel) {
         if (monsterInformation.isVisible() && monsterInformation.isVisible()) {
             monsterInformation.setVisible(false);
             subscribe(presetService.getMonster(String.valueOf(monster.type())),
@@ -93,7 +93,10 @@ public class MonsterListController extends Controller {
         }
     }
 
-    public void updateMonsterStatus() {
+    /**
+     * Updates the monster status in the monster list.
+     */
+    public void updateStatus() {
         List<Monster> monsters = monsterService.getTeam().blockingFirst();
         for (int slot = 0; slot < monsters.size(); slot++) {
             Monster monster = monsters.get(slot);
