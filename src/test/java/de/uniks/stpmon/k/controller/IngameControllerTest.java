@@ -3,11 +3,13 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +43,7 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     RegionStorage regionStorage;
     @Spy
+    @InjectMocks
     BackpackController backpackController;
     @Spy
     Provider<BackpackMenuController> backpackMenuControllerProvider;
@@ -54,6 +57,8 @@ public class IngameControllerTest extends ApplicationTest {
     WorldController worldController;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
+    @Spy
+    InputHandler inputHandler;
     @Spy
     App app = new App(null);
     @Spy
@@ -69,7 +74,14 @@ public class IngameControllerTest extends ApplicationTest {
         regionStorage = minimapController.regionStorage;
         mapOverviewController.closeButton = new Button("");
         app.show(ingameController);
+        app.addInputHandler(inputHandler);
         stage.requestFocus();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Remove event handlers
+        app.removeInputHandler(inputHandler);
     }
 
     @Test
