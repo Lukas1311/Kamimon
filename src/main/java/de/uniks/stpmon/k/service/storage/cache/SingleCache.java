@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public class SingleCache<V> {
 
-    private final BehaviorSubject<Optional<V>> value = BehaviorSubject.createDefault(Optional.empty());
+    protected final BehaviorSubject<Optional<V>> value = BehaviorSubject.createDefault(Optional.empty());
 
     public void setValue(V value) {
         this.value.onNext(Optional.ofNullable(value));

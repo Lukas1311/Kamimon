@@ -116,6 +116,11 @@ public class TrainerBuilder {
         return this;
     }
 
+    public TrainerBuilder removeTeam(String team) {
+        this.team.remove(team);
+        return this;
+    }
+
     public TrainerBuilder setUser(String user) {
         this.user = user;
         return this;
