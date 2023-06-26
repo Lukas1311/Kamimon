@@ -1,9 +1,12 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.controller.StarterController;
+import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 
 import javax.inject.Inject;
@@ -21,6 +24,8 @@ public class InteractionService implements ILifecycleService {
     RegionService regionService;
     @Inject
     StarterController starterController;
+    @Inject
+    EventListener listener;
 
     @Inject
     public InteractionService() {
@@ -38,8 +43,9 @@ public class InteractionService implements ILifecycleService {
         List<String> starters = info.starters();
 
         if (starters != null && !starters.isEmpty()) {
+            Trainer me = trainerService.getMe();
             return Dialogue.builder()
-                    .addItem("Hello " + trainerService.getMe().name() + ",\nAre you ready for your first Mon?")
+                    .addItem("Hello " + me.name() + ",\nAre you ready for your first Mon?")
                     .addItem("You can choose one of three different types.")
                     .addItem().setText("Take your time and choose wisely!")
                     .addOption().setText("Fire")
@@ -47,6 +53,12 @@ public class InteractionService implements ILifecycleService {
                         interactionStorage.selectedStarter().setValue("Fire");
                         starterController.setStarter("1");
                         starterController.starterBox.setVisible(true);
+                    })
+                    .addAction(() -> {
+                        interactionStorage.selectedStarter().reset();
+                        starterController.starterBox.setVisible(false);
+                        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
+                                new TalkTrainerDto(me._id(), trainer._id(),0));
                     })
                     .setNext(Dialogue.builder().addItem("You have chosen Flamander, the Fire type Mon.").create())
                     .endOption()
@@ -56,6 +68,12 @@ public class InteractionService implements ILifecycleService {
                         starterController.setStarter("3");
                         starterController.starterBox.setVisible(true);
                     })
+                    .addAction(() -> {
+                        interactionStorage.selectedStarter().reset();
+                        starterController.starterBox.setVisible(false);
+                        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
+                                new TalkTrainerDto(me._id(), trainer._id(),1));
+                    })
                     .setNext(Dialogue.builder().addItem("You have chosen Octi, the Water type Mon.").create())
                     .endOption()
                     .addOption().setText("Grass")
@@ -64,12 +82,14 @@ public class InteractionService implements ILifecycleService {
                         starterController.setStarter("5");
                         starterController.starterBox.setVisible(true);
                     })
-                    .setNext(Dialogue.builder().addItem("You have chosen Caterpi, the Grass type Mon.").create())
-                    .endOption()
                     .addAction(() -> {
                         interactionStorage.selectedStarter().reset();
                         starterController.starterBox.setVisible(false);
+                        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
+                                new TalkTrainerDto(me._id(), trainer._id(),2));
                     })
+                    .setNext(Dialogue.builder().addItem("You have chosen Caterpi, the Grass type Mon.").create())
+                    .endOption()
                     .endItem()
                     .create();
         }
