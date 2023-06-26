@@ -1,13 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
-import de.uniks.stpmon.k.service.storage.cache.MonsterTypeCache;
+import de.uniks.stpmon.k.service.MonsterService;
+import de.uniks.stpmon.k.service.PresetService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -22,11 +19,9 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -34,9 +29,6 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterListControllerTest extends ApplicationTest {
-    @Mock
-    MonsterCache monsterCache;
-
     @Spy
     App app = new App(null);
     @Spy
@@ -50,31 +42,26 @@ public class MonsterListControllerTest extends ApplicationTest {
     MonsterListController monsterListController;
 
     @Mock
-    TrainerStorage trainerStorage;
+    PresetService presetService;
     @Mock
-    CacheManager cacheManager;
-    @Mock
-    MonsterTypeCache monsterTypeCache;
+    MonsterService monsterService;
 
 
     @Override
     public void start(Stage stage) throws Exception {
         // show app
         app.start(stage);
-        when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER);
-        when(cacheManager.requestMonsters(any())).thenReturn(monsterCache);
-        when(cacheManager.monsterTypeCache()).thenReturn(monsterTypeCache);
         // Set up mock
-        when(monsterCache.getValues()).thenReturn(Observable.just(
+        when(monsterService.getTeam()).thenReturn(Observable.just(
                 List.of(MonsterBuilder.builder().setId("1").setType(1).create(),
                         MonsterBuilder.builder().setId("2").setType(2).create(),
                         MonsterBuilder.builder().setId("3").setType(2).create()
                 )));
 
-        when(monsterTypeCache.getValue("1"))
-                .thenReturn(Optional.of(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
-        when(monsterTypeCache.getValue("2"))
-                .thenReturn(Optional.of(new MonsterTypeDto(1, "Monster 2", "", List.of(), "")));
+        when(presetService.getMonster("1")).thenReturn(
+                Observable.just(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
+        when(presetService.getMonster("2")).thenReturn(
+                Observable.just(new MonsterTypeDto(1, "Monster 2", "", List.of(), "")));
 
         when(resourceBundleProvider.get()).thenReturn(resources);
 
