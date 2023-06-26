@@ -6,7 +6,7 @@
 
 /* -------------------- Pause Screen -------------------- */
 .pause {
-    -fx-background-color: #303030b0;
+    -fx-background-color: #303030d0;
 }
 
 .pause-inner-containers{
@@ -14,7 +14,7 @@
 }
 
 .pause-text {
-    -fx-font-size: 70px;
+    -fx-font-size: 90px;
     -fx-fill: white;
 }
 
