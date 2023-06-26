@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.RegionService;
@@ -61,45 +62,23 @@ public class TrainerCacheTest {
 
     @Test
     void checkWSEvents() {
-        Trainer created = new Trainer(
-                "1",
-                "id0",
-                "userId",
-                "TestTrainer",
-                "trainerImage",
-                0,
-                "0",
-                0,
-                0,
-                0,
-                null
-        );
-        Trainer updated = new Trainer(
-                "1",
-                "id0",
-                "userId",
-                "UpdatedTrainer",
-                "trainerImage",
-                0,
-                "0",
-                0,
-                0,
-                0,
-                null
-        );
-        Trainer user = new Trainer(
-                "0",
-                "id0",
-                "userId",
-                "TestTrainer",
-                "trainerImage",
-                0,
-                "0",
-                0,
-                0,
-                0,
-                null
-        );
+        Trainer created = TrainerBuilder.builder()
+                .setId(1)
+                .setRegion("id0")
+                .setName("TestTrainer")
+                .setImage("trainerImage")
+                .setArea("0")
+                .create();
+        Trainer updated = TrainerBuilder.builder(created)
+                .setName("UpdatedTrainer")
+                .create();
+        Trainer user = TrainerBuilder.builder()
+                .setId(0)
+                .setRegion("id0")
+                .setName("TestTrainer")
+                .setImage("trainerImage")
+                .setArea("0")
+                .create();
 
         TrainerAreaCache otherCache = Mockito.mock(TrainerAreaCache.class);
         when(trainerAreaProvider.get()).thenReturn(trainerAreaCache, otherCache);

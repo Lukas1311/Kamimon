@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -54,18 +55,8 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
                             if (trainerOptional.isEmpty()) {
                                 return;
                             }
-                            Trainer trainer = trainerOptional.get();
-                            Trainer newTrainer = new Trainer(trainer._id(),
-                                    trainer.region(),
-                                    trainer.user(),
-                                    trainer.name(),
-                                    trainer.image(),
-                                    trainer.coins(),
-                                    dto.area(),
-                                    dto.x(),
-                                    dto.y(),
-                                    dto.direction(),
-                                    trainer.npc());
+                    Trainer trainer = trainerOptional.get();
+                    Trainer newTrainer = TrainerBuilder.builder(trainer).applyMove(dto).create();
                             trainerCache.updateValue(newTrainer);
                         }
                 ));

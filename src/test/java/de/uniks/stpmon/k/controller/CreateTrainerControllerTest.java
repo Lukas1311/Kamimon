@@ -1,13 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
@@ -102,7 +102,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Test
     public void testCreateTrainer() {
         // prep.
-        Trainer dummyTrainer = new Trainer("1", "r", "0", "n", "i.png", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
+        Trainer dummyTrainer = TrainerBuilder.builder().setId(1).setRegion("r").setName("n").setImage("i.png").create();
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
 
         // define mocks:

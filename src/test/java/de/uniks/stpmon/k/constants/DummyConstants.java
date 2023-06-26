@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("unused")
@@ -25,7 +26,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            null
+            null,
+            Set.of(), Set.of()
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "1",
@@ -38,7 +40,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            DummyConstants.NPC_INFO
+            DummyConstants.NPC_INFO,
+            Set.of(), Set.of()
     );
 
     public static final Trainer TRAINER_OTHER_REGION = new Trainer(
@@ -52,7 +55,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            DummyConstants.NPC_INFO
+            DummyConstants.NPC_INFO,
+            Set.of(), Set.of()
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,

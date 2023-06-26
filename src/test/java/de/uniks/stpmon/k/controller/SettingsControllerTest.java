@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -62,8 +63,7 @@ public class SettingsControllerTest extends ApplicationTest {
 
     public void start(Stage stage) throws Exception {
         // set trainer
-        Trainer trainer = new Trainer(
-                "1", "RegionA", "TestUser", "Bob", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
+        Trainer trainer = TrainerBuilder.builder().setId(1).setRegion("RegionA").setName("Bob").setUser("TestUser").create();
         lenient().when(trainerStorage.getTrainer()).thenReturn(trainer);
         when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(trainer)));
         when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);

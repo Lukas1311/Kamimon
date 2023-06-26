@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -103,18 +104,14 @@ public class RegionTestModule {
                     for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
                         String trainerImage = "trainer_" + trainerIdCount + ".png";
-                        Trainer trainer = new Trainer(
-                                Integer.toString(trainerIdCount),
-                                region._id(),
-                                USER_ID,
-                                name,
-                                trainerImage,
-                                0,
-                                area._id(),
-                                0,
-                                0,
-                                0,
-                                null);
+                        Trainer trainer = TrainerBuilder.builder()
+                                .setId(trainerIdCount)
+                                .setRegion(region)
+                                .setArea(area)
+                                .setName(name)
+                                .setImage(trainerImage)
+                                .setUser(USER_ID)
+                                .create();
                         ArrayList<Trainer> trainers = new ArrayList<>();
                         trainers.add(trainer);
                         trainersHashMap.put(area._id(), trainers);
@@ -144,19 +141,13 @@ public class RegionTestModule {
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
                 Area area = areasHashMap.get(regionId).get(0);
-                Trainer trainer = new Trainer(
-                        String.valueOf(trainerIdCount),
-                        regionId,
-                        USER_ID,
-                        trainerDto.name(),
-                        trainerDto.image(),
-                        0,
-                        area._id(),
-                        0,
-                        0,
-                        0,
-                        DummyConstants.NPC_INFO
-                );
+                Trainer trainer = TrainerBuilder.builder()
+                        .setId(trainerIdCount)
+                        .setRegion(regionId)
+                        .setArea(area)
+                        .setUser(USER_ID)
+                        .applyCreate(trainerDto)
+                        .create();
                 trainerIdCount++;
                 List<Trainer> trainers = trainersHashMap.get(area._id());
                 trainers.add(trainer);
