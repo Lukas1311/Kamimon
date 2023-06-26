@@ -54,31 +54,56 @@ public class MonBoxController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadImage(monBoxImage, "monGrid_v4.png");
         Trainer trainer = trainerStorage.getTrainer();
         monsterCache = cacheManager.requestMonsters(trainer._id());
+        subscribe(monsterCache.getValues(), this::showTeamMonster);
         subscribe(monsterCache.getValues(), this::showMonsterList);
+        loadImage(monBoxImage, "monGrid_v4.png");
 
         return parent;
     }
 
-    private void showMonsterList(List<Monster> monsters) {
+    private void showTeamMonster(List<Monster> monsters) {
+        int i = 0;
+        // Team Monster max 6 slots
         for (Monster monster : monsters) {
-            showMonster(monster);
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(67);
+            imageView.setFitWidth(67);
+            subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
+                // Scale and set the image
+                Image image = ImageUtils.scaledImageFX(imageUrl, 4.0);
+                imageView.setImage(image);
+            });
+            monTeam.add(imageView, i, 0);
+            monBoxVbox.toFront();
+            i++;
         }
     }
 
-    private void showMonster(Monster monster) {
-        ImageView imageView = new ImageView();
-        imageView.setFitHeight(67);
-        imageView.setFitWidth(67);
-        subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
-            // Scale and set the image
-            Image image = ImageUtils.scaledImageFX(imageUrl, 1);
-            imageView.setImage(image);
-        });
-        monTeam.add(imageView, 0, 0);
-        monBoxVbox.toFront();
+    private void showMonsterList(List<Monster> monsters) {
+        int columnCount = 6;
+        int rowCount = 5;
+        int monsterIndex = 0;
+
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                if (monsterIndex < monsters.size()) {
+                    ImageView imageView = new ImageView();
+                    imageView.setFitHeight(67);
+                    imageView.setFitWidth(67);
+                    subscribe(resourceService.getMonsterImage(String.valueOf(monsters.get(monsterIndex).type())), imageUrl -> {
+                        // Scale and set the image
+                        Image image = ImageUtils.scaledImageFX(imageUrl, 4.0);
+                        imageView.setImage(image);
+                    });
+                    monStorage.add(imageView, column, row);
+                    monBoxVbox.toFront();
+                    monsterIndex++;
+                }
+            }
+        }
+
     }
 
     @Override
