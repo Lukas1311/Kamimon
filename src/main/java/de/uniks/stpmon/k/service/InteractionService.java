@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.controller.StarterController;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
@@ -16,6 +17,10 @@ public class InteractionService implements ILifecycleService {
     InteractionStorage interactionStorage;
     @Inject
     TrainerService trainerService;
+    @Inject
+    RegionService regionService;
+    @Inject
+    StarterController starterController;
 
     @Inject
     public InteractionService() {
@@ -29,27 +34,46 @@ public class InteractionService implements ILifecycleService {
         if (info.canHeal()) {
             return Dialogue.builder().addItem("Can heal ?").create();
         }
+
         List<String> starters = info.starters();
-        //TODO: Add real dialogue for starters
+
         if (starters != null && !starters.isEmpty()) {
             return Dialogue.builder()
-                    .addItem("hello, welcome to this world!")
-                    .addItem("I have a gift for you")
-                    .addItem().setText("Choose your starter:")
-                    .addOption().setText("Flamingo")
-                    .addSelection(() -> interactionStorage.selectedStarter().setValue("Flamingo"))
-                    .addAction(() -> interactionStorage.selectedStarter().reset())
-                    .setNext(Dialogue.builder().addItem("you chose a flamingo!").create())
+                    .addItem("Hello " + trainerService.getMe().name() + ",\nAre you ready for your first Mon?")
+                    .addItem("You can choose one of three different types.")
+                    .addItem().setText("Take your time and choose wisely!")
+                    .addOption().setText("Fire")
+                    .addSelection(() -> {
+                        interactionStorage.selectedStarter().setValue("Fire");
+                        starterController.setStarter("1");
+                        starterController.starterBox.setVisible(true);
+                    })
+                    .setNext(Dialogue.builder().addItem("You have chosen Flamander, the Fire type Mon.").create())
                     .endOption()
-                    .addOption().setText("Elephant")
-                    .addSelection(() -> interactionStorage.selectedStarter().setValue("Elephant"))
-                    .addAction(() -> interactionStorage.selectedStarter().reset())
-                    .setNext(Dialogue.builder().addItem("you chose an elephant!").create())
+                    .addOption().setText("Water")
+                    .addSelection(() -> {
+                        interactionStorage.selectedStarter().setValue("Water");
+                        starterController.setStarter("3");
+                        starterController.starterBox.setVisible(true);
+                    })
+                    .setNext(Dialogue.builder().addItem("You have chosen Octi, the Water type Mon.").create())
                     .endOption()
+                    .addOption().setText("Grass")
+                    .addSelection(() -> {
+                        interactionStorage.selectedStarter().setValue("Grass");
+                        starterController.setStarter("5");
+                        starterController.starterBox.setVisible(true);
+                    })
+                    .setNext(Dialogue.builder().addItem("You have chosen Caterpi, the Grass type Mon.").create())
+                    .endOption()
+                    .addAction(() -> {
+                        interactionStorage.selectedStarter().reset();
+                        starterController.starterBox.setVisible(false);
+                    })
                     .endItem()
-
                     .create();
         }
+
         //TODO: Add dialogue for healing
         //TODO: Add dialogue for encounter
         return null;
