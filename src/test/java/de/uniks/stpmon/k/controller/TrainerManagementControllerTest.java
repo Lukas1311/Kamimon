@@ -8,14 +8,11 @@ import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -36,9 +33,6 @@ import static org.mockito.Mockito.*;
 public class TrainerManagementControllerTest extends ApplicationTest {
 
     @Mock
-    @SuppressWarnings("unused")
-    RegionService regionService;
-    @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
@@ -48,14 +42,9 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
-    @SuppressWarnings("unused")
-    Provider<LobbyController> lobbyControllerProvider;
-    @Mock
     TrainerService trainerService;
     @Mock
     TrainerStorage trainerStorage;
-    @Mock
-    PresetService presetService;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
@@ -76,7 +65,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
         when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(dummytrainer)));
-        when(presetService.getCharacterFile(any())).thenReturn(Observable.just(ResponseBody.create(null, "test")));
         app.show(trainerManagementController);
         stage.requestFocus();
     }

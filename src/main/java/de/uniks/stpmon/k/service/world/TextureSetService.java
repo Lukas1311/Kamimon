@@ -6,6 +6,9 @@ import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
+import de.uniks.stpmon.k.service.storage.cache.ICache;
 import de.uniks.stpmon.k.world.CharacterSet;
 import de.uniks.stpmon.k.world.TileMap;
 import de.uniks.stpmon.k.world.Tileset;
@@ -13,8 +16,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,24 +29,21 @@ public class TextureSetService {
     RegionStorage regionStorage;
     @Inject
     IResourceService resourceService;
+    @Inject
+    CacheManager cacheManager;
 
     @Inject
     public TextureSetService() {
     }
 
-    public Observable<CharacterSet> createCharacter(String name) {
-        return resourceService.getCharacterImage(name)
-                .map((body) -> new CharacterSet(name, body));
+    public Optional<CharacterSet> getCharacter(String id) {
+        ICache<CharacterSet, String> cache = cacheManager.characterSetCache();
+        return cache.getValue(id);
     }
 
-    public Observable<List<CharacterSet>> createAllCharacters() {
-        return presetService.getCharacters()
-                .map((characters) -> characters.stream()
-                        .map(this::createCharacter)
-                        .collect(Collectors.toList())).flatMap(Observable::merge)
-                .collect(Collectors.toList())
-                .toObservable().onErrorResumeNext((error) -> createAllCharacters()
-                        .delaySubscription(1, TimeUnit.MINUTES));
+    public Observable<Optional<CharacterSet>> getCharacterLazy(String id) {
+        CharacterSetCache cache = cacheManager.characterSetCache();
+        return cache.getLazyValue(id);
     }
 
     private static String escapeTileUrl(String str) {

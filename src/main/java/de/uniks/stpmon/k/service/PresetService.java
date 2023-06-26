@@ -13,6 +13,7 @@ public class PresetService {
 
     @Inject
     PresetApiService presetApiService;
+    private List<String> characters;
 
     @Inject
     public PresetService() {
@@ -23,7 +24,10 @@ public class PresetService {
     }
 
     public Observable<List<String>> getCharacters() {
-        return presetApiService.getCharacters();
+        if (characters == null) {
+            return presetApiService.getCharacters().doOnNext(list -> characters = list);
+        }
+        return Observable.just(characters);
     }
 
     public Observable<ResponseBody> getCharacterFile(String filename) {

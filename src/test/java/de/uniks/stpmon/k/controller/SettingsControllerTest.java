@@ -7,8 +7,7 @@ import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -48,19 +47,15 @@ public class SettingsControllerTest extends ApplicationTest {
     Provider<HybridController> hybridControllerProvider;
     @Mock
     UserStorage userStorage;
-    @Mock
-    @SuppressWarnings("unused")
-    TrainerService trainerService;
     @InjectMocks
     SettingsController settingsController;
-
     @Mock
     RegionStorage regionStorage;
-    @Mock
-    PresetService presetService;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
-
     public void start(Stage stage) throws Exception {
         // set trainer
         Trainer trainer = TrainerBuilder.builder().setId(1).setRegion("RegionA").setName("Bob").setUser("TestUser").create();
@@ -70,7 +65,6 @@ public class SettingsControllerTest extends ApplicationTest {
         // set user
         when(userStorage.getUser()).thenReturn(new User("1", "TestUser", "1", "1", new ArrayList<>()));
         when(trainerStorage.getTrainerLoaded()).thenReturn(new SimpleBooleanProperty(true));
-        when(presetService.getCharacterFile(anyString())).thenReturn(Observable.empty());
         // show app
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
