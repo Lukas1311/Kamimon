@@ -32,4 +32,9 @@ public class OpponentMonsterStatusController extends Controller {
     public Parent render() {
         return super.render();
     }
+
+    @Override
+    public String getResourcePath() {
+        return "encounter/";
+    }
 }

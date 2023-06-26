@@ -2,53 +2,60 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      prefHeight="117.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.encounter.UserMonsterStatusController">
     <StackPane>
-        <ImageView fx:id="userMonsterStatusView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true"
+        <ImageView fx:id="userMonsterStatusView" fitHeight="117.0" fitWidth="386.0" pickOnBounds="true"
                    preserveRatio="true">
+            <image>
+                <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/userMonsterStatus.png"/>
+            </image>
         </ImageView>
-        <ProgressBar fx:id="userHpBar" prefHeight="5.0" prefWidth="96.0" progress="0.0">
+        <ProgressBar fx:id="userHpBar" prefHeight="8.0" prefWidth="185.0" progress="0.0">
             <StackPane.margin>
-                <Insets right="19.0" top="2.0"/>
+                <Insets right="37.0" top="5.0"/>
             </StackPane.margin>
         </ProgressBar>
         <HBox alignment="TOP_CENTER">
             <Text fx:id="userMonsterName" strokeType="OUTSIDE" strokeWidth="0.0" text="Octi">
                 <HBox.margin>
-                    <Insets left="18.0" top="12.0"/>
+                    <Insets left="35.0" top="12.0"/>
                 </HBox.margin>
                 <font>
-                    <Font size="8.0"/>
+                    <Font size="15.0"/>
                 </font>
             </Text>
             <HBox HBox.hgrow="ALWAYS"/>
             <Text fx:id="userMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
                 <HBox.margin>
-                    <Insets right="65.0" top="12.0"/>
+                    <Insets right="125.0" top="12.0"/>
                 </HBox.margin>
                 <font>
-                    <Font size="8.0"/>
+                    <Font size="15.0"/>
                 </font>
             </Text>
+            <StackPane.margin>
+                <Insets top="14.0"/>
+            </StackPane.margin>
         </HBox>
         <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="200.0">
-            <Text fx:id="userMonsterHp" strokeType="OUTSIDE" strokeWidth="0.0" text="7/11">
+            <Text fx:id="userMonsterHp" strokeType="OUTSIDE" strokeWidth="0.0" text="7 / 11">
                 <font>
-                    <Font size="8.0"/>
+                    <Font size="15.0"/>
                 </font>
                 <HBox.margin>
-                    <Insets right="38.0"/>
+                    <Insets right="70.0"/>
                 </HBox.margin>
             </Text>
         </HBox>
-        <ProgressBar fx:id="userExperienceBar" prefHeight="4.0" prefWidth="98.0" progress="0.0">
+        <ProgressBar fx:id="userExperienceBar" prefHeight="6.0" prefWidth="187.0" progress="0.0">
             <StackPane.margin>
-                <Insets right="5.0" top="32.0"/>
+                <Insets right="10.0" top="63.0"/>
             </StackPane.margin>
         </ProgressBar>
     </StackPane>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.EncounterOverviewController">
+    <ImageView fx:id="background" fitHeight="729.0" fitWidth="1287.0" StackPane.alignment="CENTER"/>
+    <HBox fillHeight="false" prefHeight="300.0" prefWidth="1280.0">
+        <VBox fx:id="userMonsters" HBox.hgrow="ALWAYS">
+            <VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="117.0" prefWidth="386.0">
+                <StackPane>
+                    <ImageView fx:id="userMonsterStatusView" fitHeight="117.0" fitWidth="386.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/userMonsterStatus.png" />
+                        </image>
+                    </ImageView>
+                    <ProgressBar fx:id="userHpBar" prefHeight="8.0" prefWidth="185.0" progress="0.0">
+                        <StackPane.margin>
+                            <Insets right="37.0" top="5.0" />
+                        </StackPane.margin>
+                    </ProgressBar>
+                    <HBox alignment="TOP_CENTER">
+                        <Text fx:id="userMonsterName" strokeType="OUTSIDE" strokeWidth="0.0" text="Octi">
+                            <HBox.margin>
+                                <Insets left="35.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <Text fx:id="userMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+                            <HBox.margin>
+                                <Insets right="125.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <StackPane.margin>
+                            <Insets top="14.0" />
+                        </StackPane.margin>
+                    </HBox>
+                    <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="200.0">
+                        <Text fx:id="userMonsterHp" strokeType="OUTSIDE" strokeWidth="0.0" text="7 / 11">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets right="70.0" />
+                            </HBox.margin>
+                        </Text>
+                    </HBox>
+                    <ProgressBar fx:id="userExperienceBar" prefHeight="6.0" prefWidth="187.0" progress="0.0">
+                        <StackPane.margin>
+                            <Insets right="10.0" top="63.0" />
+                        </StackPane.margin>
+                    </ProgressBar>
+                </StackPane>
+                <VBox.margin>
+                    <Insets left="5.0" />
+                </VBox.margin>
+            </VBox>
+            <VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="117.0" prefWidth="386.0">
+                <StackPane>
+                    <ImageView fx:id="userMonsterStatusView1" fitHeight="117.0" fitWidth="386.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/userMonsterStatus.png" />
+                        </image>
+                    </ImageView>
+                    <ProgressBar fx:id="userHpBar1" prefHeight="8.0" prefWidth="185.0" progress="0.0">
+                        <StackPane.margin>
+                            <Insets right="37.0" top="5.0" />
+                        </StackPane.margin>
+                    </ProgressBar>
+                    <HBox alignment="TOP_CENTER">
+                        <Text fx:id="userMonsterName1" strokeType="OUTSIDE" strokeWidth="0.0" text="Octi">
+                            <HBox.margin>
+                                <Insets left="35.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <Text fx:id="userMonsterLevel1" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+                            <HBox.margin>
+                                <Insets right="125.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <StackPane.margin>
+                            <Insets top="14.0" />
+                        </StackPane.margin>
+                    </HBox>
+                    <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="200.0">
+                        <Text fx:id="userMonsterHp1" strokeType="OUTSIDE" strokeWidth="0.0" text="7 / 11">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                            <HBox.margin>
+                                <Insets right="70.0" />
+                            </HBox.margin>
+                        </Text>
+                    </HBox>
+                    <ProgressBar fx:id="userExperienceBar1" prefHeight="6.0" prefWidth="187.0" progress="0.0">
+                        <StackPane.margin>
+                            <Insets right="10.0" top="63.0" />
+                        </StackPane.margin>
+                    </ProgressBar>
+                </StackPane>
+                <VBox.margin>
+                    <Insets left="100.0" top="-15.0" />
+                </VBox.margin>
+            </VBox>
+            <HBox.margin>
+                <Insets top="20.0" />
+            </HBox.margin>
+        </VBox>
+        <VBox fx:id="opponentMonsters" alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+            <VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="386.0">
+                <StackPane>
+                    <ImageView fx:id="opponentMonsterStatusView" fitHeight="105.0" fitWidth="386.0">
+                        <image>
+                            <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/opponentMonsterStatus.png" />
+                        </image>
+                    </ImageView>
+                    <ProgressBar fx:id="opponentHpBar" prefHeight="7.0" prefWidth="184.0" progress="0.0">
+                        <StackPane.margin>
+                            <Insets left="23.0" top="15.0" />
+                        </StackPane.margin>
+                    </ProgressBar>
+                    <HBox alignment="TOP_CENTER">
+                        <Text fx:id="opponentMonsterName" strokeType="OUTSIDE" strokeWidth="0.0" text="Rootix">
+                            <HBox.margin>
+                                <Insets left="65.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <Text fx:id="opponentMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+                            <HBox.margin>
+                                <Insets right="95.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <StackPane.margin>
+                            <Insets top="14.0" />
+                        </StackPane.margin>
+                    </HBox>
+                </StackPane>
+                <VBox.margin>
+                    <Insets right="100.0" />
+                </VBox.margin>
+            </VBox>
+            <VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="386.0">
+                <StackPane>
+                    <ImageView fx:id="opponentMonsterStatusView1" fitHeight="105.0" fitWidth="386.0">
+                        <image>
+                            <Image url="@../../../../../../../../../../../OneDrive/SharedResources/Release_03_Ressources/03_Encounter/opponentMonsterStatus.png" />
+                        </image>
+                    </ImageView>
+                    <ProgressBar fx:id="opponentHpBar1" prefHeight="7.0" prefWidth="184.0" progress="0.0">
+                        <StackPane.margin>
+                            <Insets left="23.0" top="15.0" />
+                        </StackPane.margin>
+                    </ProgressBar>
+                    <HBox alignment="TOP_CENTER">
+                        <Text fx:id="opponentMonsterName1" strokeType="OUTSIDE" strokeWidth="0.0" text="Rootix">
+                            <HBox.margin>
+                                <Insets left="65.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <HBox HBox.hgrow="ALWAYS" />
+                        <Text fx:id="opponentMonsterLevel1" strokeType="OUTSIDE" strokeWidth="0.0" text="Lvl. 2">
+                            <HBox.margin>
+                                <Insets right="95.0" top="12.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Text>
+                        <StackPane.margin>
+                            <Insets top="14.0" />
+                        </StackPane.margin>
+                    </HBox>
+                </StackPane>
+                <VBox.margin>
+                    <Insets right="5.0" />
+                </VBox.margin>
+            </VBox>
+            <HBox.margin>
+                <Insets top="20.0" />
+            </HBox.margin>
+        </VBox>
+    </HBox>
+    <HBox alignment="BOTTOM_LEFT" fillHeight="false">
+        <HBox alignment="BOTTOM_LEFT" fillHeight="false" style="-fx-border-color: black;">
+            <ImageView fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../../../../../../../../../../../Desktop/amogus.png" />
+                </image>
+                <HBox.margin>
+                    <Insets bottom="140.0" />
+                </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../../../../../../../../../../../Desktop/Zuendorm_1.png" />
+                </image>
+                <HBox.margin>
+                    <Insets />
+                </HBox.margin>
+            </ImageView>
+            <HBox.margin>
+                <Insets bottom="100.0" left="175.0" />
+            </HBox.margin>
+        </HBox>
+    </HBox>
+    <HBox alignment="TOP_RIGHT" fillHeight="false">
+        <HBox alignment="TOP_RIGHT" fillHeight="false" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
+            <ImageView fitHeight="250.0" fitWidth="250.0" nodeOrientation="RIGHT_TO_LEFT">
+                <image>
+                    <Image url="@../../../../../../../../../../../Desktop/angrian.png" />
+                </image>
+                <HBox.margin>
+                    <Insets right="-25.0" />
+                </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="250.0" fitWidth="250.0" nodeOrientation="RIGHT_TO_LEFT">
+                <image>
+                    <Image url="@../../../../../../../../../../../Desktop/sandrorm.png" />
+                </image>
+                <HBox.margin>
+                    <Insets right="25.0" top="125.0" />
+                </HBox.margin>
+            </ImageView>
+            <HBox.margin>
+                <Insets right="175.0" top="100.0" />
+            </HBox.margin>
+        </HBox>
+    </HBox>
+    <VBox alignment="BOTTOM_RIGHT" prefHeight="200.0" prefWidth="100.0">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="177.0" stroke="BLACK" strokeType="INSIDE" width="471.0">
+            <VBox.margin>
+                <Insets bottom="20.0" right="20.0" />
+            </VBox.margin>
+        </Rectangle>
+    </VBox>
+</StackPane>
