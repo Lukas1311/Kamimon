@@ -29,6 +29,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class Viewable {
+    // this is a good scale for sharp images
+    private static final double TEXTURE_SCALE = 4.0;
 
     @Inject
     protected App app;
@@ -72,7 +74,7 @@ public abstract class Viewable {
      * @param onError     the consumer to call on an error
      */
     protected void subscribe(Completable completable, @NonNull Consumer<? super Throwable> onError) {
-        disposables.add(completable.observeOn(FX_SCHEDULER).doOnError(onError).subscribe());
+        disposables.add(completable.doOnError(onError).observeOn(FX_SCHEDULER).subscribe());
     }
 
     /**
@@ -186,33 +188,33 @@ public abstract class Viewable {
             return Completable.complete();
         }
 
-        final double SCALE = 4.0; // this is a good scale for sharp images
-        Optional<CharacterSet> maybeSet = service.getCharacter(id);
-        if (maybeSet.isEmpty()) {
+        return service.getCharacterLazy(id).observeOn(FX_SCHEDULER).map((Optional<CharacterSet> maybeSet) -> {
+            if (maybeSet.isEmpty()) {
+                return Completable.complete();
+            }
+            CharacterSet characterSet = maybeSet.get();
+
+            // Extract the sprite from the original tiled image set
+            BufferedImage image = characterSet.getPreview(direction);
+
+            // Scale the image
+            BufferedImage scaledImage = ImageUtils.scaledImage(image, TEXTURE_SCALE);
+
+            // Convert the BufferedImage to JavaFX Image
+            Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
+
+            // Set the image
+            sprite.setImage(fxImage);
+            sprite.setFitHeight(viewHeight);
+            sprite.setFitWidth(viewWidth);
+
+            spriteContainer.setPrefSize(sprite.getFitWidth(), sprite.getFitHeight());
+            // sprite center: set bottom margins so the sprite goes a little bit up
+            StackPane.setMargin(sprite, new Insets(0, 0, 35, 0));
+            spriteContainer.getChildren().clear();
+            spriteContainer.getChildren().add(sprite);
             return Completable.complete();
-        }
-        CharacterSet characterSet = maybeSet.get();
-
-        // Extract the sprite from the original tiled image set
-        BufferedImage image = characterSet.getPreview(direction);
-
-        // Scale the image
-        BufferedImage scaledImage = ImageUtils.scaledImage(image, SCALE);
-
-        // Convert the BufferedImage to JavaFX Image
-        Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
-
-        // Set the image
-        sprite.setImage(fxImage);
-        sprite.setFitHeight(viewHeight);
-        sprite.setFitWidth(viewWidth);
-
-
-        spriteContainer.setPrefSize(sprite.getFitWidth(), sprite.getFitHeight());
-        // sprite center: set bottom margins so the sprite goes a little bit up
-        StackPane.setMargin(sprite, new Insets(0, 0, 35, 0));
-        spriteContainer.getChildren().add(sprite);
-        return Completable.complete();
+        }).ignoreElements();
     }
 
 }
