@@ -9,7 +9,7 @@
 <BorderPane fx:id="pauseScreen" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#closeSidebar" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.PauseController">
     <center>
         <VBox alignment="CENTER" styleClass="pause-inner-containers" BorderPane.alignment="CENTER">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-text" text="PAUSE">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-text" text="%pause">
                 <VBox.margin>
                     <Insets bottom="30.0" />
                 </VBox.margin>
@@ -33,29 +33,29 @@
                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 </rowConstraints>
                 <children>
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="SIDEBAR:" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="INGAME:" GridPane.columnIndex="3" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Function" GridPane.rowIndex="1" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Function" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Key" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Key" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Chat" GridPane.rowIndex="3" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%sidebar" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%ingame" GridPane.columnIndex="3" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%function" GridPane.rowIndex="1" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%function" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%key" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%key" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%chat" GridPane.rowIndex="3" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="C" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Movement" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%movement" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="W, A, S, D" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Friends" GridPane.rowIndex="4" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%friends" GridPane.rowIndex="4" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="F" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Map Overview" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%map" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="M" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Settings" GridPane.rowIndex="5" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%settings" GridPane.rowIndex="5" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="# (Hash)" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Backpack" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%backpack" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="B" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Home" GridPane.rowIndex="6" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%home" GridPane.rowIndex="6" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Shift +  Esc" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Monsterbar" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%monsterbar" GridPane.columnIndex="3" GridPane.rowIndex="6" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="N" GridPane.columnIndex="4" GridPane.rowIndex="6" />
-                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="Choice" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%choice" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="LEFT, RIGHT" GridPane.columnIndex="4" GridPane.rowIndex="7" />
                 </children>
                 <VBox.margin>
