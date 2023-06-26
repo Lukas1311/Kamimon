@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.chat.CreateChatController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.animation.Interpolator;
@@ -37,9 +38,7 @@ public class HybridController extends Controller {
     private final Stack<Controller> tabStack = new Stack<>();
     private final TranslateTransition sidebarTransition = new TranslateTransition(Duration.millis(800));
     private final EventHandler<MouseEvent> consumeMouse = MouseEvent::consume;
-
     private SidebarTab mainTab = SidebarTab.NONE;
-
     private MainWindow currentWindow = MainWindow.LOBBY;
 
     @FXML
@@ -76,7 +75,8 @@ public class HybridController extends Controller {
     Provider<TrainerManagementController> trainerManagementControllerProvider;
     @Inject
     ChooseSpriteController chooseSpriteController;
-
+    @Inject
+    InputHandler inputHandler;
 
     @Inject
     public HybridController() {
@@ -86,6 +86,21 @@ public class HybridController extends Controller {
     @Override
     public void init() {
         sidebarController.get().init();
+
+        //use filter to consume ingame events, if in lobby
+        onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            if(currentWindow == MainWindow.LOBBY){
+                switch (event.getCode()) {
+                    case W, A, S, D, M, B, N, ENTER, LEFT, RIGHT, UP, DOWN ->
+                        //Block ingame control
+                            event.consume();
+                    case P ->
+                        //Block Pause
+                            event.consume();
+                }
+            }
+        }));
+
     }
 
     @Override
