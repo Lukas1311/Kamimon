@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-public class MonsterService extends BaseLifecycleService {
+public class MonsterService extends DestructibleElement {
     private boolean isInitialized = false;
     @Inject
     CacheManager cacheManager;

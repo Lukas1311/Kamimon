@@ -5,17 +5,20 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class EncounterStorage {
 
     private Encounter encounter;
+    private EncounterSession encounterSession;
     private List<Opponent> opponentList;
     private List<Monster> monsterList;
 
-
     @Inject
-    public EncounterStorage() {}
+    public EncounterStorage() {
+    }
 
     public Encounter getEncounter() {
         return encounter;
@@ -23,6 +26,14 @@ public class EncounterStorage {
 
     public void setEncounter(Encounter encounter) {
         this.encounter = encounter;
+    }
+
+    public void setEncounterSession(EncounterSession encounterSession) {
+        this.encounterSession = encounterSession;
+    }
+
+    public EncounterSession getEncounterSession() {
+        return encounterSession;
     }
 
     public List<Opponent> getOpponentList() {
@@ -42,5 +53,9 @@ public class EncounterStorage {
 
     public List<Monster> getMonsterList() {
         return monsterList;
+    }
+
+    public boolean isEmpty() {
+        return encounter != null;
     }
 }

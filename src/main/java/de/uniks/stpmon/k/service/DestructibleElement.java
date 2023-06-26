@@ -3,7 +3,7 @@ package de.uniks.stpmon.k.service;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class BaseLifecycleService implements ILifecycleService {
+public class DestructibleElement implements ILifecycleService {
     protected final CompositeDisposable disposables = new CompositeDisposable();
 
     public void onDestroy(Runnable action) {
