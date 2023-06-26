@@ -74,7 +74,7 @@ public class IngameController extends PortalController {
         backpackController.init();
         dialogueController.init();
 
-        inputHandler.addPressedKeyFilter(event -> {
+        onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (mapOverview != null) {
                 switch (event.getCode()) {
                     case A, D, W, S, LEFT, RIGHT, UP, DOWN, B -> {
@@ -101,7 +101,7 @@ public class IngameController extends PortalController {
 
                 }
             }
-        });
+        }));
     }
 
     @Override

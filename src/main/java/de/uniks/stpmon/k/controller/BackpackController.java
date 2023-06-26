@@ -47,12 +47,12 @@ public class BackpackController extends Controller {
     @Override
     public void init() {
         super.init();
-        inputHandler.addPressedKeyHandler(event -> {
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
            if(event.getCode() == KeyCode.B){
                triggerBackPackMenu();
                event.consume();
            }
-        });
+        }));
     }
 
     public void openBackPackMenu() {
