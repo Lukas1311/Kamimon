@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
@@ -65,6 +66,7 @@ public class InteractionServiceTest {
                 new NPCInfo(false, false, false,
                         List.of("monster_0", "monster_1"), List.of()));
         when(trainerService.getFacingTrainer()).thenReturn(Optional.of(trainer));
+        when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
