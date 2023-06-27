@@ -10,18 +10,20 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Singleton
 public class InteractionService implements ILifecycleService {
     @Inject
+    protected Provider<ResourceBundle> resources;
+    @Inject
     InteractionStorage interactionStorage;
     @Inject
     TrainerService trainerService;
-    @Inject
-    RegionService regionService;
     @Inject
     StarterController starterController;
     @Inject
@@ -45,9 +47,9 @@ public class InteractionService implements ILifecycleService {
         if (starters != null && !starters.isEmpty()) {
             Trainer me = trainerService.getMe();
             return Dialogue.builder()
-                    .addItem("Hello " + me.name() + ",\nAre you ready for your first Mon?")
-                    .addItem("You can choose one of three different types.")
-                    .addItem().setText("Take your time and choose wisely!")
+                    .addItem(translateString("hello") + ", " + me.name() + "!\n" + translateString("areYouReady"))
+                    .addItem(translateString("chooseOneType"))
+                    .addItem().setText(translateString("takeTime"))
                     .addOption().setText("Fire")
                     .addSelection(() -> {
                         interactionStorage.selectedStarter().setValue("Fire");
@@ -60,7 +62,7 @@ public class InteractionService implements ILifecycleService {
                         listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
                                 new TalkTrainerDto(me._id(), trainer._id(),0));
                     })
-                    .setNext(Dialogue.builder().addItem("You have chosen Flamander, the Fire type Mon.").create())
+                    .setNext(Dialogue.builder().addItem(translateString("chosenFire")).create())
                     .endOption()
                     .addOption().setText("Water")
                     .addSelection(() -> {
@@ -74,7 +76,7 @@ public class InteractionService implements ILifecycleService {
                         listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
                                 new TalkTrainerDto(me._id(), trainer._id(),1));
                     })
-                    .setNext(Dialogue.builder().addItem("You have chosen Octi, the Water type Mon.").create())
+                    .setNext(Dialogue.builder().addItem(translateString("chosenWater")).create())
                     .endOption()
                     .addOption().setText("Grass")
                     .addSelection(() -> {
@@ -88,7 +90,7 @@ public class InteractionService implements ILifecycleService {
                         listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
                                 new TalkTrainerDto(me._id(), trainer._id(),2));
                     })
-                    .setNext(Dialogue.builder().addItem("You have chosen Caterpi, the Grass type Mon.").create())
+                    .setNext(Dialogue.builder().addItem(translateString("chosenGrass")).create())
                     .endOption()
                     .endItem()
                     .create();
@@ -111,5 +113,13 @@ public class InteractionService implements ILifecycleService {
             return;
         }
         interactionStorage.setDialogue(dialogue);
+    }
+
+    protected String translateString(String word, String... args) {
+        String translation = resources.get().getString(word);
+        for (int i = 0; i < args.length; i++) {
+            translation = translation.replace("{" + i + "}", args[i]);
+        }
+        return translation;
     }
 }

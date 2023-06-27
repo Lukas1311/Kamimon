@@ -12,8 +12,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.inject.Provider;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -26,6 +29,11 @@ public class InteractionServiceTest {
     InteractionStorage interactionStorage;
     @Mock
     TrainerService trainerService;
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
+
     @InjectMocks
     InteractionService interactionService;
 
@@ -67,6 +75,7 @@ public class InteractionServiceTest {
                         List.of("monster_0", "monster_1"), List.of()));
         when(trainerService.getFacingTrainer()).thenReturn(Optional.of(trainer));
         when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
+        when(resourceBundleProvider.get()).thenReturn(resources);
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
