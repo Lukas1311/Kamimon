@@ -50,4 +50,17 @@ public abstract class BoundModule {
     @Singleton
     @SuppressWarnings("unused")
     public abstract ILifecycleService input(InputHandler handler);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService monsterService(MonsterService handler);
+
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService sessionService(SessionService handler);
 }

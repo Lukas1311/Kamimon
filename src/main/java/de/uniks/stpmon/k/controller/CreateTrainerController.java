@@ -6,9 +6,9 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -56,13 +56,9 @@ public class CreateTrainerController extends PortalController {
     @Inject
     Provider<PopUpController> popUpControllerProvider;
     @Inject
-    Provider<IngameController> ingameControllerProvider;
-    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
-    RegionStorage regionStorage;
-    @Inject
-    PresetService presetService;
+    TextureSetService textureService;
 
     private Region chosenRegion;
     private String chosenSprite = "Premade_Character_01.png";
@@ -110,8 +106,7 @@ public class CreateTrainerController extends PortalController {
 
     public void loadSprite(String selectedCharacter) {
         subscribe(
-                presetService.getCharacterFile(selectedCharacter),
-                response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response, 120, 120),
+                setSpriteImage(spriteContainer, trainerSprite, Direction.BOTTOM, selectedCharacter, textureService, 120, 120),
                 this::handleError
         );
     }

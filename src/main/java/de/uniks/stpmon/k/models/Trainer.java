@@ -1,5 +1,7 @@
 package de.uniks.stpmon.k.models;
 
+import java.util.Set;
+
 public record Trainer(
         String _id, // objectid example: 507f191e810c19729de860ea
         String region, // objectid example: 507f191e810c19729de860ea
@@ -11,6 +13,8 @@ public record Trainer(
         Integer x,
         Integer y,
         Integer direction,
-        NPCInfo npc) {
+        NPCInfo npc,
+        Set<String> team, // up to 6 ids
+        Set<Integer> encounteredMonsterTypes) {
 
 }
