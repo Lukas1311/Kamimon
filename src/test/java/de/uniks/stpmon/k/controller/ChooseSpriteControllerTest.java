@@ -7,13 +7,11 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,12 +54,7 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     Provider<CreateTrainerController> createTrainerControllerProvider;
     @Mock
-    @SuppressWarnings("unused")
-    RegionStorage regionStorage;
-
-    @Mock
     Provider<HybridController> hybridControllerProvider;
-
     @Mock
     TrainerService trainerService;
     @Spy
@@ -110,8 +103,6 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
         chooseSpriteController.characters.clear();
 
         List<String> charactersList = Arrays.asList("Sprite1", "Sprite2", "Sprite3");
-
-        when(presetService.getCharacterFile(anyString())).thenReturn(Observable.just(mock(ResponseBody.class)));
 
         chooseSpriteController.getCharactersList(charactersList);
 

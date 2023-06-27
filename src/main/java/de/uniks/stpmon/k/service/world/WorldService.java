@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.service.world;
 
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
 import de.uniks.stpmon.k.world.CharacterSet;
 
 import javax.imageio.ImageIO;
@@ -17,7 +15,7 @@ import java.util.Optional;
 public class WorldService {
     private CharacterSet characterPlaceholder;
     @Inject
-    protected CacheManager cacheManager;
+    protected TextureSetService textureSetService;
 
 
     @Inject
@@ -28,8 +26,7 @@ public class WorldService {
         if (name == null) {
             return getCharacterPlaceholder();
         }
-        CharacterSetCache characterSetCache = cacheManager.characterSetCache();
-        Optional<CharacterSet> character = characterSetCache.getValue(name);
+        Optional<CharacterSet> character = textureSetService.getCharacter(name);
         return character.orElseGet(this::getCharacterPlaceholder);
     }
 

@@ -3,6 +3,9 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
+import de.uniks.stpmon.k.service.storage.cache.AbilityCache;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.MonsterTypeCache;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.inject.Provider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +29,16 @@ import static org.mockito.Mockito.when;
 class PresetServiceTest {
     @Mock
     PresetApiService presetApiService;
-
     @InjectMocks
     PresetService presetService;
+    @Mock
+    CacheManager cacheManager;
+    @Mock
+    Provider<CacheManager> cacheManagerProvider;
+    @InjectMocks
+    AbilityCache abilityCache;
+    @InjectMocks
+    MonsterTypeCache monsterTypeCache;
 
     private ResponseBody getDummyResponseBody() {
         return ResponseBody.create(null, "file");
@@ -107,12 +118,18 @@ class PresetServiceTest {
 
     @Test
     void getMonsters() {
+        when(cacheManagerProvider.get()).thenReturn(cacheManager);
+        when(cacheManager.monsterTypeCache()).thenReturn(monsterTypeCache);
+
         MonsterTypeDto monster = getDummyMonsterTypeDto();
         List<MonsterTypeDto> monsterTypeDtos = new ArrayList<>();
         monsterTypeDtos.add(monster);
         //define mocks
         when(presetApiService.getMonsters())
                 .thenReturn(Observable.just(monsterTypeDtos));
+
+        // init cache, we need to do this because the cache is not initialized by the cache manager in the test
+        monsterTypeCache.init();
 
         //action
         List<MonsterTypeDto> returnMonsters = presetService.getMonsters().blockingFirst();
@@ -127,6 +144,15 @@ class PresetServiceTest {
 
     @Test
     void getMonster() {
+        when(cacheManagerProvider.get()).thenReturn(cacheManager);
+        when(cacheManager.monsterTypeCache()).thenReturn(monsterTypeCache);
+
+        when(presetApiService.getMonsters())
+                .thenReturn(Observable.empty());
+
+        // init cache, we need to do this because the cache is not initialized by the cache manager in the test
+        monsterTypeCache.init();
+
         MonsterTypeDto monster = getDummyMonsterTypeDto();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
@@ -167,12 +193,18 @@ class PresetServiceTest {
 
     @Test
     void getAbilities() {
+        when(cacheManagerProvider.get()).thenReturn(cacheManager);
+        when(cacheManager.abilityCache()).thenReturn(abilityCache);
+
         AbilityDto abilityDto = getDummyAbilityDto();
         List<AbilityDto> abilityDtos = new ArrayList<>();
         abilityDtos.add(abilityDto);
         //define mocks
         when(presetApiService.getAbilities())
                 .thenReturn(Observable.just(abilityDtos));
+
+        // init cache, we need to do this because the cache is not initialized by the cache manager in the test
+        abilityCache.init();
 
         //action
         List<AbilityDto> returnAbilities = presetService.getAbilities().blockingFirst();
@@ -187,7 +219,17 @@ class PresetServiceTest {
 
     @Test
     void getAbility() {
+        when(cacheManagerProvider.get()).thenReturn(cacheManager);
+        when(cacheManager.abilityCache()).thenReturn(abilityCache);
+
+        when(presetApiService.getAbilities())
+                .thenReturn(Observable.empty());
+
+        // init cache, we need to do this because the cache is not initialized by the cache manager in the test
+        abilityCache.init();
+
         AbilityDto abilityDto = getDummyAbilityDto();
+
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         when(presetApiService.getAbility("0"))
