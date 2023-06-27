@@ -79,4 +79,10 @@ public class HttpModule {
     MessageApiService messageApi(Retrofit retrofit) {
         return retrofit.create(MessageApiService.class);
     }
+
+    @Provides
+    @Singleton
+    EncounterApiService encounterApi(Retrofit retrofit) {
+        return retrofit.create(EncounterApiService.class);
+    }
 }
