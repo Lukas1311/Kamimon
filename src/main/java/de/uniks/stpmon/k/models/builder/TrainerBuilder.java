@@ -30,7 +30,7 @@ public class TrainerBuilder {
     private String user = "";
     private String name = "";
     private String image = "";
-    private int coins = 0;
+    private Integer coins = 0;
     private String area = "";
     private int x = 0;
     private int y = 0;
@@ -66,7 +66,7 @@ public class TrainerBuilder {
         return setArea(area._id());
     }
 
-    public TrainerBuilder setCoins(int coins) {
+    public TrainerBuilder setCoins(Integer coins) {
         this.coins = coins;
         return this;
     }
