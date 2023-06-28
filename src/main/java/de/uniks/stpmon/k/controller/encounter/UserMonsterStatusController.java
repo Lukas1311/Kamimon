@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 public class UserMonsterStatusController extends Controller {
     @FXML
@@ -27,11 +29,16 @@ public class UserMonsterStatusController extends Controller {
 
     @Inject
     PresetService presetService;
+    @Inject
+    IResourceService resourceService;
 
-    private final Monster monster;
+    private Monster monster;
 
     @Inject
-    public UserMonsterStatusController(Monster monster) {
+    public UserMonsterStatusController() {
+    }
+
+    public void setMonster(Monster monster) {
         this.monster = monster;
     }
 
@@ -44,13 +51,15 @@ public class UserMonsterStatusController extends Controller {
         userMonsterName.setText(monster._id());
         userMonsterLevel.setText("Lvl. " + monster.level().toString());
 
-        disposables.add(presetService.getMonster(monster._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(monsterTypeDto -> {
-                    userMonsterName.setText(monsterTypeDto.name());
-                }));
-
         return parent;
+    }
+
+    public void loadMonsterDto(String id) {
+        //disposables.add(presetService.getMonster(monster._id())
+        //        .observeOn(FX_SCHEDULER)
+        //        .subscribe(monsterTypeDto -> {
+        //            userMonsterName.setText(monsterTypeDto.name());
+        //        }));
     }
 
     @Override

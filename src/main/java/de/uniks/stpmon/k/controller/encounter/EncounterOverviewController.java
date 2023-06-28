@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,9 @@ public class EncounterOverviewController extends Controller {
     public VBox userMonsters;
     public VBox opponentMonsters;
 
+    @Inject
+    Provider<UserMonsterStatusController> userMonsterStatusController;
+
     List<Monster> dummyMonsters = new ArrayList<>();
 
     @Inject
@@ -26,7 +30,7 @@ public class EncounterOverviewController extends Controller {
     @Override
     public void init() {
         Monster amogus = new Monster(
-                "Amogus",
+                "9",
                 "testTrainer",
                 0,
                 1,
@@ -36,7 +40,7 @@ public class EncounterOverviewController extends Controller {
                 null
         );
         Monster zuendorn = new Monster(
-                "Zuendorn",
+                "109",
                 "testTrainer",
                 0,
                 2,
@@ -46,7 +50,7 @@ public class EncounterOverviewController extends Controller {
                 null
         );
         Monster angrian = new Monster(
-                "Angrian",
+                "10",
                 "opponentTrainer",
                 0,
                 3,
@@ -56,7 +60,7 @@ public class EncounterOverviewController extends Controller {
                 null
         );
         Monster sanddorm = new Monster(
-                "Sanddorm",
+                "78",
                 "opponentTrainer",
                 0,
                 4,
@@ -85,9 +89,10 @@ public class EncounterOverviewController extends Controller {
     private void renderMonsters() {
         for (Monster monster : dummyMonsters) {
             if (monster.trainer().equals("testTrainer")) {
-                UserMonsterStatusController userMonsterStatusController = new UserMonsterStatusController(monster);
-                userMonsterStatusController.init();
-                userMonsters.getChildren().add(userMonsterStatusController.render());
+                UserMonsterStatusController userMonsterStatusController1 = userMonsterStatusController.get();
+                userMonsterStatusController1.setMonster(monster);
+                userMonsterStatusController1.loadMonsterDto(String.valueOf(monster.type()));
+                userMonsters.getChildren().add(userMonsterStatusController1.render());
             } else {
                 OpponentMonsterStatusController opponentMonsterStatusController = new OpponentMonsterStatusController(monster);
                 opponentMonsterStatusController.init();
