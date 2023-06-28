@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
@@ -24,6 +25,8 @@ public class UserMonsterStatusController extends Controller {
     @FXML
     public ProgressBar userExperienceBar;
 
+    @Inject
+    PresetService presetService;
 
     private final Monster monster;
 
@@ -40,6 +43,12 @@ public class UserMonsterStatusController extends Controller {
 
         userMonsterName.setText(monster._id());
         userMonsterLevel.setText("Lvl. " + monster.level().toString());
+
+        disposables.add(presetService.getMonster(monster._id())
+                .observeOn(FX_SCHEDULER)
+                .subscribe(monsterTypeDto -> {
+                    userMonsterName.setText(monsterTypeDto.name());
+                }));
 
         return parent;
     }
