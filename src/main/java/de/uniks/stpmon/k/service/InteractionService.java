@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
+import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
@@ -24,6 +25,10 @@ public class InteractionService implements ILifecycleService {
     InteractionStorage interactionStorage;
     @Inject
     TrainerService trainerService;
+    @Inject
+    PresetService presetService;
+    @Inject
+    MonsterService monsterService;
     @Inject
     StarterController starterController;
     @Inject
@@ -46,55 +51,60 @@ public class InteractionService implements ILifecycleService {
 
         if (starters != null && !starters.isEmpty()) {
             Trainer me = trainerService.getMe();
-            return Dialogue.builder()
-                    .addItem(translateString("hello") + ", " + me.name() + "!\n" + translateString("areYouReady"))
+
+            DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder().addItem(translateString("hello") + ", " + me.name() + "!\n" + translateString("areYouReady"))
                     .addItem(translateString("chooseOneType"))
-                    .addItem().setText(translateString("takeTime"))
-                    .addOption().setText("Fire")
-                    .addSelection(() -> {
-                        interactionStorage.selectedStarter().setValue("Fire");
-                        starterController.setStarter("1");
-                        starterController.starterBox.setVisible(true);
-                    })
-                    .addAction(() -> {
-                        interactionStorage.selectedStarter().reset();
-                        starterController.starterBox.setVisible(false);
-                        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
-                                new TalkTrainerDto(me._id(), trainer._id(),0));
-                    })
-                    .setNext(Dialogue.builder().addItem(translateString("chosenFire")).create())
-                    .endOption()
-                    .addOption().setText("Water")
-                    .addSelection(() -> {
-                        interactionStorage.selectedStarter().setValue("Water");
-                        starterController.setStarter("3");
-                        starterController.starterBox.setVisible(true);
-                    })
-                    .addAction(() -> {
-                        interactionStorage.selectedStarter().reset();
-                        starterController.starterBox.setVisible(false);
-                        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
-                                new TalkTrainerDto(me._id(), trainer._id(),1));
-                    })
-                    .setNext(Dialogue.builder().addItem(translateString("chosenWater")).create())
-                    .endOption()
-                    .addOption().setText("Grass")
-                    .addSelection(() -> {
-                        interactionStorage.selectedStarter().setValue("Grass");
-                        starterController.setStarter("5");
-                        starterController.starterBox.setVisible(true);
-                    })
-                    .addAction(() -> {
-                        interactionStorage.selectedStarter().reset();
-                        starterController.starterBox.setVisible(false);
-                        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
-                                new TalkTrainerDto(me._id(), trainer._id(),2));
-                    })
-                    .setNext(Dialogue.builder().addItem(translateString("chosenGrass")).create())
-                    .endOption()
-                    .endItem()
-                    .create();
+                    .addItem().setText(translateString("takeTime"));
+
+            int index = 0;
+
+            for (String starter : starters) {
+                int starterIndex = index;
+
+                String monsterType;
+                String monsterName;
+
+                switch (starter) {
+                    case "1" -> {
+                        monsterType = "Fire";
+                        monsterName = "Flamander";
+                    }
+                    case "3" -> {
+                        monsterType = "Water";
+                        monsterName = "Octi";
+                    }
+                    case "5" -> {
+                        monsterType = "Grass";
+                        monsterName = "Caterpi";
+                    }
+                    default -> {
+                        monsterType = "";
+                        monsterName = "";
+                    }
+                }
+
+                itemBuilder.addOption().setText(monsterType)
+                        .addSelection(() -> {
+                            interactionStorage.selectedStarter().setValue(starter);
+                            starterController.setStarter(starter);
+                            starterController.starterBox.setVisible(true);
+                        })
+                        .addAction(() -> {
+                            interactionStorage.selectedStarter().reset();
+                            starterController.starterBox.setVisible(false);
+                            listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
+                                    new TalkTrainerDto(me._id(), trainer._id(), starterIndex));
+                        })
+                        .setNext(Dialogue.builder()
+                                .addItem(translateString("chosen") + " " + monsterName + ", " + translateString("the") + " " + monsterType + " " + translateString("monster")).create())
+                        .endOption();
+
+                index++;
+            }
+
+            return itemBuilder.endItem().create();
         }
+
 
         //TODO: Add dialogue for healing
         //TODO: Add dialogue for encounter
