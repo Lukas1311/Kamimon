@@ -3,12 +3,11 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.models.User;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -54,16 +53,12 @@ public class SettingsController extends ToastedController {
     @Inject
     TrainerStorage trainerStorage;
     @Inject
-    TrainerService trainerService;
-    @Inject
-    PresetService presetService;
-    @Inject
     RegionStorage regionStorage;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
-    Provider<UserManagementController> userManagementControllerProvider;
+    TextureSetService textureService;
 
     private final SimpleStringProperty usernameProperty = new SimpleStringProperty();
     private final SimpleStringProperty regionProperty = new SimpleStringProperty();
@@ -81,15 +76,14 @@ public class SettingsController extends ToastedController {
         SimpleBooleanProperty trainerLoaded = trainerStorage.getTrainerLoaded();
 
         subscribe(trainerStorage.onTrainer(), trainer -> {
-            if(trainer.isPresent()) {
+            if (trainer.isPresent()) {
                 trainerProperty.set(trainer.get().name());
                 userTrainerValue.textProperty().bind(trainerProperty);
                 regionProperty.set(regionStorage.getRegion().name());
                 userRegionValue.textProperty().bind(regionProperty);
 
                 subscribe(
-                        presetService.getCharacterFile(trainer.get().image()),
-                        response -> setSpriteImage(spriteContainer, userSprite, 0, 3, response),
+                        setSpriteImage(spriteContainer, userSprite, Direction.BOTTOM, trainer.get().image(), textureService),
                         this::handleError
                 );
             }

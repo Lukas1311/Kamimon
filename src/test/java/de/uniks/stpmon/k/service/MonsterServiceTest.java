@@ -1,41 +1,71 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.ICache;
+import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.observers.TestObserver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MonsterServiceTest{
+public class MonsterServiceTest {
+    @Mock
+    CacheManager cacheManager;
+    @Spy
+    TrainerStorage trainerStorage;
     @InjectMocks
-    private MonsterService monsterService;
+    MonsterService monsterService;
+    @Mock
+    ICache<Monster, String> teamCache;
+
 
     @Test
-    void testMonsterService() {
-        // Create new monsters
-        Monster monster1 = new Monster("1", null, null, null, null, null, null, null);
-        Monster monster2 = new Monster("2", null, null, null, null, null, null, null);
+    void testEmpty() {
+        TestObserver<List<Monster>> monsterObserver = monsterService.getMonsters().test();
+        monsterObserver.assertNoValues();
+        TestObserver<List<Monster>> teamObserver = monsterService.getTeam().test();
+        teamObserver.assertNoValues();
+    }
 
-        // Add monsters to the service
-        monsterService.addMonster(monster1);
-        monsterService.addMonster(monster2);
+    @Test
+    void testMonsters() {
+        MonsterCache cache = Mockito.mock(MonsterCache.class);
+        when(cacheManager.requestMonsters(any())).thenReturn(cache);
+        when(cache.getTeam()).thenReturn(teamCache);
+        when(teamCache.getValues()).thenReturn(Observable.empty());
+        assertThrows(IllegalStateException.class, () -> monsterService.getMonsterCache());
+        assertThrows(IllegalStateException.class, () -> monsterService.getTeamCache());
+        assertDoesNotThrow(() -> monsterService.getMonster("test"));
 
-        // Check the number of monsters in the service
-        assertEquals(monster1, monsterService.getMonster("1"));
-        assertEquals(monster2, monsterService.getMonster("2"));
+        trainerStorage.setTrainer(DummyConstants.TRAINER);
 
-        // Check the number of monsters in the list
-        assertEquals(2, monsterService.getMonsterList());
+        assertDoesNotThrow(() -> monsterService.getMonsterCache());
+        assertDoesNotThrow(() -> monsterService.getTeamCache());
 
-        // Remove a monster from the service
-        monsterService.removeMonster("1");
+        monsterService.getMonsters();
+        verify(cache).getValues();
 
-        // Check if the monster has been removed and the number of remaining monsters
-        assertNull(monsterService.getMonster("1"));
-        assertEquals(1, monsterService.getMonsterList());
+        monsterService.getTeam();
+        verify(cache.getTeam()).getValues();
+
+        monsterService.getMonster("test");
+        verify(cache).listenValue(any());
     }
 }

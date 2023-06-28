@@ -4,7 +4,9 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="loading-screen" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoadingScreenController">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="loading-screen"
+            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.LoadingScreenController">
     <center>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
             <ImageView id="imageKamimonLettering" fx:id="imageViewKamimonLettering" fitHeight="200.0" fitWidth="200.0"
@@ -32,5 +34,5 @@
                 </ImageView>
             </HBox>
         </VBox>
-   </center>
+    </center>
 </BorderPane>

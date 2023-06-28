@@ -1,7 +1,9 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import org.junit.jupiter.api.Test;
@@ -44,10 +46,7 @@ public class InteractionServiceTest {
         // Empty at first
         assertNull(interactionStorage.getDialogue());
 
-        Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0,
-                null);
-        when(trainerService.getFacingTrainer()).thenReturn(Optional.of(trainer));
+        when(trainerService.getFacingTrainer()).thenReturn(Optional.of(DummyConstants.TRAINER));
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
@@ -60,10 +59,13 @@ public class InteractionServiceTest {
         // Empty at first
         assertNull(interactionStorage.getDialogue());
 
-        Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0,
-                new NPCInfo(false, false, false,
-                        List.of("monster_0", "monster_1"), List.of()));
+        Trainer trainer = TrainerBuilder.builder()
+                .setNpc(new NPCInfo(false,
+                        false,
+                        false,
+                        List.of("monster_0", "monster_1"),
+                        List.of()))
+                .create();
         when(trainerService.getFacingTrainer()).thenReturn(Optional.of(trainer));
 
         // Search for dialogue in facing trainer

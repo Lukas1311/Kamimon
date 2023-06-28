@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
@@ -14,6 +15,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,8 +36,7 @@ public class TrainerServiceTest {
 
     @Test
     public void getMe() {
-        Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
+        Trainer trainer = DummyConstants.TRAINER;
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         Trainer test = trainerService.getMe();
@@ -51,8 +52,7 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //test when oldTrainer is not null
-        Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
+        Trainer trainer = TrainerBuilder.builder().setId("1").setRegion("0").create();
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         when(regionApiService.deleteTrainer("0", "1")).thenReturn(Observable.just(trainer));
@@ -75,15 +75,13 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up trainer which will be updated
-        Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
+        Trainer trainer = TrainerBuilder.builder().setId("1").setRegion("0").create();
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         //define mock
         final ArgumentCaptor<UpdateTrainerDto> captor = ArgumentCaptor.forClass(UpdateTrainerDto.class);
         when(regionApiService.updateTrainer(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), captor.capture()))
-                .thenReturn(Observable.just(
-                        new Trainer("1", "0", "0", "Bob", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO)
+                .thenReturn(Observable.just(TrainerBuilder.builder().setId("1").setName("Bob").create()
                 ));
 
         //action
@@ -104,15 +102,16 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up trainer which will be updated
-        Trainer trainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO);
+        Trainer trainer = TrainerBuilder.builder().setId("1").setRegion("0").create();
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         //define mock
         final ArgumentCaptor<UpdateTrainerDto> captor = ArgumentCaptor.forClass(UpdateTrainerDto.class);
         when(regionApiService.updateTrainer(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), captor.capture()))
                 .thenReturn(Observable.just(
-                        new Trainer("1", "0", "0", "0", "101", 0, "0", 0, 0, 0, DummyConstants.NPC_INFO)
+                        new Trainer("1", "0", "0", "0", "101", 0, "0",
+                                0, 0, 0, DummyConstants.NPC_INFO,
+                                Set.of(), Set.of())
                 ));
 
         //action
@@ -133,10 +132,8 @@ public class TrainerServiceTest {
         // Default direction is right
         trainerStorage.setTrainer(DummyConstants.TRAINER);
 
-        Trainer firstTrainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 2, 0, 0, DummyConstants.NPC_INFO);
-        Trainer secondTrainer = new Trainer(
-                "1", "0", "0", "0", "0", 0, "0", 1, 0, 0, DummyConstants.NPC_INFO);
+        Trainer firstTrainer = TrainerBuilder.builder().setId("1").setRegion("0").setX(2).create();
+        Trainer secondTrainer = TrainerBuilder.builder().setId("1").setRegion("0").setX(1).create();
         // First no trainer returned
         when(trainerCache.getTrainerAt(2, 0)).thenReturn(Optional.empty());
         when(trainerCache.getTrainerAt(1, 0)).thenReturn(Optional.empty());

@@ -147,7 +147,7 @@ public class LoginController extends Controller {
 
         //Show KAMIMON Logo
         Platform.runLater(() -> {
-            setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
+            loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");
             imageViewKamimonLettering.setPreserveRatio(true);
         });
 

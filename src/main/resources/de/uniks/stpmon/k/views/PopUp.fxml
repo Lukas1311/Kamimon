@@ -6,31 +6,38 @@
 <?import javafx.scene.text.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<BorderPane fx:id="popUpMainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="450.0" styleClass="popup-background" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.popup.PopUpController">
+<BorderPane fx:id="popUpMainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="150.0" prefWidth="450.0" styleClass="popup-background"
+            stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.popup.PopUpController">
     <top>
-        <Button fx:id="popUpCloseButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel" styleClass="popup-close-button" textAlignment="JUSTIFY" BorderPane.alignment="TOP_RIGHT">
+        <Button fx:id="popUpCloseButton" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#cancel"
+                styleClass="popup-close-button" textAlignment="JUSTIFY" BorderPane.alignment="TOP_RIGHT">
             <graphic>
-                <FontIcon iconLiteral="mdral-clear" />
+                <FontIcon iconLiteral="mdral-clear"/>
             </graphic>
         </Button>
     </top>
     <center>
-        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="popup-text" textAlignment="CENTER" wrappingWidth="430.0" BorderPane.alignment="CENTER" />
+        <Text fx:id="popUpMainText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="popup-text"
+              textAlignment="CENTER" wrappingWidth="430.0" BorderPane.alignment="CENTER"/>
     </center>
     <bottom>
         <GridPane fx:id="popUpButtonPane" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <BorderPane.margin>
-                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
             </BorderPane.margin>
-            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve" styleClass="kgm-general-button-blue" text="%yes" />
-            <Button fx:id="discardButton" mnemonicParsing="false" onAction="#cancel" styleClass="kgm-general-button-red" text="%discard" GridPane.columnIndex="1" />
+            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#approve"
+                    styleClass="kgm-general-button-blue" text="%yes"/>
+            <Button fx:id="discardButton" mnemonicParsing="false" onAction="#cancel" styleClass="kgm-general-button-red"
+                    text="%discard" GridPane.columnIndex="1"/>
         </GridPane>
     </bottom>
 </BorderPane>

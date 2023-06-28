@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.storage.TokenStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
+import de.uniks.stpmon.k.service.world.PreparationService;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
@@ -34,6 +35,8 @@ public class AuthenticationService {
     CacheManager cacheManager;
     @Inject
     Preferences preferences;
+    @Inject
+    PreparationService preparationService;
     // Do not inject this, it is retrieved from cacheManager
     private IFriendCache friendCache;
 
@@ -47,6 +50,7 @@ public class AuthenticationService {
         return friendCache
                 // wait for cache to be initialized
                 .onInitialized()
+                .andThen(preparationService.prepareLobby())
                 // return old login result
                 .andThen(Observable.just(old));
 

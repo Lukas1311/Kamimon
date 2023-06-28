@@ -7,11 +7,15 @@
 <?import javafx.scene.text.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<HBox alignment="CENTER" fillHeight="false" maxHeight="60.0" maxWidth="325.0" minHeight="60.0" minWidth="325.0" prefHeight="60.0" prefWidth="325.0" styleClass="friend-element-holder" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.FriendController">
-    <VBox alignment="CENTER_LEFT" fillWidth="false" prefHeight="157.0" prefWidth="60.0" styleClass="friend-element-avatar-holder" stylesheets="@css/style.css">
-        <VBox fx:id="avatarBox" prefHeight="100.0" prefWidth="50.0" styleClass="friend-element-avatar" stylesheets="@css/style.css">
+<HBox alignment="CENTER" fillHeight="false" maxHeight="60.0" maxWidth="325.0" minHeight="60.0" minWidth="325.0"
+      prefHeight="60.0" prefWidth="325.0" styleClass="friend-element-holder" stylesheets="@css/generalStyle.css"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.FriendController">
+    <VBox alignment="CENTER_LEFT" fillWidth="false" prefHeight="157.0" prefWidth="60.0"
+          styleClass="friend-element-avatar-holder">
+        <VBox fx:id="avatarBox" prefHeight="100.0" prefWidth="50.0" styleClass="friend-element-avatar">
             <VBox.margin>
-                <Insets bottom="5.0" top="5.0" />
+                <Insets bottom="5.0" top="5.0"/>
             </VBox.margin>
         </VBox>
     </VBox>
@@ -19,27 +23,32 @@
         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="100.0">
             <Circle fx:id="userStatus" fill="#41ff1f" radius="8.0" stroke="TRANSPARENT" strokeType="INSIDE">
                 <HBox.margin>
-                    <Insets left="2.0" right="5.0" />
+                    <Insets left="2.0" right="5.0"/>
                 </HBox.margin>
             </Circle>
-            <Text fx:id="userName" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" text="TestPlayerName" wrappingWidth="150.0">
+            <Text fx:id="userName" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" text="TestPlayerName"
+                  wrappingWidth="150.0">
             </Text>
         </HBox>
-      <HBox.margin>
-         <Insets top="5.0" />
-      </HBox.margin>
+        <HBox.margin>
+            <Insets top="5.0"/>
+        </HBox.margin>
     </VBox>
-    <Button fx:id="messageButton" contentDisplay="GRAPHIC_ONLY" maxHeight="37.0" maxWidth="37.0" minHeight="37.0" minWidth="37.0" mnemonicParsing="false" onAction="#openChat" prefHeight="37.0" prefWidth="37.0" styleClass="friend-icon-button" stylesheets="@css/style.css">
+    <Button fx:id="messageButton" contentDisplay="GRAPHIC_ONLY" maxHeight="37.0" maxWidth="37.0" minHeight="37.0"
+            minWidth="37.0" mnemonicParsing="false" onAction="#openChat" prefHeight="37.0" prefWidth="37.0"
+            styleClass="friend-icon-button">
         <graphic>
-            <FontIcon fx:id="chat" iconColor="black" iconLiteral="mdmz-message" iconSize="30" />
+            <FontIcon fx:id="chat" iconColor="black" iconLiteral="mdmz-message" iconSize="30"/>
         </graphic>
     </Button>
-    <Button fx:id="removeFriendButton" maxHeight="37.0" maxWidth="37.0" minHeight="37.0" minWidth="37.0" mnemonicParsing="false" onAction="#handleFriend" prefHeight="37.0" prefWidth="37.0" styleClass="friend-icon-button" stylesheets="@css/style.css">
+    <Button fx:id="removeFriendButton" maxHeight="37.0" maxWidth="37.0" minHeight="37.0" minWidth="37.0"
+            mnemonicParsing="false" onAction="#handleFriend" prefHeight="37.0" prefWidth="37.0"
+            styleClass="friend-icon-button">
         <HBox.margin>
-            <Insets bottom="5.0" top="5.0" />
+            <Insets bottom="5.0" top="5.0"/>
         </HBox.margin>
         <graphic>
-            <FontIcon fx:id="removeFriendText" iconColor="red" iconLiteral="mdral-clear" iconSize="30" />
+            <FontIcon fx:id="removeFriendText" iconColor="red" iconLiteral="mdral-clear" iconSize="30"/>
         </graphic>
     </Button>
 </HBox>

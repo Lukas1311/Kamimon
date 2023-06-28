@@ -87,8 +87,10 @@ public class SVGUtils {
             }
         } catch (NullPointerException e) {
             System.err.println("Error: svg vector is null/empty.");
+            e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Error: while loading the svg an error occured.");
+            e.printStackTrace();
         }
         return new SVGData(svgPaths, svgWidth, svgHeight);
     }

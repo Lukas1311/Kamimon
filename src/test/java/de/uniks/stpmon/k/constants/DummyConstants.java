@@ -9,10 +9,35 @@ import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 @SuppressWarnings("unused")
 public class DummyConstants {
+
+    public static final User USER_ALICE = new User(
+            "id_alice",
+            "Alice",
+            null,
+            null,
+            null
+    );
+
+    public static final User USER_BOB = new User(
+            "id_bob",
+            "Bob",
+            null,
+            null,
+            null
+    );
+
+    public static final User USER_EVE = new User(
+            "id_eve",
+            "Eve",
+            null,
+            null,
+            null
+    );
 
     public static final Trainer TRAINER = new Trainer(
             "0",
@@ -25,7 +50,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            null
+            null,
+            Set.of(), Set.of()
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "1",
@@ -38,7 +64,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            DummyConstants.NPC_INFO
+            DummyConstants.NPC_INFO,
+            Set.of(), Set.of()
     );
 
     public static final Trainer TRAINER_OTHER_REGION = new Trainer(
@@ -52,7 +79,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            DummyConstants.NPC_INFO
+            DummyConstants.NPC_INFO,
+            Set.of(), Set.of()
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,
@@ -151,4 +179,5 @@ public class DummyConstants {
             null
     );
     public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
+
 }
