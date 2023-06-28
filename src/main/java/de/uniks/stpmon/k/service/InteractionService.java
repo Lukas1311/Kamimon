@@ -87,11 +87,11 @@ public class InteractionService implements ILifecycleService {
                         .addSelection(() -> {
                             interactionStorage.selectedStarter().setValue(starter);
                             starterController.setStarter(starter);
-                            starterController.starterBox.setVisible(true);
+                            starterController.starterPane.setVisible(true);
                         })
                         .addAction(() -> {
                             interactionStorage.selectedStarter().reset();
-                            starterController.starterBox.setVisible(false);
+                            starterController.starterPane.setVisible(false);
                             listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
                                     new TalkTrainerDto(me._id(), trainer._id(), starterIndex));
                         })

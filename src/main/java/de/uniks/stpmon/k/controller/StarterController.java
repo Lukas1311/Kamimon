@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,7 +20,9 @@ public class StarterController extends Controller {
     @FXML
     public Label monsterNameLabel;
     @FXML
-    public VBox starterBox;
+    public ImageView starterBackground;
+    @FXML
+    public StackPane starterPane;
 
     @Inject
     IResourceService resourceService;
@@ -32,6 +34,7 @@ public class StarterController extends Controller {
 
     @Override
     public Parent render() {
+        //loadImage(starterBackground, "starter-choice-box.png");
         return super.render();
     }
 
