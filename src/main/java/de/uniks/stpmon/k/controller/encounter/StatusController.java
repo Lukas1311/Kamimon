@@ -30,11 +30,11 @@ public class StatusController extends Controller {
     public Text monsterHp;
     @FXML
     public ProgressBar experienceBar;
+    public ImageView monsterImage;
 
     @Inject
     PresetService presetService;
-    @Inject
-    IResourceService resourceService;
+
     @Inject
     TrainerStorage trainerStorage;
 
@@ -70,21 +70,11 @@ public class StatusController extends Controller {
     }
 
     public void loadMonsterDto(String id) {
-        final double SCALE = 4.0;
-
         disposables.add(presetService.getMonster(monster._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(monsterTypeDto -> {
                     monsterName.setText(monsterTypeDto.name());
                 }));
-
-//        disposables.add(resourceService.getMonsterImage(id)
-//                .observeOn(FX_SCHEDULER)
-//                .subscribe(imageUrl -> {
-//                    // Scale and set the image
-//                    Image image = ImageUtils.scaledImageFX(imageUrl, SCALE);
-//                    monsterImage.setImage(image);
-//                }));
     }
 
     @Override
