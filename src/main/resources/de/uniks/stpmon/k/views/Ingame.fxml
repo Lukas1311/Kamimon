@@ -25,17 +25,10 @@
                         </BorderPane.margin>
                     </VBox>
             </right>
-            <left>
-               <VBox prefHeight="280.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                  <BorderPane.margin>
-                     <Insets />
-                  </BorderPane.margin>
-               </VBox>
-            </left>
             <center>
                <VBox fx:id="starterBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="332.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                   <BorderPane.margin>
-                     <Insets />
+                     <Insets left="200.0" />
                   </BorderPane.margin>
                </VBox>
             </center>
