@@ -1,11 +1,15 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
@@ -13,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -36,7 +41,7 @@ public class EncounterOverviewController extends Controller {
     public ImageView opponentMonster0;
     @FXML
     public ImageView opponentMonster1;
-
+    public Rectangle placeholder;
 
 
     @Inject
@@ -45,6 +50,8 @@ public class EncounterOverviewController extends Controller {
     IResourceService resourceService;
     @Inject
     Provider<StatusController> statusControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
 
     List<Monster> encounterMonsters = new ArrayList<>();
@@ -62,8 +69,18 @@ public class EncounterOverviewController extends Controller {
                 1,
                 1,
                 null,
-                null,
-                null
+                new MonsterAttributes(
+                        20,
+                        20,
+                        20,
+                        20
+                ),
+                new MonsterAttributes(
+                        18,
+                        20,
+                        20,
+                        20
+                )
         );
         Monster zuendorn = new Monster(
                 "109",
@@ -72,8 +89,18 @@ public class EncounterOverviewController extends Controller {
                 2,
                 2,
                 null,
-                null,
-                null
+                new MonsterAttributes(
+                        20,
+                        20,
+                        20,
+                        20
+                ),
+                new MonsterAttributes(
+                        12,
+                        20,
+                        20,
+                        20
+                )
         );
         Monster angrian = new Monster(
                 "10",
@@ -82,8 +109,18 @@ public class EncounterOverviewController extends Controller {
                 3,
                 3,
                 null,
-                null,
-                null
+                new MonsterAttributes(
+                        20,
+                        20,
+                        20,
+                        20
+                ),
+                new MonsterAttributes(
+                        4,
+                        20,
+                        20,
+                        20
+                )
         );
         Monster sanddorm = new Monster(
                 "78",
@@ -92,8 +129,18 @@ public class EncounterOverviewController extends Controller {
                 4,
                 4,
                 null,
-                null,
-                null
+                new MonsterAttributes(
+                        20,
+                        20,
+                        20,
+                        20
+                ),
+                new MonsterAttributes(
+                        14,
+                        20,
+                        20,
+                        20
+                )
         );
         encounterMonsters.add(amogus);
         encounterMonsters.add(zuendorn);
@@ -108,6 +155,8 @@ public class EncounterOverviewController extends Controller {
         loadImage(background, "encounter/FOREST.png");
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
+
+        placeholder.setOnMouseClicked(e -> hybridControllerProvider.get().openMain(MainWindow.INGAME));
 
         renderMonsters();
 

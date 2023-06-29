@@ -21,38 +21,38 @@
             </StackPane.margin></VBox>
             <HBox alignment="CENTER" fillHeight="false">
                 <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-               <StackPane HBox.hgrow="ALWAYS">
-                  <children>
-                          <ImageView fx:id="userMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
-                        <StackPane.margin>
-                           <Insets right="150.0" />
-                        </StackPane.margin>
-                     </ImageView>
-                          <ImageView fx:id="userMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
-                        <StackPane.margin>
-                           <Insets left="300.0" top="300.0" />
-                        </StackPane.margin>
-                     </ImageView>
-                  </children>
-               </StackPane>
+                    <StackPane HBox.hgrow="ALWAYS">
+                        <ImageView fx:id="userMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <StackPane.margin>
+                                <Insets right="150.0"/>
+                            </StackPane.margin>
+                        </ImageView>
+                        <ImageView fx:id="userMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <StackPane.margin>
+                                <Insets left="300.0" top="300.0"/>
+                            </StackPane.margin>
+                        </ImageView>
+                    </StackPane>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
-               <StackPane HBox.hgrow="ALWAYS">
-                  <children>
-                          <ImageView fx:id="opponentMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
-                        <StackPane.margin>
-                           <Insets bottom="300.0" right="300.0" />
-                        </StackPane.margin>
-                     </ImageView>
-                          <ImageView fx:id="opponentMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
-                  </children>
-               </StackPane>
+                    <StackPane HBox.hgrow="ALWAYS">
+                        <ImageView fx:id="opponentMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <StackPane.margin>
+                                <Insets bottom="300.0" right="300.0"/>
+                            </StackPane.margin>
+                        </ImageView>
+                        <ImageView fx:id="opponentMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
+                                   preserveRatio="true"/>
+                    </StackPane>
                 </HBox>
             </HBox>
         </StackPane>
     </VBox>
     <VBox alignment="BOTTOM_RIGHT">
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="177.0" stroke="BLACK" strokeType="INSIDE" width="471.0">
+        <Rectangle fx:id="placeholder" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="177.0" stroke="BLACK" strokeType="INSIDE" width="471.0">
             <VBox.margin>
                 <Insets bottom="20.0" right="20.0" />
             </VBox.margin>

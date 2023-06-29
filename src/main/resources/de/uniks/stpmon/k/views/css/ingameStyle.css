@@ -8,3 +8,20 @@
 .encounter-background {
     -fx-background-size: cover;
 }
+
+.user-monster-indented {
+    -fx-start-margin: 100px;
+}
+
+.monster-hp-bar {
+    -fx-accent: #2a7d37;
+}
+
+.monster-hp-bar .bar {
+    -fx-background-color: #2a7d37;
+    -fx-padding: 0;
+}
+
+.monster-hp-bar .track {
+    -fx-padding: 0;
+}
