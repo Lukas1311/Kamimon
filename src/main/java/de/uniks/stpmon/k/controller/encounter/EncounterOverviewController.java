@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
@@ -14,7 +15,6 @@ import javafx.geometry.NodeOrientation;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -49,12 +49,14 @@ public class EncounterOverviewController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
+    MonsterService monsterService;
+    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
-
     List<Monster> userMonstersList = new ArrayList<>();
+    //    List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
     List<Monster> opponentMonstersList = new ArrayList<>();
 
     @Inject
@@ -83,26 +85,26 @@ public class EncounterOverviewController extends Controller {
                         20
                 )
         );
-//        Monster zuendorn = new Monster(
-//                "109",
-//                "trainerStorage.getTrainer()._id()",
-//                0,
-//                2,
-//                2,
-//                null,
-//                new MonsterAttributes(
-//                        20,
-//                        20,
-//                        20,
-//                        20
-//                ),
-//                new MonsterAttributes(
-//                        12,
-//                        20,
-//                        20,
-//                        20
-//                )
-//        );
+        Monster zuendorn = new Monster(
+                "109",
+                "trainerStorage.getTrainer()._id()",
+                0,
+                2,
+                2,
+                null,
+                new MonsterAttributes(
+                        20,
+                        20,
+                        20,
+                        20
+                ),
+                new MonsterAttributes(
+                        12,
+                        20,
+                        20,
+                        20
+                )
+        );
         Monster angrian = new Monster(
                 "10",
                 "opponentTrainer",
@@ -144,8 +146,8 @@ public class EncounterOverviewController extends Controller {
                 )
         );
         userMonstersList.add(amogus);
-////        userMonstersList.add(zuendorn);
-//        opponentMonstersList.add(angrian);
+        userMonstersList.add(zuendorn);
+        opponentMonstersList.add(angrian);
         opponentMonstersList.add(sanddorm);
     }
 
@@ -165,35 +167,37 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters() {
-        for (Monster monster : userMonstersList) {
+        for (int slot = 0; slot < userMonstersList.size(); slot++) {
+            Monster monster = userMonstersList.get(slot);
             StatusController userStatusController = statusControllerProvider.get();
             userStatusController.setMonster(monster);
             userStatusController.loadMonsterDto(String.valueOf(monster._id()));
             userMonsters.getChildren().add(userStatusController.render());
-            if (monster._id().equals(userMonstersList.get(0)._id())) {
-                loadMonsterImage(String.valueOf(monster._id()), userMonster0, 1);
-            } else if (monster._id().equals(userMonstersList.get(1)._id())) {
-                loadMonsterImage(String.valueOf(monster._id()), userMonster1, 1);
+            if (slot == 0) {
+                loadMonsterImage(monster._id(), userMonster0, 1);
+            } else if (slot == 1) {
+                loadMonsterImage(monster._id(), userMonster1, 1);
                 VBox.setMargin(userStatusController.fullBox, new Insets(-18, 0, 0, 125));
             }
         }
-        for (Monster monster : opponentMonstersList) {
+        for (int slot = 0; slot < opponentMonstersList.size(); slot++) {
+            Monster monster = opponentMonstersList.get(slot);
             StatusController opponentStatusController = statusControllerProvider.get();
             opponentStatusController.setMonster(monster);
             opponentStatusController.loadMonsterDto(String.valueOf(monster._id()));
             opponentMonsters.getChildren().add(opponentStatusController.render());
-            if (monster._id().equals(opponentMonstersList.get(0)._id())) {
-                loadMonsterImage(String.valueOf(monster._id()), opponentMonster0, 0);
+            if (slot == 0) {
+                loadMonsterImage(monster._id(), opponentMonster0, 0);
                 VBox.setMargin(opponentStatusController.fullBox, new Insets(0, 125, 0, 0));
-            } else if (monster._id().equals(opponentMonstersList.get(1)._id())) {
-                loadMonsterImage(String.valueOf(monster._id()), opponentMonster1,  0);
+            } else if (slot == 1) {
+                loadMonsterImage(monster._id(), opponentMonster1, 0);
                 VBox.setMargin(opponentStatusController.fullBox, new Insets(-5, 0, 0, 0));
             }
         }
     }
 
     private void loadMonsterImage(String id, ImageView monsterImage, int orientation) {
-        final double SCALE = 8.0;
+        final double SCALE = 6.0;
 
         disposables.add(resourceService.getMonsterImage(id)
                 .observeOn(FX_SCHEDULER)
