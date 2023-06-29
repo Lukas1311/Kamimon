@@ -54,7 +54,8 @@ public class EncounterOverviewController extends Controller {
     Provider<HybridController> hybridControllerProvider;
 
 
-    List<Monster> encounterMonsters = new ArrayList<>();
+    List<Monster> userMonstersList = new ArrayList<>();
+    List<Monster> opponentMonstersList = new ArrayList<>();
 
     @Inject
     public EncounterOverviewController() {
@@ -82,26 +83,26 @@ public class EncounterOverviewController extends Controller {
                         20
                 )
         );
-        Monster zuendorn = new Monster(
-                "109",
-                "trainerStorage.getTrainer()._id()",
-                0,
-                2,
-                2,
-                null,
-                new MonsterAttributes(
-                        20,
-                        20,
-                        20,
-                        20
-                ),
-                new MonsterAttributes(
-                        12,
-                        20,
-                        20,
-                        20
-                )
-        );
+//        Monster zuendorn = new Monster(
+//                "109",
+//                "trainerStorage.getTrainer()._id()",
+//                0,
+//                2,
+//                2,
+//                null,
+//                new MonsterAttributes(
+//                        20,
+//                        20,
+//                        20,
+//                        20
+//                ),
+//                new MonsterAttributes(
+//                        12,
+//                        20,
+//                        20,
+//                        20
+//                )
+//        );
         Monster angrian = new Monster(
                 "10",
                 "opponentTrainer",
@@ -142,10 +143,10 @@ public class EncounterOverviewController extends Controller {
                         20
                 )
         );
-        encounterMonsters.add(amogus);
-        encounterMonsters.add(zuendorn);
-        encounterMonsters.add(angrian);
-        encounterMonsters.add(sanddorm);
+        userMonstersList.add(amogus);
+////        userMonstersList.add(zuendorn);
+//        opponentMonstersList.add(angrian);
+        opponentMonstersList.add(sanddorm);
     }
 
     @Override
@@ -164,28 +165,29 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters() {
-        for (int i = 0; i < encounterMonsters.size(); i++) {
-            Monster monster = encounterMonsters.get(i);
-            if (monster.trainer().equals("trainerStorage.getTrainer()._id()")) {
-                StatusController userStatusController = statusControllerProvider.get();
-                userStatusController.setMonster(monster);
-                userStatusController.loadMonsterDto(String.valueOf(monster._id()));
-                if (i == 0) {
-                    loadMonsterImage(String.valueOf(monster._id()), userMonster0, 1);
-                } else if (i == 1) {
-                    loadMonsterImage(String.valueOf(monster._id()), userMonster1, 1);
-                }
-                userMonsters.getChildren().add(userStatusController.render());
-            } else {
-                StatusController opponentStatusController = statusControllerProvider.get();
-                opponentStatusController.setMonster(monster);
-                opponentStatusController.loadMonsterDto(String.valueOf(monster._id()));
-                if (i == 2) {
-                    loadMonsterImage(String.valueOf(monster._id()), opponentMonster0, 0);
-                } else if (i == 3) {
-                    loadMonsterImage(String.valueOf(monster._id()), opponentMonster1,  0);
-                }
-                opponentMonsters.getChildren().add(opponentStatusController.render());
+        for (Monster monster : userMonstersList) {
+            StatusController userStatusController = statusControllerProvider.get();
+            userStatusController.setMonster(monster);
+            userStatusController.loadMonsterDto(String.valueOf(monster._id()));
+            userMonsters.getChildren().add(userStatusController.render());
+            if (monster._id().equals(userMonstersList.get(0)._id())) {
+                loadMonsterImage(String.valueOf(monster._id()), userMonster0, 1);
+            } else if (monster._id().equals(userMonstersList.get(1)._id())) {
+                loadMonsterImage(String.valueOf(monster._id()), userMonster1, 1);
+                VBox.setMargin(userStatusController.fullBox, new Insets(-18, 0, 0, 125));
+            }
+        }
+        for (Monster monster : opponentMonstersList) {
+            StatusController opponentStatusController = statusControllerProvider.get();
+            opponentStatusController.setMonster(monster);
+            opponentStatusController.loadMonsterDto(String.valueOf(monster._id()));
+            opponentMonsters.getChildren().add(opponentStatusController.render());
+            if (monster._id().equals(opponentMonstersList.get(0)._id())) {
+                loadMonsterImage(String.valueOf(monster._id()), opponentMonster0, 0);
+                VBox.setMargin(opponentStatusController.fullBox, new Insets(0, 125, 0, 0));
+            } else if (monster._id().equals(opponentMonstersList.get(1)._id())) {
+                loadMonsterImage(String.valueOf(monster._id()), opponentMonster1,  0);
+                VBox.setMargin(opponentStatusController.fullBox, new Insets(-5, 0, 0, 0));
             }
         }
     }

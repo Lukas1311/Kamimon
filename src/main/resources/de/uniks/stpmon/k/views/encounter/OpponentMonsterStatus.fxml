@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Text?>
 
 <VBox alignment="CENTER_LEFT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../css/ingameStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.StatusController">
-    <VBox>
+    <VBox fx:id="fullBox">
         <StackPane>
             <ImageView fx:id="monsterStatusView" fitHeight="105.0" fitWidth="386.0" />
          <ProgressBar fx:id="hpBar" prefHeight="12.0" prefWidth="185.0" progress="0.0" styleClass="monster-hp-bar">
