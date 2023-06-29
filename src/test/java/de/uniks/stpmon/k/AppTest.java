@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -35,6 +36,7 @@ class AppTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        app.setMainComponent(component);
         app.start(stage);
         stage.requestFocus();
     }
@@ -77,8 +79,13 @@ class AppTest extends ApplicationTest {
         clickOn("#further");
         clickOn("#further");
 
+        sleep(1000);
         //open friend list
-        clickOn("#friends");
+        type(KeyCode.F);
+        waitForFxEvents();
+
+
+
         ScrollPane scrollPane = lookup("#scrollPane").query();
         VBox userList = (VBox) scrollPane.getContent();
         VBox friendView = (VBox) userList.lookup("#friendSection");
@@ -125,7 +132,8 @@ class AppTest extends ApplicationTest {
         //...
 
         //close friends sidebar
-        clickOn("#friends");
+        type(KeyCode.F);
+        waitForFxEvents();
 
         //check that there are two test regions
         GridPane regionListGridPane = lookup("#regionListGridPane").query();
@@ -173,7 +181,8 @@ class AppTest extends ApplicationTest {
         component.userStorage().setUser(user);
 
         //open Settings
-        clickOn("#settings");
+        //clickOn("#settings");
+        type(KeyCode.NUMBER_SIGN);
         waitForFxEvents();
         //edit User
         clickOn("#editUserButton");

@@ -22,7 +22,7 @@ import java.net.URL;
 import java.util.Objects;
 
 public class App extends Application {
-    private final MainComponent component;
+    private MainComponent component;
     protected final CompositeDisposable disposables = new CompositeDisposable();
 
     private Controller controller;
@@ -74,6 +74,10 @@ public class App extends Application {
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
         loadingScreen.startLoading(this::onFinishedLoading);
+    }
+
+    public void setMainComponent(MainComponent component){
+        this.component = component;
     }
 
     public void addInputHandler(MainComponent component) {

@@ -240,7 +240,6 @@ public class LoginController extends Controller {
     }
 
     private void showPassword() {
-
         toggleButton.getStyleClass().clear();
         toggleButton.getStyleClass().addAll("login-password-button", "login-password-button-invisible");
         tempPassword = password.get();
