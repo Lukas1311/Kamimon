@@ -181,8 +181,7 @@ class AppTest extends ApplicationTest {
         component.userStorage().setUser(user);
 
         //open Settings
-        //clickOn("#settings");
-        type(KeyCode.NUMBER_SIGN);
+        clickOn("#settings");
         waitForFxEvents();
         //edit User
         clickOn("#editUserButton");
