@@ -10,13 +10,14 @@ import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 @Singleton
 public class InteractionService implements ILifecycleService {
@@ -28,8 +29,6 @@ public class InteractionService implements ILifecycleService {
     TrainerService trainerService;
     @Inject
     PresetService presetService;
-    @Inject
-    MonsterService monsterService;
     @Inject
     StarterController starterController;
     @Inject
@@ -57,56 +56,44 @@ public class InteractionService implements ILifecycleService {
 
         List<String> starters = info.starters();
 
+        Trainer me = trainerService.getMe();
 
-        if (starters != null && starters.size() == 3) {
-            Map<Integer, MonsterTypeDto> startersMap = new HashMap<>();
-
-            disposables.add(
-                    Observable.range(0, starters.size())
-                            .flatMap(index -> presetService.getMonster(starters.get(index))
-                                    .map(monster -> {
-                                        startersMap.put(index, monster);
-                                        return monster;
-                                    })
-                            )
-                            .subscribe(
-                                    monster -> {}, // startersMap.put(monster.name(), monster.type().get(0)),
-                                    Throwable::printStackTrace
-                            )
-            );
-
-            Trainer me = trainerService.getMe();
+        if (starters != null && !starters.isEmpty() && me.team().isEmpty()) {
 
             DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder().addItem(translateString("helloAreYouReady", me.name()))
                     .addItem(translateString("chooseOneType"))
                     .addItem().setText(translateString("takeTime"));
 
-            for (Map.Entry<Integer, MonsterTypeDto> entry : startersMap.entrySet()) {
+            for (int select = 0; select < starters.size(); select++) {
+                String id = starters.get(select);
+                MonsterTypeDto monster = presetService.getMonster(id).blockingFirst();
 
-                int index = entry.getKey();
-                int monsterId = entry.getValue().id();
-                String monsterName = entry.getValue().name();
-                String monsterType = entry.getValue().type().get(0); // starters only have one type
+                if (monster != null) {
 
-                itemBuilder.addOption().setText(monsterType)
-                        .addSelection(() -> {
-                            interactionStorage.selectedStarter().setValue(monsterName);
-                            starterController.setStarter(String.valueOf(monsterId));
-                            starterController.starterPane.setVisible(true);
-                        })
-                        .addAction(() -> {
-                            interactionStorage.selectedStarter().reset();
-                            starterController.starterPane.setVisible(false);
-                            listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
-                                    new TalkTrainerDto(me._id(), trainer._id(), index));
-                        })
-                        .setNext(Dialogue.builder()
-                                .addItem(translateString("youHaveChosenMonster", monsterName, monsterType)).create())
-                        .endOption();
+                    int monsterId = monster.id();
+                    String monsterName = monster.name();
+                    String monsterType = monster.type().get(0); // starters only have one type
+
+                    int finalSelect = select;
+                    itemBuilder.addOption().setText(monsterType)
+                            .addSelection(() -> {
+                                interactionStorage.selectedStarter().setValue(monsterName);
+                                starterController.setStarter(String.valueOf(monsterId));
+                                starterController.starterPane.setVisible(true);
+                            })
+                            .addAction(() -> {
+                                interactionStorage.selectedStarter().reset();
+                                starterController.starterPane.setVisible(false);
+                                listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
+                                        new TalkTrainerDto(me._id(), trainer._id(), finalSelect));
+                            })
+                            .setNext(Dialogue.builder()
+                                    .addItem(translateString("youHaveChosenMonster", monsterName, monsterType)).create())
+                            .endOption();
+                }
             }
             return itemBuilder.endItem().create();
         }
-
 
         //TODO: Add dialogue for healing
         //TODO: Add dialogue for encounter
