@@ -1,11 +1,13 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
+import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,11 +15,12 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Optional;
+import javax.inject.Provider;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,6 +30,13 @@ public class InteractionServiceTest {
     InteractionStorage interactionStorage;
     @Mock
     TrainerService trainerService;
+    @Mock
+    PresetService presetService;
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
+
     @InjectMocks
     InteractionService interactionService;
 
@@ -66,7 +76,12 @@ public class InteractionServiceTest {
                         List.of("monster_0", "monster_1"),
                         List.of()))
                 .create();
+        MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, Arrays.asList("type1", "type2"), null);
+
         when(trainerService.getFacingTrainer()).thenReturn(Optional.of(trainer));
+        when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
+        when(resourceBundleProvider.get()).thenReturn(resources);
+        when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
