@@ -1,14 +1,16 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
+import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
@@ -18,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -53,7 +56,7 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
-    Provider<HybridController> hybridControllerProvider;
+    LoginController loginController;
 
     List<Monster> userMonstersList = new ArrayList<>();
     //    List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
@@ -159,9 +162,10 @@ public class EncounterOverviewController extends Controller {
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
-        placeholder.setOnMouseClicked(e -> hybridControllerProvider.get().openMain(MainWindow.INGAME));
+        placeholder.setOnMouseClicked(e -> app.show(loginController));
 
         renderMonsters();
+        animateMonsterEntrance();
 
         return parent;
     }
@@ -211,6 +215,79 @@ public class EncounterOverviewController extends Controller {
                     }
                     monsterImage.setImage(image);
                 }));
+    }
+
+    private void animateMonsterEntrance() {
+        userMonsters.getChildren().get(1).setOpacity(0);
+        opponentMonsters.getChildren().get(1).setOpacity(0);
+        userMonster1.setOpacity(0);
+        opponentMonster1.setOpacity(0);
+        placeholder.setOpacity(0);
+
+        TranslateTransition userTransition1 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(0));
+        userTransition1.setFromX(-400);
+        userTransition1.setToX(0);
+
+        TranslateTransition userMonsterTransition1 = new TranslateTransition(Duration.seconds(1), userMonster0);
+        userMonsterTransition1.setFromX(-400);
+        userMonsterTransition1.setToX(0);
+
+        ParallelTransition userFullTransition1 = new ParallelTransition(userTransition1, userMonsterTransition1);
+
+        TranslateTransition opponentTransition1 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(0));
+        opponentTransition1.setFromX(400);
+        opponentTransition1.setToX(0);
+
+        TranslateTransition opponentMonsterTransition1 = new TranslateTransition(Duration.seconds(1), opponentMonster0);
+        opponentMonsterTransition1.setFromX(400);
+        opponentMonsterTransition1.setToX(0);
+
+        ParallelTransition opponentFullTransition1 = new ParallelTransition(opponentTransition1, opponentMonsterTransition1);
+
+        ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
+
+        parallel1.setOnFinished(e -> {
+            userMonsters.getChildren().get(1).setOpacity(1);
+            opponentMonsters.getChildren().get(1).setOpacity(1);
+            userMonster1.setOpacity(1);
+            opponentMonster1.setOpacity(1);
+        });
+
+        TranslateTransition userTransition2 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(1));
+        userTransition2.setFromX(-600);
+        userTransition2.setToX(0);
+
+        TranslateTransition userMonsterTransition2 = new TranslateTransition(Duration.seconds(1), userMonster1);
+        userMonsterTransition2.setFromX(-600);
+        userMonsterTransition2.setToX(0);
+
+        ParallelTransition userFullTransition2 = new ParallelTransition(userTransition2, userMonsterTransition2);
+
+        TranslateTransition opponentTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(1));
+        opponentTransition2.setFromX(600);
+        opponentTransition2.setToX(0);
+
+        TranslateTransition opponentMonsterTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonster1);
+        opponentMonsterTransition2.setFromX(600);
+        opponentMonsterTransition2.setToX(0);
+
+        ParallelTransition opponentFullTransition2 = new ParallelTransition(opponentTransition2, opponentMonsterTransition2);
+
+        ParallelTransition parallel2 = new ParallelTransition(userFullTransition2, opponentFullTransition2);
+
+        parallel2.setOnFinished(e -> {
+            placeholder.setOpacity(1);
+        });
+
+        SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
+
+        TranslateTransition actionFieldTransition = new TranslateTransition(Duration.seconds(1), placeholder);
+        actionFieldTransition.setFromX(600);
+        actionFieldTransition.setToX(0);
+
+        SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
+
+        fullSequence.play();
     }
 
     @Override
