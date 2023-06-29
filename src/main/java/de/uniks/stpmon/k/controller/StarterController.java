@@ -9,12 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class StarterController extends Controller {
+public class StarterController extends ToastedController {
     @FXML
     public ImageView starterImage;
     @FXML
@@ -23,6 +24,8 @@ public class StarterController extends Controller {
     public ImageView starterBackground;
     @FXML
     public StackPane starterPane;
+    @FXML
+    public Text descriptionText;
 
     @Inject
     IResourceService resourceService;
@@ -39,18 +42,17 @@ public class StarterController extends Controller {
     }
 
     public void loadMonsterImage(String id) {
-        disposables.add(resourceService.getMonsterImage(id)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(imageUrl -> {
-                    Image image = ImageUtils.scaledImageFX(imageUrl, 4);
-                    starterImage.setImage(image);
-                }));
+        subscribe(resourceService.getMonsterImage(id),imageUrl -> {
+                Image image = ImageUtils.scaledImageFX(imageUrl, 4);
+                starterImage.setImage(image);
+                }, this::handleError);
     }
 
     public void loadMonsterName(String id) {
-        disposables.add(presetService.getMonster(id)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(monsterTypeDto -> monsterNameLabel.setText(monsterTypeDto.name())));
+        subscribe(presetService.getMonster(id),monsterTypeDto -> {
+                monsterNameLabel.setText(monsterTypeDto.name());
+                descriptionText.setText(monsterTypeDto.description());
+                }, this::handleError );
     }
 
     public void setStarter(String id) {

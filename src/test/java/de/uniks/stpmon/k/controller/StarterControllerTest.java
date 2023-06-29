@@ -41,7 +41,7 @@ public class StarterControllerTest extends ApplicationTest {
 
     @Test
     void testUI() {
-        MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", "image.png", null, null);
+        MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", "image.png", null, "description");
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
 
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
@@ -50,5 +50,6 @@ public class StarterControllerTest extends ApplicationTest {
         starterController.setStarter("1");
 
         assertEquals("monster", starterController.monsterNameLabel.getText());
+        assertEquals("description", starterController.descriptionText.getText());
     }
 }
