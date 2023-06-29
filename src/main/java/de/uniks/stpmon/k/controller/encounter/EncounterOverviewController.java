@@ -2,8 +2,11 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -13,13 +16,19 @@ import java.util.List;
 
 public class EncounterOverviewController extends Controller {
 
-
+    @FXML
     public ImageView background;
+    @FXML
     public VBox userMonsters;
+    @FXML
     public VBox opponentMonsters;
 
+
     @Inject
-    Provider<UserMonsterStatusController> userMonsterStatusController;
+    TrainerStorage trainerStorage;
+
+    @Inject
+    Provider<StatusController> statusControllerProvider;
 
     List<Monster> dummyMonsters = new ArrayList<>();
 
@@ -31,7 +40,7 @@ public class EncounterOverviewController extends Controller {
     public void init() {
         Monster amogus = new Monster(
                 "9",
-                "testTrainer",
+                "trainerStorage.getTrainer()._id()",
                 0,
                 1,
                 1,
@@ -41,7 +50,7 @@ public class EncounterOverviewController extends Controller {
         );
         Monster zuendorn = new Monster(
                 "109",
-                "testTrainer",
+                "trainerStorage.getTrainer()._id()",
                 0,
                 2,
                 2,
@@ -88,18 +97,21 @@ public class EncounterOverviewController extends Controller {
 
     private void renderMonsters() {
         for (Monster monster : dummyMonsters) {
-            if (monster.trainer().equals("testTrainer")) {
-                UserMonsterStatusController userMonsterStatusController1 = userMonsterStatusController.get();
-                userMonsterStatusController1.setMonster(monster);
-                userMonsterStatusController1.loadMonsterDto(String.valueOf(monster.type()));
-                userMonsters.getChildren().add(userMonsterStatusController1.render());
+            if (monster.trainer().equals("trainerStorage.getTrainer()._id()")) {
+                StatusController userStatusController = statusControllerProvider.get();
+                userStatusController.setMonster(monster);
+                userStatusController.loadMonsterDto(String.valueOf(monster._id()));
+                userMonsters.getChildren().add(userStatusController.render());
             } else {
-                OpponentMonsterStatusController opponentMonsterStatusController = new OpponentMonsterStatusController(monster);
-                opponentMonsterStatusController.init();
-                opponentMonsters.getChildren().add(opponentMonsterStatusController.render());
+                StatusController opponentStatusController = statusControllerProvider.get();
+                opponentStatusController.setMonster(monster);
+                opponentStatusController.loadMonsterDto(String.valueOf(monster._id()));
+                opponentMonsters.getChildren().add(opponentStatusController.render());
             }
         }
     }
+
+
 
     @Override
     public String getResourcePath() {

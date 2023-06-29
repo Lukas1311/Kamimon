@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<VBox fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="117.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.encounter.UserMonsterStatusController">
-    <StackPane>
-        <ImageView fx:id="userMonsterStatusView" fitHeight="117.0" fitWidth="386.0" pickOnBounds="true"
-                   preserveRatio="true"/>
-        <ProgressBar fx:id="userHpBar" prefHeight="8.0" prefWidth="185.0" progress="0.0">
-            <StackPane.margin>
-                <Insets right="37.0" top="5.0"/>
-            </StackPane.margin>
-        </ProgressBar>
-        <HBox alignment="TOP_CENTER">
-            <Text fx:id="userMonsterName" strokeType="OUTSIDE" strokeWidth="0.0">
-                <HBox.margin>
-                    <Insets left="35.0" top="12.0"/>
-                </HBox.margin>
-                <font>
-                    <Font size="15.0"/>
-                </font>
-            </Text>
-            <HBox HBox.hgrow="ALWAYS"/>
-            <Text fx:id="userMonsterLevel" strokeType="OUTSIDE" strokeWidth="0.0">
-                <HBox.margin>
-                    <Insets right="125.0" top="12.0"/>
-                </HBox.margin>
-                <font>
-                    <Font size="15.0"/>
-                </font>
-            </Text>
-            <StackPane.margin>
-                <Insets top="14.0"/>
-            </StackPane.margin>
-        </HBox>
-        <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="0.0" prefWidth="200.0">
-            <Text fx:id="userMonsterHp" strokeType="OUTSIDE" strokeWidth="0.0" text="7 / 11">
-                <font>
-                    <Font size="15.0"/>
-                </font>
-                <HBox.margin>
-                    <Insets right="70.0"/>
-                </HBox.margin>
-            </Text>
-        </HBox>
-        <ProgressBar fx:id="userExperienceBar" prefHeight="6.0" prefWidth="187.0" progress="0.0">
-            <StackPane.margin>
-                <Insets right="10.0" top="63.0"/>
-            </StackPane.margin>
-        </ProgressBar>
-    </StackPane>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER_RIGHT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.StatusController">
+    <VBox>
+        <StackPane>
+            <ImageView fx:id="monsterStatusView" fitHeight="117.0" fitWidth="386.0" pickOnBounds="true" preserveRatio="true" />
+            <ProgressBar fx:id="hpBar" prefHeight="8.0" prefWidth="185.0" progress="0.0">
+                <StackPane.margin>
+                    <Insets right="37.0" top="5.0" />
+                </StackPane.margin>
+            </ProgressBar>
+            <HBox alignment="TOP_CENTER">
+                <Text fx:id="monsterName" strokeType="OUTSIDE" strokeWidth="0.0">
+                    <HBox.margin>
+                        <Insets left="35.0" top="12.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Text>
+                <HBox HBox.hgrow="ALWAYS" />
+                <Text fx:id="monsterLevel" strokeType="OUTSIDE" strokeWidth="0.0">
+                    <HBox.margin>
+                        <Insets right="125.0" top="12.0" />
+                    </HBox.margin>
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Text>
+                <StackPane.margin>
+                    <Insets top="14.0" />
+                </StackPane.margin>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" fillHeight="false" prefWidth="200.0">
+                <Text fx:id="monsterHp" strokeType="OUTSIDE" strokeWidth="0.0" text="7 / 11">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets right="70.0" />
+                    </HBox.margin>
+                </Text>
+            </HBox>
+            <ProgressBar fx:id="experienceBar" prefHeight="6.0" prefWidth="187.0" progress="0.0">
+                <StackPane.margin>
+                    <Insets right="10.0" top="63.0" />
+                </StackPane.margin>
+            </ProgressBar>
+        </StackPane>
+    </VBox>
 </VBox>
