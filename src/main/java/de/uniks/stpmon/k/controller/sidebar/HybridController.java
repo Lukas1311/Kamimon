@@ -148,9 +148,7 @@ public class HybridController extends Controller {
     }
 
     private void openMain(Controller controller) {
-        if(!(controller instanceof PauseController)){
-            removeChildren(0);
-        }
+        removeChildren(0);
         pushController(controller, null);
     }
 

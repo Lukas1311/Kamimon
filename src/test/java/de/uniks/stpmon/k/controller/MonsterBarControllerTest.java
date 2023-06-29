@@ -1,10 +1,14 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.di.DaggerTestComponent;
+import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.service.InputHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +32,12 @@ public class MonsterBarControllerTest extends ApplicationTest {
     MonsterListController monsterListController;
 
     @Spy
-    App app = new App(null);
+    InputHandler inputHandler;
+
+    @Spy
+    private final App app = new App(null);
+
+    private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
 
     @InjectMocks
     MonsterBarController monsterBarController;
@@ -36,9 +45,16 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         // show app
+        app.setMainComponent(component);
         app.start(stage);
         app.show(monsterBarController);
         stage.requestFocus();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Remove used input handler
+        app.removeInputHandler(component);
     }
 
     @Test
