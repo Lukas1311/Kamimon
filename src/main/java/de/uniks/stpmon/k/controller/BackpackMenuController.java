@@ -5,6 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Polygon;
 
@@ -18,14 +20,16 @@ import static de.uniks.stpmon.k.controller.BackpackMenuOption.*;
 
 @Singleton
 public class BackpackMenuController extends Controller {
+
+    final List<BackpackMenuOption> backpackMenuOptions = new ArrayList<>();
+
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
 
-    final List<BackpackMenuOption> backpackMenuOptions = new ArrayList<>();
-    @FXML
-    public Polygon backpackMenuArrow;
     @FXML
     public HBox backpackMenuHBox;
+    @FXML
+    public ImageView arrowImageView;
 
 
     @Inject
@@ -42,17 +46,16 @@ public class BackpackMenuController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        backpackMenuListView.setBackground(new Background(loadBgImage("backpackMenuBox.png")));
+        loadImage(arrowImageView, "arrow.png");
+
         if (backpackMenuOptions.isEmpty()) {
-            backpackMenuOptions.add(MONSTER_LIST);
-            backpackMenuOptions.add(MONSTERS);
+            backpackMenuOptions.add(MONSTER);
+            backpackMenuOptions.add(TEAM);
             backpackMenuOptions.add(MAP);
         }
         backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
-        double totalHeight = (backpackMenuOptions.size()) * 33;
-        backpackMenuListView.setPrefHeight(totalHeight);
 
-        backpackMenuListView.minHeightProperty().bind(backpackMenuListView.prefHeightProperty());
-        backpackMenuListView.maxHeightProperty().bind(backpackMenuListView.prefHeightProperty());
         backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
 
 
@@ -64,8 +67,8 @@ public class BackpackMenuController extends Controller {
         backpackController.closeBackPackMenu();
         switch (option) {
             // delete dummy method after functionality is implemented
-            case MONSTER_LIST -> dummyMethod();
-            case MONSTERS -> monsterBarControllerProvider.get().showMonsters();
+            case MONSTER -> dummyMethod();
+            case TEAM -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> dummyMethod();
         }
 

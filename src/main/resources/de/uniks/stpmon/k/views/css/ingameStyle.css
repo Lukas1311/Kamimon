@@ -21,3 +21,29 @@
     -fx-fill: white;
 }
 
+
+/* -------------------- Backpack Menu -------------------- */
+.backpack-menu {
+    -fx-padding: 12 0 0 0;
+}
+
+.backpack-menu-list .list-view{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+
+.backpack-menu-list .list-cell{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+.backpack-menu-entry {
+    -fx-font-size: 22px;
+    -fx-fill: black;
+}

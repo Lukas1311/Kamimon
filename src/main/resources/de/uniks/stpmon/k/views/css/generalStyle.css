@@ -844,14 +844,7 @@ Load fonts
 }
 
 /* -------------------- Settings -------------------- */
-.bordered-listView {
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-}
 
-.ingameSettings-hox {
-    -fx-padding: 12 0 0 0;
-}
 .settings-tab {
 	-fx-pref-width: 370;
 	-fx-pref-height: 720;
