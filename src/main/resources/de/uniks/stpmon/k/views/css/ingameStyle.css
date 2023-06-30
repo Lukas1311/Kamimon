@@ -73,3 +73,87 @@
     -fx-text-overrun: ellipsis;
 }
 
+/* -------------------- Team Monster Label -------------------- */
+
+.monster-type-general {
+    -fx-border-width: 2px;
+    -fx-border-radius: 2px;
+    -fx-border-insets: 2px 2px 2px 2px;
+    -fx-background-radius: 2px;
+    -fx-effect:  dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.5, 1.0, 1.0)
+
+}
+
+.monster-type-normal {
+    -fx-background-color: #A8A878;
+    -fx-border-color: #6D6D4E;
+}
+.monster-type-fire {
+    -fx-background-color: #F08030;
+    -fx-border-color: #9C531F;
+}
+.monster-type-fairy {
+    -fx-background-color: #f7bdcc;
+    -fx-border-color: #ee99ac;
+}
+.monster-type-water {
+    -fx-background-color: #6890F0;
+    -fx-border-color: #445E9C;
+}
+.monster-type-electric {
+    -fx-background-color: #F8D030;
+    -fx-border-color: #A1871F;
+}
+.monster-type-grass {
+    -fx-background-color: #78C850;
+    -fx-border-color: #4E8234;
+}
+.monster-type-ice {
+    -fx-background-color: #98D8D8;
+    -fx-border-color: #638D8D;
+}
+.monster-type-ground {
+    -fx-background-color: #E0C068;
+    -fx-border-color: #927D44;
+}
+.monster-type-flying {
+    -fx-background-color: #A890F0;
+    -fx-border-color: #6D5E9C;
+}
+.monster-type-ghost {
+    -fx-background-color: #705898;
+    -fx-border-color: #493963;
+}
+.monster-type-rock {
+    -fx-background-color: #B8A038;
+    -fx-border-color: #786824;
+}
+.monster-type-fighting {
+    -fx-background-color: #C03028;
+    -fx-border-color: #7D1F1A;
+}
+.monster-type-poison {
+    -fx-background-color: #A040A0;
+    -fx-border-color: #682A68;
+}
+.monster-type-psychic {
+    -fx-background-color: #F85888;
+    -fx-border-color: #A13959;
+}
+.monster-type-bug {
+    -fx-background-color: #A8B820;
+    -fx-border-color: #6D7815;
+}
+.monster-type-dark {
+    -fx-background-color: #705848;
+    -fx-border-color: #49392F;
+}
+.monster-type-steel {
+    -fx-background-color: #B8B8D0;
+    -fx-border-color: #787887;
+}
+.monster-type-dragon {
+    -fx-background-color: #7038F8;
+    -fx-border-color: #4924A1;
+}
+
