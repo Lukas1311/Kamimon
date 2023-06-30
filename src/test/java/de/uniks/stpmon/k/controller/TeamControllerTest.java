@@ -28,7 +28,7 @@ import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
-public class MonsterListControllerTest extends ApplicationTest {
+public class TeamControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
     @Spy
@@ -39,7 +39,7 @@ public class MonsterListControllerTest extends ApplicationTest {
     Provider<MonsterBarController> monsterBarControllerProvider;
 
     @InjectMocks
-    MonsterListController monsterListController;
+    TeamController teamController;
 
     @Mock
     PresetService presetService;
@@ -68,7 +68,7 @@ public class MonsterListControllerTest extends ApplicationTest {
         MonsterBarController mock = Mockito.mock(MonsterBarController.class);
         when(monsterBarControllerProvider.get()).thenReturn(mock);
 
-        app.show(monsterListController);
+        app.show(teamController);
         stage.requestFocus();
     }
 
@@ -76,14 +76,14 @@ public class MonsterListControllerTest extends ApplicationTest {
     public void testShowMonsterList() {
         waitForFxEvents();
         // Verify the size of monsterListVBox
-        assertEquals(6, monsterListController.monsterListVBox.getChildren().size());
+        assertEquals(6, teamController.monsterListVBox.getChildren().size());
 
         // Verify the text of the labels
-        verifyThat("#monster_label_0", hasText("Monster 1"));
-        verifyThat("#monster_label_1", hasText("Monster 2"));
-        verifyThat("#monster_label_2", hasText("Monster 2"));
-        verifyThat("#monster_label_3", hasText("<free>"));
-        verifyThat("#monster_label_4", hasText("<free>"));
-        verifyThat("#monster_label_5", hasText("<free>"));
+        verifyThat("#monster_label_0", hasText("  Monster 1"));
+        verifyThat("#monster_label_1", hasText("  Monster 2"));
+        verifyThat("#monster_label_2", hasText("  Monster 2"));
+        verifyThat("#monster_label_3", hasText("  -"));
+        verifyThat("#monster_label_4", hasText("  -"));
+        verifyThat("#monster_label_5", hasText("  -"));
     }
 }

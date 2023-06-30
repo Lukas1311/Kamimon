@@ -47,3 +47,29 @@
     -fx-font-size: 22px;
     -fx-fill: black;
 }
+
+/* -------------------- Team Monsters Menu -------------------- */
+
+.outstanding {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+
+}
+
+.team-monster-holder {
+    -fx-padding: 4 5 6 10;
+}
+
+.team-monster-entry {
+    -fx-min-height: 20;
+    -fx-min-width: 110;
+    -fx-pref-height: 20;
+    -fx-pref-width: 110;
+    -fx-max-height: 20;
+    -fx-max-width: 110;
+
+    -fx-text-alignment: center left;
+    -fx-text-overrun: ellipsis;
+}
+

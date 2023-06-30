@@ -29,7 +29,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     private ImageView monsterSlot;
 
     @Mock
-    MonsterListController monsterListController;
+    TeamController teamController;
 
     @Spy
     InputHandler inputHandler;
@@ -102,7 +102,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Test
     public void testShowMonsters() {
         VBox monsterList = new VBox();
-        when(monsterListController.render()).thenReturn(monsterList);
+        when(teamController.render()).thenReturn(monsterList);
 
         // Click on monster bar to show the popup
         clickOn("#monsterBar");

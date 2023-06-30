@@ -47,7 +47,7 @@ public class BackpackMenuController extends Controller {
         final Parent parent = super.render();
 
         backpackMenuListView.setBackground(new Background(loadBgImage("backpackMenuBox.png")));
-        loadImage(arrowImageView, "arrow.png");
+        loadImage(arrowImageView, "arrow_right.png");
 
         if (backpackMenuOptions.isEmpty()) {
             backpackMenuOptions.add(MONSTER);

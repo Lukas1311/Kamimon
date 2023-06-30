@@ -23,7 +23,7 @@ public class MonsterBarController extends Controller {
     protected ImageView[] monsterSlots = new ImageView[6];
 
     @Inject
-    MonsterListController monsterListController;
+    TeamController teamController;
     @Inject
     InputHandler inputHandler;
 
@@ -35,11 +35,11 @@ public class MonsterBarController extends Controller {
     public void init() {
         super.init();
 
-        if (monsterListController == null) {
+        if (teamController == null) {
             return;
         }
-        monsterListController.init();
-        onDestroy(monsterListController::destroy);
+        teamController.init();
+        onDestroy(teamController::destroy);
 
         onDestroy(inputHandler.addPressedKeyHandler(event -> {
             if(event.getCode() == KeyCode.N){
@@ -101,7 +101,7 @@ public class MonsterBarController extends Controller {
             monsterList.setVisible(false);
         } else {
             // Render the monster list
-            Parent monsterListContent = monsterListController.render();
+            Parent monsterListContent = teamController.render();
             monsterList.getChildren().setAll(monsterListContent);
             monsterList.setVisible(true);
         }
