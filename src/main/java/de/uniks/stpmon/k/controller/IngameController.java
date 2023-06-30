@@ -31,6 +31,8 @@ public class IngameController extends PortalController {
     public HBox ingameWrappingHBox;
     @FXML
     public HBox dialogueBox;
+    @FXML
+    public VBox starterBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -45,6 +47,8 @@ public class IngameController extends PortalController {
     @Inject
     DialogueController dialogueController;
     @Inject
+    StarterController starterController;
+    @Inject
     InteractionStorage interactionStorage;
 
     @Inject
@@ -57,7 +61,6 @@ public class IngameController extends PortalController {
     InputHandler inputHandler;
 
     private Parent mapOverview;
-
 
     @Inject
     public IngameController() {
@@ -93,7 +96,7 @@ public class IngameController extends PortalController {
                     }
 
                     case ESCAPE -> {
-                        if(mapOverview.isVisible()){
+                        if (mapOverview.isVisible()) {
                             mapOverview.setVisible(false);
                             event.consume();
                         }
@@ -102,6 +105,7 @@ public class IngameController extends PortalController {
                 }
             }
         }));
+        starterController.init();
     }
 
     @Override
@@ -114,6 +118,7 @@ public class IngameController extends PortalController {
         mapOverviewController.destroy();
         backpackController.destroy();
         dialogueController.destroy();
+        starterController.destroy();
     }
 
     @Override
@@ -160,6 +165,13 @@ public class IngameController extends PortalController {
 
         if (miniMap != null && mapOverview != null) {
             miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+        }
+
+        Parent starter = this.starterController.render();
+        if (starter != null) {
+            starterBox.getChildren().clear();
+            starterBox.getChildren().add(starter);
+            starter.setVisible(false);
         }
 
         return parent;

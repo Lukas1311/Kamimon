@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
@@ -38,9 +39,16 @@ public class PreparationService {
     CacheManager cacheManager;
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    PresetService presetService;
 
     @Inject
     public PreparationService() {
+    }
+
+    public Completable prepareLobby() {
+        // Currently we don't need to load anything for the lobby.
+        return Completable.complete();
     }
 
     /**
@@ -50,7 +58,7 @@ public class PreparationService {
      * @return Completable which completes after all data is loaded.
      */
     public Completable prepareWorld() {
-        return tryCompleteWithRateLimit(this::loadCharacters)
+        return tryCompleteWithRateLimit(this::loadAreaCharacters)
                 .andThen(tryCompleteWithRateLimit(this::loadRegionMap))
                 .andThen(tryCompleteWithRateLimit(this::loadAreaAndProps));
     }
@@ -75,7 +83,7 @@ public class PreparationService {
                 });
     }
 
-    public Completable loadCharacters() {
+    public Completable loadAreaCharacters() {
         TrainerAreaCache areaCache = cacheManager.trainerAreaCache();
         return areaCache.onInitialized()
                 // just take the first values

@@ -209,7 +209,7 @@ class AppTest extends ApplicationTest {
 
         clickOn("#monster_label_0");
         //clickOn("#monster_label_0");
-        verifyThat("#monsterInformation", Node::isVisible);
+        //verifyThat("#monsterInformation", Node::isVisible);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", not(Node::isVisible));

@@ -36,11 +36,13 @@ public abstract class LazyCache<T, K> extends SimpleCache<T, K> {
         if (optional.isPresent()) {
             return Observable.just(optional);
         }
-        return requestValue(id).map(
-                value -> {
-                    addValue(value);
-                    return Optional.of(value);
-                }
-        );
+        // wait for initialization to complete if not initialized yet
+        return onInitialized()
+                .andThen(requestValue(id).map(
+                        value -> {
+                            addValue(value);
+                            return Optional.of(value);
+                        }
+                ));
     }
 }

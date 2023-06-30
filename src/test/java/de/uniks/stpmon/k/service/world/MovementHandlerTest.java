@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
@@ -121,10 +122,11 @@ public class MovementHandlerTest {
     }
 
     private Trainer trainerForDto(int x, int y, int direction) {
-        return new Trainer(DummyConstants.TRAINER._id(), DummyConstants.TRAINER.region(), DummyConstants.TRAINER.user(),
-                DummyConstants.TRAINER.name(), DummyConstants.TRAINER.image(), DummyConstants.TRAINER.coins(),
-                DummyConstants.TRAINER.area(), x, y, direction,
-                DummyConstants.TRAINER.npc());
+        return TrainerBuilder.builder(DummyConstants.TRAINER)
+                .setX(x)
+                .setY(y)
+                .setDirection(direction)
+                .create();
     }
 
     @Test

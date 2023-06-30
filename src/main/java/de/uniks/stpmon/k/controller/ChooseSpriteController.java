@@ -6,8 +6,8 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -30,7 +30,6 @@ public class ChooseSpriteController extends ToastedController {
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
     private boolean isCreation = true;
-
 
     protected int currentSpriteIndex;
     protected int previousSpriteIndex;
@@ -55,11 +54,7 @@ public class ChooseSpriteController extends ToastedController {
     @Inject
     Preferences preferences;
     @Inject
-    RegionStorage regionStorage;
-    @Inject
     TrainerService trainerService;
-    @Inject
-    TrainerStorage trainerStorage;
 
     @Inject
     Provider<CreateTrainerController> createTrainerControllerProvider;
@@ -67,6 +62,8 @@ public class ChooseSpriteController extends ToastedController {
     Provider<PopUpController> popUpControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    TextureSetService textureService;
 
 
     @Inject
@@ -92,10 +89,11 @@ public class ChooseSpriteController extends ToastedController {
     }
 
     /**
-     * Set the creation mode. If true, the CreateTrainerCotnroller is shown after saving.
-     * @param isCreation
+     * Set the creation mode. If true, the CreateTrainerController is shown after saving.
+     *
+     * @param isCreation true if the CreateTrainerController should be shown after saving
      */
-    public void setCreationMode(boolean isCreation){
+    public void setCreationMode(boolean isCreation) {
         this.isCreation = isCreation;
     }
 
@@ -135,8 +133,7 @@ public class ChooseSpriteController extends ToastedController {
      */
     public void loadSprite(String selectedCharacter) {
         subscribe(
-                presetService.getCharacterFile(selectedCharacter),
-                response -> setSpriteImage(spriteContainer, spriteImage, 0, 3, response),
+                setSpriteImage(spriteContainer, spriteImage, Direction.BOTTOM, selectedCharacter, textureService),
                 this::handleError
         );
     }
