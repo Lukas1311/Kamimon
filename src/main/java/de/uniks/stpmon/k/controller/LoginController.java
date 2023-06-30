@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.service.storage.TokenStorage;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -85,6 +86,8 @@ public class LoginController extends Controller {
     private String tempPassword;
     private boolean isEmpty = false;
 
+    private boolean passwordVisible = false;
+
     @Inject
     public LoginController() {
 
@@ -132,14 +135,18 @@ public class LoginController extends Controller {
         loginButton.disableProperty().bind(isInvalid);
         registerButton.disableProperty().bind(isInvalid);
 
-        // shows Password on holding mouse button or holding enter
-        toggleButton.armedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                showPassword();
-            } else {
+        hidePassword();
+
+        // toggle password
+        toggleButton.setOnAction(event -> {
+            if(passwordVisible){
                 hidePassword();
+            } else {
+                showPassword();
             }
+            passwordVisible = !passwordVisible;
         });
+
 
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
@@ -221,15 +228,20 @@ public class LoginController extends Controller {
     }
 
     private void hidePassword() {
+        toggleButton.getStyleClass().clear();
+        toggleButton.getStyleClass().addAll("login-password-button", "login-password-button-visible");
         if (isEmpty) {
             password.set("");
         } else {
             password.set(tempPassword);
         }
         passwordInput.setPromptText(translateString("password"));
+        passwordInput.setDisable(false);
     }
 
     private void showPassword() {
+        toggleButton.getStyleClass().clear();
+        toggleButton.getStyleClass().addAll("login-password-button", "login-password-button-invisible");
         tempPassword = password.get();
         if (tempPassword == null || tempPassword.isEmpty()) {
             tempPassword = translateString("password");
@@ -239,6 +251,7 @@ public class LoginController extends Controller {
         }
         password.set(""); // clears the bound input field
         passwordInput.setPromptText(tempPassword);
+        passwordInput.setDisable(true);
     }
 
     @FXML
