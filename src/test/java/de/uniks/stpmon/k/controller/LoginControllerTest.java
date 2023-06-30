@@ -194,21 +194,24 @@ public class LoginControllerTest extends ApplicationTest {
         // tab to the toggle button password field is empty
         write("\t\t\t");
         assertThat(pwdToggleButton).isFocused();
-        press(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         assertThat(pwdField.getPromptText()).isEqualTo("Password");
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         // tab back to password field
-        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
+        press(KeyCode.SHIFT).type(KeyCode.TAB).release(KeyCode.SHIFT);
         write("stringst");
         // click show password button and verify the show password
         write("\t");
-        press(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents(); // not really necessary I guess
         // get password input field to verify the contents
 
         // check if prompt text matches the password that was written into password field before
         assertThat(pwdField.getPromptText()).isEqualTo("stringst");
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
     }
 
     @Test

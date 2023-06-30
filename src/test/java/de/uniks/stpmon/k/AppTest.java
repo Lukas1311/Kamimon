@@ -35,6 +35,7 @@ class AppTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        app.setMainComponent(component);
         app.start(stage);
         stage.requestFocus();
     }
@@ -77,8 +78,13 @@ class AppTest extends ApplicationTest {
         clickOn("#further");
         clickOn("#further");
 
+        sleep(1000);
         //open friend list
-        clickOn("#friends");
+        type(KeyCode.F);
+        waitForFxEvents();
+
+
+
         ScrollPane scrollPane = lookup("#scrollPane").query();
         VBox userList = (VBox) scrollPane.getContent();
         VBox friendView = (VBox) userList.lookup("#friendSection");
@@ -125,7 +131,8 @@ class AppTest extends ApplicationTest {
         //...
 
         //close friends sidebar
-        clickOn("#friends");
+        type(KeyCode.F);
+        waitForFxEvents();
 
         //check that there are two test regions
         GridPane regionListGridPane = lookup("#regionListGridPane").query();

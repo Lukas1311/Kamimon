@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.service.AuthenticationService;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -46,10 +47,49 @@ public class SidebarController extends Controller {
     Provider<ChatController> chatControlleProvider;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    InputHandler inputHandler;
     boolean ingame = false;
 
     @Inject
     public SidebarController() {
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
+            switch (event.getCode()) {
+                case C -> {
+                    openChat();
+                    event.consume();
+                }
+                case F -> {
+                    openFriends();
+                    event.consume();
+                }
+                case P -> {
+                    toPause();
+                    event.consume();
+                }
+                case NUMBER_SIGN -> {
+                    openSettings();
+                    event.consume();
+                }
+                case ESCAPE -> {
+                    if (event.isShiftDown()) {
+                        if (ingame) {
+                            trainerStorage.setTrainer(null);
+                            backtoLobby();
+                        } else {
+                            logout();
+                        }
+                    }
+                    event.consume();
+                }
+                default -> {}
+            }
+        }));
     }
 
     public Parent render() {
@@ -104,15 +144,16 @@ public class SidebarController extends Controller {
         settings.setVisible(b);
     }
 
-    public void updatePauseButton(boolean isPause){
-        pause.setTooltip(new Tooltip(translateString(isPause? ("resume.game"):("pause.game"))));
+    public void updatePauseButton(boolean isPause) {
+        pause.setTooltip(new Tooltip(translateString(isPause ? ("resume.game") : ("pause.game"))));
     }
 
-    public void updateLogoutButton(boolean leaveRegion){
-        logoutButton.setTooltip(new Tooltip(translateString(leaveRegion? ("leaveRegion"):("logout"))));
+    public void updateLogoutButton(boolean leaveRegion) {
+        logoutButton.setTooltip(new Tooltip(translateString(leaveRegion ? ("leaveRegion") : ("logout"))));
     }
 
     public void openSettings() {
         hybridController.forceTab(SidebarTab.SETTINGS);
     }
+
 }

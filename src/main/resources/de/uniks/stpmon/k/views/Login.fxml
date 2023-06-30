@@ -48,7 +48,7 @@
                     </styleClass>
                 </PasswordField>
                 <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false"
-                        styleClass="login-password-button" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
+                        styleClass="login-password-button" StackPane.alignment="CENTER_RIGHT">
                     <graphic>
                         <FontIcon iconLiteral="mdmz-visibility_off" iconSize="24" textAlignment="CENTER"/>
                     </graphic>
