@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class LoadingRegionController extends Controller {
+
     @FXML
     public Label regionLabel;
     @FXML
@@ -42,7 +43,7 @@ public class LoadingRegionController extends Controller {
         regionLabel.setText(currentRegion.name());
         progressBar.setProgress(0);
         progressBar.getStyleClass().add("progress-bar");
-        setVectorImage(imageViewKamimonLettering, "kamimonLettering.svg");
+        loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");
         imageViewKamimonLettering.setPreserveRatio(true);
         return parent;
     }
@@ -69,7 +70,7 @@ public class LoadingRegionController extends Controller {
                     progressBar.setProgress(progress);
                 }
             }
-        }, 0, minTime/10);
+        }, 0, minTime / 10);
         onDestroy(timer::cancel);
 
         TimerTask task = new TimerTask() {
@@ -88,4 +89,5 @@ public class LoadingRegionController extends Controller {
     public void setMinTime(int minTime) {
         this.minTime = minTime;
     }
+
 }

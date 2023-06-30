@@ -22,7 +22,7 @@ public abstract class Controller extends Viewable {
     }
 
     protected Parent load(String view) {
-        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/" + view + ".fxml"));
+        final FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/" + getResourcePath() + view + ".fxml"));
         loader.setControllerFactory(c -> this);
         if (resources != null) {
             loader.setResources(resources.get());
@@ -32,6 +32,15 @@ public abstract class Controller extends Viewable {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    /**
+     * Returns the path relative to "resources/views/" where the view is located.
+     *
+     * @return Returns the path relative to "resources/views/".
+     */
+    public String getResourcePath() {
+        return "";
     }
 
     /**

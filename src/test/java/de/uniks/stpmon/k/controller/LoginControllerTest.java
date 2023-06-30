@@ -99,14 +99,15 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testLogin() {
+        // define mocks:
         when(authService.login(any(), any(), eq(false))).thenReturn(Observable.just(
                 new LoginResult(null, null, null, null, null, "a", "r")
         ));
-
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
-
+        
+        // action:
         // write username and password
         write("\tstring\t");
         write("stringst");
@@ -118,6 +119,9 @@ public class LoginControllerTest extends ApplicationTest {
 
         Label label = lookup("#errorLabel").queryAs(Label.class);
         verifyThat(label, LabeledMatchers.hasText("Login successful"));
+
+        // verify mocks:
+        verify(authService).login(any(), any(), anyBoolean());
         verify(app).show(mock);
     }
 

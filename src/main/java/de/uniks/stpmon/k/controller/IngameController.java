@@ -1,15 +1,13 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,6 +28,10 @@ public class IngameController extends PortalController {
     public VBox rightVbox;
     @FXML
     public HBox ingameWrappingHBox;
+    @FXML
+    public HBox dialogueBox;
+    @FXML
+    public VBox starterBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -42,11 +44,17 @@ public class IngameController extends PortalController {
     @Inject
     BackpackController backpackController;
     @Inject
+    DialogueController dialogueController;
+    @Inject
+    StarterController starterController;
+    @Inject
+    InteractionStorage interactionStorage;
+
+    @Inject
     TrainerStorage trainerStorage;
 
     @Inject
-    protected WorldController worldController;
-
+    WorldController worldController;
 
     @Inject
     public IngameController() {
@@ -61,6 +69,8 @@ public class IngameController extends PortalController {
         minimapController.init();
         mapOverviewController.init();
         backpackController.init();
+        dialogueController.init();
+        starterController.init();
     }
 
     @Override
@@ -72,6 +82,8 @@ public class IngameController extends PortalController {
         minimapController.destroy();
         mapOverviewController.destroy();
         backpackController.destroy();
+        dialogueController.destroy();
+        starterController.destroy();
     }
 
     @Override
@@ -88,7 +100,6 @@ public class IngameController extends PortalController {
         if (monsterBar != null) {
             pane.getChildren().add(monsterBar);
         }
-
 
         Parent miniMap = this.minimapController.render();
         // Null if unit testing world view
@@ -110,8 +121,22 @@ public class IngameController extends PortalController {
             mapOverview.setVisible(false);
         }
 
-        if (miniMap != null) {
+        Parent dialogue = this.dialogueController.render();
+        if (dialogue != null) {
+            dialogueBox.getChildren().clear();
+            dialogueBox.getChildren().add(dialogue);
+            dialogue.setVisible(false);
+        }
+
+        if (miniMap != null && mapOverview != null) {
             miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+        }
+
+        Parent starter = this.starterController.render();
+        if (starter != null) {
+            starterBox.getChildren().clear();
+            starterBox.getChildren().add(starter);
+            starter.setVisible(false);
         }
 
         return parent;

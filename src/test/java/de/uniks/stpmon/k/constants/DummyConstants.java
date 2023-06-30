@@ -1,24 +1,43 @@
 package de.uniks.stpmon.k.constants;
 
-import de.uniks.stpmon.k.models.Area;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.NPCInfo;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
-import de.uniks.stpmon.k.world.WorldSet;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
+@SuppressWarnings("unused")
 public class DummyConstants {
+
+    public static final User USER_ALICE = new User(
+            "id_alice",
+            "Alice",
+            null,
+            null,
+            null
+    );
+
+    public static final User USER_BOB = new User(
+            "id_bob",
+            "Bob",
+            null,
+            null,
+            null
+    );
+
+    public static final User USER_EVE = new User(
+            "id_eve",
+            "Eve",
+            null,
+            null,
+            null
+    );
 
     public static final Trainer TRAINER = new Trainer(
             "0",
@@ -31,7 +50,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            null
+            null,
+            Set.of(), Set.of()
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "1",
@@ -44,7 +64,8 @@ public class DummyConstants {
             0,
             0,
             0,
-            new NPCInfo(true)
+            DummyConstants.NPC_INFO,
+            Set.of(), Set.of()
     );
 
     public static final Trainer TRAINER_OTHER_REGION = new Trainer(
@@ -58,7 +79,27 @@ public class DummyConstants {
             0,
             0,
             0,
-            new NPCInfo(true)
+            DummyConstants.NPC_INFO,
+            Set.of(), Set.of()
+    );
+    public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
+            1, 1,
+            false,
+            List.of(new TileLayerData(
+                    0, "Ground",
+                    List.of(),
+                    List.of(),
+                    List.of(),
+                    0, 0,
+                    1, 1,
+                    0, 0,
+                    "tilelayer",
+                    true,
+                    List.of()
+            )),
+            1, 1,
+            List.of(),
+            "map"
     );
 
     public static final TileMapData AREA_MAP_DATA = new TileMapData(
@@ -77,7 +118,8 @@ public class DummyConstants {
 
                                     )
                             ),
-                            List.of(new ObjectData(0, null, List.of(),null, null, false, 0, 0, 0, 0, 0)),
+                            List.of(),
+                            List.of(new ObjectData(0, null, List.of(), null, null, false, 0, 0, 0, 0, 0)),
                             0, 0,
                             16, 16,
                             0, 0,
@@ -123,7 +165,7 @@ public class DummyConstants {
             "region_0",
             "Test Region",
             new Spawn("area_0", 0, 0),
-            null
+            AREA_MAP_DATA
     );
 
     public static final Monster MONSTER = new Monster(
@@ -136,8 +178,6 @@ public class DummyConstants {
             null,
             null
     );
-    public static final WorldSet WORLD = new WorldSet(
-            new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
-            new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB),
-            List.of());
+    public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
+
 }

@@ -54,7 +54,8 @@ public class App extends Application {
         //set scene for loading screen
         final Scene scene = new Scene(new Label("Loading"));
 
-        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/style.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/generalStyle.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("views/css/ingameStyle.css")).toExternalForm());
         CSSFX.start(scene);
 
         stage.setScene(scene);
@@ -79,8 +80,26 @@ public class App extends Application {
         if (component == null) {
             return;
         }
-        InputHandler inputHandler = component.inputHandler();
+        addInputHandler(component.inputHandler());
+    }
+
+    public void addInputHandler(InputHandler inputHandler) {
         stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, inputHandler.keyPressedFilter());
+        stage.addEventFilter(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedFilter());
+    }
+
+    public void removeInputHandler(MainComponent component) {
+        if (component == null) {
+            return;
+        }
+        removeInputHandler(component.inputHandler());
+    }
+
+    public void removeInputHandler(InputHandler inputHandler) {
+        stage.removeEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
+        stage.removeEventFilter(KeyEvent.KEY_PRESSED, inputHandler.keyPressedFilter());
+        stage.removeEventFilter(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedFilter());
     }
 
     private void onFinishedLoading() {
@@ -97,10 +116,14 @@ public class App extends Application {
 
     private URL getIconUrl() {
         //requireNonNull was not shown in Lecture, but is needed to eliminate warning
-        return Objects.requireNonNull(App.class.getResource("icon_256.png"));
+        return Objects.requireNonNull(App.class.getResource("icon_500_new.png"));
     }
 
     private void setAppIcon(Stage stage) {
+        // Tests will all run on same stage, so we need to check if icon is already set
+        if (!stage.getIcons().isEmpty()) {
+            return;
+        }
         final Image image = new Image(getIconUrl().toString());
         stage.getIcons().add(image);
     }
@@ -126,6 +149,9 @@ public class App extends Application {
         if (component == null) {
             return;
         }
+
+        // remove all input handlers from stage
+        removeInputHandler(component);
 
         // destroy all lifecycle services
         for (ILifecycleService service : component.lifecycleServices()) {

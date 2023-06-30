@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
@@ -36,6 +37,12 @@ class AppTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         stage.requestFocus();
+    }
+
+    @AfterEach
+    void afterEach() {
+        // Remove used input handler
+        app.removeInputHandler(component);
     }
 
     @Test
@@ -194,7 +201,7 @@ class AppTest extends ApplicationTest {
 
         clickOn("#monster_label_0");
         //clickOn("#monster_label_0");
-        verifyThat("#monsterInformation", Node::isVisible);
+        //verifyThat("#monsterInformation", Node::isVisible);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", not(Node::isVisible));

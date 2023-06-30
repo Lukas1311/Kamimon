@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.TrainerSprite;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
-import de.uniks.stpmon.k.service.storage.WorldStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
@@ -34,7 +34,7 @@ public abstract class EntityView extends WorldViewable {
     @Inject
     protected MovementHandler movementHandler;
     @Inject
-    protected WorldStorage worldStorage;
+    protected WorldRepository worldRepository;
     @Inject
     protected WorldService worldService;
     @Inject
@@ -115,6 +115,7 @@ public abstract class EntityView extends WorldViewable {
         }
         if (Objects.equals(trainer.x(), currentTrainer.x())
                 && Objects.equals(trainer.y(), currentTrainer.y())
+                && Objects.equals(trainer.direction(), currentTrainer.direction())
                 && !changedImage) {
             return;
         }

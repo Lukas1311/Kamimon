@@ -3,12 +3,11 @@ package de.uniks.stpmon.k.di;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import de.uniks.stpmon.k.service.ILifecycleService;
-import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.FriendCache;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
+import de.uniks.stpmon.k.service.world.WorldLoader;
 
 import javax.inject.Singleton;
 
@@ -26,5 +25,42 @@ public abstract class BoundModule {
     @Binds
     @IntoSet
     @SuppressWarnings("unused")
-    public abstract ILifecycleService trainerManager(CacheManager manager);
+    public abstract ILifecycleService cacheManager(CacheManager manager);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService userService(UserService service);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService worldLoader(WorldLoader loader);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService interactionService(InteractionService loader);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService input(InputHandler handler);
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService monsterService(MonsterService handler);
+
+
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService sessionService(SessionService handler);
 }

@@ -2,9 +2,45 @@
 Load fonts
  */
 
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Bold.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-BoldItalic.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Italic.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Light.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-LightItalic.ttf");
+}
+
+@font-face {
+	/*font family name: Comic Neue*/
+	src: url("../fonts/ComicNeue-Regular.ttf");
+}
+
+@font-face {
+	/*font family name: Pokémon DS Font*/
+	src: url("../fonts/pokemon-ds-font.ttf");
+}
+
+
 
 .root{
-    -fx-font-family: "Comic Sans MS";
+    -fx-font-family: "Comic Neue Bold";
     -fx-font-size: 16;
 
 	-fx-color-kgm-red: #ae2f34;
@@ -259,12 +295,42 @@ Load fonts
 	-fx-max-width: 110;
 	-fx-max-height: 30;
 }
+.login-radio-button .radio {
+	-fx-border-color: black;
+	-fx-border-width: 2px;
+	-fx-background-color: transparent;
+	-fx-border-radius: 15px;
+	-fx-padding: 4px
+}
+
+.login-radio-button:selected .radio {
+	-fx-background-color: transparent;
+}
+
+.login-radio-button:armed .radio {
+	-fx-background-color: transparent;
+}
+
+.login-radio-button:determinate .radio {
+	-fx-background-color: transparent;
+}
+
+.login-radio-button:indeterminate .radio {
+	-fx-background-color: transparent;
+}
+
+.login-radio-button .dot {
+	-fx-mark-highlight-color: black;
+	-fx-mark-color: black;
+	-fx-background-radius: 6px;
+}
 
 .login-error-text {
 	-fx-text-fill: -fx-color-red;
 	-fx-text-overrun: ellipsis;
 	-fx-font-size: 12;
 }
+
 
 /* -------------------- Introduction -------------------- */
 .intro-screen {
@@ -856,8 +922,14 @@ Load fonts
 }
 
 /* -------------------- Loading Screen for Region -------------------- */
-.progress-bar {
-    -fx-accent: black;
+.loading-progress-bar {
+    -fx-accent: -fx-color-kgm-red;
+}
+
+.loading-label {
+	-fx-font-size: 45px;
+	-fx-font-family: "Pokémon DS Font";
+	-fx-font-weight: bolder;
 }
 
 /* -------------------- Monster Information -------------------- */
@@ -904,4 +976,18 @@ Load fonts
     -fx-text-fill: white;
     -fx-alignment: center;
     -fx-pref-width: 55;
+}
+
+/* -------------------- Map Overview -------------------- */
+.map-overview-close-button {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-border-style: hidden;
+	-fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+.map-overview-content {
+	-fx-background-color: black;
 }

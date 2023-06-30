@@ -9,6 +9,8 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 
+import static de.uniks.stpmon.k.utils.StringUtils.filterChatName;
+
 public class ChatEntryController extends Controller {
 
     @FXML
@@ -31,7 +33,7 @@ public class ChatEntryController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         parent.setId("entry_" + name);
-        chatName.setText(name);
+        chatName.setText(filterChatName(name, chatListController.getCurrentUsername()));
         chatEntry.setId(name);
         parent.setOnMouseClicked(e -> openChat());
 

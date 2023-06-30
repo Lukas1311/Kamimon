@@ -1,21 +1,19 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
 
-public class TrainerCache extends ListenerCache<Trainer> {
+public class TrainerCache extends ListenerCache<Trainer, String> {
 
     @Inject
     RegionService regionService;
-    @Inject
-    TrainerStorage trainerStorage;
     @Inject
     RegionStorage regionStorage;
     @Inject
@@ -43,23 +41,15 @@ public class TrainerCache extends ListenerCache<Trainer> {
         Trainer oldTrainer = getValue(value._id()).orElse(null);
         if (oldTrainer != null) {
             // Keep old position because it is not updated by websocket
-            value = new Trainer(value._id(),
-                    value.region(),
-                    value.user(),
-                    value.name(),
-                    value.image(),
-                    value.coins(),
-                    value.area(),
-                    oldTrainer.x(),
-                    oldTrainer.y(),
-                    oldTrainer.direction(),
-                    value.npc());
+            value = TrainerBuilder.builder(oldTrainer)
+                    .applyWithoutMove(value)
+                    .create();
         }
         updateValue(value);
     }
 
     @Override
-    public ICache<Trainer> init() {
+    public ICache<Trainer, String> init() {
         super.init();
         disposables.add(regionStorage.onEvents().subscribe(event -> {
             if (areaCache != null) {

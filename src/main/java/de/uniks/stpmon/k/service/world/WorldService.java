@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.service.world;
 
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.CharacterSetCache;
 import de.uniks.stpmon.k.world.CharacterSet;
 
 import javax.imageio.ImageIO;
@@ -9,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,7 +15,7 @@ import java.util.Optional;
 public class WorldService {
     private CharacterSet characterPlaceholder;
     @Inject
-    protected CacheManager cacheManager;
+    protected TextureSetService textureSetService;
 
 
     @Inject
@@ -27,16 +26,15 @@ public class WorldService {
         if (name == null) {
             return getCharacterPlaceholder();
         }
-        CharacterSetCache characterSetCache = cacheManager.characterSetCache();
-        Optional<CharacterSet> character = characterSetCache.getValue(name);
+        Optional<CharacterSet> character = textureSetService.getCharacter(name);
         return character.orElseGet(this::getCharacterPlaceholder);
     }
 
     public CharacterSet getCharacterPlaceholder() {
         if (characterPlaceholder == null) {
             BufferedImage image;
-            try {
-                image = ImageIO.read(Objects.requireNonNull(CharacterSet.class.getResourceAsStream("char.png")));
+            try (InputStream stream = CharacterSet.class.getResourceAsStream("char.png")) {
+                image = ImageIO.read(Objects.requireNonNull(stream));
             } catch (IOException e) {
                 image = new BufferedImage(384, 96, BufferedImage.TYPE_INT_RGB);
             }

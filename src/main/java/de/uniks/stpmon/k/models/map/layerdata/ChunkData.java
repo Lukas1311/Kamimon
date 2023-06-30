@@ -15,5 +15,19 @@ public record ChunkData(
         int height,
         int x,
         int y
-) {
+) implements ITileDataProvider {
+    @Override
+    public int startx() {
+        return x;
+    }
+
+    @Override
+    public int starty() {
+        return y;
+    }
+
+    public int getId(int x, int y) {
+        int index = (y - starty()) * width() + (x - startx());
+        return data().get(index);
+    }
 }

@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.scene.control.Button;
@@ -47,8 +48,13 @@ public class IngameControllerTest extends ApplicationTest {
     Provider<IngameController> ingameControllerProvider;
     @Mock
     @SuppressWarnings("unused")
+    DialogueController dialogueController;
+    @Mock
+    @SuppressWarnings("unused")
     WorldController worldController;
-
+    @Mock
+    @SuppressWarnings("unused")
+    StarterController starterController;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
@@ -71,8 +77,6 @@ public class IngameControllerTest extends ApplicationTest {
 
     @Test
     void showBackPackMenu() {
-
-
         final HybridController hybridController = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(hybridController);
 

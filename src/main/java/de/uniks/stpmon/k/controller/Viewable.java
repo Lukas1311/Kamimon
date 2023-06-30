@@ -2,35 +2,35 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.SVGUtils;
+import de.uniks.stpmon.k.world.CharacterSet;
 import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import okhttp3.ResponseBody;
 
-
-
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
-
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 public abstract class Viewable {
+    // this is a good scale for sharp images
+    private static final double TEXTURE_SCALE = 4.0;
 
     @Inject
     protected App app;
@@ -59,8 +59,30 @@ public abstract class Viewable {
      * Subscribes to an observable on the FX thread.
      * This method is only a utility method to avoid boilerplate code.
      *
+     * @param completable the completable to subscribe to
+     * @param onComplete  the consumer to call on each event
+     */
+    protected void subscribe(Completable completable, Action onComplete) {
+        disposables.add(completable.observeOn(FX_SCHEDULER).subscribe(onComplete));
+    }
+
+    /**
+     * Subscribes to an observable on the FX thread.
+     * This method is only a utility method to avoid boilerplate code.
+     *
+     * @param completable the completable to subscribe to
+     * @param onError     the consumer to call on an error
+     */
+    protected void subscribe(Completable completable, @NonNull Consumer<? super Throwable> onError) {
+        disposables.add(completable.doOnError(onError).observeOn(FX_SCHEDULER).subscribe());
+    }
+
+    /**
+     * Subscribes to an observable on the FX thread.
+     * This method is only a utility method to avoid boilerplate code.
+     *
      * @param observable the observable to subscribe to
-     * @param onNext     the consumer to call on each event
+     * @param onNext     the action to call on completion
      * @param <T>        the type of the items emitted by the Observable
      */
     protected <@NonNull T> void subscribe(Observable<T> observable, Consumer<T> onNext) {
@@ -141,12 +163,12 @@ public abstract class Viewable {
      *
      * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
      * @param sprite          is the ImageView of the fxml where you want the image data to be loaded in
-     * @param tileRow         is the row of the tile you want to extract (most cases one of 0,1,2)
-     * @param tileIndex       the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
-     * @param responseBody    is the reponse body from the api call to the preset-service that contains the direct link to the image
+     * @param direction       viewing direction of the sprite
+     * @param id              id of the used trainer
+     * @param service         the service used to retrieve the texture sets
      */
-    public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody) {
-        setSpriteImage(spriteContainer, sprite, tileRow, tileIndex, responseBody, 150, 155);
+    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id, TextureSetService service) {
+        return setSpriteImage(spriteContainer, sprite, direction, id, service, 150, 155);
     }
 
 
@@ -155,51 +177,44 @@ public abstract class Viewable {
      *
      * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
      * @param sprite          is the ImageView of the fxml where you want the image data to be loaded in
-     * @param tileRow         is the row of the tile you want to extract (most cases one of 0,1,2)
-     * @param tileIndex       the index of the sprite you want to extract (4th sprite => 3 because indexing starts at 0)
-     * @param responseBody    is the reponse body from the api call to the preset-service that contains the direct link to the image
+     * @param direction       viewing direction of the sprite
+     * @param id              id of the used trainer
+     * @param service         the service used to retrieve the texture sets
      * @param viewWidth       is the fitWidth property of the imageview
      * @param viewHeight      is the fitHeight property of the imageview
      */
-    public void setSpriteImage(StackPane spriteContainer, ImageView sprite, int tileRow, int tileIndex, ResponseBody responseBody, int viewWidth, int viewHeight) {
+    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id, TextureSetService service, int viewWidth, int viewHeight) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
-            return;
+            return Completable.complete();
         }
 
-        final double SCALE = 4.0; // this is a good scale for sharp images
-        final int SPRITE_WIDTH = 16; // width of sprite, you could say X-value
-        final int SPRITE_HEIGHT = 32; // height of sprite, you could say Y-value
-        int spriteOffsetX = tileIndex * SPRITE_WIDTH;
-        int spriteOffsetY = tileRow * SPRITE_HEIGHT;
-        if (responseBody != null) {
-            try (responseBody) {
-                // Read the image data from the response body and create a BufferedImage
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(responseBody.bytes());
-                BufferedImage bufferedImage = ImageIO.read(inputStream);
-
-                // Extract the sprite from the original tiled image set
-                BufferedImage image = bufferedImage.getSubimage(spriteOffsetX, spriteOffsetY, SPRITE_WIDTH, SPRITE_HEIGHT);
-
-                // Scale the image
-                BufferedImage scaledImage = ImageUtils.scaledImage(image, SCALE);
-
-                // Convert the BufferedImage to JavaFX Image
-                Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
-
-                // Set the image
-                sprite.setImage(fxImage);
-                sprite.setFitHeight(viewHeight);
-                sprite.setFitWidth(viewWidth);
-
-
-                spriteContainer.setPrefSize(sprite.getFitWidth(), sprite.getFitHeight());
-                // sprite center: set bottom margins so the sprite goes a little bit up
-                StackPane.setMargin(sprite, new Insets(0, 0, 35, 0));
-                spriteContainer.getChildren().add(sprite);
-            } catch (IOException e) {
-                System.err.println("Error: I/O Exception");
+        return service.getCharacterLazy(id).observeOn(FX_SCHEDULER).map((Optional<CharacterSet> maybeSet) -> {
+            if (maybeSet.isEmpty()) {
+                return Completable.complete();
             }
-        }
+            CharacterSet characterSet = maybeSet.get();
+
+            // Extract the sprite from the original tiled image set
+            BufferedImage image = characterSet.getPreview(direction);
+
+            // Scale the image
+            BufferedImage scaledImage = ImageUtils.scaledImage(image, TEXTURE_SCALE);
+
+            // Convert the BufferedImage to JavaFX Image
+            Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
+
+            // Set the image
+            sprite.setImage(fxImage);
+            sprite.setFitHeight(viewHeight);
+            sprite.setFitWidth(viewWidth);
+
+            spriteContainer.setPrefSize(sprite.getFitWidth(), sprite.getFitHeight());
+            // sprite center: set bottom margins so the sprite goes a little bit up
+            StackPane.setMargin(sprite, new Insets(0, 0, 35, 0));
+            spriteContainer.getChildren().clear();
+            spriteContainer.getChildren().add(sprite);
+            return Completable.complete();
+        }).ignoreElements();
     }
 
 }

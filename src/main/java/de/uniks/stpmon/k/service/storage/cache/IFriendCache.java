@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import java.util.List;
 
-public interface IFriendCache extends ICache<User> {
+public interface IFriendCache extends ICache<User, String> {
 
     IFriendCache init();
 

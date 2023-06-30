@@ -5,13 +5,11 @@ import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
-import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
-import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Button;
@@ -49,17 +47,9 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
-    @SuppressWarnings("unused")
-    Provider<IngameController> ingameControllerProvider;
-    @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
-    @SuppressWarnings("unused")
-    RegionStorage regionStorage;
-    @Mock
     WorldLoader worldLoader;
-    @Mock
-    PresetService presetService;
 
     @Spy
     @InjectMocks
@@ -74,7 +64,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        when(presetService.getCharacterFile(anyString())).thenReturn(Observable.empty());
 
         createTrainerController.setChosenRegion(dummyRegion);
 
@@ -102,8 +91,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Test
     public void testCreateTrainer() {
         // prep.
-        NPCInfo npcInfo = new NPCInfo(false);
-        Trainer dummyTrainer = new Trainer("1", "r", "0", "n", "i.png", 0, "0", 0, 0, 0, npcInfo);
+        Trainer dummyTrainer = TrainerBuilder.builder().setId(1).setRegion("r").setName("n").setImage("i.png").create();
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
 
         // define mocks:

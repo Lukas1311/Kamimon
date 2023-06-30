@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.models.map.layerdata;
 
-import java.util.List;
-
 import de.uniks.stpmon.k.models.map.Property;
+
+import java.util.List;
 
 /**
  * @param chunks     Array of chunks (optional). tilelayer only. Available in layer index = 0 = 1
@@ -24,6 +24,7 @@ public record TileLayerData(
         int id,
         String name,
         List<ChunkData> chunks,
+        List<Integer> data,
         List<ObjectData> objects,
         int x,
         int y,
@@ -34,8 +35,17 @@ public record TileLayerData(
         String type,
         boolean visible,
         List<Property> properties
-) {
+) implements ITileDataProvider {
     public static final String GROUND_TYPE = "Ground";
     public static final String WALLS_TYPE = "Walls";
 
+
+    public boolean checkBounds(int x, int y) {
+        return x >= startx() && x < startx() + width() && y >= starty() && y < starty() + height();
+    }
+
+    public int getIdFromData(int x, int y) {
+        int index = (x - startx()) + (y - starty()) * (width());
+        return data().get(index);
+    }
 }

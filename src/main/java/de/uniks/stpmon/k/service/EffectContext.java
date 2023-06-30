@@ -13,7 +13,8 @@ public class EffectContext {
     private boolean skipLoading = false;
     private int walkingSpeed = EntityView.MOVEMENT_PERIOD;
     private int walkingAnimationSpeed = EntityView.WALKING_ANIMATION_PERIOD;
-    private double textureScale = 4.0d;
+    private double textureScale = 3.0d;
+    private int dialogAnimationSpeed = 450;
 
 
     /**
@@ -134,5 +135,24 @@ public class EffectContext {
      */
     public double getTextureScale() {
         return textureScale;
+    }
+
+    /**
+     * Sets the speed of the open dialog animation.
+     *
+     * @param dialogAnimationSpeed speed of the open dialog animation
+     */
+    public EffectContext setDialogAnimationSpeed(int dialogAnimationSpeed) {
+        this.dialogAnimationSpeed = dialogAnimationSpeed;
+        return this;
+    }
+
+    /**
+     * Returns the speed of the open dialog animation.
+     *
+     * @return Speed of the open dialog animation.
+     */
+    public int getDialogAnimationSpeed() {
+        return dialogAnimationSpeed;
     }
 }

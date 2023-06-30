@@ -10,12 +10,16 @@ import de.uniks.stpmon.k.service.storage.TokenStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
+import de.uniks.stpmon.k.service.world.PreparationService;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.Response;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.prefs.Preferences;
+
+import static de.uniks.stpmon.k.service.UserService.OnlineStatus;
+
 
 @Singleton
 public class AuthenticationService {
@@ -24,11 +28,15 @@ public class AuthenticationService {
     @Inject
     AuthenticationApiService authApiService;
     @Inject
+    UserService userService;
+    @Inject
     UserStorage userStorage;
     @Inject
     CacheManager cacheManager;
     @Inject
     Preferences preferences;
+    @Inject
+    PreparationService preparationService;
     // Do not inject this, it is retrieved from cacheManager
     private IFriendCache friendCache;
 
@@ -42,30 +50,31 @@ public class AuthenticationService {
         return friendCache
                 // wait for cache to be initialized
                 .onInitialized()
+                .andThen(preparationService.prepareLobby())
                 // return old login result
                 .andThen(Observable.just(old));
 
     }
 
     public Observable<LoginResult> login(String username, String password, boolean rememberMe) {
-        return authApiService.login(new LoginDto(username, password)).map(lr -> {
+        return authApiService.login(new LoginDto(username, password)).flatMap(lr -> {
             tokenStorage.setToken(lr.accessToken());
             if (rememberMe) {
                 preferences.put("refreshToken", lr.refreshToken());
             }
             //Add User to UserStorage
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
-            return lr;
+            return userService.updateStatus(OnlineStatus.ONLINE).map(res -> lr);
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
 
     public Observable<Response<ErrorResponse>> logout() {
-        return authApiService.logout().map(res -> {
+        return authApiService.logout().flatMap(res -> {
             if (friendCache != null) {
                 friendCache.destroy();
                 friendCache = null;
             }
-            return res;
+            return userService.updateStatus(OnlineStatus.OFFLINE).map(res2 -> res);
         });
     }
 
@@ -74,10 +83,10 @@ public class AuthenticationService {
     }
 
     public Observable<LoginResult> refresh() {
-        return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).map(lr -> {
+        return authApiService.refresh(new RefreshDto(preferences.get("refreshToken", null))).flatMap(lr -> {
             tokenStorage.setToken(lr.accessToken());
             userStorage.setUser(new User(lr._id(), lr.name(), lr.status(), lr.avatar(), lr.friends()));
-            return lr;
+            return userService.updateStatus(OnlineStatus.ONLINE).map(res -> lr);
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
 }
