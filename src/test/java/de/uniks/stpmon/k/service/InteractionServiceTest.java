@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
-import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
@@ -16,12 +15,13 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.inject.Provider;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,12 +77,11 @@ public class InteractionServiceTest {
                         List.of("monster_0", "monster_1"),
                         List.of()))
                 .create();
-        MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, Arrays.asList("type1", "type2"), null);
 
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(trainer));
         when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
+        when(presetService.getMonster(anyString())).thenReturn(Observable.just(DummyConstants.MONSTER_TYPE));
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
@@ -114,6 +113,11 @@ public class InteractionServiceTest {
                         List.of(),
                         List.of()))
                 .create();
+
+        when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
+        when(resourceBundleProvider.get()).thenReturn(resources);
+        when(presetService.getMonster(anyString())).thenReturn(Observable.just(DummyConstants.MONSTER_TYPE));
+
         // First no trainer returned, no dialogue should be found
         when(trainerService.getFacingTrainer(2)).thenReturn(Optional.empty());
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.empty());

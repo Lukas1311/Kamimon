@@ -32,7 +32,6 @@ public class TrainerService {
     }
 
     public Trainer getMe() {
-
         return trainerStorage.getTrainer();
     }
 
@@ -41,10 +40,11 @@ public class TrainerService {
         if (currentTrainer == null) {
             return Observable.empty();
         }
-        return regionApiService.deleteTrainer(currentTrainer.region(), currentTrainer._id()).map(trainer->{
-            trainerStorage.setTrainer(null);
-            return trainer;
-        });
+        return regionApiService.deleteTrainer(currentTrainer.region(), currentTrainer._id())
+                .map(trainer -> {
+                    trainerStorage.setTrainer(null);
+                    return trainer;
+                });
     }
 
     public Observable<Trainer> setTrainerName(String trainername) {
