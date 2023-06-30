@@ -100,22 +100,16 @@ public class FriendListController extends ToastedController {
         subscribe(searchUpdate.flatMap((text) -> userService.searchUser(text)), (values) -> {
            allSearchRes.setAll(values);
             if(allUsers) {
-                //for (User us : values) {
-                //    System.out.println(us.name());
-                //}
                 users.setAll(values);
             }
-        });
+        }, this::handleError);
 
         subscribe(searchUpdate.flatMap((text) -> userService.searchUser(text, true)), (values) -> {
             friendSearchRes.setAll(values);
             if(!allUsers) {
-                //for (User us : values) {
-                //    System.out.println(us.name());
-                //}
-                users.setAll(values);
+               users.setAll(values);
             }
-        });
+        }, this::handleError);
 
         //searchUpdate.onNext("");
     }

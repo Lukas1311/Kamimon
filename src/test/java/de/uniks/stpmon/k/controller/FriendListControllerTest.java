@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,6 +17,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.matcher.control.ListViewMatchers;
 
 import javax.inject.Provider;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,7 +73,7 @@ class FriendListControllerTest extends ApplicationTest {
         clickOn("#searchFriend");
         write("Pe");
 
-        FxAssert.verifyThat("#searchFriend", hasText("Pe"));
+        verifyThat("#searchFriend", hasText("Pe"));
 
         clickOn("#searchButton");
 
@@ -85,9 +88,11 @@ class FriendListControllerTest extends ApplicationTest {
     @Test
     void removeFriend() {
         //get friendList
-        final ScrollPane scrollPane = lookup("#scrollPane").query();
-        final VBox userList = (VBox) scrollPane.getContent();
+        //final ScrollPane scrollPane = lookup("#scrollPane").query();
+        final VBox userList = (VBox) lookup("#friendListVbox").query();
+        final ListView<User> listView = (ListView<User>) userList.lookup("#userListView");
 
+        verifyThat(listView, ListViewMatchers.hasItems(1));
         assertNotNull(userList.lookup("#Peter"));
 
         when(userService.removeFriend(any(User.class))).thenReturn(Observable.just(friends));
@@ -118,7 +123,7 @@ class FriendListControllerTest extends ApplicationTest {
         clickOn("#searchFriend");
         write("Alice");
 
-        FxAssert.verifyThat("#searchFriend", hasText("Alice"));
+        verifyThat("#searchFriend", hasText("Alice"));
 
         clickOn("#searchButton");
 
