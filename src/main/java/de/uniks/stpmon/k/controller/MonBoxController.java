@@ -49,6 +49,7 @@ public class MonBoxController extends Controller {
     @Override
     public void init() {
         super.init();
+
     }
 
     @Override
@@ -56,8 +57,8 @@ public class MonBoxController extends Controller {
         final Parent parent = super.render();
         Trainer trainer = trainerStorage.getTrainer();
         monsterCache = cacheManager.requestMonsters(trainer._id());
-        subscribe(monsterCache.getValues(), this::showTeamMonster);
-        subscribe(monsterCache.getValues(), this::showMonsterList);
+        subscribe(monsterCache.getTeam().getValues(), this::showTeamMonster);
+        subscribe(monsterCache.getValues(),this::showMonsterList);
         loadImage(monBoxImage, "monGrid_v4.png");
 
         return parent;
@@ -72,7 +73,7 @@ public class MonBoxController extends Controller {
             imageView.setFitWidth(67);
             subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
                 // Scale and set the image
-                Image image = ImageUtils.scaledImageFX(imageUrl, 4.0);
+                Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
                 imageView.setImage(image);
             });
             monTeam.add(imageView, i, 0);
@@ -82,9 +83,11 @@ public class MonBoxController extends Controller {
     }
 
     private void showMonsterList(List<Monster> monsters) {
+        List<Monster> teamMonsters = monsterCache.getTeam().getValues().blockingFirst();
         int columnCount = 6;
         int rowCount = 5;
         int monsterIndex = 0;
+        monsters.removeAll(teamMonsters);
 
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
@@ -94,7 +97,7 @@ public class MonBoxController extends Controller {
                     imageView.setFitWidth(67);
                     subscribe(resourceService.getMonsterImage(String.valueOf(monsters.get(monsterIndex).type())), imageUrl -> {
                         // Scale and set the image
-                        Image image = ImageUtils.scaledImageFX(imageUrl, 4.0);
+                        Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
                         imageView.setImage(image);
                     });
                     monStorage.add(imageView, column, row);
