@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
@@ -40,17 +41,9 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
         Trainer oldTrainer = getValue(value._id()).orElse(null);
         if (oldTrainer != null) {
             // Keep old position because it is not updated by websocket
-            value = new Trainer(value._id(),
-                    value.region(),
-                    value.user(),
-                    value.name(),
-                    value.image(),
-                    value.coins(),
-                    value.area(),
-                    oldTrainer.x(),
-                    oldTrainer.y(),
-                    oldTrainer.direction(),
-                    value.npc());
+            value = TrainerBuilder.builder(oldTrainer)
+                    .applyWithoutMove(value)
+                    .create();
         }
         updateValue(value);
     }

@@ -15,8 +15,6 @@ import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 public class PortalController extends ToastedController implements IPortalController {
     @Inject
-    LoadingScreenController loadingScreen;
-    @Inject
     LoadingRegionController loadingRegionController;
     @Inject
     RegionService regionService;
@@ -53,7 +51,7 @@ public class PortalController extends ToastedController implements IPortalContro
     @Override
     public void loadWorld() {
         Platform.runLater(() ->
-                loadingScreen.startLoading(() -> loadingScreen.subscribe(worldLoader.loadWorld(),
+                loadingRegionController.startLoading(() -> loadingRegionController.subscribe(worldLoader.loadWorld(),
                         () -> {
                             app.show(hybridControllerProvider.get());
                             hybridControllerProvider.get().openMain(INGAME);

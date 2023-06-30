@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Polygon?>
 <HBox fx:id="backpackMenuHBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      stylesheets="@css/style.css" styleClass="ingameSettings-hox" xmlns="http://javafx.com/javafx/19"
+      stylesheets="@css/generalStyle.css" styleClass="ingameSettings-hox" xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.BackpackMenuController"
 >

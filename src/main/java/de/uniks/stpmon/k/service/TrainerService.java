@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
@@ -52,17 +53,9 @@ public class TrainerService {
         if (trainer == null) {
             return Observable.empty();
         }
-        Trainer newTrainer = new Trainer(trainer._id(),
-                trainer.region(),
-                trainer.user(),
-                trainername,
-                trainer.image(),
-                trainer.coins(),
-                trainer.area(),
-                trainer.x(),
-                trainer.y(),
-                trainer.direction(),
-                trainer.npc());
+        Trainer newTrainer = TrainerBuilder.builder(trainer)
+                .setName(trainername)
+                .create();
         trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
@@ -73,17 +66,9 @@ public class TrainerService {
         if (trainer == null) {
             return Observable.empty();
         }
-        Trainer newTrainer = new Trainer(trainer._id(),
-                trainer.region(),
-                trainer.user(),
-                trainer.name(),
-                image,
-                trainer.coins(),
-                trainer.area(),
-                trainer.x(),
-                trainer.y(),
-                trainer.direction(),
-                trainer.npc());
+        Trainer newTrainer = TrainerBuilder.builder(trainer)
+                .setImage(image)
+                .create();
         trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(null, image);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);

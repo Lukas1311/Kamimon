@@ -53,6 +53,9 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     WorldController worldController;
     @Mock
+    @SuppressWarnings("unused")
+    StarterController starterController;
+    @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     App app = new App(null);

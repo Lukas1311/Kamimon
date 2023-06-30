@@ -34,6 +34,8 @@ public class IngameController extends PortalController {
     public HBox ingameWrappingHBox;
     @FXML
     public HBox dialogueBox;
+    @FXML
+    public VBox starterBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -48,6 +50,8 @@ public class IngameController extends PortalController {
     @Inject
     DialogueController dialogueController;
     @Inject
+    StarterController starterController;
+    @Inject
     InteractionStorage interactionStorage;
 
     @Inject
@@ -55,7 +59,6 @@ public class IngameController extends PortalController {
 
     @Inject
     WorldController worldController;
-
 
     @Inject
     public IngameController() {
@@ -71,6 +74,7 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
+        starterController.init();
     }
 
     @Override
@@ -83,6 +87,7 @@ public class IngameController extends PortalController {
         mapOverviewController.destroy();
         backpackController.destroy();
         dialogueController.destroy();
+        starterController.destroy();
     }
 
     @Override
@@ -130,6 +135,13 @@ public class IngameController extends PortalController {
 
         if (miniMap != null && mapOverview != null) {
             miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+        }
+
+        Parent starter = this.starterController.render();
+        if (starter != null) {
+            starterBox.getChildren().clear();
+            starterBox.getChildren().add(starter);
+            starter.setVisible(false);
         }
 
         return parent;

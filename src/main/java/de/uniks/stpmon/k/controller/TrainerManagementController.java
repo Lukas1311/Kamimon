@@ -6,11 +6,10 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -56,8 +55,6 @@ public class TrainerManagementController extends ToastedController {
     public Text trainerNameText;
 
     @Inject
-    RegionService regionService;
-    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     Provider<PopUpController> popUpControllerProvider;
@@ -66,14 +63,7 @@ public class TrainerManagementController extends ToastedController {
     @Inject
     TrainerStorage trainerStorage;
     @Inject
-    IResourceService resourceService;
-
-    @Inject
-    PresetService presetService;
-    @Inject
-    Provider<LoginController> loginControllerProvider;
-    @Inject
-    Provider<LobbyController> lobbyControllerProvider;
+    TextureSetService textureService;
 
     private Trainer currentTrainer;
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
@@ -101,12 +91,11 @@ public class TrainerManagementController extends ToastedController {
         trainerManagementScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         subscribe(trainerStorage.onTrainer(), trainer -> {
-            if(trainer.isPresent()) {
+            if (trainer.isPresent()) {
                 trainerNameInput.setPromptText(trainer.get().name());
                 currentTrainer = trainer.get();
                 subscribe(
-                        presetService.getCharacterFile(trainer.get().image()),
-                        response -> setSpriteImage(spriteContainer, trainerSprite, 0, 3, response),
+                        setSpriteImage(spriteContainer, trainerSprite, Direction.BOTTOM, trainer.get().image(), textureService),
                         this::handleError
                 );
             }

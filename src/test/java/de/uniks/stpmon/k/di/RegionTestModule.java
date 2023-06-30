@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -27,7 +28,7 @@ public class RegionTestModule {
             final List<Region> regions = new ArrayList<>();
             //String is regionId
             final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
-            final Map<String, List<Trainer>> trainersHashMap = new HashMap<>();
+            final Map<String, List<Trainer>> trainersHashMap = new LinkedHashMap<>();
 
             final List<Monster> monsters = new ArrayList<>();
 
@@ -99,22 +100,20 @@ public class RegionTestModule {
              * Adds 1 Trainer to each area
              */
             private void initDummyTrainers() {
+                int monsterIdCount = 0;
                 for (Region region : regions) {
                     for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
                         String trainerImage = "trainer_" + trainerIdCount + ".png";
-                        Trainer trainer = new Trainer(
-                                Integer.toString(trainerIdCount),
-                                region._id(),
-                                USER_ID,
-                                name,
-                                trainerImage,
-                                0,
-                                area._id(),
-                                0,
-                                0,
-                                0,
-                                null);
+                        Trainer trainer = TrainerBuilder.builder()
+                                .setId(trainerIdCount)
+                                .setRegion(region)
+                                .setArea(area)
+                                .setName(name)
+                                .setImage(trainerImage)
+                                .setUser(USER_ID)
+                                .addTeam(Integer.toString(monsterIdCount++))
+                                .create();
                         ArrayList<Trainer> trainers = new ArrayList<>();
                         trainers.add(trainer);
                         trainersHashMap.put(area._id(), trainers);
@@ -144,19 +143,13 @@ public class RegionTestModule {
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
                 Area area = areasHashMap.get(regionId).get(0);
-                Trainer trainer = new Trainer(
-                        String.valueOf(trainerIdCount),
-                        regionId,
-                        USER_ID,
-                        trainerDto.name(),
-                        trainerDto.image(),
-                        0,
-                        area._id(),
-                        0,
-                        0,
-                        0,
-                        DummyConstants.NPC_INFO
-                );
+                Trainer trainer = TrainerBuilder.builder()
+                        .setId(trainerIdCount)
+                        .setRegion(regionId)
+                        .setArea(area)
+                        .setUser(USER_ID)
+                        .applyCreate(trainerDto)
+                        .create();
                 trainerIdCount++;
                 List<Trainer> trainers = trainersHashMap.get(area._id());
                 trainers.add(trainer);
@@ -273,7 +266,6 @@ public class RegionTestModule {
             @Override
             public Observable<List<Monster>> getMonsters(String regionId, String trainerId) {
                 return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
-
             }
 
             @Override

@@ -5,14 +5,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.lang.String?>
 <VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" spacing="2.0" styleClass="chat-ov-menu"
-      stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.chat.ChatListController">
 
-    <VBox fx:id="chatList" alignment="TOP_CENTER" styleClass="chat-ov-list" stylesheets="@css/style.css"
-          VBox.vgrow="ALWAYS"/>
+    <VBox fx:id="chatList" alignment="TOP_CENTER" styleClass="chat-ov-list" VBox.vgrow="ALWAYS"/>
     <VBox alignment="CENTER">
         <Button fx:id="newChatButton" mnemonicParsing="false" onAction="#createChat" prefHeight="35.0" prefWidth="330.0"
-                stylesheets="@css/style.css" text="%new.chat">
+                text="%new.chat">
             <VBox.margin>
                 <Insets bottom="10.0" top="10.0"/>
             </VBox.margin>

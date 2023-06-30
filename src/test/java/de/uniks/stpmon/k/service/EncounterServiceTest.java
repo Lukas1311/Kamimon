@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -286,8 +287,8 @@ class EncounterServiceTest {
         Opponent opponent = getDummyOpponents().get(1);
 
         // Create new monsters
-        Monster attacker = new Monster("0", null, null, null, null, null, null, null);
-        Monster nextMonster = new Monster("1", null, null, null, null, null, null, null);
+        Monster attacker = MonsterBuilder.builder().setId("0").create();
+        Monster nextMonster = MonsterBuilder.builder().setId("1").create();
 
         //define mock
         when(encounterApiService.makeMove(any(), any(), any(), any()))
