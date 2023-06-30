@@ -21,6 +21,9 @@ import java.util.ResourceBundle;
 
 @Singleton
 public class InteractionService implements ILifecycleService {
+
+    public static final int DISTANCE_CHECKED_FOR_TRAINERS = 2;
+
     @Inject
     protected Provider<ResourceBundle> resources;
     @Inject
@@ -60,7 +63,9 @@ public class InteractionService implements ILifecycleService {
 
         if (starters != null && !starters.isEmpty() && me.team().isEmpty()) {
 
-            DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder().addItem(translateString("helloAreYouReady", me.name()))
+            DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder()
+                    .setTrainerId(trainer._id())
+                    .addItem(translateString("helloAreYouReady", me.name()))
                     .addItem(translateString("chooseOneType"))
                     .addItem().setText(translateString("takeTime"));
 
@@ -100,20 +105,6 @@ public class InteractionService implements ILifecycleService {
         return null;
     }
 
-    public void tryUpdateDialogue() {
-        Optional<Trainer> optionalTrainer = trainerService.getFacingTrainer();
-        if (optionalTrainer.isEmpty()) {
-            interactionStorage.setDialogue(null);
-            return;
-        }
-        Trainer trainer = optionalTrainer.get();
-        Dialogue dialogue = getDialogue(trainer);
-        if (dialogue == null) {
-            return;
-        }
-        interactionStorage.setDialogue(dialogue);
-    }
-
     protected String translateString(String word, String... args) {
         String translation = resources.get().getString(word);
         for (int i = 0; i < args.length; i++) {
@@ -121,4 +112,32 @@ public class InteractionService implements ILifecycleService {
         }
         return translation;
     }
+
+    /**
+     * Retrieves the possible dialogue of a trainer in front of the player.
+     *
+     * @return The current dialogue, or null if there is none.
+     */
+    public Dialogue getPossibleDialogue() {
+        for (int i = 1; i <= DISTANCE_CHECKED_FOR_TRAINERS; i++) {
+            Optional<Trainer> optionalTrainer = trainerService.getFacingTrainer(i);
+            if (optionalTrainer.isEmpty()) {
+                continue;
+            }
+            Trainer trainer = optionalTrainer.get();
+            Dialogue dialogue = getDialogue(trainer);
+            if (dialogue != null) {
+                return dialogue;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Tries to update the current dialogue to the one of the facing trainer.
+     */
+    public void tryUpdateDialogue() {
+        interactionStorage.setDialogue(getPossibleDialogue());
+    }
+
 }
