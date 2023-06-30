@@ -200,8 +200,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterList", Node::isVisible);
 
         clickOn("#monster_label_0");
-        //clickOn("#monster_label_0");
-        //verifyThat("#monsterInformation", Node::isVisible);
+        verifyThat("#monsterInformation", Node::isVisible);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", not(Node::isVisible));
@@ -236,7 +235,39 @@ class AppTest extends ApplicationTest {
         clickOn("#editUserButton");
         clickOn("#deleteUserButton");
         clickOn("#approveButton");
-        verifyThat("#registerButton", Node::isVisible);
 
+        verifyThat("#registerButton", Node::isVisible);
+    }
+
+    @Test
+    void criticalPathV3() {
+        MovementDummy.addMovementDummy(component.eventListener());
+
+        app.show(component.hybridController());
+
+        //set User
+        User user = new User(
+                "01",
+                "T",
+                "online",
+                null,
+                null
+        );
+        component.userStorage().setUser(user);
+
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("T");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        clickOn("#monsterBar");
+        clickOn("#monsterBar");
     }
 }
