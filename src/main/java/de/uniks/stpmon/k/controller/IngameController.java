@@ -4,8 +4,10 @@ import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -16,11 +18,13 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.Stack;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends PortalController {
+    private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
     public StackPane ingameStack;
@@ -164,11 +168,39 @@ public class IngameController extends PortalController {
     }
 
     public void addMonBox(StackPane monBox) {
-        if (ingameWrappingHBox.getChildren().size() == 2) {
+        if (ingameWrappingHBox.getChildren().size() == 3) {
             ingameWrappingHBox.getChildren().remove(0);
         } else {
             ingameWrappingHBox.getChildren().add(0, monBox);
         }
+    }
+
+    public void addMonsterInfo(Parent monsterInfo) {
+        if (ingameWrappingHBox.getChildren().size() == 4) {
+            ingameWrappingHBox.getChildren().remove(0);
+        } else {
+            ingameWrappingHBox.getChildren().add(0, monsterInfo);
+        }
+    }
+
+    public void pushController(Controller controller) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+        controller.init();
+        tabStack.push(controller);
+        children.add(0, controller.render());
+    }
+
+    public void removeChildren(int endIndex) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+        for (int i = tabStack.size() - 1; i >= endIndex; i--) {
+            Controller controller = tabStack.pop();
+            controller.destroy();
+            children.remove(i);
+        }
+    }
+
+    public void popTab() {
+        removeChildren(Math.max(tabStack.size() - 1, 1));
     }
 
 }

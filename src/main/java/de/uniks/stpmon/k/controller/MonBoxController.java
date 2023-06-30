@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -39,7 +40,12 @@ public class MonBoxController extends Controller {
     TrainerStorage trainerStorage;
     @Inject
     IResourceService resourceService;
-    MonsterCache monsterCache;
+    @Inject
+    MonsterInformationController monsterInformationController;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    private MonsterCache monsterCache;
+    private ImageView activeImage;
 
 
     @Inject
@@ -58,7 +64,7 @@ public class MonBoxController extends Controller {
         Trainer trainer = trainerStorage.getTrainer();
         monsterCache = cacheManager.requestMonsters(trainer._id());
         subscribe(monsterCache.getTeam().getValues(), this::showTeamMonster);
-        subscribe(monsterCache.getValues(),this::showMonsterList);
+        subscribe(monsterCache.getValues(), this::showMonsterList);
         loadImage(monBoxImage, "monGrid_v4.png");
 
         return parent;
@@ -75,11 +81,27 @@ public class MonBoxController extends Controller {
                 // Scale and set the image
                 Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
                 imageView.setImage(image);
+                imageView.setOnMouseClicked(e -> {
+                            if (activeImage != null) {
+                                activeImage.setStyle("-fx-border-color: transparent;");
+                            }
+                            imageView.setStyle("-fx-border-color: black; -fx-border-width: 200px;");
+                            activeImage = imageView;
+                            openMonsterInformation(monster);
+                        }
+                );
             });
             monTeam.add(imageView, i, 0);
             monBoxVbox.toFront();
             i++;
         }
+    }
+
+    private void openMonsterInformation(Monster monster) {
+        Parent monsterInfo = monsterInformationController.render();
+        monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
+        monsterInformationController.loadMonster(monster);
+        ingameControllerProvider.get().addMonsterInfo(monsterInfo);
     }
 
     private void showMonsterList(List<Monster> monsters) {

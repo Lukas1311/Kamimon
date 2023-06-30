@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ public class BackpackMenuController extends Controller {
     @Inject
     Provider<IngameController> ingameControllerProvider;
     @Inject
-    MonBoxController monBoxController;
+    Provider<MonBoxController> monBoxController;
 
     @Inject
     public BackpackMenuController() {
@@ -65,7 +64,6 @@ public class BackpackMenuController extends Controller {
 
 
     public void openOption(BackpackMenuOption option) {
-        backpackController.closeBackPackMenu();
         switch (option) {
             // delete dummy method after functionality is implemented
             case MONSTER_LIST -> openMonBox();
@@ -83,7 +81,6 @@ public class BackpackMenuController extends Controller {
     }
 
     private void openMonBox() {
-        StackPane monBox = (StackPane) monBoxController.render();
-        ingameControllerProvider.get().addMonBox(monBox);
+        ingameControllerProvider.get().pushController(monBoxController.get());
     }
 }
