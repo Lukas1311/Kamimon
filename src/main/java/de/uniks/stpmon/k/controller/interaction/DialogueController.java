@@ -88,6 +88,7 @@ public class DialogueController extends ToastController {
                     case A, D, W, S, LEFT, RIGHT, UP, DOWN->
                         // Block movement
                             event.consume();
+                    default -> {}
                 }
             }
             if (event.getCode() != KeyCode.ENTER) {
@@ -123,6 +124,7 @@ public class DialogueController extends ToastController {
                     case W, S, UP, DOWN ->
                         // Block movement
                             event.consume();
+                    default -> {}
                 }
             }
             if (event.getCode() != KeyCode.ENTER || dialogue == null) {

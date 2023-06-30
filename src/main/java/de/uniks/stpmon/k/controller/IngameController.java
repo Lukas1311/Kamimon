@@ -87,11 +87,7 @@ public class IngameController extends PortalController {
                         }
                     }
                     case M -> {
-                        if (mapOverview.isVisible()) {
-                            mapOverview.setVisible(false);
-                        } else {
-                            mapOverview.setVisible(true);
-                        }
+                        mapOverview.setVisible(!mapOverview.isVisible());
                         event.consume();
                     }
 
@@ -101,6 +97,8 @@ public class IngameController extends PortalController {
                             event.consume();
                         }
                     }
+
+                    default -> { }
 
                 }
             }

@@ -100,6 +100,7 @@ public class HybridController extends Controller {
                             event.consume();
                         }
                     }
+                    default -> {}
                 }
             }
         }));
