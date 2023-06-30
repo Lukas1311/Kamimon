@@ -11,17 +11,12 @@ public class DialogueOption {
      */
     private final Runnable action;
     private final Dialogue nextDialogue;
-    private DialogueItem parent;
 
     DialogueOption(String text, Runnable action, Runnable selection, Dialogue nextDialogue) {
         this.selection = selection;
         this.text = text;
         this.action = action;
         this.nextDialogue = nextDialogue;
-    }
-
-    public void setup(DialogueItem parent) {
-        this.parent = parent;
     }
 
     public Runnable getAction() {
@@ -38,10 +33,6 @@ public class DialogueOption {
 
     public String getText() {
         return text;
-    }
-
-    public DialogueItem getParent() {
-        return parent;
     }
 
     public boolean hasNext() {

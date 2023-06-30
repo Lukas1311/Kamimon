@@ -12,6 +12,9 @@ import java.util.Optional;
 
 @Singleton
 public class InteractionService implements ILifecycleService {
+
+    public static final int DISTANCE_CHECKED_FOR_TRAINERS = 2;
+
     @Inject
     InteractionStorage interactionStorage;
     @Inject
@@ -33,6 +36,7 @@ public class InteractionService implements ILifecycleService {
         //TODO: Add real dialogue for starters
         if (starters != null && !starters.isEmpty()) {
             return Dialogue.builder()
+                    .setTrainerId(trainer._id())
                     .addItem("hello, welcome to this world!")
                     .addItem("I have a gift for you")
                     .addItem().setText("Choose your starter:")
@@ -47,7 +51,6 @@ public class InteractionService implements ILifecycleService {
                     .setNext(Dialogue.builder().addItem("you chose an elephant!").create())
                     .endOption()
                     .endItem()
-
                     .create();
         }
         //TODO: Add dialogue for healing
@@ -55,17 +58,31 @@ public class InteractionService implements ILifecycleService {
         return null;
     }
 
-    public void tryUpdateDialogue() {
-        Optional<Trainer> optionalTrainer = trainerService.getFacingTrainer();
-        if (optionalTrainer.isEmpty()) {
-            interactionStorage.setDialogue(null);
-            return;
+    /**
+     * Retrieves the possible dialogue of a trainer in front of the player.
+     *
+     * @return The current dialogue, or null if there is none.
+     */
+    public Dialogue getPossibleDialogue() {
+        for (int i = 1; i <= DISTANCE_CHECKED_FOR_TRAINERS; i++) {
+            Optional<Trainer> optionalTrainer = trainerService.getFacingTrainer(i);
+            if (optionalTrainer.isEmpty()) {
+                continue;
+            }
+            Trainer trainer = optionalTrainer.get();
+            Dialogue dialogue = getDialogue(trainer);
+            if (dialogue != null) {
+                return dialogue;
+            }
         }
-        Trainer trainer = optionalTrainer.get();
-        Dialogue dialogue = getDialogue(trainer);
-        if (dialogue == null) {
-            return;
-        }
-        interactionStorage.setDialogue(dialogue);
+        return null;
     }
+
+    /**
+     * Tries to update the current dialogue to the one of the facing trainer.
+     */
+    public void tryUpdateDialogue() {
+        interactionStorage.setDialogue(getPossibleDialogue());
+    }
+
 }

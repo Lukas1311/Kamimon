@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @Singleton
 public class TrainerService {
-    public static final int DISTANCE_CHECKED_FOR_TRAINERS = 2;
 
     @Inject
     RegionApiService regionApiService;
@@ -77,21 +76,19 @@ public class TrainerService {
     /**
      * Returns the trainer that is in the direction the trainer is facing.
      */
-    public Optional<Trainer> getFacingTrainer() {
+    public Optional<Trainer> getFacingTrainer(int distance) {
+        // Return empty if distance is 0, this would be the player itself
+        if (distance == 0) {
+            return Optional.empty();
+        }
         if (areaCache == null || areaCache.getStatus() == ICache.Status.DESTROYED) {
             areaCache = cacheManager.trainerAreaCache();
         }
         Trainer trainer = trainerStorage.getTrainer();
         Direction dir = Direction.from(trainer);
-        for (int i = 1; i <= DISTANCE_CHECKED_FOR_TRAINERS; i++) {
-            int x = trainer.x() + dir.tileX() * i;
-            int y = trainer.y() + dir.tileY() * i;
-            // Upper bounds are not important because cache is designed for  up to 0xFFFF
-            Optional<Trainer> trainerOptional = areaCache.getTrainerAt(x, y);
-            if (trainerOptional.isPresent()) {
-                return trainerOptional;
-            }
-        }
-        return Optional.empty();
+        int x = trainer.x() + dir.tileX() * distance;
+        int y = trainer.y() + dir.tileY() * distance;
+        // Upper bounds are not important because cache is designed for  up to 0xFFFF
+        return areaCache.getTrainerAt(x, y);
     }
 }

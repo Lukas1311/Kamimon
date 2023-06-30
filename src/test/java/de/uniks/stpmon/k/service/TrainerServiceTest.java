@@ -135,24 +135,22 @@ public class TrainerServiceTest {
         Trainer firstTrainer = TrainerBuilder.builder().setId("1").setRegion("0").setX(2).create();
         Trainer secondTrainer = TrainerBuilder.builder().setId("1").setRegion("0").setX(1).create();
         // First no trainer returned
-        when(trainerCache.getTrainerAt(2, 0)).thenReturn(Optional.empty());
-        when(trainerCache.getTrainerAt(1, 0)).thenReturn(Optional.empty());
-        // Optional should be empty
-        Optional<Trainer> emptyNpc = trainerService.getFacingTrainer();
+        when(trainerCache.getTrainerAt(2, 0)).thenReturn(Optional.of(secondTrainer));
+        when(trainerCache.getTrainerAt(1, 0)).thenReturn(Optional.of(firstTrainer));
+        // Retrieve player itself
+        Optional<Trainer> emptyNpc = trainerService.getFacingTrainer(0);
+        // Should always be empty
         assertTrue(emptyNpc.isEmpty());
 
-        // Return which is two steps away
-        when(trainerCache.getTrainerAt(2, 0)).thenReturn(Optional.of(firstTrainer));
-
-        Optional<Trainer> firstNpc = trainerService.getFacingTrainer();
+        // Retrieve trainer one step away
+        Optional<Trainer> firstNpc = trainerService.getFacingTrainer(1);
+        // Should return first trainer
         assertTrue(firstNpc.isPresent());
         assertEquals(firstTrainer, firstNpc.get());
 
-        // Return which is one steps away
-        when(trainerCache.getTrainerAt(1, 0)).thenReturn(Optional.of(secondTrainer));
-
-        // second trainer should be returned because it is closer
-        Optional<Trainer> secondNpc = trainerService.getFacingTrainer();
+        // Retrieve trainer two steps away
+        Optional<Trainer> secondNpc = trainerService.getFacingTrainer(2);
+        // Should return second trainer
         assertTrue(secondNpc.isPresent());
         assertEquals(secondTrainer, secondNpc.get());
 
