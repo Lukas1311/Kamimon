@@ -148,7 +148,7 @@ public class EncounterOverviewController extends Controller {
                         20
                 )
         );
-        userMonstersList.add(amogus);
+//        userMonstersList.add(amogus);
         userMonstersList.add(zuendorn);
         opponentMonstersList.add(angrian);
         opponentMonstersList.add(sanddorm);
@@ -218,28 +218,33 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void animateMonsterEntrance() {
-        userMonsters.getChildren().get(1).setOpacity(0);
-        opponentMonsters.getChildren().get(1).setOpacity(0);
-        userMonster1.setOpacity(0);
-        opponentMonster1.setOpacity(0);
+        if (userMonstersList.size() > 1) {
+            userMonsters.getChildren().get(1).setOpacity(0);
+            userMonster1.setOpacity(0);
+        }
+        if (opponentMonstersList.size() > 1) {
+            opponentMonsters.getChildren().get(1).setOpacity(0);
+            opponentMonster1.setOpacity(0);
+        }
         placeholder.setOpacity(0);
 
+        //the first monster of the user and opponent always gets rendered
         TranslateTransition userTransition1 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(0));
-        userTransition1.setFromX(-400);
+        userTransition1.setFromX(-600);
         userTransition1.setToX(0);
 
         TranslateTransition userMonsterTransition1 = new TranslateTransition(Duration.seconds(1), userMonster0);
-        userMonsterTransition1.setFromX(-400);
+        userMonsterTransition1.setFromX(-600);
         userMonsterTransition1.setToX(0);
 
         ParallelTransition userFullTransition1 = new ParallelTransition(userTransition1, userMonsterTransition1);
 
         TranslateTransition opponentTransition1 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(0));
-        opponentTransition1.setFromX(400);
+        opponentTransition1.setFromX(600);
         opponentTransition1.setToX(0);
 
         TranslateTransition opponentMonsterTransition1 = new TranslateTransition(Duration.seconds(1), opponentMonster0);
-        opponentMonsterTransition1.setFromX(400);
+        opponentMonsterTransition1.setFromX(600);
         opponentMonsterTransition1.setToX(0);
 
         ParallelTransition opponentFullTransition1 = new ParallelTransition(opponentTransition1, opponentMonsterTransition1);
@@ -247,33 +252,49 @@ public class EncounterOverviewController extends Controller {
         ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
 
         parallel1.setOnFinished(e -> {
-            userMonsters.getChildren().get(1).setOpacity(1);
-            opponentMonsters.getChildren().get(1).setOpacity(1);
-            userMonster1.setOpacity(1);
-            opponentMonster1.setOpacity(1);
+            if (userMonstersList.size() > 1) {
+                userMonsters.getChildren().get(1).setOpacity(1);
+                userMonster1.setOpacity(1);
+            }
+            if (opponentMonstersList.size() > 1) {
+                opponentMonsters.getChildren().get(1).setOpacity(1);
+                opponentMonster1.setOpacity(1);
+            }
         });
 
-        TranslateTransition userTransition2 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(1));
-        userTransition2.setFromX(-600);
-        userTransition2.setToX(0);
+        ParallelTransition userFullTransition2 = null;
+        if (userMonstersList.size() > 1) {
+            TranslateTransition userTransition2 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(1));
+            userTransition2.setFromX(-600);
+            userTransition2.setToX(0);
 
-        TranslateTransition userMonsterTransition2 = new TranslateTransition(Duration.seconds(1), userMonster1);
-        userMonsterTransition2.setFromX(-600);
-        userMonsterTransition2.setToX(0);
+            TranslateTransition userMonsterTransition2 = new TranslateTransition(Duration.seconds(1), userMonster1);
+            userMonsterTransition2.setFromX(-600);
+            userMonsterTransition2.setToX(0);
 
-        ParallelTransition userFullTransition2 = new ParallelTransition(userTransition2, userMonsterTransition2);
+            userFullTransition2 = new ParallelTransition(userTransition2, userMonsterTransition2);
+        }
 
-        TranslateTransition opponentTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(1));
-        opponentTransition2.setFromX(600);
-        opponentTransition2.setToX(0);
+        ParallelTransition opponentFullTransition2 = null;
+        if (opponentMonstersList.size() > 1) {
+            TranslateTransition opponentTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(1));
+            opponentTransition2.setFromX(600);
+            opponentTransition2.setToX(0);
 
-        TranslateTransition opponentMonsterTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonster1);
-        opponentMonsterTransition2.setFromX(600);
-        opponentMonsterTransition2.setToX(0);
+            TranslateTransition opponentMonsterTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonster1);
+            opponentMonsterTransition2.setFromX(600);
+            opponentMonsterTransition2.setToX(0);
 
-        ParallelTransition opponentFullTransition2 = new ParallelTransition(opponentTransition2, opponentMonsterTransition2);
+            opponentFullTransition2 = new ParallelTransition(opponentTransition2, opponentMonsterTransition2);
+        }
 
-        ParallelTransition parallel2 = new ParallelTransition(userFullTransition2, opponentFullTransition2);
+        ParallelTransition parallel2 = new ParallelTransition();
+        if (userFullTransition2 != null) {
+            parallel2.getChildren().add(userFullTransition2);
+        }
+        if (opponentFullTransition2 != null) {
+            parallel2.getChildren().add(opponentFullTransition2);
+        }
 
         parallel2.setOnFinished(e -> {
             placeholder.setOpacity(1);
