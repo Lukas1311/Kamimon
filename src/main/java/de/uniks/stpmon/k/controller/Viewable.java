@@ -18,7 +18,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import okhttp3.ResponseBody;
 
 import javax.imageio.ImageIO;
@@ -129,6 +129,25 @@ public abstract class Viewable {
             return;
         }
         view.setImage(loadImage(image));
+    }
+
+    /**
+     * Loads an image from the resource folder and returns BackgroundImage.
+     * If loadImages is false, this method does nothing.
+     * This flag is used to disable image loading for tests.
+     *
+     * @param image Path to the image relative to "resources/de/uniks/stpmon/k/controller"
+     */
+    protected BackgroundImage loadBgImage(String image) {
+        if (effectContext != null &&
+                effectContext.shouldSkipLoadImages()) {
+            return null;
+        }
+        return new BackgroundImage(loadImage(image),
+                BackgroundRepeat.SPACE,
+                BackgroundRepeat.SPACE,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(1.0, 1.0, true, true, false, true));
     }
 
     /**
