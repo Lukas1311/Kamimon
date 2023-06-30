@@ -47,12 +47,11 @@ public class CharacterView extends EntityView {
 
     private void keyPressed(KeyEvent event) {
         switch (event.getCode()) {
-            case W -> movementHandler.moveDirection(Direction.TOP);
-            case S -> movementHandler.moveDirection(Direction.BOTTOM);
-            case A -> movementHandler.moveDirection(Direction.LEFT);
-            case D -> movementHandler.moveDirection(Direction.RIGHT);
-            default -> {
-            }
+            case W, UP -> movementHandler.moveDirection(Direction.TOP);
+            case S, DOWN -> movementHandler.moveDirection(Direction.BOTTOM);
+            case A, LEFT -> movementHandler.moveDirection(Direction.LEFT);
+            case D, RIGHT -> movementHandler.moveDirection(Direction.RIGHT);
+            default -> {}
         }
     }
 

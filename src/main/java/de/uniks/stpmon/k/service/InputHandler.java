@@ -6,6 +6,7 @@ import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -18,6 +19,17 @@ import java.util.function.Consumer;
  * <p>
  * The handlers and filters are called in the order they were registered.
  * If a filter or handler consumes any other handler or filter will not be called.
+ * Following key events should be captured / consumed by handlers:
+ * C -> Button
+ * F -> Friends
+ * P -> Pause
+ * # -> Settings
+ * Shift + ESC -> Home / Logout
+ * W, A, S, D (LEFT, RIGHT, UP, DOWN) -> Movement
+ * B -> Backpack
+ * T -> Team
+ * Enter -> Dialogue
+ * Left, Right (A, D)-> Choices
  */
 @Singleton
 public class InputHandler implements ILifecycleService {

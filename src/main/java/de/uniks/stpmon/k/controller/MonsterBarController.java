@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -22,6 +24,8 @@ public class MonsterBarController extends Controller {
 
     @Inject
     MonsterListController monsterListController;
+    @Inject
+    InputHandler inputHandler;
 
     @Inject
     public MonsterBarController() {
@@ -36,6 +40,12 @@ public class MonsterBarController extends Controller {
         }
         monsterListController.init();
         onDestroy(monsterListController::destroy);
+
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
+            if(event.getCode() == KeyCode.N){
+                showMonsters();
+            }
+        }));
     }
 
     @Override
