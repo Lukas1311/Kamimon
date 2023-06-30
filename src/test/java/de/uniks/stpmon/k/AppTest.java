@@ -2,9 +2,15 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.function.Predicate.not;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -242,7 +249,7 @@ class AppTest extends ApplicationTest {
     @Test
     void criticalPathV3() {
         MovementDummy.addMovementDummy(component.eventListener());
-
+        app.addInputHandler(component);
         app.show(component.hybridController());
 
         //set User
@@ -267,7 +274,40 @@ class AppTest extends ApplicationTest {
         clickOn("#approveButton");
         waitForFxEvents();
 
+        CacheManager cacheManager = component.cacheManager();
+        TrainerCache trainerCache = cacheManager.trainerCache();
+
+        Trainer me = component.trainerStorage().getTrainer();
+        Trainer prof = TrainerBuilder.builder()
+                .setId("prof")
+                .setX(4)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.LEFT)
+                .setNpc(new NPCInfo(false, false, false, List.of("0", "1", "2"), null))
+                .create();
+
+        trainerCache.addValue(prof);
+
         clickOn("#monsterBar");
+        // verify that the monster list is empty
+        assertThat(me.team()).isEmpty();
+
+        // walk to the right
+        type(KeyCode.D, 3);
+        // talk to prof
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        /*
+        component.eventListener().sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(prof.area(), me._id()),
+                new TalkTrainerDto(me._id(), prof._id(), 0));
+         */
+
         clickOn("#monsterBar");
     }
 }
