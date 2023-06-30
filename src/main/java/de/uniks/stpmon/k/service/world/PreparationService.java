@@ -116,7 +116,7 @@ public class PreparationService {
             return new PropMap(List.of(), new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
         }
         TileMapData data = tileMap.getData();
-        PropInspector inspector = new PropInspector(data.width(), data.height(), decorationLayers.size());
+        PropInspector inspector = new PropInspector(tileMap.getWidth(), tileMap.getHeight(), decorationLayers.size());
         return inspector.work(decorationLayers, data);
     }
 
