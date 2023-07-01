@@ -58,4 +58,5 @@ public class EncounterStorage {
     public boolean isEmpty() {
         return encounter != null;
     }
+
 }

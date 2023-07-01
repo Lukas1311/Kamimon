@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.utils;
 
 public class UiToggle {
+
     private boolean value;
     private final boolean initialValue;
 
@@ -18,4 +19,5 @@ public class UiToggle {
     public void reset() {
         value = initialValue;
     }
+
 }

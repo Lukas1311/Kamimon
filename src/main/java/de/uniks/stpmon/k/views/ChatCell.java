@@ -24,4 +24,5 @@ public class ChatCell extends ListCell<Group> {
             setGraphic(chatEntryController.render());
         }
     }
+
 }

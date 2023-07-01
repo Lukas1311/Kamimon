@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import java.util.*;
 
 public class IncludedCandidateRule implements CandidateRule {
+
     private final Set<Integer> tileIds;
     private final String tileSet;
 
@@ -32,4 +33,5 @@ public class IncludedCandidateRule implements CandidateRule {
         }
         return null;
     }
+
 }

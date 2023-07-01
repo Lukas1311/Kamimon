@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PortalSource {
+
     private IPortalController portalController;
     private boolean teleporting;
 
@@ -27,4 +28,5 @@ public class PortalSource {
     public void setTeleporting(boolean teleporting) {
         this.teleporting = teleporting;
     }
+
 }

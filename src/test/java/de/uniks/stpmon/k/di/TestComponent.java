@@ -45,5 +45,7 @@ public interface TestComponent extends MainComponent {
 
         @Override
         TestComponent build();
+
     }
+
 }

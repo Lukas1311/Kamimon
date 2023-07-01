@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class DestructibleElement implements ILifecycleService {
+
     protected final CompositeDisposable disposables = new CompositeDisposable();
 
     public void onDestroy(Runnable action) {
@@ -18,4 +19,5 @@ public class DestructibleElement implements ILifecycleService {
     public void destroy() {
         disposables.dispose();
     }
+
 }

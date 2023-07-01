@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
@@ -30,6 +31,8 @@ public class IngameController extends PortalController {
     public HBox ingameWrappingHBox;
     @FXML
     public HBox dialogueBox;
+    @FXML
+    public VBox starterBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -44,6 +47,8 @@ public class IngameController extends PortalController {
     @Inject
     DialogueController dialogueController;
     @Inject
+    StarterController starterController;
+    @Inject
     InteractionStorage interactionStorage;
 
     @Inject
@@ -52,6 +57,10 @@ public class IngameController extends PortalController {
     @Inject
     WorldController worldController;
 
+    @Inject
+    InputHandler inputHandler;
+
+    private Parent mapOverview;
 
     @Inject
     public IngameController() {
@@ -67,6 +76,35 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
+
+        onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            if (mapOverview != null) {
+                switch (event.getCode()) {
+                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B -> {
+                        // Block movement and backpack, if map overview is shown
+                        if (mapOverview.isVisible()) {
+                            event.consume();
+                        }
+                    }
+                    case M -> {
+                        mapOverview.setVisible(!mapOverview.isVisible());
+                        event.consume();
+                    }
+
+                    case ESCAPE -> {
+                        if (mapOverview.isVisible()) {
+                            mapOverview.setVisible(false);
+                            event.consume();
+                        }
+                    }
+
+                    default -> {
+                    }
+
+                }
+            }
+        }));
+        starterController.init();
     }
 
     @Override
@@ -79,6 +117,7 @@ public class IngameController extends PortalController {
         mapOverviewController.destroy();
         backpackController.destroy();
         dialogueController.destroy();
+        starterController.destroy();
     }
 
     @Override
@@ -102,7 +141,7 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(0, miniMap);
         }
 
-        Parent mapOverview = this.mapOverviewController.render();
+        mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
@@ -125,6 +164,13 @@ public class IngameController extends PortalController {
 
         if (miniMap != null && mapOverview != null) {
             miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+        }
+
+        Parent starter = this.starterController.render();
+        if (starter != null) {
+            starterBox.getChildren().clear();
+            starterBox.getChildren().add(starter);
+            starter.setVisible(false);
         }
 
         return parent;

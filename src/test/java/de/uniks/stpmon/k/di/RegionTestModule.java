@@ -33,7 +33,6 @@ public class RegionTestModule {
             final List<Monster> monsters = new ArrayList<>();
 
 
-
             /**
              * Adds 2 DummyRegions to the regions list with ids {"id0", "id1"} and
              * names {"TestRegion0", "TestRegion1"}
@@ -277,4 +276,5 @@ public class RegionTestModule {
             }
         };
     }
+
 }

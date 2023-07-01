@@ -79,6 +79,7 @@ public class MonsterCache extends ListenerCache<Monster, String> {
     }
 
     private static class TeamCache extends SimpleCache<Monster, String> {
+
         private final MonsterCache parent;
         private Set<String> currentTeam = null;
 
@@ -151,6 +152,7 @@ public class MonsterCache extends ListenerCache<Monster, String> {
             return value._id();
 
         }
+
     }
 
 }

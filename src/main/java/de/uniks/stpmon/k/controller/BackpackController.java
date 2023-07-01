@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
@@ -23,7 +25,8 @@ public class BackpackController extends Controller {
     @Inject
     Provider<IngameController> ingameControllerProvider;
 
-
+    @Inject
+    InputHandler inputHandler;
 
 
     @Inject
@@ -42,6 +45,12 @@ public class BackpackController extends Controller {
     @Override
     public void init() {
         super.init();
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
+            if (event.getCode() == KeyCode.B) {
+                triggerBackPackMenu();
+                event.consume();
+            }
+        }));
     }
 
     public void openBackPackMenu() {
@@ -62,4 +71,5 @@ public class BackpackController extends Controller {
             closeBackPackMenu();
         }
     }
+
 }

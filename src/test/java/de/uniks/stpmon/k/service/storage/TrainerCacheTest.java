@@ -37,6 +37,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class TrainerCacheTest {
+
     @Mock
     RegionService regionService;
     @Mock
@@ -242,4 +243,5 @@ public class TrainerCacheTest {
         assertThrows(IllegalArgumentException.class, () -> cache.updateValue(null));
         assertThrows(IllegalArgumentException.class, () -> cache.addValue(null));
     }
+
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface CandidateRule {
 
     PropInfo apply(List<PropInfo> candidates, List<DecorationLayer> layers);
+
 }

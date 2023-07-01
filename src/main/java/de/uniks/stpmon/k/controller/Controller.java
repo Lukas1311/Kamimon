@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 
 public abstract class Controller extends Viewable {
+
     public static final Scheduler FX_SCHEDULER = Viewable.FX_SCHEDULER;
 
     @Inject
@@ -60,4 +61,5 @@ public abstract class Controller extends Viewable {
         }
         return translation;
     }
+
 }

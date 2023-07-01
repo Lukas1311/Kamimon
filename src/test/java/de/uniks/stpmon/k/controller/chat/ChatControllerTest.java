@@ -4,12 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.ToastController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.models.Event;
-import de.uniks.stpmon.k.models.Group;
-import de.uniks.stpmon.k.models.Message;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Spawn;
-import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.GroupApiService;
@@ -43,11 +38,7 @@ import org.testfx.matcher.control.ListViewMatchers;
 import org.testfx.matcher.control.TextMatchers;
 
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -57,6 +48,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class ChatControllerTest extends ApplicationTest {
+
     @Mock
     MessageService msgService;
     @Mock
@@ -405,4 +397,5 @@ public class ChatControllerTest extends ApplicationTest {
         Group retrievedGroup = chatController.getGroup();
         assertEquals(group, retrievedGroup);
     }
+
 }

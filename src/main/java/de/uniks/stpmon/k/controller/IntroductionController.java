@@ -84,4 +84,5 @@ public class IntroductionController extends Controller {
         imageIntroduction.setImage(images[index]);
         indexProperty.set(index);
     }
+
 }

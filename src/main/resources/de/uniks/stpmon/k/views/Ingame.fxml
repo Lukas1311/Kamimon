@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
             minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0"
-            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="de.uniks.stpmon.k.controller.IngameController">
     <center>
         <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
@@ -16,14 +16,21 @@
                 </top>
                 <right>
 
-                    <VBox fx:id="rightVbox" prefHeight="310.0" prefWidth="120" BorderPane.alignment="CENTER">
+                    <VBox fx:id="rightVbox" prefHeight="310.0" prefWidth="120.0" BorderPane.alignment="CENTER">
                         <HBox fx:id="ingameWrappingHBox"/>
                         <BorderPane.margin>
                             <Insets top="-40.0"/>
                         </BorderPane.margin>
                     </VBox>
-
                 </right>
+                <center>
+                    <VBox fx:id="starterBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                          prefHeight="332.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+                        <BorderPane.margin>
+                            <Insets left="200.0"/>
+                        </BorderPane.margin>
+                    </VBox>
+                </center>
                 <bottom>
                     <HBox fx:id="dialogueBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0"
                           BorderPane.alignment="CENTER"/>

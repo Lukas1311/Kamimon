@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class MonsterService extends DestructibleElement {
+
     private boolean isInitialized = false;
     @Inject
     CacheManager cacheManager;
@@ -75,4 +76,5 @@ public class MonsterService extends DestructibleElement {
         }
         return monsterCache;
     }
+
 }

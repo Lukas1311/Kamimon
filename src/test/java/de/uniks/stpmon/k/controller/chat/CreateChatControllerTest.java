@@ -36,6 +36,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 class CreateChatControllerTest extends ApplicationTest {
+
     @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
@@ -204,4 +205,5 @@ class CreateChatControllerTest extends ApplicationTest {
         //verify -> left createChatController
         verify(mock).openChat(group);
     }
+
 }

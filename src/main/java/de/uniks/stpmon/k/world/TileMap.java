@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.*;
 
 public class TileMap {
+
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
     private final Set<TileLayerData> floorLayers;

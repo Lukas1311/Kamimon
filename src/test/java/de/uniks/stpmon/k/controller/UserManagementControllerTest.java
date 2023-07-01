@@ -1,38 +1,32 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.popup.*;
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
+import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
-import okhttp3.ResponseBody;
-import retrofit2.HttpException;
-import retrofit2.Response;
-
-import java.util.ResourceBundle;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testfx.framework.junit5.ApplicationTest;
-
 import io.reactivex.rxjava3.core.Observable;
-import javax.inject.Provider;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import okhttp3.ResponseBody;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.framework.junit5.ApplicationTest;
+import retrofit2.HttpException;
+import retrofit2.Response;
+
+import javax.inject.Provider;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserManagementControllerTest extends ApplicationTest {
@@ -79,7 +73,7 @@ public class UserManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -105,7 +99,7 @@ public class UserManagementControllerTest extends ApplicationTest {
 
         // action:
         clickOn("#backButton");
-        
+
         // no values to check
 
         // check mocks:
@@ -156,7 +150,7 @@ public class UserManagementControllerTest extends ApplicationTest {
             callback.onModalResult(true);
             return null;
         }).when(mock).showModal(any());
-        
+
         // action:
         write("\tBob");
         clickOn("#saveChangesButton");
@@ -187,7 +181,7 @@ public class UserManagementControllerTest extends ApplicationTest {
             callback.onModalResult(true);
             return null;
         }).when(mock).showModal(any());
-        
+
         // action:
         write("\t\tpassword");
         clickOn("#saveChangesButton");
@@ -270,4 +264,5 @@ public class UserManagementControllerTest extends ApplicationTest {
         verify(mock).showModal(any());
         verify(userService).setPassword(any());
     }
+
 }

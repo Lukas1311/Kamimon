@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.stpmon.k.Main;
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
+import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 
 @Singleton
 public class EventListener {
+
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
     private final Map<Socket, SocketSender> adapters = new HashMap<>();
@@ -113,4 +115,10 @@ public class EventListener {
         SocketSender adapter = this.ensureOpen(socket);
         return send(adapter, new Event<>(event, moveTrainerDto), false);
     }
+
+    public Object sendTalk(Socket socket, String event, TalkTrainerDto talkTrainerDto) {
+        SocketSender adapter = this.ensureOpen(socket);
+        return send(adapter, new Event<>(event, talkTrainerDto), false);
+    }
+
 }

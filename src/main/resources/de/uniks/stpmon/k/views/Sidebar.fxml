@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.kordamp.ikonli.javafx.*?>
-
 <GridPane fx:id="grid" alignment="TOP_CENTER" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="500.0"
           prefWidth="50.0" styleClass="sidebar-holder" stylesheets="@css/generalStyle.css"
           xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"

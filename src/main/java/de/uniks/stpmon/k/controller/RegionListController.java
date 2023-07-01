@@ -24,6 +24,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class RegionListController extends PortalController {
+
     private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @FXML
     public VBox regionListWrapping;
@@ -83,13 +84,13 @@ public class RegionListController extends PortalController {
         return parent;
     }
 
-    public void removeLettering(){
+    public void removeLettering() {
         regionListWrapping.getChildren().remove(imageViewKamimonLetteringRegion);
         regionListWrapping.setAlignment(Pos.CENTER);
     }
 
-    public void addLettering(){
-        regionListWrapping.getChildren().add(0,imageViewKamimonLetteringRegion);
+    public void addLettering() {
+        regionListWrapping.getChildren().add(0, imageViewKamimonLetteringRegion);
         regionListWrapping.setAlignment(Pos.CENTER);
     }
 
@@ -108,4 +109,5 @@ public class RegionListController extends PortalController {
         });
 
     }
+
 }

@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EncounterServiceTest {
+
     @Mock
     EncounterApiService encounterApiService;
     @Spy
@@ -351,4 +352,5 @@ class EncounterServiceTest {
         //check mock
         verify(encounterApiService).fleeEncounter(any(), any(), any());
     }
+
 }

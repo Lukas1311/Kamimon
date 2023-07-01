@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import java.util.Set;
 
 public class NoneConstants {
+
     public static final Trainer NONE_TRAINER = new Trainer(
             "none",
             "none",
@@ -19,4 +20,5 @@ public class NoneConstants {
             null,
             Set.of(), Set.of()
     );
+
 }
