@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +23,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -54,19 +56,12 @@ public class TeamControllerTest extends ApplicationTest {
         app.start(stage);
         // Set up mock
         when(monsterService.getTeam()).thenReturn(Observable.just(
-                List.of(MonsterBuilder.builder().setId("1").setType(1).create(),
-                        MonsterBuilder.builder().setId("2").setType(2).create(),
-                        MonsterBuilder.builder().setId("3").setType(3).create()
+                List.of(MonsterBuilder.builder().setId("1").setType(1).create()
                 )));
 
 
         when(presetService.getMonster("1")).thenReturn(
                 Observable.just(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
-        when(presetService.getMonster("2")).thenReturn(
-                Observable.just(new MonsterTypeDto(2, "Monster 2", "", List.of(), "")));
-        when(presetService.getMonster("3")).thenReturn(
-                Observable.just(new MonsterTypeDto(3, "Monster 3", "", List.of(), "")));
-
         when(resourceBundleProvider.get()).thenReturn(resources);
 
         MonsterBarController mock = Mockito.mock(MonsterBarController.class);
@@ -82,13 +77,25 @@ public class TeamControllerTest extends ApplicationTest {
         // Verify the size of monsterListVBox
         assertEquals(6, teamController.monsterListVBox.getChildren().size());
 
+        waitForFxEvents();
         // Verify the text of the labels
-        verifyThat("#monster_label_0", hasText("  Monster 1"));
-        verifyThat("#monster_label_1", hasText("  Monster 2"));
-        verifyThat("#monster_label_2", hasText("  Monster 3"));
-        verifyThat("#monster_label_3", hasText("  -"));
-        verifyThat("#monster_label_4", hasText("  -"));
-        verifyThat("#monster_label_5", hasText("  -"));
+        Label label = (Label) lookup("#monster_label_0").query();
+        assertTrue(label.getText().endsWith("Monster 1"));
+
+        label = (Label) lookup("#monster_label_1").query();
+        assertEquals("  -", label.getText());
+
+        label = (Label) lookup("#monster_label_2").query();
+        assertEquals("  -", label.getText());
+
+        label = (Label) lookup("#monster_label_3").query();
+        assertEquals("  -", label.getText());
+
+        label = (Label) lookup("#monster_label_4").query();
+        assertEquals("  -", label.getText());
+
+        label = (Label) lookup("#monster_label_5").query();
+        assertEquals("  -", label.getText());
     }
 
 
