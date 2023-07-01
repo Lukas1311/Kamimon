@@ -928,51 +928,7 @@ Load fonts
 	-fx-font-weight: bolder;
 }
 
-/* -------------------- Monster Information -------------------- */
-.monster {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-}
-.monster-attributes {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-background-color: white;
-}
-.monster-type {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-background-color: #5F3BDF;
-    -fx-text-fill: white;
-}
-.ability {
-    -fx-background-color: #C7C7C7;
-}
-.ability-name-type-box {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-pref-width: 177;
-}
-.ability-type {
-    -fx-background-color: #CF2A27;
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-text-fill: white;
-    -fx-alignment: center;
-    -fx-pref-width: 65;
-}
-.ability-uses {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-text-fill: white;
-    -fx-alignment: center;
-    -fx-pref-width: 55;
-}
+
 
 /* -------------------- Map Overview -------------------- */
 .map-overview-close-button {

@@ -28,4 +28,17 @@ public enum MonsterType {
         this.typeName = typeName;
         this.styleClass = styleClass;
     }
+
+    @Override
+    public String toString(){
+        return typeName;
+    }
+
+    public String getStyleClass(){
+        return styleClass;
+    }
+
+    public String getTypeName(){
+        return styleClass;
+    }
 }
