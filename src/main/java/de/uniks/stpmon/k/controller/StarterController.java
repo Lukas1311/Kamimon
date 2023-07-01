@@ -39,8 +39,9 @@ public class StarterController extends ToastedController {
 
     @Override
     public Parent render() {
-        //loadImage(starterBackground, "starter-choice-box.png");
-        return super.render();
+        Parent parent = super.render();
+        loadBgImage(starterPane, "starter-choice-box.png");
+        return parent;
     }
 
     public void loadMonsterImage(String id) {
