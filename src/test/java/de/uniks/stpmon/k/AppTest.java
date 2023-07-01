@@ -327,13 +327,19 @@ class AppTest extends ApplicationTest {
         Monster storageMonster = MonsterBuilder.builder().setId("monster2")
                 .setTrainer(me._id()).create();
         MonsterCache monsterCache = cacheManager.requestMonsters(me._id());
-        monsterCache.getTeam().addValue(teamMonster);
         monsterCache.addValue(storageMonster);
+        monsterCache.addValue(teamMonster);
+        trainerCache.updateValue(TrainerBuilder.builder(me).addTeam(teamMonster._id()).create());
 
         //open MonBox
         clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
         verifyThat("#monBoxStackPane", Node::isVisible);
+
+        GridPane teamGrid = lookup("#monTeam").query();
+        Node teamMon = teamGrid.getChildren().get(0);
+        clickOn(teamMon);
+        verifyThat("#mainPane", Node::isVisible);
 
         type(KeyCode.B);
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
