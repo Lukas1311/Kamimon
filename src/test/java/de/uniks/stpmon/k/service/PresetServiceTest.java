@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PresetServiceTest {
+
     @Mock
     PresetApiService presetApiService;
     @InjectMocks
@@ -244,4 +245,5 @@ class PresetServiceTest {
         //check mocks
         verify(presetApiService).getAbility(captor.capture());
     }
+
 }

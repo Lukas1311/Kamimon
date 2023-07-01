@@ -39,4 +39,5 @@ class PropGridTest {
         // Check if group changed to 1
         assertEquals(1, grid.getGroup(0, 0));
     }
+
 }

@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterServiceTest {
+
     @Mock
     CacheManager cacheManager;
     @Spy
@@ -68,4 +69,5 @@ public class MonsterServiceTest {
         monsterService.getMonster("test");
         verify(cache).listenValue(any());
     }
+
 }

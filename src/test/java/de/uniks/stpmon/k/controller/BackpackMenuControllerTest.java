@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,4 +67,5 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         verify(monsterBarController).showMonsters();
 
     }
+
 }

@@ -150,4 +150,5 @@ public class InteractionServiceTest {
         assertNotNull(fourthDialogue);
         assertEquals("first", fourthDialogue.getTrainerId());
     }
+
 }

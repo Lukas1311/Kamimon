@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterBarControllerTest extends ApplicationTest {
+
     @Mock
     private ImageView monsterSlot;
 
@@ -110,4 +111,5 @@ public class MonsterBarControllerTest extends ApplicationTest {
         // Check if the monster list is showing
         assertTrue(monsterList.isVisible());
     }
+
 }

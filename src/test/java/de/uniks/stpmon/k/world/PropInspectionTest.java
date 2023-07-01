@@ -70,4 +70,5 @@ public class PropInspectionTest {
         assertEquals(1, prop.height());
         assertEqualsImages(resultImage, prop.image());
     }
+
 }
