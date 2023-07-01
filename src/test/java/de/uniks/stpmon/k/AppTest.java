@@ -2,9 +2,18 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
+import de.uniks.stpmon.k.utils.Direction;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -12,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -20,8 +30,10 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.function.Predicate.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -206,8 +218,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterList", Node::isVisible);
 
         clickOn("#monster_label_0");
-        //clickOn("#monster_label_0");
-        //verifyThat("#monsterInformation", Node::isVisible);
+        verifyThat("#monsterInformation", Node::isVisible);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", not(Node::isVisible));
@@ -250,12 +261,12 @@ class AppTest extends ApplicationTest {
     @Test
     void criticalPathV3() {
         MovementDummy.addMovementDummy(component.eventListener());
-
+        app.addInputHandler(component);
         app.show(component.hybridController());
 
-        //set user
+        //set User
         User user = new User(
-                "00",
+                "01",
                 "T",
                 "online",
                 null,
@@ -267,19 +278,67 @@ class AppTest extends ApplicationTest {
         clickOn("#regionVBox");
         waitForFxEvents();
 
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("T");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        CacheManager cacheManager = component.cacheManager();
+        TrainerCache trainerCache = cacheManager.trainerCache();
+
+        Trainer me = component.trainerStorage().getTrainer();
+        Trainer prof = TrainerBuilder.builder()
+                .setId("prof")
+                .setX(4)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.LEFT)
+                .setNpc(new NPCInfo(false, false, false, List.of("0", "1", "2"), null))
+                .create();
+
+        trainerCache.addValue(prof);
+
+        clickOn("#monsterBar");
+        // verify that the monster list is empty
+        assertThat(me.team()).isEmpty();
+
+        // walk to the right
+        type(KeyCode.D, 3);
+        // talk to prof
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        type(KeyCode.ENTER);
+        waitForFxEvents();
+
+        clickOn("#monsterBar");
+
         //check backpack
         clickOn("#backpackImage");
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
+        //add Monsters to inventory
+        Monster teamMonster = MonsterBuilder.builder().setId("monster1")
+                .setTrainer(me._id()).create();
+        Monster storageMonster = MonsterBuilder.builder().setId("monster2")
+                .setTrainer(me._id()).create();
+        MonsterCache monsterCache = cacheManager.requestMonsters(me._id());
+        monsterCache.getTeam().addValue(teamMonster);
+        monsterCache.addValue(storageMonster);
 
         //open MonBox
-        clickOn("#backpackMenuText0");
+        clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
-        verifyThat("#monBoxBorderPane", Node::isVisible);
-        clickOn("#backpackImage");
-        verifyThat("#backpackMenuHBox", Node::isVisible);
-        clickOn("#backpackMenuText0");
-        waitForFxEvents();
+        verifyThat("#monBoxStackPane", Node::isVisible);
+
+        type(KeyCode.B);
+        HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
+        assertEquals(1, ingameWrappingHbox.getChildren().size());
+
 
     }
 }

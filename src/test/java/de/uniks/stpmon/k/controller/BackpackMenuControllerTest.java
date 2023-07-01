@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,9 +29,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
-
-    @Mock
-    BackpackController backpackController;
     @Spy
     Provider<MonsterBarController> monsterBarControllerProvider;
     @Spy
@@ -63,7 +59,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
     @Test
     void clickOnMonsters() {
-        doNothing().when(backpackController).closeBackPackMenu();
         MonsterBarController monsterBarController = Mockito.mock(MonsterBarController.class);
         when(monsterBarControllerProvider.get()).thenReturn(monsterBarController);
         doNothing().when(monsterBarController).showMonsters();
@@ -81,9 +76,15 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         IngameController ingameController = Mockito.mock(IngameController.class);
         when(ingameControllerProvider.get()).thenReturn(ingameController);
 
-        Text text = lookup("#backpackMenuText0").query();
-        clickOn(text);
+        Label label = lookup("#backpackMenuLabel_0").query();
+        clickOn(label);
         waitForFxEvents();
-        verify(monBoxController).render();
+        verify(ingameController).pushController(any());
+
+        Label label2 = lookup("#backpackMenuLabel_0").query();
+        clickOn(label2);
+        waitForFxEvents();
+
+        verify(ingameController).removeChildren(anyInt());
     }
 }

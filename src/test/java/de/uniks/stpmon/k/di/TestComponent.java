@@ -12,6 +12,7 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 
 import javax.inject.Singleton;
 
@@ -39,6 +40,8 @@ public interface TestComponent extends MainComponent {
     RegionStorage regionStorage();
 
     RegionService regionService();
+
+    CacheManager cacheManager();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {
