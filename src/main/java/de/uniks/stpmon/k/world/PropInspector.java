@@ -89,7 +89,7 @@ public class PropInspector {
                         }
                         PropInfo info = new PropInfo(x, y, layerIndex, id, otherId, otherLayer,
                                 data.getTileset(id).source(), data.getTileset(otherId).source(), dir, otherDir);
-                        RuleResult result = registry.applyRule(false,
+                        RuleResult result = registry.applyRule(
                                 info, decorationLayers
                         );
                         if (result == RuleResult.NO_MATCH_DECORATION) {
@@ -123,7 +123,7 @@ public class PropInspector {
                 if (checkOtherDirections(grid, x, y)) {
                     continue;
                 }
-                RuleResult result = registry.applyRule(true, singleInfo, decorationLayers);
+                RuleResult result = registry.applySingleRule(singleInfo, decorationLayers);
                 if (result == RuleResult.MATCH_SINGLE) {
                     createIfAbsent(grid, x, y, null, layerIndex);
                 }

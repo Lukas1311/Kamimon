@@ -44,18 +44,37 @@ public class RuleRegistry {
         candidateRules.add(rule);
     }
 
-    private Iterable<PropRule> getRules(boolean single, PropInfo info) {
+    private Iterable<PropRule> getSingleRules(PropInfo info) {
         RegistryGroup group = groupByTileset.get(info.tileSet());
         if (group == null) {
-            return single ? singleRules : connectionRules;
+            return singleRules;
         }
-        return IterableUtils.concat(
-                (single ? group.singleRules : group.connectionRules).getRules(info.tileId()),
-                single ? singleRules : connectionRules);
+        return IterableUtils.concat((group.singleRules).getRules(info.tileId()), singleRules);
     }
 
-    public RuleResult applyRule(boolean single, PropInfo info, List<DecorationLayer> decorationLayers) {
-        for (PropRule rule : getRules(single, info)) {
+    public RuleResult applySingleRule(PropInfo info, List<DecorationLayer> decorationLayers) {
+        for (PropRule rule : getSingleRules(info)) {
+            RuleResult result = rule.apply(info, decorationLayers);
+            if (result != RuleResult.NO_MATCH) {
+                return result;
+            }
+        }
+        return RuleResult.NO_MATCH;
+    }
+
+    private Collection<PropRule> getConnectionRules(String tileset, int tileId) {
+        RegistryGroup group = groupByTileset.get(tileset);
+        if (group == null) {
+            return Collections.emptyList();
+        }
+        return group.connectionRules.getRules(tileId);
+    }
+
+    public RuleResult applyRule(PropInfo info, List<DecorationLayer> decorationLayers) {
+        Set<PropRule> rules = new LinkedHashSet<>(getConnectionRules(info.tileSet(), info.tileId()));
+        rules.addAll(getConnectionRules(info.otherTileSet(), info.otherTileId()));
+        rules.addAll(connectionRules);
+        for (PropRule rule : rules) {
             RuleResult result = rule.apply(info, decorationLayers);
             if (result != RuleResult.NO_MATCH) {
                 return result;
@@ -65,22 +84,30 @@ public class RuleRegistry {
     }
 
     public PropInfo getPropInfo(PropInfo info, List<PropInfo> candidates, List<DecorationLayer> decorationLayers) {
-        PropInfo bestCandidate = null;
-        if (candidates.size() > 1) {
-            RegistryGroup group = groupByTileset.get(info.tileSet());
-            Iterable<CandidateRule> candidateRules = group != null ?
-                    IterableUtils.concat(group.candidateRules.getRules(info.tileId()), this.candidateRules)
-                    : this.candidateRules;
-            for (CandidateRule rule : candidateRules) {
-                bestCandidate = rule.apply(candidates, decorationLayers);
-                if (bestCandidate != null) {
-                    break;
-                }
-            }
-        } else {
-            bestCandidate = candidates.get(0);
+        if (candidates.size() <= 1) {
+            return candidates.get(0);
         }
-        return bestCandidate;
+        PropInfo bestCandidate;
+        Set<CandidateRule> rules = new LinkedHashSet<>(getCandidateRules(info));
+        for (PropInfo candidateInfo : candidates) {
+            rules.addAll(getCandidateRules(candidateInfo));
+        }
+        rules.addAll(candidateRules);
+        for (CandidateRule rule : rules) {
+            bestCandidate = rule.apply(candidates, decorationLayers);
+            if (bestCandidate != null) {
+                return bestCandidate;
+            }
+        }
+        return null;
+    }
+
+    private Collection<CandidateRule> getCandidateRules(PropInfo info) {
+        RegistryGroup group = groupByTileset.get(info.tileSet());
+        if (group == null) {
+            return Collections.emptyList();
+        }
+        return group.candidateRules.getRules(info.tileId());
     }
 
     private static class RegistryGroup {
