@@ -1,6 +1,6 @@
 .ingame {
     -fx-font-family: "Pokémon DS Font";
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
 }
 
 
@@ -43,8 +43,13 @@
     -fx-hbar-policy: never;
 }
 
+.backpack-menu-list .list-cell:selected {
+    -fx-text-fill: black;
+}
+
+
 .backpack-menu-entry {
-    -fx-font-size: 22px;
+    -fx-font-size: 20px;
     -fx-fill: black;
 }
 
@@ -201,5 +206,10 @@
 
 .monster-update-label {
     -fx-text-fill: #445E9C;
+}
+
+/* -------------------- Dialogue  -------------------- */
+.dialog-font-size {
+    -fx-font-size: 25px;
 }
 
