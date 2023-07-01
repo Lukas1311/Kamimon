@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-
-import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
@@ -136,8 +134,7 @@ public class LoginController extends Controller {
         // shows Password on holding mouse button or holding enter
         toggleButton.armedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                EncounterOverviewController encounterOverviewController = new EncounterOverviewController();
-                app.show(encounterOverviewController);
+                showPassword();
             } else {
                 hidePassword();
             }

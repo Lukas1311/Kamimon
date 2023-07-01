@@ -1,15 +1,31 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.MonsterService;
+
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Provider;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,15 +34,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Provider;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterOverviewControllerTest extends ApplicationTest {
@@ -61,7 +70,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         userMonsterList.add(userMonster2);
 
         when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(monsterImage));
-        // when(monsterService.getTeam()).thenReturn(Observable.just(userMonsterList));
+        when(monsterService.getTeam()).thenReturn(Observable.just(userMonsterList));
 
         when(statusControllerProvider.get()).thenAnswer(invocation -> {
             VBox statusBox = new VBox();
@@ -69,7 +78,8 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
             statusBox.setPrefWidth(50);
             statusBox.setPrefHeight(20);
             StatusController statusController = mock(StatusController.class);
-            when(statusController.render()).thenReturn(statusBox);
+            statusController.fullBox = statusBox;
+            when(statusController.render()).thenReturn(statusController.fullBox);
             return statusController;
         });
 
@@ -79,6 +89,8 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 MonsterBuilder.builder().setId("2").setType(1).create(),
                 MonsterBuilder.builder().setId("3").setType(2).create()
         ));
+
+        encounterOverviewController.opponentMonstersList = opponentMonsterList;
 
         app.show(encounterOverviewController);
         stage.requestFocus();
@@ -93,22 +105,4 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         assertNotNull(encounterOverviewController);
         sleep(4000);
     }
-
-    // @Test
-    // void testLoadMonsterImage() {
-    //     VBox userMonsters = mock(VBox.class);
-    //     ImageView userMonster0 = mock(ImageView.class);
-    //     MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", "image", null, "description");
-    //     BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
-
-    //     encounterOverviewController.userMonsters = userMonsters;
-    //     encounterOverviewController.userMonster0 = userMonster0;
-
-    //     when(resourceService.getMonsterImage(anyString())).thenReturn(Observable.just(image));
-
-    //     encounterOverviewController.loadMonsterImage(monsterTypeDto.id().toString(), userMonster0, 0);
-    //     waitForFxEvents();
-
-    //     assertEquals(2, encounterOverviewController.userMonsters.getChildren().size());
-    // }
 }

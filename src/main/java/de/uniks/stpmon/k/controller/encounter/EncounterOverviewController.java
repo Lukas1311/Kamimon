@@ -53,8 +53,8 @@ public class EncounterOverviewController extends Controller {
     @Inject
     LoginController loginController;
 
-    List<Monster> userMonstersList;
-    List<Monster> opponentMonstersList;
+    public List<Monster> userMonstersList;
+    public List<Monster> opponentMonstersList;
 
     @Inject
     public EncounterOverviewController() {
