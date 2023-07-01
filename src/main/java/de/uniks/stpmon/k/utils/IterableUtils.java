@@ -5,7 +5,7 @@ import java.util.Iterator;
 public class IterableUtils {
     public static <E> Iterable<E> concat(final Iterable<? extends E> iterable1,
                                          final Iterable<? extends E> iterable2) {
-        return () -> new Iterator<E>() {
+        return () -> new Iterator<>() {
             final Iterator<? extends E> iterator1 = iterable1.iterator();
             final Iterator<? extends E> iterator2 = iterable2.iterator();
 
