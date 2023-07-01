@@ -15,8 +15,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class MonsterInformation2Controller extends Controller {
 
     @FXML
@@ -53,6 +55,10 @@ public class MonsterInformation2Controller extends Controller {
     public Label speUpdateLabel;
     @FXML
     public AnchorPane mainPane;
+    @FXML
+    public Label descriptionLabel;
+    @FXML
+    public GridPane infoGrid;
 
     @Inject
     PresetService presetService;
@@ -106,11 +112,11 @@ public class MonsterInformation2Controller extends Controller {
         hpValueLabel.setText(monster.attributes().health().toString());
         atkValueLabel.setText(monster.attributes().attack().toString());
         defValueLabel.setText(monster.attributes().defense().toString());
-        speUpdateLabel.setText(monster.attributes().speed().toString());
+        speValueLabel.setText(monster.attributes().speed().toString());
 
         // Iterate over the abilities of the monster
         cleanupAttackGrid();
-        int i = 0;
+        int i = 1;
         for (String key : monster.abilities().keySet()) {
             if (monster.abilities().containsKey(key)) {
                 fillAbilityTable(key, i);
@@ -120,7 +126,18 @@ public class MonsterInformation2Controller extends Controller {
     }
 
     public void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
-        gridPane.getChildren().removeIf(node -> GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row);
+        gridPane.getChildren().removeIf(node -> {
+            if(row != 0 && (GridPane.getRowIndex(node) == null || GridPane.getRowIndex(node) == 0)) {
+                return false;
+            }
+            if(column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
+                return false;
+            }
+            return GridPane.getRowIndex(node) != null
+                    && GridPane.getColumnIndex(node) != null
+                    && GridPane.getColumnIndex(node) == column
+                    && GridPane.getRowIndex(node) == row;
+        });
     }
 
 
@@ -146,6 +163,18 @@ public class MonsterInformation2Controller extends Controller {
     private void fillAbilityRow(AbilityDto ability, int rowIndex) {
         Label typeLabel = typeLabel(null, ability.type());
         Label nameLabel = new Label(ability.name());
+        nameLabel.setOnMouseClicked(event -> {
+
+            if(descriptionLabel.isVisible() && descriptionLabel.getText().equals(ability.description())) {
+                descriptionLabel.setVisible(false);
+                descriptionLabel.setText("");
+                infoGrid.setVisible(true);
+            } else {
+                descriptionLabel.setVisible(true);
+                descriptionLabel.setText(ability.description());
+                infoGrid.setVisible(false);
+            }
+        });
         //TODO add style here
         Label powLabel = new Label(ability.power().toString());
         Label accLabel = new Label(String.valueOf((int) (ability.accuracy().doubleValue() * 100.0)));
@@ -180,6 +209,8 @@ public class MonsterInformation2Controller extends Controller {
     public Parent render() {
         Parent parent = super.render();
         mainPane.setBackground(new Background(loadBgImage("MonInfoView_v2.3-final.png")));
+        descriptionLabel.setVisible(false);
+        descriptionLabel.setWrapText(true);
         return parent;
     }
 

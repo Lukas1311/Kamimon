@@ -39,6 +39,6 @@ public enum MonsterType {
     }
 
     public String getTypeName(){
-        return styleClass;
+        return typeName;
     }
 }

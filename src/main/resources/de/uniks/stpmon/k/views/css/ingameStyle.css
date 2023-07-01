@@ -78,9 +78,19 @@
 .monster-type-general {
     -fx-border-width: 2px;
     -fx-border-radius: 2px;
-    -fx-border-insets: 2px 2px 2px 2px;
     -fx-background-radius: 2px;
-    -fx-effect:  dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.5, 1.0, 1.0)
+    -fx-effect:  dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.5, 1.0, 1.0);
+
+    -fx-min-width: 65;
+    -fx-pref-width: 65;
+    -fx-max-width: 65;
+    -fx-min-height: 22;
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+
+    -fx-text-fill: white;
+
+    -fx-alignment: center;
 
 }
 
@@ -159,6 +169,12 @@
 
 
 /* -------------------- Monster Information -------------------- */
+.monster-information-font {
+    -fx-font-size: 18px;
+}
+
+
+
 .monster {
     -fx-border-color: black;
     -fx-border-width: 3px;
