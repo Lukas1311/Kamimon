@@ -102,4 +102,8 @@ public class BackpackMenuController extends Controller {
             closeMonBox();
         }
     }
+
+    public void setMonboxNull() {
+        monBox = null;
+    }
 }

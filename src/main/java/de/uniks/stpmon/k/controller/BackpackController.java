@@ -23,6 +23,10 @@ public class BackpackController extends Controller {
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<MonBoxController> monBoxControllerProvider;
+    @Inject
+    Provider<MonsterInformationController> monsterInformationControllerProvider;
 
     @Inject
     InputHandler inputHandler;
@@ -60,6 +64,7 @@ public class BackpackController extends Controller {
     public void closeBackPackMenu() {
         ingameControllerProvider.get().removeChildren(0);
         backpackMenu = null;
+        backpackMenuControllerProvider.get().setMonboxNull();
     }
 
 
