@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.models.Region;
@@ -14,7 +15,6 @@ import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class StatusControllerTest extends ApplicationTest {
@@ -111,7 +112,6 @@ public class StatusControllerTest extends ApplicationTest {
         // Call the loadMonsterInformation method
         statusController.loadMonsterInformation();
 
-
         // Verify that the UI elements are updated correctly
         verify(monsterHp).setText("5 / 10");
         verify(monsterLevel).setText("Lvl. 1");
@@ -125,8 +125,14 @@ public class StatusControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testLoadOpponentMonsterInformation() {
+    void testLoadMonsterDto() {
+        MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, null, null);
 
+        when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
+
+        statusController.loadMonsterDto(monsterTypeDto.id().toString());
+        waitForFxEvents();
+
+        assertEquals("monster", statusController.monsterName.getText());
     }
-
 }
