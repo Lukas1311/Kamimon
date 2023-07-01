@@ -100,7 +100,7 @@ public class AuthenticationServiceTest {
                 Observable.just(Response.success(new ErrorResponse(200, "e", "m")))
         );
         when(userService.updateStatus(any())).thenReturn(Observable.just(
-            new User("1", "b", "online", "a", null)
+                new User("1", "b", "online", "a", null)
         ));
 
         // action:
@@ -148,4 +148,5 @@ public class AuthenticationServiceTest {
         verify(userService).updateStatus(statusCaptor.capture());
         assertEquals(OnlineStatus.ONLINE, statusCaptor.getValue());
     }
+
 }

@@ -1,17 +1,13 @@
 package de.uniks.stpmon.k.rest;
 
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
-import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Area;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Trainer;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import retrofit2.http.*;
 
 import java.util.List;
 
@@ -69,4 +65,5 @@ public interface RegionApiService {
 
     @GET("regions/{region}/trainers/{trainer}/monsters/{id}")
     Observable<Monster> getMonster(@Path("region") String region, @Path("id") String monsterId);
+
 }

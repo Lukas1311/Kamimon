@@ -29,8 +29,6 @@ public class BackpackController extends Controller {
     InputHandler inputHandler;
 
 
-
-
     @Inject
     public BackpackController() {
 
@@ -48,10 +46,10 @@ public class BackpackController extends Controller {
     public void init() {
         super.init();
         onDestroy(inputHandler.addPressedKeyHandler(event -> {
-           if(event.getCode() == KeyCode.B){
-               triggerBackPackMenu();
-               event.consume();
-           }
+            if (event.getCode() == KeyCode.B) {
+                triggerBackPackMenu();
+                event.consume();
+            }
         }));
     }
 
@@ -73,4 +71,5 @@ public class BackpackController extends Controller {
             closeBackPackMenu();
         }
     }
+
 }

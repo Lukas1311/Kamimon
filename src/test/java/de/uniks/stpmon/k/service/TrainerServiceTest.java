@@ -155,4 +155,5 @@ public class TrainerServiceTest {
         assertEquals(secondTrainer, secondNpc.get());
 
     }
+
 }

@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import java.util.List;
 
 public class TilesetCandidateRule implements CandidateRule {
+
     private final String tileset;
     private final int distance;
     private final int columns;
@@ -40,4 +41,5 @@ public class TilesetCandidateRule implements CandidateRule {
         }
         return null;
     }
+
 }

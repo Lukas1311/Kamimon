@@ -9,4 +9,5 @@ public record UpdateUserDto(
         ArrayList<String> friends,
         String password
 ) {
+
 }

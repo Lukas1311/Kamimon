@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 
-
 @ExtendWith(MockitoExtension.class)
 public class TextDeliveryServiceTest {
 
@@ -34,19 +33,19 @@ public class TextDeliveryServiceTest {
 
     private TileMapData createDummyMap() {
         ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
-            2, 2,
-            0, 0);
+                2, 2,
+                0, 0);
         ObjectData object = new ObjectData(0, "Route 101", List.of(), List.of(new Property("Route 101", "Route", "text")), "Route", false, 0, 0, 0, 0, 0);
         TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), List.of(), List.of(object),
                 0, 0,
                 2, 2,
                 0, 0, "tilelayer", true, List.of());
         return new TileMapData(
-            2, 2,
-            false, List.of(layer, layer, layer),
-            1, 1,
-            List.of(new TilesetSource(1, "grass.json")),
-            "map");
+                2, 2,
+                false, List.of(layer, layer, layer),
+                1, 1,
+                List.of(new TilesetSource(1, "grass.json")),
+                "map");
     }
 
     @Test
@@ -54,7 +53,7 @@ public class TextDeliveryServiceTest {
         when(mapProvider.map()).thenReturn(createDummyMap());
 
         List<RouteData> routeData = textDeliveryService.
-            getRouteData(mapProvider).blockingFirst();
+                getRouteData(mapProvider).blockingFirst();
 
         assertEquals(1, routeData.size());
         RouteText routeText = routeData.get(0).routeText();
@@ -62,5 +61,5 @@ public class TextDeliveryServiceTest {
         assertEquals("Route", routeText.type());
         assertEquals("N/A", routeText.description());
     }
-    
+
 }

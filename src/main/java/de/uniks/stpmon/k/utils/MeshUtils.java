@@ -4,6 +4,7 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 public class MeshUtils {
+
     public static MeshView createPlane(int l, int b) {
         TriangleMesh mesh = new TriangleMesh();
 
@@ -62,4 +63,5 @@ public class MeshUtils {
 
         return new MeshView(mesh);
     }
+
 }

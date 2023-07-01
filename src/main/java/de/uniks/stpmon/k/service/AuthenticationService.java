@@ -23,6 +23,7 @@ import static de.uniks.stpmon.k.service.UserService.OnlineStatus;
 
 @Singleton
 public class AuthenticationService {
+
     @Inject
     TokenStorage tokenStorage;
     @Inject
@@ -89,4 +90,5 @@ public class AuthenticationService {
             return userService.updateStatus(OnlineStatus.ONLINE).map(res -> lr);
         }).concatMap(old -> setupCache(old, userStorage.getUser()));
     }
+
 }

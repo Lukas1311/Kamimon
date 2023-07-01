@@ -7,4 +7,5 @@ import java.util.List;
 public abstract class PropRule {
 
     public abstract RuleResult apply(PropInfo info, List<DecorationLayer> layers);
+
 }

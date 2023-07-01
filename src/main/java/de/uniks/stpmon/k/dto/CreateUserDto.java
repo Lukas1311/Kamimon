@@ -5,4 +5,5 @@ public record CreateUserDto(
         String avatar,
         String password
 ) {
+
 }

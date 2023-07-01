@@ -22,7 +22,6 @@ import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import okhttp3.ResponseBody;
 
 import javax.inject.Inject;
 import java.awt.image.BufferedImage;
@@ -30,6 +29,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class Viewable {
+
     // this is a good scale for sharp images
     private static final double TEXTURE_SCALE = 4.0;
 
@@ -99,8 +99,8 @@ public abstract class Viewable {
      * @param <T>        the type of the items emitted by the Observable
      */
     protected <@NonNull T> void subscribe(Observable<T> observable,
-            Consumer<T> onNext,
-            @NonNull Consumer<? super Throwable> onError) {
+                                          Consumer<T> onNext,
+                                          @NonNull Consumer<? super Throwable> onError) {
         disposables.add(observable.observeOn(FX_SCHEDULER).subscribe(onNext, onError));
     }
 
@@ -197,7 +197,7 @@ public abstract class Viewable {
      * @param service         the service used to retrieve the texture sets
      */
     public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id,
-            TextureSetService service) {
+                                      TextureSetService service) {
         return setSpriteImage(spriteContainer, sprite, direction, id, service, 150, 155);
     }
 
@@ -215,7 +215,7 @@ public abstract class Viewable {
      * @param viewHeight      is the fitHeight property of the imageview
      */
     public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id,
-            TextureSetService service, int viewWidth, int viewHeight) {
+                                      TextureSetService service, int viewWidth, int viewHeight) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return Completable.complete();
         }

@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class StarterControllerTest extends ApplicationTest {
+
     @Spy
     App app = new App(null);
     @Mock
@@ -31,6 +32,7 @@ public class StarterControllerTest extends ApplicationTest {
 
     @InjectMocks
     StarterController starterController;
+
     @Override
     public void start(Stage stage) throws Exception {
         // show app
@@ -52,4 +54,5 @@ public class StarterControllerTest extends ApplicationTest {
         assertEquals("monster", starterController.monsterNameLabel.getText());
         assertEquals("description", starterController.descriptionText.getText());
     }
+
 }

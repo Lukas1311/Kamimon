@@ -9,18 +9,11 @@ import de.uniks.stpmon.k.service.storage.TokenStorage;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -30,7 +23,6 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Objects;
@@ -139,7 +131,7 @@ public class LoginController extends Controller {
 
         // toggle password
         toggleButton.setOnAction(event -> {
-            if(passwordVisible){
+            if (passwordVisible) {
                 hidePassword();
             } else {
                 showPassword();
@@ -268,4 +260,5 @@ public class LoginController extends Controller {
         preferences.put("locale", locale.toLanguageTag());
         app.show(this); //reloaded
     }
+
 }

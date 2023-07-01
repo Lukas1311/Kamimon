@@ -87,4 +87,5 @@ public class EncounterSession extends DestructibleElement {
     public OpponentCache getOpponentCache() {
         return opponentCache;
     }
+
 }

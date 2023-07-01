@@ -7,4 +7,5 @@ public interface SocketReceiver extends ClientEndpoint {
     void addMessageHandler(Consumer<String> msgHandler);
 
     void removeMessageHandler(Consumer<String> msgHandler);
+
 }

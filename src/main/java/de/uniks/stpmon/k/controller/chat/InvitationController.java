@@ -57,4 +57,5 @@ public class InvitationController extends Controller {
     public void joinRegion() {
         chatController.openRegion(region);
     }
+
 }

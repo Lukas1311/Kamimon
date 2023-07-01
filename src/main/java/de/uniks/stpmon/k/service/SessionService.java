@@ -48,4 +48,5 @@ public class SessionService extends DestructibleElement {
             return opponents;
         }).ignoreElements();
     }
+
 }
