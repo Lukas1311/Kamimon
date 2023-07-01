@@ -86,4 +86,5 @@ public class TextureSetServiceTest {
         assertEquals(Color.RED.getRGB(), resultImage.getRGB(0, 1));
         assertEquals(Color.BLACK.getRGB(), resultImage.getRGB(1, 1));
     }
+
 }

@@ -59,4 +59,5 @@ class SessionServiceTest {
 
         sessionService.loadEncounter().blockingAwait();
     }
+
 }

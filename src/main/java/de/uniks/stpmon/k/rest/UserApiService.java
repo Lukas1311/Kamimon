@@ -4,17 +4,12 @@ import de.uniks.stpmon.k.dto.CreateUserDto;
 import de.uniks.stpmon.k.dto.UpdateUserDto;
 import de.uniks.stpmon.k.models.User;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import retrofit2.http.*;
 
 import java.util.List;
 
 public interface UserApiService {
+
     @POST("users")
     Observable<User> addUser(@Body CreateUserDto dto);
 
@@ -32,4 +27,5 @@ public interface UserApiService {
 
     @DELETE("users/{id}")
     Observable<User> deleteUser(@Path("id") String id);
+
 }

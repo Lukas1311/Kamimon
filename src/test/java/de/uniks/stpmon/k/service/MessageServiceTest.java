@@ -153,4 +153,5 @@ public class MessageServiceTest {
         // check mocks:
         verify(msgApiService).getMessages("groups", "p", null, null, 10);
     }
+
 }

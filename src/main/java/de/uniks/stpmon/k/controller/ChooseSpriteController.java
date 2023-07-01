@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 public class ChooseSpriteController extends ToastedController {
+
     protected final ObservableList<String> characters = FXCollections.observableArrayList();
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 

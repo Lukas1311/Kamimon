@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class RegionStorage {
+
     private final Subject<RegionEvent> regionEvents = PublishSubject.create();
     private Region region;
     private Area area;
@@ -48,6 +49,7 @@ public class RegionStorage {
     }
 
     public record RegionEvent(Region region, Area area, Area oldArea) {
+
         public static final RegionEvent EMPTY = new RegionEvent(null, null, null);
 
         public boolean isEmpty() {
@@ -59,4 +61,5 @@ public class RegionStorage {
         }
 
     }
+
 }

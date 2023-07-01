@@ -6,7 +6,6 @@ import javafx.scene.input.KeyEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -124,6 +123,7 @@ public class InputHandler implements ILifecycleService {
     }
 
     private static class MultiHandler<T extends Event> implements EventHandler<T> {
+
         private final List<Consumer<? super T>> handlers = new LinkedList<>();
 
         void add(Consumer<? super T> handler) {
@@ -147,5 +147,7 @@ public class InputHandler implements ILifecycleService {
                 }
             }
         }
+
     }
+
 }

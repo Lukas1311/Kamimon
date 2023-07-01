@@ -114,4 +114,5 @@ public class EncounterService {
                 encounterStorage.getOpponentList().get(0)._id()
         );
     }
+
 }

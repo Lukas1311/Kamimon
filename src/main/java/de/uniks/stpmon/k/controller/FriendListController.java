@@ -141,4 +141,5 @@ public class FriendListController extends ToastedController {
     public void openChat(User friend) {
         hybridControllerProvider.get().openChat(friend);
     }
+
 }

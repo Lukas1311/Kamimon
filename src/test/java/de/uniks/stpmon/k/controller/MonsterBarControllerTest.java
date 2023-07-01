@@ -25,11 +25,12 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterBarControllerTest extends ApplicationTest {
+
     @Mock
     private ImageView monsterSlot;
 
     @Mock
-    MonsterListController monsterListController;
+    TeamController teamController;
 
     @Spy
     InputHandler inputHandler;
@@ -102,7 +103,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Test
     public void testShowMonsters() {
         VBox monsterList = new VBox();
-        when(monsterListController.render()).thenReturn(monsterList);
+        when(teamController.render()).thenReturn(monsterList);
 
         // Click on monster bar to show the popup
         clickOn("#monsterBar");
@@ -110,4 +111,5 @@ public class MonsterBarControllerTest extends ApplicationTest {
         // Check if the monster list is showing
         assertTrue(monsterList.isVisible());
     }
+
 }

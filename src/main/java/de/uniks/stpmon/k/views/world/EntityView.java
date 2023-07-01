@@ -173,6 +173,7 @@ public abstract class EntityView extends WorldViewable {
 
 
     private class SpriteAnimation extends Transition {
+
         private final CharacterSet characterSet;
         private final int direction;
         private final boolean isMoving;
@@ -197,5 +198,7 @@ public abstract class EntityView extends WorldViewable {
                     Direction.values()[Math.min(Math.max(direction, 0), 3)],
                     isMoving));
         }
+
     }
+
 }

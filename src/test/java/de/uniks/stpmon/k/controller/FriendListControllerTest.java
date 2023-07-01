@@ -141,4 +141,5 @@ class FriendListControllerTest extends ApplicationTest {
         //"Alice" is in friends
         assertNotNull(friendView.lookup("#Alice"));
     }
+
 }

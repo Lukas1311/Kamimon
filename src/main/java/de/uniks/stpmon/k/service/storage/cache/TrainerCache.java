@@ -114,4 +114,5 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
     public String getId(Trainer value) {
         return value._id();
     }
+
 }

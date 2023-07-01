@@ -33,19 +33,19 @@ public enum PopUpScenario {
      * Retrieve them with the getParams() call. Set parameter values in the lang.properties files.
      * Use a scheme like '{0}' for the first parameter value, '{1}' for the second, and so on...
      * E.g. 'userGotDeleted=User {0} got deleted!'
-     * 
+     *
      * @param params: the parameter/s as a List of type String that hold the values to pass to translateString() method in the class Controller
      */
     public void setParams(List<String> params) {
         this.parameters = params;
-    } 
+    }
 
     /**
      * returns the held parameters that are used to create a translation for "lang.property" files
-     * 
+     *
      * @return parameters as a String[]
      */
     public String[] getParams() {
         return parameters.toArray(new String[0]);
-    } 
+    }
 }

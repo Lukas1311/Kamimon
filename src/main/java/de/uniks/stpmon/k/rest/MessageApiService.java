@@ -4,18 +4,13 @@ import de.uniks.stpmon.k.dto.CreateMessageDto;
 import de.uniks.stpmon.k.dto.UpdateMessageDto;
 import de.uniks.stpmon.k.models.Message;
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.PATCH;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import retrofit2.http.*;
 
 import java.util.ArrayList;
 
 
 public interface MessageApiService {
+
     @POST("{namespace}/{parent}/messages")
     Observable<Message> sendMessage(
             @Path("namespace") String namespace,
@@ -54,4 +49,5 @@ public interface MessageApiService {
             @Path("parent") String parent,
             @Path("id") String id
     );
+
 }

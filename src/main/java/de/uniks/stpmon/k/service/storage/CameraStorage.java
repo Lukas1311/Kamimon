@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class CameraStorage {
+
     private PerspectiveCamera camera;
 
     @Inject

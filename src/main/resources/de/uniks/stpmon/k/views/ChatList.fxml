@@ -2,7 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import java.lang.String?>
 <VBox maxWidth="370.0" prefHeight="720.0" prefWidth="370.0" spacing="2.0" styleClass="chat-ov-menu"
       stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
@@ -18,7 +18,7 @@
             <styleClass>
                 <String fx:value="kgm-general-button-blue"/>
                 <String fx:value="chat-ov-button"/>
-         </styleClass>
+            </styleClass>
         </Button>
     </VBox>
 </VBox>

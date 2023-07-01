@@ -1,13 +1,6 @@
 package de.uniks.stpmon.k.net;
 
-import javax.websocket.CloseReason;
-import javax.websocket.ContainerProvider;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
+import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -18,6 +11,7 @@ import java.util.function.Consumer;
 
 @javax.websocket.ClientEndpoint
 public class WSEndpoint implements SocketReceiver, SocketSender {
+
     private final URI endpointURI;
     protected final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
 
@@ -111,4 +105,5 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
             e.printStackTrace();
         }
     }
+
 }

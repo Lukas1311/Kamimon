@@ -34,6 +34,7 @@ import java.util.function.Consumer;
 
 @Singleton
 public class HybridController extends Controller {
+
     public static final int TAB_WIDTH = -370;
     private final Stack<Controller> tabStack = new Stack<>();
     private final TranslateTransition sidebarTransition = new TranslateTransition(Duration.millis(800));
@@ -89,18 +90,19 @@ public class HybridController extends Controller {
 
         //use filter to consume ingame events, if in lobby
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            if(currentWindow == MainWindow.LOBBY || currentWindow == MainWindow.PAUSE){
+            if (currentWindow == MainWindow.LOBBY || currentWindow == MainWindow.PAUSE) {
                 switch (event.getCode()) {
                     case W, A, S, D, M, B, N, LEFT, RIGHT, UP, DOWN ->
                         //Block ingame control
                             event.consume();
                     case P -> {
                         //Block Pause, if in Lobby
-                        if(currentWindow == MainWindow.LOBBY) {
+                        if (currentWindow == MainWindow.LOBBY) {
                             event.consume();
                         }
                     }
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
         }));
@@ -341,4 +343,5 @@ public class HybridController extends Controller {
             return 1 - Math.pow(1 - t, 5);
         }
     };
+
 }

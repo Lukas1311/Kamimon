@@ -7,11 +7,7 @@ import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GroupService {
 
@@ -96,4 +92,5 @@ public class GroupService {
     public Observable<Group> deleteGroup(Group group) {
         return groupApiService.deleteGroup(group._id());
     }
+
 }
