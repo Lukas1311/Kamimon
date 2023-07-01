@@ -56,13 +56,16 @@ public class TeamControllerTest extends ApplicationTest {
         when(monsterService.getTeam()).thenReturn(Observable.just(
                 List.of(MonsterBuilder.builder().setId("1").setType(1).create(),
                         MonsterBuilder.builder().setId("2").setType(2).create(),
-                        MonsterBuilder.builder().setId("3").setType(2).create()
+                        MonsterBuilder.builder().setId("3").setType(3).create()
                 )));
+
 
         when(presetService.getMonster("1")).thenReturn(
                 Observable.just(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
         when(presetService.getMonster("2")).thenReturn(
-                Observable.just(new MonsterTypeDto(1, "Monster 2", "", List.of(), "")));
+                Observable.just(new MonsterTypeDto(2, "Monster 2", "", List.of(), "")));
+        when(presetService.getMonster("3")).thenReturn(
+                Observable.just(new MonsterTypeDto(3, "Monster 3", "", List.of(), "")));
 
         when(resourceBundleProvider.get()).thenReturn(resources);
 
@@ -82,10 +85,11 @@ public class TeamControllerTest extends ApplicationTest {
         // Verify the text of the labels
         verifyThat("#monster_label_0", hasText("  Monster 1"));
         verifyThat("#monster_label_1", hasText("  Monster 2"));
-        verifyThat("#monster_label_2", hasText("  Monster 2"));
+        verifyThat("#monster_label_2", hasText("  Monster 3"));
         verifyThat("#monster_label_3", hasText("  -"));
         verifyThat("#monster_label_4", hasText("  -"));
         verifyThat("#monster_label_5", hasText("  -"));
     }
+
 
 }

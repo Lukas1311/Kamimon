@@ -134,18 +134,21 @@ public class MonsterInformation2Controller extends Controller {
             if (column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
                 return false;
             }
-            return GridPane.getRowIndex(node) != null
+            boolean b = GridPane.getRowIndex(node) != null
                     && GridPane.getColumnIndex(node) != null
                     && GridPane.getColumnIndex(node) == column
                     && GridPane.getRowIndex(node) == row;
+            return b;
         });
     }
 
 
+    @SuppressWarnings("SameParameterValue")
     private Label typeLabel(Label label, String monsterType) {
         MonsterType type = MonsterType.valueOf(monsterType.toUpperCase());
         if (label == null) {
             label = new Label();
+            label.setId(type.getTypeName().toUpperCase() + "_label");
         }
         label.setText(type.getTypeName().toUpperCase());
         label.getStyleClass().clear();
@@ -163,7 +166,10 @@ public class MonsterInformation2Controller extends Controller {
 
     private void fillAbilityRow(AbilityDto ability, int rowIndex) {
         Label typeLabel = typeLabel(null, ability.type());
+        typeLabel.setId("typeLabel_" + rowIndex);
         Label nameLabel = new Label(ability.name());
+        nameLabel.setId("nameLabel_" + rowIndex);
+
         nameLabel.setOnMouseClicked(event -> {
 
             if (descriptionLabel.isVisible() && descriptionLabel.getText().equals(ability.description())) {
@@ -176,9 +182,15 @@ public class MonsterInformation2Controller extends Controller {
                 infoGrid.setVisible(false);
             }
         });
+
         Label powLabel = new Label(ability.power().toString());
+        powLabel.setId("powLabel_" + rowIndex);
+
         Label accLabel = new Label(String.valueOf((int) (ability.accuracy().doubleValue() * 100.0)));
+        accLabel.setId("accLabel_" + rowIndex);
+
         Label useLabel = new Label("??" + "/" + ability.maxUses());
+        useLabel.setId("useLabel_" + rowIndex);
 
         for (int i = 0; i < 5; i++) {
             removeNodeByRowColumnIndex(rowIndex, i, attackGrid);
