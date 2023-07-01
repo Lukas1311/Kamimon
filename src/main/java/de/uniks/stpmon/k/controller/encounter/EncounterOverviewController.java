@@ -78,38 +78,37 @@ public class EncounterOverviewController extends Controller {
 
         placeholder.setOnMouseClicked(e -> app.show(loginController));
 
-        renderMonsters();
+        renderMonsterLists();
         animateMonsterEntrance();
 
         return parent;
     }
 
-    public void renderMonsters() {
-        for (int slot = 0; slot < userMonstersList.size(); slot++) {
-            Monster monster = userMonstersList.get(slot);
-            StatusController userStatusController = statusControllerProvider.get();
-            userStatusController.setMonster(monster);
-            userStatusController.loadMonsterDto(String.valueOf(monster._id()));
-            userMonsters.getChildren().add(userStatusController.render());
+    private void renderMonsterLists() {
+        renderMonsters(userMonstersList, userMonsters, userMonster0, userMonster1, true);
+        renderMonsters(opponentMonstersList, opponentMonsters, opponentMonster0, opponentMonster1, false);
+    }
+
+    private void renderMonsters(List<Monster> monsterList, VBox monstersContainer, ImageView monsterImageView1, ImageView monsterImageView2, boolean isUser) {
+        for (int slot = 0; slot < monsterList.size(); slot++) {
+            Monster monster = monsterList.get(slot);
+            StatusController statusController = statusControllerProvider.get();
+            statusController.setMonster(monster);
+            statusController.loadMonsterDto(String.valueOf(monster._id()));
+            monstersContainer.getChildren().add(statusController.render());
+
             if (slot == 0) {
-                loadMonsterImage(monster._id(), userMonster0, 1);
+                loadMonsterImage(monster._id(), monsterImageView1, isUser ? 1 : 0);
+                if (isUser) {
+                    VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 125));
+                } else {
+                    VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
+                }
             } else if (slot == 1) {
-                loadMonsterImage(monster._id(), userMonster1, 1);
-                VBox.setMargin(userStatusController.fullBox, new Insets(-18, 0, 0, 125));
-            }
-        }
-        for (int slot = 0; slot < opponentMonstersList.size(); slot++) {
-            Monster monster = opponentMonstersList.get(slot);
-            StatusController opponentStatusController = statusControllerProvider.get();
-            opponentStatusController.setMonster(monster);
-            opponentStatusController.loadMonsterDto(String.valueOf(monster._id()));
-            opponentMonsters.getChildren().add(opponentStatusController.render());
-            if (slot == 0) {
-                loadMonsterImage(monster._id(), opponentMonster0, 0);
-                VBox.setMargin(opponentStatusController.fullBox, new Insets(0, 125, 0, 0));
-            } else if (slot == 1) {
-                loadMonsterImage(monster._id(), opponentMonster1, 0);
-                VBox.setMargin(opponentStatusController.fullBox, new Insets(-5, 0, 0, 0));
+                loadMonsterImage(monster._id(), monsterImageView2, isUser ? 1 : 0);
+                if (isUser) {
+                    VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 0));
+                }
             }
         }
     }
