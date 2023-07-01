@@ -6,7 +6,9 @@ import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
+import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
+import de.uniks.stpmon.k.service.dummies.MonsterDummy;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
@@ -255,6 +257,8 @@ class AppTest extends ApplicationTest {
     @Test
     void criticalPathV3() {
         MovementDummy.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
         app.addInputHandler(component);
         app.show(component.hybridController());
 
@@ -279,6 +283,8 @@ class AppTest extends ApplicationTest {
         // popup pops up
         clickOn("#approveButton");
         waitForFxEvents();
+
+        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy);
 
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
@@ -307,12 +313,11 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
+        sleep(2000);
         waitForFxEvents();
 
-        /*
-        component.eventListener().sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(prof.area(), me._id()),
-                new TalkTrainerDto(me._id(), prof._id(), 0));
-         */
+        clickOn("#monster_label_0");
+        verifyThat("#monsterInformation", Node::isVisible);
 
         clickOn("#monsterBar");
     }
