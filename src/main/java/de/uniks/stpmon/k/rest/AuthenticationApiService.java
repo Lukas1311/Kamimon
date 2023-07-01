@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface AuthenticationApiService {
+
     // Log in with user credentials.
     @POST("auth/login")
     Observable<LoginResult> login(@Body LoginDto dto);
@@ -21,4 +22,5 @@ public interface AuthenticationApiService {
     // Log in with a refresh token.
     @POST("auth/refresh")
     Observable<LoginResult> refresh(@Body RefreshDto refreshToken);
+
 }

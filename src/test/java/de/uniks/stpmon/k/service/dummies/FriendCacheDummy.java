@@ -135,4 +135,5 @@ public class FriendCacheDummy implements IFriendCache {
     public Status getStatus() {
         return Status.INITIALIZED;
     }
+
 }

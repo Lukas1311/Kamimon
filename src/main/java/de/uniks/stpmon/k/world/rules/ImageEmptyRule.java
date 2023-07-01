@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class ImageEmptyRule extends PropRule {
+
     public static final int RGB_EMPTY_THRESHOLD = 45;
     public static final int ALPHA_EMPTY_THRESHOLD = 10;
 
@@ -35,4 +36,5 @@ public class ImageEmptyRule extends PropRule {
         }
         return RuleResult.NO_MATCH;
     }
+
 }

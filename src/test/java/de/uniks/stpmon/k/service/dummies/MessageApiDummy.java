@@ -232,4 +232,5 @@ public class MessageApiDummy implements MessageApiService {
         return Observable.error(new Throwable("404 Not found"));
 
     }
+
 }

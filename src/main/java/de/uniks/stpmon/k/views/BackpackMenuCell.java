@@ -9,6 +9,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 
 public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
+
     private final BackpackMenuController backpackMenuController;
 
     public BackpackMenuCell(BackpackMenuController backpackMenuController) {

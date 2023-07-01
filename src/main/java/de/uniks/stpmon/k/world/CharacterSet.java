@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.utils.Direction;
 import java.awt.image.BufferedImage;
 
 public record CharacterSet(String name, BufferedImage image) {
+
     public static final int TRAINER_HEIGHT = 32;
     public static final int TRAINER_WIDTH = 16;
 

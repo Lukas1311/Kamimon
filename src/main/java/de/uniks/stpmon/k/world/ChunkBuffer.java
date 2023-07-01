@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import java.util.List;
 
 public class ChunkBuffer {
+
     public static final int ID_DEFAULT = 0;
     public static final int ID_INVALID = -1;
     /**
@@ -54,4 +55,5 @@ public class ChunkBuffer {
         }
         return layerData.chunks().get(reference - BUFFER_OFFSET);
     }
+
 }

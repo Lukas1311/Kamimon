@@ -10,13 +10,12 @@ import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-public class UserService implements ILifecycleService{
+public class UserService implements ILifecycleService {
 
     public enum OnlineStatus {
         ONLINE("online"),
@@ -212,4 +211,5 @@ public class UserService implements ILifecycleService{
         }
         return userApiService.deleteUser(currentUser._id());
     }
+
 }

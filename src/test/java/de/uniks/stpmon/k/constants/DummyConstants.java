@@ -186,4 +186,5 @@ public class DummyConstants {
             List.of("type1"),
             "");
     public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
+
 }

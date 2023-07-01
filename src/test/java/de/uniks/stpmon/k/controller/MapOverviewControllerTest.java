@@ -79,6 +79,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
                 List.of(new TilesetSource(1, "grass.json")),
                 "map");
     }
+
     TileMapData dummyMap = createDummyMap();
     Region dummyRegion = new Region("1", "reg", null, dummyMap);
     TileMap tileMapMock = mock(TileMap.class);
@@ -141,4 +142,5 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // close static mock:
         mockedStatic.close();
     }
+
 }

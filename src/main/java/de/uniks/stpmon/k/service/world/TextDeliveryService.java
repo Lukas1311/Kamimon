@@ -38,4 +38,5 @@ public class TextDeliveryService {
         }
         return Observable.just(Collections.emptyList());
     }
+
 }

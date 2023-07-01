@@ -87,7 +87,8 @@ public class SidebarController extends Controller {
                     }
                     event.consume();
                 }
-                default -> {}
+                default -> {
+                }
             }
         }));
     }

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public class TrainerBuilder {
+
     public static TrainerBuilder builder() {
         return new TrainerBuilder();
     }
@@ -173,4 +174,5 @@ public class TrainerBuilder {
         return new Trainer(_id, region, user, name, image, coins, area,
                 x, y, direction, npc, team, encounteredMonsterTypes);
     }
+
 }

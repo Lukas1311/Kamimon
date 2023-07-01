@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,10 +47,10 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
     @Test
     void hoverOver() {
-        Label label = lookup("#backpackMenuSelectedLabel0").query();
+        Label label = lookup("#backpackMenuSelectedLabel_0").query();
         moveTo(label);
         assertEquals(">", label.getText());
-        Label label2 = lookup("#backpackMenuSelectedLabel1").query();
+        Label label2 = lookup("#backpackMenuSelectedLabel_1").query();
         moveTo(label2);
         assertEquals("", label.getText());
     }
@@ -63,9 +62,10 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         when(monsterBarControllerProvider.get()).thenReturn(monsterBarController);
         doNothing().when(monsterBarController).showMonsters();
 
-        Text text = lookup("#backpackMenuText1").query();
-        clickOn(text);
+        Label label = lookup("#backpackMenuLabel_1").query();
+        clickOn(label);
         verify(monsterBarController).showMonsters();
 
     }
+
 }

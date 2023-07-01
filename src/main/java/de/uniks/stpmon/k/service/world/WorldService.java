@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Singleton
 public class WorldService {
+
     private CharacterSet characterPlaceholder;
     @Inject
     protected TextureSetService textureSetService;
@@ -42,4 +43,5 @@ public class WorldService {
         }
         return characterPlaceholder;
     }
+
 }

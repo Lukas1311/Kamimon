@@ -91,7 +91,6 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
 
-
         ScrollPane scrollPane = lookup("#scrollPane").query();
         VBox userList = (VBox) scrollPane.getContent();
         VBox friendView = (VBox) userList.lookup("#friendSection");
@@ -317,4 +316,5 @@ class AppTest extends ApplicationTest {
 
         clickOn("#monsterBar");
     }
+
 }

@@ -11,7 +11,7 @@ public class StringUtils {
         }
 
         if (groupName.endsWith(option2)) {
-            return groupName.substring(0, groupName.length()-option2.length());
+            return groupName.substring(0, groupName.length() - option2.length());
         }
 
         return groupName;

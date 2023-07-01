@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class WorldControllerTest extends ApplicationTest {
+
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     WorldController worldController = component.worldController();
@@ -64,4 +65,5 @@ public class WorldControllerTest extends ApplicationTest {
         Parent world = node.getRoot();
         assertFalse(world.getChildrenUnmodifiable().isEmpty());
     }
+
 }

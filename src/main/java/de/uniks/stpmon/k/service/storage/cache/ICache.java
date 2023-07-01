@@ -17,6 +17,7 @@ import java.util.Optional;
  * @param <T> The data type to store.
  */
 public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
+
     /**
      * Destroy the cache and all its values.
      * <p>

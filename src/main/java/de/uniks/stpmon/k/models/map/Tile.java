@@ -7,4 +7,5 @@ import java.util.List;
  * @param properties Array of Properties
  */
 public record Tile(int id, List<Property> properties) {
+
 }

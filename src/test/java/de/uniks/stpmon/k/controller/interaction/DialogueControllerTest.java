@@ -368,4 +368,5 @@ class DialogueControllerTest extends ApplicationTest {
         // Dialog be closed again
         verifyThat("#dialoguePane", not(Node::isVisible));
     }
+
 }
