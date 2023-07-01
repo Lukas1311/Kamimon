@@ -11,7 +11,6 @@ import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +32,7 @@ import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
-public class MonsterInformation2ControllerTest extends ApplicationTest {
+public class MonsterInformationControllerTest extends ApplicationTest {
 
     @Spy
     App app = new App(null);
@@ -49,7 +48,7 @@ public class MonsterInformation2ControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
 
     @InjectMocks
-    MonsterInformation2Controller monsterInformation2Controller;
+    MonsterInformationController monsterInformationController;
     @Spy
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
@@ -59,7 +58,7 @@ public class MonsterInformation2ControllerTest extends ApplicationTest {
         // show app
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        app.show(monsterInformation2Controller);
+        app.show(monsterInformationController);
         stage.requestFocus();
     }
 
@@ -72,11 +71,11 @@ public class MonsterInformation2ControllerTest extends ApplicationTest {
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
         when(resourceService.getMonsterImage(anyString())).thenReturn(Observable.just(image));
 
-        monsterInformation2Controller.loadMonsterTypeDto(monsterTypeDto.id().toString());
+        monsterInformationController.loadMonsterTypeDto(monsterTypeDto.id().toString());
         waitForFxEvents();
 
-        assertEquals("monster", monsterInformation2Controller.monsterNameLabel.getText());
-        assertEquals(7, monsterInformation2Controller.overviewGrid.getChildren().size());
+        assertEquals("monster", monsterInformationController.monsterNameLabel.getText());
+        assertEquals(7, monsterInformationController.overviewGrid.getChildren().size());
     }
 
     @Test
@@ -102,19 +101,19 @@ public class MonsterInformation2ControllerTest extends ApplicationTest {
 
 
         Platform.runLater(() -> {
-            monsterInformation2Controller.loadMonster(monster);
+            monsterInformationController.loadMonster(monster);
 
 
 
         });
         waitForFxEvents();
-        assertEquals("Lvl. 1", monsterInformation2Controller.monsterLevelLabel.getText());
-        assertEquals("HP: 5/10", monsterInformation2Controller.monsterHpLabel.getText());
-        assertEquals("XP: 10", monsterInformation2Controller.monsterXpLabel.getText());
-        assertEquals("10", monsterInformation2Controller.hpValueLabel.getText());
-        assertEquals("8", monsterInformation2Controller.atkValueLabel.getText());
-        assertEquals("6", monsterInformation2Controller.defValueLabel.getText());
-        assertEquals("4", monsterInformation2Controller.speValueLabel.getText());
+        assertEquals("Lvl. 1", monsterInformationController.monsterLevelLabel.getText());
+        assertEquals("HP: 5/10", monsterInformationController.monsterHpLabel.getText());
+        assertEquals("XP: 10", monsterInformationController.monsterXpLabel.getText());
+        assertEquals("10", monsterInformationController.hpValueLabel.getText());
+        assertEquals("8", monsterInformationController.atkValueLabel.getText());
+        assertEquals("6", monsterInformationController.defValueLabel.getText());
+        assertEquals("4", monsterInformationController.speValueLabel.getText());
 
         FxAssert.verifyThat("#typeLabel_1", hasText("FIRE"));
         FxAssert.verifyThat("#nameLabel_1", hasText("abilityName"));
@@ -142,15 +141,15 @@ public class MonsterInformation2ControllerTest extends ApplicationTest {
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
 
-        Platform.runLater(() -> monsterInformation2Controller.loadMonster(monster));
+        Platform.runLater(() -> monsterInformationController.loadMonster(monster));
 
         waitForFxEvents();
 
         clickOn("#nameLabel_1");
         waitForFxEvents();
-        assertTrue(monsterInformation2Controller.descriptionLabel.isVisible());
-        assertFalse(monsterInformation2Controller.infoGrid.isVisible());
-        assertEquals("AbilityDescription", monsterInformation2Controller.descriptionLabel.getText());
+        assertTrue(monsterInformationController.descriptionLabel.isVisible());
+        assertFalse(monsterInformationController.infoGrid.isVisible());
+        assertEquals("AbilityDescription", monsterInformationController.descriptionLabel.getText());
     }
 
 }

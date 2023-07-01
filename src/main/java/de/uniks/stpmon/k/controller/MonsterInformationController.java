@@ -19,7 +19,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class MonsterInformation2Controller extends Controller {
+public class MonsterInformationController extends Controller {
 
     @FXML
     public ImageView monsterImage;
@@ -66,7 +66,7 @@ public class MonsterInformation2Controller extends Controller {
     IResourceService resourceService;
 
     @Inject
-    public MonsterInformation2Controller() {
+    public MonsterInformationController() {
     }
 
     public void loadMonsterTypeDto(String id) {

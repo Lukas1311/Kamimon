@@ -28,7 +28,7 @@ public class TeamController extends Controller {
     @Inject
     MonsterService monsterService;
     @Inject
-    MonsterInformation2Controller monsterInformation2Controller;
+    MonsterInformationController monsterInformationController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
 
@@ -99,9 +99,9 @@ public class TeamController extends Controller {
             //        type -> monsterLabel.setText(type.name()));
         } else {
             // Render the monster information
-            Parent monsterInformationContent = monsterInformation2Controller.render();
-            monsterInformation2Controller.loadMonsterTypeDto(String.valueOf(monster.type()));
-            monsterInformation2Controller.loadMonster(monster);
+            Parent monsterInformationContent = monsterInformationController.render();
+            monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
+            monsterInformationController.loadMonster(monster);
             monsterInformation.getChildren().setAll(monsterInformationContent);
             monsterInformation.setVisible(true);
             //monsterLabel.setText("> " + monsterLabel.getText());

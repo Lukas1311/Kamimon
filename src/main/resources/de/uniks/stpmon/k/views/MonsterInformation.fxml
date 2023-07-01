@@ -7,7 +7,7 @@
 <AnchorPane fx:id="mainPane" maxHeight="361.0" maxWidth="304.0" minHeight="361.0" minWidth="304.0" prefHeight="361.0"
             prefWidth="304.0" stylesheets="@css/ingameStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.MonsterInformation2Controller">
+            fx:controller="de.uniks.stpmon.k.controller.MonsterInformationController">
     <styleClass>
         <String fx:value="ingame"/>
         <String fx:value="monster-information-font"/>
