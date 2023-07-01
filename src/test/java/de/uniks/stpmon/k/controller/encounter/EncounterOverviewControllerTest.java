@@ -1,31 +1,16 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.MonsterService;
-
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Provider;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,7 +19,15 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -48,11 +41,11 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     MonsterService monsterService;
     @Mock
     Provider<StatusController> statusControllerProvider;
-    // @Mock
-    // TrainerStorage trainerStorage;
-
     @InjectMocks
     EncounterOverviewController encounterOverviewController;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
     List<Monster> userMonsterList = new ArrayList<>();
