@@ -23,6 +23,8 @@ import java.util.List;
 @Singleton
 public class MonBoxController extends Controller {
 
+    public final static int IMAGESIZE = 67;
+
     @FXML
     public StackPane monBoxStackPane;
     @FXML
@@ -75,8 +77,8 @@ public class MonBoxController extends Controller {
         // Team Monster max 6 slots
         for (Monster monster : monsters) {
             ImageView imageView = new ImageView();
-            imageView.setFitHeight(67);
-            imageView.setFitWidth(67);
+            imageView.setFitHeight(IMAGESIZE);
+            imageView.setFitWidth(IMAGESIZE);
             subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
                 // Scale and set the image
                 Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
@@ -101,8 +103,8 @@ public class MonBoxController extends Controller {
             for (int column = 0; column < columnCount; column++) {
                 if (monsterIndex < monsters.size()) {
                     ImageView imageView = new ImageView();
-                    imageView.setFitHeight(67);
-                    imageView.setFitWidth(67);
+                    imageView.setFitHeight(IMAGESIZE);
+                    imageView.setFitWidth(IMAGESIZE);
                     int finalMonsterIndex = monsterIndex;
                     subscribe(resourceService.getMonsterImage(String.valueOf(monsters.get(monsterIndex).type())), imageUrl -> {
                         // Scale and set the image
