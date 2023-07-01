@@ -16,6 +16,7 @@ import java.util.List;
 
 @Singleton
 public class RegionService {
+
     @Inject
     RegionApiService regionApiService;
     @Inject
@@ -84,4 +85,5 @@ public class RegionService {
     public Observable<Monster> getMonster(String regionId, String monsterId) {
         return regionApiService.getMonster(regionId, monsterId);
     }
+
 }

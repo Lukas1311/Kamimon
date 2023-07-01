@@ -181,4 +181,5 @@ public class MovementHandlerTest {
         assertEquals(4, captor.getAllValues().size());
 
     }
+
 }

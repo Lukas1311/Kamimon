@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @Singleton
 public class DummyResourceService implements IResourceService {
+
     private BufferedImage tileSetImage;
     private BufferedImage characterImage;
     private BufferedImage monsterImage;
@@ -64,4 +65,5 @@ public class DummyResourceService implements IResourceService {
     public Observable<BufferedImage> getMonsterImage(String fileName) {
         return Observable.just(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
     }
+
 }

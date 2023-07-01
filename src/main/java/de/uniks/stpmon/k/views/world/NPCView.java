@@ -17,4 +17,5 @@ public class NPCView extends EntityView {
     protected TrainerProvider getProvider() {
         return trainerProvider;
     }
+
 }

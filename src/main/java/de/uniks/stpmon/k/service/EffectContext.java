@@ -155,4 +155,5 @@ public class EffectContext {
     public int getDialogAnimationSpeed() {
         return dialogAnimationSpeed;
     }
+
 }

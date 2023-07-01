@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.constants;
 
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
@@ -178,6 +179,12 @@ public class DummyConstants {
             null,
             null
     );
+    public static final MonsterTypeDto MONSTER_TYPE = new MonsterTypeDto(
+            0,
+            "monster",
+            "",
+            List.of("type1"),
+            "");
     public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
 
 }

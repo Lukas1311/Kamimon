@@ -25,11 +25,11 @@ import java.util.Objects;
  * How to add a new customized controller:
  * 1. Add you scenario in the PopUpScenario.java enum (the string is the main text of the popup)
  * 2. Add the following method to the controller from which the popUp is called:
- * 
+ *
  * <pre>
  * // get the pop up scneraio enum import
  * import de.uniks.stpmon.k.controller.popup.PopUpScenario;
- * 
+ *
  * // create yourself a BooleanProperty field like:
  * private BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
  * // then bind all your buttons that need to be disabled to it e.g. in render() like:
@@ -38,7 +38,7 @@ import java.util.Objects;
  *     DISABLE_ME_BUTTON.disableProperty().bind(isPopUpShown);
  *     ...
  * }
- * 
+ *
  * // create a new method called:
  * public void showPopUp(PopUpScenario scenario, ModalCallback callback) {
  *     // disable buttons of your controller here
@@ -49,10 +49,10 @@ import java.util.Objects;
  *     // enable buttons of your controller here again
  *     isPopUpShown.set(false);
  * }
- * 
+ *
  * // 4. Use the callback to implement the functionality in your controller
  * // e.g. something like this:
- * 
+ *
  * public void saveChanges() {
  *     showPopUp(PopUpScenario.YOUR_POPUP_SCENARIO_HERE, result -> {
  *         if (!result) return; // changes are not save
@@ -60,11 +60,11 @@ import java.util.Objects;
  *         ...
  *     });
  * }
- * 
+ *
  * </pre>
- * 
  */
 public class PopUpController extends Controller {
+
     @FXML
     public BorderPane popUpMainBorderPane;
     @FXML
@@ -77,7 +77,7 @@ public class PopUpController extends Controller {
     public Button approveButton;
     @FXML
     public Button discardButton;
-    
+
     private Stage modalStage;
     private ModalCallback callback;
     private PopUpScenario scenario;
@@ -87,7 +87,7 @@ public class PopUpController extends Controller {
     }
 
     @Override
-    public Parent render(){
+    public Parent render() {
         final Parent parent = super.render();
 
         // special case for deleted user action (only one button and no close element)
@@ -104,7 +104,8 @@ public class PopUpController extends Controller {
                 popUpButtonPane.getColumnConstraints().remove(1);
                 approveButton.setText(translateString("backtoLobby"));
             }
-            default -> {}
+            default -> {
+            }
         }
 
         return parent;
@@ -115,9 +116,9 @@ public class PopUpController extends Controller {
     }
 
     private void setPopUpMainText() {
-        
+
         popUpMainText.setText(
-            translateString(scenario.toString(), scenario.getParams() )
+                translateString(scenario.toString(), scenario.getParams())
         );
     }
 
@@ -176,4 +177,5 @@ public class PopUpController extends Controller {
         //enable buttons
         modalStage.close();
     }
+
 }

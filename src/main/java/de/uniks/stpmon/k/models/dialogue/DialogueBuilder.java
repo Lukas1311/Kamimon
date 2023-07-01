@@ -7,8 +7,14 @@ import java.util.Objects;
 public class DialogueBuilder {
 
     private final List<DialogueItem> items = new LinkedList<>();
+    private String trainerId = "";
 
     DialogueBuilder() {
+    }
+
+    public DialogueBuilder setTrainerId(String trainerId) {
+        this.trainerId = trainerId;
+        return this;
     }
 
     private void add(DialogueItem item) {
@@ -24,10 +30,11 @@ public class DialogueBuilder {
     }
 
     public Dialogue create() {
-        return Dialogue.create(items.toArray(new DialogueItem[0]));
+        return Dialogue.create(trainerId, items.toArray(new DialogueItem[0]));
     }
 
     public static class ItemBuilder {
+
         private final DialogueBuilder parent;
         private final List<DialogueOption> options = new LinkedList<>();
         private String text = "";
@@ -63,9 +70,11 @@ public class DialogueBuilder {
         void add(DialogueOption option) {
             options.add(option);
         }
+
     }
 
     public static class OptionBuilder {
+
         private final ItemBuilder parent;
 
         private String text = "";
@@ -108,5 +117,7 @@ public class DialogueBuilder {
             parent.add(new DialogueOption(text, action, selection, nextDialogue));
             return parent;
         }
+
     }
+
 }

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 public class TrainerProvider extends SingleCache<Trainer> {
+
     protected Trainer trainer;
 
     @Inject
@@ -29,4 +30,5 @@ public class TrainerProvider extends SingleCache<Trainer> {
     public boolean isMain() {
         return false;
     }
+
 }

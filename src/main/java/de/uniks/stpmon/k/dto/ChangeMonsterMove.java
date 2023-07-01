@@ -7,4 +7,5 @@ public record ChangeMonsterMove(
         String monster // Monster ID
 
 ) implements IMove {
+
 }

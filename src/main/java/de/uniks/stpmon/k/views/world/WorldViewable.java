@@ -77,4 +77,5 @@ public abstract class WorldViewable extends Viewable {
         entity.setMaterial(createMaterial(image));
         return entity;
     }
+
 }

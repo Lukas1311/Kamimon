@@ -190,4 +190,5 @@ class CacheManagerTest {
         // Check if new cache is created
         verify(cache, times(2)).init();
     }
+
 }

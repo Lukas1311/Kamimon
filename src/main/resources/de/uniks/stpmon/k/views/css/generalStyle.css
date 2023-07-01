@@ -3,353 +3,356 @@ Load fonts
  */
 
 @font-face {
-	/*font family name: Comic Neue*/
-	src: url("../fonts/ComicNeue-Bold.ttf");
+    /*font family name: Comic Neue*/
+    src: url("../fonts/ComicNeue-Bold.ttf");
 }
 
 @font-face {
-	/*font family name: Comic Neue*/
-	src: url("../fonts/ComicNeue-BoldItalic.ttf");
+    /*font family name: Comic Neue*/
+    src: url("../fonts/ComicNeue-BoldItalic.ttf");
 }
 
 @font-face {
-	/*font family name: Comic Neue*/
-	src: url("../fonts/ComicNeue-Italic.ttf");
+    /*font family name: Comic Neue*/
+    src: url("../fonts/ComicNeue-Italic.ttf");
 }
 
 @font-face {
-	/*font family name: Comic Neue*/
-	src: url("../fonts/ComicNeue-Light.ttf");
+    /*font family name: Comic Neue*/
+    src: url("../fonts/ComicNeue-Light.ttf");
 }
 
 @font-face {
-	/*font family name: Comic Neue*/
-	src: url("../fonts/ComicNeue-LightItalic.ttf");
+    /*font family name: Comic Neue*/
+    src: url("../fonts/ComicNeue-LightItalic.ttf");
 }
 
 @font-face {
-	/*font family name: Comic Neue*/
-	src: url("../fonts/ComicNeue-Regular.ttf");
+    /*font family name: Comic Neue*/
+    src: url("../fonts/ComicNeue-Regular.ttf");
 }
 
 @font-face {
-	/*font family name: Pokémon DS Font*/
-	src: url("../fonts/pokemon-ds-font.ttf");
+    /*font family name: Pokémon DS Font*/
+    src: url("../fonts/pokemon-ds-font.ttf");
 }
 
 
-
-.root{
+.root {
     -fx-font-family: "Comic Neue Bold";
     -fx-font-size: 16;
     -fx-font-smoothing-type: gray;
 
-	-fx-color-kgm-red: #ae2f34;
-	-fx-color-kgm-yellow: #fcf1d0;
-	-fx-color-kgm-yellow-transparent: rgb(252, 241, 208, 0.8);
-	-fx-color-red: #cf2a27;
-	-fx-color-light-red: #c75f5d;
-	-fx-color-blue: #2b78e4;
-	-fx-color-light-blue: #9fc5f8;
-	-fx-color-light-green: #b6d7a8;
-	-fx-color-yellow: #ffe599;
-	-fx-color-grey: #707070;
-	-fx-color-light-grey: #999999;
-	-fx-color-dark-white: #f2f2f2;
+    -fx-color-kgm-red: #ae2f34;
+    -fx-color-kgm-yellow: #fcf1d0;
+    -fx-color-kgm-yellow-transparent: rgb(252, 241, 208, 0.8);
+    -fx-color-red: #cf2a27;
+    -fx-color-light-red: #c75f5d;
+    -fx-color-blue: #2b78e4;
+    -fx-color-light-blue: #9fc5f8;
+    -fx-color-light-green: #b6d7a8;
+    -fx-color-yellow: #ffe599;
+    -fx-color-grey: #707070;
+    -fx-color-light-grey: #999999;
+    -fx-color-dark-white: #f2f2f2;
 }
+
 /* -------------------- General Items -------------------- */
 .kgm-general-button-blue {
-	-fx-opacity: 1;
-	-fx-background-color: -fx-color-blue;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-	-fx-text-fill: white;
-	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
+    -fx-opacity: 1;
+    -fx-background-color: -fx-color-blue;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
 }
 
 .kgm-general-button-blue:disabled {
-	-fx-opacity: 1;
-	-fx-background-color: -fx-color-light-grey;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-	-fx-text-fill: black;
-	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
+    -fx-opacity: 1;
+    -fx-background-color: -fx-color-light-grey;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
 }
 
 .kgm-general-button-white {
-	-fx-opacity: 1;
-	-fx-background-color: white;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-	-fx-text-fill: black;
-	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
+    -fx-opacity: 1;
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
 }
 
 .kgm-general-button-white:disabled {
-	-fx-opacity: 1;
-	-fx-background-color: -fx-color-light-grey;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-	-fx-text-fill: black;
-	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
+    -fx-opacity: 1;
+    -fx-background-color: -fx-color-light-grey;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
 }
 
 .kgm-general-button-red {
-	-fx-opacity: 1;
-	-fx-background-color: -fx-color-red;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-	-fx-text-fill: white;
-	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
+    -fx-opacity: 1;
+    -fx-background-color: -fx-color-red;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
 }
 
 .kgm-general-button-red:disabled {
-	-fx-opacity: 1;
-	-fx-background-color: -fx-color-light-grey;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
-	-fx-text-fill: black;
-	-fx-font-weight: bolder;
-	-fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
-}
-
-.outstanding {
-	-fx-background-color: rgba(255, 255, 255, 0.8);
-	-fx-border-color: black;
-	-fx-border-width: 3px;
-	-fx-padding: 5 5 5 10;
+    -fx-opacity: 1;
+    -fx-background-color: -fx-color-light-grey;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1, 3, 3);
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
 }
 
 /* -------------------- Scrollbar -------------------- */
 .scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
-	-fx-background-color : transparent;
-	-fx-border-color : transparent;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-radius : 0px;
-	-fx-border-radius : 0px;
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-radius: 0px;
+    -fx-border-radius: 0px;
 }
 
 
-.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .increment-button,
 .scroll-bar:horizontal .decrement-button {
-	-fx-background-color :transparent;
-	-fx-background-radius : 0.0em;
-	-fx-padding :0.0 0.0 10.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 0.0 10.0 0.0;
 
 }
 
-.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .increment-button,
 .scroll-bar:vertical .decrement-button {
-	-fx-background-color :transparent;
-	-fx-background-radius : 0.0em;
-	-fx-padding :0.0 10.0 0.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
 
 }
 
 .scroll-bar .increment-arrow,
-.scroll-bar .decrement-arrow{
-	-fx-shape : " ";
-	-fx-padding :0.15em 0.0;
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.15em 0.0;
 }
 
 .scroll-bar:vertical .increment-arrow,
-.scroll-bar:vertical .decrement-arrow{
-	-fx-shape : " ";
-	-fx-padding :0.0 0.15em;
+.scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.15em;
 }
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-	-fx-background-color : -fx-color-kgm-red;
-	-fx-background-insets : 2.0, 0.0, 0.0;
-	-fx-background-radius : 2.0em;
+    -fx-background-color: -fx-color-kgm-red;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
 .scroll-bar:horizontal .thumb:hover,
 .scroll-bar:vertical .thumb:hover {
-	-fx-background-color :-fx-color-kgm-red;
-	-fx-background-insets : 2.0, 0.0, 0.0;
-	-fx-background-radius : 2.0em;
+    -fx-background-color: -fx-color-kgm-red;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
 /* -------------------- Loading Screen -------------------- */
 .loading-screen {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
 
 /* -------------------- Login Window -------------------- */
 .login-background {
-	-fx-background-image: url("../images/background.png");
-	-fx-background-size: cover;
+    -fx-background-image: url("../images/background.png");
+    -fx-background-size: cover;
 }
 
 .login-window {
-	-fx-background-color: -fx-color-kgm-yellow;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
-	-fx-pref-width: 400;
-	-fx-pref-height: 500;
-	-fx-min-width: 400;
-	-fx-min-height: 500;
-	-fx-max-width: 400;
-	-fx-max-height: 500;
-	-fx-spacing: 13;
+    -fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-pref-width: 400;
+    -fx-pref-height: 500;
+    -fx-min-width: 400;
+    -fx-min-height: 500;
+    -fx-max-width: 400;
+    -fx-max-height: 500;
+    -fx-spacing: 13;
 }
 
 .login-element {
-	-fx-pref-width: 250;
-	-fx-pref-height: 35;
-	-fx-min-width: 250;
-	-fx-min-height: 35;
-	-fx-max-width: 250;
-	-fx-max-height: 35;
+    -fx-pref-width: 250;
+    -fx-pref-height: 35;
+    -fx-min-width: 250;
+    -fx-min-height: 35;
+    -fx-max-width: 250;
+    -fx-max-height: 35;
 }
 
 .login-text-input {
-	-fx-alignment: center-left;
-	-fx-text-fill: black;
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: -fx-color-light-grey;
-	-fx-border-width: 3px;
-	-fx-background-radius: 0px;
-	-fx-background-color: white;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
+    -fx-alignment: center-left;
+    -fx-text-fill: black;
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: -fx-color-light-grey;
+    -fx-border-width: 3px;
+    -fx-background-radius: 0px;
+    -fx-background-color: white;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-opacity: 1.0;
+}
+
+.login-text-input:disabled {
+    -fx-opacity: 1.0;
 }
 
 .login-password-button {
-	-fx-pref-width: 45;
-	-fx-pref-height: 35;
-	-fx-min-width: 45;
-	-fx-min-height: 35;
-	-fx-max-width: 45;
-	-fx-max-height: 35;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-icon-size: 24;
+    -fx-pref-width: 40;
+    -fx-pref-height: 35;
+    -fx-min-width: 40;
+    -fx-min-height: 35;
+    -fx-max-width: 40;
+    -fx-max-height: 35;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+}
+
+.login-password-button-visible .ikonli-font-icon {
+    -fx-icon-code: "mdmz-visibility";
+    -fx-icon-size: 24px;
+}
+
+.login-password-button-invisible .ikonli-font-icon {
+    -fx-icon-code: "mdmz-visibility_off";
+    -fx-icon-size: 24px;
 }
 
 .login-check-box {
-	-fx-alignment: center-left;
-	-fx-text-fill: black;
+    -fx-alignment: center-left;
+    -fx-text-fill: black;
 }
 
 .login-check-box .box {
-	-fx-border-color: black;
-	-fx-border-radius: 3;
-	-fx-border-width: 2;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-radius: 3;
+    -fx-border-width: 2;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .login-lang-selection {
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: -fx-color-light-grey;
-	-fx-border-width: 3px;
-	-fx-background-radius: 0px;
-	-fx-background-color: white;
-	-fx-alignment: center;
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: -fx-color-light-grey;
+    -fx-border-width: 3px;
+    -fx-background-radius: 0px;
+    -fx-background-color: white;
+    -fx-alignment: center;
 }
 
 .login-radio-button {
-	-fx-pref-width: 110;
-	-fx-pref-height: 30;
-	-fx-min-width: 110;
-	-fx-min-height: 30;
-	-fx-max-width: 110;
-	-fx-max-height: 30;
+    -fx-pref-width: 110;
+    -fx-pref-height: 30;
+    -fx-min-width: 110;
+    -fx-min-height: 30;
+    -fx-max-width: 110;
+    -fx-max-height: 30;
 }
+
 .login-radio-button .radio {
-	-fx-border-color: black;
-	-fx-border-width: 2px;
-	-fx-background-color: transparent;
-	-fx-border-radius: 15px;
-	-fx-padding: 4px
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-background-color: transparent;
+    -fx-border-radius: 15px;
+    -fx-padding: 4px
 }
 
 .login-radio-button:selected .radio {
-	-fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .login-radio-button:armed .radio {
-	-fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .login-radio-button:determinate .radio {
-	-fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .login-radio-button:indeterminate .radio {
-	-fx-background-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .login-radio-button .dot {
-	-fx-mark-highlight-color: black;
-	-fx-mark-color: black;
-	-fx-background-radius: 6px;
+    -fx-mark-highlight-color: black;
+    -fx-mark-color: black;
+    -fx-background-radius: 6px;
 }
 
 .login-error-text {
-	-fx-text-fill: -fx-color-red;
-	-fx-text-overrun: ellipsis;
-	-fx-font-size: 12;
+    -fx-text-fill: -fx-color-red;
+    -fx-text-overrun: ellipsis;
+    -fx-font-size: 12;
 }
 
 
 /* -------------------- Introduction -------------------- */
 .intro-screen {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
 
 .intro-container {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
 
 /* -------------------- SideBar -------------------- */
 .sidebar-holder {
-	-fx-background-color: -fx-color-kgm-red;
-	-fx-background-radius: 0;
+    -fx-background-color: -fx-color-kgm-red;
+    -fx-background-radius: 0;
 
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
 
     -fx-pref-width: 70;
     -fx-min-width: 70;
@@ -357,167 +360,169 @@ Load fonts
 }
 
 .sidebar-button {
-	-fx-background-color: -fx-color-kgm-red;
-	-fx-background-radius: 0;
+    -fx-background-color: -fx-color-kgm-red;
+    -fx-background-radius: 0;
 
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
-	-fx-border-style: solid outside;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-border-style: solid outside;
 
-  -fx-pref-width: 64;
-  -fx-pref-height: 64;
-  -fx-min-width: 64;
-  -fx-min-height: 64;
-  -fx-max-width: 64;
-  -fx-max-height: 64;
+    -fx-pref-width: 64;
+    -fx-pref-height: 64;
+    -fx-min-width: 64;
+    -fx-min-height: 64;
+    -fx-max-width: 64;
+    -fx-max-height: 64;
 
-	-fx-content-display: center;
-	-fx-alignment: center;
-	-fx-text-alignment: center;
+    -fx-content-display: center;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
 
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 .sidebar-button .ikonli-font-icon {
-  -fx-icon-color: white;
-  -fx-icon-size: 50px;
+    -fx-icon-color: white;
+    -fx-icon-size: 50px;
 }
 
 .sidebar-button:pressed {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
+
 .sidebar-button:pressed .ikonli-font-icon {
     -fx-icon-color: black;
     -fx-icon-size: 50px;
 }
 
 .sidebar-button:hover {
-	-fx-background-color: -fx-color-kgm-yellow;
+    -fx-background-color: -fx-color-kgm-yellow;
 }
+
 .sidebar-button:hover .ikonli-font-icon {
-	-fx-icon-color: black;
-	-fx-icon-size: 50px;
+    -fx-icon-color: black;
+    -fx-icon-size: 50px;
 }
 
 /* -------------------- Friend list -------------------- */
 .friends-menu-holder {
-	-fx-pref-width: 370;
-	-fx-pref-height: 720;
-	-fx-min-width: 370;
-	-fx-min-height: 70;
-	-fx-max-width: 370;
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
+    -fx-max-width: 370;
 
-	-fx-background-color: -fx-color-kgm-yellow-transparent;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
 }
 
 .friends-search-element {
-	-fx-pref-width: 310;
-	-fx-pref-height: 35;
-	-fx-min-width: 310;
-	-fx-min-height: 35;
-	-fx-max-width: 310;
-	-fx-max-height: 35;
+    -fx-pref-width: 310;
+    -fx-pref-height: 35;
+    -fx-min-width: 310;
+    -fx-min-height: 35;
+    -fx-max-width: 310;
+    -fx-max-height: 35;
 
-	-fx-background-color: transparent;
-	-fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
 }
 
 .friends-text-input {
-	-fx-alignment: center-left;
-	-fx-text-fill: black;
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-color: -fx-color-light-grey;
-	-fx-border-width: 3px;
-	-fx-background-radius: 0px;
-	-fx-background-color: white;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
+    -fx-alignment: center-left;
+    -fx-text-fill: black;
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-color: -fx-color-light-grey;
+    -fx-border-width: 3px;
+    -fx-background-radius: 0px;
+    -fx-background-color: white;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 .friends-search-button {
-	-fx-pref-width: 45;
-	-fx-pref-height: 35;
-	-fx-min-width: 45;
-	-fx-min-height: 35;
-	-fx-max-width: 45;
-	-fx-max-height: 35;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-icon-size: 24;
+    -fx-pref-width: 45;
+    -fx-pref-height: 35;
+    -fx-min-width: 45;
+    -fx-min-height: 35;
+    -fx-max-width: 45;
+    -fx-max-height: 35;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-icon-size: 24;
 }
 
 .friends-search-button .ikonli-font-icon {
-	-fx-icon-size: 24px;
-	-fx-icon-color: -fx-color-blue;
+    -fx-icon-size: 24px;
+    -fx-icon-color: -fx-color-blue;
 }
 
 .friends-scroll-pane {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background: transparent;
-	-fx-background-color: transparent;
-	-fx-border-color: transparent;
-	-fx-spacing: 6;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-spacing: 6;
 
-  	-fx-alignment: center;
+    -fx-alignment: center;
 }
 
 /* -------------------- Friend element -------------------- */
 .friend-element-holder {
-	-fx-background-color: -fx-color-yellow;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
-	-fx-border-style: solid outside;
+    -fx-background-color: -fx-color-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-border-style: solid outside;
 
-	-fx-pref-width: 325;
-	-fx-pref-height: 60;
-	-fx-min-width: 325;
-	-fx-min-height: 60;
-	-fx-max-width: 325;
-	-fx-max-height: 60;
+    -fx-pref-width: 325;
+    -fx-pref-height: 60;
+    -fx-min-width: 325;
+    -fx-min-height: 60;
+    -fx-max-width: 325;
+    -fx-max-height: 60;
 
-	-fx-spacing: 5;
+    -fx-spacing: 5;
 }
 
 .friend-element-avatar-holder {
-	-fx-pref-width: 40;
-	-fx-pref-height: 55;
-	-fx-min-width: 40;
-	-fx-min-height: 55;
-	-fx-max-width: 40;
-	-fx-max-height: 55;
+    -fx-pref-width: 40;
+    -fx-pref-height: 55;
+    -fx-min-width: 40;
+    -fx-min-height: 55;
+    -fx-max-width: 40;
+    -fx-max-height: 55;
 }
 
 .friend-element-avatar {
-	-fx-background-color: white;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
-	-fx-border-style: solid outside;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-border-style: solid outside;
 }
 
 .friend-icon-button {
-	-fx-pref-width: 35;
-	-fx-pref-height: 35;
-	-fx-min-width: 35;
-	-fx-min-height: 35;
-	-fx-max-width: 35;
-	-fx-max-height: 35;
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
 
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
 }
 
 
@@ -545,15 +550,15 @@ Load fonts
     -fx-hbar-policy: never;
 }
 
-.chat-ov-list .list-view{
+.chat-ov-list .list-view {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
     -fx-border-style: hidden;
-	-fx-hbar-policy: never;
+    -fx-hbar-policy: never;
 }
 
-.chat-ov-list .list-cell{
+.chat-ov-list .list-cell {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
@@ -585,7 +590,7 @@ Load fonts
     -fx-border-width: 3;
 }
 
-.chat-ov-button-holder{
+.chat-ov-button-holder {
     -fx-pref-width: 370;
     -fx-pref-height: 50;
     -fx-min-width: 370;
@@ -600,32 +605,32 @@ Load fonts
 /* -------------------- Chat -------------------- */
 
 .chat-tab {
-	-fx-pref-width: 370;
-	-fx-pref-height: 720;
-	-fx-min-width: 370;
-	-fx-min-height: 70;
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
 
-	-fx-background-color: -fx-color-kgm-yellow-transparent;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
 }
 
 .chat-holders {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
 }
 
 
-.chat-title{
-	-fx-pref-width: 220;
-	-fx-pref-height: 35;
-	-fx-min-width: 220;
-	-fx-min-height: 35;
-	-fx-max-width: 220;
-	-fx-max-height: 35;
+.chat-title {
+    -fx-pref-width: 220;
+    -fx-pref-height: 35;
+    -fx-min-width: 220;
+    -fx-min-height: 35;
+    -fx-max-width: 220;
+    -fx-max-height: 35;
 }
 
 .chat-list-holder {
@@ -647,7 +652,7 @@ Load fonts
     -fx-hbar-policy: never;
 }
 
-.chat-list .list-view{
+.chat-list .list-view {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
@@ -656,12 +661,12 @@ Load fonts
 
 }
 
-.chat-list .list-view .scroll-bar:horizontal{
+.chat-list .list-view .scroll-bar:horizontal {
     -fx-padding: -10px;
     -fx-opacity: 0;
 }
 
-.chat-list .list-cell{
+.chat-list .list-cell {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
@@ -670,31 +675,33 @@ Load fonts
 }
 
 
-.chat-back-button{
-	-fx-pref-width: 35;
-	-fx-pref-height: 35;
-	-fx-min-width: 35;
-	-fx-min-height: 35;
-	-fx-max-width: 35;
-	-fx-max-height: 35;
+.chat-back-button {
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
 }
-.chat-back-button .ikonli-font-icon{
-	-fx-icon-color: black;
-	-fx-icon-size: 30px;
-	-fx-rotate: 180;
+
+.chat-back-button .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
+    -fx-rotate: 180;
 }
 
 .chat-settings-button {
-	-fx-pref-width: 35;
-	-fx-pref-height: 35;
-	-fx-min-width: 35;
-	-fx-min-height: 35;
-	-fx-max-width: 35;
-	-fx-max-height: 35;
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
 }
-.chat-settings-button .ikonli-font-icon{
-	-fx-icon-color: black;
-	-fx-icon-size: 30px;
+
+.chat-settings-button .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
 }
 
 
@@ -720,14 +727,14 @@ Load fonts
 }
 
 
-.chat-message-holder{
+.chat-message-holder {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
     -fx-background-radius: 0;
 }
 
-.chat-my-message  {
+.chat-my-message {
     -fx-alignment: center-right;
     -fx-background-color: -fx-color-light-green;
     -fx-background-radius: 0;
@@ -746,86 +753,87 @@ Load fonts
 }
 
 /* -------------------- New Chat-------------------- */
-.edit-chat-tab{
-	-fx-pref-width: 370;
-	-fx-pref-height: 720;
-	-fx-min-width: 370;
-	-fx-min-height: 70;
+.edit-chat-tab {
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
 
-	-fx-background-color: -fx-color-kgm-yellow-transparent;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
 }
 
 .edit-chat-holders {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
 }
 
-.edit-chat-list-frame{
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: -fx-color-yellow;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-style: solid outside;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
-	-fx-hbar-policy: never;
+.edit-chat-list-frame {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: -fx-color-yellow;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-style: solid outside;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
+    -fx-hbar-policy: never;
 }
 
 .edit-chat-list {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-border-style: none;
-	-fx-hbar-policy: never;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: none;
+    -fx-hbar-policy: never;
 }
 
-.edit-chat-list .list-view{
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-border-style: hidden;
-	-fx-hbar-policy: never;
+.edit-chat-list .list-view {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
 }
 
 
-.edit-chat-list .list-cell{
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-border-style: hidden;
-	-fx-hbar-policy: never;
+.edit-chat-list .list-cell {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
 }
 
 .edit-chat-checkbox {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-text-fill: black;
-}
-.edit-chat-checkbox:selected {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-text-fill: -fx-color-blue;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
 }
 
-.edit-chat-checkbox:selected .box{
-	-fx-border-color: -fx-color-blue;
+.edit-chat-checkbox:selected {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-color-blue;
+}
+
+.edit-chat-checkbox:selected .box {
+    -fx-border-color: -fx-color-blue;
 }
 
 .edit-chat-checkbox .box {
-	-fx-border-color: black;
-	-fx-border-radius: 3;
-	-fx-border-width: 2;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-radius: 3;
+    -fx-border-width: 2;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
 }
 
 .edit-chat-error-text {
@@ -835,44 +843,37 @@ Load fonts
 }
 
 /* -------------------- Settings -------------------- */
-.bordered-listView {
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-}
 
-.ingameSettings-hox {
-    -fx-padding: 12 0 0 0;
-}
 .settings-tab {
-	-fx-pref-width: 370;
-	-fx-pref-height: 720;
-	-fx-min-width: 370;
-	-fx-min-height: 70;
+    -fx-pref-width: 370;
+    -fx-pref-height: 720;
+    -fx-min-width: 370;
+    -fx-min-height: 70;
 
-	-fx-background-color: -fx-color-kgm-yellow-transparent;
-	-fx-background-radius: 0;
-	-fx-border-color: black;
-	-fx-border-radius: 0;
-	-fx-border-width: 3;
+    -fx-background-color: -fx-color-kgm-yellow-transparent;
+    -fx-background-radius: 0;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 3;
 }
 
 .settings-button {
-	-fx-pref-width: 330;
-	-fx-pref-height: 35;
-	-fx-min-width: 330;
-	-fx-min-height: 35;
-	-fx-max-width: 330;
-	-fx-max-height: 35;
+    -fx-pref-width: 330;
+    -fx-pref-height: 35;
+    -fx-min-width: 330;
+    -fx-min-height: 35;
+    -fx-max-width: 330;
+    -fx-max-height: 35;
 }
 
 
 .settings-text-input {
-	-fx-text-fill: black;
-	-fx-background-color: white;
-	-fx-border-color: black;
-	-fx-border-width: 3px;
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
+    -fx-text-fill: black;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 
@@ -885,41 +886,42 @@ Load fonts
     -fx-text-fill: black;
     -fx-background-color: white;
     -fx-border-color: black;
-	-fx-border-width: 3px;
+    -fx-border-width: 3px;
 }
+
 /* -------------------- Border for RegionPane -------------------- */
 .region-pane-border {
-	-fx-border-color: black; /* Border color */
-	-fx-border-width: 10px; /* Border width */
+    -fx-border-color: black; /* Border color */
+    -fx-border-width: 10px; /* Border width */
 }
 
 
 /* -------------------- PopUp -------------------- */
 .popup-close-button {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-border-style: hidden;
-	-fx-font-size: 20px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-font-size: 20px;
 }
 
-.popup-close-button .ikonli-font-icon{
-	-fx-icon-color: black;
-	-fx-icon-size: 30px;
+.popup-close-button .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
 }
 
 .popup-background {
-	-fx-border-color: black;
-	-fx-border-width: 3px;
-	-fx-border-radius: 0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 0;
 
-	-fx-background-color: white;
-	-fx-background-insets: 0;
-	-fx-background-radius: 0;
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
 }
 
-.popup-text{
-	-fx-font-size: 20px;
+.popup-text {
+    -fx-font-size: 20px;
 }
 
 /* -------------------- Loading Screen for Region -------------------- */
@@ -928,67 +930,22 @@ Load fonts
 }
 
 .loading-label {
-	-fx-font-size: 45px;
-	-fx-font-family: "Pokémon DS Font";
-	-fx-font-weight: bolder;
+    -fx-font-size: 45px;
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-weight: bolder;
 }
 
-/* -------------------- Monster Information -------------------- */
-.monster {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-}
-.monster-attributes {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-background-color: white;
-}
-.monster-type {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-background-color: #5F3BDF;
-    -fx-text-fill: white;
-}
-.ability {
-    -fx-background-color: #C7C7C7;
-}
-.ability-name-type-box {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-pref-width: 177;
-}
-.ability-type {
-    -fx-background-color: #CF2A27;
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-text-fill: white;
-    -fx-alignment: center;
-    -fx-pref-width: 65;
-}
-.ability-uses {
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-border-radius: 0;
-    -fx-text-fill: white;
-    -fx-alignment: center;
-    -fx-pref-width: 55;
-}
 
 /* -------------------- Map Overview -------------------- */
 .map-overview-close-button {
-	-fx-focus-color: transparent;
-	-fx-faint-focus-color: transparent;
-	-fx-background-color: transparent;
-	-fx-border-style: hidden;
-	-fx-font-size: 20px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-font-size: 20px;
     -fx-text-fill: white;
 }
 
 .map-overview-content {
-	-fx-background-color: black;
+    -fx-background-color: black;
 }

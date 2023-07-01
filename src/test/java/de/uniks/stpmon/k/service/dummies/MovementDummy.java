@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class MovementDummy {
+
     public static void addMovementDummy(EventListener listener) {
         PublishSubject<Event<Object>> subject = PublishSubject.create();
         when(listener.listen(any(), any(), any())).thenReturn(subject);
@@ -17,4 +18,5 @@ public class MovementDummy {
             return null;
         });
     }
+
 }

@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterCacheTest {
+
     @Mock
     EventListener eventListener;
     @Spy
@@ -125,4 +126,5 @@ public class MonsterCacheTest {
 
 
     }
+
 }

@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 
 public class DialogueController extends ToastController {
+
     public static final int DIALOGUE_HEIGHT = 120;
     private final Image[] stageImages = new Image[3];
     @FXML
@@ -85,9 +86,11 @@ public class DialogueController extends ToastController {
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (dialogue != null) {
                 switch (event.getCode()) {
-                    case A, D, W, S ->
+                    case A, D, W, S, LEFT, RIGHT, UP, DOWN ->
                         // Block movement
                             event.consume();
+                    default -> {
+                    }
                 }
             }
             if (event.getCode() != KeyCode.ENTER) {
@@ -112,17 +115,19 @@ public class DialogueController extends ToastController {
         onDestroy(inputHandler.addReleasedKeyFilter(event -> {
             if (dialogue != null) {
                 switch (event.getCode()) {
-                    case A -> {
+                    case A, LEFT -> {
                         setOptionIndex(optionIndex - 1);
                         event.consume();
                     }
-                    case D -> {
+                    case D, RIGHT -> {
                         setOptionIndex(optionIndex + 1);
                         event.consume();
                     }
-                    case W, S ->
+                    case W, S, UP, DOWN ->
                         // Block movement
                             event.consume();
+                    default -> {
+                    }
                 }
             }
             if (event.getCode() != KeyCode.ENTER || dialogue == null) {
@@ -350,4 +355,5 @@ public class DialogueController extends ToastController {
             return texture;
         }
     }
+
 }

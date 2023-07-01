@@ -28,6 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FriendCacheTest {
+
     @Mock
     UserApiService userApiService;
     @Mock
@@ -372,4 +373,5 @@ class FriendCacheTest {
 
         disposable.dispose();
     }
+
 }

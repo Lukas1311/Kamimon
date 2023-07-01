@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class InteractionStorage {
+
     private final SingleCache<String> selectedStarter = new SingleCache<>();
     private Dialogue dialogue = null;
 
@@ -26,4 +27,5 @@ public class InteractionStorage {
     public SingleCache<String> selectedStarter() {
         return selectedStarter;
     }
+
 }

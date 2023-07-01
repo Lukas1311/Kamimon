@@ -4,6 +4,7 @@ import java.util.List;
 
 @SuppressWarnings("SpellCheckingInspection")
 public interface ITileDataProvider {
+
     List<Integer> data();
 
     int width();
@@ -13,4 +14,5 @@ public interface ITileDataProvider {
     int startx();
 
     int starty();
+
 }

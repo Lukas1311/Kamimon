@@ -26,4 +26,5 @@ public interface IFriendCache extends ICache<User, String> {
      * @return true if the given user is the main user
      */
     boolean isMainUser(String userId);
+
 }

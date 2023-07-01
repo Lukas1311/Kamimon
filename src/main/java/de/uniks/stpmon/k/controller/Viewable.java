@@ -21,7 +21,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 
 import javax.inject.Inject;
 import java.awt.image.BufferedImage;
@@ -29,6 +29,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public abstract class Viewable {
+
     // this is a good scale for sharp images
     private static final double TEXTURE_SCALE = 4.0;
 
@@ -40,7 +41,6 @@ public abstract class Viewable {
     public static final Scheduler FX_SCHEDULER = Schedulers.from(Platform::runLater);
 
     protected CompositeDisposable disposables = new CompositeDisposable();
-
 
     public void init() {
 
@@ -107,7 +107,8 @@ public abstract class Viewable {
     /**
      * Loads an image from the resource folder.
      *
-     * @param image Path to the image relative to "resources/de/uniks/stpmon/k/controller"
+     * @param image Path to the image relative to
+     *              "resources/de/uniks/stpmon/k/controller"
      * @return The loaded image
      */
     private Image loadImage(String image) {
@@ -115,11 +116,13 @@ public abstract class Viewable {
     }
 
     /**
-     * Loads an image from the resource folder and sets it to the given image array at the specified index.
+     * Loads an image from the resource folder and sets it to the given image array
+     * at the specified index.
      * If loadImages is false, this method does nothing.
      * This flag is used to disable image loading for tests.
      *
-     * @param image Path to the image relative to "resources/de/uniks/stpmon/k/controller"
+     * @param image Path to the image relative to
+     *              "resources/de/uniks/stpmon/k/controller"
      */
     protected void loadImage(Image[] images, int index, String image) {
         if (effectContext != null &&
@@ -134,7 +137,8 @@ public abstract class Viewable {
      * If loadImages is false, this method does nothing.
      * This flag is used to disable image loading for tests.
      *
-     * @param image Path to the image relative to "resources/de/uniks/stpmon/k/controller"
+     * @param image Path to the image relative to
+     *              "resources/de/uniks/stpmon/k/controller"
      */
     protected void loadImage(ImageView view, String image) {
         if (effectContext != null &&
@@ -145,10 +149,33 @@ public abstract class Viewable {
     }
 
     /**
-     * Method to load vector files (.svg) created with Adobe Illustrator and put them into an ImageView object.
+     * Loads an image from the resource folder and returns BackgroundImage.
+     * If loadImages is false, this method does nothing.
+     * This flag is used to disable image loading for tests.
      *
-     * @param imageView takes the ImageView object where you want to put the vector graphic inside
-     * @param filename  takes the filename of the vector image e.g. kamimonLetterling.svg
+     * @param image Path to the image relative to
+     *              "resources/de/uniks/stpmon/k/controller"
+     */
+    protected BackgroundImage loadBgImage(String image) {
+        if (effectContext != null &&
+                effectContext.shouldSkipLoadImages()) {
+            return null;
+        }
+        return new BackgroundImage(loadImage(image),
+                BackgroundRepeat.SPACE,
+                BackgroundRepeat.SPACE,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(1.0, 1.0, true, true, false, true));
+    }
+
+    /**
+     * Method to load vector files (.svg) created with Adobe Illustrator and put
+     * them into an ImageView object.
+     *
+     * @param imageView takes the ImageView object where you want to put the vector
+     *                  graphic inside
+     * @param filename  takes the filename of the vector image e.g.
+     *                  kamimonLetterling.svg
      */
     protected void setVectorImage(ImageView imageView, String filename) {
         if (effectContext != null &&
@@ -161,29 +188,34 @@ public abstract class Viewable {
     /**
      * Processes the ResponseBody containing the image data for a trainer sprite
      *
-     * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
-     * @param sprite          is the ImageView of the fxml where you want the image data to be loaded in
+     * @param spriteContainer Container were the sprite should be added to
+     *                        (preferably StackPane)
+     * @param sprite          is the ImageView of the fxml where you want the image
+     *                        data to be loaded in
      * @param direction       viewing direction of the sprite
      * @param id              id of the used trainer
      * @param service         the service used to retrieve the texture sets
      */
-    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id, TextureSetService service) {
+    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id,
+                                      TextureSetService service) {
         return setSpriteImage(spriteContainer, sprite, direction, id, service, 150, 155);
     }
-
 
     /**
      * Processes the ResponseBody containing the image data for a trainer sprite
      *
-     * @param spriteContainer Container were the sprite should be added to (preferably StackPane)
-     * @param sprite          is the ImageView of the fxml where you want the image data to be loaded in
+     * @param spriteContainer Container were the sprite should be added to
+     *                        (preferably StackPane)
+     * @param sprite          is the ImageView of the fxml where you want the image
+     *                        data to be loaded in
      * @param direction       viewing direction of the sprite
      * @param id              id of the used trainer
      * @param service         the service used to retrieve the texture sets
      * @param viewWidth       is the fitWidth property of the imageview
      * @param viewHeight      is the fitHeight property of the imageview
      */
-    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id, TextureSetService service, int viewWidth, int viewHeight) {
+    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id,
+                                      TextureSetService service, int viewWidth, int viewHeight) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return Completable.complete();
         }

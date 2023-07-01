@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class LoadingRegionControllerTest extends ApplicationTest {
+
     @Spy
     RegionStorage regionStorage;
     @Spy
@@ -55,4 +56,5 @@ public class LoadingRegionControllerTest extends ApplicationTest {
         loadingRegionController.setMinTime(minTime);
         assertEquals(minTime, loadingRegionController.minTime);
     }
+
 }

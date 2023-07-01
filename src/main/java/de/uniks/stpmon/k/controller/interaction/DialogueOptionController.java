@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class DialogueOptionController extends Controller {
+
     @FXML
     public Text indicator;
     @FXML
@@ -31,4 +32,5 @@ public class DialogueOptionController extends Controller {
     public void onDeselected() {
         indicator.setVisible(false);
     }
+
 }

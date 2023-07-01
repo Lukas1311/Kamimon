@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -11,6 +13,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MonsterBarController extends Controller {
+
     @FXML
     public VBox monsterBar;
     @FXML
@@ -21,7 +24,9 @@ public class MonsterBarController extends Controller {
     protected ImageView[] monsterSlots = new ImageView[6];
 
     @Inject
-    MonsterListController monsterListController;
+    TeamController teamController;
+    @Inject
+    InputHandler inputHandler;
 
     @Inject
     public MonsterBarController() {
@@ -31,11 +36,17 @@ public class MonsterBarController extends Controller {
     public void init() {
         super.init();
 
-        if (monsterListController == null) {
+        if (teamController == null) {
             return;
         }
-        monsterListController.init();
-        onDestroy(monsterListController::destroy);
+        teamController.init();
+        onDestroy(teamController::destroy);
+
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
+            if (event.getCode() == KeyCode.N) {
+                showMonsters();
+            }
+        }));
     }
 
     @Override
@@ -91,7 +102,7 @@ public class MonsterBarController extends Controller {
             monsterList.setVisible(false);
         } else {
             // Render the monster list
-            Parent monsterListContent = monsterListController.render();
+            Parent monsterListContent = teamController.render();
             monsterList.getChildren().setAll(monsterListContent);
             monsterList.setVisible(true);
         }
@@ -102,4 +113,5 @@ public class MonsterBarController extends Controller {
         super.destroy();
         monsterSlotsHBox.getChildren().clear();
     }
+
 }

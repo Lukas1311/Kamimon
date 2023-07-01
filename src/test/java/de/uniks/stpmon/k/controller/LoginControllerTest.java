@@ -8,24 +8,15 @@ import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
-
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.control.LabeledMatchers;
@@ -33,23 +24,14 @@ import retrofit2.HttpException;
 import retrofit2.Response;
 
 import javax.inject.Provider;
-
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.prefs.Preferences;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -58,6 +40,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginControllerTest extends ApplicationTest {
+
     @Mock
     AuthenticationService authService;
     @Mock
@@ -106,7 +89,7 @@ public class LoginControllerTest extends ApplicationTest {
         final HybridController mock = Mockito.mock(HybridController.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
         doNothing().when(app).show(mock);
-        
+
         // action:
         // write username and password
         write("\tstring\t");
@@ -156,9 +139,9 @@ public class LoginControllerTest extends ApplicationTest {
         verifyThat(label, LabeledMatchers.hasText("Registration successful"));
 
         verify(userService).addUser(captor.capture(), any());
-        assertEquals("Bob",captor.getValue());
+        assertEquals("Bob", captor.getValue());
         verify(authService).login(captor.capture(), any(), anyBoolean());
-        assertEquals("bob",captor.getValue());
+        assertEquals("bob", captor.getValue());
         verify(introductionControllerProvider).get();
         verify(app).show(introMock);
     }
@@ -194,21 +177,24 @@ public class LoginControllerTest extends ApplicationTest {
         // tab to the toggle button password field is empty
         write("\t\t\t");
         assertThat(pwdToggleButton).isFocused();
-        press(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         assertThat(pwdField.getPromptText()).isEqualTo("Password");
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
         // tab back to password field
-        press(KeyCode.SHIFT).press(KeyCode.TAB).release(KeyCode.TAB).release(KeyCode.SHIFT);
+        press(KeyCode.SHIFT).type(KeyCode.TAB).release(KeyCode.SHIFT);
         write("stringst");
         // click show password button and verify the show password
         write("\t");
-        press(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents(); // not really necessary I guess
         // get password input field to verify the contents
 
         // check if prompt text matches the password that was written into password field before
         assertThat(pwdField.getPromptText()).isEqualTo("stringst");
-        release(KeyCode.ENTER);
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
     }
 
     @Test
@@ -298,4 +284,5 @@ public class LoginControllerTest extends ApplicationTest {
         // test has to be verified 5 times because we check 5 error codes
         verify(authService, times(5)).login(any(), any(), anyBoolean());
     }
+
 }

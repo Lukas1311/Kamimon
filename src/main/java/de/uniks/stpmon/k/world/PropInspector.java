@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.*;
 
 public class PropInspector {
+
     public static final int TILE_SIZE = 16;
     private final PropGrid[] grids;
     private final int layerOffset;
@@ -355,4 +356,5 @@ public class PropInspector {
         }
         return tiles;
     }
+
 }

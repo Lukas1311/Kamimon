@@ -33,6 +33,7 @@ public class EncounterTestModule {
             final EncounterWrapper encounterWrapper = initDummyEncounter(opponentId);
 
             private class EncounterWrapper {
+
                 private final Encounter encounter;
                 private final List<Opponent> opponentList;
                 private final List<Monster> monsterList;
@@ -119,6 +120,7 @@ public class EncounterTestModule {
                                     20));
                     return List.of(monster1, monster2);
                 }
+
             }
 
             private EncounterWrapper initDummyEncounter(String opponentId) {
@@ -308,4 +310,5 @@ public class EncounterTestModule {
             }
         };
     }
+
 }

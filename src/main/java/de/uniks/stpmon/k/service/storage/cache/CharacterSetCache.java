@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class CharacterSetCache extends LazyCache<CharacterSet, String> {
+
     @Inject
     protected IResourceService resourceService;
 
@@ -31,4 +32,5 @@ public class CharacterSetCache extends LazyCache<CharacterSet, String> {
     public String getId(CharacterSet value) {
         return value.name();
     }
+
 }

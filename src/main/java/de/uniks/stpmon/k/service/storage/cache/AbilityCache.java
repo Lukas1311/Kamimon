@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class AbilityCache extends LazyCache<AbilityDto, String> {
+
     @Inject
     PresetApiService presetApiService;
 
@@ -29,4 +30,5 @@ public class AbilityCache extends LazyCache<AbilityDto, String> {
     protected Observable<AbilityDto> requestValue(String id) {
         return presetApiService.getAbility(id);
     }
+
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 @Module
 public class GroupTestModule {
+
     @Provides
     @Singleton
     static GroupApiService groupApiService() {
@@ -180,4 +181,5 @@ public class GroupTestModule {
             }
         };
     }
+
 }

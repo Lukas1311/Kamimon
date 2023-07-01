@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.collections.ObservableList;
@@ -68,6 +69,11 @@ public class IngameController extends PortalController {
     WorldController worldController;
 
     @Inject
+    InputHandler inputHandler;
+
+    private Parent mapOverview;
+
+    @Inject
     public IngameController() {
     }
 
@@ -81,6 +87,34 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
+
+        onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            if (mapOverview != null) {
+                switch (event.getCode()) {
+                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B -> {
+                        // Block movement and backpack, if map overview is shown
+                        if (mapOverview.isVisible()) {
+                            event.consume();
+                        }
+                    }
+                    case M -> {
+                        mapOverview.setVisible(!mapOverview.isVisible());
+                        event.consume();
+                    }
+
+                    case ESCAPE -> {
+                        if (mapOverview.isVisible()) {
+                            mapOverview.setVisible(false);
+                            event.consume();
+                        }
+                    }
+
+                    default -> {
+                    }
+
+                }
+            }
+        }));
         starterController.init();
     }
 
@@ -100,7 +134,6 @@ public class IngameController extends PortalController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        ingameWrappingHBox.setSpacing(10);
 
         Parent world = this.worldController.render();
         // Null if unit testing world view
@@ -119,7 +152,7 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(0, miniMap);
         }
 
-        Parent mapOverview = this.mapOverviewController.render();
+        mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
