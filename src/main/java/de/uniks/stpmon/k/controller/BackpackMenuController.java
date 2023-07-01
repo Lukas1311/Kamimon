@@ -18,6 +18,8 @@ import static de.uniks.stpmon.k.controller.BackpackMenuOption.*;
 
 @Singleton
 public class BackpackMenuController extends Controller {
+
+    private Controller monBox;
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
 
@@ -66,7 +68,7 @@ public class BackpackMenuController extends Controller {
     public void openOption(BackpackMenuOption option) {
         switch (option) {
             // delete dummy method after functionality is implemented
-            case MONSTER_LIST -> openMonBox();
+            case MONSTER_LIST -> triggerMonBox();
             case MONSTERS -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> dummyMethod();
         }
@@ -80,7 +82,21 @@ public class BackpackMenuController extends Controller {
     private void dummyMethod() {
     }
 
-    private void openMonBox() {
-        ingameControllerProvider.get().pushController(monBoxController.get());
+    public void openMonBox() {
+        monBox = monBoxController.get();
+        ingameControllerProvider.get().pushController(monBox);
+    }
+
+    public void closeMonBox() {
+        ingameControllerProvider.get().removeChildren(1);
+        monBox = null;
+    }
+
+    public void triggerMonBox() {
+        if (monBox == null) {
+            openMonBox();
+        } else {
+            closeMonBox();
+        }
     }
 }

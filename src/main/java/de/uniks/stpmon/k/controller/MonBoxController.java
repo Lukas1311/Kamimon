@@ -45,7 +45,7 @@ public class MonBoxController extends Controller {
     @Inject
     Provider<IngameController> ingameControllerProvider;
     private MonsterCache monsterCache;
-    private ImageView activeImage;
+    private Monster activeMonster;
 
 
     @Inject
@@ -71,7 +71,7 @@ public class MonBoxController extends Controller {
     }
 
     private void showTeamMonster(List<Monster> monsters) {
-        int i = 0;
+        int monsterIndex = 0;
         // Team Monster max 6 slots
         for (Monster monster : monsters) {
             ImageView imageView = new ImageView();
@@ -81,27 +81,13 @@ public class MonBoxController extends Controller {
                 // Scale and set the image
                 Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
                 imageView.setImage(image);
-                imageView.setOnMouseClicked(e -> {
-                            if (activeImage != null) {
-                                activeImage.setStyle("-fx-border-color: transparent;");
-                            }
-                            imageView.setStyle("-fx-border-color: black; -fx-border-width: 200px;");
-                            activeImage = imageView;
-                            openMonsterInformation(monster);
-                        }
+                imageView.setOnMouseClicked(e -> triggerMonsterInformation(monster)
                 );
             });
-            monTeam.add(imageView, i, 0);
+            monTeam.add(imageView, monsterIndex, 0);
             monBoxVbox.toFront();
-            i++;
+            monsterIndex++;
         }
-    }
-
-    private void openMonsterInformation(Monster monster) {
-        Parent monsterInfo = monsterInformationController.render();
-        monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
-        monsterInformationController.loadMonster(monster);
-        ingameControllerProvider.get().addMonsterInfo(monsterInfo);
     }
 
     private void showMonsterList(List<Monster> monsters) {
@@ -117,10 +103,13 @@ public class MonBoxController extends Controller {
                     ImageView imageView = new ImageView();
                     imageView.setFitHeight(67);
                     imageView.setFitWidth(67);
+                    int finalMonsterIndex = monsterIndex;
                     subscribe(resourceService.getMonsterImage(String.valueOf(monsters.get(monsterIndex).type())), imageUrl -> {
                         // Scale and set the image
                         Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
                         imageView.setImage(image);
+                        imageView.setOnMouseClicked(e -> triggerMonsterInformation(monsters.get(finalMonsterIndex))
+                        );
                     });
                     monStorage.add(imageView, column, row);
                     monBoxVbox.toFront();
@@ -129,6 +118,28 @@ public class MonBoxController extends Controller {
             }
         }
 
+    }
+    private void openMonsterInformation(Monster monster) {
+        activeMonster = monster;
+        ingameControllerProvider.get().openMonsterInfo(monster);
+    }
+
+    public void triggerMonsterInformation(Monster monster) {
+        if (activeMonster == null) {
+            openMonsterInformation(monster);
+        } else {
+            if(activeMonster == monster) {
+                closeMonsterInformation();
+            } else {
+                closeMonsterInformation();
+                openMonsterInformation(monster);
+            }
+        }
+    }
+
+    private void closeMonsterInformation() {
+        ingameControllerProvider.get().removeChildren(2);
+        activeMonster = null;
     }
 
     @Override
