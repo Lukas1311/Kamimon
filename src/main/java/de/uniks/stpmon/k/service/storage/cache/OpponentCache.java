@@ -42,4 +42,5 @@ public class OpponentCache extends ListenerCache<Opponent, String> {
     public String getId(Opponent value) {
         return value._id();
     }
+
 }

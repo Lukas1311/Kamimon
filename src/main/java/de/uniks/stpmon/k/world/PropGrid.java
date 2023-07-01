@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.world;
 import de.uniks.stpmon.k.utils.Direction;
 
 public class PropGrid {
+
     private final int[][] grid;
     private final int width;
     private final int height;

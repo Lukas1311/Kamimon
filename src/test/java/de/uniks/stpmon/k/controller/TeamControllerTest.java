@@ -29,6 +29,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class TeamControllerTest extends ApplicationTest {
+
     @Spy
     App app = new App(null);
     @Spy
@@ -86,4 +87,5 @@ public class TeamControllerTest extends ApplicationTest {
         verifyThat("#monster_label_4", hasText("  -"));
         verifyThat("#monster_label_5", hasText("  -"));
     }
+
 }

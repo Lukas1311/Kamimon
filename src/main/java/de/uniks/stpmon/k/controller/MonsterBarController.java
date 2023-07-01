@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MonsterBarController extends Controller {
+
     @FXML
     public VBox monsterBar;
     @FXML
@@ -42,7 +43,7 @@ public class MonsterBarController extends Controller {
         onDestroy(teamController::destroy);
 
         onDestroy(inputHandler.addPressedKeyHandler(event -> {
-            if(event.getCode() == KeyCode.N){
+            if (event.getCode() == KeyCode.N) {
                 showMonsters();
             }
         }));
@@ -112,4 +113,5 @@ public class MonsterBarController extends Controller {
         super.destroy();
         monsterSlotsHBox.getChildren().clear();
     }
+
 }

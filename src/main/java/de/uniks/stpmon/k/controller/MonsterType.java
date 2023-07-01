@@ -24,21 +24,21 @@ public enum MonsterType {
     private final String typeName;
     private final String styleClass;
 
-    MonsterType(final String typeName, final String styleClass){
+    MonsterType(final String typeName, final String styleClass) {
         this.typeName = typeName;
         this.styleClass = styleClass;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return typeName;
     }
 
-    public String getStyleClass(){
+    public String getStyleClass() {
         return styleClass;
     }
 
-    public String getTypeName(){
+    public String getTypeName() {
         return typeName;
     }
 }

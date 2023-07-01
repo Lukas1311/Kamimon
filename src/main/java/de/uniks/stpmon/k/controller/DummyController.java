@@ -22,4 +22,5 @@ public class DummyController extends Controller {
         // do dummy stuff here
         return super.render();
     }
+
 }

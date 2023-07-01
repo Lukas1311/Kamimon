@@ -33,6 +33,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterInformationControllerTest extends ApplicationTest {
+
     @Spy
     App app = new App(null);
 

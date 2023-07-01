@@ -31,6 +31,7 @@ public record Tileset(
     }
 
     public static class Builder {
+
         private TilesetSource source;
         private TilesetData data;
         private BufferedImage image;
@@ -71,5 +72,7 @@ public record Tileset(
             return new Tileset(source, data, image,
                     anyTallGrass ? tallGrassData : null);
         }
+
     }
+
 }

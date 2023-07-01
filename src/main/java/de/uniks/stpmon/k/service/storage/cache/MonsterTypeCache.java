@@ -30,4 +30,5 @@ public class MonsterTypeCache extends LazyCache<MonsterTypeDto, String> {
     protected Observable<MonsterTypeDto> requestValue(String id) {
         return presetApiService.getMonster(id);
     }
+
 }

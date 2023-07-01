@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class MonsterInformationController extends ToastedController {
+
     @FXML
     public ImageView monsterImage;
     @FXML
@@ -100,10 +101,10 @@ public class MonsterInformationController extends ToastedController {
     }
 
     public void loadMonster(Monster monster) {
-        int currentHealth = (int)(((double)monster.currentAttributes().health() / monster.attributes().health()) * 100);
-        int currentAttack= (int)(((double)monster.currentAttributes().attack() / monster.attributes().attack()) * 100);
-        int currentDefense = (int)(((double)monster.currentAttributes().defense() / monster.attributes().defense()) * 100);
-        int currentSpeed = (int)(((double)monster.currentAttributes().speed() / monster.attributes().speed()) * 100);
+        int currentHealth = (int) (((double) monster.currentAttributes().health() / monster.attributes().health()) * 100);
+        int currentAttack = (int) (((double) monster.currentAttributes().attack() / monster.attributes().attack()) * 100);
+        int currentDefense = (int) (((double) monster.currentAttributes().defense() / monster.attributes().defense()) * 100);
+        int currentSpeed = (int) (((double) monster.currentAttributes().speed() / monster.attributes().speed()) * 100);
 
         // Set all labels
         healthLabel.setText(String.valueOf(currentHealth));
@@ -143,7 +144,7 @@ public class MonsterInformationController extends ToastedController {
 
         abilityBox.getChildren().addAll(nameAndTypeBox, amountUsesBox);
         nameAndTypeBox.getChildren().addAll(abilityTypeLabel, abilityNameText);
-        amountUsesBox.getChildren().addAll(currentUsesLabel, slash , maxUsesLabel);
+        amountUsesBox.getChildren().addAll(currentUsesLabel, slash, maxUsesLabel);
 
         // Apply CSS styles
         abilityBox.getStyleClass().add("ability");
@@ -156,8 +157,8 @@ public class MonsterInformationController extends ToastedController {
         disposables.add(presetService.getAbility(id)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(ability -> {
-                        abilityTypeLabel.setText(ability.type());
-                        abilityNameText.setText(ability.name());
+                    abilityTypeLabel.setText(ability.type());
+                    abilityNameText.setText(ability.name());
                     maxUsesLabel.setText(String.valueOf(ability.maxUses()));
                     abilityBox.setId("abilityBox" + ability.id());
                     abilityBox.setOnMouseClicked(event -> descriptionText.setText(ability.description()));

@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class UserStorage {
+
     private User user;
 
     @Inject
@@ -20,4 +21,5 @@ public class UserStorage {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

@@ -35,4 +35,5 @@ public class GroupMemberCell extends ListCell<User> {
             setGraphic(checkBox);
         }
     }
+
 }

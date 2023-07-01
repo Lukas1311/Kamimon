@@ -3,16 +3,18 @@ package de.uniks.stpmon.k.world;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 
-public record RouteText (
-    String name,
-    String description,
-    String type
+public record RouteText(
+        String name,
+        String description,
+        String type
 ) {
+
     public static RouteText.Builder builder() {
         return new RouteText.Builder();
     }
 
     public static class Builder {
+
         private ObjectData data;
 
 
@@ -37,5 +39,7 @@ public record RouteText (
             }
             return new RouteText(name, description, type);
         }
+
     }
+
 }

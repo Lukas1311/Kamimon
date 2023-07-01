@@ -4,13 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
 
 public class BackpackMenuEntryController extends Controller {
+
     @FXML
     public Label backpackMenuSelectedLabel;
     @FXML

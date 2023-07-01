@@ -26,11 +26,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CreateChatController extends TabController {
 
@@ -193,4 +189,5 @@ public class CreateChatController extends TabController {
     public boolean isSelected(String id) {
         return groupMembers.contains(id);
     }
+
 }

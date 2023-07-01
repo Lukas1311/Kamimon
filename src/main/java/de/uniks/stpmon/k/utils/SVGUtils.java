@@ -1,21 +1,5 @@
 package de.uniks.stpmon.k.utils;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import de.uniks.stpmon.k.controller.Viewable;
 import javafx.scene.Group;
 import javafx.scene.SnapshotParameters;
@@ -23,6 +7,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SVGUtils {
 
@@ -119,7 +117,9 @@ public class SVGUtils {
     private record SVGData(List<SVGPath> svgPaths, double width, double height) {
 
         private List<SVGPath> getSVGPaths() {
-                return this.svgPaths;
-            }
+            return this.svgPaths;
         }
+
+    }
+
 }

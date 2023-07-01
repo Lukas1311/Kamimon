@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class IdSource implements Supplier<Collection<Integer>> {
+
     protected final int startIndex;
 
     public IdSource(int startIndex) {
@@ -23,9 +24,11 @@ public abstract class IdSource implements Supplier<Collection<Integer>> {
         public Collection<Integer> get() {
             return List.of(startIndex);
         }
+
     }
 
     public static class Rectangle extends IdSource {
+
         private final int width;
         private final int height;
         private final int columns;
@@ -47,5 +50,7 @@ public abstract class IdSource implements Supplier<Collection<Integer>> {
             }
             return values;
         }
+
     }
+
 }

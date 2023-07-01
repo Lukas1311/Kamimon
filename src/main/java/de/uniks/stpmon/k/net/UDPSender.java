@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UDPSender extends UDPReceiver implements SocketSender {
+
     protected final List<SocketReceiver> endpoints = Collections.synchronizedList(new ArrayList<>());
 
     @Override
@@ -45,4 +46,5 @@ public class UDPSender extends UDPReceiver implements SocketSender {
         }
         endpoints.clear();
     }
+
 }

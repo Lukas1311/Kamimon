@@ -92,10 +92,11 @@ public class MonsterInformation2Controller extends Controller {
 
     private void updateTypeList(List<String> types) {
         // Update the UI with a list of types
-        for (int i = 0; i < 4; i++) {
-            removeNodeByRowColumnIndex(i, 1, overviewGrid);
+        for (int i = 0; i < 5; i++) {
+            //start second row, because name is on first row
+            removeNodeByRowColumnIndex(i + 1, 1, overviewGrid);
             if (i < types.size()) {
-                overviewGrid.add(typeLabel(null, types.get(i)), 1, i);
+                overviewGrid.add(typeLabel(null, types.get(i)), 1, i + 1);
             }
         }
     }
@@ -127,10 +128,10 @@ public class MonsterInformation2Controller extends Controller {
 
     public void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         gridPane.getChildren().removeIf(node -> {
-            if(row != 0 && (GridPane.getRowIndex(node) == null || GridPane.getRowIndex(node) == 0)) {
+            if (row != 0 && (GridPane.getRowIndex(node) == null || GridPane.getRowIndex(node) == 0)) {
                 return false;
             }
-            if(column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
+            if (column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
                 return false;
             }
             return GridPane.getRowIndex(node) != null
@@ -165,7 +166,7 @@ public class MonsterInformation2Controller extends Controller {
         Label nameLabel = new Label(ability.name());
         nameLabel.setOnMouseClicked(event -> {
 
-            if(descriptionLabel.isVisible() && descriptionLabel.getText().equals(ability.description())) {
+            if (descriptionLabel.isVisible() && descriptionLabel.getText().equals(ability.description())) {
                 descriptionLabel.setVisible(false);
                 descriptionLabel.setText("");
                 infoGrid.setVisible(true);
@@ -175,7 +176,6 @@ public class MonsterInformation2Controller extends Controller {
                 infoGrid.setVisible(false);
             }
         });
-        //TODO add style here
         Label powLabel = new Label(ability.power().toString());
         Label accLabel = new Label(String.valueOf((int) (ability.accuracy().doubleValue() * 100.0)));
         Label useLabel = new Label("??" + "/" + ability.maxUses());

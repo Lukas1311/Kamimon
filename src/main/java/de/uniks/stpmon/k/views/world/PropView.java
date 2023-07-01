@@ -36,4 +36,5 @@ public class PropView extends WorldViewable {
         }
         return props;
     }
+
 }

@@ -52,7 +52,6 @@ public class TeamController extends Controller {
         monsterListVBox.setBackground(new Background(loadBgImage("TeamBox.png")));
 
 
-
         monsterInformation.setVisible(false);
         // Does not block, because the cache is already initialized
         updateListContent(monsterService.getTeam().blockingFirst());

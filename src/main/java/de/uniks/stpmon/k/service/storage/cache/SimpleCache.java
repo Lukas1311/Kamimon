@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import java.util.*;
 
 public abstract class SimpleCache<T, K> implements ICache<T, K> {
+
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
     protected final Map<K, T> valuesById = Collections.synchronizedMap(new LinkedHashMap<>());
     protected final Map<K, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
@@ -264,4 +265,5 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
     public Status getStatus() {
         return status;
     }
+
 }

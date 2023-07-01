@@ -8,7 +8,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -80,4 +79,5 @@ public class BackpackMenuController extends Controller {
 
     private void dummyMethod() {
     }
+
 }
