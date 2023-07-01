@@ -22,13 +22,13 @@ public class MonsterDummy {
             eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
                     .formatted(currentTrainer._id(), "monster_0"),
                     MonsterBuilder.builder()
-                            .setId("monster_label_0")
+                            .setId("monster_0")
                             .setType(selection)
                             .create()));
             eventDummy.sendEvent(new Event<>("regions.%s.trainers.%s.updated"
                     .formatted(currentTrainer.region(), currentTrainer._id()),
                     TrainerBuilder.builder(currentTrainer)
-                            .addTeam("monster_label_0")
+                            .addTeam("monster_0")
                             .create()));
         });
 
