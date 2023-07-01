@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 @Singleton
 public class EventListener {
+
     private final TokenStorage tokenStorage;
     private final ObjectMapper mapper;
     private final Map<Socket, SocketSender> adapters = new HashMap<>();
@@ -119,4 +120,5 @@ public class EventListener {
         SocketSender adapter = this.ensureOpen(socket);
         return send(adapter, new Event<>(event, talkTrainerDto), false);
     }
+
 }

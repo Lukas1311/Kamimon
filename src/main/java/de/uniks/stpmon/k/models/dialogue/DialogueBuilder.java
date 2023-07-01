@@ -34,6 +34,7 @@ public class DialogueBuilder {
     }
 
     public static class ItemBuilder {
+
         private final DialogueBuilder parent;
         private final List<DialogueOption> options = new LinkedList<>();
         private String text = "";
@@ -69,9 +70,11 @@ public class DialogueBuilder {
         void add(DialogueOption option) {
             options.add(option);
         }
+
     }
 
     public static class OptionBuilder {
+
         private final ItemBuilder parent;
 
         private String text = "";
@@ -114,5 +117,7 @@ public class DialogueBuilder {
             parent.add(new DialogueOption(text, action, selection, nextDialogue));
             return parent;
         }
+
     }
+
 }

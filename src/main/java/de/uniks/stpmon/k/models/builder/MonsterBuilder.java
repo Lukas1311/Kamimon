@@ -86,4 +86,5 @@ public class MonsterBuilder {
     public Monster create() {
         return new Monster(_id, trainer, type, level, experience, abilities, attributes, currentAttributes);
     }
+
 }

@@ -46,4 +46,5 @@ public abstract class ListenerCache<T, K> extends SimpleCache<T, K> {
     protected void updateValueFromSocket(T value) {
         updateValue(value);
     }
+
 }

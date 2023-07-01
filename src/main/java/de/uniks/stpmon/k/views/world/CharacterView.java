@@ -51,7 +51,8 @@ public class CharacterView extends EntityView {
             case S, DOWN -> movementHandler.moveDirection(Direction.BOTTOM);
             case A, LEFT -> movementHandler.moveDirection(Direction.LEFT);
             case D, RIGHT -> movementHandler.moveDirection(Direction.RIGHT);
-            default -> {}
+            default -> {
+            }
         }
     }
 

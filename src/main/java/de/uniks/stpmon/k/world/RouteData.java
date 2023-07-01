@@ -20,6 +20,7 @@ public record RouteData(
     }
 
     public static class Builder {
+
         private ObjectData data;
         private final RouteText.Builder routeTextBuilder;
 
@@ -43,5 +44,7 @@ public record RouteData(
             RouteText routeText = routeTextBuilder.setData(data).build();
             return new RouteData(id, routeText, height, width, x, y, polygon == null ? List.of() : polygon);
         }
+
     }
+
 }

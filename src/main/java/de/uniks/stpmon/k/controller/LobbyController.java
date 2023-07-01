@@ -11,6 +11,7 @@ import javax.inject.Provider;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 public class LobbyController extends Controller {
+
     @FXML
     public BorderPane lobbyPane;
     @Inject
@@ -40,4 +41,5 @@ public class LobbyController extends Controller {
     public void closeSidebar() {
         hybridControllerProvider.get().forceTab(NONE);
     }
+
 }

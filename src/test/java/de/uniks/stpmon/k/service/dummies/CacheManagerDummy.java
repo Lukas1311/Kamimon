@@ -34,4 +34,5 @@ public class CacheManagerDummy extends CacheManager {
     private void setTrainerCacheProvider(Provider<TrainerCache> trainerCacheProvider) {
         this.trainerCacheProvider = trainerCacheProvider;
     }
+
 }

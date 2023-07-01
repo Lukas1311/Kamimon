@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
-<BorderPane fx:id="pauseScreen" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#closeSidebar" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.PauseController">
+<?import java.lang.String?>
+<?import java.net.URL?>
+<BorderPane fx:id="pauseScreen" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+            onMouseClicked="#closeSidebar" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.PauseController">
     <center>
         <VBox alignment="CENTER" styleClass="pause-inner-containers" BorderPane.alignment="CENTER">
             <Text fx:id="pauseText" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-text" text="%pause">
                 <VBox.margin>
-                    <Insets bottom="60.0" />
+                    <Insets bottom="60.0"/>
                 </VBox.margin>
             </Text>
             <GridPane fx:id="shortcutPane" alignment="CENTER" styleClass="pause-inner-containers" vgap="15.0">
@@ -87,10 +88,10 @@
         </VBox>
     </center>
     <stylesheets>
-        <URL value="@css/ingameStyle.css" />
+        <URL value="@css/ingameStyle.css"/>
     </stylesheets>
-   <styleClass>
-      <String fx:value="pause" />
-      <String fx:value="ingame" />
-   </styleClass>
+    <styleClass>
+        <String fx:value="pause"/>
+        <String fx:value="ingame"/>
+    </styleClass>
 </BorderPane>

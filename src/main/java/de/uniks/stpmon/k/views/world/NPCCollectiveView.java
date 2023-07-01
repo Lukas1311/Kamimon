@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class NPCCollectiveView extends WorldViewable {
+
     private final Map<String, Node> npcViews = new HashMap<>();
     @Inject
     RegionService regionService;
@@ -86,4 +87,5 @@ public class NPCCollectiveView extends WorldViewable {
     private NPCView getNPCView() {
         return npcViewProvider.get();
     }
+
 }

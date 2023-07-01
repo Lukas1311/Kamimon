@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.models.dialogue;
 
 public class DialogueOption {
+
     private final String text;
     /**
      * Action performed on selection of the option
@@ -38,4 +39,5 @@ public class DialogueOption {
     public boolean hasNext() {
         return nextDialogue != null;
     }
+
 }

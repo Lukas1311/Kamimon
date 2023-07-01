@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import java.util.*;
 
 public class EntangledRule extends PropRule {
+
     private final String tileSet;
     private final Set<Integer> tileIds;
 

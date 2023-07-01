@@ -98,7 +98,8 @@ public class IngameController extends PortalController {
                         }
                     }
 
-                    default -> { }
+                    default -> {
+                    }
 
                 }
             }

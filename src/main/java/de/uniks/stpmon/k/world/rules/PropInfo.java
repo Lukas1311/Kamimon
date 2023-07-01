@@ -13,4 +13,5 @@ public record PropInfo(
         String otherTileSet,
         Direction dir,
         Direction otherDir) {
+
 }

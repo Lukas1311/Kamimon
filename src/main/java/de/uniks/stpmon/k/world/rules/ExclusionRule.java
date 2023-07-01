@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import java.util.*;
 
 public class ExclusionRule extends PropRule {
+
     private final String tileSet;
     private final Set<Integer> tileIds;
 
@@ -34,4 +35,5 @@ public class ExclusionRule extends PropRule {
         }
         return RuleResult.NO_MATCH;
     }
+
 }

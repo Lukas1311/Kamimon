@@ -5,4 +5,5 @@ public record TalkTrainerDto(
         String target,
         Integer selection
 ) {
+
 }

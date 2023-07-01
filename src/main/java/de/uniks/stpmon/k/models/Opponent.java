@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.models;
 
-import de.uniks.stpmon.k.dto.AbilityMove;
-import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.IMove;
 import de.uniks.stpmon.k.dto.IMoves;
 
@@ -17,7 +15,8 @@ public record Opponent(
 
         Boolean isNPC, // Whether the opponent is an NPC. Handled by the server.
 
-        String monster, // Can be patched when set to undefined/null. This happens after the monster died. You then have to patch a new monster ID to change the monster without expending your move.
+        String monster,
+        // Can be patched when set to undefined/null. This happens after the monster died. You then have to patch a new monster ID to change the monster without expending your move.
 
         IMove move,
 
@@ -26,4 +25,5 @@ public record Opponent(
         Integer coins // The number of coins that will be earned when the encounter is won.
 
 ) implements IMoves {
+
 }

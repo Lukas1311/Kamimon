@@ -91,4 +91,5 @@ public class TrainerService {
         // Upper bounds are not important because cache is designed for  up to 0xFFFF
         return areaCache.getTrainerAt(x, y);
     }
+
 }
