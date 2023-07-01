@@ -2,47 +2,52 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<StackPane fx:id="monBoxStackPane" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/19"
-           xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonBoxController">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="monBoxStackPane" translateY="-13.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonBoxController">
    <VBox fx:id="monBoxVbox" alignment="TOP_CENTER">
-      <Pane prefHeight="28.0" prefWidth="432.0"/>
+      <Pane prefHeight="28.0" prefWidth="432.0" />
       <GridPane fx:id="monTeam" alignment="CENTER">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="69.0" vgrow="SOMETIMES"/>
+            <RowConstraints maxHeight="-Infinity" minHeight="69.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <VBox.margin>
-            <Insets/>
+            <Insets />
          </VBox.margin>
       </GridPane>
-      <Pane prefHeight="8.0" prefWidth="432.0"/>
+      <Pane prefHeight="8.0" prefWidth="432.0" />
       <GridPane fx:id="monStorage" alignment="CENTER">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="69.0" prefWidth="69.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES"/>
+            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="69.0" prefHeight="69.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
    </VBox>
-   <ImageView fx:id="monBoxImage" fitHeight="461.0" fitWidth="432.0" nodeOrientation="INHERIT" pickOnBounds="true"
-              preserveRatio="true">
+   <ImageView fx:id="monBoxImage" fitHeight="461.0" fitWidth="432.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
    </ImageView>
 </StackPane>

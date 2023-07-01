@@ -8,7 +8,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Polygon;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -38,6 +37,10 @@ public class BackpackMenuController extends Controller {
     BackpackController backpackController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<MonBoxController> monBoxControllerProvider;
 
     @Inject
     public BackpackMenuController() {
@@ -83,7 +86,7 @@ public class BackpackMenuController extends Controller {
     }
 
     public void openMonBox() {
-        monBox = monBoxController.get();
+        monBox = monBoxControllerProvider.get();
         ingameControllerProvider.get().pushController(monBox);
     }
 
