@@ -2,19 +2,12 @@ package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 
-import java.util.*;
+import java.util.List;
 
-public class EntangledRule extends PropRule {
-    private final String tileSet;
-    private final Set<Integer> tileIds;
-
-    public EntangledRule(String tileSet, Collection<Integer> c) {
-        this.tileIds = new HashSet<>(c);
-        this.tileSet = tileSet;
-    }
+public class EntangledRule extends BaseTilesetRule implements PropRule {
 
     public EntangledRule(String tileSet, IdSource... sources) {
-        this(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
+        super(tileSet, sources);
     }
 
     @Override

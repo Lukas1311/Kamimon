@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class ImageConnectionRule extends PropRule {
+public class ImageConnectionRule implements PropRule {
 
     public static final int CHECKED_PIXELS = 3;
     public static final int TILE_SIZE = 16;

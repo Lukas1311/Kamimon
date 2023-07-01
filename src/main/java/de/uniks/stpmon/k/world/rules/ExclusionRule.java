@@ -2,23 +2,16 @@ package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 
-import java.util.*;
+import java.util.List;
 
-public class ExclusionRule extends PropRule {
-    private final String tileSet;
-    private final Set<Integer> tileIds;
+public class ExclusionRule extends BaseTilesetRule implements PropRule {
 
     public ExclusionRule(String tileSet, Integer... tileIds) {
-        this(tileSet, Arrays.asList(tileIds));
-    }
-
-    public ExclusionRule(String tileSet, Collection<Integer> c) {
-        this.tileIds = new HashSet<>(c);
-        this.tileSet = tileSet;
+        super(tileSet, tileIds);
     }
 
     public ExclusionRule(String tileSet, IdSource... sources) {
-        this(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
+        super(tileSet, sources);
     }
 
     @Override

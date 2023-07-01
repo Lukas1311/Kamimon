@@ -2,19 +2,12 @@ package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 
-import java.util.*;
+import java.util.List;
 
-public class IncludedCandidateRule implements CandidateRule {
-    private final Set<Integer> tileIds;
-    private final String tileSet;
+public class IncludedCandidateRule extends BaseTilesetRule implements CandidateRule {
 
-    public IncludedCandidateRule(String tileSet, int... c) {
-        this(tileSet, Arrays.stream(c).boxed().toList());
-    }
-
-    public IncludedCandidateRule(String tileSet, Collection<Integer> c) {
-        this.tileIds = new HashSet<>(c);
-        this.tileSet = tileSet;
+    public IncludedCandidateRule(String tileSet, Integer... tileIds) {
+        super(tileSet, tileIds);
     }
 
     @Override
