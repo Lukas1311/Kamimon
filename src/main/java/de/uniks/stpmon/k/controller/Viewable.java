@@ -98,9 +98,7 @@ public abstract class Viewable {
      * @param onError    the consumer to call on an error
      * @param <T>        the type of the items emitted by the Observable
      */
-    protected <@NonNull T> void subscribe(Observable<T> observable,
-                                          Consumer<T> onNext,
-                                          @NonNull Consumer<? super Throwable> onError) {
+    protected <@NonNull T> void subscribe(Observable<T> observable, Consumer<T> onNext, @NonNull Consumer<? super Throwable> onError) {
         disposables.add(observable.observeOn(FX_SCHEDULER).subscribe(onNext, onError));
     }
 
@@ -125,8 +123,7 @@ public abstract class Viewable {
      *              "resources/de/uniks/stpmon/k/controller"
      */
     protected void loadImage(Image[] images, int index, String image) {
-        if (effectContext != null &&
-                effectContext.shouldSkipLoadImages()) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return;
         }
         images[index] = loadImage(image);
@@ -141,8 +138,7 @@ public abstract class Viewable {
      *              "resources/de/uniks/stpmon/k/controller"
      */
     protected void loadImage(ImageView view, String image) {
-        if (effectContext != null &&
-                effectContext.shouldSkipLoadImages()) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return;
         }
         view.setImage(loadImage(image));
@@ -157,15 +153,31 @@ public abstract class Viewable {
      *              "resources/de/uniks/stpmon/k/controller"
      */
     protected BackgroundImage loadBgImage(String image) {
-        if (effectContext != null &&
-                effectContext.shouldSkipLoadImages()) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return null;
         }
-        return new BackgroundImage(loadImage(image),
-                BackgroundRepeat.SPACE,
-                BackgroundRepeat.SPACE,
+        return new BackgroundImage(loadImage(image), BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, new BackgroundSize(1.0, 1.0, true, true, false, true));
+    }
+
+    /**
+     * Loads an image from the resource folder and sets it to the given Region.
+     * Every Region allows the placement of a background.
+     * If loadImages is false, this method does nothing.
+     * This flag is used to disable image loading for tests.
+     *
+     * @param image Path to the image relative to
+     *              "resources/de/uniks/stpmon/k/controller"
+     * @param element Any element, that extends region class 
+     */
+    protected void loadBgImage(Region element, String image) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
+        BackgroundImage bg = new BackgroundImage(loadImage(image), BackgroundRepeat.SPACE, BackgroundRepeat.SPACE,
                 BackgroundPosition.CENTER,
                 new BackgroundSize(1.0, 1.0, true, true, false, true));
+
+        element.setBackground(new Background(bg));
     }
 
     /**
@@ -178,8 +190,7 @@ public abstract class Viewable {
      *                  kamimonLetterling.svg
      */
     protected void setVectorImage(ImageView imageView, String filename) {
-        if (effectContext != null &&
-                effectContext.shouldSkipLoadImages()) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return;
         }
         SVGUtils.setVectorImage(imageView, filename);
@@ -196,8 +207,7 @@ public abstract class Viewable {
      * @param id              id of the used trainer
      * @param service         the service used to retrieve the texture sets
      */
-    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id,
-                                      TextureSetService service) {
+    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id, TextureSetService service) {
         return setSpriteImage(spriteContainer, sprite, direction, id, service, 150, 155);
     }
 
@@ -214,8 +224,7 @@ public abstract class Viewable {
      * @param viewWidth       is the fitWidth property of the imageview
      * @param viewHeight      is the fitHeight property of the imageview
      */
-    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id,
-                                      TextureSetService service, int viewWidth, int viewHeight) {
+    public Completable setSpriteImage(StackPane spriteContainer, ImageView sprite, Direction direction, String id, TextureSetService service, int viewWidth, int viewHeight) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return Completable.complete();
         }
