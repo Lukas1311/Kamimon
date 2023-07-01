@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
@@ -46,6 +47,9 @@ public class StatusControllerTest extends ApplicationTest {
     TrainerService trainerService;
     @InjectMocks
     StatusController statusController;
+    @Spy
+    @SuppressWarnings("unused")
+    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     Region dummyRegion = new Region("1", "reg", null, null);
     Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
