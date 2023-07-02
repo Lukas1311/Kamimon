@@ -42,6 +42,11 @@
     -fx-text-fill: black;
 }
 
+.backpack-menu-list .list-cell .label{
+    -fx-text-fill: black;
+}
+
+
 .backpack-menu-list .list-cell:selected .label{
     -fx-text-fill: black;
 }
