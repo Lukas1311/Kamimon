@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;

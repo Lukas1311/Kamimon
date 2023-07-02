@@ -5,8 +5,6 @@
 
 
 /* -------------------- Pause Screen -------------------- */
-
-
 .pause-inner-containers {
     -fx-background-color: transparent;
 }
@@ -59,7 +57,6 @@
     -fx-background-color: rgba(255, 255, 255, 0.8);
     -fx-border-color: black;
     -fx-border-width: 3px;
-
 }
 
 .team-monster-holder {
@@ -96,7 +93,6 @@
     -fx-text-fill: white;
 
     -fx-alignment: center;
-
 }
 
 .monster-type-normal {
@@ -241,4 +237,26 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: lightgray;
+}
+
+/* -------------------- Encounter -------------------- */
+.encounter-background {
+    -fx-background-size: cover;
+}
+
+.user-monster-indented {
+    -fx-start-margin: 100px;
+}
+
+.monster-hp-bar {
+    -fx-accent: #2a7d37;
+}
+
+.monster-hp-bar .bar {
+    -fx-background-color: #2a7d37;
+    -fx-padding: 0;
+}
+
+.monster-hp-bar .track {
+    -fx-padding: 0;
 }
