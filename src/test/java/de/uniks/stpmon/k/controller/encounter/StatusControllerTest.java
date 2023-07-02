@@ -131,7 +131,7 @@ public class StatusControllerTest extends ApplicationTest {
         assertEquals("5 / 10", statusController.monsterHp.getText());
         assertEquals("Lvl. 1", statusController.monsterLevel.getText());
         assertEquals(0.5, statusController.hpBar.getProgress());
-        assertEquals(0.6666666666666666, statusController.experienceBar.getProgress());
+        assertEquals(2.0, statusController.experienceBar.getProgress());
     }
 
     @Test

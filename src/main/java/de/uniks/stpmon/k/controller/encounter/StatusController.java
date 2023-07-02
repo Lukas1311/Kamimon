@@ -80,7 +80,7 @@ public class StatusController extends Controller {
                     hpBar.setProgress(hpProgress);
 
                     if (trainerService.getMe().team().contains(monster1._id())) {
-                        double maxExp = monster1.level() * 3 - (monster1.level() - 1) * 3;
+                        double maxExp = Math.pow(monster1.level(), 3) - Math.pow(monster1.level() - 1, 3);
                         double currentExp = monster1.experience();
                         double expProgress = currentExp / maxExp;
 
