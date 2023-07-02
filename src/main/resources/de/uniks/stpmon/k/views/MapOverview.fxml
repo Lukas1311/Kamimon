@@ -1,46 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-<BorderPane fx:id="mapOverviewContent" styleClass="map-overview-content" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity"
-            minWidth="-Infinity" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="mapOverviewContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="map-overview-content" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
     <top>
         <StackPane prefHeight="25.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <HBox prefHeight="100.0" prefWidth="200.0"/>
+            <HBox prefHeight="100.0" prefWidth="200.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                <Label fx:id="regionNameLabel" text="Label" textFill="WHITE" underline="true"/>
+                <Label fx:id="regionNameLabel" text="Label" textFill="WHITE" underline="true" />
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                <Button fx:id="closeButton" styleClass="map-overview-close-button" mnemonicParsing="false" text="X"/>
+                <Button fx:id="closeButton" mnemonicParsing="false" styleClass="map-overview-close-button" text="X" />
             </HBox>
         </StackPane>
     </top>
     <center>
-        <VBox fx:id="mapContainer" alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity"
-              minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
+        <VBox fx:id="mapContainer" alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
             <StackPane fx:id="mapStackPane" VBox.vgrow="NEVER">
-                <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
-                           preserveRatio="true"/>
-                <Pane fx:id="highlightPane"/>
+                <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                <Pane fx:id="highlightPane" />
             </StackPane>
         </VBox>
     </center>
     <bottom>
-        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: lightgrey;"
-              BorderPane.alignment="CENTER">
-            <TextFlow fx:id="textFlowRegionDescription" prefWidth="200" style="-fx-text-alignment: center">
-                <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0"/>
+        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" styleClass="map-overview-label-bg" BorderPane.alignment="CENTER">
+            <TextFlow fx:id="textFlowRegionDescription" prefWidth="200" styleClass="map-overview-label">
+                <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" />
             </TextFlow>
 
             <BorderPane.margin>
-                <Insets bottom="10.0" left="50.0" right="50.0"/>
+                <Insets bottom="10.0" left="50.0" right="50.0" />
             </BorderPane.margin>
         </HBox>
     </bottom>
