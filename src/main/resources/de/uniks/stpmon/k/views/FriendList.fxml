@@ -7,7 +7,7 @@
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" styleClass="friends-menu-holder"
       stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.FriendListController">
+      fx:controller="de.uniks.stpmon.k.controller.FriendListController" fx:id="friendMenu">
     <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" styleClass="friends-scroll-pane" VBox.vgrow="ALWAYS">
         <VBox fx:id="friendList" alignment="TOP_CENTER" maxWidth="360.0" minWidth="360.0" prefHeight="77.0"
               prefWidth="360.0" styleClass="friends-scroll-pane">

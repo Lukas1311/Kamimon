@@ -72,7 +72,7 @@ public class SidebarController extends Controller {
                     toPause();
                     event.consume();
                 }
-                case NUMBER_SIGN -> {
+                case NUMBER_SIGN, O -> {
                     openSettings();
                     event.consume();
                 }
