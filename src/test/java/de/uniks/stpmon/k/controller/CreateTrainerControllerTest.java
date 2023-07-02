@@ -81,7 +81,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
 
         Button createSprite = lookup("#createSpriteButton").query();
         assertNotNull(createSprite);
-        assertEquals("Create Sprite", createSprite.getText());
+        assertEquals("Choose Sprite", createSprite.getText());
 
         Button createTrainer = lookup("#createTrainerButton").query();
         assertNotNull(createTrainer);
