@@ -43,8 +43,6 @@ public class MonBoxController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
-    MonsterInformationController monsterInformationController;
-    @Inject
     Provider<IngameController> ingameControllerProvider;
     private MonsterCache monsterCache;
     private Monster activeMonster;
