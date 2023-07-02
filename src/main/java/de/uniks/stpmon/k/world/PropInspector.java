@@ -4,7 +4,10 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
-import de.uniks.stpmon.k.world.rules.*;
+import de.uniks.stpmon.k.world.rules.BasicRules;
+import de.uniks.stpmon.k.world.rules.RuleRegistry;
+import de.uniks.stpmon.k.world.rules.RuleResult;
+import de.uniks.stpmon.k.world.rules.TileInfo;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,15 +15,12 @@ import java.util.List;
 import java.util.*;
 
 public class PropInspector {
-
+    private static final RuleRegistry registry = BasicRules.registerRules();
     public static final int TILE_SIZE = 16;
     private final PropGrid[] grids;
     private final int layerOffset;
     private int groupId = 1;
     private final Map<Integer, HashSet<Integer>> groups;
-    private final List<PropRule> connectionRules = new ArrayList<>();
-    private final List<PropRule> tileRules = new ArrayList<>();
-    private final List<CandidateRule> candidateRules = new ArrayList<>();
 
     public PropInspector(int width, int height, int layers) {
         grids = new PropGrid[layers];
@@ -29,85 +29,10 @@ public class PropInspector {
         }
         layerOffset = width * height;
         groups = new HashMap<>();
-        registerRules();
-    }
-
-    private void registerRules() {
-        // City Fence extraction
-        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
-                2141, 2143, 3194, 3193));
-        // modular fence extraction
-        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
-                32999, 33002, 33175, 33178));
-        // forest fence extraction
-        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
-                new IdSource.Rectangle(1336, 3, 1, 176)));
-        // start house porch
-        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
-                new IdSource.Rectangle(10118, 8, 2, 176),
-                new IdSource.Rectangle(9422, 1, 6, 176)));
-        // City Fence entangled
-        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
-                new IdSource.Rectangle(2137, 8, 8, 176),
-                new IdSource.Rectangle(1789, 3, 2, 176),
-                new IdSource.Rectangle(383, 2, 9, 176)));
-        // Modular fence entangled
-        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
-                new IdSource.Rectangle(32294, 37, 7, 176)));
-        // Lantern entangled
-        addConnectionRule(new EntangledRule("../../tilesets/Modern_Exteriors_16x16.json",
-                new IdSource.Rectangle(3001, 1, 4, 176)));
-        // house carpets
-        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Interiors_16x16.json",
-                new IdSource.Rectangle(8285 + 247, 4, 3, 16),
-                new IdSource.Rectangle(8285 + 173, 4, 14, 16),
-                new IdSource.Rectangle(8285 + 251, 2, 6, 16)));
-        // house counter
-        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Interiors_16x16.json",
-                new IdSource.Rectangle(8285 + 10, 5, 5, 16),
-                new IdSource.Single(8285 + 407),
-                new IdSource.Single(8285 + 60)));
-        // picnic
-        addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
-                new IdSource.Rectangle(1135, 5, 8, 176)));
-        addConnectionRule(new ImageConnectionRule());
-        addTileRule(new ImageEmptyRule());
-        addCandidateRule(new TilesetCandidateRule("../../tilesets/Modern_Exteriors_16x16.json", 176));
-        addCandidateRule(new IncludedCandidateRule("../../tilesets/Modern_Exteriors_16x16.json", 12141, 13021));
-        addCandidateRule(new IncludedCandidateRule("../../tilesets/Modern_Exteriors_16x16.json", 10553, 10377));
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public PropInspector addTileRule(PropRule rule) {
-        tileRules.add(rule);
-        return this;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public PropInspector addConnectionRule(PropRule rule) {
-        connectionRules.add(rule);
-        return this;
-    }
-
-    @SuppressWarnings("UnusedReturnValue")
-    public PropInspector addCandidateRule(CandidateRule rule) {
-        candidateRules.add(rule);
-        return this;
     }
 
     public Set<HashSet<Integer>> uniqueGroups() {
         return new HashSet<>(groups.values());
-    }
-
-
-    private RuleResult applyRules(Collection<PropRule> rules, PropInfo info, List<DecorationLayer> decorationLayers) {
-        for (PropRule rule : rules) {
-            RuleResult result = rule.apply(info, decorationLayers);
-            if (result != RuleResult.NO_MATCH) {
-                return result;
-            }
-        }
-        return RuleResult.NO_MATCH;
     }
 
     public PropMap work(DecorationLayer layer, TileMapData data) {
@@ -136,6 +61,14 @@ public class PropInspector {
                 if (id <= 0) {
                     continue;
                 }
+
+                TileInfo current = new TileInfo(x, y, layerIndex, id, data.getTileset(id).source());
+                // Check if tile is a decoration or already used
+                if (registry.isDecoration(current)) {
+                    grid.setUsed(x, y, true);
+                    continue;
+                }
+
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
@@ -144,7 +77,7 @@ public class PropInspector {
                     if (notInBounds(grid, otherX, otherY)) {
                         continue;
                     }
-                    List<PropInfo> candidates = new ArrayList<>();
+                    List<TileInfo> candidates = new ArrayList<>();
                     for (int otherLayer = 0; otherLayer < decorationLayers.size(); otherLayer++) {
                         PropGrid otherGrid = grids[otherLayer];
                         ChunkBuffer otherBuffer = buffers[otherLayer];
@@ -159,39 +92,27 @@ public class PropInspector {
                         if (otherId <= 0) {
                             continue;
                         }
-                        PropInfo info = new PropInfo(x, y, layerIndex, id, otherId, otherLayer,
-                                data.getTileset(id).source(), data.getTileset(otherId).source(), dir, otherDir);
-                        RuleResult result = applyRules(connectionRules,
-                                info, decorationLayers
-                        );
-                        if (result == RuleResult.NO_MATCH_DECORATION) {
-                            marked = true;
+
+                        TileInfo other = new TileInfo(x, y, otherLayer, otherId, data.getTileset(otherId).source());
+                        // Check if tile is a decoration or already used
+                        if (registry.isDecoration(other)) {
                             continue;
                         }
+                        RuleResult result = registry.applyRule(current, other, dir, otherDir, decorationLayers);
                         if (result == RuleResult.NO_MATCH_STOP) {
                             continue;
                         }
                         // Check if the tiles are connected
                         if (result == RuleResult.MATCH_CONNECTION) {
-                            candidates.add(info);
+                            candidates.add(other);
                         }
                     }
                     if (candidates.isEmpty()) {
                         continue;
                     }
-                    PropInfo bestCandidate = null;
-                    if (candidates.size() > 1) {
-                        for (CandidateRule rule : candidateRules) {
-                            bestCandidate = rule.apply(candidates, decorationLayers);
-                            if (bestCandidate != null) {
-                                break;
-                            }
-                        }
-                    } else {
-                        bestCandidate = candidates.get(0);
-                    }
+                    TileInfo bestCandidate = registry.getPropInfo(current, candidates, decorationLayers);
                     if (bestCandidate != null) {
-                        int otherLayer = bestCandidate.otherLayer();
+                        int otherLayer = bestCandidate.layer();
                         PropGrid otherGrid = grids[otherLayer];
                         tryMergeGroups(x, y, layerIndex, otherX, otherY, otherLayer);
                         marked = true;
@@ -205,10 +126,7 @@ public class PropInspector {
                 if (checkOtherDirections(grid, x, y)) {
                     continue;
                 }
-                RuleResult result = applyRules(tileRules,
-                        new PropInfo(x, y, layerIndex, id, -1, -1,
-                                data.getTileset(id).source(), null, null, null), decorationLayers
-                );
+                RuleResult result = registry.applyLoneRule(current, decorationLayers);
                 if (result == RuleResult.MATCH_SINGLE) {
                     createIfAbsent(grid, x, y, null, layerIndex);
                 }
@@ -371,5 +289,4 @@ public class PropInspector {
         }
         return tiles;
     }
-
 }

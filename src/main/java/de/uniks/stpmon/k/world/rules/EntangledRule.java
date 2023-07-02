@@ -1,40 +1,30 @@
 package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
+import de.uniks.stpmon.k.utils.Direction;
 
-import java.util.*;
+import java.util.List;
 
-public class EntangledRule extends PropRule {
+public class EntangledRule implements ConnectionRule {
 
-    private final String tileSet;
-    private final Set<Integer> tileIds;
+    private final RuleRegistry registry;
 
-    public EntangledRule(String tileSet, Collection<Integer> c) {
-        this.tileIds = new HashSet<>(c);
-        this.tileSet = tileSet;
-    }
-
-    public EntangledRule(String tileSet, IdSource... sources) {
-        this(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
+    public EntangledRule(RuleRegistry registry) {
+        this.registry = registry;
     }
 
     @Override
-    public RuleResult apply(PropInfo info, List<DecorationLayer> layers) {
-        if (!tileSet.equals(info.tileSet())) {
-            return RuleResult.NO_MATCH;
-        }
-        boolean first = tileIds.contains(info.otherTileId());
-        boolean second = tileIds.contains(info.tileId());
-        // Booth tiles have to be in the set
-        if (!first && second || first && !second) {
+    public RuleResult apply(TileInfo current, TileInfo other, Direction currentDir, Direction otherDir, List<DecorationLayer> layers) {
+        int first = registry.getEntangledGroup(current.tileSet(), current.tileId());
+        int second = registry.getEntangledGroup(other.tileSet(), other.tileId());
+        // If groups are not the same, stop
+        if (first != second) {
             return RuleResult.NO_MATCH_STOP;
         }
-        // both true
-        if (second) {
+        // if first is positive, booth have a group that is the same, we have a match
+        if (first > 0) {
             return RuleResult.MATCH_CONNECTION;
         }
         return RuleResult.NO_MATCH;
     }
-
-
 }

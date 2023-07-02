@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CandidateRule {
 
-    PropInfo apply(List<PropInfo> candidates, List<DecorationLayer> layers);
+    TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers);
 
 }
