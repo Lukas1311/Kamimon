@@ -5,9 +5,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 
-<StackPane fx:id="fullBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" styleClass="encounter-background" stylesheets="@../css/ingameStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.EncounterOverviewController">
+<StackPane fx:id="fullBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" styleClass="encounter-background" stylesheets="@../css/ingameStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.EncounterOverviewController">
     <ImageView fx:id="background" fitHeight="729.0" fitWidth="1287.0" StackPane.alignment="CENTER" />
     <VBox>
         <StackPane VBox.vgrow="ALWAYS">
@@ -22,40 +21,36 @@
             <HBox alignment="CENTER" fillHeight="false">
                 <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                     <StackPane HBox.hgrow="ALWAYS">
-                        <ImageView fx:id="userMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
-                                   preserveRatio="true">
+                        <ImageView fx:id="userMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
                             <StackPane.margin>
-                                <Insets right="150.0"/>
+                                <Insets right="150.0" />
                             </StackPane.margin>
                         </ImageView>
-                        <ImageView fx:id="userMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
-                                   preserveRatio="true">
+                        <ImageView fx:id="userMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
                             <StackPane.margin>
-                                <Insets left="300.0" top="300.0"/>
+                                <Insets left="300.0" top="300.0" />
                             </StackPane.margin>
                         </ImageView>
                     </StackPane>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                     <StackPane HBox.hgrow="ALWAYS">
-                        <ImageView fx:id="opponentMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
-                                   preserveRatio="true">
+                        <ImageView fx:id="opponentMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
                             <StackPane.margin>
-                                <Insets bottom="300.0" right="300.0"/>
+                                <Insets bottom="300.0" right="300.0" />
                             </StackPane.margin>
                         </ImageView>
-                        <ImageView fx:id="opponentMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
-                                   preserveRatio="true"/>
+                        <ImageView fx:id="opponentMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
                     </StackPane>
                 </HBox>
             </HBox>
         </StackPane>
     </VBox>
     <VBox alignment="BOTTOM_RIGHT">
-        <Rectangle fx:id="placeholder" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="177.0" stroke="BLACK" strokeType="INSIDE" width="471.0">
-            <VBox.margin>
-                <Insets bottom="20.0" right="20.0" />
-            </VBox.margin>
-        </Rectangle>
+        <VBox fx:id="placeholder" prefHeight="111.0" prefWidth="335.0">
+           <VBox.margin>
+               <Insets bottom="10.0" left="900.0" right="30.0" />
+           </VBox.margin>
+        </VBox>
     </VBox>
 </StackPane>

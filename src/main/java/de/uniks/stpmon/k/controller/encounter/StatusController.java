@@ -53,7 +53,7 @@ public class StatusController extends Controller {
     @Override
     public Parent render() {
         final Parent parent;
-        if (monster.trainer().equals(trainerService.getMe()._id())) {
+        if (monster.trainer().equals("trainerService.getMe()._id()")) {
             parent = load("UserMonsterStatus");
             loadImage(monsterStatusView, "encounter/userMonsterStatus.png");
             loadMonsterInformation();
@@ -67,7 +67,7 @@ public class StatusController extends Controller {
 
     public void loadMonsterInformation() {
         // used to get the monster information for the monster of the trainer in the active region
-        disposables.add(regionService.getMonster(regionStorage.getRegion()._id(), monster._id())
+        disposables.add(regionService.getMonster("regionStorage.getRegion()._id()", monster._id())
                 .observeOn(FX_SCHEDULER)
                 .subscribe(monster1 -> {
                     monsterHp.setText(monster1.currentAttributes().health() + " / " + monster1.attributes().health());
@@ -79,13 +79,13 @@ public class StatusController extends Controller {
 
                     hpBar.setProgress(hpProgress);
 
-                    if (trainerService.getMe().team().contains(monster1._id())) {
-                        double maxExp = Math.pow(monster1.level(), 3) - Math.pow(monster1.level() - 1, 3);
-                        double currentExp = monster1.experience();
-                        double expProgress = currentExp / maxExp;
+                    //if (trainerService.getMe().team().contains(monster1._id())) {
+                    double maxExp = Math.pow(monster1.level(), 3) - Math.pow(monster1.level() - 1, 3);
+                    double currentExp = monster1.experience();
+                    double expProgress = currentExp / maxExp;
 
-                        experienceBar.setProgress(expProgress);
-                    }
+                    experienceBar.setProgress(expProgress);
+                    //  }
                 }));
     }
 
