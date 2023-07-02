@@ -2,18 +2,21 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
+import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
+import de.uniks.stpmon.k.service.dummies.MonsterDummy;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -21,6 +24,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -253,14 +257,15 @@ class AppTest extends ApplicationTest {
         clickOn("#editUserButton");
         clickOn("#deleteUserButton");
         clickOn("#approveButton");
+
         verifyThat("#registerButton", Node::isVisible);
-
     }
-
 
     @Test
     void criticalPathV3() {
         MovementDummy.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
         app.addInputHandler(component);
         app.show(component.hybridController());
 
@@ -285,6 +290,8 @@ class AppTest extends ApplicationTest {
         // popup pops up
         clickOn("#approveButton");
         waitForFxEvents();
+
+        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy);
 
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
@@ -313,9 +320,14 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
         type(KeyCode.ENTER);
+        sleep(2000);
         waitForFxEvents();
 
+        clickOn("#monster_label_0");
+        verifyThat("#monsterInformation", Node::isVisible);
+
         clickOn("#monsterBar");
+
 
         //check backpack
         clickOn("#backpackImage");
@@ -345,6 +357,6 @@ class AppTest extends ApplicationTest {
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
         assertEquals(1, ingameWrappingHbox.getChildren().size());
 
-
     }
+
 }

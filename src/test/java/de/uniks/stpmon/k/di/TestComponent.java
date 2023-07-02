@@ -43,6 +43,8 @@ public interface TestComponent extends MainComponent {
 
     CacheManager cacheManager();
 
+    EventDummy eventDummy();
+
     @Component.Builder
     interface Builder extends MainComponent.Builder {
 
