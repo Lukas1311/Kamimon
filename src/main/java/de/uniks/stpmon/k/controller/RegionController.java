@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class RegionController extends Controller {
+
     private final Region region;
     @FXML
     public Text regionNameText;
@@ -52,4 +53,5 @@ public class RegionController extends Controller {
     public Node getNode() {
         return regionVBox;
     }
+
 }

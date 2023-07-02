@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class FriendCache extends ListenerCache<User, String> implements IFriendCache, ILifecycleService {
+
     private final InternalFriends friends = new InternalFriends();
 
     @Inject
@@ -156,6 +157,7 @@ public class FriendCache extends ListenerCache<User, String> implements IFriendC
         public String getId(User value) {
             return value._id();
         }
+
     }
 
 }

@@ -35,4 +35,5 @@ public class TabController extends ToastedController {
     protected void openTab(Consumer<HybridController> callback) {
         callback.accept(hybridControllerProvider.get());
     }
+
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 @Singleton
 public class WorldRepository {
+
     private final SingleCache<BufferedImage> floorImage = new SingleCache<>();
     private final SingleCache<BufferedImage> minimapImage = new SingleCache<>();
     private final SingleCache<BufferedImage> regionMap = new SingleCache<>();
@@ -51,4 +52,5 @@ public class WorldRepository {
                 && props.isEmpty()
                 && regionMap.isEmpty();
     }
+
 }

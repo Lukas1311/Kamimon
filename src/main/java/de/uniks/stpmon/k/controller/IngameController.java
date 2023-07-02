@@ -2,22 +2,31 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.Stack;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends PortalController {
+    private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
     public StackPane ingameStack;
@@ -50,6 +59,8 @@ public class IngameController extends PortalController {
     StarterController starterController;
     @Inject
     InteractionStorage interactionStorage;
+    @Inject
+    MonsterInformationController monsterInformationController;
 
     @Inject
     TrainerStorage trainerStorage;
@@ -98,7 +109,8 @@ public class IngameController extends PortalController {
                         }
                     }
 
-                    default -> { }
+                    default -> {
+                    }
 
                 }
             }
@@ -179,12 +191,35 @@ public class IngameController extends PortalController {
         hybridControllerProvider.get().forceTab(NONE);
     }
 
-    public void addBackpackMenu(HBox backpackMenu) {
-        ingameWrappingHBox.getChildren().add(0, backpackMenu);
+    public void pushController(Controller controller) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        controller.init();
+        tabStack.push(controller);
+        children.add(0, controller.render());
     }
 
-    public void removeBackpackMenu(HBox backpackMenu) {
-        ingameWrappingHBox.getChildren().remove(backpackMenu);
+    public void removeChildren(int endIndex) {
+
+        for (int i = tabStack.size() - 1; i >= endIndex; i--) {
+            ObservableList<Node> children = ingameWrappingHBox.getChildren();
+            Controller controller = tabStack.pop();
+            controller.destroy();
+            children.remove(0);
+        }
     }
 
+
+    public void openMonsterInfo(Monster monster) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        MonsterInformationController controller = monsterInformationController;
+        controller.init();
+        tabStack.push(controller);
+
+        Parent monsterInfo = controller.render();
+        controller.loadMonsterTypeDto(String.valueOf(monster.type()));
+        controller.loadMonster(monster);
+        children.add(0, monsterInfo);
+    }
 }

@@ -104,9 +104,11 @@ public class ChatListController extends TabController {
 
     /**
      * returns the username from the current user
+     *
      * @return username of current user
      */
     public String getCurrentUsername() {
         return userService.getMe().name();
     }
+
 }

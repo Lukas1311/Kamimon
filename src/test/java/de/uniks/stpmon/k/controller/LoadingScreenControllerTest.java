@@ -75,4 +75,5 @@ public class LoadingScreenControllerTest extends ApplicationTest {
         // Check if the task is not executed
         verify(runTask, never()).run();
     }
+
 }

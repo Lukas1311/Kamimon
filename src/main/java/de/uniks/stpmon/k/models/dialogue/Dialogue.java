@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.models.dialogue;
 
 public final class Dialogue {
+
     private final DialogueItem[] items;
     private final String trainerId;
 
@@ -32,4 +33,5 @@ public final class Dialogue {
     public boolean isEmpty() {
         return getItems().length == 0;
     }
+
 }

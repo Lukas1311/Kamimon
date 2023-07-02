@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +18,7 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class BackpackMenuControllerTest extends ApplicationTest {
@@ -29,11 +29,12 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
-
-    @Mock
-    BackpackController backpackController;
     @Spy
     Provider<MonsterBarController> monsterBarControllerProvider;
+    @Spy
+    Provider<MonBoxController> monBoxControllerProvider;
+    @Mock
+    Provider<IngameController> ingameControllerProvider;
 
     @InjectMocks
     BackpackMenuController backpackMenuController;
@@ -48,24 +49,42 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
     @Test
     void hoverOver() {
-        Label label = lookup("#backpackMenuSelectedLabel0").query();
+        Label label = lookup("#backpackMenuSelectedLabel_0").query();
         moveTo(label);
         assertEquals(">", label.getText());
-        Label label2 = lookup("#backpackMenuSelectedLabel1").query();
+        Label label2 = lookup("#backpackMenuSelectedLabel_1").query();
         moveTo(label2);
         assertEquals("", label.getText());
     }
 
     @Test
     void clickOnMonsters() {
-        doNothing().when(backpackController).closeBackPackMenu();
         MonsterBarController monsterBarController = Mockito.mock(MonsterBarController.class);
         when(monsterBarControllerProvider.get()).thenReturn(monsterBarController);
         doNothing().when(monsterBarController).showMonsters();
 
-        Text text = lookup("#backpackMenuText1").query();
-        clickOn(text);
+        Label label = lookup("#backpackMenuLabel_1").query();
+        clickOn(label);
         verify(monsterBarController).showMonsters();
 
+    }
+
+    @Test
+    void clickOnMonster_List() {
+        MonBoxController monBoxController = Mockito.mock(MonBoxController.class);
+        when(monBoxControllerProvider.get()).thenReturn(monBoxController);
+        IngameController ingameController = Mockito.mock(IngameController.class);
+        when(ingameControllerProvider.get()).thenReturn(ingameController);
+
+        Label label = lookup("#backpackMenuLabel_0").query();
+        clickOn(label);
+        waitForFxEvents();
+        verify(ingameController).pushController(any());
+
+        Label label2 = lookup("#backpackMenuLabel_0").query();
+        clickOn(label2);
+        waitForFxEvents();
+
+        verify(ingameController).removeChildren(anyInt());
     }
 }

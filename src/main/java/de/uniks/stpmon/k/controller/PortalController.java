@@ -14,6 +14,7 @@ import javax.inject.Provider;
 import static de.uniks.stpmon.k.controller.sidebar.MainWindow.INGAME;
 
 public class PortalController extends ToastedController implements IPortalController {
+
     @Inject
     LoadingRegionController loadingRegionController;
     @Inject
@@ -57,4 +58,5 @@ public class PortalController extends ToastedController implements IPortalContro
                             hybridControllerProvider.get().openMain(INGAME);
                         })));
     }
+
 }

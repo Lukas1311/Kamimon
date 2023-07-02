@@ -5,6 +5,7 @@ import retrofit2.HttpException;
 import javax.inject.Inject;
 
 public class ToastedController extends Controller {
+
     @Inject
     protected ToastController toastController;
 
@@ -16,4 +17,5 @@ public class ToastedController extends Controller {
             toastController.openToast(translateString("too.many.requests.try.again"));
         }
     }
+
 }

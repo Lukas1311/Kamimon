@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 @Module
 public class HttpModule {
+
     @Provides
     @Singleton
     static OkHttpClient client(TokenStorage tokenStorage) {
@@ -85,4 +86,5 @@ public class HttpModule {
     EncounterApiService encounterApi(Retrofit retrofit) {
         return retrofit.create(EncounterApiService.class);
     }
+
 }

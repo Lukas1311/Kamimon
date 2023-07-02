@@ -3,14 +3,11 @@ package de.uniks.stpmon.k.net;
 import de.uniks.stpmon.k.Main;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.util.function.Consumer;
 
 public class UDPReceiver implements SocketReceiver {
+
     protected DatagramSocket socket;
     private Thread thread;
     private Consumer<String> handler;
@@ -92,4 +89,5 @@ public class UDPReceiver implements SocketReceiver {
         }
         socket.close();
     }
+
 }

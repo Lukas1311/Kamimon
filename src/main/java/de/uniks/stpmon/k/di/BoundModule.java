@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 @Module
 public abstract class BoundModule {
+
     @Binds
     @SuppressWarnings("unused")
     public abstract IFriendCache friendCache(FriendCache cache);
@@ -63,4 +64,5 @@ public abstract class BoundModule {
     @Singleton
     @SuppressWarnings("unused")
     public abstract ILifecycleService sessionService(SessionService handler);
+
 }

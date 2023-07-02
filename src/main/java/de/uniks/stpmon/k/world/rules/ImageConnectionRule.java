@@ -43,4 +43,5 @@ public class ImageConnectionRule implements PropRule {
 
         return RuleResult.MATCH_CONNECTION;
     }
+
 }

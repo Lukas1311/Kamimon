@@ -69,4 +69,5 @@ public class MessageController extends Controller {
 
         return strippedTime.toString();
     }
+
 }

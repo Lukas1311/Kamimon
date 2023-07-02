@@ -36,6 +36,7 @@ public class UserTestModule {
                 }
 
             }
+
             @Override
             public Observable<User> addUser(CreateUserDto dto) {
                 String avatar = "someAvatar";
@@ -80,7 +81,7 @@ public class UserTestModule {
             @Override
             public Observable<User> getUser(String id) {
                 //1 because test bot registers, and is added to list
-                if(users.size() <= 1) {
+                if (users.size() <= 1) {
                     initDummyUsers();
                 }
                 Optional<User> returnUser = users.stream()
@@ -153,4 +154,5 @@ public class UserTestModule {
             }
         };
     }
+
 }

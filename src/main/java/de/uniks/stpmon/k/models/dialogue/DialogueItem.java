@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.models.dialogue;
 import java.util.Objects;
 
 public class DialogueItem {
+
     private final String text;
     private final Runnable action;
     private final DialogueOption[] options;
@@ -40,4 +41,5 @@ public class DialogueItem {
     public DialogueItem getNext() {
         return next;
     }
+
 }
