@@ -15,9 +15,6 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,8 +27,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+
 
 @ExtendWith(MockitoExtension.class)
 public class StatusControllerTest extends ApplicationTest {
@@ -45,87 +44,94 @@ public class StatusControllerTest extends ApplicationTest {
     RegionStorage regionStorage;
     @Mock
     TrainerService trainerService;
-    @InjectMocks
-    StatusController statusController;
     @Spy
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
+    @InjectMocks
+    StatusController statusController;
+
     Region dummyRegion = new Region("1", "reg", null, null);
-    Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
-    Monster dummyMonster;
+
+    MonsterAttributes attributes1 = new MonsterAttributes(10, 8, 6, 4);
+    MonsterAttributes currentAttributes1 = new MonsterAttributes(5, 4, 3, 2);
+    Monster dummyMonster1 = MonsterBuilder.builder()
+            .setId("id1")
+            .setTrainer("id")
+            .setLevel(1)
+            .setExperience(2)
+            .setAttributes(attributes1)
+            .setCurrentAttributes(currentAttributes1)
+            .create();
+
+    Trainer dummyTrainer = TrainerBuilder.builder()
+            .setId("id")
+            .addTeam(dummyMonster1._id())
+            .create();
+
+    // create a dummy monster with some values for the second trainer
+    MonsterAttributes attributes2 = new MonsterAttributes(24, 9, 7, 5);
+    MonsterAttributes currentAttributes2 = new MonsterAttributes(6, 5, 4, 3);
+    Monster dummyMonster2 = MonsterBuilder.builder()
+            .setId("id2")
+            .setTrainer("otherTrainerId")
+            .setLevel(2)
+            .setExperience(3)
+            .setAttributes(attributes2)
+            .setCurrentAttributes(currentAttributes2)
+            .create();
 
 
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
 
-        when(trainerService.getMe()).thenReturn(dummytrainer);
+        statusController.setMonster(dummyMonster1);
+
+        when(trainerService.getMe()).thenReturn(dummyTrainer);
         when(regionStorage.getRegion()).thenReturn(dummyRegion);
 
-        MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
-        MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
-        dummyMonster = MonsterBuilder.builder()
-                .setId("id")
-                .setTrainer(trainerService.getMe()._id())
-                .setLevel(1)
-                .setExperience(2)
-                .setAttributes(attributes)
-                .setCurrentAttributes(currentAttributes)
-                .create();
-
-        statusController.setMonster(dummyMonster);
-
-        when(regionService.getMonster(anyString(), anyString())).thenReturn(Observable.just(dummyMonster));
+        when(regionService.getMonster(anyString(), eq("id1"))).thenReturn(Observable.just(dummyMonster1));
 
         app.show(statusController);
         stage.requestFocus();
     }
 
+
+    @Test
+    void testRender() {
+        StatusController statusControllerSpy = spy(statusController);
+        doNothing().when(statusControllerSpy).loadMonsterInformation();
+        when(trainerService.getMe()).thenReturn(dummyTrainer);
+
+        statusControllerSpy.setMonster(dummyMonster1);
+        statusControllerSpy.render();
+
+        statusControllerSpy.setMonster(dummyMonster2);
+        statusControllerSpy.render();
+
+        // one time for app start (because monster has to be initially set), two times for invocation
+        verify(statusControllerSpy, times(2)).loadMonsterInformation();
+    }
+
     @Test
     void testLoadUserMonsterInformation() {
-        // Mock UI elements
-        VBox fullBox = mock(VBox.class);
-        ProgressBar hpBar = mock(ProgressBar.class);
-        Text monsterHp = mock(Text.class);
-        Text monsterLevel = mock(Text.class);
-        ProgressBar experienceBar = mock(ProgressBar.class);
-
-        // Set UI elements in the statusController
-        statusController.fullBox = fullBox;
-        statusController.hpBar = hpBar;
-        statusController.monsterHp = monsterHp;
-        statusController.monsterLevel = monsterLevel;
-        statusController.experienceBar = experienceBar;
-
-        // Create a dummy monster with the expected values
-        MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
-        MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
-        Monster dummyMonster = MonsterBuilder.builder()
-                .setId("id")
-                .setTrainer(trainerService.getMe()._id())
-                .setLevel(1)
-                .setExperience(2)
-                .setAttributes(attributes)
-                .setCurrentAttributes(currentAttributes)
-                .create();
-
         // Mock the regionService.getMonster() method to return the dummy monster
-        when(regionService.getMonster(anyString(), anyString())).thenReturn(Observable.just(dummyMonster));
+        when(regionService.getMonster(anyString(), anyString())).thenReturn(Observable.just(dummyMonster1));
 
         // Call the loadMonsterInformation method
         statusController.loadMonsterInformation();
 
-        // Verify that the UI elements are updated correctly
-        verify(monsterHp).setText("5 / 10");
-        verify(monsterLevel).setText("Lvl. 1");
-        verify(hpBar).setProgress(0.5);
+        assertNotNull(statusController.fullBox);
+        assertNotNull(statusController.hpBar);
+        assertNotNull(statusController.monsterHp);
+        assertNotNull(statusController.monsterLevel);
+        assertNotNull(statusController.experienceBar);
 
-        assertNotNull(fullBox);
-        assertNotNull(hpBar);
-        assertNotNull(monsterHp);
-        assertNotNull(monsterLevel);
-        assertNotNull(experienceBar);
+        assertEquals("5 / 10", statusController.monsterHp.getText());
+        assertEquals("Lvl. 1", statusController.monsterLevel.getText());
+        assertEquals(0.5, statusController.hpBar.getProgress());
+        assertEquals(0.6666666666666666, statusController.experienceBar.getProgress());
     }
 
     @Test
