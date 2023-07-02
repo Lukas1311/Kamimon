@@ -39,9 +39,10 @@
     -fx-background-color: transparent;
     -fx-border-style: hidden;
     -fx-hbar-policy: never;
+    -fx-text-fill: black;
 }
 
-.backpack-menu-list .list-cell:selected {
+.backpack-menu-list .list-cell:selected .label{
     -fx-text-fill: black;
 }
 
