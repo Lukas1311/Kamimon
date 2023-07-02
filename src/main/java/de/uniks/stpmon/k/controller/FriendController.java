@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.service.UserService;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -11,6 +13,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
 
@@ -33,15 +36,21 @@ public class FriendController extends Controller {
 
     private final FriendListController friendListController;
 
+    @Inject
+    Provider<UserService> userServiceProvider;
+
     private final User user;
-    private final boolean newFriend;
+
+    private final boolean isFriend;
 
 
-    public FriendController(User user, Boolean newFriend, FriendListController friendListController, Provider<ResourceBundle> resources) {
+    public FriendController(User user, FriendListController friendListController, Provider<ResourceBundle> resources, Provider<UserService> userServiceProvider) {
         this.user = user;
-        this.newFriend = newFriend;
+        this.isFriend = userServiceProvider.get().isFriend(user);
         this.friendListController = friendListController;
         this.resources = resources;
+        this.userServiceProvider = userServiceProvider;
+
     }
 
     @Override
@@ -52,14 +61,14 @@ public class FriendController extends Controller {
 
         userName.setText(user.name());
         messageButton.setTooltip(new Tooltip(translateString("chatWithFriend")));
-        removeFriendButton.setTooltip(new Tooltip(translateString(newFriend ? ("addFriend") : ("removeFriend"))));
 
-        if (newFriend) {
-            removeFriendText.setIconLiteral("mdral-add");
-            removeFriendText.setIconColor(Color.rgb(106, 168, 79));
-        } else {
+        removeFriendButton.setTooltip(new Tooltip(translateString(isFriend ? ("removeFriend") : ("addFriend"))));
+        if (isFriend) {
             removeFriendText.setIconLiteral("mdral-clear");
             removeFriendText.setIconColor(Color.rgb(207, 42, 39));
+        } else {
+            removeFriendText.setIconLiteral("mdral-add");
+            removeFriendText.setIconColor(Color.rgb(106, 168, 79));
         }
 
         if (user.status().equals("offline")) {
@@ -67,6 +76,9 @@ public class FriendController extends Controller {
         } else {
             userStatus.setFill(Color.rgb(106, 168, 79));
         }
+
+
+        //TODO: Add avatar image to friendlist
 
         //add avatar-url when avatar != null
         //avatarBox.setBackground(new Background(new BackgroundImage(new Image(""), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
@@ -85,7 +97,7 @@ public class FriendController extends Controller {
 
     @FXML
     public void handleFriend() {
-        friendListController.handleFriend(newFriend, user);
+        friendListController.handleFriend(user);
     }
 
 }

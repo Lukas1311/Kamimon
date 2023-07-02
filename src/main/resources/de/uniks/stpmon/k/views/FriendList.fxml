@@ -1,31 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-<VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" styleClass="friends-menu-holder"
-      stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.FriendListController" fx:id="friendMenu">
-    <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" styleClass="friends-scroll-pane" VBox.vgrow="ALWAYS">
-        <VBox fx:id="friendList" alignment="TOP_CENTER" maxWidth="360.0" minWidth="360.0" prefHeight="77.0"
-              prefWidth="360.0" styleClass="friends-scroll-pane">
-            <VBox fx:id="friendSection" alignment="TOP_CENTER" fillWidth="false" maxWidth="360.0" minWidth="360.0"
-                  prefWidth="360.0" styleClass="friends-scroll-pane"/>
-            <VBox fx:id="userSeparator" alignment="CENTER" fillWidth="false" maxWidth="330.0" minWidth="330.0"
-                  prefHeight="43.0" prefWidth="330.0" visible="false">
-                <VBox.margin>
-                    <Insets bottom="10.0" top="10.0"/>
-                </VBox.margin>
-                <Separator prefWidth="370.0"/>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•••" textAlignment="CENTER"/>
-                <Separator layoutX="10.0" layoutY="10.0" prefWidth="370.0"/>
-            </VBox>
-            <VBox fx:id="userSection" alignment="TOP_CENTER" fillWidth="false" maxWidth="360.0" minWidth="360.0"
-                  prefWidth="360.0" styleClass="friends-scroll-pane"/>
-        </VBox>
-    </ScrollPane>
+<VBox alignment="CENTER" maxWidth="370.0" prefHeight="720.0" spacing="10.0" styleClass="friends-menu-holder"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.FriendListController">
+    <VBox fx:id="friendListVbox" alignment="TOP_CENTER" VBox.vgrow="ALWAYS"/>
+    <CheckBox fx:id="checkBox" maxWidth="330.0" minWidth="330.0" mnemonicParsing="false" prefWidth="330.0"
+              styleClass="login-check-box" text="Search all users"/>
     <VBox alignment="CENTER_LEFT" maxWidth="330.0" minWidth="330.0" prefWidth="330.0" styleClass="friends-scroll-pane"
           VBox.vgrow="NEVER">
         <StackPane alignment="CENTER_LEFT" maxWidth="330.0" minWidth="330.0" prefWidth="330.0">

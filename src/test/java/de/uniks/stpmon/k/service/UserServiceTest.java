@@ -199,7 +199,7 @@ class UserServiceTest {
 
         when(userApiService.getUsers()).thenReturn(Observable.just(List.of()));
         //action
-        List<User> emptyList = userService.searchFriend("").blockingFirst();
+        List<User> emptyList = userService.searchUser("").blockingFirst();
 
         //check values
         assertTrue(emptyList.isEmpty());
@@ -228,7 +228,7 @@ class UserServiceTest {
         when(userApiService.getUsers()).thenReturn(Observable.just(usersFromServer));
 
         //action
-        final List<User> users = userService.searchFriend("a").blockingFirst();
+        final List<User> users = userService.searchUser("a").blockingFirst();
 
         //check values
         assertEquals(1, users.size());

@@ -50,9 +50,7 @@ public class UserService implements ILifecycleService {
     }
 
     public Observable<User> addUser(String username, String password) {
-        return userApiService.addUser(
-                new CreateUserDto(username, null, password)
-        );
+        return userApiService.addUser(new CreateUserDto(username, null, password));
     }
 
     private IFriendCache friendCache() {
@@ -129,22 +127,34 @@ public class UserService implements ILifecycleService {
         return userApiService.updateUser(newUser._id(), dto);
     }
 
-    public Observable<List<User>> searchFriend(String name) {
-        return friendCache().getValues()
-                .map((e) -> {
-                    if (name.isEmpty()) {
-                        return new ArrayList<User>();
-                    }
-                    return e;
-                })
-                .flatMap(old -> friendCache().getFriends().map((e) -> old))
-                .map(users -> {
-                    final User user = userStorage.getUser();
-                    return users.stream()
-                            .filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
-                                    && !f._id().equals(user._id())) //do not show the searching user
-                            .filter(g -> !user.friends().contains(g._id())).toList();
-                });
+    /**
+     * This method filters all users, where the username begins with the given string.
+     * If the string is empty, all users get returned.
+     *
+     * @param name: the search term
+     * @return Observable list of users that match the search term
+     */
+    public Observable<List<User>> searchUser(String name) {
+        return friendCache().getValues().flatMap(old -> friendCache().getFriends().map((e) -> old)).map(users -> {
+            final User user = userStorage.getUser();
+            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
+                            && !f._id().equals(user._id())) //do not show the searching user
+                    .toList();
+        });
+    }
+
+    public Observable<List<User>> searchUser(String name, boolean onlyFriends) {
+        return friendCache().getValues().flatMap(old -> friendCache().getFriends().map((e) -> old)).map(users -> {
+            final User user = userStorage.getUser();
+            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
+                            && !f._id().equals(user._id())) //do not show the searching user
+                    .filter(g -> isFriend(g) || !onlyFriends)
+                    .toList();
+        });
+    }
+
+    public boolean isFriend(User user) {
+        return userStorage.getUser().friends().contains(user._id());
     }
 
     public Observable<List<User>> addFriend(User friend) {
@@ -166,22 +176,16 @@ public class UserService implements ILifecycleService {
     }
 
     private Observable<List<User>> updateFriendList(User user, HashSet<String> friendList) {
-        UpdateUserDto dto = new UpdateUserDto(
-                null,
-                null,
-                null,
-                new ArrayList<>(friendList),
-                null);
+        UpdateUserDto dto = new UpdateUserDto(null, null, null, new ArrayList<>(friendList), null);
 
-        return userApiService.updateUser(user._id(), dto)
-                .map(e -> {
-                    userStorage.setUser(e);
-                    // is true, if last friend is removed
-                    if (e.friends().isEmpty()) {
-                        return Observable.<List<User>>fromSupplier(ArrayList::new);
-                    }
-                    return friendCache().updateFriends(e);
-                }).concatMap(f -> f);
+        return userApiService.updateUser(user._id(), dto).map(e -> {
+            userStorage.setUser(e);
+            // is true, if last friend is removed
+            if (e.friends().isEmpty()) {
+                return Observable.<List<User>>fromSupplier(ArrayList::new);
+            }
+            return friendCache().updateFriends(e);
+        }).concatMap(f -> f);
     }
 
     public Observable<List<User>> getFriends() {
@@ -193,10 +197,7 @@ public class UserService implements ILifecycleService {
     }
 
     public Observable<List<User>> getUsers(List<String> ids) {
-        List<User> users = ids.stream().map(id -> friendCache().getValue(id))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+        List<User> users = ids.stream().map(id -> friendCache().getValue(id)).filter(Optional::isPresent).map(Optional::get).toList();
         return Observable.just(users);
     }
 
