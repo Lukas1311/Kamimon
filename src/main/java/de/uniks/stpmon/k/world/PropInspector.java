@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.*;
 
 public class PropInspector {
+
     public static final int TILE_SIZE = 16;
     private final PropGrid[] grids;
     private final int layerOffset;
@@ -28,6 +29,10 @@ public class PropInspector {
         }
         layerOffset = width * height;
         groups = new HashMap<>();
+        registerRules();
+    }
+
+    private void registerRules() {
         // City Fence extraction
         addConnectionRule(new ExclusionRule("../../tilesets/Modern_Exteriors_16x16.json",
                 2141, 2143, 3194, 3193));
@@ -115,113 +120,124 @@ public class PropInspector {
             buffers[i] = new ChunkBuffer(decorationLayers.get(i).layerData());
         }
         for (int layerIndex = 0; layerIndex < decorationLayers.size(); layerIndex++) {
-            ChunkBuffer buffer = buffers[layerIndex];
-            PropGrid grid = grids[layerIndex];
-            for (int x = 0; x < grid.getWidth(); x++) {
-                for (int y = grid.getHeight() - 1; y >= 0; y--) {
-                    boolean marked = false;
-                    int id = buffer.getId(x, y);
-                    // Empty or invalid tile
-                    if (id <= 0) {
+            workLayer(decorationLayers, data, buffers, layerIndex);
+        }
+        return createProps(decorationLayers);
+    }
+
+    private void workLayer(List<DecorationLayer> decorationLayers, TileMapData data, ChunkBuffer[] buffers, int layerIndex) {
+        ChunkBuffer buffer = buffers[layerIndex];
+        PropGrid grid = grids[layerIndex];
+        for (int x = 0; x < grid.getWidth(); x++) {
+            for (int y = grid.getHeight() - 1; y >= 0; y--) {
+                boolean marked = false;
+                int id = buffer.getId(x, y);
+                // Empty or invalid tile
+                if (id <= 0) {
+                    continue;
+                }
+                for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
+                    int otherX = x + dir.tileX();
+                    int otherY = y + dir.tileY();
+                    Direction otherDir = dir.opposite();
+                    // Check bounds
+                    if (notInBounds(grid, otherX, otherY)) {
                         continue;
                     }
-                    for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
-                        int otherX = x + dir.tileX();
-                        int otherY = y + dir.tileY();
-                        Direction otherDir = dir.opposite();
-                        // Check bounds
-                        if (otherX < 0 || otherX >= grid.getWidth()
-                                || otherY < 0 || otherY >= grid.getHeight()) {
-                            continue;
-                        }
-                        List<PropInfo> candidates = new ArrayList<>();
-                        for (int otherLayer = 0; otherLayer < decorationLayers.size(); otherLayer++) {
-                            PropGrid otherGrid = grids[otherLayer];
-                            ChunkBuffer otherBuffer = buffers[otherLayer];
-                            // Check visited
-                            if (grid.hasVisited(x, y, dir)
-                                    || otherGrid.hasVisited(otherX, otherY, otherDir)) {
-                                marked = true;
-                                continue;
-                            }
-                            int otherId = otherBuffer.getId(otherX, otherY);
-                            // Empty or invalid tile
-                            if (otherId <= 0) {
-                                continue;
-                            }
-                            PropInfo info = new PropInfo(x, y, layerIndex, id, otherId, otherLayer,
-                                    data.getTileset(id).source(), data.getTileset(otherId).source(), dir, otherDir);
-                            RuleResult result = applyRules(connectionRules,
-                                    info, decorationLayers
-                            );
-                            if (result == RuleResult.NO_MATCH_DECORATION) {
-                                marked = true;
-                                continue;
-                            }
-                            if (result == RuleResult.NO_MATCH_STOP) {
-                                continue;
-                            }
-                            // Check if the tiles are connected
-                            if (result == RuleResult.MATCH_CONNECTION) {
-                                candidates.add(info);
-                            }
-                        }
-                        if (candidates.isEmpty()) {
-                            continue;
-                        }
-                        PropInfo bestCandidate = null;
-                        if (candidates.size() > 1) {
-                            for (CandidateRule rule : candidateRules) {
-                                bestCandidate = rule.apply(candidates, decorationLayers);
-                                if (bestCandidate != null) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            bestCandidate = candidates.get(0);
-                        }
-                        if (bestCandidate != null) {
-                            int otherLayer = bestCandidate.otherLayer();
-                            PropGrid otherGrid = grids[otherLayer];
-                            tryMergeGroups(x, y, layerIndex, otherX, otherY, otherLayer);
-                            marked = true;
-                            grid.setVisited(x, y, dir);
-                            otherGrid.setVisited(otherX, otherY, otherDir);
-                        }
-                    }
-                    if (marked) {
-                        continue;
-                    }
-                    for (Direction dir : new Direction[]{Direction.LEFT, Direction.BOTTOM}) {
-                        int otherX = x + dir.tileX();
-                        int otherY = y + dir.tileY();
-                        Direction otherDir = dir.opposite();
-                        // Check bounds
-                        if (otherX < 0 || otherX >= grid.getWidth()
-                                || otherY < 0 || otherY >= grid.getHeight()) {
-                            continue;
-                        }
+                    List<PropInfo> candidates = new ArrayList<>();
+                    for (int otherLayer = 0; otherLayer < decorationLayers.size(); otherLayer++) {
+                        PropGrid otherGrid = grids[otherLayer];
+                        ChunkBuffer otherBuffer = buffers[otherLayer];
                         // Check visited
                         if (grid.hasVisited(x, y, dir)
-                                || grid.hasVisited(otherX, otherY, otherDir)) {
+                                || otherGrid.hasVisited(otherX, otherY, otherDir)) {
                             marked = true;
-                            break;
+                            continue;
+                        }
+                        int otherId = otherBuffer.getId(otherX, otherY);
+                        // Empty or invalid tile
+                        if (otherId <= 0) {
+                            continue;
+                        }
+                        PropInfo info = new PropInfo(x, y, layerIndex, id, otherId, otherLayer,
+                                data.getTileset(id).source(), data.getTileset(otherId).source(), dir, otherDir);
+                        RuleResult result = applyRules(connectionRules,
+                                info, decorationLayers
+                        );
+                        if (result == RuleResult.NO_MATCH_DECORATION) {
+                            marked = true;
+                            continue;
+                        }
+                        if (result == RuleResult.NO_MATCH_STOP) {
+                            continue;
+                        }
+                        // Check if the tiles are connected
+                        if (result == RuleResult.MATCH_CONNECTION) {
+                            candidates.add(info);
                         }
                     }
-                    if (marked) {
+                    if (candidates.isEmpty()) {
                         continue;
                     }
-                    RuleResult result = applyRules(tileRules,
-                            new PropInfo(x, y, layerIndex, id, -1, -1,
-                                    data.getTileset(id).source(), null, null, null), decorationLayers
-                    );
-                    if (result == RuleResult.MATCH_SINGLE) {
-                        createIfAbsent(grid, x, y, null, layerIndex);
+                    PropInfo bestCandidate = null;
+                    if (candidates.size() > 1) {
+                        for (CandidateRule rule : candidateRules) {
+                            bestCandidate = rule.apply(candidates, decorationLayers);
+                            if (bestCandidate != null) {
+                                break;
+                            }
+                        }
+                    } else {
+                        bestCandidate = candidates.get(0);
                     }
+                    if (bestCandidate != null) {
+                        int otherLayer = bestCandidate.otherLayer();
+                        PropGrid otherGrid = grids[otherLayer];
+                        tryMergeGroups(x, y, layerIndex, otherX, otherY, otherLayer);
+                        marked = true;
+                        grid.setVisited(x, y, dir);
+                        otherGrid.setVisited(otherX, otherY, otherDir);
+                    }
+                }
+                if (marked) {
+                    continue;
+                }
+                if (checkOtherDirections(grid, x, y)) {
+                    continue;
+                }
+                RuleResult result = applyRules(tileRules,
+                        new PropInfo(x, y, layerIndex, id, -1, -1,
+                                data.getTileset(id).source(), null, null, null), decorationLayers
+                );
+                if (result == RuleResult.MATCH_SINGLE) {
+                    createIfAbsent(grid, x, y, null, layerIndex);
                 }
             }
         }
-        return createProps(decorationLayers);
+    }
+
+    private static boolean checkOtherDirections(PropGrid grid, int x, int y) {
+        for (Direction dir : new Direction[]{Direction.LEFT, Direction.BOTTOM}) {
+            int otherX = x + dir.tileX();
+            int otherY = y + dir.tileY();
+            Direction otherDir = dir.opposite();
+            // Check bounds
+            if (notInBounds(grid, otherX, otherY)) {
+                continue;
+            }
+            // Check visited
+            if (!grid.hasVisited(x, y, dir)
+                    && !grid.hasVisited(otherX, otherY, otherDir)) {
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean notInBounds(PropGrid grid, int otherX, int otherY) {
+        return otherX < 0 || otherX >= grid.getWidth()
+                || otherY < 0 || otherY >= grid.getHeight();
     }
 
 
@@ -269,7 +285,7 @@ public class PropInspector {
             BufferedImage img = new BufferedImage(propWidth * TILE_SIZE, propHeight * TILE_SIZE,
                     BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D propGraphics = img.createGraphics();
-            for (int i : group.stream().sorted(Comparator.<Integer>comparingInt(a -> a / layerOffset).reversed()).toList()) {
+            for (int i : group.stream().sorted(Comparator.comparingInt(a -> a / layerOffset)).toList()) {
                 int layer = i / layerOffset;
                 int positionPart = i % layerOffset;
                 Graphics2D layerGraphics = graphicsList.get(layer);
@@ -355,4 +371,5 @@ public class PropInspector {
         }
         return tiles;
     }
+
 }

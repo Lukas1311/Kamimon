@@ -79,4 +79,5 @@ public class RegionListControllerTest extends ApplicationTest {
         verify(worldLoader).tryEnterRegion(any());
 
     }
+
 }

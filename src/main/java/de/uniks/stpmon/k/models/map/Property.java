@@ -10,4 +10,5 @@ public record Property(
         String name,
         String type,
         String value) {
+
 }

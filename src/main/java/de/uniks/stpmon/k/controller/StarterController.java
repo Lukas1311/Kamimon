@@ -16,12 +16,11 @@ import javax.inject.Singleton;
 
 @Singleton
 public class StarterController extends ToastedController {
+
     @FXML
     public ImageView starterImage;
     @FXML
     public Label monsterNameLabel;
-    @FXML
-    public ImageView starterBackground;
     @FXML
     public StackPane starterPane;
     @FXML
@@ -33,30 +32,33 @@ public class StarterController extends ToastedController {
     PresetService presetService;
 
     @Inject
-    public StarterController() {}
+    public StarterController() {
+    }
 
     @Override
     public Parent render() {
-        //loadImage(starterBackground, "starter-choice-box.png");
-        return super.render();
+        Parent parent = super.render();
+        loadBgImage(starterPane, "starter-choice-box.png");
+        return parent;
     }
 
     public void loadMonsterImage(String id) {
-        subscribe(resourceService.getMonsterImage(id),imageUrl -> {
-                Image image = ImageUtils.scaledImageFX(imageUrl, 4);
-                starterImage.setImage(image);
-                }, this::handleError);
+        subscribe(resourceService.getMonsterImage(id), imageUrl -> {
+            Image image = ImageUtils.scaledImageFX(imageUrl, 4);
+            starterImage.setImage(image);
+        }, this::handleError);
     }
 
     public void loadMonsterName(String id) {
-        subscribe(presetService.getMonster(id),monsterTypeDto -> {
-                monsterNameLabel.setText(monsterTypeDto.name());
-                descriptionText.setText(monsterTypeDto.description());
-                }, this::handleError );
+        subscribe(presetService.getMonster(id), monsterTypeDto -> {
+            monsterNameLabel.setText(monsterTypeDto.name());
+            descriptionText.setText(monsterTypeDto.description());
+        }, this::handleError);
     }
 
     public void setStarter(String id) {
         loadMonsterName(id);
         loadMonsterImage(id);
     }
+
 }

@@ -11,6 +11,7 @@ import retrofit2.http.Streaming;
 import java.util.List;
 
 public interface PresetApiService {
+
     @GET("presets/tilesets/{filename}")
     @Streaming
         //streaming is needed for receiving (larger) files

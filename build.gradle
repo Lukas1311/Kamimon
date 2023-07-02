@@ -8,7 +8,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 
 
-
 }
 
 group 'de.uniks'
@@ -131,7 +130,7 @@ jacoco {
 }
 
 jacocoTestReport {
-	reports.xml.required = true
+    reports.xml.required = true
 }
 
 test {
@@ -144,17 +143,17 @@ test {
         showStackTraces = true
     }
 
-	if (hasProperty('headless') || System.getenv('CI')) {
-		systemProperties = [
-				'java.awt.headless': 'true',
-				'testfx.robot': 'glass',
-				'testfx.headless': 'true',
-				'glass.platform': 'Monocle',
-				'monocle.platform': 'Headless',
-				'prism.order': 'sw',
-				'prism.text': 't2k',
-		]
-	}
+    if (hasProperty('headless') || System.getenv('CI')) {
+        systemProperties = [
+                'java.awt.headless': 'true',
+                'testfx.robot'     : 'glass',
+                'testfx.headless'  : 'true',
+                'glass.platform'   : 'Monocle',
+                'monocle.platform' : 'Headless',
+                'prism.order'      : 'sw',
+                'prism.text'       : 't2k',
+        ]
+    }
 }
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17

@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 
 @Module
 public abstract class BoundTestModule {
+
     @Binds
     @Singleton
     @SuppressWarnings("unused")
@@ -28,4 +29,5 @@ public abstract class BoundTestModule {
     @IntoSet
     @SuppressWarnings("unused")
     public abstract ILifecycleService cacheManager(CacheManager manager);
+
 }

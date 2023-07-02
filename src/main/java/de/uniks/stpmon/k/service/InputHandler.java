@@ -18,6 +18,17 @@ import java.util.function.Consumer;
  * <p>
  * The handlers and filters are called in the order they were registered.
  * If a filter or handler consumes any other handler or filter will not be called.
+ * Following key events should be captured / consumed by handlers:
+ * C -> Button
+ * F -> Friends
+ * P -> Pause
+ * # -> Settings
+ * Shift + ESC -> Home / Logout
+ * W, A, S, D (LEFT, RIGHT, UP, DOWN) -> Movement
+ * B -> Backpack
+ * T -> Team
+ * Enter -> Dialogue
+ * Left, Right (A, D)-> Choices
  */
 @Singleton
 public class InputHandler implements ILifecycleService {
@@ -112,6 +123,7 @@ public class InputHandler implements ILifecycleService {
     }
 
     private static class MultiHandler<T extends Event> implements EventHandler<T> {
+
         private final List<Consumer<? super T>> handlers = new LinkedList<>();
 
         void add(Consumer<? super T> handler) {
@@ -135,5 +147,7 @@ public class InputHandler implements ILifecycleService {
                 }
             }
         }
+
     }
+
 }

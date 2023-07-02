@@ -111,5 +111,6 @@ public class MinimapController extends Controller {
     public void onDestroy(Runnable action) {
         super.onDestroy(action);
     }
+
 }
 

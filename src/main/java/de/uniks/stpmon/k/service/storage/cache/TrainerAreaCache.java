@@ -48,15 +48,15 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
         disposables.add(listener.listen(Socket.UDP,
                         String.format("areas.%s.trainers.*.moved", areaId), MoveTrainerDto.class)
                 .subscribe(event -> {
-                    final MoveTrainerDto dto = event.data();
-                    // Get trainer from parent cache to get trainers which changed area
-                    Optional<Trainer> trainerOptional = trainerCache.getValue(dto._id());
-                    // Should never happen, trainer moves before he exists
+                            final MoveTrainerDto dto = event.data();
+                            // Get trainer from parent cache to get trainers which changed area
+                            Optional<Trainer> trainerOptional = trainerCache.getValue(dto._id());
+                            // Should never happen, trainer moves before he exists
                             if (trainerOptional.isEmpty()) {
                                 return;
                             }
-                    Trainer trainer = trainerOptional.get();
-                    Trainer newTrainer = TrainerBuilder.builder(trainer).applyMove(dto).create();
+                            Trainer trainer = trainerOptional.get();
+                            Trainer newTrainer = TrainerBuilder.builder(trainer).applyMove(dto).create();
                             trainerCache.updateValue(newTrainer);
                         }
                 ));
@@ -88,7 +88,7 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
     }
 
     public Optional<Trainer> getTrainerAt(int x, int y) {
-        if(x < 0 || y < 0){
+        if (x < 0 || y < 0) {
             return Optional.empty();
         }
         return positionCache.getValue(getPositionIndex(x, y));
@@ -128,5 +128,7 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
         public Integer getId(Trainer value) {
             return getPositionIndex(value.x(), value.y());
         }
+
     }
+
 }

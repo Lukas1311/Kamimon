@@ -87,4 +87,5 @@ public class OpponentBuilder {
     public Opponent create() {
         return new Opponent(id, encounter, trainer, isAttacker, isNPC, monster, move, result, coins);
     }
+
 }

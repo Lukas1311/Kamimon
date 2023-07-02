@@ -59,4 +59,5 @@ public class SingleCache<V> {
     public void reset() {
         value.onNext(Optional.empty());
     }
+
 }

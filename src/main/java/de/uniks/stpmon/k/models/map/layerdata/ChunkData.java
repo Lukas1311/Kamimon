@@ -16,6 +16,7 @@ public record ChunkData(
         int x,
         int y
 ) implements ITileDataProvider {
+
     @Override
     public int startx() {
         return x;
@@ -30,4 +31,5 @@ public record ChunkData(
         int index = (y - starty()) * width() + (x - startx());
         return data().get(index);
     }
+
 }

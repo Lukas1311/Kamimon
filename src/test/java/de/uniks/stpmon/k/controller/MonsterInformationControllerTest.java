@@ -18,21 +18,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.api.FxAssert;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class MonsterInformationControllerTest extends ApplicationTest {
+
     @Spy
     App app = new App(null);
 
@@ -40,6 +41,11 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     PresetService presetService;
     @Mock
     IResourceService resourceService;
+
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     @InjectMocks
     MonsterInformationController monsterInformationController;
@@ -51,14 +57,14 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         // show app
         app.start(stage);
-
+        when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(monsterInformationController);
         stage.requestFocus();
     }
 
     @Test
     public void testInfoMonsterTypeDto() {
-        List<String> types = Arrays.asList("type1", "type2");
+        List<String> types = Arrays.asList("fire", "water");
         MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", "image", types, "description");
         BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
 
@@ -68,9 +74,8 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         monsterInformationController.loadMonsterTypeDto(monsterTypeDto.id().toString());
         waitForFxEvents();
 
-        assertEquals("monster", monsterInformationController.monsterNameText.getText());
-        assertEquals(2, monsterInformationController.typeListHBox.getChildren().size());
-        assertEquals("description", monsterInformationController.descriptionText.getText());
+        assertEquals("monster", monsterInformationController.monsterNameLabel.getText());
+        assertEquals(7, monsterInformationController.overviewGrid.getChildren().size());
     }
 
     @Test
@@ -78,12 +83,13 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         SortedMap<String, Integer> abilities = new TreeMap<>();
         abilities.put("1", 15);
         abilities.put("2", 10);
-        AbilityDto abilityDto = new AbilityDto(1, "abilityName", null, "abilityType", 20, null, null);
+        AbilityDto abilityDto = new AbilityDto(1, "abilityName", "abilityDescription", "fire", 20, 1, 25);
         MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
         MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
         Monster monster = MonsterBuilder.builder().setId("id")
                 .setType(1)
                 .setLevel(1)
+                .setExperience(10)
                 .setAbilities(abilities)
                 .setAttributes(attributes)
                 .setCurrentAttributes(currentAttributes)
@@ -91,27 +97,38 @@ public class MonsterInformationControllerTest extends ApplicationTest {
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
 
+
+
+
         Platform.runLater(() -> {
             monsterInformationController.loadMonster(monster);
 
-            assertEquals("50", monsterInformationController.healthLabel.getText());
-            assertEquals("50", monsterInformationController.attackLabel.getText());
-            assertEquals("50", monsterInformationController.defenseLabel.getText());
-            assertEquals("50", monsterInformationController.speedLabel.getText());
-            assertEquals("1", monsterInformationController.levelLabel.getText());
-            assertEquals("5", monsterInformationController.currentHPLabel.getText());
-            assertEquals("10", monsterInformationController.maxHPLabel.getText());
-            assertEquals("1", monsterInformationController.levelLabel.getText());
-            assertEquals("0", monsterInformationController.experienceLabel.getText());
+
+
         });
+        waitForFxEvents();
+        assertEquals("Lvl. 1", monsterInformationController.monsterLevelLabel.getText());
+        assertEquals("HP: 5/10", monsterInformationController.monsterHpLabel.getText());
+        assertEquals("XP: 10", monsterInformationController.monsterXpLabel.getText());
+        assertEquals("10", monsterInformationController.hpValueLabel.getText());
+        assertEquals("8", monsterInformationController.atkValueLabel.getText());
+        assertEquals("6", monsterInformationController.defValueLabel.getText());
+        assertEquals("4", monsterInformationController.speValueLabel.getText());
+
+        FxAssert.verifyThat("#typeLabel_1", hasText("FIRE"));
+        FxAssert.verifyThat("#nameLabel_1", hasText("abilityName"));
+        FxAssert.verifyThat("#powLabel_1", hasText("25"));
+        FxAssert.verifyThat("#accLabel_1", hasText("100"));
+        FxAssert.verifyThat("#useLabel_1", hasText("??/20"));
     }
 
     @Test
-    public void testAbilityDescrition() {
+    public void testAbilityDescription() {
+
         SortedMap<String, Integer> abilities = new TreeMap<>();
         abilities.put("1", 15);
         abilities.put("2", 10);
-        AbilityDto abilityDto = new AbilityDto(1, "abilityName", "AbilityDescription", "abilityType", 20, null, null);
+        AbilityDto abilityDto = new AbilityDto(1, "abilityName", "AbilityDescription", "fire", 20, 1, 25);
         MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
         MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
         Monster monster = MonsterBuilder.builder().setId("id")
@@ -128,10 +145,11 @@ public class MonsterInformationControllerTest extends ApplicationTest {
 
         waitForFxEvents();
 
-        clickOn("#abilityBox1");
+        clickOn("#nameLabel_1");
         waitForFxEvents();
-        assertEquals("AbilityDescription", monsterInformationController.descriptionText.getText());
-
+        assertTrue(monsterInformationController.descriptionLabel.isVisible());
+        assertFalse(monsterInformationController.infoGrid.isVisible());
+        assertEquals("AbilityDescription", monsterInformationController.descriptionLabel.getText());
     }
 
 }

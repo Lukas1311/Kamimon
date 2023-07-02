@@ -149,4 +149,5 @@ public class MapOverviewController extends ToastedController {
     public void closeMap() {
         mapOverviewContent.setVisible(false);
     }
+
 }

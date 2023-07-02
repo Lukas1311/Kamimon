@@ -100,4 +100,5 @@ class ChatListControllerTest extends ApplicationTest {
         app.show(chatListController);
         verify(toastController).openToast(any());
     }
+
 }

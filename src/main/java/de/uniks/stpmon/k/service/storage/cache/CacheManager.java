@@ -17,6 +17,7 @@ import java.util.Map;
  */
 @Singleton
 public class CacheManager implements ILifecycleService {
+
     private final Map<String, TrainerProvider> trainers = new HashMap<>();
     private final Map<String, MonsterCache> monsters = new HashMap<>();
 
@@ -251,4 +252,5 @@ public class CacheManager implements ILifecycleService {
             regionSubscription.dispose();
         }
     }
+
 }

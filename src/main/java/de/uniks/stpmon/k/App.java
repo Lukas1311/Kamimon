@@ -22,7 +22,8 @@ import java.net.URL;
 import java.util.Objects;
 
 public class App extends Application {
-    private final MainComponent component;
+
+    private MainComponent component;
     protected final CompositeDisposable disposables = new CompositeDisposable();
 
     private Controller controller;
@@ -47,8 +48,8 @@ public class App extends Application {
         //initial window size
         stage.setWidth(1280);
         stage.setHeight(720);
-        stage.setMinWidth(600);
-        stage.setMinHeight(600);
+        stage.setMinWidth(1280);
+        stage.setMinHeight(720);
         stage.setTitle("Kamimon");
 
         //set scene for loading screen
@@ -74,6 +75,10 @@ public class App extends Application {
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
         loadingScreen.startLoading(this::onFinishedLoading);
+    }
+
+    public void setMainComponent(MainComponent component) {
+        this.component = component;
     }
 
     public void addInputHandler(MainComponent component) {
@@ -182,4 +187,5 @@ public class App extends Application {
             controller = null;
         }
     }
+
 }

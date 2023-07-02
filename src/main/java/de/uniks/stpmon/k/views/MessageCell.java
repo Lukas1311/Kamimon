@@ -57,4 +57,5 @@ public class MessageCell extends ListCell<Message> {
     private boolean isOwnMessage(Message msg) {
         return msg.sender().equals(me._id());
     }
+
 }

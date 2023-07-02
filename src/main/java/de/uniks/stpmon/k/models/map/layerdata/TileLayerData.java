@@ -36,6 +36,7 @@ public record TileLayerData(
         boolean visible,
         List<Property> properties
 ) implements ITileDataProvider {
+
     public static final String GROUND_TYPE = "Ground";
     public static final String WALLS_TYPE = "Walls";
 
@@ -48,4 +49,5 @@ public record TileLayerData(
         int index = (x - startx()) + (y - starty()) * (width());
         return data().get(index);
     }
+
 }

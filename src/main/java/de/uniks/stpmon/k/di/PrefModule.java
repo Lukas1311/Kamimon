@@ -9,9 +9,11 @@ import java.util.prefs.Preferences;
 
 @Module
 public class PrefModule {
+
     @Provides
     @Singleton
     Preferences prefs() {
         return Preferences.userNodeForPackage(Main.class);
     }
+
 }

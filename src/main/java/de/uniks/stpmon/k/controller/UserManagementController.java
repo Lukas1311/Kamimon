@@ -1,12 +1,11 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.popup.PopUpController;
 import de.uniks.stpmon.k.controller.popup.PopUpScenario;
-import de.uniks.stpmon.k.controller.popup.ModalCallback;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
@@ -15,18 +14,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import retrofit2.HttpException;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-
 
 public class UserManagementController extends Controller {
+
     @FXML
     public VBox userManagementScreen;
     @FXML
@@ -98,14 +99,14 @@ public class UserManagementController extends Controller {
         deleteUserButton.disableProperty().bind(isPopUpShown);
 
         usernameInfo.textProperty().bind(
-            Bindings.when(usernameTooLong)
-            .then(translateString("username.too.long."))
-            .otherwise("")
+                Bindings.when(usernameTooLong)
+                        .then(translateString("username.too.long."))
+                        .otherwise("")
         );
         passwordInfo.textProperty().bind(
-            Bindings.when(passwordTooShort.and(password.length().greaterThan(0)))
-            .then(translateString("password.too.short."))
-            .otherwise("")
+                Bindings.when(passwordTooShort.and(password.length().greaterThan(0)))
+                        .then(translateString("password.too.short."))
+                        .otherwise("")
         );
 
         // ui functions:
@@ -148,28 +149,28 @@ public class UserManagementController extends Controller {
 
     private void saveUsername(String newUsername) {
         disposables.add(
-            userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
-                // set this to retrieve the newly set username
-                currentUser = usr;
-            }, err -> {
-                usernameError = new SimpleStringProperty("");
-                usernameInfo.textProperty().bind(usernameError);
-                usernameError.set("error");
-                if (!(err instanceof HttpException ex)) return;
-                if (!(ex.code() == 409)) return;
-                usernameError.set(translateString("username.already.in.use"));
-            })
+                userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
+                    // set this to retrieve the newly set username
+                    currentUser = usr;
+                }, err -> {
+                    usernameError = new SimpleStringProperty("");
+                    usernameInfo.textProperty().bind(usernameError);
+                    usernameError.set("error");
+                    if (!(err instanceof HttpException ex)) return;
+                    if (!(ex.code() == 409)) return;
+                    usernameError.set(translateString("username.already.in.use"));
+                })
         );
     }
 
     private void savePassword(String newPassword) {
         disposables.add(
-            userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
-            }, err -> {
-                passwordError = new SimpleStringProperty("");
-                passwordInfo.textProperty().bind(passwordError);
-                passwordError.set(translateString("error"));
-            })
+                userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
+                }, err -> {
+                    passwordError = new SimpleStringProperty("");
+                    passwordInfo.textProperty().bind(passwordError);
+                    passwordError.set(translateString("error"));
+                })
         );
     }
 
@@ -180,14 +181,14 @@ public class UserManagementController extends Controller {
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
             disposables.add(userService
-                .deleteMe()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(usr -> {
-                    PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
-                    deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
-                    showPopUp(deleteConfirmScenario, innerResult -> app.show(loginControllerProvider.get()));
-                }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
-                )
+                    .deleteMe()
+                    .observeOn(FX_SCHEDULER)
+                    .subscribe(usr -> {
+                                PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
+                                deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
+                                showPopUp(deleteConfirmScenario, innerResult -> app.show(loginControllerProvider.get()));
+                            }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
+                    )
             );
         });
     }
@@ -199,4 +200,5 @@ public class UserManagementController extends Controller {
         popUp.showModal(callback);
         isPopUpShown.set(false);
     }
+
 }

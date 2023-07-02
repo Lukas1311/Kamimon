@@ -16,4 +16,5 @@ public class ExceptionHelper {
         Response<Object> response = Response.error(code, ResponseBody.create(null, message));
         return Observable.error(new HttpException(response));
     }
+
 }

@@ -6,17 +6,22 @@ import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.List;
 
-public class MonsterListController extends Controller {
+public class TeamController extends Controller {
+
     @FXML
     public VBox monsterListVBox;
     @FXML
     public VBox monsterInformation;
+    @FXML
+    public ImageView arrowImageView;
 
     @Inject
     PresetService presetService;
@@ -28,7 +33,7 @@ public class MonsterListController extends Controller {
     Provider<MonsterBarController> monsterBarControllerProvider;
 
     @Inject
-    public MonsterListController() {
+    public TeamController() {
     }
 
     @Override
@@ -43,6 +48,11 @@ public class MonsterListController extends Controller {
     @Override
     public Parent render() {
         Parent render = super.render();
+        loadImage(arrowImageView, "arrow_up.png");
+        //monsterListVBox.setBackground(new Background(loadBgImage("TeamBox.png")));
+        loadBgImage(monsterListVBox, "TeamBox.png");
+
+
         monsterInformation.setVisible(false);
         // Does not block, because the cache is already initialized
         updateListContent(monsterService.getTeam().blockingFirst());
@@ -61,17 +71,23 @@ public class MonsterListController extends Controller {
         monsterListVBox.getChildren().clear();
         for (int slot = 0; slot < Math.max(monsters.size(), 6); slot++) {
             Label monsterLabel = new Label();
+            monsterLabel.getStyleClass().addAll("ingame", "team-monster-entry", "backpack-menu-entry");
             monsterLabel.setId("monster_label_" + slot);
             Monster monster = slot >= monsters.size() ? null : monsters.get(slot);
             // Display monster id if monster exists
             if (monster != null) {
                 subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
-                    monsterLabel.setText(type.name());
+                    monsterLabel.setText("  " + type.name());
                     monsterLabel.setOnMouseClicked(event -> showInformation(monster, monsterLabel));
+                    monsterLabel.setOnMouseEntered(event -> {
+                        monsterLabel.setText(monsterLabel.getText().replace("  ", "> "));
+                    });
+                    monsterLabel.setOnMouseExited(event -> {
+                        monsterLabel.setText(monsterLabel.getText().replace("> ", "  "));
+                    });
                 });
             } else {
-                // Display "<free>" if no monster exists
-                monsterLabel.setText("<" + translateString("free") + ">");
+                monsterLabel.setText("  -");
             }
             monsterListVBox.getChildren().add(monsterLabel);
         }
@@ -80,8 +96,8 @@ public class MonsterListController extends Controller {
     public void showInformation(Monster monster, Label monsterLabel) {
         if (monsterInformation.isVisible() && monsterInformation.isVisible()) {
             monsterInformation.setVisible(false);
-            subscribe(presetService.getMonster(String.valueOf(monster.type())),
-                    type -> monsterLabel.setText(type.name()));
+            //subscribe(presetService.getMonster(String.valueOf(monster.type())),
+            //        type -> monsterLabel.setText(type.name()));
         } else {
             // Render the monster information
             Parent monsterInformationContent = monsterInformationController.render();
@@ -89,7 +105,7 @@ public class MonsterListController extends Controller {
             monsterInformationController.loadMonster(monster);
             monsterInformation.getChildren().setAll(monsterInformationContent);
             monsterInformation.setVisible(true);
-            monsterLabel.setText("> " + monsterLabel.getText());
+            //monsterLabel.setText("> " + monsterLabel.getText());
         }
     }
 
@@ -113,4 +129,5 @@ public class MonsterListController extends Controller {
             monsterListVBox.getChildren().clear();
         }
     }
+
 }

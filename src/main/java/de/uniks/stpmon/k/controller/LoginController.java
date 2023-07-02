@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
@@ -13,13 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -29,7 +22,6 @@ import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
 import java.net.UnknownHostException;
 import java.util.Locale;
 import java.util.Objects;
@@ -85,6 +77,8 @@ public class LoginController extends Controller {
     private String tempPassword;
     private boolean isEmpty = false;
 
+    private boolean passwordVisible = false;
+
     @Inject
     public LoginController() {
 
@@ -132,14 +126,18 @@ public class LoginController extends Controller {
         loginButton.disableProperty().bind(isInvalid);
         registerButton.disableProperty().bind(isInvalid);
 
-        // shows Password on holding mouse button or holding enter
-        toggleButton.armedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                showPassword();
-            } else {
+        hidePassword();
+
+        // toggle password
+        toggleButton.setOnAction(event -> {
+            if (passwordVisible) {
                 hidePassword();
+            } else {
+                showPassword();
             }
+            passwordVisible = !passwordVisible;
         });
+
 
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
@@ -221,15 +219,20 @@ public class LoginController extends Controller {
     }
 
     private void hidePassword() {
+        toggleButton.getStyleClass().clear();
+        toggleButton.getStyleClass().addAll("login-password-button", "login-password-button-visible");
         if (isEmpty) {
             password.set("");
         } else {
             password.set(tempPassword);
         }
         passwordInput.setPromptText(translateString("password"));
+        passwordInput.setDisable(false);
     }
 
     private void showPassword() {
+        toggleButton.getStyleClass().clear();
+        toggleButton.getStyleClass().addAll("login-password-button", "login-password-button-invisible");
         tempPassword = password.get();
         if (tempPassword == null || tempPassword.isEmpty()) {
             tempPassword = translateString("password");
@@ -239,6 +242,7 @@ public class LoginController extends Controller {
         }
         password.set(""); // clears the bound input field
         passwordInput.setPromptText(tempPassword);
+        passwordInput.setDisable(true);
     }
 
     @FXML
@@ -255,4 +259,5 @@ public class LoginController extends Controller {
         preferences.put("locale", locale.toLanguageTag());
         app.show(this); //reloaded
     }
+
 }

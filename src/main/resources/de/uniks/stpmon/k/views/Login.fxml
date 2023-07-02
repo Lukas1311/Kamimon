@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import org.kordamp.ikonli.javafx.*?>
-
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.*?>
 <BorderPane prefHeight="450.0" prefWidth="800.0" styleClass="login-background" stylesheets="@css/generalStyle.css"
             xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="de.uniks.stpmon.k.controller.LoginController">
@@ -48,7 +47,7 @@
                     </styleClass>
                 </PasswordField>
                 <Button fx:id="toggleButton" alignment="CENTER_RIGHT" mnemonicParsing="false"
-                        styleClass="login-password-button" textAlignment="RIGHT" StackPane.alignment="CENTER_RIGHT">
+                        styleClass="login-password-button" StackPane.alignment="CENTER_RIGHT">
                     <graphic>
                         <FontIcon iconLiteral="mdmz-visibility_off" iconSize="24" textAlignment="CENTER"/>
                     </graphic>

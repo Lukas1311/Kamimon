@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import org.kordamp.ikonli.javafx.*?>
-
+<?import javafx.scene.text.Text?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import java.lang.*?>
 <VBox fx:id="trainerManagementScreen" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css"
+      minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab"
+      stylesheets="@css/generalStyle.css"
       xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="de.uniks.stpmon.k.controller.TrainerManagementController">
 

@@ -13,28 +13,29 @@
             <BorderPane>
                 <top>
                     <HBox prefHeight="40.0" prefWidth="380.0" BorderPane.alignment="CENTER">
-                        <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" />
+                        <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0"/>
                     </HBox>
                 </top>
-            <right>
-
-                          <VBox fx:id="rightVbox" prefHeight="310.0" prefWidth="120.0" BorderPane.alignment="CENTER">
-                        <HBox fx:id="ingameWrappingHBox" />
+                <right>
+                    <VBox fx:id="rightVbox" alignment="TOP_RIGHT" prefHeight="310.0" prefWidth="120.0" BorderPane.alignment="CENTER">
+                        <HBox fx:id="ingameWrappingHBox" alignment="TOP_RIGHT" />
+                            <BorderPane.margin>
+                                <Insets top="-40.0" />
+                            </BorderPane.margin>
+                    </VBox>
+                </right>
+                <center>
+                    <VBox fx:id="starterBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                          prefHeight="332.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                         <BorderPane.margin>
-                            <Insets top="-40.0" />
+                            <Insets left="200.0"/>
                         </BorderPane.margin>
                     </VBox>
-            </right>
-            <center>
-               <VBox fx:id="starterBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="332.0" prefWidth="250.0" BorderPane.alignment="CENTER">
-                  <BorderPane.margin>
-                     <Insets left="200.0" />
-                  </BorderPane.margin>
-               </VBox>
-            </center>
-            <bottom>
-                    <HBox fx:id="dialogueBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-            </bottom>
+                </center>
+                <bottom>
+                    <HBox fx:id="dialogueBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0"
+                          BorderPane.alignment="CENTER"/>
+                </bottom>
             </BorderPane>
         </StackPane>
     </center>

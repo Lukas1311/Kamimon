@@ -1,9 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.input.KeyCode;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -14,16 +15,21 @@ public class BackpackController extends Controller {
 
     @FXML
     public ImageView backpackImage;
-    @FXML
-    HBox backpackMenu;
+
+    private Controller backpackMenu;
 
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<MonBoxController> monBoxControllerProvider;
+    @Inject
+    Provider<MonsterInformationController> monsterInformationControllerProvider;
 
-
+    @Inject
+    InputHandler inputHandler;
 
 
     @Inject
@@ -42,16 +48,23 @@ public class BackpackController extends Controller {
     @Override
     public void init() {
         super.init();
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
+            if (event.getCode() == KeyCode.B) {
+                triggerBackPackMenu();
+                event.consume();
+            }
+        }));
     }
 
     public void openBackPackMenu() {
-        backpackMenu = (HBox) backpackMenuControllerProvider.get().render();
-        ingameControllerProvider.get().addBackpackMenu(backpackMenu);
+        backpackMenu = backpackMenuControllerProvider.get();
+        ingameControllerProvider.get().pushController(backpackMenu);
     }
 
     public void closeBackPackMenu() {
-        ingameControllerProvider.get().removeBackpackMenu(backpackMenu);
+        ingameControllerProvider.get().removeChildren(0);
         backpackMenu = null;
+        backpackMenuControllerProvider.get().setMonBoxNull();
     }
 
 

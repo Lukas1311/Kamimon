@@ -11,12 +11,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
-
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class FriendController extends Controller {
 

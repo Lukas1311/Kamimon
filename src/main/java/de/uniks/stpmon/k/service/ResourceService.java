@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 
 @Singleton
 public class ResourceService implements IResourceService {
+
     @Inject
     protected PresetService presetService;
     @Inject
@@ -36,4 +37,5 @@ public class ResourceService implements IResourceService {
     public Observable<BufferedImage> getMonsterImage(String fileName) {
         return ResponseUtils.readImage(presetService.getMonsterImage(fileName));
     }
+
 }

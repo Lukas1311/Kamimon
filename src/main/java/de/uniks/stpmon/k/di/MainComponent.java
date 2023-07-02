@@ -31,9 +31,12 @@ public interface MainComponent {
 
     @Component.Builder
     interface Builder {
+
         @BindsInstance
         Builder mainApp(App app);
 
         MainComponent build();
+
     }
+
 }
