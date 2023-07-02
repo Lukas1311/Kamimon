@@ -21,14 +21,16 @@ public class TilesetCandidateRule implements CandidateRule {
     }
 
     @Override
-    public PropInfo apply(List<PropInfo> candidates, List<DecorationLayer> layers) {
-        for (PropInfo candidate : candidates) {
-            if (!candidate.tileSet().equals(tileset)
-                    || !candidate.otherTileSet().equals(tileset)) {
+    public TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers) {
+        if (!current.tileSet().equals(tileset)) {
+            return null;
+        }
+        int id = current.tileId();
+        for (TileInfo candidate : candidates) {
+            if (!candidate.tileSet().equals(tileset)) {
                 continue;
             }
-            int id = candidate.tileId();
-            int otherId = candidate.otherTileId();
+            int otherId = candidate.tileId();
             int mainX = id % columns;
             int mainY = id / columns;
             int otherX = otherId % columns;

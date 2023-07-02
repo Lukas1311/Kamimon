@@ -317,7 +317,40 @@ class AppTest extends ApplicationTest {
 
         trainerCache.addValue(prof);
 
+        //shortcut tests
+        type(KeyCode.C);
+        waitForFxEvents();
+        verifyThat("#chatList", Node::isVisible);
+        type(KeyCode.C);
+
+        type(KeyCode.B);
+        waitForFxEvents();
+        verifyThat("#backpackMenuHBox", Node::isVisible);
+        type(KeyCode.B);
+
+        type(KeyCode.M);
+        waitForFxEvents();
+        verifyThat("#mapOverviewContent", Node::isVisible);
+        type(KeyCode.M);
+
+        type(KeyCode.N);
+        waitForFxEvents();
+        verifyThat("#monsterListVBox", Node::isVisible);
+        type(KeyCode.N);
+
+        type(KeyCode.P);
+        waitForFxEvents();
+        verifyThat("#shortcutPane", Node::isVisible);
+        type(KeyCode.P);
+
+        type(KeyCode.O);
+        waitForFxEvents();
+        verifyThat("#settingsScreen", Node::isVisible);
+        type(KeyCode.O);
+
+
         clickOn("#monsterBar");
+        waitForFxEvents();
         // verify that the monster list is empty
         assertThat(me.team()).isEmpty();
 
@@ -339,6 +372,7 @@ class AppTest extends ApplicationTest {
 
         //check backpack
         clickOn("#backpackImage");
+
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
         //add Monsters to inventory

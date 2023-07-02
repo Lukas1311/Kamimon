@@ -13,10 +13,6 @@ public enum RuleResult {
      */
     NO_MATCH_STOP,
     /**
-     * No match, stop with all rules, this tile is a decoration
-     */
-    NO_MATCH_DECORATION,
-    /**
      * Match, stop with rules
      */
     MATCH_SINGLE,

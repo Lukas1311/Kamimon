@@ -28,7 +28,6 @@ public class FriendListController extends ToastedController {
 
     private final Subject<String> searchUpdate = PublishSubject.create();
 
-
     @FXML
     public CheckBox checkBox;
     @FXML
@@ -37,7 +36,6 @@ public class FriendListController extends ToastedController {
     public TextField searchFriend;
     @FXML
     public Button searchButton;
-
 
     @Inject
     UserService userService;
@@ -52,13 +50,11 @@ public class FriendListController extends ToastedController {
     @Inject
     Provider<UserService> userServiceProvider;
 
-
     private final ObservableList<User> friendSearchRes = FXCollections.observableArrayList();
     private final ObservableList<User> allSearchRes = FXCollections.observableArrayList();
     private ObservableList<User> users = FXCollections.observableArrayList();
 
     private Boolean allUsers = false;
-
 
     @Inject
     public FriendListController() {
@@ -70,7 +66,7 @@ public class FriendListController extends ToastedController {
 
         final ListView<User> userList = new ListView<>(this.users);
         userList.setId("userListView");
-        userList.getStyleClass().add("chat-ov-list"); //TODO: Add styleclass
+        userList.getStyleClass().add("chat-ov-list"); // TODO: Add styleclass
         userList.setCellFactory(param -> new FriendCell(this, resources, userServiceProvider));
         friendListVbox.getChildren().add(userList);
         userList.setCache(true);
@@ -98,27 +94,26 @@ public class FriendListController extends ToastedController {
     @Override
     public void init() {
         subscribe(searchUpdate.flatMap((text) -> userService.searchUser(text)), (values) -> {
-           allSearchRes.setAll(values);
-            if(allUsers) {
+            allSearchRes.setAll(values);
+            if (allUsers) {
                 users.setAll(values);
             }
         }, this::handleError);
 
         subscribe(searchUpdate.flatMap((text) -> userService.searchUser(text, true)), (values) -> {
             friendSearchRes.setAll(values);
-            if(!allUsers) {
-               users.setAll(values);
+            if (!allUsers) {
+                users.setAll(values);
             }
         }, this::handleError);
 
-        //searchUpdate.onNext("");
+        // searchUpdate.onNext("");
     }
 
     @Override
     public void destroy() {
         super.destroy();
     }
-
 
     @FXML
     private void searchForFriend() {
@@ -128,9 +123,11 @@ public class FriendListController extends ToastedController {
 
     public void handleFriend(User user) {
         if (userService.isFriend(user)) {
-            disposables.add(userService.removeFriend(user).observeOn(FX_SCHEDULER).doOnError(this::handleError).subscribe());
+            disposables.add(
+                    userService.removeFriend(user).observeOn(FX_SCHEDULER).doOnError(this::handleError).subscribe());
         } else {
-            disposables.add(userService.addFriend(user).observeOn(FX_SCHEDULER).doOnError(this::handleError).subscribe());
+            disposables
+                    .add(userService.addFriend(user).observeOn(FX_SCHEDULER).doOnError(this::handleError).subscribe());
         }
     }
 
