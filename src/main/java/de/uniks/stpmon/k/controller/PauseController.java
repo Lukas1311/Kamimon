@@ -38,10 +38,6 @@ public class PauseController extends Controller {
     public Parent render() {
         Parent parent = super.render();
         loadBgImage(pauseScreen, "../views/images/background_black.png");
-        //BackgroundImage bi = loadBgImage("../views/images/background_black.png");
-        //if (bi != null) {
-        //    pauseScreen.setBackground(new Background(bi));
-        //}
         return parent;
     }
 
