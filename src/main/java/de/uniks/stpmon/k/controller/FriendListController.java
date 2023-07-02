@@ -44,6 +44,8 @@ public class FriendListController extends ToastedController {
     public VBox userSection;
     @FXML
     public ScrollPane scrollPane;
+    @FXML
+    public VBox friendMenu;
 
     @Inject
     UserService userService;

@@ -18,9 +18,7 @@
                 <Insets right="10.0"/>
             </padding>
         </HBox>
-        <ImageView fitHeight="15.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../controller/monsterbarArrow.png"/>
-        </ImageView>
+        <ImageView fitHeight="15.0" fitWidth="240.0" pickOnBounds="true" preserveRatio="true" fx:id="arrow"/>
         <padding>
             <Insets top="15.0"/>
         </padding>
