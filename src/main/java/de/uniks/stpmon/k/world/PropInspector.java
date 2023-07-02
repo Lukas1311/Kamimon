@@ -5,9 +5,9 @@ import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.world.rules.BasicRules;
-import de.uniks.stpmon.k.world.rules.PropInfo;
 import de.uniks.stpmon.k.world.rules.RuleRegistry;
 import de.uniks.stpmon.k.world.rules.RuleResult;
+import de.uniks.stpmon.k.world.rules.TileInfo;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -62,8 +62,13 @@ public class PropInspector {
                     continue;
                 }
 
-                PropInfo singleInfo = new PropInfo(x, y, layerIndex, id, -1, -1,
-                        data.getTileset(id).source(), null, null, null);
+                TileInfo current = new TileInfo(x, y, layerIndex, id, data.getTileset(id).source());
+                // Check if tile is a decoration or already used
+                if (registry.isDecoration(current)) {
+                    grid.setUsed(x, y, true);
+                    continue;
+                }
+
                 for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
                     int otherX = x + dir.tileX();
                     int otherY = y + dir.tileY();
@@ -72,7 +77,7 @@ public class PropInspector {
                     if (notInBounds(grid, otherX, otherY)) {
                         continue;
                     }
-                    List<PropInfo> candidates = new ArrayList<>();
+                    List<TileInfo> candidates = new ArrayList<>();
                     for (int otherLayer = 0; otherLayer < decorationLayers.size(); otherLayer++) {
                         PropGrid otherGrid = grids[otherLayer];
                         ChunkBuffer otherBuffer = buffers[otherLayer];
@@ -87,29 +92,27 @@ public class PropInspector {
                         if (otherId <= 0) {
                             continue;
                         }
-                        PropInfo info = new PropInfo(x, y, layerIndex, id, otherId, otherLayer,
-                                data.getTileset(id).source(), data.getTileset(otherId).source(), dir, otherDir);
-                        RuleResult result = registry.applyRule(
-                                info, decorationLayers
-                        );
-                        if (result == RuleResult.NO_MATCH_DECORATION) {
-                            marked = true;
+
+                        TileInfo other = new TileInfo(x, y, otherLayer, otherId, data.getTileset(otherId).source());
+                        // Check if tile is a decoration or already used
+                        if (registry.isDecoration(other)) {
                             continue;
                         }
+                        RuleResult result = registry.applyRule(current, other, dir, otherDir, decorationLayers);
                         if (result == RuleResult.NO_MATCH_STOP) {
                             continue;
                         }
                         // Check if the tiles are connected
                         if (result == RuleResult.MATCH_CONNECTION) {
-                            candidates.add(info);
+                            candidates.add(other);
                         }
                     }
                     if (candidates.isEmpty()) {
                         continue;
                     }
-                    PropInfo bestCandidate = registry.getPropInfo(singleInfo, candidates, decorationLayers);
+                    TileInfo bestCandidate = registry.getPropInfo(current, candidates, decorationLayers);
                     if (bestCandidate != null) {
-                        int otherLayer = bestCandidate.otherLayer();
+                        int otherLayer = bestCandidate.layer();
                         PropGrid otherGrid = grids[otherLayer];
                         tryMergeGroups(x, y, layerIndex, otherX, otherY, otherLayer);
                         marked = true;
@@ -123,7 +126,7 @@ public class PropInspector {
                 if (checkOtherDirections(grid, x, y)) {
                     continue;
                 }
-                RuleResult result = registry.applySingleRule(singleInfo, decorationLayers);
+                RuleResult result = registry.applyLoneRule(current, decorationLayers);
                 if (result == RuleResult.MATCH_SINGLE) {
                     createIfAbsent(grid, x, y, null, layerIndex);
                 }

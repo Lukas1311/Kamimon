@@ -1,27 +1,30 @@
 package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
+import de.uniks.stpmon.k.utils.Direction;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class ImageConnectionRule implements PropRule {
+public class ImageConnectionRule implements ConnectionRule {
 
     public static final int CHECKED_PIXELS = 3;
     public static final int TILE_SIZE = 16;
 
     @Override
-    public RuleResult apply(PropInfo info, List<DecorationLayer> layers) {
-        BufferedImage firstImage = layers.get(info.layer()).image();
-        BufferedImage secondImage = layers.get(info.otherLayer()).image();
+    public RuleResult apply(TileInfo current, TileInfo other,
+                            Direction currentDir, Direction otherDir,
+                            List<DecorationLayer> layers) {
+        BufferedImage firstImage = layers.get(current.layer()).image();
+        BufferedImage secondImage = layers.get(other.layer()).image();
         int emptyCount = 0;
         for (int dist = 0; dist < CHECKED_PIXELS; dist++) {
             // Iterate over each pixel in the images and compare the edges
             for (int i = 0; i < TILE_SIZE; i++) {
-                int firstX = info.tileX() * TILE_SIZE + info.dir().imageX(i, dist);
-                int firstY = info.tileY() * TILE_SIZE + info.dir().imageY(i, dist);
-                int secondX = (info.tileX() + info.dir().tileX()) * TILE_SIZE + info.otherDir().imageX(i, dist);
-                int secondY = (info.tileY() + info.dir().tileY()) * TILE_SIZE + info.otherDir().imageY(i, dist);
+                int firstX = current.tileX() * TILE_SIZE + currentDir.imageX(i, dist);
+                int firstY = current.tileY() * TILE_SIZE + currentDir.imageY(i, dist);
+                int secondX = (current.tileX() + currentDir.tileX()) * TILE_SIZE + otherDir.imageX(i, dist);
+                int secondY = (current.tileY() + currentDir.tileY()) * TILE_SIZE + otherDir.imageY(i, dist);
                 int first = firstImage.getRGB(firstX, firstY);
                 int second = secondImage.getRGB(secondX, secondY);
                 int firstAlpha = (first >> 24 & 0xFF);

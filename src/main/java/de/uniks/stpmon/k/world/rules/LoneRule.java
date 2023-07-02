@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 
 import java.util.List;
 
-public interface PropRule {
-
-    RuleResult apply(PropInfo info, List<DecorationLayer> layers);
+public interface LoneRule {
+    RuleResult apply(TileInfo current, List<DecorationLayer> layers);
 }

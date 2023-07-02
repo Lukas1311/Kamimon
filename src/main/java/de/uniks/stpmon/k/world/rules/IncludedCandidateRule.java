@@ -11,12 +11,15 @@ public class IncludedCandidateRule extends BaseTilesetRule implements CandidateR
     }
 
     @Override
-    public PropInfo apply(List<PropInfo> candidates, List<DecorationLayer> layers) {
-        for (PropInfo candidate : candidates) {
+    public TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers) {
+        if (!tileSet.equals(current.tileSet())) {
+            return null;
+        }
+        boolean first = tileIds.contains(current.tileId());
+        for (TileInfo candidate : candidates) {
             if (!tileSet.equals(candidate.tileSet())) {
                 continue;
             }
-            boolean first = tileIds.contains(candidate.otherTileId());
             boolean second = tileIds.contains(candidate.tileId());
             // Booth tiles have to be in the set
             if (first && second) {
