@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.ImageView?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-<GridPane fx:id="dialoguePane" prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/19"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController">
+<?import javafx.scene.text.*?>
+
+<GridPane fx:id="dialoguePane" prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <ImageView fx:id="background" fitHeight="112.0" fitWidth="504.0" pickOnBounds="true" preserveRatio="true"
-               GridPane.valignment="TOP">
+    <ImageView fx:id="background" fitHeight="112.0" fitWidth="504.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="TOP">
     </ImageView>
     <Pane prefHeight="200.0" prefWidth="200.0">
-        <ImageView fx:id="cursor" fitHeight="22.0" fitWidth="18.0" layoutX="478.0" layoutY="54.0" pickOnBounds="true"
-                   preserveRatio="true">
+        <ImageView fx:id="cursor" fitHeight="22.0" fitWidth="18.0" layoutX="478.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
         </ImageView>
     </Pane>
     <VBox prefWidth="504.0">
         <GridPane.margin>
-            <Insets/>
+            <Insets />
         </GridPane.margin>
         <padding>
-            <Insets bottom="10.0" left="22.0" right="40.0" top="18.0"/>
+            <Insets bottom="10.0" left="22.0" right="40.0" top="18.0" />
         </padding>
         <TextFlow prefWidth="442.0" VBox.vgrow="ALWAYS">
-            <Text fx:id="textContainer" strokeType="OUTSIDE" strokeWidth="0.0"
-                  text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"/>
+            <Text fx:id="textContainer" strokeType="OUTSIDE" strokeWidth="0.0" text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam" />
         </TextFlow>
         <HBox fx:id="optionContainer" alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="70.0">
             <VBox.margin>
-                <Insets bottom="14.0"/>
+                <Insets bottom="14.0" />
             </VBox.margin>
         </HBox>
     </VBox>
+   <styleClass>
+      <String fx:value="ingame" />
+      <String fx:value="dialog-font-size" />
+   </styleClass>
 </GridPane>

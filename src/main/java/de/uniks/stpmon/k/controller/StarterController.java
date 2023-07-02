@@ -22,8 +22,6 @@ public class StarterController extends ToastedController {
     @FXML
     public Label monsterNameLabel;
     @FXML
-    public ImageView starterBackground;
-    @FXML
     public StackPane starterPane;
     @FXML
     public Text descriptionText;
@@ -40,7 +38,7 @@ public class StarterController extends ToastedController {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadImage(starterBackground, "starter-choice-box.png");
+        loadBgImage(starterPane, "starter-choice-box.png");
         return parent;
     }
 
