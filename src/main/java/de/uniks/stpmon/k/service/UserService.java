@@ -137,7 +137,8 @@ public class UserService implements ILifecycleService {
     public Observable<List<User>> searchUser(String name) {
         return friendCache().getValues().flatMap(old -> friendCache().getFriends().map((e) -> old)).map(users -> {
             final User user = userStorage.getUser();
-            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())) //do not show the searching user
+            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
+                            && !f._id().equals(user._id())) //do not show the searching user
                     .toList();
         });
     }
@@ -145,8 +146,10 @@ public class UserService implements ILifecycleService {
     public Observable<List<User>> searchUser(String name, boolean onlyFriends) {
         return friendCache().getValues().flatMap(old -> friendCache().getFriends().map((e) -> old)).map(users -> {
             final User user = userStorage.getUser();
-            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase()) && !f._id().equals(user._id())) //do not show the searching user
-                    .filter(g -> isFriend(g) || !onlyFriends).toList();
+            return users.stream().filter(f -> f.name().toLowerCase().startsWith(name.toLowerCase())
+                            && !f._id().equals(user._id())) //do not show the searching user
+                    .filter(g -> isFriend(g) || !onlyFriends)
+                    .toList();
         });
     }
 
