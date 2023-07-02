@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 class FriendListControllerTest extends ApplicationTest {
@@ -118,7 +119,7 @@ class FriendListControllerTest extends ApplicationTest {
         //get friendList
         //final ScrollPane scrollPane = lookup("#scrollPane").query();
         final VBox userList = lookup("#friendListVbox").query();
-        final ListView<User> listView = (ListView<User>) userList.lookup("#userListView");
+        final ListView<User> listView =  lookup("#userListView").query();
 
         verifyThat(listView, ListViewMatchers.hasItems(2));
         assertNotNull(userList.lookup("#Alice"));
@@ -134,37 +135,38 @@ class FriendListControllerTest extends ApplicationTest {
         sleep(200);
         verify(userService).removeFriend(any(User.class));
 
-        //peter is no longer in friends
+        sleep(2000);
+        //alice is no longer in friends
         assertNull(userList.lookup("#Alice"));
     }
 
     @Test
     void addFriend() {
-        //get friendList
-        final ScrollPane scrollPane = lookup("#scrollPane").query();
-        final VBox userList = (VBox) scrollPane.getContent();
-        final VBox friendView = (VBox) userList.lookup("#friendSection");
-        final VBox userView = (VBox) userList.lookup("#userSection");
 
-        //"Alice" is not displayed before search
-        assertNull(userView.lookup("#Alice"));
+        final VBox userList = lookup("#friendListVbox").query();
+        final ListView<User> listView =  lookup("#userListView").query();
 
-        //search in friendList for friend "Alice"
-        clickOn("#searchFriend");
-        write("Alice");
+        //"Eve" is not displayed before search
+        assertNull(userList.lookup("#Eve"));
 
-        verifyThat("#searchFriend", hasText("Alice"));
-
+        clickOn("#checkBox");
         clickOn("#searchButton");
 
+        waitForFxEvents();
+
+        assertNotNull(userList.lookup("#Eve"));
+
+        when(userService.addFriend(any(User.class))).thenReturn(Observable.just(users));
+        when(userService.removeFriend(any(User.class))).thenReturn(Observable.just(friends));
+
+        clickOn("#Eve #removeFriendButton");
         friendsObs.onNext(List.of());
         usersObs.onNext(users);
         sleep(200);
 
-        when(userService.addFriend(any(User.class))).thenReturn(Observable.just(users));
 
         //add "Alice" to friends
-        friends.add(users.get(0));
+        friends.add(DummyConstants.USER_EVE);
 
         clickOn("#Alice #removeFriendButton");
         friendsObs.onNext(friends);
@@ -174,7 +176,7 @@ class FriendListControllerTest extends ApplicationTest {
         verify(userService).addFriend(any(User.class));
 
         //"Alice" is in friends
-        assertNotNull(friendView.lookup("#Alice"));
+        assertNotNull(userList.lookup("#Alice"));
     }
 
 }
