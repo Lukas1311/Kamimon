@@ -22,8 +22,6 @@ public class StarterController extends ToastedController {
     @FXML
     public Label monsterNameLabel;
     @FXML
-    public ImageView starterBackground;
-    @FXML
     public StackPane starterPane;
     @FXML
     public Text descriptionText;
