@@ -20,10 +20,12 @@ import static de.uniks.stpmon.k.controller.BackpackMenuOption.*;
 @Singleton
 public class BackpackMenuController extends Controller {
 
-    final List<BackpackMenuOption> backpackMenuOptions = new ArrayList<>();
-
+    private Controller monBox;
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
+
+    final List<BackpackMenuOption> backpackMenuOptions = new ArrayList<>();
+
 
     @FXML
     public HBox backpackMenuHBox;
@@ -35,6 +37,10 @@ public class BackpackMenuController extends Controller {
     BackpackController backpackController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<MonBoxController> monBoxControllerProvider;
 
     @Inject
     public BackpackMenuController() {
@@ -63,10 +69,9 @@ public class BackpackMenuController extends Controller {
 
 
     public void openOption(BackpackMenuOption option) {
-        backpackController.closeBackPackMenu();
         switch (option) {
             // delete dummy method after functionality is implemented
-            case MONSTER -> dummyMethod();
+            case MONSTER -> triggerMonBox();
             case TEAM -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> dummyMethod();
         }
@@ -80,4 +85,25 @@ public class BackpackMenuController extends Controller {
     private void dummyMethod() {
     }
 
+    public void openMonBox() {
+        monBox = monBoxControllerProvider.get();
+        ingameControllerProvider.get().pushController(monBox);
+    }
+
+    public void closeMonBox() {
+        ingameControllerProvider.get().removeChildren(1);
+        monBox = null;
+    }
+
+    public void triggerMonBox() {
+        if (monBox == null) {
+            openMonBox();
+        } else {
+            closeMonBox();
+        }
+    }
+
+    public void setMonBoxNull() {
+        monBox = null;
+    }
 }

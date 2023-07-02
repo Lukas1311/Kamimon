@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class BackpackMenuControllerTest extends ApplicationTest {
@@ -28,11 +29,12 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
-
-    @Mock
-    BackpackController backpackController;
     @Spy
     Provider<MonsterBarController> monsterBarControllerProvider;
+    @Spy
+    Provider<MonBoxController> monBoxControllerProvider;
+    @Mock
+    Provider<IngameController> ingameControllerProvider;
 
     @InjectMocks
     BackpackMenuController backpackMenuController;
@@ -57,7 +59,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
     @Test
     void clickOnMonsters() {
-        doNothing().when(backpackController).closeBackPackMenu();
         MonsterBarController monsterBarController = Mockito.mock(MonsterBarController.class);
         when(monsterBarControllerProvider.get()).thenReturn(monsterBarController);
         doNothing().when(monsterBarController).showMonsters();
@@ -68,4 +69,22 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
     }
 
+    @Test
+    void clickOnMonster_List() {
+        MonBoxController monBoxController = Mockito.mock(MonBoxController.class);
+        when(monBoxControllerProvider.get()).thenReturn(monBoxController);
+        IngameController ingameController = Mockito.mock(IngameController.class);
+        when(ingameControllerProvider.get()).thenReturn(ingameController);
+
+        Label label = lookup("#backpackMenuLabel_0").query();
+        clickOn(label);
+        waitForFxEvents();
+        verify(ingameController).pushController(any());
+
+        Label label2 = lookup("#backpackMenuLabel_0").query();
+        clickOn(label2);
+        waitForFxEvents();
+
+        verify(ingameController).removeChildren(anyInt());
+    }
 }
