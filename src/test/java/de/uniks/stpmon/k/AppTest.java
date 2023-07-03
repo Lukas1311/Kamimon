@@ -19,6 +19,7 @@ import de.uniks.stpmon.k.utils.Direction;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -27,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -35,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.function.Predicate.not;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -97,16 +99,18 @@ class AppTest extends ApplicationTest {
         type(KeyCode.F);
         waitForFxEvents();
 
+        ListView<User> list = lookup("#userListView").query();
+        ObservableList<User> users = list.getItems();
 
-        ScrollPane scrollPane = lookup("#scrollPane").query();
-        VBox userList = (VBox) scrollPane.getContent();
-        VBox friendView = (VBox) userList.lookup("#friendSection");
-        VBox userView = (VBox) userList.lookup("#userSection");
-        ObservableList<Node> friendChildren = friendView.getChildren();
-        ObservableList<Node> userChildren = userView.getChildren();
-        //check if friend list is empty
-        assertThat(friendChildren).isEmpty();
-        assertThat(userChildren).isEmpty();
+        //user has no friends
+        assertEquals(0, users.size());
+
+        clickOn("#checkBox");
+        clickOn("#searchButton");
+        waitForFxEvents();
+
+        //show all users
+        assertEquals(3, users.size());
 
         //add a new friend
         clickOn("#searchFriend");
@@ -114,15 +118,24 @@ class AppTest extends ApplicationTest {
         verifyThat("#searchFriend", hasText("TestUser1"));
         type(KeyCode.ENTER);
 
-        assertThat(friendChildren).isEmpty();
-        assertThat(userChildren).isNotEmpty();
+        //one search result is shown
+        assertEquals(1, users.size());
+
+        //TestUser1 is shown
+        assertEquals("TestUser1", users.get(0).name());
+        assertNotNull(lookup("#TestUser1").query());
 
         //add friend
         clickOn("#removeFriendButton");
         waitForFxEvents();
+
+        clickOn("#checkBox");
+        clickOn("#searchFriend");
+        type(KeyCode.BACK_SPACE, "TestUser1".length());
+        clickOn("#searchButton");
+
         //check if user is added to friend list
-        assertThat(friendChildren).hasSize(1);
-        assertThat(userChildren).isEmpty();
+        assertEquals(1, users.size());
 
         messageApi.mockEvents("0");
 
@@ -140,8 +153,6 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         //chatlist first entry is message with t
         verifyThat("#bodyText", hasText("t"));
-        //potential invite here
-        //...
 
         //close friends sidebar
         type(KeyCode.F);
@@ -306,7 +317,40 @@ class AppTest extends ApplicationTest {
 
         trainerCache.addValue(prof);
 
+        //shortcut tests
+        type(KeyCode.C);
+        waitForFxEvents();
+        verifyThat("#chatList", Node::isVisible);
+        type(KeyCode.C);
+
+        type(KeyCode.B);
+        waitForFxEvents();
+        verifyThat("#backpackMenuHBox", Node::isVisible);
+        type(KeyCode.B);
+
+        type(KeyCode.M);
+        waitForFxEvents();
+        verifyThat("#mapOverviewContent", Node::isVisible);
+        type(KeyCode.M);
+
+        type(KeyCode.N);
+        waitForFxEvents();
+        verifyThat("#monsterListVBox", Node::isVisible);
+        type(KeyCode.N);
+
+        type(KeyCode.P);
+        waitForFxEvents();
+        verifyThat("#shortcutPane", Node::isVisible);
+        type(KeyCode.P);
+
+        type(KeyCode.O);
+        waitForFxEvents();
+        verifyThat("#settingsScreen", Node::isVisible);
+        type(KeyCode.O);
+
+
         clickOn("#monsterBar");
+        waitForFxEvents();
         // verify that the monster list is empty
         assertThat(me.team()).isEmpty();
 
@@ -328,6 +372,7 @@ class AppTest extends ApplicationTest {
 
         //check backpack
         clickOn("#backpackImage");
+
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
         //add Monsters to inventory

@@ -19,7 +19,7 @@ public class DummyConstants {
     public static final User USER_ALICE = new User(
             "id_alice",
             "Alice",
-            null,
+            "online",
             null,
             null
     );
@@ -27,7 +27,7 @@ public class DummyConstants {
     public static final User USER_BOB = new User(
             "id_bob",
             "Bob",
-            null,
+            "offline",
             null,
             null
     );
@@ -35,7 +35,7 @@ public class DummyConstants {
     public static final User USER_EVE = new User(
             "id_eve",
             "Eve",
-            null,
+            "online",
             null,
             null
     );

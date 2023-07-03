@@ -41,7 +41,6 @@ Load fonts
 .root {
     -fx-font-family: "Comic Neue Bold";
     -fx-font-size: 16;
-    -fx-font-smoothing-type: gray;
 
     -fx-color-kgm-red: #ae2f34;
     -fx-color-kgm-yellow: #fcf1d0;
