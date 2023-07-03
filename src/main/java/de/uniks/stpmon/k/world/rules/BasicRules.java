@@ -3,6 +3,8 @@ package de.uniks.stpmon.k.world.rules;
 public class BasicRules {
     public static final String TILESET_BASE = "../../tilesets/";
     public static final String TILESET_MODERN_EXTERIORS = TILESET_BASE + "Modern_Exteriors_16x16.json";
+
+    public static final String TILESET_MODERN_EXTERIORS_EXTENDED = TILESET_BASE + "Modern_Exteriors_extended_16x16.json";
     public static final String TILESET_MODERN_INTERIORS = TILESET_BASE + "Modern_Interiors_16x16.json";
 
     public static final String TILESET_ROOM_BUILDER = TILESET_BASE + "Room_Builder_16x16.json";
@@ -53,6 +55,14 @@ public class BasicRules {
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(182, 2, 4, 176),
                 new IdSource.Rectangle(913, 15, 5, 176));
+
+        // hanging lamp entangle
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(4760, 2, 2, 176),
+                new IdSource.Rectangle(5112, 1, 2, 176));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(4762, 2, 2, 176),
+                new IdSource.Rectangle(5115, 1, 2, 176));
 
         //  wire fence
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
@@ -140,10 +150,12 @@ public class BasicRules {
                 new IdSource.Rectangle(1200, 3, 5, 176),
                 new IdSource.Rectangle(2069, 4, 1, 176),
                 new IdSource.Rectangle(2242, 10, 6, 176),
+                new IdSource.Rectangle(2604, 2, 2, 176),
                 new IdSource.Single(3298),
                 new IdSource.Rectangle(3300, 6, 8, 176),
                 new IdSource.Rectangle(2954, 6, 7, 176),
-                new IdSource.Rectangle(4189, 1, 3, 176));
+                new IdSource.Rectangle(4189, 1, 3, 176),
+                new IdSource.Rectangle(4708, 6, 5, 176));
 
         // boats
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
@@ -177,6 +189,11 @@ public class BasicRules {
                 new IdSource.Rectangle(1119, 3, 5, 176),
                 new IdSource.Rectangle(9972, 12, 6, 176));
 
+
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(177, 2, 1, 176),
+                new IdSource.Rectangle(1598, 2, 1, 176));
+
         // add decoration rules
         registry.addConnection(new EntangledRule(registry));
         registry.addConnection(new ImageConnectionRule());
@@ -184,10 +201,20 @@ public class BasicRules {
         // add missing candidate rules
         registry.addCandidate(new TilesetCandidateRule(TILESET_MODERN_EXTERIORS,
                 176));
+
+        registry.addCandidate(new TilesetCandidateRule(TILESET_MODERN_EXTERIORS_EXTENDED,
+                16, 41713));
         registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
                 12141, 13021));
         registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
                 10553, 10377));
+        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
+                10553, 10377));
+
+        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS_EXTENDED,
+                41713 + 178, 41713 + 176));
+        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS_EXTENDED,
+                41713 + 162, 41713 + 160));
         return registry;
     }
 }

@@ -35,6 +35,17 @@ public class RuleRegistry {
         tileset.markEntangled(c);
     }
 
+    public void markBottom(String tileSet, IdSource... sources) {
+        markBottom(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
+    }
+
+    public void markBottom(String tileSet, Collection<Integer> c) {
+        TilesetProperties tileset = properties.computeIfAbsent(tileSet, (k) -> new TilesetProperties());
+        for (Integer tileId : c) {
+            tileset.setProperty(tileId, TileProperties.BOTTOM);
+        }
+    }
+
     public boolean isDecoration(TileInfo info) {
         TilesetProperties tileset = properties.get(info.tileSet());
         if (tileset == null) {

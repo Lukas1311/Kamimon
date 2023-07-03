@@ -10,14 +10,21 @@ public class TilesetCandidateRule implements CandidateRule {
     private final int distance;
     private final int columns;
 
+    private final int offset;
+
     public TilesetCandidateRule(String tileset, int columns) {
-        this(tileset, columns, 1);
+        this(tileset, columns, 1, 0);
     }
 
-    public TilesetCandidateRule(String tileset, int columns, int distance) {
+    public TilesetCandidateRule(String tileset, int columns, int offset) {
+        this(tileset, columns, 1, offset);
+    }
+
+    public TilesetCandidateRule(String tileset, int columns, int distance, int offset) {
         this.tileset = tileset;
         this.distance = distance;
         this.columns = columns;
+        this.offset = offset;
     }
 
     @Override
@@ -25,12 +32,12 @@ public class TilesetCandidateRule implements CandidateRule {
         if (!current.tileSet().equals(tileset)) {
             return null;
         }
-        int id = current.tileId();
+        int id = current.tileId() - offset;
         for (TileInfo candidate : candidates) {
             if (!candidate.tileSet().equals(tileset)) {
                 continue;
             }
-            int otherId = candidate.tileId();
+            int otherId = candidate.tileId() - offset;
             int mainX = id % columns;
             int mainY = id / columns;
             int otherX = otherId % columns;
