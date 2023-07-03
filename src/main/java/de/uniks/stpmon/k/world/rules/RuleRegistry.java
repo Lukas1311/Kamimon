@@ -35,6 +35,17 @@ public class RuleRegistry {
         tileset.markEntangled(c);
     }
 
+    public void markBottom(String tileSet, IdSource... sources) {
+        markBottom(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
+    }
+
+    public void markBottom(String tileSet, Collection<Integer> c) {
+        TilesetProperties tileset = properties.computeIfAbsent(tileSet, (k) -> new TilesetProperties());
+        for (Integer tileId : c) {
+            tileset.setProperty(tileId, TileProperties.BOTTOM);
+        }
+    }
+
     public boolean isDecoration(TileInfo info) {
         TilesetProperties tileset = properties.get(info.tileSet());
         if (tileset == null) {
@@ -78,7 +89,7 @@ public class RuleRegistry {
         candidateRules.add(rule);
     }
 
-    public RuleResult applyLoneRule(TileInfo current, List<DecorationLayer> decorationLayers) {
+    public RuleResult tryToExtract(TileInfo current, List<DecorationLayer> decorationLayers) {
         for (LoneRule rule : loneRules) {
             RuleResult result = rule.apply(current, decorationLayers);
             if (result != RuleResult.NO_MATCH) {
@@ -88,9 +99,9 @@ public class RuleRegistry {
         return RuleResult.NO_MATCH;
     }
 
-    public RuleResult applyRule(TileInfo current, TileInfo other,
-                                Direction currentDir, Direction otherDir,
-                                List<DecorationLayer> decorationLayers) {
+    public RuleResult tryToConnect(TileInfo current, TileInfo other,
+                                   Direction currentDir, Direction otherDir,
+                                   List<DecorationLayer> decorationLayers) {
         for (ConnectionRule rule : connectionRules) {
             RuleResult result = rule.apply(current, other, currentDir, otherDir, decorationLayers);
             if (result != RuleResult.NO_MATCH) {
