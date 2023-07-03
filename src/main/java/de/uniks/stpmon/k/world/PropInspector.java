@@ -14,12 +14,28 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
+/**
+ * The PropInspector is responsible for creating the props from the given tile map data and the decoration layers.
+ * These layers are used to determine the props and their positions. These textures are then used to create the props.
+ * <p/>
+ * The container {@link RuleRegistry} defines the way the props are defined.
+ */
 public class PropInspector {
     private static final RuleRegistry registry = BasicRules.registerRules();
     public static final int TILE_SIZE = 16;
     private final PropGrid[] grids;
+    /**
+     * The offset to the tile id that a different layer has.
+     */
     private final int layerOffset;
+    /**
+     * The current group id. This is used to group the tile together as one prop.
+     */
     private int groupId = 1;
+    /**
+     * The groups of tiles. Each group contains the tile ids of the tiles that belong to the group. Every group is later
+     * used to create a single prop.
+     */
     private final Map<Integer, HashSet<Integer>> groups;
 
     public PropInspector(int width, int height, int layers) {
@@ -45,95 +61,222 @@ public class PropInspector {
             buffers[i] = new ChunkBuffer(decorationLayers.get(i).layerData());
         }
         for (int layerIndex = 0; layerIndex < decorationLayers.size(); layerIndex++) {
-            workLayer(decorationLayers, data, buffers, layerIndex);
+            PropContext context = new PropContext(layerIndex, data, buffers, decorationLayers);
+            workLayer(context);
         }
         return createProps(decorationLayers);
     }
 
-    private void workLayer(List<DecorationLayer> decorationLayers, TileMapData data, ChunkBuffer[] buffers, int layerIndex) {
-        ChunkBuffer buffer = buffers[layerIndex];
-        PropGrid grid = grids[layerIndex];
+    /**
+     * Creates the props from the given context and marks them in the context grid.
+     *
+     * @param context The context to create the props
+     */
+    private void workLayer(PropContext context) {
+        ChunkBuffer buffer = context.buffers[context.layerIndex];
+        PropGrid grid = grids[context.layerIndex];
         for (int x = 0; x < grid.getWidth(); x++) {
             for (int y = grid.getHeight() - 1; y >= 0; y--) {
-                boolean marked = false;
                 int id = buffer.getId(x, y);
                 // Empty or invalid tile
                 if (id <= 0) {
                     continue;
                 }
 
-                TileInfo current = new TileInfo(x, y, layerIndex, id, data.getTileset(id).source());
+                TileInfo current = new TileInfo(x, y, context.layerIndex, id, context.getTileset(id));
                 // Check if tile is a decoration or already used
                 if (registry.isDecoration(current)) {
                     grid.setUsed(x, y, true);
                     continue;
                 }
 
-                for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
-                    int otherX = x + dir.tileX();
-                    int otherY = y + dir.tileY();
-                    Direction otherDir = dir.opposite();
-                    // Check bounds
-                    if (notInBounds(grid, otherX, otherY)) {
-                        continue;
-                    }
-                    List<TileInfo> candidates = new ArrayList<>();
-                    for (int otherLayer = 0; otherLayer < decorationLayers.size(); otherLayer++) {
-                        PropGrid otherGrid = grids[otherLayer];
-                        ChunkBuffer otherBuffer = buffers[otherLayer];
-                        // Check visited
-                        if (grid.hasVisited(x, y, dir)
-                                || otherGrid.hasVisited(otherX, otherY, otherDir)) {
-                            marked = true;
-                            continue;
-                        }
-                        int otherId = otherBuffer.getId(otherX, otherY);
-                        // Empty or invalid tile
-                        if (otherId <= 0) {
-                            continue;
-                        }
-
-                        TileInfo other = new TileInfo(x, y, otherLayer, otherId, data.getTileset(otherId).source());
-                        // Check if tile is a decoration or already used
-                        if (registry.isDecoration(other)) {
-                            continue;
-                        }
-                        RuleResult result = registry.applyRule(current, other, dir, otherDir, decorationLayers);
-                        if (result == RuleResult.NO_MATCH_STOP) {
-                            continue;
-                        }
-                        // Check if the tiles are connected
-                        if (result == RuleResult.MATCH_CONNECTION) {
-                            candidates.add(other);
-                        }
-                    }
-                    if (candidates.isEmpty()) {
-                        continue;
-                    }
-                    TileInfo bestCandidate = registry.getPropInfo(current, candidates, decorationLayers);
-                    if (bestCandidate != null) {
-                        int otherLayer = bestCandidate.layer();
-                        PropGrid otherGrid = grids[otherLayer];
-                        tryMergeGroups(x, y, layerIndex, otherX, otherY, otherLayer);
-                        marked = true;
-                        grid.setVisited(x, y, dir);
-                        otherGrid.setVisited(otherX, otherY, otherDir);
-                    }
-                }
-                if (marked) {
+                if (connectTo(context, grid, x, y, current)) {
                     continue;
                 }
                 if (checkOtherDirections(grid, x, y)) {
                     continue;
                 }
-                RuleResult result = registry.applyLoneRule(current, decorationLayers);
+                RuleResult result = registry.tryToExtract(current, context.decorationLayers);
                 if (result == RuleResult.MATCH_SINGLE) {
-                    createIfAbsent(grid, x, y, null, layerIndex);
+                    createIfAbsent(grid, x, y, null, context.layerIndex);
                 }
             }
         }
     }
 
+    /**
+     * Connects the current tile to the best neighbour tiles in the directions right and top.
+     * The neighbour tile also has to allow the current tile to connect back. If this is not the case, the neighbour
+     * will be ignored.
+     *
+     * @param context The current context
+     * @param grid    The current grid
+     * @param x       The x coordinate
+     * @param y       The y coordinate
+     * @param current The current tile
+     * @return True if the current tile was marked as visited
+     */
+    private boolean connectTo(PropContext context, PropGrid grid, int x, int y, TileInfo current) {
+        boolean marked = false;
+        for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
+            ConnectionResult result = findBestNeighbour(context, grid, x, y, current, dir);
+            TileInfo bestCandidate = result.connectedTile;
+            marked |= result.alreadyVisited;
+            if (bestCandidate != null) {
+                ConnectionResult back = findBestNeighbour(context, grid,
+                        bestCandidate.tileX(), bestCandidate.tileY(),
+                        bestCandidate, dir.opposite());
+                // Check if the other tile wants to connect back
+                if (back.connectedTile == null || back.connectedTile.tileId() != current.tileId()) {
+                    continue;
+                }
+                int otherLayer = bestCandidate.layer();
+                PropGrid otherGrid = grids[otherLayer];
+                tryMergeGroups(x, y, context.layerIndex, bestCandidate.tileX(), bestCandidate.tileY(), otherLayer);
+                marked = true;
+                grid.setVisited(x, y, dir);
+                otherGrid.setVisited(bestCandidate.tileX(), bestCandidate.tileY(), dir.opposite());
+            }
+        }
+        return marked;
+    }
+
+    private int createIndex(int x, int y, int layer) {
+        return x + y * grids[0].getWidth() + layer * layerOffset;
+    }
+
+    public void tryMergeGroups(int x, int y, int layer, int otherX, int otherY, int otherLayer) {
+        PropGrid grid = grids[layer];
+        PropGrid otherGrid = grids[otherLayer];
+        int firstGroup = grid.getGroup(x, y);
+        int secondGroup = otherGrid.getGroup(otherX, otherY);
+        HashSet<Integer> first = groups.get(firstGroup);
+        HashSet<Integer> second = groups.get(secondGroup);
+        if (firstGroup == 0 && secondGroup == 0) {
+            first = new HashSet<>();
+            first.add(createIndex(x, y, layer));
+            first.add(createIndex(otherX, otherY, otherLayer));
+            int groupIndex = groupId++;
+            groups.put(groupIndex, first);
+            grid.setGroup(x, y, groupIndex);
+            otherGrid.setGroup(otherX, otherY, groupIndex);
+            return;
+        }
+        if (first != null && second == null) {
+            first.add(createIndex(otherX, otherY, otherLayer));
+            otherGrid.setGroup(otherX, otherY, firstGroup);
+            return;
+        }
+        if (first == null && second != null) {
+            second.add(createIndex(x, y, layer));
+            grid.setGroup(x, y, secondGroup);
+            return;
+        }
+        first = createIfAbsent(grid, x, y, first, layer);
+        second = createIfAbsent(otherGrid, otherX, otherY, second, otherLayer);
+        firstGroup = grid.getGroup(x, y);
+        secondGroup = otherGrid.getGroup(otherX, otherY);
+        if (firstGroup != secondGroup) {
+            if (first.size() >= second.size()) {
+                first.addAll(second);
+                groups.put(secondGroup, first);
+            } else {
+                second.addAll(first);
+                groups.put(firstGroup, second);
+            }
+        }
+    }
+
+    /**
+     * Checks if the given group is present (not null). If not, a new group is created and the tile is added to it.
+     *
+     * @param grid  The grid to check
+     * @param x     The x coordinate
+     * @param y     The y coordinate
+     * @param tiles The group which can be null
+     * @param layer The index of layer
+     * @return The group which is guaranteed to be not null
+     */
+    private HashSet<Integer> createIfAbsent(PropGrid grid, int x, int y, HashSet<Integer> tiles, int layer) {
+        if (tiles == null) {
+            tiles = new HashSet<>();
+            tiles.add(createIndex(x, y, layer));
+            int groupIndex = groupId++;
+            groups.put(groupIndex, tiles);
+            grid.setGroup(x, y, groupIndex);
+        }
+        return tiles;
+    }
+
+    /**
+     * Tries to find the best neighbour tile for the given coordinates and direction.
+     * The best neighbour tile is a tile which can be connected to the current tile and is chosen by the
+     * candidate rules as the best candidate.
+     *
+     * @param context The current context
+     * @param grid    The current grid
+     * @param x       The x coordinate
+     * @param y       The y coordinate
+     * @param current The current tile
+     * @param dir     The direction to check
+     * @return The best neighbour tile or null if no neighbour was found
+     */
+    private ConnectionResult findBestNeighbour(PropContext context, PropGrid grid, int x, int y, TileInfo current, Direction dir) {
+        int otherX = x + dir.tileX();
+        int otherY = y + dir.tileY();
+        Direction otherDir = dir.opposite();
+        // Check bounds
+        if (notInBounds(grid, otherX, otherY)) {
+            return ConnectionResult.NO_CONNECTION;
+        }
+        boolean marked = false;
+        List<TileInfo> candidates = new ArrayList<>();
+        for (int otherLayer = 0; otherLayer < context.decorationLayers.size(); otherLayer++) {
+            PropGrid otherGrid = grids[otherLayer];
+            ChunkBuffer otherBuffer = context.buffers[otherLayer];
+            // Check visited
+            if (grid.hasVisited(x, y, dir)
+                    || otherGrid.hasVisited(otherX, otherY, otherDir)) {
+                marked = true;
+                continue;
+            }
+            int otherId = otherBuffer.getId(otherX, otherY);
+            // Empty or invalid tile
+            if (otherId <= 0) {
+                continue;
+            }
+
+            TileInfo other = new TileInfo(otherX, otherY, otherLayer, otherId, context.getTileset(otherId));
+            // Check if tile is a decoration or already used
+            if (registry.isDecoration(other)) {
+                continue;
+            }
+            // Apply connection rules
+            RuleResult result = registry.tryToConnect(current, other, dir, otherDir, context.decorationLayers);
+            if (result == RuleResult.NO_MATCH_STOP) {
+                continue;
+            }
+            // Check if the tiles are connected
+            if (result == RuleResult.MATCH_CONNECTION) {
+                candidates.add(other);
+            }
+        }
+        if (candidates.isEmpty()) {
+            return new ConnectionResult(marked, null);
+        }
+        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers);
+        return new ConnectionResult(marked, bestCandidate);
+    }
+
+    /**
+     * Check if the tile at the given coordinates in the given grid was already visited in the directions
+     * that are not the main directions (right and top).
+     *
+     * @param grid The grid to check against
+     * @param x    The x coordinate to check
+     * @param y    The y coordinate to check
+     * @return True if the tile was already visited, false otherwise
+     */
     private static boolean checkOtherDirections(PropGrid grid, int x, int y) {
         for (Direction dir : new Direction[]{Direction.LEFT, Direction.BOTTOM}) {
             int otherX = x + dir.tileX();
@@ -153,11 +296,17 @@ public class PropInspector {
         return false;
     }
 
-    private static boolean notInBounds(PropGrid grid, int otherX, int otherY) {
-        return otherX < 0 || otherX >= grid.getWidth()
-                || otherY < 0 || otherY >= grid.getHeight();
+    /**
+     * Checks if the given coordinates are out of bounds.
+     *
+     * @param grid The grid to check against
+     * @param x    The x coordinate to check
+     * @param y    The y coordinate to check
+     * @return True if the coordinates are out of bounds, false otherwise
+     */
+    private static boolean notInBounds(PropGrid grid, int x, int y) {
+        return x < 0 || x >= grid.getWidth() || y < 0 || y >= grid.getHeight();
     }
-
 
     /**
      * Extracts the props from the image and returns them in a prop map.
@@ -233,60 +382,14 @@ public class PropInspector {
         return new PropMap(props, imagesList.get(0));
     }
 
-    private int createIndex(int x, int y, int layer) {
-        return x + y * grids[0].getWidth() + layer * layerOffset;
-    }
-
-    public void tryMergeGroups(int x, int y, int layer, int otherX, int otherY, int otherLayer) {
-        PropGrid grid = grids[layer];
-        PropGrid otherGrid = grids[otherLayer];
-        int firstGroup = grid.getGroup(x, y);
-        int secondGroup = otherGrid.getGroup(otherX, otherY);
-        HashSet<Integer> first = groups.get(firstGroup);
-        HashSet<Integer> second = groups.get(secondGroup);
-        if (firstGroup == 0 && secondGroup == 0) {
-            first = new HashSet<>();
-            first.add(createIndex(x, y, layer));
-            first.add(createIndex(otherX, otherY, otherLayer));
-            int groupIndex = groupId++;
-            groups.put(groupIndex, first);
-            grid.setGroup(x, y, groupIndex);
-            otherGrid.setGroup(otherX, otherY, groupIndex);
-            return;
-        }
-        if (first != null && second == null) {
-            first.add(createIndex(otherX, otherY, otherLayer));
-            otherGrid.setGroup(otherX, otherY, firstGroup);
-            return;
-        }
-        if (first == null && second != null) {
-            second.add(createIndex(x, y, layer));
-            grid.setGroup(x, y, secondGroup);
-            return;
-        }
-        first = createIfAbsent(grid, x, y, first, layer);
-        second = createIfAbsent(otherGrid, otherX, otherY, second, otherLayer);
-        firstGroup = grid.getGroup(x, y);
-        secondGroup = otherGrid.getGroup(otherX, otherY);
-        if (firstGroup != secondGroup) {
-            if (first.size() >= second.size()) {
-                first.addAll(second);
-                groups.put(secondGroup, first);
-            } else {
-                second.addAll(first);
-                groups.put(firstGroup, second);
-            }
+    private record PropContext(int layerIndex, TileMapData data, ChunkBuffer[] buffers,
+                               List<DecorationLayer> decorationLayers) {
+        public String getTileset(int id) {
+            return data.getTileset(id).source();
         }
     }
 
-    private HashSet<Integer> createIfAbsent(PropGrid grid, int x, int y, HashSet<Integer> tiles, int layer) {
-        if (tiles == null) {
-            tiles = new HashSet<>();
-            tiles.add(createIndex(x, y, layer));
-            int groupIndex = groupId++;
-            groups.put(groupIndex, tiles);
-            grid.setGroup(x, y, groupIndex);
-        }
-        return tiles;
+    private record ConnectionResult(boolean alreadyVisited, TileInfo connectedTile) {
+        public static final ConnectionResult NO_CONNECTION = new ConnectionResult(false, null);
     }
 }
