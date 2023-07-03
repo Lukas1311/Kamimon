@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.cache.ICache;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
@@ -41,6 +42,7 @@ public class StatusController extends Controller {
     TrainerService trainerService;
 
     public Monster monster;
+    private ICache<Monster, String> monsterCache;
 
     @Inject
     public StatusController() {
@@ -48,6 +50,10 @@ public class StatusController extends Controller {
 
     public void setMonster(Monster monster) {
         this.monster = monster;
+    }
+
+    public void setMonsterCache(ICache<Monster, String> monsterCache) {
+        this.monsterCache = monsterCache;
     }
 
     @Override
@@ -67,9 +73,13 @@ public class StatusController extends Controller {
 
     public void loadMonsterInformation() {
         // used to get the monster information for the monster of the trainer in the active region
-        disposables.add(regionService.getMonster(regionStorage.getRegion()._id(), monster._id())
+        disposables.add(monsterCache.listenValue(monster._id())
                 .observeOn(FX_SCHEDULER)
-                .subscribe(monster1 -> {
+                .subscribe(optMonster -> {
+                    if (optMonster.isEmpty()) {
+                        return;
+                    }
+                    Monster monster1 = optMonster.get();
                     monsterHp.setText(monster1.currentAttributes().health() + " / " + monster1.attributes().health());
                     monsterLevel.setText("Lvl. " + monster1.level().toString());
 

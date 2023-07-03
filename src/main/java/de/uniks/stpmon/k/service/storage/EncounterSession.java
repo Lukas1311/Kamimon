@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.service.DestructibleElement;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.CompletableSource;
 import io.reactivex.rxjava3.core.Observable;
 
 import java.util.*;
@@ -24,7 +26,7 @@ public class EncounterSession extends DestructibleElement {
         String teammate = null;
         // does not block because it is initialized with the initial values
         for (Opponent op : opponentCache.getValues().blockingFirst()) {
-            monsterCaches.put(op._id(), cacheManager.requestMonsters(op._id()));
+            monsterCaches.put(op.trainer(), cacheManager.requestMonsters(op.trainer()));
             if (op._id().equals(self)) {
                 continue;
             }
@@ -88,4 +90,13 @@ public class EncounterSession extends DestructibleElement {
         return opponentCache;
     }
 
+    public CompletableSource waitForLoad() {
+        return opponentCache.onInitialized()
+                .andThen(Completable.merge(monsterCaches.values().stream()
+                        .map(MonsterCache::onInitialized).toList()));
+    }
+
+    public String getSelfId() {
+        return self;
+    }
 }

@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -11,11 +13,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -58,6 +56,8 @@ public class IngameController extends PortalController {
     @Inject
     StarterController starterController;
     @Inject
+    Provider<EncounterOverviewController> encounterProvider;
+    @Inject
     InteractionStorage interactionStorage;
     @Inject
     MonsterInformationController monsterInformationController;
@@ -70,6 +70,9 @@ public class IngameController extends PortalController {
 
     @Inject
     InputHandler inputHandler;
+
+    @Inject
+    EncounterService encounterService;
 
     private Parent mapOverview;
 
@@ -116,6 +119,17 @@ public class IngameController extends PortalController {
             }
         }));
         starterController.init();
+
+        if (encounterService != null) {
+            subscribe(encounterService.tryLoadEncounter(), () -> {
+                EncounterOverviewController controller = encounterProvider.get();
+                app.show(controller);
+            });
+            subscribe(encounterService.listenForEncounter(), () -> {
+                EncounterOverviewController controller = encounterProvider.get();
+                app.show(controller);
+            });
+        }
     }
 
     @Override

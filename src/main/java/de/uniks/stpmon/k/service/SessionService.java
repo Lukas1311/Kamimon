@@ -49,4 +49,11 @@ public class SessionService extends DestructibleElement {
         }).ignoreElements();
     }
 
+//    public Observable<List<Monster>> getMainMonster(String monsterId) {
+//        return encounterStorage.getEncounterSession().getMonster(monsterId);
+//    }
+//    public Observable<List<Monster>> getAttackerMonster(String monsterId) {
+//        return encounterStorage.getEncounterSession().getMonster(monsterId);
+//    }
+
 }

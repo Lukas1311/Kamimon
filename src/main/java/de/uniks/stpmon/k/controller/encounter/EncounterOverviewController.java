@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.MonsterService;
+import de.uniks.stpmon.k.service.storage.EncounterSession;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -52,9 +54,11 @@ public class EncounterOverviewController extends Controller {
     Provider<StatusController> statusControllerProvider;
     @Inject
     LoginController loginController;
+    @Inject
+    EncounterStorage encounterStorage;
 
-    public List<Monster> userMonstersList;
-    public List<Monster> opponentMonstersList;
+    public List<Monster> userMonstersList = new ArrayList<>();
+    public List<Monster> opponentMonstersList = new ArrayList<>();
 
     @Inject
     public EncounterOverviewController() {
@@ -65,7 +69,13 @@ public class EncounterOverviewController extends Controller {
     public void init() {
         super.init();
 
-        subscribe(monsterService.getTeam(), team -> userMonstersList.addAll(team));
+        subscribe(monsterService.getTeam(), team -> {
+            userMonstersList.addAll(team);
+            opponentMonstersList.addAll(team);
+            renderMonsterLists();
+            animateMonsterEntrance();
+        });
+        //subscribe(monsterService.getTeam(), team -> opponentMonstersList.addAll(team));
     }
 
     @Override
@@ -78,8 +88,8 @@ public class EncounterOverviewController extends Controller {
 
         placeholder.setOnMouseClicked(e -> app.show(loginController));
 
-        renderMonsterLists();
-        animateMonsterEntrance();
+        //renderMonsterLists();
+        //animateMonsterEntrance();
 
         return parent;
     }
@@ -90,22 +100,24 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters(List<Monster> monsterList, VBox monstersContainer, ImageView monsterImageView1, ImageView monsterImageView2, boolean isUser) {
+        EncounterSession session = encounterStorage.getEncounterSession();
         for (int slot = 0; slot < monsterList.size(); slot++) {
             Monster monster = monsterList.get(slot);
             StatusController statusController = statusControllerProvider.get();
             statusController.setMonster(monster);
-            statusController.loadMonsterDto(String.valueOf(monster._id()));
+            statusController.setMonsterCache(session.getMonsters(session.getSelfId()));
+            statusController.loadMonsterDto(String.valueOf(monster.type()));
             monstersContainer.getChildren().add(statusController.render());
 
             if (slot == 0) {
-                loadMonsterImage(monster._id(), monsterImageView1, isUser ? 1 : 0);
+                loadMonsterImage(String.valueOf(monster.type()), monsterImageView1, isUser ? 1 : 0);
                 if (isUser) {
                     VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 125));
                 } else {
                     VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
                 }
             } else if (slot == 1) {
-                loadMonsterImage(monster._id(), monsterImageView2, isUser ? 1 : 0);
+                loadMonsterImage(String.valueOf(monster.type()), monsterImageView2, isUser ? 1 : 0);
                 if (isUser) {
                     VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 0));
                 }

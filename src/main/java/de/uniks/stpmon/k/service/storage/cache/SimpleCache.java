@@ -87,6 +87,13 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.addValues(subject.getValue());
         }
+
+        // Update listeners
+        for (T value : values) {
+            K id = getId(value);
+            Optional.ofNullable(listenersById.get(id))
+                    .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
+        }
     }
 
     /**
