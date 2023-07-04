@@ -95,9 +95,6 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterMember member) {
-        if (!sessionService.hasMember(member)) {
-            return;
-        }
         Monster monster = sessionService.getMonster(member);
         StatusController statusController = statusControllerProvider.get();
         statusController.setMember(member);
