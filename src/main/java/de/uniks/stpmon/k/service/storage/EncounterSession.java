@@ -13,6 +13,10 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Provider;
 import java.util.*;
 
+/**
+ * A session is a local representation of the encounter that contains all the data needed to play the encounter.
+ * Including cached monsters and opponents.
+ */
 public class EncounterSession extends DestructibleElement {
 
     private final OpponentCache opponentCache;
@@ -24,7 +28,9 @@ public class EncounterSession extends DestructibleElement {
     public EncounterSession(OpponentCache opponentCache) {
         this.opponentCache = opponentCache;
         this.attackerTeam = new LinkedList<>();
-        this.ownTeam = new ArrayList<>(1);
+        this.ownTeam = new ArrayList<>();
+        // Initialize with empty values to allow other teammates to be added after the self trainer
+        this.ownTeam.add("");
     }
 
     public void setup(Provider<SingleMonsterCache> cacheProvider, String selfTrainer) {

@@ -61,38 +61,60 @@ public class EncounterService {
     }
 
     //---------------- Encounter Operations -------------------------
-    public boolean hasEncounter() {
-        return !encounterStorage.isEmpty();
+    public boolean hasNoEncounter() {
+        return encounterStorage.isEmpty();
     }
 
+    /**
+     * Tries to load the current encounter from the server if the trainer has an associated opponent.
+     *
+     * @return A completable that completes when the encounter is loaded or an error occurs.
+     */
     public Completable tryLoadEncounter() {
         Trainer trainer = trainerStorage.getTrainer();
         return getTrainerOpponents(trainer._id()).flatMap((opponents) -> {
             if (opponents.isEmpty()) {
                 return Observable.empty();
             }
-            Opponent trainerOpponent = opponents.get(0);
-            return encounterApiService.getEncounter(
-                    regionStorage.getRegion()._id(),
-                    trainerOpponent.encounter()
-            ).map(encounter -> {
-                encounterStorage.setEncounter(encounter);
-                return encounter;
-            });
-        }).flatMapCompletable((e) -> loadEncounter());
+            return Observable.just(opponents.get(0));
+        }).flatMapCompletable(this::loadEncounter);
     }
 
+    /**
+     * Listens for newly created opponents of the current trainer and loads the encounter if one is created.
+     *
+     * @return A completable that completes when the encounter is loaded or an error occurs.
+     */
     public Completable listenForEncounter() {
         return eventListener.listen(Socket.WS,
                 "encounters.*.trainers.%s.opponents.*.created".formatted(trainerStorage.getTrainer()._id()),
-                Encounter.class
-        ).map(Event::data).map(encounter -> {
-            encounterStorage.setEncounter(encounter);
-            return encounter;
-        }).flatMapCompletable((e) -> loadEncounter());
+                Opponent.class
+        ).map(Event::data).flatMapCompletable(this::loadEncounter);
     }
 
-    public Completable loadEncounter() {
+    /**
+     * Loads the encounter for the given opponent.
+     *
+     * @param opponent The opponent to load the encounter for.
+     * @return A completable that completes when the encounter is loaded or an error occurs.
+     */
+    private Completable loadEncounter(Opponent opponent) {
+        return encounterApiService.getEncounter(
+                regionStorage.getRegion()._id(),
+                opponent.encounter()
+        ).map(encounter -> {
+            encounterStorage.setEncounter(encounter);
+            return encounter;
+        }).flatMapCompletable((e) -> createSession());
+    }
+
+    /**
+     * Creates a new session for the current encounter. A session is a local representation of the encounter that
+     * contains all the data needed to play the encounter. Including cached monsters and opponents.
+     *
+     * @return
+     */
+    private Completable createSession() {
         return getEncounterOpponents().flatMap(opponents -> {
             if (opponents.isEmpty()) {
                 return Observable.empty();
