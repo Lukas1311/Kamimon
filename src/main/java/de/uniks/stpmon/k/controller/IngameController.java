@@ -122,10 +122,16 @@ public class IngameController extends PortalController {
 
         if (encounterService != null) {
             subscribe(encounterService.tryLoadEncounter(), () -> {
+                if (!encounterService.hasEncounter()) {
+                    return;
+                }
                 EncounterOverviewController controller = encounterProvider.get();
                 app.show(controller);
             });
             subscribe(encounterService.listenForEncounter(), () -> {
+                if (!encounterService.hasEncounter()) {
+                    return;
+                }
                 EncounterOverviewController controller = encounterProvider.get();
                 app.show(controller);
             });
