@@ -1,12 +1,10 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.models.EncounterMember;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.cache.ICache;
+import de.uniks.stpmon.k.service.SessionService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
@@ -35,31 +33,22 @@ public class StatusController extends Controller {
     @Inject
     PresetService presetService;
     @Inject
-    RegionService regionService;
-    @Inject
-    RegionStorage regionStorage;
-    @Inject
-    TrainerService trainerService;
+    SessionService sessionService;
 
-    public Monster monster;
-    private ICache<Monster, String> monsterCache;
+    public EncounterMember member;
 
     @Inject
     public StatusController() {
     }
 
-    public void setMonster(Monster monster) {
-        this.monster = monster;
-    }
-
-    public void setMonsterCache(ICache<Monster, String> monsterCache) {
-        this.monsterCache = monsterCache;
+    public void setMember(EncounterMember member) {
+        this.member = member;
     }
 
     @Override
     public Parent render() {
         final Parent parent;
-        if (monster.trainer().equals(trainerService.getMe()._id())) {
+        if (member.isSelf()) {
             parent = load("UserMonsterStatus");
             loadImage(monsterStatusView, "encounter/userMonsterStatus.png");
             loadMonsterInformation();
@@ -72,31 +61,32 @@ public class StatusController extends Controller {
     }
 
     public void loadMonsterInformation() {
+        // Initial state
+        updateState(sessionService.getMonster(member));
         // used to get the monster information for the monster of the trainer in the active region
-        disposables.add(monsterCache.listenValue(monster._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(optMonster -> {
-                    if (optMonster.isEmpty()) {
-                        return;
-                    }
-                    Monster monster1 = optMonster.get();
-                    monsterHp.setText(monster1.currentAttributes().health() + " / " + monster1.attributes().health());
-                    monsterLevel.setText("Lvl. " + monster1.level().toString());
+        subscribe(sessionService.listenMonster(member), this::updateState);
+    }
 
-                    double maxHp = monster1.attributes().health();
-                    double currentHp = monster1.currentAttributes().health();
-                    double hpProgress = currentHp / maxHp;
+    private void updateState(Monster monster) {
+        loadMonsterDto(Integer.toString(monster.type()));
 
-                    hpBar.setProgress(hpProgress);
+        monsterLevel.setText("Lvl. " + monster.level().toString());
 
-                    if (trainerService.getMe().team().contains(monster1._id())) {
-                        double maxExp = Math.pow(monster1.level(), 3) - Math.pow(monster1.level() - 1, 3);
-                        double currentExp = monster1.experience();
-                        double expProgress = currentExp / maxExp;
+        double maxHp = monster.attributes().health();
+        double currentHp = monster.currentAttributes().health();
+        double hpProgress = currentHp / maxHp;
 
-                        experienceBar.setProgress(expProgress);
-                    }
-                }));
+        hpBar.setProgress(hpProgress);
+
+        if (member.isSelf()) {
+            monsterHp.setText(monster.currentAttributes().health() + " / " + monster.attributes().health());
+
+            double maxExp = Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3);
+            double currentExp = monster.experience();
+            double expProgress = currentExp / maxExp;
+
+            experienceBar.setProgress(expProgress);
+        }
     }
 
 

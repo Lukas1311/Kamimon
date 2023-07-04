@@ -1,102 +1,132 @@
 package de.uniks.stpmon.k.service.storage;
 
+import de.uniks.stpmon.k.models.EncounterMember;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.DestructibleElement;
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
+import de.uniks.stpmon.k.service.storage.cache.SingleMonsterCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableSource;
 import io.reactivex.rxjava3.core.Observable;
 
+import javax.inject.Provider;
 import java.util.*;
 
 public class EncounterSession extends DestructibleElement {
 
     private final OpponentCache opponentCache;
-    private final String self;
-    private final String teammate;
-    private final List<String> opposingTeam;
-    private final Map<String, MonsterCache> monsterCaches = new HashMap<>();
+    private final List<String> ownTeam;
+    private final List<String> attackerTeam;
+    private final Map<String, SingleMonsterCache> cacheByOpponent = new HashMap<>();
+    private final Set<EncounterMember> members = new LinkedHashSet<>();
 
-    public EncounterSession(OpponentCache opponentCache, CacheManager cacheManager, String self) {
+    public EncounterSession(OpponentCache opponentCache) {
         this.opponentCache = opponentCache;
-        this.self = self;
-        this.opposingTeam = new LinkedList<>();
-        String teammate = null;
+        this.attackerTeam = new LinkedList<>();
+        this.ownTeam = new ArrayList<>(1);
+    }
+
+    public void setup(Provider<SingleMonsterCache> cacheProvider, String selfTrainer) {
+        int teamIndex = 1;
+        int attackerIndex = 0;
         // does not block because it is initialized with the initial values
-        for (Opponent op : opponentCache.getValues().blockingFirst()) {
-            monsterCaches.put(op.trainer(), cacheManager.requestMonsters(op.trainer()));
-            if (op._id().equals(self)) {
+        for (Opponent op : opponentCache.getCurrentValues()) {
+            SingleMonsterCache monsterCache = cacheProvider.get();
+            monsterCache.setup(op.trainer(), op.monster());
+            monsterCache.init();
+            cacheByOpponent.put(op._id(), monsterCache);
+            // self trainer is always in the first position
+            if (op.trainer().equals(selfTrainer)) {
+                members.add(new EncounterMember(0, false));
+                ownTeam.set(0, op._id());
                 continue;
             }
             if (!op.isAttacker()) {
-                teammate = op._id();
+                // other are added behind the self trainer
+                members.add(new EncounterMember(teamIndex++, false));
+                ownTeam.add(op._id());
             } else {
-                opposingTeam.add(op._id());
+                attackerTeam.add(op._id());
+                members.add(new EncounterMember(attackerIndex++, true));
             }
         }
-        this.teammate = teammate;
         onDestroy(opponentCache::destroy);
     }
 
-    public Observable<Opponent> getSelf() {
-        return opponentCache.listenValue(self).flatMap(op ->
-                op.map(Observable::just).orElse(Observable.empty())
-        );
+
+    public boolean hasMember(EncounterMember member) {
+        return members.contains(member);
     }
 
-    public MonsterCache getMonsters(String id) {
-        return monsterCaches.get(id);
-    }
-
-    public Observable<Opponent> getTeammate() {
-        return opponentCache.listenValue(teammate).flatMap(op ->
-                op.map(Observable::just).orElse(Observable.empty())
-        );
-    }
-
-    public int getEnemies() {
-        return opposingTeam.size();
-    }
-
-    public Observable<Opponent> getFirstEnemy() {
-        if (getEnemies() < 0) {
-            return Observable.error(new IllegalStateException("No enemies found!"));
+    public Monster getMonster(EncounterMember member) {
+        String opponent = getOpponentId(member);
+        if (opponent == null) {
+            throw createOpponentNotFound(member);
         }
-        return opponentCache.listenValue(opposingTeam.get(0)).flatMap(op ->
-                op.map(Observable::just).orElse(Observable.empty())
-        );
+        SingleMonsterCache cache = cacheByOpponent.get(opponent);
+        return cache == null ? null : cache.asNullable();
     }
 
-    public Observable<Opponent> getSecondEnemy() {
-        if (getEnemies() < 1) {
-            return Observable.error(new IllegalStateException("Second enemy not found!"));
+    public Observable<Monster> listenMonster(EncounterMember member) {
+        String opponent = getOpponentId(member);
+        if (opponent == null) {
+            return Observable.error(createOpponentNotFound(member));
         }
-        return opponentCache.listenValue(opposingTeam.get(1)).flatMap(op ->
+        SingleMonsterCache cache = cacheByOpponent.get(opponent);
+        return cache == null ? Observable.empty() : cache.onValue().flatMap(op ->
                 op.map(Observable::just).orElse(Observable.empty())
         );
     }
 
-    public List<String> getOpposingTeam() {
-        return Collections.unmodifiableList(opposingTeam);
+    public Observable<Opponent> listenOpponent(EncounterMember member) {
+        String opponent = getOpponentId(member);
+        if (opponent == null) {
+            return Observable.error(createOpponentNotFound(member));
+        }
+        return opponentCache.listenValue(opponent).flatMap(op ->
+                op.map(Observable::just).orElse(Observable.empty())
+        );
     }
 
-    public Set<String> getOwnTeam() {
-        return Set.of(self, teammate);
+    public Opponent getOpponent(EncounterMember member) {
+        String opponent = getOpponentId(member);
+        if (opponent == null) {
+            throw createOpponentNotFound(member);
+        }
+        return opponentCache.getValue(opponent).orElse(null);
     }
 
-    public OpponentCache getOpponentCache() {
-        return opponentCache;
+    private String getOpponentId(EncounterMember member) {
+        if (member.index() < 0) {
+            return null;
+        }
+        List<String> team = member.attacker() ? attackerTeam : ownTeam;
+        return member.index() >= team.size() ? null : team.get(member.index());
+    }
+
+    private IllegalStateException createOpponentNotFound(EncounterMember member) {
+        return new IllegalStateException(
+                "Opponent not found: Member: %s, Own-Team: %s, Att-Team: %s"
+                        .formatted(member, ownTeam, attackerTeam
+                        ));
+    }
+
+    public List<String> getAttackerTeam() {
+        return Collections.unmodifiableList(attackerTeam);
+    }
+
+    public List<String> getOwnTeam() {
+        return Collections.unmodifiableList(ownTeam);
     }
 
     public CompletableSource waitForLoad() {
         return opponentCache.onInitialized()
-                .andThen(Completable.merge(monsterCaches.values().stream()
-                        .map(MonsterCache::onInitialized).toList()));
+                .andThen(Completable.merge(cacheByOpponent.values().stream()
+                        .map(SingleMonsterCache::onInitialized).toList()));
     }
 
-    public String getSelfId() {
-        return self;
+    public Collection<EncounterMember> getMembers() {
+        return members;
     }
 }

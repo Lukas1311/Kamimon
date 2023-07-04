@@ -11,8 +11,8 @@ import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
+import de.uniks.stpmon.k.service.storage.cache.SingleMonsterCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -52,7 +52,7 @@ public class EncounterService {
     @Inject
     TrainerStorage trainerStorage;
     @Inject
-    CacheManager cacheManager;
+    Provider<SingleMonsterCache> monsterCacheProvider;
     @Inject
     Provider<OpponentCache> opponentCacheProvider;
 
@@ -61,6 +61,10 @@ public class EncounterService {
     }
 
     //---------------- Encounter Operations -------------------------
+    public boolean hasEncounter() {
+        return !encounterStorage.isEmpty();
+    }
+
     public Completable tryLoadEncounter() {
         Trainer trainer = trainerStorage.getTrainer();
         return getTrainerOpponents(trainer._id()).flatMap((opponents) -> {
@@ -100,10 +104,8 @@ public class EncounterService {
             opponentCache.init();
             return opponentCache.onInitialized().andThen(Observable.just(opponentCache));
         }).flatMapCompletable(cache -> {
-            EncounterSession session = new EncounterSession(cache,
-                    cacheManager,
-                    trainerStorage.getTrainer()._id()
-            );
+            EncounterSession session = new EncounterSession(cache);
+            session.setup(monsterCacheProvider, trainerStorage.getTrainer()._id());
             encounterStorage.setEncounterSession(session);
 
             return session.waitForLoad();

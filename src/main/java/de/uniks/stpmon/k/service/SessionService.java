@@ -1,59 +1,95 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.models.Encounter;
+import de.uniks.stpmon.k.models.EncounterMember;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
-import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ * Facade for the encounter session. This can be used to access the current encounter session. This should be the only
+ * way to access the encounter session. This helps to mock the encounter session in tests.
+ */
 @Singleton
 public class SessionService extends DestructibleElement {
 
     @Inject
-    TrainerStorage trainerStorage;
-    @Inject
     EncounterStorage encounterStorage;
-    @Inject
-    EncounterService encounterService;
-    @Inject
-    CacheManager cacheManager;
-    @Inject
-    Provider<OpponentCache> opponentCacheProvider;
 
     @Inject
     public SessionService() {
     }
 
-    public Completable loadEncounter() {
-        return encounterService.getEncounterOpponents().map(opponents -> {
-            if (opponents.isEmpty()) {
-                return opponents;
-            }
-
-            Encounter encounter = encounterStorage.getEncounter();
-            OpponentCache opponentCache = opponentCacheProvider.get();
-            opponentCache.setup(encounter._id(), opponents);
-            opponentCache.init();
-            EncounterSession session = new EncounterSession(opponentCache,
-                    cacheManager,
-                    trainerStorage.getTrainer()._id()
-            );
-            encounterStorage.setEncounterSession(session);
-            return opponents;
-        }).ignoreElements();
+    public Monster getMonster(EncounterMember member) {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        return session.getMonster(member);
     }
 
-//    public Observable<List<Monster>> getMainMonster(String monsterId) {
-//        return encounterStorage.getEncounterSession().getMonster(monsterId);
-//    }
-//    public Observable<List<Monster>> getAttackerMonster(String monsterId) {
-//        return encounterStorage.getEncounterSession().getMonster(monsterId);
-//    }
+    public Observable<Monster> listenMonster(EncounterMember member) {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        return session.listenMonster(member);
+    }
+
+    public Observable<Opponent> listenOpponent(EncounterMember member) {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        return session.listenOpponent(member);
+    }
+
+    public Opponent getOpponent(EncounterMember member) {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        return session.getOpponent(member);
+    }
+
+    public boolean hasMember(EncounterMember member) {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        return session.hasMember(member);
+    }
+
+    public Collection<EncounterMember> getMembers() {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        return session.getMembers();
+    }
+
+
+    public List<String> getAttackerTeam() {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            return Collections.emptyList();
+        }
+        return session.getAttackerTeam();
+    }
+
+    public List<String> getOwnTeam() {
+        EncounterSession session = encounterStorage.getEncounterSession();
+        if (session == null) {
+            return Collections.emptyList();
+        }
+        return session.getOwnTeam();
+    }
 
 }

@@ -2,18 +2,19 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoginController;
+import de.uniks.stpmon.k.models.EncounterMember;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.storage.EncounterSession;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,10 +25,10 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EncounterOverviewController extends Controller {
+
+    public static final double IMAGE_SCALE = 6.0;
     @FXML
     public StackPane fullBox;
     @FXML
@@ -49,33 +50,14 @@ public class EncounterOverviewController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
     LoginController loginController;
     @Inject
-    EncounterStorage encounterStorage;
-
-    public List<Monster> userMonstersList = new ArrayList<>();
-    public List<Monster> opponentMonstersList = new ArrayList<>();
+    SessionService sessionService;
 
     @Inject
     public EncounterOverviewController() {
-        opponentMonstersList = new ArrayList<>();
-    }
-
-    @Override
-    public void init() {
-        super.init();
-
-        subscribe(monsterService.getTeam(), team -> {
-            userMonstersList.addAll(team);
-            opponentMonstersList.addAll(team);
-            renderMonsterLists();
-            animateMonsterEntrance();
-        });
-        //subscribe(monsterService.getTeam(), team -> opponentMonstersList.addAll(team));
     }
 
     @Override
@@ -88,129 +70,105 @@ public class EncounterOverviewController extends Controller {
 
         placeholder.setOnMouseClicked(e -> app.show(loginController));
 
-        //renderMonsterLists();
-        //animateMonsterEntrance();
+        renderMonsterLists();
+        animateMonsterEntrance();
 
         return parent;
     }
 
     private void renderMonsterLists() {
-        renderMonsters(userMonstersList, userMonsters, userMonster0, userMonster1, true);
-        renderMonsters(opponentMonstersList, opponentMonsters, opponentMonster0, opponentMonster1, false);
-    }
-
-    private void renderMonsters(List<Monster> monsterList, VBox monstersContainer, ImageView monsterImageView1, ImageView monsterImageView2, boolean isUser) {
-        EncounterSession session = encounterStorage.getEncounterSession();
-        for (int slot = 0; slot < monsterList.size(); slot++) {
-            Monster monster = monsterList.get(slot);
-            StatusController statusController = statusControllerProvider.get();
-            statusController.setMonster(monster);
-            statusController.setMonsterCache(session.getMonsters(session.getSelfId()));
-            statusController.loadMonsterDto(String.valueOf(monster.type()));
-            monstersContainer.getChildren().add(statusController.render());
-
-            if (slot == 0) {
-                loadMonsterImage(String.valueOf(monster.type()), monsterImageView1, isUser ? 1 : 0);
-                if (isUser) {
-                    VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 125));
+        for (EncounterMember member : sessionService.getMembers()) {
+            if (member.attacker()) {
+                if (member.index() == 0) {
+                    renderMonsters(opponentMonsters, opponentMonster0, member);
                 } else {
-                    VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
+                    renderMonsters(opponentMonsters, opponentMonster1, member);
                 }
-            } else if (slot == 1) {
-                loadMonsterImage(String.valueOf(monster.type()), monsterImageView2, isUser ? 1 : 0);
-                if (isUser) {
-                    VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 0));
+            } else {
+                if (member.index() == 0) {
+                    renderMonsters(userMonsters, userMonster0, member);
+                } else {
+                    renderMonsters(userMonsters, userMonster1, member);
                 }
             }
         }
     }
 
-    public void loadMonsterImage(String monsterId, ImageView monsterImage, int orientation) {
-        final double SCALE = 6.0;
+    private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterMember member) {
+        if (!sessionService.hasMember(member)) {
+            return;
+        }
+        Monster monster = sessionService.getMonster(member);
+        StatusController statusController = statusControllerProvider.get();
+        statusController.setMember(member);
+        monstersContainer.getChildren().add(statusController.render());
 
-        disposables.add(resourceService.getMonsterImage(monsterId)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(imageUrl -> {
-                    // Scale and set the image
-                    Image image = ImageUtils.scaledImageFX(imageUrl, SCALE);
-                    if (orientation == 0) {
-                        monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-                    } else {
-                        monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-                    }
-                    monsterImage.setImage(image);
-                }));
+        if (member.index() == 0) {
+            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, member.attacker());
+            if (!member.attacker()) {
+                VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 125));
+            } else {
+                VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
+            }
+        } else if (member.index() == 1) {
+            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, member.attacker());
+            if (!member.attacker()) {
+                VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 0));
+            }
+        }
+    }
+
+    public void loadMonsterImage(String monsterId, ImageView monsterImage, boolean attacker) {
+        subscribe(resourceService.getMonsterImage(monsterId), imageUrl -> {
+            // Scale and set the image
+            Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
+            if (attacker) {
+                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+            } else {
+                monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            }
+            monsterImage.setImage(image);
+        });
     }
 
     private void animateMonsterEntrance() {
-        if (userMonstersList.size() > 1) {
-            userMonsters.getChildren().get(1).setOpacity(0);
+        ObservableList<Node> teamMonsters = userMonsters.getChildren();
+        if (teamMonsters.size() > 1) {
+            teamMonsters.get(1).setOpacity(0);
             userMonster1.setOpacity(0);
         }
-        if (opponentMonstersList.size() > 1) {
-            opponentMonsters.getChildren().get(1).setOpacity(0);
+        ObservableList<Node> attackerMonsters = opponentMonsters.getChildren();
+        if (attackerMonsters.size() > 1) {
+            attackerMonsters.get(1).setOpacity(0);
             opponentMonster1.setOpacity(0);
         }
         placeholder.setOpacity(0);
 
         //the first monster of the user and opponent always gets rendered
-        TranslateTransition userTransition1 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(0));
-        userTransition1.setFromX(-600);
-        userTransition1.setToX(0);
-
-        TranslateTransition userMonsterTransition1 = new TranslateTransition(Duration.seconds(1), userMonster0);
-        userMonsterTransition1.setFromX(-600);
-        userMonsterTransition1.setToX(0);
-
-        ParallelTransition userFullTransition1 = new ParallelTransition(userTransition1, userMonsterTransition1);
-
-        TranslateTransition opponentTransition1 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(0));
-        opponentTransition1.setFromX(600);
-        opponentTransition1.setToX(0);
-
-        TranslateTransition opponentMonsterTransition1 = new TranslateTransition(Duration.seconds(1), opponentMonster0);
-        opponentMonsterTransition1.setFromX(600);
-        opponentMonsterTransition1.setToX(0);
-
-        ParallelTransition opponentFullTransition1 = new ParallelTransition(opponentTransition1, opponentMonsterTransition1);
+        ParallelTransition userFullTransition1 = createMonsterTransition(userMonster0, teamMonsters.get(0), false);
+        ParallelTransition opponentFullTransition1 = createMonsterTransition(opponentMonster0, attackerMonsters.get(0), true);
 
         ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
 
         parallel1.setOnFinished(e -> {
-            if (userMonstersList.size() > 1) {
-                userMonsters.getChildren().get(1).setOpacity(1);
+            if (teamMonsters.size() > 1) {
+                teamMonsters.get(1).setOpacity(1);
                 userMonster1.setOpacity(1);
             }
-            if (opponentMonstersList.size() > 1) {
-                opponentMonsters.getChildren().get(1).setOpacity(1);
+            if (attackerMonsters.size() > 1) {
+                attackerMonsters.get(1).setOpacity(1);
                 opponentMonster1.setOpacity(1);
             }
         });
 
         ParallelTransition userFullTransition2 = null;
-        if (userMonstersList.size() > 1) {
-            TranslateTransition userTransition2 = new TranslateTransition(Duration.seconds(1), userMonsters.getChildren().get(1));
-            userTransition2.setFromX(-600);
-            userTransition2.setToX(0);
-
-            TranslateTransition userMonsterTransition2 = new TranslateTransition(Duration.seconds(1), userMonster1);
-            userMonsterTransition2.setFromX(-600);
-            userMonsterTransition2.setToX(0);
-
-            userFullTransition2 = new ParallelTransition(userTransition2, userMonsterTransition2);
+        if (teamMonsters.size() > 1) {
+            userFullTransition2 = createMonsterTransition(userMonster1, teamMonsters.get(1), false);
         }
 
         ParallelTransition opponentFullTransition2 = null;
-        if (opponentMonstersList.size() > 1) {
-            TranslateTransition opponentTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonsters.getChildren().get(1));
-            opponentTransition2.setFromX(600);
-            opponentTransition2.setToX(0);
-
-            TranslateTransition opponentMonsterTransition2 = new TranslateTransition(Duration.seconds(1), opponentMonster1);
-            opponentMonsterTransition2.setFromX(600);
-            opponentMonsterTransition2.setToX(0);
-
-            opponentFullTransition2 = new ParallelTransition(opponentTransition2, opponentMonsterTransition2);
+        if (attackerMonsters.size() > 1) {
+            opponentFullTransition2 = createMonsterTransition(opponentMonster1, attackerMonsters.get(1), true);
         }
 
         ParallelTransition parallel2 = new ParallelTransition();
@@ -225,13 +183,22 @@ public class EncounterOverviewController extends Controller {
 
         SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
 
-        TranslateTransition actionFieldTransition = new TranslateTransition(Duration.seconds(1), placeholder);
-        actionFieldTransition.setFromX(600);
-        actionFieldTransition.setToX(0);
-
-        SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
+        SequentialTransition fullSequence = new SequentialTransition(sequence, createNodeTransition(placeholder, true));
 
         fullSequence.play();
+    }
+
+    private ParallelTransition createMonsterTransition(Node image, Node status, boolean attacker) {
+        //the first monster of the user and opponent always gets rendered
+        return new ParallelTransition(createNodeTransition(status, attacker), createNodeTransition(image, attacker));
+    }
+
+
+    private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
+        TranslateTransition monsterTransition = new TranslateTransition(Duration.seconds(1), node);
+        monsterTransition.setFromX(fromRight ? 600 : -600);
+        monsterTransition.setToX(0);
+        return monsterTransition;
     }
 
     @Override

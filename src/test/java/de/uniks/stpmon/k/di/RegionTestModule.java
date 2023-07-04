@@ -268,7 +268,7 @@ public class RegionTestModule {
             }
 
             @Override
-            public Observable<Monster> getMonster(String regionId, String monsterId) {
+            public Observable<Monster> getMonster(String regionId, String trainer, String monsterId) {
                 Optional<Monster> monsterOptional = monsters
                         .stream().filter(m -> m._id().equals(monsterId)).findFirst();
                 return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()
