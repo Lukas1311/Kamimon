@@ -268,6 +268,13 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         return subject;
     }
 
+    public List<T> getCurrentValues() {
+        if (status == Status.DESTROYED) {
+            throw new IllegalStateException("Cache already destroyed");
+        }
+        return subject.getValue();
+    }
+
     @Override
     public Status getStatus() {
         return status;
