@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -17,6 +18,11 @@ public class BackpackController extends Controller {
     public ImageView backpackImage;
 
     private Controller backpackMenu;
+
+    private Controller loadingEncounter;
+
+    @Inject
+    Provider<LoadingEncounterController> loadingEncounterControllerProvider;
 
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
@@ -57,8 +63,10 @@ public class BackpackController extends Controller {
     }
 
     public void openBackPackMenu() {
-        backpackMenu = backpackMenuControllerProvider.get();
-        ingameControllerProvider.get().pushController(backpackMenu);
+        loadingEncounter = loadingEncounterControllerProvider.get();
+        ingameControllerProvider.get().pushController(loadingEncounter);
+        //backpackMenu = backpackMenuControllerProvider.get();
+        //ingameControllerProvider.get().pushController(backpackMenu);
     }
 
     public void closeBackPackMenu() {

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Circle fx:id="blackPoint" radius="22.0" stroke="BLACK" strokeType="INSIDE" />
-   </children>
-</VBox>
+<?import javafx.scene.image.ImageView?>
+<StackPane fx:id="fullBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.LoadingEncounterController">
+    <Circle fx:id="blackPoint" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+</StackPane>
