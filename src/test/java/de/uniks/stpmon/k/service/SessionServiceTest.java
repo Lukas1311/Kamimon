@@ -98,7 +98,7 @@ class SessionServiceTest {
         EncounterSession session = encounterStorage.getSession();
         assertEquals(List.of("0"), session.getOwnTeam());
         assertEquals(List.of("1"), session.getAttackerTeam());
-        assertIterableEquals(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.ATTACKER_FIRST),
+        assertIterableEquals(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.ENEMY_FIRST),
                 session.getSlots());
     }
 
@@ -146,8 +146,8 @@ class SessionServiceTest {
         EncounterSession session = encounterStorage.getSession();
         assertEquals(List.of("0", "2"), session.getOwnTeam());
         assertEquals(List.of("1", "3"), session.getAttackerTeam());
-        assertIterableEquals(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.ATTACKER_FIRST,
-                EncounterSlot.PARTY_SECOND, EncounterSlot.ATTACKER_SECOND), session.getSlots());
+        assertIterableEquals(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.ENEMY_FIRST,
+                EncounterSlot.PARTY_SECOND, EncounterSlot.ENEMY_SECOND), session.getSlots());
     }
 
     @Test

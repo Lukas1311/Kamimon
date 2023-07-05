@@ -36,6 +36,16 @@ public class EncounterSession extends DestructibleElement {
     public void setup(Provider<EncounterMember> cacheProvider, String selfTrainer) {
         int teamIndex = 1;
         int attackerIndex = 0;
+
+        boolean attackingTeam = false;
+        for (Opponent op : opponentCache.getCurrentValues()) {
+            // self trainer is always in the first position
+            if (op.trainer().equals(selfTrainer)) {
+                attackingTeam = op.isAttacker();
+                break;
+            }
+        }
+
         // does not block because it is initialized with the initial values
         for (Opponent op : opponentCache.getCurrentValues()) {
             EncounterMember monsterCache = cacheProvider.get();
@@ -46,7 +56,7 @@ public class EncounterSession extends DestructibleElement {
             if (op.trainer().equals(selfTrainer)) {
                 member = new EncounterSlot(0, false);
                 ownTeam.set(0, op._id());
-            } else if (!op.isAttacker()) {
+            } else if (op.isAttacker() && attackingTeam) {
                 // other are added behind the self trainer
                 member = new EncounterSlot(teamIndex++, false);
                 ownTeam.add(op._id());
@@ -125,7 +135,7 @@ public class EncounterSession extends DestructibleElement {
         if (slot.partyIndex() < 0) {
             return null;
         }
-        List<String> team = slot.attacker() ? attackerTeam : ownTeam;
+        List<String> team = slot.enemy() ? attackerTeam : ownTeam;
         return slot.partyIndex() >= team.size() ? null : team.get(slot.partyIndex());
     }
 

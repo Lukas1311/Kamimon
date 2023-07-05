@@ -23,7 +23,7 @@ public class RegionTestModule {
     static RegionApiService regionApiService() {
         return new RegionApiService() {
             final String USER_ID = "0";
-            int trainerIdCount = 0;
+            int trainerIdCount = 1;
             int monsterIdCount = 0;
             final List<Region> regions = new ArrayList<>();
             //String is regionId
@@ -142,14 +142,14 @@ public class RegionTestModule {
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
                 Area area = areasHashMap.get(regionId).get(0);
+
                 Trainer trainer = TrainerBuilder.builder()
-                        .setId(trainerIdCount)
+                        .setId(0)
                         .setRegion(regionId)
                         .setArea(area)
                         .setUser(USER_ID)
                         .applyCreate(trainerDto)
                         .create();
-                trainerIdCount++;
                 List<Trainer> trainers = trainersHashMap.get(area._id());
                 trainers.add(trainer);
 
@@ -181,7 +181,7 @@ public class RegionTestModule {
                     List<Trainer> t = trainersHashMap.get("id0_0");
                     return Observable.just(t);
                 }
-                return getTrainer("", "4")
+                return getTrainer("", "0")
                         .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                         .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
             }

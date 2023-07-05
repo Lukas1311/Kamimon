@@ -74,11 +74,12 @@ public class SessionService extends DestructibleElement {
         return eventListener.listen(Socket.WS,
                 "encounters.*.trainers.%s.opponents.*.created".formatted(trainerStorage.getTrainer()._id()),
                 Opponent.class
-        ).map(Event::data).flatMapCompletable(this::loadEncounter);
+        ).map(Event::data).take(1).flatMapCompletable(this::loadEncounter);
     }
 
     /**
      * Loads the encounter for the given opponent.
+     * po
      *
      * @param opponent The opponent to load the encounter for.
      * @return A completable that completes when the encounter is loaded or an error occurs.

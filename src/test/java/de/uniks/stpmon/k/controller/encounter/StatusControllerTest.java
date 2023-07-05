@@ -74,13 +74,13 @@ public class StatusControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
-        when(sessionService.isSelf(EncounterSlot.ATTACKER_FIRST)).thenReturn(false);
+        when(sessionService.isSelf(EncounterSlot.ENEMY_FIRST)).thenReturn(false);
         doNothing().when(statusController).loadMonsterInformation();
 
         statusController.setSlot(EncounterSlot.PARTY_FIRST);
         statusController.render();
 
-        statusController.setSlot(EncounterSlot.ATTACKER_FIRST);
+        statusController.setSlot(EncounterSlot.ENEMY_FIRST);
         statusController.render();
 
         // one time for app start (because monster has to be initially set), two times for invocation

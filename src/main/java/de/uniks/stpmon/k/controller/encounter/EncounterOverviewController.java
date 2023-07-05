@@ -1,7 +1,9 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.LoginController;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -52,7 +54,7 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
-    LoginController loginController;
+    Provider<HybridController> hybridControllerProvider;
     @Inject
     SessionService sessionService;
 
@@ -68,7 +70,12 @@ public class EncounterOverviewController extends Controller {
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
-        placeholder.setOnMouseClicked(e -> app.show(loginController));
+        placeholder.setOnMouseClicked(e -> {
+            IngameController.disableEncounter = true;
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+        });
 
         renderMonsterLists();
         animateMonsterEntrance();
@@ -78,7 +85,7 @@ public class EncounterOverviewController extends Controller {
 
     private void renderMonsterLists() {
         for (EncounterSlot slot : sessionService.getSlots()) {
-            if (slot.attacker()) {
+            if (slot.enemy()) {
                 if (slot.partyIndex() == 0) {
                     renderMonsters(opponentMonsters, opponentMonster0, slot);
                 } else {
@@ -101,15 +108,15 @@ public class EncounterOverviewController extends Controller {
         monstersContainer.getChildren().add(statusController.render());
 
         if (slot.partyIndex() == 0) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.attacker());
-            if (!slot.attacker()) {
+            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
+            if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 0));
             } else {
                 VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
             }
         } else if (slot.partyIndex() == 1) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.attacker());
-            if (!slot.attacker()) {
+            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
+            if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 125));
             }
         }
@@ -177,13 +184,13 @@ public class EncounterOverviewController extends Controller {
         if (opponentFullTransition2 != null) {
             parallel2.getChildren().add(opponentFullTransition2);
         }
-
-        parallel2.setOnFinished(e -> placeholder.setOpacity(1));
-
         SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
+        sequence.setOnFinished(e -> placeholder.setOpacity(1));
 
-        SequentialTransition fullSequence = new SequentialTransition(sequence, createNodeTransition(placeholder, true));
-
+        TranslateTransition actionFieldTransition = new TranslateTransition(Duration.seconds(1), placeholder);
+        actionFieldTransition.setFromX(600);
+        actionFieldTransition.setToX(0);
+        SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
         fullSequence.play();
     }
 
@@ -194,10 +201,10 @@ public class EncounterOverviewController extends Controller {
 
 
     private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
-        TranslateTransition monsterTransition = new TranslateTransition(Duration.seconds(1), node);
-        monsterTransition.setFromX(fromRight ? 600 : -600);
-        monsterTransition.setToX(0);
-        return monsterTransition;
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), node);
+        transition.setFromX(fromRight ? 600 : -600);
+        transition.setToX(0);
+        return transition;
     }
 
     @Override

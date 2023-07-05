@@ -57,7 +57,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
         // Defines used slots of the encounter
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
-                EncounterSlot.ATTACKER_FIRST, EncounterSlot.ATTACKER_SECOND));
+                EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
         Monster userMonster1 = MonsterBuilder.builder().setId("2").setTrainer(dummytrainer._id()).setType(1).create();
         Monster userMonster2 = MonsterBuilder.builder(userMonster1).setId("3").setType(2).create();
@@ -65,10 +65,10 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         when(sessionService.getMonster(EncounterSlot.PARTY_FIRST)).thenReturn(userMonster1);
         when(sessionService.getMonster(EncounterSlot.PARTY_SECOND)).thenReturn(userMonster2);
 
-        // Assigns the monsters to the attacker slots
-        when(sessionService.getMonster(EncounterSlot.ATTACKER_FIRST))
+        // Assigns the monsters to the enemy slots
+        when(sessionService.getMonster(EncounterSlot.ENEMY_FIRST))
                 .thenReturn(MonsterBuilder.builder().setId("2").setType(1).create());
-        when(sessionService.getMonster(EncounterSlot.ATTACKER_SECOND))
+        when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
                 .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
 
         when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(monsterImage));
