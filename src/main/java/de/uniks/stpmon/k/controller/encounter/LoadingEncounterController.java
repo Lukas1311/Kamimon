@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
@@ -59,6 +60,15 @@ public class LoadingEncounterController extends Controller {
 
             // Füge die ImageView zur StackPane hinzu
             fullBox.getChildren().add(vsBackground);
+
+            // Füge eine Pause von 3 Sekunden hinzu
+            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+            pauseTransition.setOnFinished(e -> {
+                // Ändere das Bild nach 3 Sekunden
+                loadImage(vsBackground, "encounter/trainerEncounter1.png");
+            });
+
+            pauseTransition.play();
         });
 
         scaleTransition.play();
