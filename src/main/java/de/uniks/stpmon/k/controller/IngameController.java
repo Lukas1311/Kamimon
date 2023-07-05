@@ -133,9 +133,7 @@ public class IngameController extends PortalController {
                 EncounterOverviewController controller = encounterProvider.get();
                 app.show(controller);
             });
-            subscribe(encounterService.listenForEncounter().doOnComplete(() -> {
-                System.out.println("Disposing encounter");
-            }), () -> {
+            subscribe(encounterService.listenForEncounter(), () -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
