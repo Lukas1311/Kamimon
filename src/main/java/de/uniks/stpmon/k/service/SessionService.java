@@ -6,8 +6,8 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
-import de.uniks.stpmon.k.service.storage.cache.SingleMonsterCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -17,6 +17,7 @@ import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 /**
@@ -33,7 +34,7 @@ public class SessionService extends DestructibleElement {
     @Inject
     TrainerStorage trainerStorage;
     @Inject
-    Provider<SingleMonsterCache> monsterCacheProvider;
+    Provider<EncounterMember> monsterCacheProvider;
     @Inject
     Provider<OpponentCache> opponentCacheProvider;
     @Inject
@@ -115,43 +116,52 @@ public class SessionService extends DestructibleElement {
         });
     }
 
-    private <T> T applyIfEncounter(BiFunction<EncounterSession, EncounterMember, T> getter, EncounterMember member) {
+    private <T> T applyIfEncounter(BiFunction<EncounterSession, EncounterSlot, T> getter, EncounterSlot slot) {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
             throw new IllegalStateException("No encounter session available");
         }
-        return getter.apply(session, member);
+        return getter.apply(session, slot);
     }
 
 
     //---------------- Session Getters -------------------------
 
-    public Monster getMonster(EncounterMember member) {
-        return applyIfEncounter(EncounterSession::getMonster, member);
+    public Monster getMonster(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::getMonster, slot);
     }
 
-    public Observable<Monster> listenMonster(EncounterMember member) {
-        return applyIfEncounter(EncounterSession::listenMonster, member);
+    public Observable<Monster> listenMonster(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::listenMonster, slot);
     }
 
-    public Observable<Opponent> listenOpponent(EncounterMember member) {
-        return applyIfEncounter(EncounterSession::listenOpponent, member);
+    public Observable<Opponent> listenOpponent(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::listenOpponent, slot);
     }
 
-    public Opponent getOpponent(EncounterMember member) {
-        return applyIfEncounter(EncounterSession::getOpponent, member);
+    public Opponent getOpponent(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::getOpponent, slot);
     }
 
-    public boolean hasMember(EncounterMember member) {
-        return applyIfEncounter(EncounterSession::hasMember, member);
+    public boolean isSelf(EncounterSlot slot) {
+        Trainer trainer = trainerStorage.getTrainer();
+        return Objects.equals(trainer._id(), getTrainer(slot));
     }
 
-    public Collection<EncounterMember> getMembers() {
+    public String getTrainer(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::getTrainer, slot);
+    }
+
+    public boolean hasSlot(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::hasSlot, slot);
+    }
+
+    public Collection<EncounterSlot> getSlots() {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
             return Collections.emptyList();
         }
-        return session.getMembers();
+        return session.getSlots();
     }
 
 

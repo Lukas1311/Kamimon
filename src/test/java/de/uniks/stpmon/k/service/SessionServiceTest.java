@@ -9,8 +9,8 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
-import de.uniks.stpmon.k.service.storage.cache.SingleMonsterCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -25,6 +25,7 @@ import javax.inject.Provider;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,11 +40,25 @@ class SessionServiceTest {
     @Mock
     Provider<OpponentCache> opponentCacheProvider;
     @Mock
-    Provider<SingleMonsterCache> monsterCacheProvider;
+    Provider<EncounterMember> monsterCacheProvider;
     @Mock
     EventListener listener;
     @InjectMocks
     SessionService sessionService;
+
+    private void mockCaches(List<Opponent> opponents) {
+        // Mock opponent cache
+        OpponentCache cache = Mockito.mock(OpponentCache.class);
+        when(cache.getCurrentValues()).thenReturn(opponents);
+        when(cache.onInitialized()).thenReturn(Completable.complete());
+        when(cache.listenValue(any())).thenReturn(Observable.empty());
+        when(opponentCacheProvider.get()).thenReturn(cache);
+        // Mock single monster cache
+        EncounterMember monsterCache = Mockito.mock(EncounterMember.class);
+        when(monsterCache.onInitialized()).thenReturn(Completable.complete());
+        when(monsterCache.getTrainerId()).thenReturn("0");
+        when(monsterCacheProvider.get()).thenReturn(monsterCache);
+    }
 
     @Test
     void listenEncounter() {
@@ -65,15 +80,7 @@ class SessionServiceTest {
         Encounter dummyEncounter = new Encounter("encounter_0", "", false);
         when(encounterService.getEncounter("encounter_0"))
                 .thenReturn(Observable.just(dummyEncounter));
-        // Mock opponent cache
-        OpponentCache cache = Mockito.mock(OpponentCache.class);
-        when(cache.getCurrentValues()).thenReturn(opponents);
-        when(cache.onInitialized()).thenReturn(Completable.complete());
-        when(opponentCacheProvider.get()).thenReturn(cache);
-        // Mock single monster cache
-        SingleMonsterCache monsterCache = Mockito.mock(SingleMonsterCache.class);
-        when(monsterCache.onInitialized()).thenReturn(Completable.complete());
-        when(monsterCacheProvider.get()).thenReturn(monsterCache);
+        mockCaches(opponents);
 
         when(listener.listen(Socket.WS,
                 "encounters.*.trainers.0.opponents.*.created", Opponent.class))
@@ -86,12 +93,13 @@ class SessionServiceTest {
         sessionService.listenForEncounter().blockingAwait();
         // Check if encounter is set after loading
         assertEquals(dummyEncounter, encounterStorage.getEncounter());
+        assertTrue(sessionService.isSelf(EncounterSlot.PARTY_FIRST));
 
         EncounterSession session = encounterStorage.getSession();
         assertEquals(List.of("0"), session.getOwnTeam());
         assertEquals(List.of("1"), session.getAttackerTeam());
-        assertIterableEquals(List.of(EncounterMember.SELF, EncounterMember.ATTACKER_FIRST),
-                session.getMembers());
+        assertIterableEquals(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.ATTACKER_FIRST),
+                session.getSlots());
     }
 
     @Test
@@ -122,15 +130,7 @@ class SessionServiceTest {
         Encounter dummyEncounter = new Encounter("encounter_0", "", false);
         when(encounterService.getEncounter("encounter_0"))
                 .thenReturn(Observable.just(dummyEncounter));
-        // Mock opponent cache
-        OpponentCache cache = Mockito.mock(OpponentCache.class);
-        when(cache.getCurrentValues()).thenReturn(opponents);
-        when(cache.onInitialized()).thenReturn(Completable.complete());
-        when(opponentCacheProvider.get()).thenReturn(cache);
-        // Mock single monster cache
-        SingleMonsterCache monsterCache = Mockito.mock(SingleMonsterCache.class);
-        when(monsterCache.onInitialized()).thenReturn(Completable.complete());
-        when(monsterCacheProvider.get()).thenReturn(monsterCache);
+        mockCaches(opponents);
 
         // Check if encounter is null at start
         assertNull(encounterStorage.getEncounter());
@@ -141,21 +141,22 @@ class SessionServiceTest {
         // Check if encounter is set after loading
         assertEquals(dummyEncounter, encounterStorage.getEncounter());
         assertFalse(sessionService.hasNoEncounter());
+        assertTrue(sessionService.isSelf(EncounterSlot.PARTY_FIRST));
 
         EncounterSession session = encounterStorage.getSession();
         assertEquals(List.of("0", "2"), session.getOwnTeam());
         assertEquals(List.of("1", "3"), session.getAttackerTeam());
-        assertIterableEquals(List.of(EncounterMember.SELF, EncounterMember.ATTACKER_FIRST,
-                EncounterMember.TEAM_FIRST, EncounterMember.ATTACKER_SECOND), session.getMembers());
+        assertIterableEquals(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.ATTACKER_FIRST,
+                EncounterSlot.PARTY_SECOND, EncounterSlot.ATTACKER_SECOND), session.getSlots());
     }
 
     @Test
     public void testFacade() {
         assertTrue(sessionService.hasNoEncounter());
         // Every getter method should throw an error if session is null
-        assertThrows(IllegalStateException.class, () -> sessionService.getMonster(EncounterMember.SELF));
+        assertThrows(IllegalStateException.class, () -> sessionService.getMonster(EncounterSlot.PARTY_FIRST));
         // List should just be empty
-        assertEquals(List.of(), sessionService.getMembers());
+        assertEquals(List.of(), sessionService.getSlots());
         assertEquals(List.of(), sessionService.getAttackerTeam());
         assertEquals(List.of(), sessionService.getOwnTeam());
 
@@ -171,28 +172,28 @@ class SessionServiceTest {
         assertEquals(List.of("10"), sessionService.getAttackerTeam());
 
         Opponent opponent = OpponentBuilder.builder().create();
-        when(session.getOpponent(EncounterMember.SELF)).thenReturn(opponent);
-        assertEquals(opponent, sessionService.getOpponent(EncounterMember.SELF));
+        when(session.getOpponent(EncounterSlot.PARTY_FIRST)).thenReturn(opponent);
+        assertEquals(opponent, sessionService.getOpponent(EncounterSlot.PARTY_FIRST));
 
-        when(session.listenOpponent(EncounterMember.TEAM_FIRST)).thenReturn(Observable.empty());
+        when(session.listenOpponent(EncounterSlot.PARTY_SECOND)).thenReturn(Observable.empty());
         // Check if listen is empty
-        sessionService.listenOpponent(EncounterMember.TEAM_FIRST).test()
+        sessionService.listenOpponent(EncounterSlot.PARTY_SECOND).test()
                 .assertValues();
 
 
         Monster monster = MonsterBuilder.builder().create();
-        when(session.getMonster(EncounterMember.SELF)).thenReturn(monster);
-        assertEquals(monster, sessionService.getMonster(EncounterMember.SELF));
+        when(session.getMonster(EncounterSlot.PARTY_FIRST)).thenReturn(monster);
+        assertEquals(monster, sessionService.getMonster(EncounterSlot.PARTY_FIRST));
 
-        when(session.listenMonster(EncounterMember.TEAM_FIRST)).thenReturn(Observable.empty());
+        when(session.listenMonster(EncounterSlot.PARTY_SECOND)).thenReturn(Observable.empty());
         // Check if listen is empty
-        sessionService.listenMonster(EncounterMember.TEAM_FIRST).test()
+        sessionService.listenMonster(EncounterSlot.PARTY_SECOND).test()
                 .assertValues();
 
-        when(session.hasMember(EncounterMember.SELF)).thenReturn(true);
-        when(session.hasMember(EncounterMember.TEAM_FIRST)).thenReturn(false);
-        assertTrue(sessionService.hasMember(EncounterMember.SELF));
-        assertFalse(sessionService.hasMember(EncounterMember.TEAM_FIRST));
+        when(session.hasSlot(EncounterSlot.PARTY_FIRST)).thenReturn(true);
+        when(session.hasSlot(EncounterSlot.PARTY_SECOND)).thenReturn(false);
+        assertTrue(sessionService.hasSlot(EncounterSlot.PARTY_FIRST));
+        assertFalse(sessionService.hasSlot(EncounterSlot.PARTY_SECOND));
     }
 
 }

@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.models.EncounterMember;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -35,36 +35,35 @@ public class StatusController extends Controller {
     @Inject
     SessionService sessionService;
 
-    public EncounterMember member;
+    public EncounterSlot slot;
 
     @Inject
     public StatusController() {
     }
 
-    public void setMember(EncounterMember member) {
-        this.member = member;
+    public void setSlot(EncounterSlot slot) {
+        this.slot = slot;
     }
 
     @Override
     public Parent render() {
         final Parent parent;
-        if (member.isSelf()) {
+        if (sessionService.isSelf(slot)) {
             parent = load("UserMonsterStatus");
             loadImage(monsterStatusView, "encounter/userMonsterStatus.png");
-            loadMonsterInformation();
         } else {
             parent = load("OpponentMonsterStatus");
             loadImage(monsterStatusView, "encounter/opponentMonsterStatus.png");
-            loadMonsterInformation();
         }
+        loadMonsterInformation();
         return parent;
     }
 
     public void loadMonsterInformation() {
         // Initial state
-        updateState(sessionService.getMonster(member));
+        updateState(sessionService.getMonster(slot));
         // used to get the monster information for the monster of the trainer in the active region
-        subscribe(sessionService.listenMonster(member), this::updateState);
+        subscribe(sessionService.listenMonster(slot), this::updateState);
     }
 
     private void updateState(Monster monster) {
@@ -78,15 +77,16 @@ public class StatusController extends Controller {
 
         hpBar.setProgress(hpProgress);
 
-        if (member.isSelf()) {
-            monsterHp.setText(monster.currentAttributes().health() + " / " + monster.attributes().health());
-
-            double maxExp = Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3);
-            double currentExp = monster.experience();
-            double expProgress = currentExp / maxExp;
-
-            experienceBar.setProgress(expProgress);
+        if (!sessionService.isSelf(slot)) {
+            return;
         }
+        monsterHp.setText(monster.currentAttributes().health() + " / " + monster.attributes().health());
+
+        double maxExp = Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3);
+        double currentExp = monster.experience();
+        double expProgress = currentExp / maxExp;
+
+        experienceBar.setProgress(expProgress);
     }
 
 

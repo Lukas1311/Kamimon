@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
 
-public class SingleMonsterCache extends SingleCache<Monster> {
+public class EncounterMember extends SingleCache<Monster> {
 
     @Inject
     protected EventListener listener;
@@ -25,7 +25,7 @@ public class SingleMonsterCache extends SingleCache<Monster> {
 
 
     @Inject
-    public SingleMonsterCache() {
+    public EncounterMember() {
     }
 
     public void setup(String trainerId, String monsterId) {
@@ -41,7 +41,6 @@ public class SingleMonsterCache extends SingleCache<Monster> {
 
         // Reset disposable
         if (onInitialized != null) {
-            reset();
             destroy();
             disposables = new CompositeDisposable();
         }

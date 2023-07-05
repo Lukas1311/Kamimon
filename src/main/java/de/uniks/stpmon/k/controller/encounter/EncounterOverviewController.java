@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoginController;
-import de.uniks.stpmon.k.models.EncounterMember;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -77,39 +77,39 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsterLists() {
-        for (EncounterMember member : sessionService.getMembers()) {
-            if (member.attacker()) {
-                if (member.index() == 0) {
-                    renderMonsters(opponentMonsters, opponentMonster0, member);
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            if (slot.attacker()) {
+                if (slot.partyIndex() == 0) {
+                    renderMonsters(opponentMonsters, opponentMonster0, slot);
                 } else {
-                    renderMonsters(opponentMonsters, opponentMonster1, member);
+                    renderMonsters(opponentMonsters, opponentMonster1, slot);
                 }
             } else {
-                if (member.index() == 0) {
-                    renderMonsters(userMonsters, userMonster0, member);
+                if (slot.partyIndex() == 0) {
+                    renderMonsters(userMonsters, userMonster0, slot);
                 } else {
-                    renderMonsters(userMonsters, userMonster1, member);
+                    renderMonsters(userMonsters, userMonster1, slot);
                 }
             }
         }
     }
 
-    private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterMember member) {
-        Monster monster = sessionService.getMonster(member);
+    private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterSlot slot) {
+        Monster monster = sessionService.getMonster(slot);
         StatusController statusController = statusControllerProvider.get();
-        statusController.setMember(member);
+        statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
-        if (member.index() == 0) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, member.attacker());
-            if (!member.attacker()) {
+        if (slot.partyIndex() == 0) {
+            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.attacker());
+            if (!slot.attacker()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 0));
             } else {
                 VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
             }
-        } else if (member.index() == 1) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, member.attacker());
-            if (!member.attacker()) {
+        } else if (slot.partyIndex() == 1) {
+            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.attacker());
+            if (!slot.attacker()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 125));
             }
         }
@@ -142,8 +142,10 @@ public class EncounterOverviewController extends Controller {
         placeholder.setOpacity(0);
 
         //the first monster of the user and opponent always gets rendered
-        ParallelTransition userFullTransition1 = createMonsterTransition(userMonster0, teamMonsters.get(0), false);
-        ParallelTransition opponentFullTransition1 = createMonsterTransition(opponentMonster0, attackerMonsters.get(0), true);
+        ParallelTransition userFullTransition1 =
+                createMonsterTransition(userMonster0, teamMonsters.get(0), false);
+        ParallelTransition opponentFullTransition1 =
+                createMonsterTransition(opponentMonster0, attackerMonsters.get(0), true);
 
         ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
 

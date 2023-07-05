@@ -3,7 +3,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.EncounterMember;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
@@ -61,11 +61,12 @@ public class StatusControllerTest extends ApplicationTest {
         MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, null, null);
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
 
-        when(sessionService.getMonster(EncounterMember.SELF)).thenReturn(dummyMonster1);
+        when(sessionService.getMonster(EncounterSlot.PARTY_FIRST)).thenReturn(dummyMonster1);
         // No monster updates
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
+        when(sessionService.isSelf(EncounterSlot.PARTY_FIRST)).thenReturn(true);
 
-        statusController.setMember(EncounterMember.SELF);
+        statusController.setSlot(EncounterSlot.PARTY_FIRST);
         app.show(statusController);
         stage.requestFocus();
     }
@@ -73,12 +74,13 @@ public class StatusControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
+        when(sessionService.isSelf(EncounterSlot.ATTACKER_FIRST)).thenReturn(false);
         doNothing().when(statusController).loadMonsterInformation();
 
-        statusController.setMember(EncounterMember.SELF);
+        statusController.setSlot(EncounterSlot.PARTY_FIRST);
         statusController.render();
 
-        statusController.setMember(EncounterMember.ATTACKER_FIRST);
+        statusController.setSlot(EncounterSlot.ATTACKER_FIRST);
         statusController.render();
 
         // one time for app start (because monster has to be initially set), two times for invocation

@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.models.EncounterMember;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
@@ -56,19 +56,19 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         app.start(stage);
 
         // Defines used slots of the encounter
-        when(sessionService.getMembers()).thenReturn(List.of(EncounterMember.SELF, EncounterMember.TEAM_FIRST,
-                EncounterMember.ATTACKER_FIRST, EncounterMember.ATTACKER_SECOND));
+        when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
+                EncounterSlot.ATTACKER_FIRST, EncounterSlot.ATTACKER_SECOND));
 
         Monster userMonster1 = MonsterBuilder.builder().setId("2").setTrainer(dummytrainer._id()).setType(1).create();
         Monster userMonster2 = MonsterBuilder.builder(userMonster1).setId("3").setType(2).create();
         // Assigns the monsters to the team slots
-        when(sessionService.getMonster(EncounterMember.SELF)).thenReturn(userMonster1);
-        when(sessionService.getMonster(EncounterMember.TEAM_FIRST)).thenReturn(userMonster2);
+        when(sessionService.getMonster(EncounterSlot.PARTY_FIRST)).thenReturn(userMonster1);
+        when(sessionService.getMonster(EncounterSlot.PARTY_SECOND)).thenReturn(userMonster2);
 
         // Assigns the monsters to the attacker slots
-        when(sessionService.getMonster(EncounterMember.ATTACKER_FIRST))
+        when(sessionService.getMonster(EncounterSlot.ATTACKER_FIRST))
                 .thenReturn(MonsterBuilder.builder().setId("2").setType(1).create());
-        when(sessionService.getMonster(EncounterMember.ATTACKER_SECOND))
+        when(sessionService.getMonster(EncounterSlot.ATTACKER_SECOND))
                 .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
 
         when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(monsterImage));
