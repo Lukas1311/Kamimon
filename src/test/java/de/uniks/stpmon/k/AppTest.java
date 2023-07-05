@@ -417,7 +417,7 @@ class AppTest extends ApplicationTest {
         type(KeyCode.ENTER);
         type(KeyCode.RIGHT);
         type(KeyCode.ENTER);
-        sleep(2000);
+        verifyThat("#userMonsters", Node::isVisible);
 
     }
 

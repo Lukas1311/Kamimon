@@ -56,7 +56,7 @@ public class EncounterSession extends DestructibleElement {
             if (op.trainer().equals(selfTrainer)) {
                 member = new EncounterSlot(0, false);
                 ownTeam.set(0, op._id());
-            } else if (op.isAttacker() && attackingTeam) {
+            } else if (op.isAttacker() == attackingTeam) {
                 // other are added behind the self trainer
                 member = new EncounterSlot(teamIndex++, false);
                 ownTeam.add(op._id());

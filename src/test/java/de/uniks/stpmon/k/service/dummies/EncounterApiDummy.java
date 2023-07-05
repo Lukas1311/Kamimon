@@ -252,7 +252,7 @@ public class EncounterApiDummy implements EncounterApiService {
                     opponentId,
                     encounter._id(),
                     "0",
-                    false,
+                    true,
                     false,
                     monsterList.get(0)._id(),
                     new AbilityMove(

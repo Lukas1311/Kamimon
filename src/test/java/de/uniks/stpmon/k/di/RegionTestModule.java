@@ -141,6 +141,9 @@ public class RegionTestModule {
              */
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 Area area = areasHashMap.get(regionId).get(0);
 
                 Trainer trainer = TrainerBuilder.builder()
