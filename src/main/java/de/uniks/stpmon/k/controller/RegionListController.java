@@ -8,13 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -33,12 +31,12 @@ public class RegionListController extends PortalController {
     @Inject
     CreateTrainerController createTrainerController;
     @FXML
-    public VBox regionListWrappingVox;
-    private int colIndex;
+    public VBox regionListWrappingVBox;
     @FXML
     public GridPane regionListGridPane;
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
+    @SuppressWarnings("unused")
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
@@ -48,23 +46,26 @@ public class RegionListController extends PortalController {
     }
 
     private void addRegionToGridPane() {
-        RegionListController listController = this;
-        RegionController regionController = new RegionController(regions.get(colIndex), listController);
-        Parent parent = regionController.render();
-        ColumnConstraints column = new ColumnConstraints(200, 200, Double.MAX_VALUE);
-        column.setHgrow(Priority.ALWAYS);
-        column.setHalignment(HPos.CENTER);
-        regionListGridPane.getColumnConstraints().clear();
-        regionListGridPane.getColumnConstraints().add(column);
-        regionListGridPane.add(parent, colIndex, 0);
+        regionListGridPane.getChildren().clear();
 
+        for (int i = 0; i < regions.size(); i++) {
+
+            RegionListController listController = this;
+            RegionController regionController = new RegionController(regions.get(i), listController);
+            Parent parent = regionController.render();
+            regionListGridPane.getColumnConstraints().clear();
+
+            int row = i / 3;
+            int col = i % 3;
+
+            regionListGridPane.add(parent, col, row);
+            System.out.println("Added: " + regions.get(i).name());
+
+            GridPane.setMargin(parent, new Insets(0, 25, 0, 25));
+        }
+        regionListGridPane.autosize();
     }
 
-    @Override
-    public void init() {
-        super.init();
-        colIndex = 0;
-    }
 
     @Override
     public Parent render() {
@@ -80,7 +81,9 @@ public class RegionListController extends PortalController {
 
         loadImage(imageViewKamimonLetteringRegion, "kamimonLettering_new.png");
 
-        regionListWrappingVox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
+        regionListWrappingVBox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
+
+
         return parent;
     }
 
@@ -89,6 +92,7 @@ public class RegionListController extends PortalController {
         regionListWrapping.setAlignment(Pos.CENTER);
     }
 
+    @SuppressWarnings("unused")
     public void addLettering() {
         regionListWrapping.getChildren().add(0, imageViewKamimonLetteringRegion);
         regionListWrapping.setAlignment(Pos.CENTER);
@@ -99,15 +103,13 @@ public class RegionListController extends PortalController {
             if (trainer == NoneConstants.NONE_TRAINER) {
                 createTrainerController.setChosenRegion(region);
                 Parent createTrainer = createTrainerController.render();
-                if (regionListWrappingVox != null && !regionListWrappingVox.getChildren().contains(createTrainer)) {
-                    regionListWrappingVox.getChildren().clear();
-                    regionListWrappingVox.getChildren().add(createTrainer);
+                if (regionListWrappingVBox != null && !regionListWrappingVBox.getChildren().contains(createTrainer)) {
+                    regionListWrappingVBox.getChildren().clear();
+                    regionListWrappingVBox.getChildren().add(createTrainer);
                 }
             } else {
                 enterRegion(region);
             }
         });
-
     }
-
 }
