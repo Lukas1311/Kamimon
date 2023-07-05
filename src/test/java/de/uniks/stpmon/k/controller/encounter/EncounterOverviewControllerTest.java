@@ -56,13 +56,13 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         app.start(stage);
 
         // Defines used slots of the encounter
-        when(sessionService.getMembers()).thenReturn(List.of(EncounterMember.TEAM_SELF, EncounterMember.TEAM_FIRST,
+        when(sessionService.getMembers()).thenReturn(List.of(EncounterMember.SELF, EncounterMember.TEAM_FIRST,
                 EncounterMember.ATTACKER_FIRST, EncounterMember.ATTACKER_SECOND));
 
         Monster userMonster1 = MonsterBuilder.builder().setId("2").setTrainer(dummytrainer._id()).setType(1).create();
         Monster userMonster2 = MonsterBuilder.builder(userMonster1).setId("3").setType(2).create();
         // Assigns the monsters to the team slots
-        when(sessionService.getMonster(EncounterMember.TEAM_SELF)).thenReturn(userMonster1);
+        when(sessionService.getMonster(EncounterMember.SELF)).thenReturn(userMonster1);
         when(sessionService.getMonster(EncounterMember.TEAM_FIRST)).thenReturn(userMonster2);
 
         // Assigns the monsters to the attacker slots

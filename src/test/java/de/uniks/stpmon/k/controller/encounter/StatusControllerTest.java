@@ -61,11 +61,11 @@ public class StatusControllerTest extends ApplicationTest {
         MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, null, null);
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
 
-        when(sessionService.getMonster(EncounterMember.TEAM_SELF)).thenReturn(dummyMonster1);
+        when(sessionService.getMonster(EncounterMember.SELF)).thenReturn(dummyMonster1);
         // No monster updates
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
 
-        statusController.setMember(EncounterMember.TEAM_SELF);
+        statusController.setMember(EncounterMember.SELF);
         app.show(statusController);
         stage.requestFocus();
     }
@@ -75,7 +75,7 @@ public class StatusControllerTest extends ApplicationTest {
     void testRender() {
         doNothing().when(statusController).loadMonsterInformation();
 
-        statusController.setMember(EncounterMember.TEAM_SELF);
+        statusController.setMember(EncounterMember.SELF);
         statusController.render();
 
         statusController.setMember(EncounterMember.ATTACKER_FIRST);
