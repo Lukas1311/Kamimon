@@ -65,6 +65,9 @@ public class MonsterInformationController extends Controller {
     @Inject
     IResourceService resourceService;
 
+
+    private String monsterDescription;
+
     @Inject
     public MonsterInformationController() {
     }
@@ -75,6 +78,7 @@ public class MonsterInformationController extends Controller {
         disposables.add(presetService.getMonster(id)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(monsterTypeDto -> {
+                    monsterDescription = monsterTypeDto.description();
                     monsterNameLabel.setText(monsterTypeDto.name());
                     // Retrieves the list of types and updates the type list UI
                     List<String> types = monsterTypeDto.type();
@@ -171,15 +175,14 @@ public class MonsterInformationController extends Controller {
         nameLabel.setId("nameLabel_" + rowIndex);
 
         nameLabel.setOnMouseClicked(event -> {
-
-            if (descriptionLabel.isVisible() && descriptionLabel.getText().equals(ability.description())) {
+            if(!descriptionLabel.isVisible() || !descriptionLabel.getText().contains(ability.name() + ":\n" + ability.description())) {
+                descriptionLabel.setVisible(true);
+                descriptionLabel.setText(ability.name() + ":\n" + ability.description());
+                infoGrid.setVisible(false);
+            } else {
                 descriptionLabel.setVisible(false);
                 descriptionLabel.setText("");
                 infoGrid.setVisible(true);
-            } else {
-                descriptionLabel.setVisible(true);
-                descriptionLabel.setText(ability.description());
-                infoGrid.setVisible(false);
             }
         });
 
@@ -211,6 +214,7 @@ public class MonsterInformationController extends Controller {
             for (int j = 0; j < 5; j++) {
                 removeNodeByRowColumnIndex(i, j, attackGrid);
                 Label label = new Label("-");
+                attackGrid.add(label, j, i);
                 //TODO Add style classes
 
             }
@@ -223,6 +227,19 @@ public class MonsterInformationController extends Controller {
         loadBgImage(mainPane, "MonInfoView_v2.3-final.png");
         descriptionLabel.setVisible(false);
         descriptionLabel.setWrapText(true);
+
+        monsterImage.setOnMouseClicked(event -> {
+            if(!descriptionLabel.isVisible() || !descriptionLabel.getText().equals(monsterDescription)) {
+                descriptionLabel.setVisible(true);
+                descriptionLabel.setText(monsterDescription);
+                infoGrid.setVisible(false);
+            } else {
+                descriptionLabel.setVisible(false);
+                descriptionLabel.setText("");
+                infoGrid.setVisible(true);
+            }
+        });
+
         return parent;
     }
 
