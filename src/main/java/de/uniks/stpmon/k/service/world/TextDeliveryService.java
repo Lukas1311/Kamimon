@@ -24,19 +24,21 @@ public class TextDeliveryService {
     public Observable<List<RouteData>> getRouteData(IMapProvider mapProvider) {
         if (mapProvider.map() != null) {
             TileMapData mapData = mapProvider.map();
-            TileLayerData routeLayerData = (mapData.layers().isEmpty() || mapData.layers().size() < 2 ? null : mapData.layers().get(2));
-            if (routeLayerData == null) {
-                return Observable.just(Collections.emptyList());
-            }
             List<RouteData> routeDataList = new ArrayList<>();
-            for (ObjectData obj : routeLayerData.objects()) {
-                RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
-                RouteData routeData = routeDataBuilder.build();
-                routeDataList.add(routeData);
+            for(TileLayerData routeLayerData : mapData.layers()) {
+                if(!routeLayerData.type().equals("objectgroup")){
+                    continue;
+                }
+                for (ObjectData obj : routeLayerData.objects()) {
+                    RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
+                    RouteData routeData = routeDataBuilder.build();
+                    routeDataList.add(routeData);
+                }
             }
             return Observable.just(routeDataList);
         }
         return Observable.just(Collections.emptyList());
     }
+
 
 }
