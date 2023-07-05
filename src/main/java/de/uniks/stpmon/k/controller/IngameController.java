@@ -4,8 +4,8 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.collections.ObservableList;
@@ -72,7 +72,7 @@ public class IngameController extends PortalController {
     InputHandler inputHandler;
 
     @Inject
-    EncounterService encounterService;
+    SessionService encounterService;
 
     private Parent mapOverview;
 

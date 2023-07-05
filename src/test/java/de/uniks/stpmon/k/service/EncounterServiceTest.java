@@ -132,7 +132,7 @@ class EncounterServiceTest {
 
         //action
         final Encounter returnEncounter = encounterService
-                .getEncounter()
+                .getCurrentEncounter()
                 .blockingFirst();
 
         //check values

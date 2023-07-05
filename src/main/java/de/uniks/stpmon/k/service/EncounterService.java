@@ -3,17 +3,16 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Encounter;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.rest.EncounterApiService;
-import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import de.uniks.stpmon.k.service.storage.cache.SingleMonsterCache;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -60,80 +59,6 @@ public class EncounterService {
     public EncounterService() {
     }
 
-    //---------------- Encounter Operations -------------------------
-    public boolean hasNoEncounter() {
-        return encounterStorage.isEmpty();
-    }
-
-    /**
-     * Tries to load the current encounter from the server if the trainer has an associated opponent.
-     *
-     * @return A completable that completes when the encounter is loaded or an error occurs.
-     */
-    public Completable tryLoadEncounter() {
-        Trainer trainer = trainerStorage.getTrainer();
-        return getTrainerOpponents(trainer._id()).flatMap((opponents) -> {
-            if (opponents.isEmpty()) {
-                return Observable.empty();
-            }
-            return Observable.just(opponents.get(0));
-        }).flatMapCompletable(this::loadEncounter);
-    }
-
-    /**
-     * Listens for newly created opponents of the current trainer and loads the encounter if one is created.
-     *
-     * @return A completable that completes when the encounter is loaded or an error occurs.
-     */
-    public Completable listenForEncounter() {
-        return eventListener.listen(Socket.WS,
-                "encounters.*.trainers.%s.opponents.*.created".formatted(trainerStorage.getTrainer()._id()),
-                Opponent.class
-        ).map(Event::data).flatMapCompletable(this::loadEncounter);
-    }
-
-    /**
-     * Loads the encounter for the given opponent.
-     *
-     * @param opponent The opponent to load the encounter for.
-     * @return A completable that completes when the encounter is loaded or an error occurs.
-     */
-    private Completable loadEncounter(Opponent opponent) {
-        return encounterApiService.getEncounter(
-                regionStorage.getRegion()._id(),
-                opponent.encounter()
-        ).map(encounter -> {
-            encounterStorage.setEncounter(encounter);
-            return encounter;
-        }).flatMapCompletable((e) -> createSession());
-    }
-
-    /**
-     * Creates a new session for the current encounter. A session is a local representation of the encounter that
-     * contains all the data needed to play the encounter. Including cached monsters and opponents.
-     *
-     * @return
-     */
-    private Completable createSession() {
-        return getEncounterOpponents().flatMap(opponents -> {
-            if (opponents.isEmpty()) {
-                return Observable.empty();
-            }
-
-            Encounter encounter = encounterStorage.getEncounter();
-            OpponentCache opponentCache = opponentCacheProvider.get();
-            opponentCache.setup(encounter._id(), opponents);
-            opponentCache.init();
-            return opponentCache.onInitialized().andThen(Observable.just(opponentCache));
-        }).flatMapCompletable(cache -> {
-            EncounterSession session = new EncounterSession(cache);
-            session.setup(monsterCacheProvider, trainerStorage.getTrainer()._id());
-            encounterStorage.setEncounterSession(session);
-
-            return session.waitForLoad();
-        });
-    }
-
 
     //---------------- Region Encounters ----------------------------
 
@@ -141,9 +66,16 @@ public class EncounterService {
         return encounterApiService.getEncounters(regionStorage.getRegion()._id());
     }
 
-    public Observable<Encounter> getEncounter() {
+
+    public Observable<Encounter> getEncounter(String encounterId) {
         return encounterApiService.getEncounter(
                 regionStorage.getRegion()._id(),
+                encounterId
+        );
+    }
+
+    public Observable<Encounter> getCurrentEncounter() {
+        return getEncounter(
                 encounterStorage.getEncounter()._id()
         );
     }

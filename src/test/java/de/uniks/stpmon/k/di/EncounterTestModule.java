@@ -41,8 +41,8 @@ public class EncounterTestModule {
 
                 public EncounterWrapper(Encounter encounter, String opponentId) {
                     this.encounter = encounter;
-                    this.opponentList = initDummyOpponent(encounter, opponentId);
                     this.monsterList = initDummyMonsters();
+                    this.opponentList = initDummyOpponent(encounter, opponentId);
                     this.encounterHashMap.put(encounter.region(), List.of(encounter));
                 }
 

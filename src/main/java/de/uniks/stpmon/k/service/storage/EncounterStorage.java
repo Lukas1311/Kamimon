@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.models.Encounter;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 
@@ -14,7 +13,6 @@ public class EncounterStorage extends SingleCache<Encounter> {
 
     private EncounterSession encounterSession;
     private List<Opponent> opponentList;
-    private List<Monster> monsterList;
 
     @Inject
     public EncounterStorage() {
@@ -28,11 +26,11 @@ public class EncounterStorage extends SingleCache<Encounter> {
         setValue(encounter);
     }
 
-    public void setEncounterSession(EncounterSession encounterSession) {
+    public void setSession(EncounterSession encounterSession) {
         this.encounterSession = encounterSession;
     }
 
-    public EncounterSession getEncounterSession() {
+    public EncounterSession getSession() {
         return encounterSession;
     }
 
@@ -45,14 +43,6 @@ public class EncounterStorage extends SingleCache<Encounter> {
      */
     public void setOpponentList(List<Opponent> opponentList) {
         this.opponentList = opponentList;
-    }
-
-    public void setMonsterList(List<Monster> monsterList) {
-        this.monsterList = monsterList;
-    }
-
-    public List<Monster> getMonsterList() {
-        return monsterList;
     }
 
 }
