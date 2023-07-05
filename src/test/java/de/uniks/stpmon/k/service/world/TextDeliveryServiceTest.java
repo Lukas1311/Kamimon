@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.service.world;
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.world.RouteData;
@@ -40,7 +39,7 @@ public class TextDeliveryServiceTest {
                 2, 2,
                 false, List.of(layer),
                 1, 1,
-                List.of(new TilesetSource(1, "grass.json")),
+                List.of(),
                 "map");
     }
 
@@ -57,5 +56,4 @@ public class TextDeliveryServiceTest {
         assertEquals("Route", routeText.type());
         assertEquals("N/A", routeText.description());
     }
-
 }
