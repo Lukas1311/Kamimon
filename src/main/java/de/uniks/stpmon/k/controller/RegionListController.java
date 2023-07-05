@@ -12,8 +12,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -33,7 +34,7 @@ public class RegionListController extends PortalController {
     @FXML
     public VBox regionListWrappingVBox;
     @FXML
-    public GridPane regionListGridPane;
+    public FlowPane regionListFlowPane;
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
     @SuppressWarnings("unused")
@@ -45,25 +46,27 @@ public class RegionListController extends PortalController {
 
     }
 
-    private void addRegionToGridPane() {
-        regionListGridPane.getChildren().clear();
+    private void addRegionToFlowPane() {
+        regionListFlowPane.getChildren().clear();
 
         for (int i = 0; i < regions.size(); i++) {
-
             RegionListController listController = this;
             RegionController regionController = new RegionController(regions.get(i), listController);
             Parent parent = regionController.render();
-            regionListGridPane.getColumnConstraints().clear();
 
-            int row = i / 3;
-            int col = i % 3;
+            regionListFlowPane.getChildren().add(parent);
 
-            regionListGridPane.add(parent, col, row);
             System.out.println("Added: " + regions.get(i).name());
 
-            GridPane.setMargin(parent, new Insets(0, 25, 0, 25));
+            FlowPane.setMargin(parent, new Insets(25, 25, 0, 25));
+
+            if (regions.size() > 3) {
+                Scale scale = new Scale(0.75, 0.75);
+                parent.getTransforms().add(scale);
+                FlowPane.setMargin(parent, new Insets(25, 0, -100, 0));
+            }
         }
-        regionListGridPane.autosize();
+        regionListFlowPane.autosize();
     }
 
 
@@ -71,7 +74,7 @@ public class RegionListController extends PortalController {
     public Parent render() {
         final Parent parent = super.render();
 
-        ListChangeListener<Region> listener = c -> addRegionToGridPane();
+        ListChangeListener<Region> listener = c -> addRegionToFlowPane();
         regions.addListener(listener);
 
         disposables.add(regionService.getRegions()
@@ -82,7 +85,6 @@ public class RegionListController extends PortalController {
         loadImage(imageViewKamimonLetteringRegion, "kamimonLettering_new.png");
 
         regionListWrappingVBox.prefWidthProperty().bind(app.getStage().getScene().widthProperty());
-
 
         return parent;
     }
