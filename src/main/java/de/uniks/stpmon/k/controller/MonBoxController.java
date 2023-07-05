@@ -74,16 +74,7 @@ public class MonBoxController extends Controller {
         int monsterIndex = 0;
         // Team Monster max 6 slots
         for (Monster monster : monsters) {
-            ImageView imageView = new ImageView();
-            imageView.setFitHeight(IMAGESIZE);
-            imageView.setFitWidth(IMAGESIZE);
-            subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
-                // Scale and set the image
-                Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
-                imageView.setImage(image);
-                imageView.setOnMouseClicked(e -> triggerMonsterInformation(monster)
-                );
-            });
+            ImageView imageView = createMonsterImageView(monster);
             monTeam.add(imageView, monsterIndex, 0);
             monBoxVbox.toFront();
             monsterIndex++;
@@ -100,25 +91,31 @@ public class MonBoxController extends Controller {
         for (int row = 0; row < rowCount; row++) {
             for (int column = 0; column < columnCount; column++) {
                 if (monsterIndex < monsters.size()) {
-                    ImageView imageView = new ImageView();
-                    imageView.setFitHeight(IMAGESIZE);
-                    imageView.setFitWidth(IMAGESIZE);
-                    int finalMonsterIndex = monsterIndex;
-                    subscribe(resourceService.getMonsterImage(String.valueOf(monsters.get(monsterIndex).type())), imageUrl -> {
-                        // Scale and set the image
-                        Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
-                        imageView.setImage(image);
-                        imageView.setOnMouseClicked(e -> triggerMonsterInformation(monsters.get(finalMonsterIndex))
-                        );
-                    });
+                    Monster monster = monsters.get(monsterIndex);
+                    ImageView imageView = createMonsterImageView(monster);
                     monStorage.add(imageView, column, row);
                     monBoxVbox.toFront();
                     monsterIndex++;
                 }
             }
         }
-
     }
+
+    private ImageView createMonsterImageView(Monster monster) {
+        ImageView imageView = new ImageView();
+        imageView.setFitHeight(IMAGESIZE);
+        imageView.setFitWidth(IMAGESIZE);
+
+        subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
+            // Scale and set the image
+            Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
+            imageView.setImage(image);
+        });
+
+        imageView.setOnMouseClicked(e -> triggerMonsterInformation(monster));
+        return imageView;
+    }
+
     private void openMonsterInformation(Monster monster) {
         activeMonster = monster;
         ingameControllerProvider.get().openMonsterInfo(monster);
@@ -128,7 +125,7 @@ public class MonBoxController extends Controller {
         if (activeMonster == null) {
             openMonsterInformation(monster);
         } else {
-            if(activeMonster == monster) {
+            if (activeMonster == monster) {
                 closeMonsterInformation();
             } else {
                 closeMonsterInformation();
