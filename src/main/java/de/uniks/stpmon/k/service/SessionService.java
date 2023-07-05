@@ -149,7 +149,7 @@ public class SessionService extends DestructibleElement {
     public Collection<EncounterMember> getMembers() {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
-            throw new IllegalStateException("No encounter session available");
+            return Collections.emptyList();
         }
         return session.getMembers();
     }

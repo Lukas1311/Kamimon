@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.models.Encounter;
-import de.uniks.stpmon.k.models.EncounterMember;
-import de.uniks.stpmon.k.models.Event;
-import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.OpponentBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
@@ -137,16 +135,64 @@ class SessionServiceTest {
         // Check if encounter is null at start
         assertNull(encounterStorage.getEncounter());
         assertNull(encounterStorage.getSession());
+        assertTrue(sessionService.hasNoEncounter());
 
         sessionService.tryLoadEncounter().blockingAwait();
         // Check if encounter is set after loading
         assertEquals(dummyEncounter, encounterStorage.getEncounter());
+        assertFalse(sessionService.hasNoEncounter());
 
         EncounterSession session = encounterStorage.getSession();
         assertEquals(List.of("0", "2"), session.getOwnTeam());
         assertEquals(List.of("1", "3"), session.getAttackerTeam());
         assertIterableEquals(List.of(EncounterMember.SELF, EncounterMember.ATTACKER_FIRST,
                 EncounterMember.TEAM_FIRST, EncounterMember.ATTACKER_SECOND), session.getMembers());
+    }
+
+    @Test
+    public void testFacade() {
+        assertTrue(sessionService.hasNoEncounter());
+        // Every getter method should throw an error if session is null
+        assertThrows(IllegalStateException.class, () -> sessionService.getMonster(EncounterMember.SELF));
+        // List should just be empty
+        assertEquals(List.of(), sessionService.getMembers());
+        assertEquals(List.of(), sessionService.getAttackerTeam());
+        assertEquals(List.of(), sessionService.getOwnTeam());
+
+        EncounterSession session = Mockito.mock(EncounterSession.class);
+        encounterStorage.setSession(session);
+
+        when(session.getOwnTeam()).thenReturn(List.of("10"));
+
+        assertEquals(List.of("10"), sessionService.getOwnTeam());
+
+        when(session.getAttackerTeam()).thenReturn(List.of("10"));
+
+        assertEquals(List.of("10"), sessionService.getAttackerTeam());
+
+        Opponent opponent = OpponentBuilder.builder().create();
+        when(session.getOpponent(EncounterMember.SELF)).thenReturn(opponent);
+        assertEquals(opponent, sessionService.getOpponent(EncounterMember.SELF));
+
+        when(session.listenOpponent(EncounterMember.TEAM_FIRST)).thenReturn(Observable.empty());
+        // Check if listen is empty
+        sessionService.listenOpponent(EncounterMember.TEAM_FIRST).test()
+                .assertValues();
+
+
+        Monster monster = MonsterBuilder.builder().create();
+        when(session.getMonster(EncounterMember.SELF)).thenReturn(monster);
+        assertEquals(monster, sessionService.getMonster(EncounterMember.SELF));
+
+        when(session.listenMonster(EncounterMember.TEAM_FIRST)).thenReturn(Observable.empty());
+        // Check if listen is empty
+        sessionService.listenMonster(EncounterMember.TEAM_FIRST).test()
+                .assertValues();
+
+        when(session.hasMember(EncounterMember.SELF)).thenReturn(true);
+        when(session.hasMember(EncounterMember.TEAM_FIRST)).thenReturn(false);
+        assertTrue(sessionService.hasMember(EncounterMember.SELF));
+        assertFalse(sessionService.hasMember(EncounterMember.TEAM_FIRST));
     }
 
 }
