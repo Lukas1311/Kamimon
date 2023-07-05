@@ -42,24 +42,39 @@ public class EncounterSession extends DestructibleElement {
             monsterCache.setup(op.trainer(), op.monster());
             monsterCache.init();
             cacheByOpponent.put(op._id(), monsterCache);
+            EncounterMember member;
             // self trainer is always in the first position
             if (op.trainer().equals(selfTrainer)) {
-                members.add(new EncounterMember(0, false));
+                member = new EncounterMember(0, 0, false);
                 ownTeam.set(0, op._id());
-                continue;
-            }
-            if (!op.isAttacker()) {
+            } else if (!op.isAttacker()) {
                 // other are added behind the self trainer
-                members.add(new EncounterMember(teamIndex++, false));
+                member = new EncounterMember(teamIndex++, 0, false);
                 ownTeam.add(op._id());
             } else {
                 attackerTeam.add(op._id());
-                members.add(new EncounterMember(attackerIndex++, true));
+                member = new EncounterMember(attackerIndex++, 0, true);
             }
+            members.add(member);
+            listenToOpponentMonster(op._id(), member);
         }
         onDestroy(opponentCache::destroy);
     }
 
+    private void listenToOpponentMonster(String opId, EncounterMember member) {
+        onDestroy(opponentCache.listenValue(opId).subscribe((opponentOptional)->{
+            if(opponentOptional.isEmpty()){
+                return;
+            }
+            Opponent opponent = opponentOptional.get();
+            SingleMonsterCache cache = cacheByOpponent.get(opId);
+            Monster monster = cache.asNullable();
+            if(monster != null && !opponent.monster().equals(monster._id())){
+                cache.setup(cache.getTrainerId(), opponent.monster());
+                cache.init();
+            }
+        }));
+    }
 
     public boolean hasMember(EncounterMember member) {
         return members.contains(member);

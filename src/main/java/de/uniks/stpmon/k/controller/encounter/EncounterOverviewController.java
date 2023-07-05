@@ -103,14 +103,14 @@ public class EncounterOverviewController extends Controller {
         if (member.index() == 0) {
             loadMonsterImage(String.valueOf(monster.type()), monsterImageView, member.attacker());
             if (!member.attacker()) {
-                VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 125));
+                VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 0));
             } else {
                 VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
             }
         } else if (member.index() == 1) {
             loadMonsterImage(String.valueOf(monster.type()), monsterImageView, member.attacker());
             if (!member.attacker()) {
-                VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 0));
+                VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 125));
             }
         }
     }

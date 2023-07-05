@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
 
@@ -37,6 +38,14 @@ public class SingleMonsterCache extends SingleCache<Monster> {
         if (region == null) {
             throw new IllegalStateException("Region not found");
         }
+
+        // Reset disposable
+        if (onInitialized != null) {
+            reset();
+            destroy();
+            disposables = new CompositeDisposable();
+        }
+
         // Set initial value
         onInitialized = regionService.getMonster(region._id(), trainerId, monsterId)
                 .doOnNext(this::setValue).ignoreElements();
@@ -58,4 +67,7 @@ public class SingleMonsterCache extends SingleCache<Monster> {
         return onInitialized;
     }
 
+    public String getTrainerId() {
+        return trainerId;
+    }
 }

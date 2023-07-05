@@ -68,7 +68,6 @@ public class InteractionService implements ILifecycleService {
         }
 
         //TODO: Add dialogue for healing
-        //TODO: Add dialogue for encounter
         return null;
     }
 
@@ -76,12 +75,10 @@ public class InteractionService implements ILifecycleService {
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("dialogue.intro"))
+                .addOption().setText("dialogue.select.no").endOption()
                 .addOption()
-                .setText("dialogue.select.no")
-                .setText("dialogue.select.yes")
-                .addAction(() -> {
-                    talkTo(trainer, me, null);
-                })
+                .setText(translateString("dialogue.select.yes"))
+                .addAction(() -> talkTo(trainer, me, null))
                 .endOption()
                 .endItem();
         return itemBuilder.create();
