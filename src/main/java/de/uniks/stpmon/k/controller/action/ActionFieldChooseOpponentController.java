@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.PresetService;
@@ -9,16 +8,17 @@ import de.uniks.stpmon.k.service.TrainerService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
+import javax.inject.Singleton;
 import java.util.List;
 
+@Singleton
 public class ActionFieldChooseOpponentController extends Controller {
     @FXML
     public StackPane pane;
@@ -27,69 +27,68 @@ public class ActionFieldChooseOpponentController extends Controller {
     @FXML
     public Text textContent;
     @FXML
-    public VBox chooseOpponentBox;
+    public ListView<HBox> chooseOpponentListView;
 
     @Inject
     TrainerService trainerService;
     @Inject
     PresetService presetService;
     @Inject
-    EncounterOverviewController encounterOverviewController;
+    ActionFieldBattleLogController actionFieldBattleLogController;
+    @Inject
+    ActionFieldChangeMonsterController actionFieldChangeMonsterController;
 
-    private final List<HBox> actionOptions = new ArrayList<>();
     public List<Monster> opponentMonstersList;
+    public String selectedOpponentMonster;
+    public String userMonster;
 
     @Inject
     public ActionFieldChooseOpponentController(){
         opponentMonstersList = List.of(
-                MonsterBuilder.builder().setTrainer("opponent").setId(2).setExperience(2).setLevel(3).create(),
-                MonsterBuilder.builder().setTrainer("opponent").setId(55).setExperience(2).setLevel(3).create());
-
+                MonsterBuilder.builder().setTrainer("opponent").setType(2).create(),
+                MonsterBuilder.builder().setTrainer("opponent").setType(55).create());
     }
 
     @Override
     public Parent render() {
         Parent parent = super.render();
         loadImage(background, "action_menu_background.png");
-        textContent.setText("Which Mon should be attacked?");
-
+        userMonster = actionFieldChangeMonsterController.selectedUserMonster;
+        textContent.setText("Which Mon should " + userMonster +" attack?");
         setAction();
 
         return parent;
     }
 
     public void setAction() {
-        for (Monster monster : opponentMonstersList) {
-            addActionOption(monster._id());
-            /*
-            subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
-                addActionOption(type.name());
-            });
-             */
+        if(opponentMonstersList != null) {
+            for (Monster monster : opponentMonstersList) {
+                subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> addActionOption(type.name()));
+            }
         }
     }
 
     public void addActionOption(String optionText) {
-        HBox optionContainer = new HBox();
-        actionOptions.add(optionContainer);
-
         Label arrowLabel = new Label("> ");
         Label optionLabel = new Label(optionText);
 
         arrowLabel.setVisible(false);
 
-        optionContainer.getChildren().addAll(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowLabel, optionLabel);
 
         optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> showBattleLog());
+        optionContainer.setOnMouseClicked(event -> showBattleLog(optionText));
 
-        chooseOpponentBox.getChildren().add(optionContainer);
+        int index = chooseOpponentListView.getItems().size();
+        optionLabel.setId("opponent_monster_label_" + index);
+
+        chooseOpponentListView.getItems().add(optionContainer);
     }
 
-    private void showBattleLog() {
-        ActionFieldBattleLogController controller = new ActionFieldBattleLogController();
-        pane.getChildren().add(controller.render());
+    private void showBattleLog(String option) {
+        selectedOpponentMonster = option;
+        pane.getChildren().add(actionFieldBattleLogController.render());
     }
 
     @Override
