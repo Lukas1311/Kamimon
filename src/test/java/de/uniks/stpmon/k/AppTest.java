@@ -220,7 +220,6 @@ class AppTest extends ApplicationTest {
 
         clickOn("#settings");
 
-
         //join region
         clickOn("#regionVBox");
         waitForFxEvents();

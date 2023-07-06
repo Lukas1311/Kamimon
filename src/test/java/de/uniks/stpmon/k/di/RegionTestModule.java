@@ -95,17 +95,13 @@ public class RegionTestModule {
 
                 for (List<Trainer> trainerList : trainersHashMap.values()) {
                     for (Trainer trainer : trainerList) {
-                        Monster monster = new Monster(
-                                String.valueOf(monsterIdCount),
-                                trainer._id(),
-                                0,
-                                0,
-                                0,
-                                abilities,
-                                attributes,
-                                currentAttributes);
-                        monsterIdCount++;
-                        monsters.add(monster);
+                        monsters.add(MonsterBuilder.builder()
+                                .setId(monsterIdCount++)
+                                .setTrainer(trainer._id())
+                                .setAbilities(abilities)
+                                .setAttributes(attributes)
+                                .setCurrentAttributes(currentAttributes)
+                                .create());
                     }
                 }
             }
@@ -114,7 +110,7 @@ public class RegionTestModule {
              * Adds 1 Trainer to each area
              */
             private void initDummyTrainers() {
-                int monsterIdCount = 0;
+                int monsterIdCount = 2;
                 for (Region region : regions) {
                     for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
