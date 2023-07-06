@@ -4,7 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.service.PresetService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,8 +50,8 @@ public class ActionFieldChooseAbilityControllerTest extends ApplicationTest {
         actionFieldChooseAbilityController.setAction(abilityDto.name());
         waitForFxEvents();
 
-        Label label = lookup("#ability_label_0").query();
-        assertTrue(label.getText().endsWith("abilityName"));
+        Text text = lookup("#ability_0").query();
+        assertTrue(text.getText().endsWith("abilityName"));
     }
 
 }

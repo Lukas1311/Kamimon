@@ -7,11 +7,10 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ public class ActionFieldChooseOpponentController extends Controller {
     @FXML
     public Text textContent;
     @FXML
-    public ListView<HBox> chooseOpponentListView;
+    public HBox chooseOpponentBox;
 
     @Inject
     TrainerService trainerService;
@@ -42,11 +41,14 @@ public class ActionFieldChooseOpponentController extends Controller {
     public String selectedOpponentMonster;
     public String userMonster;
 
+    private int count = 0;
+
     @Inject
     public ActionFieldChooseOpponentController(){
         opponentMonstersList = List.of(
                 MonsterBuilder.builder().setTrainer("opponent").setType(2).create(),
-                MonsterBuilder.builder().setTrainer("opponent").setType(55).create());
+                MonsterBuilder.builder().setTrainer("opponent").setType(55).create(),
+                MonsterBuilder.builder().setTrainer("opponent").setType(45).create());
     }
 
     @Override
@@ -68,23 +70,35 @@ public class ActionFieldChooseOpponentController extends Controller {
         }
     }
 
-    public void addActionOption(String optionText) {
-        Label arrowLabel = new Label("> ");
-        Label optionLabel = new Label(optionText);
+    public void addActionOption(String option) {
+        Text arrowText = new Text(" >");
+        Text optionText = new Text(option);
 
-        arrowLabel.setVisible(false);
+        arrowText.setVisible(false);
 
-        HBox optionContainer = new HBox(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowText, optionText);
 
-        optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> showBattleLog(optionText));
+        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
+        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
+        optionContainer.setOnMouseClicked(event -> showBattleLog(option));
 
-        int index = chooseOpponentListView.getItems().size();
-        optionLabel.setId("opponent_monster_label_" + index);
+        // each column containing a maximum of 2 options
+        int index = count / 2;
+        if (chooseOpponentBox.getChildren().size() <= index) {
+            VBox vbox = new VBox();
+            chooseOpponentBox.getChildren().add(vbox);
+        }
+        VBox vbox = (VBox) chooseOpponentBox.getChildren().get(index);
 
-        chooseOpponentListView.getItems().add(optionContainer);
+        // set IDs for the options
+        int optionIndex = vbox.getChildren().size();
+        optionText.setId("opponent_monster_label_" + (index * 2 + optionIndex));
+
+        vbox.getChildren().add(optionContainer);
+
+        count++;
     }
+
 
     private void showBattleLog(String option) {
         selectedOpponentMonster = option;

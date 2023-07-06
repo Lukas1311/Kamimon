@@ -4,7 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,10 +52,10 @@ public class ActionFieldChangeMonsterControllerTest extends ApplicationTest {
     @Test
     void testRender() {
         Platform.runLater(() -> actionFieldChangeMonsterController.addActionOption("monster", false));
-        Label back = lookup("#user_monster_label_0").query();
+        Text back = lookup("#user_monster_0").query();
         assertTrue(back.getText().endsWith("Back"));
 
-        Label mon= lookup("#user_monster_label_1").query();
+        Text mon= lookup("#user_monster_1").query();
         assertTrue(mon.getText().endsWith("monster"));
     }
 }

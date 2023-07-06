@@ -6,11 +6,10 @@ import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ public class ActionFieldChangeMonsterController extends Controller {
     @FXML
     public Text textContent;
     @FXML
-    public ListView<HBox> changeMonListView;
+    public HBox changeMonBox;
 
     @Inject
     MonsterService monsterService;
@@ -40,6 +39,8 @@ public class ActionFieldChangeMonsterController extends Controller {
     public List<Monster> userMonstersList;
     public Monster activeMonster;
     public String selectedUserMonster;
+
+    private int count = 0;
 
 
     @Inject
@@ -77,26 +78,38 @@ public class ActionFieldChangeMonsterController extends Controller {
         addActionOption("Back", true);
     }
 
-    public void addActionOption(String optionText, boolean isBackOption) {
-        Label arrowLabel = new Label("> ");
-        Label optionLabel = new Label(optionText);
+    public void addActionOption(String option, boolean isBackOption) {
+        Text arrowText = new Text(" >");
+        Text optionText = new Text(option);
 
-        arrowLabel.setVisible(false);
+        arrowText.setVisible(false);
 
-        HBox optionContainer = new HBox(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowText, optionText);
 
-        optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> openAction(optionText));
+        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
+        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
+        optionContainer.setOnMouseClicked(event -> openAction(option));
 
-        int index = changeMonListView.getItems().size();
-        optionLabel.setId("user_monster_label_" + index);
-
-        if (isBackOption) {
-            changeMonListView.getItems().add(optionContainer);
-        } else {
-            changeMonListView.getItems().add(changeMonListView.getItems().size() - 1, optionContainer);
+        // each column containing a maximum of 3 options
+        int index = count / 3;
+        if (changeMonBox.getChildren().size() <= index) {
+            VBox vbox = new VBox();
+            changeMonBox.getChildren().add(vbox);
         }
+        VBox vbox = (VBox) changeMonBox.getChildren().get(index);
+
+        // set IDs for the options
+        int optionIndex = vbox.getChildren().size();
+        optionText.setId("user_monster_" + (index * 3 + optionIndex));
+
+        // if the option is 'Back', add it to the end of the VBox
+        if (isBackOption) {
+            vbox.getChildren().add(optionContainer);
+        } else {
+            vbox.getChildren().add(vbox.getChildren().size() - 1, optionContainer);
+        }
+
+        count++;
     }
 
     public void openAction(String option) {

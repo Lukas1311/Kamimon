@@ -2,12 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-
-<?import javafx.scene.control.ListView?>
 <StackPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
            prefHeight="111.0" prefWidth="355.0" xmlns="http://javafx.com/javafx/11.0.1"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -23,6 +22,6 @@
          </VBox.margin>
          <Text fx:id="textContent" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
       </TextFlow>
-      <ListView fx:id="changeMonListView" prefHeight="200.0" prefWidth="100.0"/>
+      <HBox fx:id="changeMonBox" prefHeight="200.0" prefWidth="100.0"/>
    </VBox>
 </StackPane>

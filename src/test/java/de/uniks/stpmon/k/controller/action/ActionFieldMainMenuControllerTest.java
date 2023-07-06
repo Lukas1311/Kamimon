@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.App;
-import javafx.scene.control.Label;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,10 +44,10 @@ public class ActionFieldMainMenuControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
-        Label fightLabel = lookup("#main_menu_label_0").query();
-        Label changeMonLabel = lookup("#main_menu_label_1").query();
+        Text fight = lookup("#main_menu_0").query();
+        Text changeMon = lookup("#main_menu_1").query();
 
-        verifyThat(fightLabel, hasText("Fight"));
-        verifyThat(changeMonLabel, hasText("Change Mon"));
+        verifyThat(fight, hasText("Fight"));
+        verifyThat(changeMon, hasText("Change Mon"));
     }
 }

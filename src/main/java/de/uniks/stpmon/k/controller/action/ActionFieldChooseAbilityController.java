@@ -5,11 +5,11 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -22,7 +22,7 @@ public class ActionFieldChooseAbilityController extends Controller {
     @FXML
     public ImageView background;
     @FXML
-    public ListView<HBox> changeAbilityListView;
+    public HBox chooseAbilityBox;
 
     @Inject
     PresetService presetService;
@@ -38,6 +38,8 @@ public class ActionFieldChooseAbilityController extends Controller {
 
     public String selectedAbility;
     public Integer maxUses;
+
+    private int count = 0;
 
     @Inject
     public ActionFieldChooseAbilityController() {
@@ -68,23 +70,34 @@ public class ActionFieldChooseAbilityController extends Controller {
         });
     }
 
-    public void addActionOption(String optionText) {
-        Label arrowLabel = new Label("> ");
-        Label optionLabel = new Label(optionText);
-        Label useLabel = new Label(" (??" + "/" + maxUses + ")");
+    public void addActionOption(String option) {
+        Text arrowText = new Text(" >");
+        Text optionText = new Text(option);
+        Text useLabel = new Text(" (??" + "/" + maxUses + ") ");
 
-        arrowLabel.setVisible(false);
+        arrowText.setVisible(false);
 
-        HBox optionContainer = new HBox(arrowLabel, optionLabel, useLabel);
+        HBox optionContainer = new HBox(arrowText, optionText, useLabel);
 
-        optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> openAction(optionText));
+        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
+        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
+        optionContainer.setOnMouseClicked(event -> openAction(option));
 
-        int index = changeAbilityListView.getItems().size();
-        optionLabel.setId("ability_label_" + index);
+        // each column containing a maximum of 3 options
+        int index = count / 3;
+        if (chooseAbilityBox.getChildren().size() <= index) {
+            VBox vbox = new VBox();
+            chooseAbilityBox.getChildren().add(vbox);
+        }
+        VBox vbox = (VBox) chooseAbilityBox.getChildren().get(index);
 
-        changeAbilityListView.getItems().add(optionContainer);
+        // set IDs for the options
+        int optionIndex = vbox.getChildren().size();
+        optionText.setId("ability_" + (index * 3 + optionIndex));
+
+        vbox.getChildren().add(optionContainer);
+
+        count++;
     }
 
     public void openAction(String option) {

@@ -3,11 +3,10 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -22,7 +21,7 @@ public class ActionFieldMainMenuController extends Controller {
     @FXML
     public Text textContent;
     @FXML
-    public ListView<HBox> mainMenuListView;
+    public VBox mainMenuBox;
 
     @Inject
     ActionFieldChangeMonsterController actionFieldChangeMonsterController;
@@ -52,22 +51,23 @@ public class ActionFieldMainMenuController extends Controller {
         addActionOption(changeMon);
     }
 
-    public void addActionOption(String optionText) {
-        Label arrowLabel = new Label("> ");
-        Label optionLabel = new Label(optionText);
+    public void addActionOption(String option) {
+        Text arrowText = new Text(" >");
+        Text optionText = new Text(option);
 
-        arrowLabel.setVisible(false);
+        arrowText.setVisible(false);
 
-        HBox optionContainer = new HBox(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox();
+        optionContainer.getChildren().addAll(arrowText, optionText);
 
-        optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> openAction(optionText));
+        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
+        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
+        optionContainer.setOnMouseClicked(event -> openAction(option));
 
-        int index = mainMenuListView.getItems().size();
-        optionLabel.setId("main_menu_label_" + index);
+        int index = mainMenuBox.getChildren().size();
+        optionText.setId("main_menu_" + index);
 
-        mainMenuListView.getItems().add(optionContainer);
+        mainMenuBox.getChildren().add(optionContainer);
     }
 
     public void openAction(String option) {

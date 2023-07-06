@@ -73,7 +73,7 @@ public class ActionFieldChooseOpponentControllerTest extends ApplicationTest {
 
         Platform.runLater(() -> actionFieldChooseOpponentController.addActionOption(typeDto.name()));
 
-        Label mon= lookup("#user_monster_label_0").query();
+        Label mon= lookup("#opponent_monster_0").query();
         assertTrue(mon.getText().endsWith("monster"));
 
     }
