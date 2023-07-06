@@ -1,24 +1,21 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -30,23 +27,26 @@ public class ActionFieldChangeMonsterController extends Controller {
     @FXML
     public Text textContent;
     @FXML
-    public VBox changeMonBox;
+    public ListView<HBox> changeMonListView;
 
     @Inject
     MonsterService monsterService;
     @Inject
     PresetService presetService;
 
-    private final List<HBox> actionOptions = new ArrayList<>();
-    private List<Monster> userMonstersList;
+    @Inject
+    Provider<ActionFieldMainMenuController> actionFieldMainMenuController;
+
+    public List<Monster> userMonstersList;
+    public Monster activeMonster;
+    public String selectedUserMonster;
 
 
     @Inject
     public ActionFieldChangeMonsterController() {
-        userMonstersList = List.of(
-                MonsterBuilder.builder().setTrainer("trainerService.getMe()._id()").setId(102).setExperience(2).setLevel(3).create(),
-                MonsterBuilder.builder().setTrainer("trainerService.getMe()._id()").setId(23).setExperience(2).setLevel(3).create());
-
+    }
+    public void setMonster(Monster monster) {
+        activeMonster = monster;
     }
 
     @Override
@@ -55,58 +55,65 @@ public class ActionFieldChangeMonsterController extends Controller {
         loadImage(background, "action_menu_background.png");
         textContent.setText("Choose Mon:");
 
+        if(monsterService.getTeam() != null) {
+            userMonstersList = monsterService.getTeam().blockingFirst();
+        }
+
         setAction();
 
         return parent;
     }
 
-    public void loadMonsterName(String id) {
-
-    }
-
     public void setAction() {
-        for (Monster monster : userMonstersList) {
-            /*
-            subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
-                        addActionOption(type.name());
-            });*/
-            addActionOption(monster._id());
+        if(userMonstersList != null && !userMonstersList.isEmpty()) {
+            for (Monster monster : userMonstersList) {
+                subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
+                    selectedUserMonster = type.name();
+                    addActionOption(type.name(), false);
+                });
+            }
         }
-        addActionOption("Back");
+
+        addActionOption("Back", true);
     }
 
-    public void addActionOption(String optionText) {
-        HBox optionContainer = new HBox();
-        actionOptions.add(optionContainer);
-
+    public void addActionOption(String optionText, boolean isBackOption) {
         Label arrowLabel = new Label("> ");
         Label optionLabel = new Label(optionText);
 
         arrowLabel.setVisible(false);
 
-        optionContainer.getChildren().addAll(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowLabel, optionLabel);
 
         optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
         optionContainer.setOnMouseClicked(event -> openAction(optionText));
 
-        changeMonBox.getChildren().add(optionContainer);
-    }
+        int index = changeMonListView.getItems().size();
+        optionLabel.setId("user_monster_label_" + index);
 
-    public void openAction(String option) {
-        switch (option) {
-            case "Back" -> openMainMenu();
-            default -> setActiveMonster(option);
+        if (isBackOption) {
+            changeMonListView.getItems().add(optionContainer);
+        } else {
+            changeMonListView.getItems().add(changeMonListView.getItems().size() - 1, optionContainer);
         }
     }
 
-    private void setActiveMonster(String monsterName) {
-        // TODO set the active monster
+    public void openAction(String option) {
+        if (option.equals("Back")) {
+            pane.getChildren().add(actionFieldMainMenuController.get().render());
+        } else {
+            selectedUserMonster = option;
+            openAbilities(option);
+        }
     }
 
-    private void openMainMenu()  {
-        ActionFieldMainMenuController controller = new ActionFieldMainMenuController();
-        pane.getChildren().add(controller.render());
+    private void openAbilities(String name) {
+        for (Monster monster : userMonstersList) {
+            if (selectedUserMonster.equals(name)) {
+                setMonster(monster);
+            }
+        }
     }
 
     @Override

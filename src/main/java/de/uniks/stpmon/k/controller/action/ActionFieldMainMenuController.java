@@ -1,23 +1,19 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Singleton;
 
+@Singleton
 public class ActionFieldMainMenuController extends Controller {
     @FXML
     public Pane pane;
@@ -26,19 +22,12 @@ public class ActionFieldMainMenuController extends Controller {
     @FXML
     public Text textContent;
     @FXML
-    public VBox mainMenuBox;
+    public ListView<HBox> mainMenuListView;
 
     @Inject
-    InputHandler inputHandler;
+    ActionFieldChangeMonsterController actionFieldChangeMonsterController;
     @Inject
-    ActionFieldChooseOpponentController chooseOpponentController;
-    @Inject
-    ActionFieldChangeMonsterController changeMonsterController;
-    @Inject
-    EncounterOverviewController encounterOverviewController;
-
-    private final List<HBox> actionOptions = new ArrayList<>();
-    List<Monster> userMonsterList;
+    ActionFieldChooseAbilityController actionFieldChooseAbilityController;
 
     @Inject
     public ActionFieldMainMenuController() {}
@@ -59,21 +48,21 @@ public class ActionFieldMainMenuController extends Controller {
     }
 
     public void addActionOption(String optionText) {
-        HBox optionContainer = new HBox();
-        actionOptions.add(optionContainer);
-
         Label arrowLabel = new Label("> ");
         Label optionLabel = new Label(optionText);
 
         arrowLabel.setVisible(false);
 
-        optionContainer.getChildren().addAll(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowLabel, optionLabel);
 
         optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
         optionContainer.setOnMouseClicked(event -> openAction(optionText));
 
-        mainMenuBox.getChildren().add(optionContainer);
+        int index = mainMenuListView.getItems().size();
+        optionLabel.setId("main_menu_label_" + index);
+
+        mainMenuListView.getItems().add(optionContainer);
     }
 
     public void openAction(String option) {
@@ -83,14 +72,12 @@ public class ActionFieldMainMenuController extends Controller {
         }
     }
 
-    private void openFight() {
-        ActionFieldChooseOpponentController controller = new ActionFieldChooseOpponentController();
-        pane.getChildren().add(controller.render());
+    public void openFight() {
+        pane.getChildren().add(actionFieldChooseAbilityController.render());
     }
 
-    private void openChangeMon() {
-        ActionFieldChangeMonsterController controller = new ActionFieldChangeMonsterController();
-        pane.getChildren().add(controller.render());
+    public void openChangeMon() {
+        pane.getChildren().add(actionFieldChangeMonsterController.render());
     }
 
     @Override
