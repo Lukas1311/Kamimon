@@ -118,7 +118,7 @@ class FriendListControllerTest extends ApplicationTest {
         //get friendList
         //final ScrollPane scrollPane = lookup("#scrollPane").query();
         final VBox userList = lookup("#friendListVbox").query();
-        final ListView<User> listView =  lookup("#userListView").query();
+        final ListView<User> listView = lookup("#userListView").query();
 
         verifyThat(listView, ListViewMatchers.hasItems(2));
         assertNotNull(userList.lookup("#Alice"));
@@ -141,9 +141,7 @@ class FriendListControllerTest extends ApplicationTest {
 
     @Test
     void addFriend() {
-
         final VBox userList = lookup("#friendListVbox").query();
-        final ListView<User> listView =  lookup("#userListView").query();
 
         //"Eve" is not displayed before search
         assertNull(userList.lookup("#Eve"));

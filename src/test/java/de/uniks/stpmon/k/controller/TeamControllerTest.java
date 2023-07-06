@@ -77,22 +77,22 @@ public class TeamControllerTest extends ApplicationTest {
 
         waitForFxEvents();
         // Verify the text of the labels
-        Label label = lookup("#monster_label_0").query();
+        Label label = lookup("#monster_label_0").queryAs(Label.class);
         assertTrue(label.getText().endsWith("Monster 1"));
 
-        label = lookup("#monster_label_1").query();
+        label = lookup("#monster_label_1").queryAs(Label.class);
         assertEquals("  -", label.getText());
 
-        label = lookup("#monster_label_2").query();
+        label = lookup("#monster_label_2").queryAs(Label.class);
         assertEquals("  -", label.getText());
 
-        label = lookup("#monster_label_3").query();
+        label = lookup("#monster_label_3").queryAs(Label.class);
         assertEquals("  -", label.getText());
 
-        label = lookup("#monster_label_4").query();
+        label = lookup("#monster_label_4").queryAs(Label.class);
         assertEquals("  -", label.getText());
 
-        label = lookup("#monster_label_5").query();
+        label = lookup("#monster_label_5").queryAs(Label.class);
         assertEquals("  -", label.getText());
     }
 

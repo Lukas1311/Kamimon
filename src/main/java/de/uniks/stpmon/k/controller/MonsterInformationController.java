@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
@@ -157,11 +156,8 @@ public class MonsterInformationController extends Controller {
     }
 
     private void fillAbilityTable(String abilityId, int rowIndex) {
-        disposables.add(presetService.getAbility(abilityId)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(ability -> {
-                    fillAbilityRow(ability, rowIndex);
-                }));
+        subscribe(presetService.getAbility(abilityId),
+                ability -> fillAbilityRow(ability, rowIndex));
     }
 
     private void fillAbilityRow(AbilityDto ability, int rowIndex) {

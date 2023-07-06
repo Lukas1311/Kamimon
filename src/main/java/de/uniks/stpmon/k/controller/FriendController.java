@@ -33,7 +33,6 @@ public class FriendController extends Controller {
     public FontIcon chat;
 
     private final FriendListController friendListController;
-    private final Provider<UserService> userServiceProvider;
 
     private final User user;
 
@@ -45,7 +44,6 @@ public class FriendController extends Controller {
         this.isFriend = userServiceProvider.get().isFriend(user);
         this.friendListController = friendListController;
         this.resources = resources;
-        this.userServiceProvider = userServiceProvider;
 
     }
 
@@ -72,12 +70,6 @@ public class FriendController extends Controller {
         } else {
             userStatus.setFill(Color.rgb(106, 168, 79));
         }
-
-
-        //TODO: Add avatar image to friendlist
-
-        //add avatar-url when avatar != null
-        //avatarBox.setBackground(new Background(new BackgroundImage(new Image(""), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
         messageButton.setOnAction(e -> openChat());
 

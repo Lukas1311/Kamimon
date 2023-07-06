@@ -37,20 +37,6 @@ public class MessageApiDummy implements MessageApiService {
     public MessageApiDummy() {
     }
 
-    /**
-     * Adds 6 messageEntities to ArrayList
-     * 2 with namespace="global" and parent="100"
-     * 2 with namespace="global" and parent="101"
-     * 2 with namespace="groups" and parent="102"
-     */
-    public void initDummyMessages() {
-        //global messages
-        addDummyMessages("global", "100");
-        addDummyMessages("global", "101");
-        addDummyMessages("groups", "102");
-
-    }
-
     /***
      * Initializes the mocking of the event listener for the events of the given group.
      *
@@ -111,7 +97,7 @@ public class MessageApiDummy implements MessageApiService {
      * @param namespace: global, regions, groups
      * @param parent:    id of receiving instance
      * @param msg:       dto with body
-     * @return: the Message that was sent
+     * @return the Message that was sent
      */
     @Override
     public Observable<Message> sendMessage(String namespace, String parent, CreateMessageDto msg) {
@@ -133,7 +119,7 @@ public class MessageApiDummy implements MessageApiService {
      * @param dateTimeAfter:  can be null
      * @param dateTimeBefore: can be null
      * @param limit:          if null, limit = 100
-     * @return: filtered Messages
+     * @return filtered Messages
      */
     @Override
     public Observable<ArrayList<Message>> getMessages(String namespace, String parent,

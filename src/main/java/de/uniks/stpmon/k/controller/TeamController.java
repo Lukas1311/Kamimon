@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -78,13 +77,11 @@ public class TeamController extends Controller {
             if (monster != null) {
                 subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
                     monsterLabel.setText("  " + type.name());
-                    monsterLabel.setOnMouseClicked(event -> showInformation(monster, monsterLabel));
-                    monsterLabel.setOnMouseEntered(event -> {
-                        monsterLabel.setText(monsterLabel.getText().replace("  ", "> "));
-                    });
-                    monsterLabel.setOnMouseExited(event -> {
-                        monsterLabel.setText(monsterLabel.getText().replace("> ", "  "));
-                    });
+                    monsterLabel.setOnMouseClicked(event -> showInformation(monster));
+                    monsterLabel.setOnMouseEntered(event ->
+                            monsterLabel.setText(monsterLabel.getText().replace("  ", "> ")));
+                    monsterLabel.setOnMouseExited(event ->
+                            monsterLabel.setText(monsterLabel.getText().replace("> ", "  ")));
                 });
             } else {
                 monsterLabel.setText("  -");
@@ -93,11 +90,9 @@ public class TeamController extends Controller {
         }
     }
 
-    public void showInformation(Monster monster, Label monsterLabel) {
+    public void showInformation(Monster monster) {
         if (monsterInformation.isVisible() && monsterInformation.isVisible()) {
             monsterInformation.setVisible(false);
-            //subscribe(presetService.getMonster(String.valueOf(monster.type())),
-            //        type -> monsterLabel.setText(type.name()));
         } else {
             // Render the monster information
             Parent monsterInformationContent = monsterInformationController.render();
@@ -105,7 +100,6 @@ public class TeamController extends Controller {
             monsterInformationController.loadMonster(monster);
             monsterInformation.getChildren().setAll(monsterInformationContent);
             monsterInformation.setVisible(true);
-            //monsterLabel.setText("> " + monsterLabel.getText());
         }
     }
 

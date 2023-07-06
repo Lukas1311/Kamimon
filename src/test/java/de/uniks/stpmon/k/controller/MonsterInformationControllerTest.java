@@ -97,15 +97,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
 
-
-
-
-        Platform.runLater(() -> {
-            monsterInformationController.loadMonster(monster);
-
-
-
-        });
+        Platform.runLater(() -> monsterInformationController.loadMonster(monster));
         waitForFxEvents();
         assertEquals("Lvl. 1", monsterInformationController.monsterLevelLabel.getText());
         assertEquals("HP: 5/10", monsterInformationController.monsterHpLabel.getText());

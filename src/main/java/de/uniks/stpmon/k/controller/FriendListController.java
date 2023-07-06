@@ -79,9 +79,7 @@ public class FriendListController extends ToastedController {
         searchButton.setOnAction(e -> searchForFriend());
 
         allUsers = checkBox.isSelected();
-        checkBox.setOnAction(e -> {
-            allUsers = checkBox.isSelected();
-        });
+        checkBox.setOnAction(e -> allUsers = checkBox.isSelected());
 
         searchFriend.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {

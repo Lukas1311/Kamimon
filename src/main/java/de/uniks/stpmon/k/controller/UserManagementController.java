@@ -23,7 +23,7 @@ import retrofit2.HttpException;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 
 public class UserManagementController extends Controller {
@@ -176,8 +176,7 @@ public class UserManagementController extends Controller {
 
     public void deleteUser() {
         PopUpScenario deleteScenario = PopUpScenario.DELETE_USER;
-        // TODO: maybe set username initially and no "enter name" placeholder? ask SM / PO
-        deleteScenario.setParams(new ArrayList<>(Arrays.asList(currentUser.name())));
+        deleteScenario.setParams(new ArrayList<>(Collections.singletonList(currentUser.name())));
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
             disposables.add(userService
@@ -185,7 +184,7 @@ public class UserManagementController extends Controller {
                     .observeOn(FX_SCHEDULER)
                     .subscribe(usr -> {
                                 PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
-                                deleteConfirmScenario.setParams(new ArrayList<>(Arrays.asList(usr.name())));
+                                deleteConfirmScenario.setParams(new ArrayList<>(Collections.singletonList(usr.name())));
                                 showPopUp(deleteConfirmScenario, innerResult -> app.show(loginControllerProvider.get()));
                             }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
                     )
