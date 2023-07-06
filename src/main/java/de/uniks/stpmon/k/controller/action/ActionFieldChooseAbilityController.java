@@ -6,85 +6,89 @@ import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class ActionFieldChooseAbilityController extends Controller {
     @FXML
     public StackPane pane;
     @FXML
     public ImageView background;
     @FXML
-    public VBox chooseAbilityBox;
+    public ListView<HBox> changeAbilityListView;
 
     @Inject
     PresetService presetService;
-    private final List<HBox> actionOptions = new ArrayList<>();
-    private Monster monster;
 
     @Inject
-    public ActionFieldChooseAbilityController() {}
+    Provider<ActionFieldMainMenuController> actionFieldMainMenuController;
+    @Inject
+    ActionFieldChangeMonsterController actionFieldChangeMonsterController;
+    @Inject
+    ActionFieldChooseOpponentController actionFieldChooseOpponentController;
+
+    public Monster monster;
+
+    public String selectedAbility;
+
+    @Inject
+    public ActionFieldChooseAbilityController() {
+    }
 
     @Override
     public Parent render() {
         Parent parent = super.render();
         loadImage(background, "action_menu_background.png");
-        loadMonAbility();
+
+        monster = actionFieldChangeMonsterController.activeMonster;
+
+        if(monster != null) {
+            for (String key : monster.abilities().keySet()) {
+                if (monster.abilities().containsKey(key)) {
+                    setAction(key);
+                }
+            }
+        }
+
         return parent;
     }
 
-    public void setMonster(Monster monster) {
-        this.monster = monster;
+    public void setAction(String abilityId) {
+        subscribe(presetService.getAbility(abilityId), ability -> addActionOption(ability.name()));
     }
 
-    public void loadMonAbility() {
-        for (String key : monster.abilities().keySet()) {
-            if (monster.abilities().containsKey(key)) {
-                HBox abilityBox = addActionOption(key);
-                chooseAbilityBox.getChildren().add(abilityBox);
-            }
-        }
-    }
-
-    public HBox addActionOption(String optionText) {
-        HBox optionContainer = new HBox();
-        actionOptions.add(optionContainer);
-
+    public void addActionOption(String optionText) {
         Label arrowLabel = new Label("> ");
         Label optionLabel = new Label(optionText);
 
         arrowLabel.setVisible(false);
 
-        optionContainer.getChildren().addAll(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowLabel, optionLabel);
 
         optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> openOption(monster));
+        optionContainer.setOnMouseClicked(event -> openAction(optionText));
 
-        chooseAbilityBox.getChildren().add(optionContainer);
-        disposables.add(presetService.getAbility(monster._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(ability -> {
-                    optionLabel.setText(ability.name());
-                }));
+        int index = changeAbilityListView.getItems().size();
+        optionLabel.setId("ability_label_" + index);
 
-        return optionContainer;
+        changeAbilityListView.getItems().add(optionContainer);
     }
 
-    private void openOption(Monster monster) {
-        ActionFieldBattleLogController controller = new ActionFieldBattleLogController();
-        pane.getChildren().add(controller.render());
+    public void openAction(String option) {
+        selectedAbility = option;
+        pane.getChildren().add(actionFieldChooseOpponentController.render());
     }
 
     @Override
     public String getResourcePath() {
         return "action/";
     }
-
 }
