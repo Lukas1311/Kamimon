@@ -1,12 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.constants.NoneConstants;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,17 +10,14 @@ import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Scale;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.List;
 
 
 @Singleton
 public class RegionListController extends PortalController {
-
-    private final ObservableList<Region> regions = FXCollections.observableArrayList();
     @FXML
     public VBox regionListWrapping;
     @Inject
@@ -34,39 +27,30 @@ public class RegionListController extends PortalController {
     @FXML
     public VBox regionListWrappingVBox;
     @FXML
-    public FlowPane regionListFlowPane;
+    public FlowPane regionsFlowPane;
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
-    @SuppressWarnings("unused")
-    @Inject
-    Provider<HybridController> hybridControllerProvider;
 
     @Inject
     public RegionListController() {
 
     }
 
-    private void addRegionToFlowPane() {
-        regionListFlowPane.getChildren().clear();
+    private void addRegionsToFlowPane(List<Region> regions) {
+        regionsFlowPane.getChildren().clear();
 
         for (int i = 0; i < regions.size(); i++) {
-            RegionListController listController = this;
-            RegionController regionController = new RegionController(regions.get(i), listController);
+            if(i > 2){
+                continue;
+            }
+            RegionController regionController = new RegionController(regions.get(i), this);
             Parent parent = regionController.render();
 
-            regionListFlowPane.getChildren().add(parent);
-
-            System.out.println("Added: " + regions.get(i).name());
+            regionsFlowPane.getChildren().add(parent);
 
             FlowPane.setMargin(parent, new Insets(25, 25, 0, 25));
-
-            if (regions.size() > 3) {
-                Scale scale = new Scale(0.75, 0.75);
-                parent.getTransforms().add(scale);
-                FlowPane.setMargin(parent, new Insets(25, 0, -100, 0));
-            }
         }
-        regionListFlowPane.autosize();
+        regionsFlowPane.autosize();
     }
 
 
@@ -74,13 +58,7 @@ public class RegionListController extends PortalController {
     public Parent render() {
         final Parent parent = super.render();
 
-        ListChangeListener<Region> listener = c -> addRegionToFlowPane();
-        regions.addListener(listener);
-
-        disposables.add(regionService.getRegions()
-                .observeOn(FX_SCHEDULER)
-                .subscribe(regions::setAll, this::handleError));
-
+        subscribe(regionService.getRegions(), this::addRegionsToFlowPane);
 
         loadImage(imageViewKamimonLetteringRegion, "kamimonLettering_new.png");
 

@@ -17,7 +17,7 @@
         </ImageView>
     </VBox>
     <VBox fx:id="regionListWrappingVBox" alignment="CENTER">
-        <FlowPane fx:id="regionListFlowPane" alignment="CENTER" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="regionsFlowPane" alignment="CENTER" VBox.vgrow="ALWAYS">
         </FlowPane>
     </VBox>
 
