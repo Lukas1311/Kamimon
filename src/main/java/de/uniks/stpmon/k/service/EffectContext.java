@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.views.world.EntityView;
-
 /**
  * Service which controls the rendering of images and animations.
  * It can be used to skip image loading and animations while testing or in other cases.
@@ -9,11 +7,14 @@ import de.uniks.stpmon.k.views.world.EntityView;
 @SuppressWarnings("unused")
 public class EffectContext {
 
+    public static final int MOVEMENT_PERIOD = 200;
+    public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
+
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
-    private int walkingSpeed = EntityView.MOVEMENT_PERIOD;
-    private int walkingAnimationSpeed = EntityView.WALKING_ANIMATION_PERIOD;
+    private int walkingSpeed = MOVEMENT_PERIOD;
+    private int walkingAnimationSpeed = WALKING_ANIMATION_PERIOD;
     private double textureScale = 3.0d;
     private int dialogAnimationSpeed = 450;
 
