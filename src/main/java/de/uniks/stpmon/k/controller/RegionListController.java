@@ -20,20 +20,19 @@ import java.util.List;
 public class RegionListController extends PortalController {
     @FXML
     public VBox regionListWrapping;
-    @Inject
-    RegionService regionService;
-    @Inject
-    CreateTrainerController createTrainerController;
     @FXML
     public VBox regionListWrappingVBox;
     @FXML
     public FlowPane regionsFlowPane;
     @FXML
     private ImageView imageViewKamimonLetteringRegion;
+    @Inject
+    RegionService regionService;
+    @Inject
+    CreateTrainerController createTrainerController;
 
     @Inject
     public RegionListController() {
-
     }
 
     private void addRegionsToFlowPane(List<Region> regions) {
@@ -72,15 +71,10 @@ public class RegionListController extends PortalController {
         regionListWrapping.setAlignment(Pos.CENTER);
     }
 
-    @SuppressWarnings("unused")
-    public void addLettering() {
-        regionListWrapping.getChildren().add(0, imageViewKamimonLetteringRegion);
-        regionListWrapping.setAlignment(Pos.CENTER);
-    }
-
     public void createNewTrainer(Region region) {
         subscribe(regionService.getMainTrainer(region._id()), (trainer) -> {
             if (trainer == NoneConstants.NONE_TRAINER) {
+                removeLettering();
                 createTrainerController.setChosenRegion(region);
                 Parent createTrainer = createTrainerController.render();
                 if (regionListWrappingVBox != null && !regionListWrappingVBox.getChildren().contains(createTrainer)) {

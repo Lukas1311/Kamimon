@@ -68,7 +68,7 @@ public class RegionListControllerTest extends ApplicationTest {
         when(regionService.getMainTrainer(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
 
-        FlowPane regionListFlowPane = lookup("#regionListFlowPane").query();
+        FlowPane regionListFlowPane = lookup("#regionsFlowPane").query();
         assertThat(regionListFlowPane.getChildren().size()).isEqualTo(1);
         Text regionName = lookup("#regionNameText").queryText();
         assertEquals("Test", regionName.getText());
