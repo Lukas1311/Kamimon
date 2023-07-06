@@ -9,7 +9,7 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -68,8 +68,8 @@ public class RegionListControllerTest extends ApplicationTest {
         when(regionService.getMainTrainer(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
 
-        GridPane regionListGridPane = lookup("#regionListGridPane").query();
-        assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
+        FlowPane regionListFlowPane = lookup("#regionsFlowPane").query();
+        assertThat(regionListFlowPane.getChildren().size()).isEqualTo(1);
         Text regionName = lookup("#regionNameText").queryText();
         assertEquals("Test", regionName.getText());
         ImageView regionImage = lookup("#regionImage").query();
