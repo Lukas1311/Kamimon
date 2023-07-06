@@ -235,6 +235,7 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         return onCreate;
     }
 
+    @SuppressWarnings("unused")
     public Observable<T> onUpdate() {
         return onUpdate;
     }

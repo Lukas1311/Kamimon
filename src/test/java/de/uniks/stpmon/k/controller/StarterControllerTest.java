@@ -34,7 +34,7 @@ public class StarterControllerTest extends ApplicationTest {
     StarterController starterController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         app.show(starterController);

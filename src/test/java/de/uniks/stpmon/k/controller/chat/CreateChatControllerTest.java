@@ -61,7 +61,7 @@ class CreateChatControllerTest extends ApplicationTest {
     final List<String> memberNames = new ArrayList<>();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         final User alice = new User("Alice", "Alice", null, null, null);

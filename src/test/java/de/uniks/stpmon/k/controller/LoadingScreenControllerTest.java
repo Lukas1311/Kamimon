@@ -32,7 +32,7 @@ public class LoadingScreenControllerTest extends ApplicationTest {
             .setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         stage.requestFocus();

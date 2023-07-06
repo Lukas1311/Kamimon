@@ -89,11 +89,6 @@ public class RegionListController extends PortalController {
         regionListWrapping.setAlignment(Pos.CENTER);
     }
 
-    public void addLettering() {
-        regionListWrapping.getChildren().add(0, imageViewKamimonLetteringRegion);
-        regionListWrapping.setAlignment(Pos.CENTER);
-    }
-
     public void createNewTrainer(Region region) {
         subscribe(regionService.getMainTrainer(region._id()), (trainer) -> {
             if (trainer == NoneConstants.NONE_TRAINER) {

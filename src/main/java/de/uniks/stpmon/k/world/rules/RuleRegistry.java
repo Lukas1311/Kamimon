@@ -54,6 +54,7 @@ public class RuleRegistry {
         return tileset.getProperty(info.tileId(), TileProperties.DECORATION);
     }
 
+    @SuppressWarnings("unused")
     public boolean isBottom(TileInfo info) {
         TilesetProperties tileset = properties.get(info.tileSet());
         if (tileset == null) {
@@ -159,6 +160,7 @@ public class RuleRegistry {
             return (properties.getOrDefault(tileId, 0) & (1 << property.ordinal())) != 0;
         }
 
+        @SuppressWarnings("unused")
         public void setBottom(int tileId) {
             setProperty(tileId, TileProperties.BOTTOM);
         }

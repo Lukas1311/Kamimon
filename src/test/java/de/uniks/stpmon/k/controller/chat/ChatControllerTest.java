@@ -83,7 +83,7 @@ public class ChatControllerTest extends ApplicationTest {
     final Subject<Event<Message>> events = BehaviorSubject.create();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         when(resourceBundleProvider.get()).thenReturn(resources);
         // we have to do all the stuff here because it is set in the init() method of ChatController :(((
         final User bob = new User("b_id", "b", null, null, null);

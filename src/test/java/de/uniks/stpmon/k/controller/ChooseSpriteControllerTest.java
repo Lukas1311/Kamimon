@@ -62,7 +62,7 @@ public class ChooseSpriteControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         final Observable<List<String>> characterList = Observable.just(List.of("Sprite1", "Sprite2", "Sprite3"));
 

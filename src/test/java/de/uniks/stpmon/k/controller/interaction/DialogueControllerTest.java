@@ -47,7 +47,7 @@ class DialogueControllerTest extends ApplicationTest {
             .setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         app.show(controller);
         app.addInputHandler(inputHandler);

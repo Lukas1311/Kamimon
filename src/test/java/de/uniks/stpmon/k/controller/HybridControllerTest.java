@@ -53,7 +53,7 @@ class HybridControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         userStorage.setUser(new User("1", "Bob", "", "", new ArrayList<>()));
         app.show(hybridController);

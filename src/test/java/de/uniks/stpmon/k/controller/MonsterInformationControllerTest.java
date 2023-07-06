@@ -54,7 +54,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);

@@ -80,6 +80,7 @@ public class BackpackMenuController extends Controller {
         return backpackMenuOptions.indexOf(option);
     }
 
+    @SuppressWarnings("EmptyMethod")
     private void dummyMethod() {
         // Dummy method for the moment
     }

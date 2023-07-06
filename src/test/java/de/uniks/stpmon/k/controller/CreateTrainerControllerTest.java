@@ -61,7 +61,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     final Region dummyRegion = new Region("1", "r", null, null);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
 

@@ -60,7 +60,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);

@@ -36,15 +36,6 @@ public class PropGrid {
         return grid[x][y] >> 5;
     }
 
-    public void setUsed(int x, int y, boolean empty) {
-        grid[x][y] = (grid[x][y] & ~0x10) | (empty ? 0x10 : 0);
-    }
-
-
-    public boolean isUsed(int x, int y) {
-        return (grid[x][y] & 0x10) > 0;
-    }
-
     public void setGroup(int x, int y, int group) {
         grid[x][y] = (grid[x][y] & 0xF) | (group << 5);
     }

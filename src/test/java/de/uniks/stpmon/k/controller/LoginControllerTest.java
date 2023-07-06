@@ -68,7 +68,7 @@ public class LoginControllerTest extends ApplicationTest {
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(preferences.get(anyString(), anyString())).thenReturn("en");

@@ -69,7 +69,7 @@ public class IngameControllerTest extends ApplicationTest {
     IngameController ingameController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         mapOverviewController.closeButton = new Button("");

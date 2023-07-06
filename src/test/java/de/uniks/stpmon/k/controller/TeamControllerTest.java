@@ -49,7 +49,7 @@ public class TeamControllerTest extends ApplicationTest {
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         // Set up mock

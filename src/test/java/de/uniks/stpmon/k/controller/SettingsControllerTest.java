@@ -56,7 +56,7 @@ public class SettingsControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // set trainer
         Trainer trainer = TrainerBuilder.builder().setId(1).setRegion("RegionA").setName("Bob").setUser("TestUser").create();
         lenient().when(trainerStorage.getTrainer()).thenReturn(trainer);

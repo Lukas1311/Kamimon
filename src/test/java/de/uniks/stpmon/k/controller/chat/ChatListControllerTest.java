@@ -62,7 +62,7 @@ class ChatListControllerTest extends ApplicationTest {
     final ArrayList<Group> groups = new ArrayList<>();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         groups.add(new Group(null, null, "0", "Peter", null));
