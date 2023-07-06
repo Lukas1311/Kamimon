@@ -157,7 +157,7 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
         //check that there are two test regions
-        FlowPane regionListFlowPane = lookup("#regionListFlowPane").query();
+        FlowPane regionListFlowPane = lookup("#regionsFlowPane").query();
         assertThat(regionListFlowPane.getChildren().size()).isEqualTo(2);
 
         clickOn("#regionImage");
