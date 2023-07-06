@@ -140,6 +140,9 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             return;
         }
         K id = getId(value);
+        if (id == null) {
+            return;
+        }
 
         for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.beforeAdd(value);
@@ -168,6 +171,9 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             throw new IllegalArgumentException("value must not be null");
         }
         K id = getId(value);
+        if (id == null) {
+            return;
+        }
         // Add if value is not already cached
         if (!hasValue(id)) {
             addValue(value);
@@ -204,7 +210,7 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             throw new IllegalArgumentException("value must not be null");
         }
         K id = getId(value);
-        if (!hasValue(id)) {
+        if (!hasValue(id) || id == null) {
             return;
         }
 

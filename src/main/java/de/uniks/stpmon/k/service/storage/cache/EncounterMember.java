@@ -47,17 +47,18 @@ public class EncounterMember extends SingleCache<Monster> {
 
         // Set initial value
         onInitialized = regionService.getMonster(region._id(), trainerId, monsterId)
-                .doOnNext(this::setValue).ignoreElements();
+                .doOnNext(this::setValue).ignoreElements().cache();
+        disposables.add(onInitialized.subscribe());
         // Listen to changes to the monster
         disposables.add(listener.listen(Socket.WS,
                         "trainers.%s.monsters.%s.*".formatted(trainerId, monsterId),
                         Monster.class)
                 .subscribe(event -> {
-                            final Monster value = event.data();
-                            switch (event.suffix()) {
-                                case "created", "updated" -> setValue(value);
-                                case "deleted" -> reset();
-                            }
+                    final Monster value = event.data();
+                    switch (event.suffix()) {
+                        case "created", "updated" -> setValue(value);
+                        case "deleted" -> reset();
+                    }
                         }
                 ));
     }

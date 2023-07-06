@@ -187,7 +187,8 @@ public class EncounterOverviewController extends Controller {
         SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
         sequence.setOnFinished(e -> placeholder.setOpacity(1));
 
-        TranslateTransition actionFieldTransition = new TranslateTransition(Duration.seconds(1), placeholder);
+        TranslateTransition actionFieldTransition = new TranslateTransition(
+                Duration.millis(effectContext.getEncounterAnimationSpeed()), placeholder);
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
@@ -201,7 +202,8 @@ public class EncounterOverviewController extends Controller {
 
 
     private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), node);
+        TranslateTransition transition = new TranslateTransition(
+                Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
         transition.setFromX(fromRight ? 600 : -600);
         transition.setToX(0);
         return transition;

@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -77,6 +78,21 @@ public class RegionTestModule {
 
                 MonsterAttributes attributes = new MonsterAttributes(0, 0, 0, 0);
                 MonsterAttributes currentAttributes = new MonsterAttributes(0, 0, 0, 0);
+
+                monsters.add(MonsterBuilder.builder()
+                        .setId(monsterIdCount++)
+                        .setAbilities(abilities)
+                        .setAttributes(new MonsterAttributes(20, 0, 0, 0))
+                        .setCurrentAttributes(new MonsterAttributes(10, 0, 0, 0))
+                        .create());
+
+                monsters.add(MonsterBuilder.builder()
+                        .setId(monsterIdCount++)
+                        .setAbilities(abilities)
+                        .setAttributes(new MonsterAttributes(12, 0, 0, 0))
+                        .setCurrentAttributes(new MonsterAttributes(5, 0, 0, 0))
+                        .create());
+
                 for (List<Trainer> trainerList : trainersHashMap.values()) {
                     for (Trainer trainer : trainerList) {
                         Monster monster = new Monster(
@@ -92,7 +108,6 @@ public class RegionTestModule {
                         monsters.add(monster);
                     }
                 }
-
             }
 
             /**
@@ -267,11 +282,17 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Monster>> getMonsters(String regionId, String trainerId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
             }
 
             @Override
             public Observable<Monster> getMonster(String regionId, String trainer, String monsterId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 Optional<Monster> monsterOptional = monsters
                         .stream().filter(m -> m._id().equals(monsterId)).findFirst();
                 return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()

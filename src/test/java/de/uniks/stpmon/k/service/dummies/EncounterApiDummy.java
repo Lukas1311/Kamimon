@@ -22,16 +22,20 @@ public class EncounterApiDummy implements EncounterApiService {
     public EncounterApiDummy() {
     }
 
-    private EncounterWrapper initDummyEncounter(String opponentId) {
+    private EncounterWrapper initDummyEncounter(String opponentId, boolean big) {
         return new EncounterWrapper(new Encounter(
                 "0",
                 "id0",
                 false
-        ), opponentId);
+        ), opponentId, big);
     }
 
     public void startEncounter() {
-        encounterWrapper = initDummyEncounter(opponentId);
+        startEncounter(false);
+    }
+
+    public void startEncounter(boolean big) {
+        encounterWrapper = initDummyEncounter(opponentId, big);
         for (Opponent opponent : encounterWrapper.opponentList) {
             sendOpponentEvent(opponent, "created");
         }
@@ -76,10 +80,9 @@ public class EncounterApiDummy implements EncounterApiService {
         if (regionId.isEmpty()) {
             return Observable.error(new Throwable(regionId + "does not exist"));
         }
-        if (encounterWrapper.opponentList.stream().anyMatch(m -> m.trainer().equals(trainerId))) {
-            return Observable.just(encounterWrapper.opponentList.stream().filter(m -> m.trainer().equals(trainerId)).toList());
-        }
-        return Observable.just(new ArrayList<>());
+        return Observable.just(encounterWrapper.opponentList
+                .stream().filter(m -> m.trainer().equals(trainerId))
+                .toList());
     }
 
     @Override
@@ -90,7 +93,9 @@ public class EncounterApiDummy implements EncounterApiService {
         if (regionId.isEmpty()) {
             return Observable.error(new Throwable(regionId + "does not exist"));
         }
-        return Observable.just(encounterWrapper.opponentList.stream().filter(m -> m.encounter().equals(encounterId)).toList());
+        return Observable.just(encounterWrapper.opponentList
+                .stream().filter(m -> m.encounter().equals(encounterId))
+                .toList());
     }
 
     @Override
@@ -114,8 +119,9 @@ public class EncounterApiDummy implements EncounterApiService {
         }
 
         // we only mock 1 v 1 encounters
-        if (encounterWrapper.opponentList.get(0)._id().equals(opponentId) && encounterWrapper
-                .opponentList.get(0).move() instanceof AbilityMove) {
+        Opponent playerOpponent = encounterWrapper.opponentList.get(0);
+        Opponent enemyOpponent = encounterWrapper.opponentList.get(1);
+        if (playerOpponent._id().equals(opponentId) && playerOpponent.move() instanceof AbilityMove) {
             //manipulate the uses of the first ability by replacing it with the same ability but fewer uses -> don't know if this is the right way
             encounterWrapper.monsterList.get(0).abilities().replace("Tackle", 19);
 
@@ -152,9 +158,10 @@ public class EncounterApiDummy implements EncounterApiService {
                     result,
                     1
             );
+            sendOpponentEvent(opponent, "updated");
             return Observable.just(opponent);
             //this is for the server move
-        } else if (encounterWrapper.opponentList.get(1)._id().equals(opponentId)) {
+        } else if (enemyOpponent._id().equals(opponentId)) {
             Monster updatedTarget = new Monster("0",
                     "0",
                     1,
@@ -178,9 +185,9 @@ public class EncounterApiDummy implements EncounterApiService {
                     "normal"
             );
 
-            Opponent opponent = new Opponent(encounterWrapper.opponentList.get(1)._id(),
+            Opponent opponent = new Opponent(opponentId,
                     encounterId,
-                    encounterWrapper.opponentList.get(1).trainer(),
+                    enemyOpponent.trainer(),
                     true,
                     true,
                     opponentDto.monster(),
@@ -188,8 +195,11 @@ public class EncounterApiDummy implements EncounterApiService {
                     result,
                     1
             );
+
+            sendOpponentEvent(opponent, "updated");
             return Observable.just(opponent);
         }
+
         return Observable.error(new Throwable("404 Not found"));
     }
 
@@ -240,14 +250,14 @@ public class EncounterApiDummy implements EncounterApiService {
         private final List<Monster> monsterList;
         final Map<String, List<Encounter>> encounterHashMap = new HashMap<>();
 
-        public EncounterWrapper(Encounter encounter, String opponentId) {
+        public EncounterWrapper(Encounter encounter, String opponentId, boolean big) {
             this.encounter = encounter;
             this.monsterList = initDummyMonsters();
-            this.opponentList = initDummyOpponent(encounter, opponentId);
+            this.opponentList = initDummyOpponent(encounter, opponentId, big);
             this.encounterHashMap.put(encounter.region(), List.of(encounter));
         }
 
-        private List<Opponent> initDummyOpponent(Encounter encounter, String opponentId) {
+        private List<Opponent> initDummyOpponent(Encounter encounter, String opponentId, boolean big) {
             Opponent opponent0 = new Opponent(
                     opponentId,
                     encounter._id(),
@@ -285,7 +295,46 @@ public class EncounterApiDummy implements EncounterApiService {
                     ),
                     0
             );
-            return List.of(opponent0, opponent1);
+            if (!big) {
+                return List.of(opponent0, opponent1);
+            }
+            Opponent opponent2 = new Opponent(
+                    "2",
+                    encounter._id(),
+                    "attacker1",
+                    false,
+                    true,
+                    monsterList.get(1)._id(),
+                    new ChangeMonsterMove(
+                            "change-monster",
+                            "monster2Id"
+                    ),
+                    new Result(
+                            "monster-changed",
+                            null,
+                            null
+                    ),
+                    0
+            );
+            Opponent opponent3 = new Opponent(
+                    "3",
+                    encounter._id(),
+                    "defender1",
+                    true,
+                    true,
+                    monsterList.get(1)._id(),
+                    new ChangeMonsterMove(
+                            "change-monster",
+                            "monster2Id"
+                    ),
+                    new Result(
+                            "monster-changed",
+                            null,
+                            null
+                    ),
+                    0
+            );
+            return List.of(opponent0, opponent1, opponent2, opponent3);
         }
 
         private List<Monster> initDummyMonsters() {

@@ -55,6 +55,7 @@ public class StatusController extends Controller {
             parent = load("OpponentMonsterStatus");
             loadImage(monsterStatusView, "encounter/opponentMonsterStatus.png");
         }
+        parent.setId(slot.partyIndex() + (slot.enemy() ? "_enemy" : "_party"));
         loadMonsterInformation();
         return parent;
     }
