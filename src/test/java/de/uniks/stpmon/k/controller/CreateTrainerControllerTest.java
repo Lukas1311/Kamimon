@@ -38,9 +38,9 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Mock
     RegionService regionService;
@@ -58,7 +58,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    Region dummyRegion = new Region("1", "r", null, null);
+    final Region dummyRegion = new Region("1", "r", null, null);
 
     @Override
     public void start(Stage stage) throws Exception {

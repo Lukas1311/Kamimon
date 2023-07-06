@@ -42,9 +42,9 @@ public class RegionListControllerTest extends ApplicationTest {
     @InjectMocks
     RegionListController regionListController;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 

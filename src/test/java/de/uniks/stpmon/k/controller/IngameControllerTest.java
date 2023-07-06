@@ -63,9 +63,9 @@ public class IngameControllerTest extends ApplicationTest {
     @Spy
     InputHandler inputHandler;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @InjectMocks
     IngameController ingameController;

@@ -35,7 +35,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 @ExtendWith(MockitoExtension.class)
 public class StatusControllerTest extends ApplicationTest {
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Mock
     PresetService presetService;
     @Mock
@@ -51,11 +51,11 @@ public class StatusControllerTest extends ApplicationTest {
     @InjectMocks
     StatusController statusController;
 
-    Region dummyRegion = new Region("1", "reg", null, null);
+    final Region dummyRegion = new Region("1", "reg", null, null);
 
-    MonsterAttributes attributes1 = new MonsterAttributes(10, 8, 6, 4);
-    MonsterAttributes currentAttributes1 = new MonsterAttributes(5, 4, 3, 2);
-    Monster dummyMonster1 = MonsterBuilder.builder()
+    final MonsterAttributes attributes1 = new MonsterAttributes(10, 8, 6, 4);
+    final MonsterAttributes currentAttributes1 = new MonsterAttributes(5, 4, 3, 2);
+    final Monster dummyMonster1 = MonsterBuilder.builder()
             .setId("id1")
             .setTrainer("id")
             .setLevel(1)
@@ -64,15 +64,15 @@ public class StatusControllerTest extends ApplicationTest {
             .setCurrentAttributes(currentAttributes1)
             .create();
 
-    Trainer dummyTrainer = TrainerBuilder.builder()
+    final Trainer dummyTrainer = TrainerBuilder.builder()
             .setId("id")
             .addTeam(dummyMonster1._id())
             .create();
 
     // create a dummy monster with some values for the second trainer
-    MonsterAttributes attributes2 = new MonsterAttributes(24, 9, 7, 5);
-    MonsterAttributes currentAttributes2 = new MonsterAttributes(6, 5, 4, 3);
-    Monster dummyMonster2 = MonsterBuilder.builder()
+    final MonsterAttributes attributes2 = new MonsterAttributes(24, 9, 7, 5);
+    final MonsterAttributes currentAttributes2 = new MonsterAttributes(6, 5, 4, 3);
+    final Monster dummyMonster2 = MonsterBuilder.builder()
             .setId("id2")
             .setTrainer("otherTrainerId")
             .setLevel(2)

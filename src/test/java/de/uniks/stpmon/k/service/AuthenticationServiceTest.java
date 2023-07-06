@@ -41,7 +41,7 @@ public class AuthenticationServiceTest {
     @Mock
     AuthenticationApiService authApiService;
     @Spy
-    CacheManager cacheManager = new CacheManagerDummy();
+    final CacheManager cacheManager = new CacheManagerDummy();
     @Mock
     Preferences prefs;
 

@@ -21,7 +21,7 @@ public class LoadingRegionControllerTest extends ApplicationTest {
     @Spy
     RegionStorage regionStorage;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @InjectMocks
     LoadingRegionController loadingRegionController;
     @Spy

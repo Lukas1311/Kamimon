@@ -35,7 +35,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 public class MonsterInformationControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Mock
     PresetService presetService;
@@ -43,7 +43,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     IResourceService resourceService;
 
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 

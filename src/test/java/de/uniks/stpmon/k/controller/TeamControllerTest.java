@@ -25,17 +25,15 @@ import java.util.ResourceBundle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class TeamControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Mock
@@ -79,22 +77,22 @@ public class TeamControllerTest extends ApplicationTest {
 
         waitForFxEvents();
         // Verify the text of the labels
-        Label label = (Label) lookup("#monster_label_0").query();
+        Label label = lookup("#monster_label_0").query();
         assertTrue(label.getText().endsWith("Monster 1"));
 
-        label = (Label) lookup("#monster_label_1").query();
+        label = lookup("#monster_label_1").query();
         assertEquals("  -", label.getText());
 
-        label = (Label) lookup("#monster_label_2").query();
+        label = lookup("#monster_label_2").query();
         assertEquals("  -", label.getText());
 
-        label = (Label) lookup("#monster_label_3").query();
+        label = lookup("#monster_label_3").query();
         assertEquals("  -", label.getText());
 
-        label = (Label) lookup("#monster_label_4").query();
+        label = lookup("#monster_label_4").query();
         assertEquals("  -", label.getText());
 
-        label = (Label) lookup("#monster_label_5").query();
+        label = lookup("#monster_label_5").query();
         assertEquals("  -", label.getText());
     }
 

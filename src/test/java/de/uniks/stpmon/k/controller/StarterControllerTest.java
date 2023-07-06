@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class StarterControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Mock
     IResourceService resourceService;
     @Mock

@@ -46,9 +46,9 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @Mock
     TrainerStorage trainerStorage;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Spy
     @InjectMocks
@@ -57,7 +57,7 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
+    final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
 
     @Override
     public void start(Stage stage) throws Exception {

@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
-import io.reactivex.rxjava3.core.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -13,7 +12,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
 
@@ -35,9 +33,7 @@ public class FriendController extends Controller {
     public FontIcon chat;
 
     private final FriendListController friendListController;
-
-    @Inject
-    Provider<UserService> userServiceProvider;
+    private final Provider<UserService> userServiceProvider;
 
     private final User user;
 

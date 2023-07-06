@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class EncounterOverviewControllerTest extends ApplicationTest {
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Mock
     IResourceService resourceService;
@@ -47,10 +47,10 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
-    List<Monster> userMonsterList = new ArrayList<>();
-    List<Monster> opponentMonsterList = new ArrayList<>();
-    BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
+    final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
+    final List<Monster> userMonsterList = new ArrayList<>();
+    final List<Monster> opponentMonsterList = new ArrayList<>();
+    final BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
 
 
     @Override

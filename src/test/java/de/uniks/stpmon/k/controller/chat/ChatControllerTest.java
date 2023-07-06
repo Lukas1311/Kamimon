@@ -67,10 +67,10 @@ public class ChatControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @InjectMocks
     ChatController chatController;
@@ -80,7 +80,7 @@ public class ChatControllerTest extends ApplicationTest {
     @InjectMocks
     ToastController toastController;
 
-    Subject<Event<Message>> events = BehaviorSubject.create();
+    final Subject<Event<Message>> events = BehaviorSubject.create();
 
     @Override
     public void start(Stage stage) throws Exception {
