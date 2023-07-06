@@ -18,8 +18,11 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,6 +32,10 @@ import static org.mockito.Mockito.when;
 public class ActionFieldChooseOpponentControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     @Mock
     PresetService presetService;
@@ -48,6 +55,8 @@ public class ActionFieldChooseOpponentControllerTest extends ApplicationTest {
                 MonsterBuilder.builder().setId("2").setType(1).create(),
                 MonsterBuilder.builder().setId("3").setType(2).create()
         ));
+
+        when(resourceBundleProvider.get()).thenReturn(resources);
 
         app.show(actionFieldChooseOpponentController);
 

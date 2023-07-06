@@ -53,7 +53,7 @@ public class ActionFieldChangeMonsterController extends Controller {
     public Parent render() {
         Parent parent = super.render();
         loadImage(background, "action_menu_background.png");
-        textContent.setText("Choose Mon:");
+        textContent.setText(translateString("chooseMon"));
 
         if(monsterService.getTeam() != null) {
             userMonstersList = monsterService.getTeam().blockingFirst();

@@ -13,13 +13,19 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ActionFieldBattleLogControllerTest extends ApplicationTest {
     @Spy
     App app = new App(null);
-
+    @Spy
+    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
     @Mock
     Provider<ActionFieldChangeMonsterController> actionFieldChangeMonsterController;
     @Mock
@@ -34,8 +40,10 @@ public class ActionFieldBattleLogControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-        app.show(actionFieldBattleLogController);
 
+        when(resourceBundleProvider.get()).thenReturn(resources);
+
+        app.show(actionFieldBattleLogController);
         stage.requestFocus();
     }
 

@@ -39,10 +39,15 @@ public class ActionFieldBattleLogController extends Controller {
         loadImage(background, "action_menu_background.png");
 
         String userMonster = actionFieldChangeMonsterController.get().selectedUserMonster;
-        String opponentMonster = actionFieldChooseOpponentController.get().selectedOpponentMonster;
+        String opponentAttackedMonster = actionFieldChooseOpponentController.get().selectedOpponentMonster;
         String userAbility = actionFieldChangeAbilityController.get().selectedAbility;
-        trainerAttackText.setText(userMonster + " attacks " + opponentMonster + " with " + userAbility);
-        opponentAttackText.setText("..." + " attacks " + "..." + " with " + "...");
+
+        String opponentMonster = "...";
+        String userAttackedMonster = "...";
+        String opponentAbility = "...";
+
+        trainerAttackText.setText(translateString("userAttacks",userMonster, opponentAttackedMonster, userAbility));
+        opponentAttackText.setText(translateString("opponentAttacks", opponentMonster, userAttackedMonster, opponentAbility));
 
         return parent;
     }

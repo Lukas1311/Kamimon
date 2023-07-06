@@ -54,7 +54,7 @@ public class ActionFieldChooseOpponentController extends Controller {
         Parent parent = super.render();
         loadImage(background, "action_menu_background.png");
         userMonster = actionFieldChangeMonsterController.selectedUserMonster;
-        textContent.setText("Which Mon should " + userMonster +" attack?");
+        textContent.setText(translateString("attackMon", userMonster));
         setAction();
 
         return parent;

@@ -29,6 +29,9 @@ public class ActionFieldMainMenuController extends Controller {
     @Inject
     ActionFieldChooseAbilityController actionFieldChooseAbilityController;
 
+    public String fight;
+    public String changeMon;
+
     @Inject
     public ActionFieldMainMenuController() {}
 
@@ -36,15 +39,17 @@ public class ActionFieldMainMenuController extends Controller {
     public Parent render() {
         Parent parent = super.render();
         loadImage(background, "action_menu_background.png");
-        textContent.setText("What do you want to do?");
+        textContent.setText(translateString("wannaDo"));
+        fight = translateString("fight");
+        changeMon = translateString("changeMon");
         setAction();
 
         return parent;
     }
 
     public void setAction() {
-        addActionOption("Fight");
-        addActionOption("Change Mon");
+        addActionOption(fight);
+        addActionOption(changeMon);
     }
 
     public void addActionOption(String optionText) {
@@ -66,9 +71,10 @@ public class ActionFieldMainMenuController extends Controller {
     }
 
     public void openAction(String option) {
-        switch (option) {
-            case "Fight" -> openFight();
-            case "Change Mon" -> openChangeMon();
+        if(option.equals(fight)) {
+            openFight();
+        } else if (option.equals(changeMon)) {
+            openChangeMon();
         }
     }
 
