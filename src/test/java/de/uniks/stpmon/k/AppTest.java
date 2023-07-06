@@ -20,15 +20,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -159,8 +157,8 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
         //check that there are two test regions
-        GridPane regionListGridPane = lookup("#regionListGridPane").query();
-        assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
+        FlowPane regionListFlowPane = lookup("#regionsFlowPane").query();
+        assertThat(regionListFlowPane.getChildren().size()).isEqualTo(2);
 
         clickOn("#regionImage");
         waitForFxEvents();
@@ -177,7 +175,7 @@ class AppTest extends ApplicationTest {
         clickOn("#pause");
         verifyThat("#pauseScreen", Node::isVisible);
         clickOn("#logoutButton");
-        verifyThat(regionListGridPane, Node::isVisible);
+        verifyThat(regionListFlowPane, Node::isVisible);
 
         clickOn("#regionImage");
 
