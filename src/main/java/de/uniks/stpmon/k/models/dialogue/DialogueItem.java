@@ -8,7 +8,6 @@ public class DialogueItem {
     private final Runnable action;
     private final DialogueOption[] options;
     private DialogueItem next;
-    private Dialogue parent;
 
     DialogueItem(String text, Runnable action, DialogueOption[] options) {
         Objects.requireNonNull(text);
@@ -17,8 +16,7 @@ public class DialogueItem {
         this.options = options;
     }
 
-    public void setup(Dialogue parent, DialogueItem next) {
-        this.parent = parent;
+    public void setup(DialogueItem next) {
         this.next = next;
     }
 

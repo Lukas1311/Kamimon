@@ -205,9 +205,7 @@ public class MonsterInformationController extends Controller {
             //interate over columns
             for (int j = 0; j < 5; j++) {
                 removeNodeByRowColumnIndex(i, j, attackGrid);
-                Label label = new Label("-");
                 //TODO Add style classes
-
             }
         }
     }
