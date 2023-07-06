@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.action.ActionFieldMainMenuController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -41,6 +42,8 @@ public class BackpackMenuController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<MonBoxController> monBoxControllerProvider;
+    @Inject
+    ActionFieldMainMenuController actionFieldMainMenuController;
 
     @Inject
     public BackpackMenuController() {
@@ -83,6 +86,8 @@ public class BackpackMenuController extends Controller {
     }
 
     private void dummyMethod() {
+        // test action field, can delete when the trainer enters the Encounter
+        ingameControllerProvider.get().pushController(actionFieldMainMenuController);
     }
 
     public void openMonBox() {
