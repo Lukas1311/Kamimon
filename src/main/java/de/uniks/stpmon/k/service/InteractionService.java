@@ -75,7 +75,7 @@ public class InteractionService implements ILifecycleService {
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("dialogue.intro"))
-                .addOption().setText("dialogue.select.no").endOption()
+                .addOption().setText(translateString("dialogue.select.no")).endOption()
                 .addOption()
                 .setText(translateString("dialogue.select.yes"))
                 .addAction(() -> talkTo(trainer, me, null))
