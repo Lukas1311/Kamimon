@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.action.ActionFieldMainMenuController;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.utils.ImageUtils;
@@ -23,6 +22,7 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EncounterOverviewController extends Controller {
@@ -61,19 +61,14 @@ public class EncounterOverviewController extends Controller {
 
     @Inject
     public EncounterOverviewController() {
-        userMonstersList = List.of(
-                MonsterBuilder.builder().setTrainer("trainerService.getMe()._id()").setId(102).setExperience(2).setLevel(3).create(),
-                MonsterBuilder.builder().setTrainer("trainerService.getMe()._id()").setId(23).setExperience(2).setLevel(3).create());
-        opponentMonstersList = List.of(
-                MonsterBuilder.builder().setTrainer("opponent").setId(2).setExperience(2).setLevel(3).create(),
-                MonsterBuilder.builder().setTrainer("opponent").setId(55).setExperience(2).setLevel(3).create());
+        opponentMonstersList = new ArrayList<>();
     }
 
     @Override
     public void init() {
         super.init();
 
-        // subscribe(monsterService.getTeam(), team -> userMonstersList.addAll(team));
+        subscribe(monsterService.getTeam(), team -> userMonstersList.addAll(team));
     }
 
     @Override
@@ -84,9 +79,8 @@ public class EncounterOverviewController extends Controller {
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
-        placeholder.getChildren().add(actionFieldMainMenuController.get().render());
-
-        //placeholder.setOnMouseClicked(e -> app.show(loginController));
+        //placeholder.getChildren().add(actionFieldMainMenuController.get().render());
+        placeholder.setOnMouseClicked(e -> app.show(loginController));
 
         renderMonsterLists();
         animateMonsterEntrance();
@@ -230,10 +224,6 @@ public class EncounterOverviewController extends Controller {
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
 
         fullSequence.play();
-    }
-
-    public List<Monster> getUserMonsterList() {
-        return userMonstersList;
     }
 
         @Override

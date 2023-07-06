@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.NetworkAvailability;
@@ -70,8 +69,6 @@ public class LoginController extends Controller {
 
     @Inject
     Provider<IntroductionController> introductionControllerProvider;
-    @Inject
-    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     private BooleanBinding isInvalid;
     private final SimpleStringProperty username = new SimpleStringProperty();
@@ -234,9 +231,6 @@ public class LoginController extends Controller {
     }
 
     private void showPassword() {
-        EncounterOverviewController encounterOverviewController = encounterOverviewControllerProvider.get();
-        app.show(encounterOverviewController);
-        /*
         toggleButton.getStyleClass().clear();
         toggleButton.getStyleClass().addAll("login-password-button", "login-password-button-invisible");
         tempPassword = password.get();
@@ -249,8 +243,6 @@ public class LoginController extends Controller {
         password.set(""); // clears the bound input field
         passwordInput.setPromptText(tempPassword);
         passwordInput.setDisable(true);
-
-         */
     }
 
     @FXML

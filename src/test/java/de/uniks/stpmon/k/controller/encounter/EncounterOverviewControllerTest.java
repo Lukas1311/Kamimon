@@ -41,6 +41,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     MonsterService monsterService;
     @Mock
     Provider<StatusController> statusControllerProvider;
+
     @InjectMocks
     EncounterOverviewController encounterOverviewController;
     @Spy
