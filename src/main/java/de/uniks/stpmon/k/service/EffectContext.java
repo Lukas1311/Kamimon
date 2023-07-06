@@ -106,6 +106,7 @@ public class EffectContext {
      *
      * @param walkingAnimationSpeed The walking animation speed of the player in milliseconds per 6 frames
      */
+    @SuppressWarnings("unused")
     public EffectContext setWalkingAnimationSpeed(int walkingAnimationSpeed) {
         this.walkingAnimationSpeed = walkingAnimationSpeed;
         return this;
