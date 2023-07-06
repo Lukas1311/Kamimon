@@ -62,7 +62,7 @@ public class ActionFieldChooseOpponentControllerTest extends ApplicationTest {
         MonsterTypeDto typeDto = new MonsterTypeDto(1, "monster", null, null, null);
         when(presetService.getMonster(any())).thenReturn(Observable.just(typeDto));
 
-        Platform.runLater(() -> actionFieldChooseOpponentController.addActionOption(typeDto.name()));;
+        Platform.runLater(() -> actionFieldChooseOpponentController.addActionOption(typeDto.name()));
 
         Label mon= lookup("#user_monster_label_0").query();
         assertTrue(mon.getText().endsWith("monster"));

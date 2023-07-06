@@ -37,6 +37,7 @@ public class ActionFieldChooseAbilityController extends Controller {
     public Monster monster;
 
     public String selectedAbility;
+    public Integer maxUses;
 
     @Inject
     public ActionFieldChooseAbilityController() {
@@ -61,16 +62,20 @@ public class ActionFieldChooseAbilityController extends Controller {
     }
 
     public void setAction(String abilityId) {
-        subscribe(presetService.getAbility(abilityId), ability -> addActionOption(ability.name()));
+        subscribe(presetService.getAbility(abilityId), ability -> {
+            maxUses = ability.maxUses();
+            addActionOption(ability.name());
+        });
     }
 
     public void addActionOption(String optionText) {
         Label arrowLabel = new Label("> ");
         Label optionLabel = new Label(optionText);
+        Label useLabel = new Label(" (??" + "/" + maxUses + ")");
 
         arrowLabel.setVisible(false);
 
-        HBox optionContainer = new HBox(arrowLabel, optionLabel);
+        HBox optionContainer = new HBox(arrowLabel, optionLabel, useLabel);
 
         optionContainer.setOnMouseEntered(event -> arrowLabel.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowLabel.setVisible(false));
