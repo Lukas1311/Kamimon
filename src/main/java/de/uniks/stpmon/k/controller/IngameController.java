@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -133,7 +134,8 @@ public class IngameController extends PortalController {
                 EncounterOverviewController controller = encounterProvider.get();
                 app.show(controller);
             });
-            subscribe(encounterService.listenForEncounter(), () -> {
+            subscribe(encounterService.listenForEncounter()
+                    .subscribeOn(Schedulers.computation()), () -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
