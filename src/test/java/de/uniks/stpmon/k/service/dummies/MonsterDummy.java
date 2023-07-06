@@ -9,8 +9,10 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 
 public class MonsterDummy {
+    @SuppressWarnings({"ResultOfMethodCallIgnored"})
     public static void addMonsterDummy(TrainerStorage storage, EventDummy eventDummy) {
         Trainer trainer = storage.getTrainer();
+        // suppresses observable result - is never disposed fo the test time
         eventDummy.listen(Socket.UDP,
                 "areas.%s.trainers.%s.talked".formatted(trainer.area(), trainer._id()),
                 TalkTrainerDto.class).subscribe(event -> {

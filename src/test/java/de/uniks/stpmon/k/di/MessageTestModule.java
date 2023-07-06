@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 public abstract class MessageTestModule {
 
     @Binds
+    @SuppressWarnings("unused")
     abstract MessageApiService messageApiService(MessageApiDummy dummy);
 
 }

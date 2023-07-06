@@ -50,24 +50,6 @@ public class MessageApiDummy implements MessageApiService {
     }
 
     /**
-     * Generates messages with given namespace and group
-     * Note: first message has 2023-01-01T00:00:00.000Z, every following message is always one day later
-     * first message has body "message0", every following message the number is incremented
-     *
-     * @param namespace: global, regions, groups
-     * @param parent:    id of receiver
-     */
-    private void addDummyMessages(String namespace, String parent) {
-        int amount = 2;
-
-        for (int i = 0; i < amount; i++) {
-            String body = "message" + i;
-            String date = "2023-0" + (i + 1) + "-01T00:00:00.000Z";
-            addMessageEntity(namespace, parent, date, date, body);
-        }
-    }
-
-    /**
      * Adds messagesEntities to the ArrayList
      *
      * @param namespace: global, regions or groups
@@ -164,8 +146,7 @@ public class MessageApiDummy implements MessageApiService {
         return Observable.just(messages);
     }
 
-    @Override
-    public Observable<Message> getMessage(String namespace, String parent, String id) {
+    private Observable<Message> getMessage(String namespace, String parent, String id) {
         Optional<Object[]> e = messageEntities
                 .stream()
                 .filter(entity -> entity[0].equals(namespace)

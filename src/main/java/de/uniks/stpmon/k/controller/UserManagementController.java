@@ -65,7 +65,6 @@ public class UserManagementController extends Controller {
     private BooleanBinding changesMade;
     private User currentUser;
 
-
     @Inject
     public UserManagementController() {
     }
@@ -148,8 +147,8 @@ public class UserManagementController extends Controller {
     }
 
     private void saveUsername(String newUsername) {
-        disposables.add(
-                userService.setUsername(newUsername).observeOn(FX_SCHEDULER).subscribe(usr -> {
+        subscribe(
+                userService.setUsername(newUsername), usr -> {
                     // set this to retrieve the newly set username
                     currentUser = usr;
                 }, err -> {
@@ -159,18 +158,17 @@ public class UserManagementController extends Controller {
                     if (!(err instanceof HttpException ex)) return;
                     if (!(ex.code() == 409)) return;
                     usernameError.set(translateString("username.already.in.use"));
-                })
+                }
         );
     }
 
     private void savePassword(String newPassword) {
-        disposables.add(
-                userService.setPassword(newPassword).observeOn(FX_SCHEDULER).subscribe(usr -> {
+        subscribe(userService.setPassword(newPassword), usr -> {
                 }, err -> {
                     passwordError = new SimpleStringProperty("");
                     passwordInfo.textProperty().bind(passwordError);
                     passwordError.set(translateString("error"));
-                })
+                }
         );
     }
 
@@ -179,15 +177,12 @@ public class UserManagementController extends Controller {
         deleteScenario.setParams(new ArrayList<>(Collections.singletonList(currentUser.name())));
         showPopUp(PopUpScenario.DELETE_USER, result -> {
             if (!result) return;
-            disposables.add(userService
-                    .deleteMe()
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(usr -> {
-                                PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
-                                deleteConfirmScenario.setParams(new ArrayList<>(Collections.singletonList(usr.name())));
-                                showPopUp(deleteConfirmScenario, innerResult -> app.show(loginControllerProvider.get()));
-                            }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
-                    )
+            subscribe(userService.deleteMe(), usr -> {
+                        PopUpScenario deleteConfirmScenario = PopUpScenario.DELETION_CONFIRMATION_USER;
+                        deleteConfirmScenario.setParams(new ArrayList<>(Collections.singletonList(usr.name())));
+                        showPopUp(deleteConfirmScenario, innerResult -> app.show(loginControllerProvider.get()));
+                    }, err -> app.show(loginControllerProvider.get()) // in case of e.g. 404 error
+
             );
         });
     }

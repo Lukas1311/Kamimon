@@ -33,6 +33,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     TeamController teamController;
 
     @Spy
+    @SuppressWarnings("unused")
     InputHandler inputHandler;
 
     @Spy

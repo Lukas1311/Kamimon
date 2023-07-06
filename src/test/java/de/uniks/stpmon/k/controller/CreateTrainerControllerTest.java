@@ -134,11 +134,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void createSprite() {
-
-    }
-
-    @Test
     void testCloseWindow() {
         // define mocks:
         HybridController hybridMock = Mockito.mock(HybridController.class);

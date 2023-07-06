@@ -34,10 +34,6 @@ public class DialogueItem {
         return text;
     }
 
-    public Dialogue getParent() {
-        return parent;
-    }
-
     public DialogueItem getNext() {
         return next;
     }

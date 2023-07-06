@@ -9,7 +9,6 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.service.dummies.MovementDummy;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
@@ -46,8 +45,6 @@ class HybridControllerTest extends ApplicationTest {
     private final UserStorage userStorage = component.userStorage();
     private final EventListener eventListener = component.eventListener();
 
-    @Mock
-    UserService userService;
     @Spy
     @SuppressWarnings("unused")
     ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);

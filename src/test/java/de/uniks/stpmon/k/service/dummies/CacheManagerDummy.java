@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 
 import javax.inject.Provider;
 
+@SuppressWarnings("unused")
 public class CacheManagerDummy extends CacheManager {
 
     public static void init(CacheManager cacheManager) {

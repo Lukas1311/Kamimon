@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.Message;
-import de.uniks.stpmon.k.models.User;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -36,7 +35,7 @@ public class MessageController extends Controller {
 
     private final boolean isOwnMessage;
 
-    public MessageController(Message msg, String senderUsername, User me, boolean isOwnMessage) {
+    public MessageController(Message msg, String senderUsername, boolean isOwnMessage) {
         this.message = msg;
         this.username = senderUsername;
         this.isOwnMessage = isOwnMessage;

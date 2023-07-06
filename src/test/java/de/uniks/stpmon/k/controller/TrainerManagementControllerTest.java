@@ -143,11 +143,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testTryChangeTrainerName() {
-        // TODO: region service call
-    }
-
-    @Test
     void testDeleteTrainer() {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
         final HybridController mock = Mockito.mock(HybridController.class);

@@ -28,13 +28,6 @@ public interface MessageApiService {
             @Query("limit") Integer limit
     );
 
-    @GET("{namespace}/{parent}/messages/{id}")
-    Observable<Message> getMessage(
-            @Path("namespace") String namespace,
-            @Path("parent") String parent,
-            @Path("id") String id
-    );
-
     @PATCH("{namespace}/{parent}/messages/{id}")
     Observable<Message> editMessage(
             @Path("namespace") String namespace,

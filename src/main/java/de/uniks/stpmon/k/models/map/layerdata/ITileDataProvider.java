@@ -11,8 +11,4 @@ public interface ITileDataProvider {
 
     int height();
 
-    int startx();
-
-    int starty();
-
 }

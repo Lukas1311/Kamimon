@@ -107,13 +107,6 @@ public class FriendListController extends ToastedController {
                 users.setAll(values);
             }
         }, this::handleError);
-
-        // searchUpdate.onNext("");
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
     }
 
     @FXML

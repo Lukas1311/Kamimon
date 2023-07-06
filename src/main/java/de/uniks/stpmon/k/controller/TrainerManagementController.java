@@ -79,11 +79,6 @@ public class TrainerManagementController extends ToastedController {
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
 

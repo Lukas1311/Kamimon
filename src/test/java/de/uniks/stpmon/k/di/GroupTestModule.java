@@ -105,26 +105,6 @@ public class GroupTestModule {
             }
 
             /**
-             * Get group by id
-             *
-             * @param id of the group
-             * @return group with given id (if there is no group the 404 error is thrown)
-             */
-            @Override
-            public Observable<Group> getGroup(String id) {
-                //check if dummy should be returned
-                initDummyGroups();
-
-                for (Group group : groups) {
-                    if (group._id().equals(id)) {
-                        return Observable.just(group);
-                    }
-                }
-                //no group found
-                return Observable.error(new Throwable("404 Not found"));
-            }
-
-            /**
              * Edit the group with the given id
              * @param id: id of group to edit
              * @param group: UpdateGroupDto (method can handle null values)

@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.views.world.EntityView;
  * Service which controls the rendering of images and animations.
  * It can be used to skip image loading and animations while testing or in other cases.
  */
+@SuppressWarnings("unused")
 public class EffectContext {
 
     private boolean skipLoadImages = false;

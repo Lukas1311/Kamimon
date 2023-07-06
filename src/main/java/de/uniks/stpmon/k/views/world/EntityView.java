@@ -187,10 +187,6 @@ public abstract class EntityView extends WorldViewable {
 
         }
 
-        public int getDirection() {
-            return direction;
-        }
-
         @Override
         protected void interpolate(double frac) {
             applySprite(characterSet.getSprite(

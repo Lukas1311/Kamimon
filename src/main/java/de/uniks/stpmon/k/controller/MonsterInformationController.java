@@ -133,11 +133,10 @@ public class MonsterInformationController extends Controller {
             if (column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
                 return false;
             }
-            boolean b = GridPane.getRowIndex(node) != null
+            return GridPane.getRowIndex(node) != null
                     && GridPane.getColumnIndex(node) != null
                     && GridPane.getColumnIndex(node) == column
                     && GridPane.getRowIndex(node) == row;
-            return b;
         });
     }
 

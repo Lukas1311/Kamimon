@@ -32,11 +32,6 @@ public class LoadingRegionController extends Controller {
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
     public Parent render() {
         Parent parent = super.render();
         Region currentRegion = regionStorage.getRegion();

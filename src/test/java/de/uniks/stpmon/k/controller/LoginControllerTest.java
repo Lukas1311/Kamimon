@@ -28,15 +28,12 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.prefs.Preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-
 
 @ExtendWith(MockitoExtension.class)
 public class LoginControllerTest extends ApplicationTest {
