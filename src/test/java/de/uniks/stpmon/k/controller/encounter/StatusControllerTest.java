@@ -22,7 +22,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -30,6 +29,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 @ExtendWith(MockitoExtension.class)
 public class StatusControllerTest extends ApplicationTest {
     @Spy
+    final
     App app = new App(null);
     @Mock
     PresetService presetService;
@@ -43,9 +43,9 @@ public class StatusControllerTest extends ApplicationTest {
     @Spy
     StatusController statusController;
 
-    MonsterAttributes attributes1 = new MonsterAttributes(10, 8, 6, 4);
-    MonsterAttributes currentAttributes1 = new MonsterAttributes(5, 4, 3, 2);
-    Monster dummyMonster1 = MonsterBuilder.builder()
+    final MonsterAttributes attributes1 = new MonsterAttributes(10, 8, 6, 4);
+    final MonsterAttributes currentAttributes1 = new MonsterAttributes(5, 4, 3, 2);
+    final Monster dummyMonster1 = MonsterBuilder.builder()
             .setId("id1")
             .setTrainer("id")
             .setLevel(1)
@@ -55,7 +55,7 @@ public class StatusControllerTest extends ApplicationTest {
             .create();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
 
         MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, null, null);

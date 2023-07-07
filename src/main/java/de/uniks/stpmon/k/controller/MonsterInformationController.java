@@ -140,7 +140,6 @@ public class MonsterInformationController extends Controller {
         });
     }
 
-
     @SuppressWarnings("SameParameterValue")
     private Label typeLabel(Label label, String monsterType) {
         MonsterType type = MonsterType.valueOf(monsterType.toUpperCase());

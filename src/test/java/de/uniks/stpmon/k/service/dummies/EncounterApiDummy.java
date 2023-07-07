@@ -11,17 +11,19 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 
+@SuppressWarnings("unused")
 @Singleton
 public class EncounterApiDummy implements EncounterApiService {
     @Inject
     EventDummy eventDummy;
-    String opponentId = "0";
+    final String opponentId = "0";
     EncounterWrapper encounterWrapper;
 
     @Inject
     public EncounterApiDummy() {
     }
 
+    @SuppressWarnings("SameParameterValue")
     private EncounterWrapper initDummyEncounter(String opponentId, boolean big) {
         return new EncounterWrapper(new Encounter(
                 "0",
