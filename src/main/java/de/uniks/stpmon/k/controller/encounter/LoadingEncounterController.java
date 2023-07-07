@@ -47,6 +47,8 @@ public class LoadingEncounterController extends Controller {
         scaleTransition.setOnFinished(event -> {
             ImageView vsBackground = new ImageView();
             loadImage(vsBackground, "encounter/trainerEncounter0.png");
+            vsBackground.setFitHeight(500);
+            vsBackground.setFitWidth(500);
 
             fullBox.getChildren().add(vsBackground);
 
