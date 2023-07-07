@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -8,16 +10,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 
@@ -75,6 +69,15 @@ public class LoadingWildEncounterController extends Controller {
                 })
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
+
+        timeline.setOnFinished(event -> {
+            ImageView vsWildBackground = new ImageView();
+            loadImage(vsWildBackground, "encounter/trainerEncounter0.png");
+            vsWildBackground.setFitHeight(800);
+            vsWildBackground.setFitWidth(1200);
+
+            fullBox.getChildren().add(vsWildBackground);
+        });
 
         // Starte die Animation
         timeline.play();
