@@ -1,26 +1,39 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.ArcType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
 
+
+
 public class LoadingWildEncounterController extends Controller {
+
+    private static final double START_ANGLE = 90;
+    private static final double ANIMATION_DURATION = 10.0; // in Sekunden
+    private static final double ANGLE_PER_SECOND = 360.0 / ANIMATION_DURATION;
 
     @FXML
     StackPane fullBox;
 
     @FXML
-    Arc blackPoint;
+    Arc arc;
 
 
     @Inject
@@ -39,27 +52,33 @@ public class LoadingWildEncounterController extends Controller {
         final Parent parent = super.render();
 
         fullBox.setAlignment(Pos.CENTER);
-        StackPane.setAlignment(blackPoint, Pos.CENTER);
+        StackPane.setAlignment(arc, Pos.CENTER);
 
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(3), blackPoint);
-        scaleTransition.setToX(40);
-        scaleTransition.setToY(40);
+        arc.setVisible(true);
 
-        scaleTransition.setOnFinished(event -> {
-            ImageView vsBackground = new ImageView();
-            loadImage(vsBackground, "encounter/trainerEncounter0.png");
-            vsBackground.setFitHeight(800);
-            vsBackground.setFitWidth(1200);
+        arc.setStartAngle(START_ANGLE);
+        arc.setLength(0);
+        arc.setType(ArcType.ROUND);
+        arc.setFill(Color.BLUE);
+        arc.setStroke(Color.BLACK);
 
-            fullBox.getChildren().add(vsBackground);
+        // Erstelle eine Timeline für die Animation
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().addAll(
+                new KeyFrame(Duration.ZERO, e -> {
+                    // Anfangszustand
+                    arc.setLength(0);
+                }),
+                new KeyFrame(Duration.seconds(ANIMATION_DURATION), e -> {
+                    // Endzustand
+                    arc.setLength(360);
+                })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
 
-            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
-            pauseTransition.setOnFinished(e -> loadImage(vsBackground, "encounter/trainerEncounter1.png"));
+        // Starte die Animation
+        timeline.play();
 
-            pauseTransition.play();
-        });
-
-        scaleTransition.play();
         return parent;
     }
 
