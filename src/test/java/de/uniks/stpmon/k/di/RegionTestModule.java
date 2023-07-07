@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.dto.CreateTrainerDto;
 import de.uniks.stpmon.k.dto.UpdateTrainerDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -23,7 +24,7 @@ public class RegionTestModule {
     static RegionApiService regionApiService() {
         return new RegionApiService() {
             final String USER_ID = "0";
-            int trainerIdCount = 0;
+            int trainerIdCount = 1;
             int monsterIdCount = 0;
             final List<Region> regions = new ArrayList<>();
             //String is regionId
@@ -77,29 +78,39 @@ public class RegionTestModule {
 
                 MonsterAttributes attributes = new MonsterAttributes(0, 0, 0, 0);
                 MonsterAttributes currentAttributes = new MonsterAttributes(0, 0, 0, 0);
+
+                monsters.add(MonsterBuilder.builder()
+                        .setId(monsterIdCount++)
+                        .setAbilities(abilities)
+                        .setAttributes(new MonsterAttributes(20, 0, 0, 0))
+                        .setCurrentAttributes(new MonsterAttributes(10, 0, 0, 0))
+                        .create());
+
+                monsters.add(MonsterBuilder.builder()
+                        .setId(monsterIdCount++)
+                        .setAbilities(abilities)
+                        .setAttributes(new MonsterAttributes(12, 0, 0, 0))
+                        .setCurrentAttributes(new MonsterAttributes(5, 0, 0, 0))
+                        .create());
+
                 for (List<Trainer> trainerList : trainersHashMap.values()) {
                     for (Trainer trainer : trainerList) {
-                        Monster monster = new Monster(
-                                String.valueOf(monsterIdCount),
-                                trainer._id(),
-                                0,
-                                0,
-                                0,
-                                abilities,
-                                attributes,
-                                currentAttributes);
-                        monsterIdCount++;
-                        monsters.add(monster);
+                        monsters.add(MonsterBuilder.builder()
+                                .setId(monsterIdCount++)
+                                .setTrainer(trainer._id())
+                                .setAbilities(abilities)
+                                .setAttributes(attributes)
+                                .setCurrentAttributes(currentAttributes)
+                                .create());
                     }
                 }
-
             }
 
             /**
              * Adds 1 Trainer to each area
              */
             private void initDummyTrainers() {
-                int monsterIdCount = 0;
+                int monsterIdCount = 2;
                 for (Region region : regions) {
                     for (Area area : areasHashMap.get(region._id())) {
                         String name = region.name() + area.name() + "DummyTrainer";
@@ -141,15 +152,18 @@ public class RegionTestModule {
              */
             @Override
             public Observable<Trainer> createTrainer(String regionId, CreateTrainerDto trainerDto) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 Area area = areasHashMap.get(regionId).get(0);
+
                 Trainer trainer = TrainerBuilder.builder()
-                        .setId(trainerIdCount)
+                        .setId(0)
                         .setRegion(regionId)
                         .setArea(area)
                         .setUser(USER_ID)
                         .applyCreate(trainerDto)
                         .create();
-                trainerIdCount++;
                 List<Trainer> trainers = trainersHashMap.get(area._id());
                 trainers.add(trainer);
 
@@ -181,7 +195,7 @@ public class RegionTestModule {
                     List<Trainer> t = trainersHashMap.get("id0_0");
                     return Observable.just(t);
                 }
-                return getTrainer("", "4")
+                return getTrainer("", "0")
                         .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                         .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
             }
@@ -264,11 +278,17 @@ public class RegionTestModule {
 
             @Override
             public Observable<List<Monster>> getMonsters(String regionId, String trainerId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
             }
 
             @Override
-            public Observable<Monster> getMonster(String regionId, String monsterId) {
+            public Observable<Monster> getMonster(String regionId, String trainer, String monsterId) {
+                if (regions.isEmpty()) {
+                    initDummyRegions();
+                }
                 Optional<Monster> monsterOptional = monsters
                         .stream().filter(m -> m._id().equals(monsterId)).findFirst();
                 return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()

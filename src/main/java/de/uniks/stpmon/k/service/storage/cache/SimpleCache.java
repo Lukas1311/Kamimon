@@ -87,6 +87,13 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.addValues(subject.getValue());
         }
+
+        // Update listeners
+        for (T value : values) {
+            K id = getId(value);
+            Optional.ofNullable(listenersById.get(id))
+                    .ifPresent(emitter -> emitter.onNext(Optional.of(value)));
+        }
     }
 
     /**
@@ -133,6 +140,9 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             return;
         }
         K id = getId(value);
+        if (id == null) {
+            return;
+        }
 
         for (SimpleCache<T, ?> childCache : childCaches) {
             childCache.beforeAdd(value);
@@ -161,6 +171,9 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             throw new IllegalArgumentException("value must not be null");
         }
         K id = getId(value);
+        if (id == null) {
+            return;
+        }
         // Add if value is not already cached
         if (!hasValue(id)) {
             addValue(value);
@@ -197,7 +210,7 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             throw new IllegalArgumentException("value must not be null");
         }
         K id = getId(value);
-        if (!hasValue(id)) {
+        if (!hasValue(id) || id == null) {
             return;
         }
 
@@ -259,6 +272,13 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
             return Observable.error(new IllegalStateException("Cache already destroyed"));
         }
         return subject;
+    }
+
+    public List<T> getCurrentValues() {
+        if (status == Status.DESTROYED) {
+            throw new IllegalStateException("Cache already destroyed");
+        }
+        return subject.getValue();
     }
 
     @Override

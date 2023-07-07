@@ -58,51 +58,69 @@ public class InteractionService implements ILifecycleService {
         }
 
         List<String> starters = info.starters();
-
         Trainer me = trainerService.getMe();
 
         if (starters != null && !starters.isEmpty() && me.team().isEmpty()) {
-
-            DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder()
-                    .setTrainerId(trainer._id())
-                    .addItem(translateString("helloAreYouReady", me.name()))
-                    .addItem(translateString("chooseOneType"))
-                    .addItem().setText(translateString("takeTime"));
-
-            for (int select = 0; select < starters.size(); select++) {
-                String id = starters.get(select);
-                MonsterTypeDto monster = presetService.getMonster(id).blockingFirst();
-
-                if (monster != null) {
-
-                    int monsterId = monster.id();
-                    String monsterName = monster.name();
-                    String monsterType = monster.type().get(0); // starters only have one type
-
-                    int finalSelect = select;
-                    itemBuilder.addOption().setText(monsterType)
-                            .addSelection(() -> {
-                                interactionStorage.selectedStarter().setValue(monsterName);
-                                starterController.setStarter(String.valueOf(monsterId));
-                                starterController.starterPane.setVisible(true);
-                            })
-                            .addAction(() -> {
-                                interactionStorage.selectedStarter().reset();
-                                starterController.starterPane.setVisible(false);
-                                listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
-                                        new TalkTrainerDto(me._id(), trainer._id(), finalSelect));
-                            })
-                            .setNext(Dialogue.builder()
-                                    .addItem(translateString("youHaveChosenMonster", monsterName, monsterType)).create())
-                            .endOption();
-                }
-            }
-            return itemBuilder.endItem().create();
+            return getStarterDialogue(starters, me, trainer);
+        }
+        if (info.encounterOnTalk()) {
+            return getEncounterDialogue(trainer, me);
         }
 
         //TODO: Add dialogue for healing
-        //TODO: Add dialogue for encounter
         return null;
+    }
+
+    private Dialogue getEncounterDialogue(Trainer trainer, Trainer me) {
+        DialogueBuilder itemBuilder = Dialogue.builder()
+                .setTrainerId(trainer._id())
+                .addItem().setText(translateString("dialogue.intro"))
+                .addOption().setText(translateString("dialogue.select.no")).endOption()
+                .addOption()
+                .setText(translateString("dialogue.select.yes"))
+                .addAction(() -> talkTo(trainer, me, null))
+                .endOption()
+                .endItem();
+        return itemBuilder.create();
+    }
+
+    private Dialogue getStarterDialogue(List<String> starters, Trainer me, Trainer trainer) {
+        DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder()
+                .setTrainerId(trainer._id())
+                .addItem(translateString("helloAreYouReady", me.name()))
+                .addItem(translateString("chooseOneType"))
+                .addItem().setText(translateString("takeTime"));
+
+        for (int select = 0; select < starters.size(); select++) {
+            String id = starters.get(select);
+            MonsterTypeDto monster = presetService.getMonster(id).blockingFirst();
+
+            int monsterId = monster.id();
+            String monsterName = monster.name();
+            String monsterType = monster.type().get(0); // starters only have one type
+
+            int finalSelect = select;
+            itemBuilder.addOption().setText(monsterType)
+                    .addSelection(() -> {
+                        interactionStorage.selectedStarter().setValue(monsterName);
+                        starterController.setStarter(String.valueOf(monsterId));
+                        starterController.starterPane.setVisible(true);
+                    })
+                    .addAction(() -> {
+                        interactionStorage.selectedStarter().reset();
+                        starterController.starterPane.setVisible(false);
+                        talkTo(trainer, me, finalSelect);
+                    })
+                    .setNext(Dialogue.builder()
+                            .addItem(translateString("youHaveChosenMonster", monsterName, monsterType)).create())
+                    .endOption();
+        }
+        return itemBuilder.endItem().create();
+    }
+
+    private void talkTo(Trainer trainer, Trainer me, Integer selection) {
+        listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
+                new TalkTrainerDto(me._id(), trainer._id(), selection));
     }
 
     protected String translateString(String word, String... args) {

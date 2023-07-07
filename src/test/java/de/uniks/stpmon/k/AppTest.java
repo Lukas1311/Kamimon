@@ -35,7 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.function.Predicate.not;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -220,7 +221,6 @@ class AppTest extends ApplicationTest {
 
         clickOn("#settings");
 
-
         //join region
         clickOn("#regionVBox");
         waitForFxEvents();
@@ -298,7 +298,7 @@ class AppTest extends ApplicationTest {
         clickOn("#approveButton");
         waitForFxEvents();
 
-        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy);
+        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy, component.encounterApi());
 
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
@@ -310,10 +310,24 @@ class AppTest extends ApplicationTest {
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.LEFT)
-                .setNpc(new NPCInfo(false, false, false, List.of("0", "1", "2"), null))
+                .setNpc(new NPCInfo(false, false, false,
+                        List.of("0", "1", "2"), List.of()))
                 .create();
 
         trainerCache.addValue(prof);
+
+        Trainer attacker = TrainerBuilder.builder()
+                .setId("attacker")
+                .setX(3)
+                .setY(3)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, true, false,
+                        List.of(), List.of()))
+                .create();
+
+        trainerCache.addValue(attacker);
 
         //shortcut tests
         type(KeyCode.C);
@@ -367,12 +381,13 @@ class AppTest extends ApplicationTest {
 
         clickOn("#monsterBar");
 
-
         //check backpack
         clickOn("#backpackImage");
 
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
+        // Update trainer (position and direction)
+        me = component.trainerStorage().getTrainer();
         //add Monsters to inventory
         Monster teamMonster = MonsterBuilder.builder().setId("monster1")
                 .setTrainer(me._id()).create();
@@ -396,6 +411,13 @@ class AppTest extends ApplicationTest {
         type(KeyCode.B);
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
         assertEquals(1, ingameWrappingHbox.getChildren().size());
+
+        type(KeyCode.S, 2);
+        // start encounter
+        type(KeyCode.ENTER);
+        type(KeyCode.RIGHT);
+        type(KeyCode.ENTER);
+        verifyThat("#userMonsters", Node::isVisible);
 
     }
 
