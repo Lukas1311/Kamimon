@@ -45,7 +45,7 @@ public class WorldViewTest extends ApplicationTest {
         super.start(stage);
 
         MovementDummy.addMovementDummy(component.eventListener());
-        trainerStorage.setTrainer(DummyConstants.TRAINER);
+        trainerStorage.setTrainer(regionService.createTrainer("id0", "Uwe", "t.png").blockingFirst());
         WorldDummy.addWorldDummy(worldRepository);
         regionStorage.setRegion(DummyConstants.REGION);
         regionStorage.setArea(regionService.getArea("id0", "id0_0").blockingFirst());

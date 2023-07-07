@@ -5,7 +5,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class DestructibleElement implements ILifecycleService {
 
-    protected final CompositeDisposable disposables = new CompositeDisposable();
+    protected CompositeDisposable disposables = new CompositeDisposable();
 
     public void onDestroy(Runnable action) {
         disposables.add(Disposable.fromRunnable(action));

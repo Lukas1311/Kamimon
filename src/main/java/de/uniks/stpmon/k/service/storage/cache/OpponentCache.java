@@ -27,7 +27,7 @@ public class OpponentCache extends ListenerCache<Opponent, String> {
 
     @Override
     protected String getEventName() {
-        return "encounters.%s.opponents.*.*".formatted(
+        return "encounters.%s.trainers.*.opponents.*.*".formatted(
                 encounterId
         );
     }
