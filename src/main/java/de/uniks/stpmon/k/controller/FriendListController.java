@@ -13,7 +13,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.CacheHint;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -52,7 +55,7 @@ public class FriendListController extends ToastedController {
 
     private final ObservableList<User> friendSearchRes = FXCollections.observableArrayList();
     private final ObservableList<User> allSearchRes = FXCollections.observableArrayList();
-    private ObservableList<User> users = FXCollections.observableArrayList();
+    private final ObservableList<User> users = FXCollections.observableArrayList();
 
     private Boolean allUsers = false;
 
@@ -76,9 +79,7 @@ public class FriendListController extends ToastedController {
         searchButton.setOnAction(e -> searchForFriend());
 
         allUsers = checkBox.isSelected();
-        checkBox.setOnAction(e -> {
-            allUsers = checkBox.isSelected();
-        });
+        checkBox.setOnAction(e -> allUsers = checkBox.isSelected());
 
         searchFriend.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -106,13 +107,6 @@ public class FriendListController extends ToastedController {
                 users.setAll(values);
             }
         }, this::handleError);
-
-        // searchUpdate.onNext("");
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
     }
 
     @FXML

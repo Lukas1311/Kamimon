@@ -48,7 +48,7 @@ public class MovementHandlerTest {
     @InjectMocks
     protected TrainerCache trainerCache;
     @Spy
-    protected TrainerStorage trainerStorage = new TrainerStorage();
+    protected final TrainerStorage trainerStorage = new TrainerStorage();
 
     @Test
     void providerNull() {

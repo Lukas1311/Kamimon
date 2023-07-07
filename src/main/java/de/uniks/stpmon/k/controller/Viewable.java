@@ -2,11 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.service.EffectContext;
-import de.uniks.stpmon.k.service.world.TextureSetService;
-import de.uniks.stpmon.k.utils.Direction;
-import de.uniks.stpmon.k.utils.ImageUtils;
-import de.uniks.stpmon.k.utils.SVGUtils;
-import de.uniks.stpmon.k.world.CharacterSet;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
@@ -17,16 +12,8 @@ import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
 
 import javax.inject.Inject;
-import java.awt.image.BufferedImage;
-import java.util.Objects;
-import java.util.Optional;
 
 public abstract class Viewable {
 
@@ -101,7 +88,6 @@ public abstract class Viewable {
     protected <@NonNull T> void subscribe(Observable<T> observable, Consumer<T> onNext, @NonNull Consumer<? super Throwable> onError) {
         disposables.add(observable.observeOn(FX_SCHEDULER).subscribe(onNext, onError));
     }
-
 
 
 }

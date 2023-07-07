@@ -17,12 +17,10 @@ public record ChunkData(
         int y
 ) implements ITileDataProvider {
 
-    @Override
     public int startx() {
         return x;
     }
 
-    @Override
     public int starty() {
         return y;
     }

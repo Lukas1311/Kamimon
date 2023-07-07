@@ -6,6 +6,4 @@ public interface IMapProvider {
 
     TileMapData map();
 
-    String name();
-
 }

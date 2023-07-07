@@ -49,7 +49,7 @@ class AppTest extends ApplicationTest {
     private final MessageApiDummy messageApi = component.messageApi();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.setMainComponent(component);
         app.start(stage);
         stage.requestFocus();

@@ -70,12 +70,6 @@ public class MapOverviewController extends ToastedController {
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
         closeButton.setOnAction(click -> closeMap());

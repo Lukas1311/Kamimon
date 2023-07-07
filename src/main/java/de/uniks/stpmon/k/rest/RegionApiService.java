@@ -11,6 +11,7 @@ import retrofit2.http.*;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface RegionApiService {
 
     //---------------- Region Trainers ----------------------------

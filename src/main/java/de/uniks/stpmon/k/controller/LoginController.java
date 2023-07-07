@@ -2,9 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.AuthenticationService;
-import de.uniks.stpmon.k.service.NetworkAvailability;
 import de.uniks.stpmon.k.service.UserService;
-import de.uniks.stpmon.k.service.storage.TokenStorage;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -57,26 +55,18 @@ public class LoginController extends Controller {
     @Inject
     AuthenticationService authService;
     @Inject
-    TokenStorage tokenStorage;
-    @Inject
-    NetworkAvailability netAvailability;
-    @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     UserService userService;
     @Inject
     Preferences preferences;
-
     @Inject
     Provider<IntroductionController> introductionControllerProvider;
-
-    private BooleanBinding isInvalid;
     private final SimpleStringProperty username = new SimpleStringProperty();
     private final SimpleStringProperty password = new SimpleStringProperty();
     private StringProperty errorText;
     private String tempPassword;
     private boolean isEmpty = false;
-
     private boolean passwordVisible = false;
 
     @Inject
@@ -95,7 +85,6 @@ public class LoginController extends Controller {
 
         usernameInput.textProperty().bindBidirectional(username);
         passwordInput.textProperty().bindBidirectional(password);
-
 
         boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
         germanButton.setSelected(germanSelected);
@@ -119,7 +108,7 @@ public class LoginController extends Controller {
                                 .otherwise("")
                         )
         );
-        isInvalid = username
+        BooleanBinding isInvalid = username
                 .isEmpty()
                 .or(passwordTooShort)
                 .or(usernameTooLong);
@@ -138,10 +127,8 @@ public class LoginController extends Controller {
             passwordVisible = !passwordVisible;
         });
 
-
         // disables all focused input fields, so you can see the input text placeholders
         FX_SCHEDULER.scheduleDirect(parent::requestFocus);
-
 
         //Show KAMIMON Logo
         Platform.runLater(() -> {
@@ -155,9 +142,6 @@ public class LoginController extends Controller {
     public void validateLoginAndRegistration() {
         errorText = new SimpleStringProperty("");
         errorLabel.textProperty().bind(errorText);
-        if (isInvalid.get()) {
-            return;
-        }
     }
 
     public void login() {

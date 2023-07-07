@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
@@ -134,14 +133,12 @@ public class MonsterInformationController extends Controller {
             if (column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
                 return false;
             }
-            boolean b = GridPane.getRowIndex(node) != null
+            return GridPane.getRowIndex(node) != null
                     && GridPane.getColumnIndex(node) != null
                     && GridPane.getColumnIndex(node) == column
                     && GridPane.getRowIndex(node) == row;
-            return b;
         });
     }
-
 
     @SuppressWarnings("SameParameterValue")
     private Label typeLabel(Label label, String monsterType) {
@@ -157,11 +154,8 @@ public class MonsterInformationController extends Controller {
     }
 
     private void fillAbilityTable(String abilityId, int rowIndex) {
-        disposables.add(presetService.getAbility(abilityId)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(ability -> {
-                    fillAbilityRow(ability, rowIndex);
-                }));
+        subscribe(presetService.getAbility(abilityId),
+                ability -> fillAbilityRow(ability, rowIndex));
     }
 
     private void fillAbilityRow(AbilityDto ability, int rowIndex) {
@@ -210,9 +204,7 @@ public class MonsterInformationController extends Controller {
             //interate over columns
             for (int j = 0; j < 5; j++) {
                 removeNodeByRowColumnIndex(i, j, attackGrid);
-                Label label = new Label("-");
                 //TODO Add style classes
-
             }
         }
     }

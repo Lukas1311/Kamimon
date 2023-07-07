@@ -32,13 +32,13 @@ public class WorldViewTest extends ApplicationTest {
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
 
-    WorldRepository worldRepository = component.worldStorage();
+    final WorldRepository worldRepository = component.worldStorage();
 
     @InjectMocks
-    public WorldController controller = component.worldController();
-    public TrainerStorage trainerStorage = component.trainerStorage();
-    public RegionStorage regionStorage = component.regionStorage();
-    public RegionService regionService = component.regionService();
+    public final WorldController controller = component.worldController();
+    public final TrainerStorage trainerStorage = component.trainerStorage();
+    public final RegionStorage regionStorage = component.regionStorage();
+    public final RegionService regionService = component.regionService();
 
     @Override
     public void start(Stage stage) throws Exception {

@@ -20,10 +20,7 @@ import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 
 import javax.inject.Singleton;
 
-@Component(modules = {TestModule.class, AuthTestModule.class, GroupTestModule.class,
-        MessageTestModule.class, RegionTestModule.class, UserTestModule.class,
-        BoundTestModule.class, PresetsTestModule.class, EncounterTestModule.class})
-
+@Component(modules = {TestModule.class, DummyApiModule.class, UserTestModule.class, BoundTestModule.class})
 @Singleton
 public interface TestComponent extends MainComponent {
 

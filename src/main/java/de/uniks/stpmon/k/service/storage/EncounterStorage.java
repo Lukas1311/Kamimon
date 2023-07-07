@@ -12,7 +12,6 @@ import java.util.List;
 public class EncounterStorage extends SingleCache<Encounter> {
 
     private EncounterSession encounterSession;
-    private List<Opponent> opponentList;
 
     @Inject
     public EncounterStorage() {
@@ -35,14 +34,7 @@ public class EncounterStorage extends SingleCache<Encounter> {
     }
 
     public List<Opponent> getOpponentList() {
-        return opponentList;
-    }
-
-    /**
-     * @param opponentList: is the list of all opponents, the user trainer should always be the first element
-     */
-    public void setOpponentList(List<Opponent> opponentList) {
-        this.opponentList = opponentList;
+        return List.of();
     }
 
 }

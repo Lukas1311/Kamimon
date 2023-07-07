@@ -33,6 +33,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     TeamController teamController;
 
     @Spy
+    @SuppressWarnings("unused")
     InputHandler inputHandler;
 
     @Spy
@@ -44,7 +45,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     MonsterBarController monsterBarController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.setMainComponent(component);
         app.start(stage);

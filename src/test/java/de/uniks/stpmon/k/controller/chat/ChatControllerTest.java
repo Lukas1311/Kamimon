@@ -67,10 +67,10 @@ public class ChatControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @InjectMocks
     ChatController chatController;
@@ -80,10 +80,10 @@ public class ChatControllerTest extends ApplicationTest {
     @InjectMocks
     ToastController toastController;
 
-    Subject<Event<Message>> events = BehaviorSubject.create();
+    final Subject<Event<Message>> events = BehaviorSubject.create();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         when(resourceBundleProvider.get()).thenReturn(resources);
         // we have to do all the stuff here because it is set in the init() method of ChatController :(((
         final User bob = new User("b_id", "b", null, null, null);
