@@ -5,9 +5,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
+<?import java.lang.String?>
 <GridPane fx:id="dialoguePane" prefHeight="92.0" prefWidth="504.0" xmlns="http://javafx.com/javafx/19"
           xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController">
+          fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueController"
+          stylesheets="@../css/ingameStyle.css">
+    <styleClass>
+        <String fx:value="ingame" />
+    </styleClass>
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
     </columnConstraints>

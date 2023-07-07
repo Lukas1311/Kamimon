@@ -3,22 +3,22 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-
-<StackPane fx:id="starterPane" prefHeight="332.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.StarterController">
+<?import java.lang.String?>
+<StackPane fx:id="starterPane" prefHeight="332.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/11.0.1"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.StarterController"
+           stylesheets="@css/ingameStyle.css">
+    <styleClass>
+        <String fx:value="ingame" />
+    </styleClass>
     <ImageView fx:id="starterBackground" fitHeight="332.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" />
     <VBox alignment="TOP_CENTER" prefHeight="332.0" prefWidth="250.0">
-        <Label fx:id="monsterNameLabel" alignment="CENTER">
+        <Label fx:id="monsterNameLabel" alignment="CENTER" styleClass="monster-information-name">
             <VBox.margin>
                 <Insets top="30.0" />
             </VBox.margin>
-            <font>
-                <Font name="System Bold" size="16.0" />
-            </font>
         </Label>
         <ImageView fx:id="starterImage" fitHeight="148.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
             <VBox.margin>
