@@ -74,8 +74,10 @@ public class EncounterOverviewController extends Controller {
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
-        actionFieldBox.getChildren().clear();
-        actionFieldBox.getChildren().add(actionFieldController.render());
+        Parent actionField = this.actionFieldController.render();
+        if (actionField != null) {
+            actionFieldBox.getChildren().add(actionField);
+        }
 
         //click on the first mon of opponent to get out of the encounter
         //Note: the encounter is still active after this
