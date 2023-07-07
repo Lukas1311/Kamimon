@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.UserService;
-import io.reactivex.rxjava3.core.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -13,7 +12,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ResourceBundle;
 
@@ -36,9 +34,6 @@ public class FriendController extends Controller {
 
     private final FriendListController friendListController;
 
-    @Inject
-    Provider<UserService> userServiceProvider;
-
     private final User user;
 
     private final boolean isFriend;
@@ -49,7 +44,6 @@ public class FriendController extends Controller {
         this.isFriend = userServiceProvider.get().isFriend(user);
         this.friendListController = friendListController;
         this.resources = resources;
-        this.userServiceProvider = userServiceProvider;
 
     }
 
@@ -76,12 +70,6 @@ public class FriendController extends Controller {
         } else {
             userStatus.setFill(Color.rgb(106, 168, 79));
         }
-
-
-        //TODO: Add avatar image to friendlist
-
-        //add avatar-url when avatar != null
-        //avatarBox.setBackground(new Background(new BackgroundImage(new Image(""), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
         messageButton.setOnAction(e -> openChat());
 

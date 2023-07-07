@@ -31,9 +31,9 @@ class UserServiceTest {
     @Mock
     UserApiService userApiService;
     @InjectMocks
-    IFriendCache friendCache = new FriendCacheDummy();
+    final IFriendCache friendCache = new FriendCacheDummy();
     @Spy
-    CacheManager cacheManager = new CacheManagerDummy();
+    final CacheManager cacheManager = new CacheManagerDummy();
     @InjectMocks
     UserService userService;
 

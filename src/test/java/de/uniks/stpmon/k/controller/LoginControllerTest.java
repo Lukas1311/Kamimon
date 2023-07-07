@@ -28,15 +28,12 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.prefs.Preferences;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-
 
 @ExtendWith(MockitoExtension.class)
 public class LoginControllerTest extends ApplicationTest {
@@ -53,7 +50,7 @@ public class LoginControllerTest extends ApplicationTest {
     @Mock
     UserService userService;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
@@ -61,7 +58,7 @@ public class LoginControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Spy
     @InjectMocks
@@ -71,7 +68,7 @@ public class LoginControllerTest extends ApplicationTest {
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(preferences.get(anyString(), anyString())).thenReturn("en");

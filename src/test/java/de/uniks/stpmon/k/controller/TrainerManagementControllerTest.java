@@ -46,9 +46,9 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @Mock
     TrainerStorage trainerStorage;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Spy
     @InjectMocks
@@ -57,10 +57,10 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
+    final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(trainerService.getMe()).thenReturn(dummytrainer);
@@ -140,11 +140,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         verify(popupMock).showModal(any());
         verify(trainerManagementController, times(0)).saveSettings();
         verify(hybridMock).popTab();
-    }
-
-    @Test
-    void testTryChangeTrainerName() {
-        // TODO: region service call
     }
 
     @Test

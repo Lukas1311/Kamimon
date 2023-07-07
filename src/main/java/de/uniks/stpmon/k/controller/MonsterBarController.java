@@ -23,7 +23,7 @@ public class MonsterBarController extends Controller {
     @FXML
     public ImageView arrow;
 
-    protected ImageView[] monsterSlots = new ImageView[6];
+    protected final ImageView[] monsterSlots = new ImageView[6];
 
     @Inject
     TeamController teamController;

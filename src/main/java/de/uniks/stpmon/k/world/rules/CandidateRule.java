@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface CandidateRule {
 
-    TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers);
+    TileInfo apply(TileInfo current, List<TileInfo> candidates,
+                   @SuppressWarnings("unused") List<DecorationLayer> layers);
 
 }

@@ -33,6 +33,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class EncounterOverviewControllerTest extends ApplicationTest {
     @Spy
+    final
     App app = new App(null);
 
     @Mock
@@ -47,12 +48,12 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
-    BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
+    final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
+    final BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
 
         // Defines used slots of the encounter

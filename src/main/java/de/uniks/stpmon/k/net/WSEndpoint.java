@@ -42,12 +42,14 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
     }
 
     @Override
+    @SuppressWarnings({"try"})
     public void open() {
         if (isOpen()) {
             return;
         }
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            //noinspection resource
             container.connectToServer(this, endpointURI);
         } catch (Exception e) {
             throw new RuntimeException(e);

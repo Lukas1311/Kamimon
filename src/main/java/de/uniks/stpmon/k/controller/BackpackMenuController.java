@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 
 import javax.inject.Inject;
@@ -81,7 +80,9 @@ public class BackpackMenuController extends Controller {
         return backpackMenuOptions.indexOf(option);
     }
 
+    @SuppressWarnings("EmptyMethod")
     private void dummyMethod() {
+        // Dummy method for the moment
     }
 
     public void openMonBox() {

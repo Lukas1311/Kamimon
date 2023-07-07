@@ -24,11 +24,11 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 public class BackpackMenuControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
     Provider<MonsterBarController> monsterBarControllerProvider;
     @Spy
@@ -40,7 +40,7 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     BackpackMenuController backpackMenuController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         app.show(backpackMenuController);

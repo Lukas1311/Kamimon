@@ -27,6 +27,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 @ExtendWith(MockitoExtension.class)
 public class EncounterTest extends ApplicationTest {
     @Spy
+    final
     App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
     @Spy
@@ -34,16 +35,16 @@ public class EncounterTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true).setEncounterAnimationSpeed(1);
 
     @Spy
-    public EncounterOverviewController controller = component.encounterController();
+    public final EncounterOverviewController controller = component.encounterController();
 
-    RegionStorage regionStorage = component.regionStorage();
-    SessionService sessionService = component.sessionService();
-    TrainerStorage trainerStorage = component.trainerStorage();
-    EncounterApiDummy encounterApiDummy = component.encounterApi();
-    EventDummy eventDummy = component.eventDummy();
+    final RegionStorage regionStorage = component.regionStorage();
+    final SessionService sessionService = component.sessionService();
+    final TrainerStorage trainerStorage = component.trainerStorage();
+    final EncounterApiDummy encounterApiDummy = component.encounterApi();
+    final EventDummy eventDummy = component.eventDummy();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
 
         trainerStorage.setTrainer(DummyConstants.TRAINER);
