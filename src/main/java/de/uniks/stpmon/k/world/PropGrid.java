@@ -36,12 +36,12 @@ public class PropGrid {
         return grid[x][y] >> 5;
     }
 
-    public void setIsEmpty(int x, int y, boolean empty) {
+    public void setUsed(int x, int y, boolean empty) {
         grid[x][y] = (grid[x][y] & ~0x10) | (empty ? 0x10 : 0);
     }
 
 
-    public boolean isEmpty(int x, int y) {
+    public boolean isUsed(int x, int y) {
         return (grid[x][y] & 0x10) > 0;
     }
 

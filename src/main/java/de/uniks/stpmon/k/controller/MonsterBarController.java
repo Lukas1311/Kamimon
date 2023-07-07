@@ -20,6 +20,8 @@ public class MonsterBarController extends Controller {
     public HBox monsterSlotsHBox;
     @FXML
     public VBox monsterList;
+    @FXML
+    public ImageView arrow;
 
     protected ImageView[] monsterSlots = new ImageView[6];
 
@@ -52,6 +54,7 @@ public class MonsterBarController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        loadImage(arrow, "../controller/monsterbarArrow.png");
         createMonsterSlots();
         return parent;
     }

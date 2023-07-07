@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
+import de.uniks.stpmon.k.service.DestructibleElement;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
  *
  * @param <V> The type of the contained value.
  */
-public class SingleCache<V> {
+public class SingleCache<V> extends DestructibleElement {
 
     protected final BehaviorSubject<Optional<V>> value = BehaviorSubject.createDefault(Optional.empty());
 

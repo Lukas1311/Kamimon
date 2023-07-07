@@ -1,6 +1,6 @@
 .ingame {
     -fx-font-family: "Pokémon DS Font";
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
 }
 
 
@@ -39,10 +39,21 @@
     -fx-background-color: transparent;
     -fx-border-style: hidden;
     -fx-hbar-policy: never;
+    -fx-text-fill: black;
 }
 
+.backpack-menu-list .list-cell .label{
+    -fx-text-fill: black;
+}
+
+
+.backpack-menu-list .list-cell:selected .label{
+    -fx-text-fill: black;
+}
+
+
 .backpack-menu-entry {
-    -fx-font-size: 22px;
+    -fx-font-size: 20px;
     -fx-fill: black;
 }
 
@@ -199,7 +210,40 @@
     -fx-text-fill: #445E9C;
 }
 
+/* -------------------- Dialogue  -------------------- */
+.dialog-font-size {
+    -fx-font-size: 25px;
+}
 
+
+/* -------------------- Map Overview -------------------- */
+.map-overview-close-button {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+.map-overview-content {
+    -fx-background-color: black;
+    -fx-border-insets: 10;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+
+.map-overview-label {
+    -fx-text-alignment: center;
+}
+
+.map-overview-label-bg {
+    -fx-border-insets: 10;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: lightgray;
+}
 
 /* -------------------- Encounter -------------------- */
 .encounter-background {

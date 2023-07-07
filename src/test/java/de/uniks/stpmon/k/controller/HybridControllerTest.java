@@ -89,7 +89,7 @@ class HybridControllerTest extends ApplicationTest {
         write("\t");
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        VBox chatList = lookup("#friendList").query();
+        VBox chatList = lookup("#friendListVbox").query();
         assertNotNull(chatList);
     }
 

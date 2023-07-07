@@ -41,7 +41,6 @@ Load fonts
 .root {
     -fx-font-family: "Comic Neue Bold";
     -fx-font-size: 16;
-    -fx-font-smoothing-type: gray;
 
     -fx-color-kgm-red: #ae2f34;
     -fx-color-kgm-yellow: #fcf1d0;
@@ -936,16 +935,3 @@ Load fonts
 }
 
 
-/* -------------------- Map Overview -------------------- */
-.map-overview-close-button {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
-    -fx-border-style: hidden;
-    -fx-font-size: 20px;
-    -fx-text-fill: white;
-}
-
-.map-overview-content {
-    -fx-background-color: black;
-}

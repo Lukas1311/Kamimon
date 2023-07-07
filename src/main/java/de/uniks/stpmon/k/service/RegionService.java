@@ -82,8 +82,8 @@ public class RegionService {
         return regionApiService.getMonsters(regionId, trainerId);
     }
 
-    public Observable<Monster> getMonster(String regionId, String monsterId) {
-        return regionApiService.getMonster(regionId, monsterId);
+    public Observable<Monster> getMonster(String regionId, String trainer, String monsterId) {
+        return regionApiService.getMonster(regionId, trainer, monsterId);
     }
 
 }

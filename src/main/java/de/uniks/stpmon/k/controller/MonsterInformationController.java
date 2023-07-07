@@ -220,7 +220,7 @@ public class MonsterInformationController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        mainPane.setBackground(new Background(loadBgImage("MonInfoView_v2.3-final.png")));
+        loadBgImage(mainPane, "MonInfoView_v2.3-final.png");
         descriptionLabel.setVisible(false);
         descriptionLabel.setWrapText(true);
         return parent;

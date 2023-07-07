@@ -16,6 +16,8 @@ public class EffectContext {
     private double textureScale = 3.0d;
     private int dialogAnimationSpeed = 450;
 
+    private double encounterAnimationSpeed = 1000;
+
 
     /**
      * Tells the controllers to skip loading images.
@@ -104,6 +106,7 @@ public class EffectContext {
      *
      * @param walkingAnimationSpeed The walking animation speed of the player in milliseconds per 6 frames
      */
+    @SuppressWarnings("unused")
     public EffectContext setWalkingAnimationSpeed(int walkingAnimationSpeed) {
         this.walkingAnimationSpeed = walkingAnimationSpeed;
         return this;
@@ -156,4 +159,22 @@ public class EffectContext {
         return dialogAnimationSpeed;
     }
 
+    /**
+     * Sets the speed of the encounter animation.
+     *
+     * @param encounterAnimationSpeed speed of the encounter animation
+     */
+    public EffectContext setEncounterAnimationSpeed(double encounterAnimationSpeed) {
+        this.encounterAnimationSpeed = encounterAnimationSpeed;
+        return this;
+    }
+
+    /**
+     * Returns the speed of the encounter animation.
+     *
+     * @return speed of the encounter animation
+     */
+    public double getEncounterAnimationSpeed() {
+        return encounterAnimationSpeed;
+    }
 }

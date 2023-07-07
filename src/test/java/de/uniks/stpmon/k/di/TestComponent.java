@@ -4,9 +4,12 @@ import dagger.Component;
 import de.uniks.stpmon.k.TestModule;
 import de.uniks.stpmon.k.UserTestModule;
 import de.uniks.stpmon.k.controller.WorldController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -45,6 +48,12 @@ public interface TestComponent extends MainComponent {
     CacheManager cacheManager();
 
     EventDummy eventDummy();
+
+    EncounterApiDummy encounterApi();
+
+    EncounterOverviewController encounterController();
+
+    SessionService sessionService();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {

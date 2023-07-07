@@ -321,11 +321,11 @@ class RegionServiceTest {
     void getMonster() {
         Monster monster = makeMonster();
         //define mocks
-        when(regionApiService.getMonster(anyString(), anyString()))
+        when(regionApiService.getMonster(anyString(), anyString(), anyString()))
                 .thenReturn(Observable.just(monster));
 
         //action
-        final Monster returnMonster = regionService.getMonster("regionId", "monsterId")
+        final Monster returnMonster = regionService.getMonster("regionId", "trainerId", "monsterId")
                 .blockingFirst();
 
         //check values
@@ -333,7 +333,7 @@ class RegionServiceTest {
         assertEquals("trainerId", returnMonster.trainer());
 
         //check mocks
-        verify(regionApiService).getMonster(anyString(), anyString());
+        verify(regionApiService).getMonster(anyString(), anyString(), anyString());
 
     }
 

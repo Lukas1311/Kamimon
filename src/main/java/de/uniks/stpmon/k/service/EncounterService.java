@@ -6,12 +6,17 @@ import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
+import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.List;
 
 public class EncounterService {
@@ -41,10 +46,19 @@ public class EncounterService {
 
     @Inject
     EncounterStorage encounterStorage;
+    @Inject
+    EventListener eventListener;
+    @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    Provider<EncounterMember> monsterCacheProvider;
+    @Inject
+    Provider<OpponentCache> opponentCacheProvider;
 
     @Inject
     public EncounterService() {
     }
+
 
     //---------------- Region Encounters ----------------------------
 
@@ -52,9 +66,16 @@ public class EncounterService {
         return encounterApiService.getEncounters(regionStorage.getRegion()._id());
     }
 
-    public Observable<Encounter> getEncounter() {
+
+    public Observable<Encounter> getEncounter(String encounterId) {
         return encounterApiService.getEncounter(
                 regionStorage.getRegion()._id(),
+                encounterId
+        );
+    }
+
+    public Observable<Encounter> getCurrentEncounter() {
+        return getEncounter(
                 encounterStorage.getEncounter()._id()
         );
     }

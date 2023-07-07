@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.MonsterAttributes;
 import java.util.Collections;
 import java.util.SortedMap;
 
+@SuppressWarnings("unused")
 public class MonsterBuilder {
 
     public static MonsterBuilder builder() {
