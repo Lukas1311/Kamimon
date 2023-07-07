@@ -19,8 +19,6 @@ public class BackpackController extends Controller {
 
     private Controller backpackMenu;
 
-    private Controller loadingEncounter;
-
     @Inject
     Provider<LoadingEncounterController> loadingEncounterControllerProvider;
 
@@ -63,10 +61,8 @@ public class BackpackController extends Controller {
     }
 
     public void openBackPackMenu() {
-        loadingEncounter = loadingEncounterControllerProvider.get();
-        ingameControllerProvider.get().pushController(loadingEncounter);
-        //backpackMenu = backpackMenuControllerProvider.get();
-        //ingameControllerProvider.get().pushController(backpackMenu);
+        backpackMenu = backpackMenuControllerProvider.get();
+        ingameControllerProvider.get().pushController(backpackMenu);
     }
 
     public void closeBackPackMenu() {

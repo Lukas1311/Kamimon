@@ -21,6 +21,6 @@ public class LoadingEncounterControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) throws Exception {
         app.start(stage);
-
+        loadingEncounterController = new LoadingEncounterController();
     }
 }
