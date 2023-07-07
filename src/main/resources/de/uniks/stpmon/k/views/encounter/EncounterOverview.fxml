@@ -47,7 +47,7 @@
         </StackPane>
     </VBox>
     <VBox alignment="BOTTOM_RIGHT">
-        <VBox fx:id="placeholder" prefHeight="111.0" prefWidth="335.0">
+        <VBox fx:id="actionFieldBox" prefHeight="111.0" prefWidth="335.0">
            <VBox.margin>
                <Insets bottom="10.0" left="900.0" right="30.0" />
            </VBox.margin>

@@ -1,30 +1,24 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.TrainerService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
 public class ActionFieldChooseOpponentController extends Controller {
     @FXML
-    public StackPane pane;
-    @FXML
-    public ImageView background;
-    @FXML
-    public Text textContent;
+    public Text chooseOpponentText;
     @FXML
     public HBox chooseOpponentBox;
 
@@ -33,44 +27,50 @@ public class ActionFieldChooseOpponentController extends Controller {
     @Inject
     PresetService presetService;
     @Inject
-    ActionFieldBattleLogController actionFieldBattleLogController;
-    @Inject
-    ActionFieldChangeMonsterController actionFieldChangeMonsterController;
+    EncounterStorage encounterStorage;
 
-    public List<Monster> opponentMonstersList;
-    public String selectedOpponentMonster;
-    public String userMonster;
+    @Inject
+    Provider<ActionFieldController> actionFieldControllerProvider;
+
+    public List<String> opponentMonstersList;
 
     private int count = 0;
 
     @Inject
     public ActionFieldChooseOpponentController(){
-        opponentMonstersList = List.of(
-                MonsterBuilder.builder().setTrainer("opponent").setType(2).create(),
-                MonsterBuilder.builder().setTrainer("opponent").setType(55).create(),
-                MonsterBuilder.builder().setTrainer("opponent").setType(45).create());
+
     }
 
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadImage(background, "action_menu_background.png");
-        userMonster = actionFieldChangeMonsterController.selectedUserMonster;
-        textContent.setText(translateString("attackMon", userMonster));
-        setAction();
+
+        //check if this screen is needed
+        if(encounterStorage.getSession().getAttackerTeam().size() == 1){
+            //TODO:make move
+            // -> use actionFieldControllerProvider.get().getChosenAbility() to get ability
+
+            actionFieldControllerProvider.get().openBattleLog();
+        }
+
+
+        //show all monsters of enemy
+        //get team of enemy
+        opponentMonstersList = encounterStorage.getSession().getAttackerTeam();
+        addMonsters();
 
         return parent;
     }
 
-    public void setAction() {
+    public void addMonsters() {
         if(opponentMonstersList != null) {
-            for (Monster monster : opponentMonstersList) {
-                subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> addActionOption(type.name()));
+            for (String monster : opponentMonstersList) {
+                subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name()));
             }
         }
     }
 
-    public void addActionOption(String option) {
+    public void addMonsterOption(String option) {
         Text arrowText = new Text(" >");
         Text optionText = new Text(option);
 
@@ -80,7 +80,10 @@ public class ActionFieldChooseOpponentController extends Controller {
 
         optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
-        optionContainer.setOnMouseClicked(event -> showBattleLog(option));
+        optionContainer.setOnMouseClicked(event -> {
+            //TODO: make move
+            showBattleLog();
+        });
 
         // each column containing a maximum of 2 options
         int index = count / 2;
@@ -100,9 +103,8 @@ public class ActionFieldChooseOpponentController extends Controller {
     }
 
 
-    private void showBattleLog(String option) {
-        selectedOpponentMonster = option;
-        pane.getChildren().add(actionFieldBattleLogController.render());
+    private void showBattleLog() {
+        actionFieldControllerProvider.get().openBattleLog();
     }
 
     @Override

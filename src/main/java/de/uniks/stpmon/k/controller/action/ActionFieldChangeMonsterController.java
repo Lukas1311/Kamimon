@@ -6,9 +6,7 @@ import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -20,10 +18,6 @@ import java.util.List;
 @Singleton
 public class ActionFieldChangeMonsterController extends Controller {
     @FXML
-    public StackPane pane;
-    @FXML
-    public ImageView background;
-    @FXML
     public Text textContent;
     @FXML
     public HBox changeMonBox;
@@ -34,7 +28,7 @@ public class ActionFieldChangeMonsterController extends Controller {
     PresetService presetService;
 
     @Inject
-    Provider<ActionFieldMainMenuController> actionFieldMainMenuController;
+    Provider<ActionFieldController> actionFieldControllerProvider;
 
     public List<Monster> userMonstersList;
     public Monster activeMonster;
@@ -53,12 +47,9 @@ public class ActionFieldChangeMonsterController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadImage(background, "action_menu_background.png");
         textContent.setText(translateString("chooseMon"));
 
-        if(monsterService.getTeam() != null) {
-            userMonstersList = monsterService.getTeam().blockingFirst();
-        }
+        userMonstersList = monsterService.getTeam().blockingFirst();
 
         setAction();
 
@@ -114,18 +105,10 @@ public class ActionFieldChangeMonsterController extends Controller {
 
     public void openAction(String option) {
         if (option.equals("Back")) {
-            pane.getChildren().add(actionFieldMainMenuController.get().render());
+            actionFieldControllerProvider.get().openMainMenu();
         } else {
             selectedUserMonster = option;
-            openAbilities(option);
-        }
-    }
-
-    private void openAbilities(String name) {
-        for (Monster monster : userMonstersList) {
-            if (selectedUserMonster.equals(name)) {
-                setMonster(monster);
-            }
+            //TODO: change Monster
         }
     }
 
