@@ -111,7 +111,9 @@ public class MonsterInformationController extends Controller {
         monsterHpLabel.setText("HP: "
                 + monster.currentAttributes().health()
                 + "/" + monster.attributes().health());
-        monsterXpLabel.setText("XP: " + monster.experience()); //TODO what is the maximum experience
+        monsterXpLabel.setText("XP: " + monster.experience()
+                + "/" + (int)(Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
+
 
         //TODO where should the current values (atk, def, speed, ..) shown?
         hpValueLabel.setText(monster.attributes().health().toString());
