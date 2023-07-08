@@ -35,6 +35,7 @@ public class ActionFieldChooseOpponentController extends Controller {
     public List<String> opponentMonstersList;
 
     private int count = 0;
+
     public String back;
 
     @Inject
@@ -57,13 +58,15 @@ public class ActionFieldChooseOpponentController extends Controller {
     }
 
     public void addMonsters() {
+        addMonsterOption(back, true);
+
         if(opponentMonstersList != null) {
             for (String monster : opponentMonstersList) {
                 subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name(), false));
             }
         }
 
-        addMonsterOption(back, true);
+        count = 0;
     }
 
     public void addMonsterOption(String option, boolean isBackOption) {

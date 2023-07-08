@@ -61,6 +61,7 @@ public class ActionFieldChangeMonsterController extends Controller {
     }
 
     public void showOptions() {
+        addActionOption(back, true);
         for (Monster monster : userMonstersList) {
             subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
                 selectedUserMonster = type.name();
@@ -68,7 +69,7 @@ public class ActionFieldChangeMonsterController extends Controller {
             });
         }
 
-        addActionOption(back, true);
+        count = 0;
     }
 
     public void addActionOption(String option, boolean isBackOption) {
@@ -91,10 +92,10 @@ public class ActionFieldChangeMonsterController extends Controller {
         optionContainer.getChildren().get(1).setId("user_monster_" + (index * 3 + optionIndex));
 
         // if the option is 'Back', add it to the end of the VBox
-        if (isBackOption) {
+        if(isBackOption){
             vbox.getChildren().add(optionContainer);
-        } else {
-            vbox.getChildren().add(vbox.getChildren().size() - 1, optionContainer);
+        }else{
+            vbox.getChildren().add(0,optionContainer);
         }
 
         count++;
