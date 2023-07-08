@@ -35,6 +35,7 @@ public class ActionFieldChangeMonsterController extends Controller {
     public String selectedUserMonster;
 
     private int count = 0;
+    public String back;
 
 
     @Inject
@@ -47,6 +48,9 @@ public class ActionFieldChangeMonsterController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
+
+        back = translateString("back");
+
         textContent.setText(translateString("chooseMon"));
 
         userMonstersList = monsterService.getTeam().blockingFirst();
@@ -66,7 +70,7 @@ public class ActionFieldChangeMonsterController extends Controller {
             }
         }
 
-        addActionOption("Back", true);
+        addActionOption(back, true);
     }
 
     public void addActionOption(String option, boolean isBackOption) {
@@ -104,7 +108,7 @@ public class ActionFieldChangeMonsterController extends Controller {
     }
 
     public void openAction(String option) {
-        if (option.equals("Back")) {
+        if (option.equals(back)) {
             actionFieldControllerProvider.get().openMainMenu();
         } else {
             selectedUserMonster = option;

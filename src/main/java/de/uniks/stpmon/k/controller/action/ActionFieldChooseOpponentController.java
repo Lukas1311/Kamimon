@@ -35,6 +35,7 @@ public class ActionFieldChooseOpponentController extends Controller {
     public List<String> opponentMonstersList;
 
     private int count = 0;
+    public String back;
 
     @Inject
     public ActionFieldChooseOpponentController(){
@@ -44,6 +45,8 @@ public class ActionFieldChooseOpponentController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
+
+        back = translateString("back");
 
         //check if this screen is needed
         if(encounterStorage.getSession().getAttackerTeam().size() == 1){
@@ -65,12 +68,14 @@ public class ActionFieldChooseOpponentController extends Controller {
     public void addMonsters() {
         if(opponentMonstersList != null) {
             for (String monster : opponentMonstersList) {
-                subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name()));
+                subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name(), false));
             }
         }
+
+        addMonsterOption(back, true);
     }
 
-    public void addMonsterOption(String option) {
+    public void addMonsterOption(String option, boolean isBackOption) {
         Text arrowText = new Text(" >");
         Text optionText = new Text(option);
 
@@ -82,7 +87,7 @@ public class ActionFieldChooseOpponentController extends Controller {
         optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> {
             //TODO: make move
-            showBattleLog();
+            showBattleLog(option);
         });
 
         // each column containing a maximum of 2 options
@@ -97,14 +102,23 @@ public class ActionFieldChooseOpponentController extends Controller {
         int optionIndex = vbox.getChildren().size();
         optionText.setId("opponent_monster_label_" + (index * 2 + optionIndex));
 
-        vbox.getChildren().add(optionContainer);
+        // if the option is 'Back', add it to the end of the VBox
+        if (isBackOption) {
+            vbox.getChildren().add(optionContainer);
+        } else {
+            vbox.getChildren().add(vbox.getChildren().size() - 1, optionContainer);
+        }
 
         count++;
     }
 
 
-    private void showBattleLog() {
-        actionFieldControllerProvider.get().openBattleLog();
+    private void showBattleLog(String option) {
+        if (option.equals(back)) {
+            actionFieldControllerProvider.get().openMainMenu();
+        } else {
+            actionFieldControllerProvider.get().openBattleLog();
+        }
     }
 
     @Override
