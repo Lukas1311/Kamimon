@@ -86,7 +86,6 @@ public class PropInspector {
                 TileInfo current = new TileInfo(x, y, context.layerIndex, id, context.getTileset(id));
                 // Check if tile is a decoration or already used
                 if (registry.isDecoration(current)) {
-                    grid.setUsed(x, y, true);
                     continue;
                 }
 

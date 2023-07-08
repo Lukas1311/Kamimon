@@ -21,6 +21,6 @@ public interface AuthenticationApiService {
 
     // Log in with a refresh token.
     @POST("auth/refresh")
-    Observable<LoginResult> refresh(@Body RefreshDto refreshToken);
+    Observable<LoginResult> refresh(@SuppressWarnings("unused") @Body RefreshDto refreshToken);
 
 }

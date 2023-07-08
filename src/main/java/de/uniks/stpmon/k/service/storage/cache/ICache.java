@@ -16,6 +16,7 @@ import java.util.Optional;
  *
  * @param <T> The data type to store.
  */
+@SuppressWarnings("unused")
 public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
 
     /**

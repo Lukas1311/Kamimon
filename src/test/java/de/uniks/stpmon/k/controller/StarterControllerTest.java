@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class StarterControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Mock
     IResourceService resourceService;
     @Mock
@@ -34,7 +34,7 @@ public class StarterControllerTest extends ApplicationTest {
     StarterController starterController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         app.show(starterController);

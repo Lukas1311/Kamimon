@@ -79,11 +79,6 @@ public class TrainerManagementController extends ToastedController {
     }
 
     @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
 
@@ -190,10 +185,8 @@ public class TrainerManagementController extends ToastedController {
                     .subscribe(trainer -> {
                         PopUpScenario deleteConfirmScenario = PopUpScenario.DELETE_CONFIRMATION_TRAINER;
                         deleteConfirmScenario.setParams(new ArrayList<>(List.of(trainer.name())));
-                        showPopUp(deleteConfirmScenario, innerResult -> {
-                            hybridControllerProvider.get().openMain(MainWindow.LOBBY);
-
-                        });
+                        showPopUp(deleteConfirmScenario, innerResult ->
+                                hybridControllerProvider.get().openMain(MainWindow.LOBBY));
 
                     }, err -> hybridControllerProvider.get().openMain(MainWindow.LOBBY)));
         });

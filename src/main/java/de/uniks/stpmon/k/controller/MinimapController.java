@@ -97,20 +97,5 @@ public class MinimapController extends Controller {
         return parent;
     }
 
-    @Override
-    public void init() {
-        super.init();
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    @Override
-    public void onDestroy(Runnable action) {
-        super.onDestroy(action);
-    }
-
 }
 

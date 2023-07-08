@@ -9,7 +9,7 @@ import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.world.WorldLoader;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -42,9 +42,9 @@ public class RegionListControllerTest extends ApplicationTest {
     @InjectMocks
     RegionListController regionListController;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 
@@ -53,7 +53,7 @@ public class RegionListControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("0", "Test", new Spawn("0", 0, 0), null)));
         when(regionService.getRegions()).thenReturn(regionMock);
 
@@ -68,8 +68,8 @@ public class RegionListControllerTest extends ApplicationTest {
         when(regionService.getMainTrainer(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
 
-        GridPane regionListGridPane = lookup("#regionListGridPane").query();
-        assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
+        FlowPane regionListFlowPane = lookup("#regionsFlowPane").query();
+        assertThat(regionListFlowPane.getChildren().size()).isEqualTo(1);
         Text regionName = lookup("#regionNameText").queryText();
         assertEquals("Test", regionName.getText());
         ImageView regionImage = lookup("#regionImage").query();
