@@ -55,38 +55,31 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         userMonstersList = monsterService.getTeam().blockingFirst();
 
-        setAction();
+        showOptions();
 
         return parent;
     }
 
-    public void setAction() {
-        if(userMonstersList != null && !userMonstersList.isEmpty()) {
-            for (Monster monster : userMonstersList) {
-                subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
-                    selectedUserMonster = type.name();
-                    addActionOption(type.name(), false);
-                });
-            }
+    public void showOptions() {
+        for (Monster monster : userMonstersList) {
+            subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
+                selectedUserMonster = type.name();
+                addActionOption(type.name(), false);
+            });
         }
 
         addActionOption(back, true);
     }
 
     public void addActionOption(String option, boolean isBackOption) {
-        Text arrowText = new Text(" >");
-        Text optionText = new Text(option);
+        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
 
-        arrowText.setVisible(false);
-
-        HBox optionContainer = new HBox(arrowText, optionText);
-
-        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
         // each column containing a maximum of 3 options
+
         int index = count / 3;
+
         if (changeMonBox.getChildren().size() <= index) {
             VBox vbox = new VBox();
             changeMonBox.getChildren().add(vbox);
@@ -95,7 +88,7 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         // set IDs for the options
         int optionIndex = vbox.getChildren().size();
-        optionText.setId("user_monster_" + (index * 3 + optionIndex));
+        optionContainer.getChildren().get(1).setId("user_monster_" + (index * 3 + optionIndex));
 
         // if the option is 'Back', add it to the end of the VBox
         if (isBackOption) {

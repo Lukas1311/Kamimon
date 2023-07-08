@@ -48,15 +48,6 @@ public class ActionFieldChooseOpponentController extends Controller {
 
         back = translateString("back");
 
-        //check if this screen is needed
-        if(encounterStorage.getSession().getAttackerTeam().size() == 1){
-            //TODO:make move
-            // -> use actionFieldControllerProvider.get().getChosenAbility() to get ability
-
-            actionFieldControllerProvider.get().openBattleLog();
-        }
-
-
         //show all monsters of enemy
         //get team of enemy
         opponentMonstersList = encounterStorage.getSession().getAttackerTeam();
@@ -76,15 +67,8 @@ public class ActionFieldChooseOpponentController extends Controller {
     }
 
     public void addMonsterOption(String option, boolean isBackOption) {
-        Text arrowText = new Text(" >");
-        Text optionText = new Text(option);
+        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
 
-        arrowText.setVisible(false);
-
-        HBox optionContainer = new HBox(arrowText, optionText);
-
-        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> {
             //TODO: make move
             showBattleLog(option);
@@ -100,7 +84,7 @@ public class ActionFieldChooseOpponentController extends Controller {
 
         // set IDs for the options
         int optionIndex = vbox.getChildren().size();
-        optionText.setId("opponent_monster_label_" + (index * 2 + optionIndex));
+        optionContainer.getChildren().get(1).setId("opponent_monster_label_" + (index * 2 + optionIndex));
 
         // if the option is 'Back', add it to the end of the VBox
         if (isBackOption) {

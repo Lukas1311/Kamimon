@@ -4,8 +4,10 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -81,5 +83,18 @@ public class ActionFieldController extends Controller {
 
     public AbilityDto getChosenAbility(){
         return chosenAbility;
+    }
+
+    public HBox getOptionContainer(String option){
+        Text arrowText = new Text(" >");
+        Text optionText = new Text(option);
+
+        arrowText.setVisible(false);
+
+        HBox optionContainer = new HBox(arrowText, optionText);
+        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
+        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
+
+        return optionContainer;
     }
 }

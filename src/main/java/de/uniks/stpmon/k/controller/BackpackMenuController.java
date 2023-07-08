@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -40,6 +41,8 @@ public class BackpackMenuController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<MonBoxController> monBoxControllerProvider;
+    @Inject
+    Provider<ActionFieldController> actionFieldControllerProvider;
 
     @Inject
     public BackpackMenuController() {
@@ -83,6 +86,8 @@ public class BackpackMenuController extends Controller {
     @SuppressWarnings("EmptyMethod")
     private void dummyMethod() {
         // Dummy method for the moment
+        monBox = actionFieldControllerProvider.get();
+        ingameControllerProvider.get().pushController(monBox);
     }
 
     public void openMonBox() {

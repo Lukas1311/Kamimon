@@ -11,7 +11,7 @@
          <VBox.margin>
             <Insets bottom="5.0"/>
          </VBox.margin>
-         <Text fx:id="logText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+         <Text fx:id="logText" strokeType="OUTSIDE" strokeWidth="0.0" text="Battlelog: remove this text in fxml after real text is implemented"/>
       </TextFlow>
 </VBox>
 

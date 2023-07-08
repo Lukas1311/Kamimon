@@ -35,6 +35,9 @@ public class ActionFieldMainMenuController extends Controller {
         textContent.setText(translateString("wannaDo"));
         fight = translateString("fight");
         changeMon = translateString("changeMon");
+
+        //TODO: Add flight option for wild encounter
+
         setActions();
 
         return parent;
@@ -46,20 +49,12 @@ public class ActionFieldMainMenuController extends Controller {
     }
 
     public void addActionOption(String option) {
-        Text arrowText = new Text(" >");
-        Text optionText = new Text(option);
+        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
 
-        arrowText.setVisible(false);
-
-        HBox optionContainer = new HBox();
-        optionContainer.getChildren().addAll(arrowText, optionText);
-
-        optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
-        optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
         int index = mainMenuBox.getChildren().size();
-        optionText.setId("main_menu_" + index);
+        optionContainer.getChildren().get(1).setId("main_menu_" + index);
 
         mainMenuBox.getChildren().add(optionContainer);
     }
