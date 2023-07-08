@@ -60,7 +60,7 @@
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="N" GridPane.columnIndex="4" GridPane.rowIndex="6" />
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%choice" GridPane.columnIndex="3" GridPane.rowIndex="8" />
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="LEFT, RIGHT" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%pause" GridPane.rowIndex="5" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%pause2" GridPane.rowIndex="5" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="P" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="%dialogue" GridPane.columnIndex="3" GridPane.rowIndex="7" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="pause-shortcut-text" text="E" GridPane.columnIndex="4" GridPane.rowIndex="7" />
