@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.InputHandler;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -37,11 +36,10 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MonsterBarController monsterBarController;
     @Mock
+    @SuppressWarnings("unused")
     MinimapController minimapController;
     @Mock
     MapOverviewController mapOverviewController;
-    @Mock
-    RegionStorage regionStorage;
     @Spy
     @InjectMocks
     BackpackController backpackController;
@@ -63,18 +61,17 @@ public class IngameControllerTest extends ApplicationTest {
     @Spy
     InputHandler inputHandler;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @InjectMocks
     IngameController ingameController;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
-        regionStorage = minimapController.regionStorage;
         mapOverviewController.closeButton = new Button("");
         app.show(ingameController);
         app.addInputHandler(inputHandler);

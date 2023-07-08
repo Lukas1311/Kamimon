@@ -25,11 +25,11 @@ public class WorldControllerTest extends ApplicationTest {
 
     private final App app = new App(null);
     private final TestComponent component = (TestComponent) DaggerTestComponent.builder().mainApp(app).build();
-    WorldController worldController = component.worldController();
-    WorldRepository worldRepository = component.worldStorage();
-    TrainerStorage trainerStorage = component.trainerStorage();
+    final WorldController worldController = component.worldController();
+    final WorldRepository worldRepository = component.worldStorage();
+    final TrainerStorage trainerStorage = component.trainerStorage();
 
-    RegionStorage regionStorage = component.regionStorage();
+    final RegionStorage regionStorage = component.regionStorage();
 
     @Override
     public void start(Stage stage) throws Exception {

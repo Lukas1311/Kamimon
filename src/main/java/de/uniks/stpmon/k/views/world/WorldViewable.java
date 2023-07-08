@@ -23,6 +23,7 @@ public abstract class WorldViewable extends Viewable {
     @Inject
     protected EffectContext effectContext;
 
+    @SuppressWarnings("unused")
     public abstract Node render();
 
     protected Material createMaterial(Image image) {

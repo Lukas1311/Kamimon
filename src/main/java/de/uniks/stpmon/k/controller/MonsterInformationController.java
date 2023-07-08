@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
@@ -65,7 +64,6 @@ public class MonsterInformationController extends Controller {
     @Inject
     IResourceService resourceService;
 
-
     private String monsterDescription;
 
     @Inject
@@ -97,7 +95,7 @@ public class MonsterInformationController extends Controller {
     private void updateTypeList(List<String> types) {
         // Update the UI with a list of types
         for (int i = 0; i < 5; i++) {
-            //start second row, because name is on first row
+            // start second row, because name is on first row
             removeNodeByRowColumnIndex(i + 1, 1, overviewGrid);
             if (i < types.size()) {
                 overviewGrid.add(typeLabel(null, types.get(i)), 1, i + 1);
@@ -112,10 +110,9 @@ public class MonsterInformationController extends Controller {
                 + monster.currentAttributes().health()
                 + "/" + monster.attributes().health());
         monsterXpLabel.setText("XP: " + monster.experience()
-                + "/" + (int)(Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
+                + "/" + (int) (Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
 
-
-        //TODO where should the current values (atk, def, speed, ..) shown?
+        // TODO where should the current values (atk, def, speed, ..) shown?
         hpValueLabel.setText(monster.attributes().health().toString());
         atkValueLabel.setText(monster.attributes().attack().toString());
         defValueLabel.setText(monster.attributes().defense().toString());
@@ -140,14 +137,12 @@ public class MonsterInformationController extends Controller {
             if (column != 0 && (GridPane.getColumnIndex(node) == null || GridPane.getColumnIndex(node) == 0)) {
                 return false;
             }
-            boolean b = GridPane.getRowIndex(node) != null
+            return GridPane.getRowIndex(node) != null
                     && GridPane.getColumnIndex(node) != null
                     && GridPane.getColumnIndex(node) == column
                     && GridPane.getRowIndex(node) == row;
-            return b;
         });
     }
-
 
     @SuppressWarnings("SameParameterValue")
     private Label typeLabel(Label label, String monsterType) {
@@ -162,11 +157,8 @@ public class MonsterInformationController extends Controller {
     }
 
     private void fillAbilityTable(String abilityId, int rowIndex) {
-        disposables.add(presetService.getAbility(abilityId)
-                .observeOn(FX_SCHEDULER)
-                .subscribe(ability -> {
-                    fillAbilityRow(ability, rowIndex);
-                }));
+        subscribe(presetService.getAbility(abilityId),
+                ability -> fillAbilityRow(ability, rowIndex));
     }
 
     private void fillAbilityRow(AbilityDto ability, int rowIndex) {
@@ -176,7 +168,8 @@ public class MonsterInformationController extends Controller {
         nameLabel.setId("nameLabel_" + rowIndex);
 
         nameLabel.setOnMouseClicked(event -> {
-            if(!descriptionLabel.isVisible() || !descriptionLabel.getText().contains(ability.name() + ":\n" + ability.description())) {
+            if (!descriptionLabel.isVisible()
+                    || !descriptionLabel.getText().contains(ability.name() + ":\n" + ability.description())) {
                 descriptionLabel.setVisible(true);
                 descriptionLabel.setText(ability.name() + ":\n" + ability.description());
                 infoGrid.setVisible(false);
@@ -207,17 +200,15 @@ public class MonsterInformationController extends Controller {
         attackGrid.add(useLabel, 4, rowIndex);
     }
 
-
     private void cleanupAttackGrid() {
-        //iterate over rows
+        // iterate over rows
         for (int i = 1; i < 5; i++) {
-            //interate over columns
+            // interate over columns
             for (int j = 0; j < 5; j++) {
                 removeNodeByRowColumnIndex(i, j, attackGrid);
                 Label label = new Label("-");
                 attackGrid.add(label, j, i);
-                //TODO Add style classes
-
+                // TODO Add style classes
             }
         }
     }
@@ -230,7 +221,7 @@ public class MonsterInformationController extends Controller {
         descriptionLabel.setWrapText(true);
 
         monsterImage.setOnMouseClicked(event -> {
-            if(!descriptionLabel.isVisible() || !descriptionLabel.getText().equals(monsterDescription)) {
+            if (!descriptionLabel.isVisible() || !descriptionLabel.getText().equals(monsterDescription)) {
                 descriptionLabel.setVisible(true);
                 descriptionLabel.setText(monsterDescription);
                 infoGrid.setVisible(false);

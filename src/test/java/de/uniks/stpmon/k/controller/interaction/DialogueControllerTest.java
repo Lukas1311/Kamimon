@@ -39,15 +39,15 @@ class DialogueControllerTest extends ApplicationTest {
     @InjectMocks
     DialogueController controller;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
     @SuppressWarnings("unused")
-    EffectContext effectContext = new EffectContext()
+    final EffectContext effectContext = new EffectContext()
             .setDialogAnimationSpeed(1)
             .setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         app.show(controller);
         app.addInputHandler(inputHandler);

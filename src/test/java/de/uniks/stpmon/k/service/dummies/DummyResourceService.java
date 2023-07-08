@@ -18,7 +18,6 @@ public class DummyResourceService implements IResourceService {
 
     private BufferedImage tileSetImage;
     private BufferedImage characterImage;
-    private BufferedImage monsterImage;
 
     @Inject
     public DummyResourceService() {

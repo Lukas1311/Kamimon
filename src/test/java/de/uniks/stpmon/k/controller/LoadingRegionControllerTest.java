@@ -21,7 +21,7 @@ public class LoadingRegionControllerTest extends ApplicationTest {
     @Spy
     RegionStorage regionStorage;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @InjectMocks
     LoadingRegionController loadingRegionController;
     @Spy
@@ -30,7 +30,7 @@ public class LoadingRegionControllerTest extends ApplicationTest {
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         loadingRegionController = new LoadingRegionController();
         regionStorage = mock(RegionStorage.class);

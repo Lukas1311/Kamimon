@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.Region;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -48,10 +47,6 @@ public class RegionController extends Controller {
         imageWrappingPane.setPrefHeight(regionImage.getFitHeight() + borderSize * 2);
 
         return parent;
-    }
-
-    public Node getNode() {
-        return regionVBox;
     }
 
 }

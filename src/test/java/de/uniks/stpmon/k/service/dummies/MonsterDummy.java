@@ -9,12 +9,19 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 
 public class MonsterDummy {
-    public static void addMonsterDummy(TrainerStorage storage, EventDummy eventDummy) {
+    @SuppressWarnings({"ResultOfMethodCallIgnored"})
+    public static void addMonsterDummy(TrainerStorage storage, EventDummy eventDummy, EncounterApiDummy encounterApi) {
         Trainer trainer = storage.getTrainer();
+        // suppresses observable result - is never disposed fo the test time
         eventDummy.listen(Socket.UDP,
                 "areas.%s.trainers.%s.talked".formatted(trainer.area(), trainer._id()),
                 TalkTrainerDto.class).subscribe(event -> {
             TalkTrainerDto dto = event.data();
+            if (dto.target().equals("attacker")) {
+                encounterApi.startEncounter();
+                return;
+            }
+
             int selection = dto.selection();
 
             // Not same as trainer, subscription could be called to a totally different time so the trainer could be changed

@@ -12,8 +12,8 @@ import io.reactivex.rxjava3.subjects.Subject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -25,7 +25,7 @@ public class EventDummy {
 
     final Subject<Event<?>> events = PublishSubject.create();
     private boolean initialized = false;
-    private final List<Consumer<Event<?>>> messageHandlers = new LinkedList<>();
+    private final List<Consumer<Event<?>>> messageHandlers = new CopyOnWriteArrayList<>();
     @Inject
     EventListener listener;
 
@@ -47,8 +47,9 @@ public class EventDummy {
         when(listener.listen(any(), any(), any())).thenAnswer((invocation) -> {
             String pattern = invocation.getArgument(1);
             return Observable.create(emitter -> {
-                //suppresses unchecked and raw types - we know that the emitter is of type ObservableEmitter<Event<T>>dd
-                Consumer<Event<?>> handler = createPatternHandler(pattern, (ObservableEmitter)emitter);
+                // suppresses unchecked and raw types - we know that the emitter is of type ObservableEmitter<Event<T>>
+                // suppresses observable result - is never disposed fo the test time
+                Consumer<Event<?>> handler = createPatternHandler(pattern, (ObservableEmitter) emitter);
                 messageHandlers.add(handler);
                 emitter.setCancellable(() -> messageHandlers.remove(handler));
             });

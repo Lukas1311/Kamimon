@@ -10,6 +10,7 @@ import retrofit2.http.Streaming;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface PresetApiService {
 
     @GET("presets/tilesets/{filename}")

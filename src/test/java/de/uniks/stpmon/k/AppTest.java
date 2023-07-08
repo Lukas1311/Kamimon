@@ -20,15 +20,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -37,7 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.function.Predicate.not;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -50,7 +49,7 @@ class AppTest extends ApplicationTest {
     private final MessageApiDummy messageApi = component.messageApi();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.setMainComponent(component);
         app.start(stage);
         stage.requestFocus();
@@ -159,8 +158,8 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
         //check that there are two test regions
-        GridPane regionListGridPane = lookup("#regionListGridPane").query();
-        assertThat(regionListGridPane.getColumnCount()).isEqualTo(1);
+        FlowPane regionListFlowPane = lookup("#regionsFlowPane").query();
+        assertThat(regionListFlowPane.getChildren().size()).isEqualTo(2);
 
         clickOn("#regionImage");
         waitForFxEvents();
@@ -177,7 +176,7 @@ class AppTest extends ApplicationTest {
         clickOn("#pause");
         verifyThat("#pauseScreen", Node::isVisible);
         clickOn("#logoutButton");
-        verifyThat(regionListGridPane, Node::isVisible);
+        verifyThat(regionListFlowPane, Node::isVisible);
 
         clickOn("#regionImage");
 
@@ -221,7 +220,6 @@ class AppTest extends ApplicationTest {
         verifyThat(username, hasText("TT"));
 
         clickOn("#settings");
-
 
         //join region
         clickOn("#regionVBox");
@@ -300,7 +298,7 @@ class AppTest extends ApplicationTest {
         clickOn("#approveButton");
         waitForFxEvents();
 
-        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy);
+        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy, component.encounterApi());
 
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
@@ -312,10 +310,24 @@ class AppTest extends ApplicationTest {
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.LEFT)
-                .setNpc(new NPCInfo(false, false, false, List.of("0", "1", "2"), null))
+                .setNpc(new NPCInfo(false, false, false,
+                        List.of("0", "1", "2"), List.of()))
                 .create();
 
         trainerCache.addValue(prof);
+
+        Trainer attacker = TrainerBuilder.builder()
+                .setId("attacker")
+                .setX(3)
+                .setY(3)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, true, false,
+                        List.of(), List.of()))
+                .create();
+
+        trainerCache.addValue(attacker);
 
         //shortcut tests
         type(KeyCode.C);
@@ -369,12 +381,13 @@ class AppTest extends ApplicationTest {
 
         clickOn("#monsterBar");
 
-
         //check backpack
         clickOn("#backpackImage");
 
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
+        // Update trainer (position and direction)
+        me = component.trainerStorage().getTrainer();
         //add Monsters to inventory
         Monster teamMonster = MonsterBuilder.builder().setId("monster1")
                 .setTrainer(me._id()).create();
@@ -398,6 +411,13 @@ class AppTest extends ApplicationTest {
         type(KeyCode.B);
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
         assertEquals(1, ingameWrappingHbox.getChildren().size());
+
+        type(KeyCode.S, 2);
+        // start encounter
+        type(KeyCode.ENTER);
+        type(KeyCode.RIGHT);
+        type(KeyCode.ENTER);
+        verifyThat("#userMonsters", Node::isVisible);
 
     }
 
