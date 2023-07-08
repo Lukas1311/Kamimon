@@ -149,14 +149,13 @@ public class MonsterInformationController extends Controller {
 
     @SuppressWarnings("SameParameterValue")
     private Label typeLabel(Label label, String monsterType) {
-        MonsterType type = MonsterType.valueOf(monsterType.toUpperCase());
         if (label == null) {
             label = new Label();
-            label.setId(type.getTypeName().toUpperCase() + "_label");
+            label.setId(monsterType.toUpperCase() + "_label");
         }
-        label.setText(type.getTypeName().toUpperCase());
+        label.setText(monsterType.toUpperCase());
         label.getStyleClass().clear();
-        label.getStyleClass().addAll("monster-type-general", type.getStyleClass());
+        label.getStyleClass().addAll("monster-type-general", "monster-type-" + monsterType);
         return label;
     }
 
