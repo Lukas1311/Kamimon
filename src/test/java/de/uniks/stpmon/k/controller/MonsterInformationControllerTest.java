@@ -149,7 +149,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         waitForFxEvents();
         assertTrue(monsterInformationController.descriptionLabel.isVisible());
         assertFalse(monsterInformationController.infoGrid.isVisible());
-        assertEquals("AbilityDescription", monsterInformationController.descriptionLabel.getText());
+        assertEquals("abilityName:\nAbilityDescription", monsterInformationController.descriptionLabel.getText());
     }
 
 }

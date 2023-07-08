@@ -357,11 +357,11 @@ class AppTest extends ApplicationTest {
         // walk to the right
         type(KeyCode.D, 3);
         // talk to prof
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
         waitForFxEvents();
 
         clickOn("#monster_label_0");

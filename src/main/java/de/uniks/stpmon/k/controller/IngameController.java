@@ -91,7 +91,7 @@ public class IngameController extends PortalController {
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (mapOverview != null) {
                 switch (event.getCode()) {
-                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B -> {
+                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B, E-> {
                         // Block movement and backpack, if map overview is shown
                         if (mapOverview.isVisible()) {
                             event.consume();
