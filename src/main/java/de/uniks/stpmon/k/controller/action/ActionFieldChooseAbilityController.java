@@ -49,7 +49,8 @@ public class ActionFieldChooseAbilityController extends Controller {
     }
 
     public void addAbility(String abilityId, Integer remainingUses) {
-        subscribe(presetService.getAbility(abilityId), abilityDto -> {addAbilityOption(abilityDto, remainingUses);});
+        addBackOption(translateString("back"));
+        subscribe(presetService.getAbility(abilityId), abilityDto -> addAbilityOption(abilityDto, remainingUses));
     }
 
     public void addAbilityOption(AbilityDto ability, Integer remainingUses) {
@@ -68,12 +69,29 @@ public class ActionFieldChooseAbilityController extends Controller {
             chooseAbility();
         });
 
-        abilityBox.getChildren().add(optionContainer);
+        // set IDs for the options
+        int optionIndex = abilityBox.getChildren().size();
+        optionContainer.getChildren().get(1).setId("ability_" + optionIndex);
 
+        System.out.println(optionContainer.getChildren().get(1).getId());
+
+        abilityBox.getChildren().add(optionContainer);
     }
 
     public void chooseAbility() {
-        actionFieldControllerProvider.get().openChooseOpponent();
+        if(encounterStorage.getSession().getAttackerTeam().size() == 1){
+            actionFieldControllerProvider.get().openBattleLog();
+        }else{
+            actionFieldControllerProvider.get().openChooseOpponent();
+        }
+    }
+
+    public void addBackOption(String option) {
+        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+
+        optionContainer.setOnMouseClicked(event -> actionFieldControllerProvider.get().openMainMenu());
+
+        abilityBox.getChildren().add(optionContainer);
     }
 
     @Override

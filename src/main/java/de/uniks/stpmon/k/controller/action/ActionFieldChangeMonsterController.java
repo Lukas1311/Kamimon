@@ -1,9 +1,11 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -26,6 +28,8 @@ public class ActionFieldChangeMonsterController extends Controller {
     MonsterService monsterService;
     @Inject
     PresetService presetService;
+    @Inject
+    EncounterStorage encounterStorage;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
@@ -61,15 +65,21 @@ public class ActionFieldChangeMonsterController extends Controller {
     }
 
     public void showOptions() {
-        addActionOption(back, true);
-        for (Monster monster : userMonstersList) {
-            subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
-                selectedUserMonster = type.name();
-                addActionOption(type.name(), false);
-            });
-        }
-
         count = 0;
+        addActionOption(back, true);
+
+        activeMonster = encounterStorage.getSession().getMonster(new EncounterSlot(0, false));
+
+        if(userMonstersList != null && !userMonstersList.isEmpty()) {
+            for (Monster monster : userMonstersList) {
+                if (activeMonster != monster) {
+                    subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
+                        selectedUserMonster = type.name();
+                        addActionOption(type.name(), false);
+                    });
+                }
+            }
+        }
     }
 
     public void addActionOption(String option, boolean isBackOption) {
@@ -77,10 +87,8 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
-        // each column containing a maximum of 3 options
-
+        // each column containing a maximum of 2 options
         int index = count / 3;
-
         if (changeMonBox.getChildren().size() <= index) {
             VBox vbox = new VBox();
             changeMonBox.getChildren().add(vbox);
@@ -89,13 +97,13 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         // set IDs for the options
         int optionIndex = vbox.getChildren().size();
-        optionContainer.getChildren().get(1).setId("user_monster_" + (index * 3 + optionIndex));
+        optionContainer.setId("user_monster_" + (index * 3 + optionIndex));
 
         // if the option is 'Back', add it to the end of the VBox
-        if(isBackOption){
+        if (isBackOption) {
             vbox.getChildren().add(optionContainer);
-        }else{
-            vbox.getChildren().add(0,optionContainer);
+        } else {
+            vbox.getChildren().add(0, optionContainer);
         }
 
         count++;

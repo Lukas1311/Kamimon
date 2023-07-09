@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -23,8 +22,6 @@ public class ActionFieldChooseOpponentController extends Controller {
     public HBox chooseOpponentBox;
 
     @Inject
-    TrainerService trainerService;
-    @Inject
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
@@ -40,7 +37,6 @@ public class ActionFieldChooseOpponentController extends Controller {
 
     @Inject
     public ActionFieldChooseOpponentController(){
-
     }
 
     @Override
@@ -52,12 +48,14 @@ public class ActionFieldChooseOpponentController extends Controller {
         //show all monsters of enemy
         //get team of enemy
         opponentMonstersList = encounterStorage.getSession().getAttackerTeam();
+
         addMonsters();
 
         return parent;
     }
 
     public void addMonsters() {
+        count = 0;
         addMonsterOption(back, true);
 
         if(opponentMonstersList != null) {
@@ -65,8 +63,6 @@ public class ActionFieldChooseOpponentController extends Controller {
                 subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name(), false));
             }
         }
-
-        count = 0;
     }
 
     public void addMonsterOption(String option, boolean isBackOption) {
@@ -87,22 +83,21 @@ public class ActionFieldChooseOpponentController extends Controller {
 
         // set IDs for the options
         int optionIndex = vbox.getChildren().size();
-        optionContainer.getChildren().get(1).setId("opponent_monster_label_" + (index * 2 + optionIndex));
+        optionContainer.setId("user_monster_" + (index * 2 + optionIndex));
 
         // if the option is 'Back', add it to the end of the VBox
         if (isBackOption) {
             vbox.getChildren().add(optionContainer);
         } else {
-            vbox.getChildren().add(vbox.getChildren().size() - 1, optionContainer);
+            vbox.getChildren().add(0, optionContainer);
         }
 
         count++;
     }
 
-
     private void showBattleLog(String option) {
         if (option.equals(back)) {
-            actionFieldControllerProvider.get().openMainMenu();
+            actionFieldControllerProvider.get().openChooseAbility();
         } else {
             actionFieldControllerProvider.get().openBattleLog();
         }
