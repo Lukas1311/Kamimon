@@ -22,6 +22,8 @@ public class BackpackController extends Controller {
 
     private Controller loadingWildEncounter;
 
+    private Controller loadingEncounter;
+
     @Inject
     Provider<LoadingWildEncounterController> loadingWildEncounterControllerProvider;
 

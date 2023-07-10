@@ -20,8 +20,7 @@ import javax.inject.Inject;
 public class LoadingWildEncounterController extends Controller {
 
     private static final double START_ANGLE = 90;
-    private static final double ANIMATION_DURATION = 10.0; // in Sekunden
-    private static final double ANGLE_PER_SECOND = 360.0 / ANIMATION_DURATION;
+    private static final double ANIMATION_DURATION = 10.0;
 
     @FXML
     StackPane fullBox;
@@ -56,15 +55,12 @@ public class LoadingWildEncounterController extends Controller {
         arc.setFill(Color.BLUE);
         arc.setStroke(Color.BLACK);
 
-        // Erstelle eine Timeline für die Animation
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().addAll(
                 new KeyFrame(Duration.ZERO, e -> {
-                    // Anfangszustand
                     arc.setLength(0);
                 }),
                 new KeyFrame(Duration.seconds(ANIMATION_DURATION), e -> {
-                    // Endzustand
                     arc.setLength(360);
                 })
         );
@@ -79,7 +75,6 @@ public class LoadingWildEncounterController extends Controller {
             fullBox.getChildren().add(vsWildBackground);
         });
 
-        // Starte die Animation
         timeline.play();
 
         return parent;
