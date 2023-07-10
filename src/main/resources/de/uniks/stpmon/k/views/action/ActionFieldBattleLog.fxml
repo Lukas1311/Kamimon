@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController">
+      <TextFlow prefHeight="25.0" prefWidth="295.0">
+         <VBox.margin>
+            <Insets bottom="5.0"/>
+         </VBox.margin>
+         <Text fx:id="logText" strokeType="OUTSIDE" strokeWidth="0.0" text="Battlelog: remove this text in fxml after real text is implemented"/>
+      </TextFlow>
+</VBox>
+

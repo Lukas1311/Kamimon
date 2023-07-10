@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
@@ -22,7 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -47,7 +47,9 @@ public class EncounterOverviewController extends Controller {
     public ImageView opponentMonster0;
     @FXML
     public ImageView opponentMonster1;
-    public Rectangle placeholder;
+    @FXML
+    public VBox actionFieldBox;
+
 
     @Inject
     IResourceService resourceService;
@@ -66,6 +68,8 @@ public class EncounterOverviewController extends Controller {
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SessionService sessionService;
+    @Inject
+    ActionFieldController actionFieldController;
 
     @Inject
     public EncounterOverviewController() {
@@ -87,7 +91,14 @@ public class EncounterOverviewController extends Controller {
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
-        placeholder.setOnMouseClicked(e -> {
+        Parent actionField = this.actionFieldController.render();
+        if (actionField != null) {
+            actionFieldBox.getChildren().add(actionField);
+        }
+
+        //click on the first mon of opponent to get out of the encounter
+        //Note: the encounter is still active after this
+        opponentMonster0.setOnMouseClicked(e -> {
             IngameController.disableEncounter = true;
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
@@ -168,7 +179,7 @@ public class EncounterOverviewController extends Controller {
             attackerMonsters.get(1).setOpacity(0);
             opponentMonster1.setOpacity(0);
         }
-        placeholder.setOpacity(0);
+        actionFieldBox.setOpacity(0);
 
         //the first monster of the user and opponent always gets rendered
         ParallelTransition userFullTransition1 =
@@ -207,10 +218,10 @@ public class EncounterOverviewController extends Controller {
             parallel2.getChildren().add(opponentFullTransition2);
         }
         SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
-        sequence.setOnFinished(e -> placeholder.setOpacity(1));
+        sequence.setOnFinished(e -> actionFieldBox.setOpacity(1));
 
         TranslateTransition actionFieldTransition = new TranslateTransition(
-                Duration.millis(effectContext.getEncounterAnimationSpeed()), placeholder);
+                Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldBox);
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
 

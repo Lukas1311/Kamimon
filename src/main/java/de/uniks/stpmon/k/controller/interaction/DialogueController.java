@@ -93,7 +93,7 @@ public class DialogueController extends ToastController {
                     }
                 }
             }
-            if (event.getCode() != KeyCode.ENTER) {
+            if (event.getCode() != KeyCode.E) {
                 return;
             }
 
@@ -130,7 +130,7 @@ public class DialogueController extends ToastController {
                     }
                 }
             }
-            if (event.getCode() != KeyCode.ENTER || dialogue == null) {
+            if (event.getCode() != KeyCode.E || dialogue == null) {
                 return;
             }
 
