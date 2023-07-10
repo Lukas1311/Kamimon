@@ -9,13 +9,13 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.UserStorage;
-import de.uniks.stpmon.k.service.storage.cache.ICache;
 import de.uniks.stpmon.k.service.storage.cache.RegionCache;
-import de.uniks.stpmon.k.service.storage.cache.RegionMapCache;
+import de.uniks.stpmon.k.service.storage.cache.RegionImageCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -27,9 +27,11 @@ public class RegionService {
     @Inject
     UserStorage userStorage;
     @Inject
-    RegionCache regionCache;
+    Provider<RegionCache> regionCacheProvider;
     @Inject
-    RegionMapCache regionMapCache;
+    Provider<RegionImageCache> regionMapCacheProvider;
+    private RegionCache regionCache;
+    private RegionImageCache regionImageCache;
 
     @Inject
     public RegionService() {
@@ -70,7 +72,8 @@ public class RegionService {
 
     //------------------- Regions ---------------------------------
     public Observable<List<Region>> getRegions() {
-        if (regionCache.getStatus() == ICache.Status.UNINITIALIZED) {
+        if (regionCache == null) {
+            regionCache = regionCacheProvider.get();
             regionCache.init();
         }
         return regionCache.onInitialized()
@@ -78,24 +81,30 @@ public class RegionService {
     }
 
     public Observable<Region> getRegion(String id) {
+        if (regionCache == null) {
+            regionCache = regionCacheProvider.get();
+            regionCache.init();
+        }
         return regionCache.getValue(id).map(Observable::just)
                 .orElseGet(Observable::empty);
     }
 
     public Observable<RegionImage> getRegionImage(String regionId) {
-        if (regionMapCache.getStatus() == ICache.Status.UNINITIALIZED) {
-            regionMapCache.init();
+        if (regionImageCache == null) {
+            regionImageCache = regionMapCacheProvider.get();
+            regionImageCache.init();
         }
-        return regionMapCache.onInitialized()
-                .andThen(regionMapCache.getLazyValue(regionId).flatMap(op ->
+        return regionImageCache.onInitialized()
+                .andThen(regionImageCache.getLazyValue(regionId).flatMap(op ->
                         op.map(Observable::just).orElse(Observable.empty())));
     }
 
     public Completable loadAllRegionImages() {
-        if (regionMapCache.getStatus() == ICache.Status.UNINITIALIZED) {
-            regionMapCache.init();
+        if (regionImageCache == null) {
+            regionImageCache = regionMapCacheProvider.get();
+            regionImageCache.init();
         }
-        return regionMapCache.getLazyValues(regionCache.getIds())
+        return regionImageCache.getLazyValues(regionCache.getIds())
                 .ignoreElements();
     }
 

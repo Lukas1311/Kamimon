@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
 
-public class RegionMapCache extends LazyCache<RegionImage, String> {
+public class RegionImageCache extends LazyCache<RegionImage, String> {
 
     @Inject
     TextureSetService textureSetService;
@@ -20,7 +20,7 @@ public class RegionMapCache extends LazyCache<RegionImage, String> {
     RegionApiService regionApiService;
 
     @Inject
-    public RegionMapCache() {
+    public RegionImageCache() {
     }
 
     @Override

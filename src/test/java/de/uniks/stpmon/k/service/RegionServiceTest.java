@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.RegionCache;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +37,10 @@ class RegionServiceTest {
     RegionStorage regionStorage;
     @Mock
     RegionApiService regionApiService;
+    @Mock
+    Provider<RegionCache> regionCacheProvider;
+    @InjectMocks
+    RegionCache regionCache;
     @InjectMocks
     RegionService regionService;
 
@@ -214,6 +220,7 @@ class RegionServiceTest {
 
         when(regionApiService.getRegions())
                 .thenReturn(Observable.just(regions));
+        when(regionCacheProvider.get()).thenReturn(regionCache);
 
         //action
         List<Region> regionList = regionService.getRegions().blockingFirst();
@@ -233,9 +240,9 @@ class RegionServiceTest {
                 new Spawn("1", 0, 0),
                 null
         );
-
-        when(regionApiService.getRegion("1"))
-                .thenReturn(Observable.just(region));
+        when(regionApiService.getRegions())
+                .thenReturn(Observable.just(List.of(region)));
+        when(regionCacheProvider.get()).thenReturn(regionCache);
 
         //action
         Region regionList = regionService.getRegion("1").blockingFirst();
@@ -244,7 +251,7 @@ class RegionServiceTest {
         assertEquals("Test", regionList.name());
         assertEquals("1", regionList._id());
         //check mock
-        verify(regionApiService).getRegion("1");
+        verify(regionApiService).getRegions();
     }
 
     //---------------- Region Areas ------------------------------
