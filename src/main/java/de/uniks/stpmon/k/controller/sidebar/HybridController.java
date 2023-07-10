@@ -92,7 +92,7 @@ public class HybridController extends Controller {
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (currentWindow == MainWindow.LOBBY || currentWindow == MainWindow.PAUSE) {
                 switch (event.getCode()) {
-                    case W, A, S, D, M, B, N, LEFT, RIGHT, UP, DOWN ->
+                    case W, A, S, D, M, B, N, LEFT, RIGHT, UP, DOWN, E ->
                         //Block ingame control
                             event.consume();
                     case P -> {

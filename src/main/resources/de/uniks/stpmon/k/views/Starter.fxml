@@ -6,9 +6,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane fx:id="starterPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.StarterController">
+<?import java.lang.String?>
+<StackPane fx:id="starterPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="332.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="de.uniks.stpmon.k.controller.StarterController"
+           stylesheets="@css/ingameStyle.css" >
     <VBox alignment="TOP_CENTER" prefHeight="332.0" prefWidth="250.0">
-        <Label fx:id="monsterNameLabel" alignment="CENTER">
+        <Label fx:id="monsterNameLabel" alignment="CENTER" styleClass="ingame">
             <VBox.margin>
                 <Insets top="30.0" />
             </VBox.margin>

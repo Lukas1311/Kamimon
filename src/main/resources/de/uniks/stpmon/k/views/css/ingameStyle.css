@@ -99,6 +99,10 @@
     -fx-text-fill: white;
 
     -fx-alignment: center;
+    
+    /*default color*/
+    -fx-background-color: grey;
+    -fx-border-color: black;
 }
 
 .monster-type-normal {
