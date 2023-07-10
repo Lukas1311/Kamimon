@@ -105,6 +105,7 @@ public class ActionFieldController extends Controller {
         this.abilityId = abilityId;
     }
 
+    @SuppressWarnings("unused")
     public int getAbilityId() {
         return abilityId;
     }
@@ -113,6 +114,7 @@ public class ActionFieldController extends Controller {
         this.enemyTrainerId = trainerId;
     }
 
+    @SuppressWarnings("unused")
     public String getEnemyTrainerId() {
         return enemyTrainerId;
     }
