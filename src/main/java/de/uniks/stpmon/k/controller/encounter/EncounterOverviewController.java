@@ -138,9 +138,9 @@ public class EncounterOverviewController extends Controller {
             // Scale and set the image
             Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
             if (attacker) {
-                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-            } else {
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            } else {
+                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
         });
