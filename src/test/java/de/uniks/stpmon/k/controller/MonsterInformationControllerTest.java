@@ -35,7 +35,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 public class MonsterInformationControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Mock
     PresetService presetService;
@@ -43,7 +43,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     IResourceService resourceService;
 
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 
@@ -54,7 +54,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
@@ -97,19 +97,11 @@ public class MonsterInformationControllerTest extends ApplicationTest {
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
 
-
-
-
-        Platform.runLater(() -> {
-            monsterInformationController.loadMonster(monster);
-
-
-
-        });
+        Platform.runLater(() -> monsterInformationController.loadMonster(monster));
         waitForFxEvents();
         assertEquals("Lvl. 1", monsterInformationController.monsterLevelLabel.getText());
         assertEquals("HP: 5/10", monsterInformationController.monsterHpLabel.getText());
-        assertEquals("XP: 10", monsterInformationController.monsterXpLabel.getText());
+        assertEquals("XP: 10/1", monsterInformationController.monsterXpLabel.getText());
         assertEquals("10", monsterInformationController.hpValueLabel.getText());
         assertEquals("8", monsterInformationController.atkValueLabel.getText());
         assertEquals("6", monsterInformationController.defValueLabel.getText());
@@ -149,7 +141,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         waitForFxEvents();
         assertTrue(monsterInformationController.descriptionLabel.isVisible());
         assertFalse(monsterInformationController.infoGrid.isVisible());
-        assertEquals("AbilityDescription", monsterInformationController.descriptionLabel.getText());
+        assertEquals("abilityName:\nAbilityDescription", monsterInformationController.descriptionLabel.getText());
     }
 
 }

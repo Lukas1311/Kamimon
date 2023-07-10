@@ -140,18 +140,15 @@ public abstract class Controller extends Viewable {
      * If loadImages is false, this method does nothing.
      * This flag is used to disable image loading for tests.
      *
-     * @param image Path to the image relative to
-     *              "resources/de/uniks/stpmon/k/controller"
+     * @param image   Path to the image relative to
+     *                "resources/de/uniks/stpmon/k/controller"
      * @param element Any element, that extends region class
      */
     protected void loadBgImage(Region element, String image) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return;
         }
-        BackgroundImage bg = new BackgroundImage(loadImage(image), BackgroundRepeat.SPACE, BackgroundRepeat.SPACE,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(1.0, 1.0, true, true, false, true));
-
+        BackgroundImage bg = loadBgImage(image);
         element.setBackground(new Background(bg));
     }
 

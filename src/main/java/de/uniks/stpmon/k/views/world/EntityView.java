@@ -28,9 +28,6 @@ import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 public abstract class EntityView extends WorldViewable {
 
-    public static final int MOVEMENT_PERIOD = 200;
-    public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
-
     @Inject
     protected MovementHandler movementHandler;
     @Inject
@@ -185,10 +182,6 @@ public abstract class EntityView extends WorldViewable {
             setInterpolator(Interpolator.LINEAR);
             setCycleDuration(Duration.millis(effectContext.getWalkingAnimationSpeed() * (isMoving ? 1 : 2)));
 
-        }
-
-        public int getDirection() {
-            return direction;
         }
 
         @Override

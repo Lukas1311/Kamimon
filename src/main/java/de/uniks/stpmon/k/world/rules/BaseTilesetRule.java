@@ -19,10 +19,6 @@ public abstract class BaseTilesetRule {
         this.tileSet = tileSet;
     }
 
-    public BaseTilesetRule(String tileSet, IdSource... sources) {
-        this(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
-    }
-
     public Set<Integer> getTileIds() {
         return tileIds;
     }

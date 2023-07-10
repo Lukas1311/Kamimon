@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -44,9 +43,9 @@ class FriendListControllerTest extends ApplicationTest {
     Provider<UserService> userServiceProvider;
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
 
@@ -61,7 +60,7 @@ class FriendListControllerTest extends ApplicationTest {
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
 
@@ -119,7 +118,7 @@ class FriendListControllerTest extends ApplicationTest {
         //get friendList
         //final ScrollPane scrollPane = lookup("#scrollPane").query();
         final VBox userList = lookup("#friendListVbox").query();
-        final ListView<User> listView =  lookup("#userListView").query();
+        final ListView<User> listView = lookup("#userListView").query();
 
         verifyThat(listView, ListViewMatchers.hasItems(2));
         assertNotNull(userList.lookup("#Alice"));
@@ -142,9 +141,7 @@ class FriendListControllerTest extends ApplicationTest {
 
     @Test
     void addFriend() {
-
         final VBox userList = lookup("#friendListVbox").query();
-        final ListView<User> listView =  lookup("#userListView").query();
 
         //"Eve" is not displayed before search
         assertNull(userList.lookup("#Eve"));

@@ -37,20 +37,6 @@ public class MessageApiDummy implements MessageApiService {
     public MessageApiDummy() {
     }
 
-    /**
-     * Adds 6 messageEntities to ArrayList
-     * 2 with namespace="global" and parent="100"
-     * 2 with namespace="global" and parent="101"
-     * 2 with namespace="groups" and parent="102"
-     */
-    public void initDummyMessages() {
-        //global messages
-        addDummyMessages("global", "100");
-        addDummyMessages("global", "101");
-        addDummyMessages("groups", "102");
-
-    }
-
     /***
      * Initializes the mocking of the event listener for the events of the given group.
      *
@@ -61,24 +47,6 @@ public class MessageApiDummy implements MessageApiService {
 
         Mockito.when(eventListener.listen(Socket.WS, "groups.%s.messages.*.*".formatted(groupId), Message.class))
                 .thenReturn(events);
-    }
-
-    /**
-     * Generates messages with given namespace and group
-     * Note: first message has 2023-01-01T00:00:00.000Z, every following message is always one day later
-     * first message has body "message0", every following message the number is incremented
-     *
-     * @param namespace: global, regions, groups
-     * @param parent:    id of receiver
-     */
-    private void addDummyMessages(String namespace, String parent) {
-        int amount = 2;
-
-        for (int i = 0; i < amount; i++) {
-            String body = "message" + i;
-            String date = "2023-0" + (i + 1) + "-01T00:00:00.000Z";
-            addMessageEntity(namespace, parent, date, date, body);
-        }
     }
 
     /**
@@ -111,7 +79,7 @@ public class MessageApiDummy implements MessageApiService {
      * @param namespace: global, regions, groups
      * @param parent:    id of receiving instance
      * @param msg:       dto with body
-     * @return: the Message that was sent
+     * @return the Message that was sent
      */
     @Override
     public Observable<Message> sendMessage(String namespace, String parent, CreateMessageDto msg) {
@@ -133,7 +101,7 @@ public class MessageApiDummy implements MessageApiService {
      * @param dateTimeAfter:  can be null
      * @param dateTimeBefore: can be null
      * @param limit:          if null, limit = 100
-     * @return: filtered Messages
+     * @return filtered Messages
      */
     @Override
     public Observable<ArrayList<Message>> getMessages(String namespace, String parent,
@@ -178,8 +146,7 @@ public class MessageApiDummy implements MessageApiService {
         return Observable.just(messages);
     }
 
-    @Override
-    public Observable<Message> getMessage(String namespace, String parent, String id) {
+    private Observable<Message> getMessage(String namespace, String parent, String id) {
         Optional<Object[]> e = messageEntities
                 .stream()
                 .filter(entity -> entity[0].equals(namespace)

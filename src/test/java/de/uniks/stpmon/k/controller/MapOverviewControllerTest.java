@@ -36,7 +36,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -44,7 +43,7 @@ import static org.mockito.Mockito.*;
 public class MapOverviewControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Mock
     TextureSetService textureSetService;
@@ -80,13 +79,13 @@ public class MapOverviewControllerTest extends ApplicationTest {
                 "map");
     }
 
-    TileMapData dummyMap = createDummyMap();
-    Region dummyRegion = new Region("1", "reg", null, dummyMap);
-    TileMap tileMapMock = mock(TileMap.class);
+    final TileMapData dummyMap = createDummyMap();
+    final Region dummyRegion = new Region("1", "reg", null, dummyMap);
+    final TileMap tileMapMock = mock(TileMap.class);
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         // mapOverviewController.mapImageView = mapImageViewMock;
 

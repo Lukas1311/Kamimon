@@ -35,7 +35,8 @@ public class TestModule {
                 .setSkipAnimations(true)
                 .setWalkingSpeed(1)
                 .setTextureScale(1.0d)
-                .setDialogAnimationSpeed(1);
+                .setDialogAnimationSpeed(1)
+                .setEncounterAnimationSpeed(1);
     }
 
     @Provides

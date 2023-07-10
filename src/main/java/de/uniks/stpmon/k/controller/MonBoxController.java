@@ -53,12 +53,6 @@ public class MonBoxController extends Controller {
     }
 
     @Override
-    public void init() {
-        super.init();
-
-    }
-
-    @Override
     public Parent render() {
         final Parent parent = super.render();
         Trainer trainer = trainerStorage.getTrainer();
@@ -137,10 +131,5 @@ public class MonBoxController extends Controller {
     private void closeMonsterInformation() {
         ingameControllerProvider.get().removeChildren(2);
         activeMonster = null;
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
     }
 }

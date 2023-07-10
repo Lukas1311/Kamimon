@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 public class LoadingScreenControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @InjectMocks
     LoadingScreenController loadingController;
@@ -28,11 +28,11 @@ public class LoadingScreenControllerTest extends ApplicationTest {
     Runnable runTask;
 
     @Spy
-    EffectContext effectContext = new EffectContext()
+    final EffectContext effectContext = new EffectContext()
             .setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         // show app
         app.start(stage);
         stage.requestFocus();

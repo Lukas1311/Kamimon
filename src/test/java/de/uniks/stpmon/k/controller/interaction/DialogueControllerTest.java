@@ -39,15 +39,15 @@ class DialogueControllerTest extends ApplicationTest {
     @InjectMocks
     DialogueController controller;
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Spy
     @SuppressWarnings("unused")
-    EffectContext effectContext = new EffectContext()
+    final EffectContext effectContext = new EffectContext()
             .setDialogAnimationSpeed(1)
             .setSkipLoadImages(true);
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         app.show(controller);
         app.addInputHandler(inputHandler);
@@ -68,7 +68,7 @@ class DialogueControllerTest extends ApplicationTest {
         interactionStorage.setDialogue(Dialogue.builder().addItem("First").create());
 
         // Open dialog
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
 
         // Dialog should still be visible because animation is running
         verifyThat("#dialoguePane", Node::isVisible);
@@ -77,14 +77,14 @@ class DialogueControllerTest extends ApplicationTest {
         effectContext.setDialogAnimationSpeed(1000);
 
         // Close dialog slowly
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Dialog should still be visible because animation is not finished
         verifyThat("#dialoguePane", Node::isVisible);
 
         // Press enter again to reopen the dialog
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Dialog should still be visible because animation should be reset
@@ -133,7 +133,7 @@ class DialogueControllerTest extends ApplicationTest {
         );
 
         // Open dialog with enter
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Dialog should be visible now
@@ -183,7 +183,7 @@ class DialogueControllerTest extends ApplicationTest {
         verify(firstSelection, times(3)).run();
         verify(secondSelection, times(2)).run();
 
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Action should be performed after selection
@@ -193,7 +193,7 @@ class DialogueControllerTest extends ApplicationTest {
         verifyThat("#textContainer", hasText("SecondText"));
         verifyThat("#dialoguePane", Node::isVisible);
 
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Action of option should not have been performed again
@@ -228,7 +228,7 @@ class DialogueControllerTest extends ApplicationTest {
         );
 
         // Open dialog with enter
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Dialog should be visible now
@@ -239,18 +239,18 @@ class DialogueControllerTest extends ApplicationTest {
         verifyThat("#optionContainer #option_0 #indicator", Node::isVisible);
         verifyThat("#optionContainer #option_1 #indicator", not(Node::isVisible));
 
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
         // Next dialogue of first option should be displayed
         verifyThat("#textContainer", hasText("FirstSelected"));
 
         // Close dialog
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
         verifyThat("#dialoguePane", not(Node::isVisible));
 
         // Dialog should be still in storage, so open again
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         verifyThat("#dialoguePane", Node::isVisible);
 
         // Dialog should be visible again
@@ -264,7 +264,7 @@ class DialogueControllerTest extends ApplicationTest {
         verifyThat("#optionContainer #option_0 #indicator", not(Node::isVisible));
         verifyThat("#optionContainer #option_1 #indicator", Node::isVisible);
 
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Next dialogue of second option should be displayed
@@ -296,7 +296,7 @@ class DialogueControllerTest extends ApplicationTest {
         );
 
         // Open dialog with enter
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Dialog should be visible now
@@ -335,7 +335,7 @@ class DialogueControllerTest extends ApplicationTest {
                         .create()
         );
         // Open dialog with enter
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Dialog should be visible now
@@ -352,14 +352,14 @@ class DialogueControllerTest extends ApplicationTest {
         verify(action, never()).run();
         // Text should not have changed
         verifyThat("#textContainer", hasText("First"));
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Should display second text
         verifyThat("#textContainer", hasText("Second"));
 
         // Close dialog
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         waitForFxEvents();
 
         // Action should be performed after second text is displayed

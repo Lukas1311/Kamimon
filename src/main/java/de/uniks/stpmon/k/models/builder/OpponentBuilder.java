@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.IMove;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Result;
 
+@SuppressWarnings("unused")
 public class OpponentBuilder {
 
     public static OpponentBuilder builder() {
