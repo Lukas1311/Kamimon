@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
@@ -89,9 +90,9 @@ public class ActionFieldChooseAbilityController extends Controller {
 
     public void chooseAbility() {
         if(encounterStorage.getSession().getEnemyTeam().size() == 1){
-            String enemyId = encounterStorage.getSession().getEnemyTeam().get(0);
+            Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
             AbilityDto ability = actionFieldControllerProvider.get().chosenAbility;
-            subscribe(encounterService.makeAbilityMove(ability.id(), enemyId),
+            subscribe(encounterService.makeAbilityMove(ability.id(), opponent.trainer()),
                     next -> {
                         //do nothing here
                     }, error -> {

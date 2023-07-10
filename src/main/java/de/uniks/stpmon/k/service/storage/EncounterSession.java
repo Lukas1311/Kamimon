@@ -77,9 +77,13 @@ public class EncounterSession extends DestructibleElement {
                 return;
             }
             Opponent opponent = opponentOptional.get();
+            if(opponent.monster() == null) {
+                return;
+            }
             EncounterMember cache = cacheByOpponent.get(slot);
             Monster monster = cache.asNullable();
-            if (monster != null && !opponent.monster().equals(monster._id())) {
+
+            if (monster != null && !Objects.equals(opponent.monster(), monster._id())) {
                 cache.setup(cache.getTrainerId(), opponent.monster());
                 cache.init();
             }

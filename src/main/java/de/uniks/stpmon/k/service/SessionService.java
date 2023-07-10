@@ -143,6 +143,9 @@ public class SessionService extends DestructibleElement {
 
     public boolean isSelf(EncounterSlot slot) {
         Trainer trainer = trainerStorage.getTrainer();
+        if(encounterStorage.getSession() == null){
+            return false;
+        }
         return Objects.equals(trainer._id(), getTrainer(slot));
     }
 
