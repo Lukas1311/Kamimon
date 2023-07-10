@@ -101,7 +101,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         waitForFxEvents();
         assertEquals("Lvl. 1", monsterInformationController.monsterLevelLabel.getText());
         assertEquals("HP: 5/10", monsterInformationController.monsterHpLabel.getText());
-        assertEquals("XP: 10", monsterInformationController.monsterXpLabel.getText());
+        assertEquals("XP: 10/1", monsterInformationController.monsterXpLabel.getText());
         assertEquals("10", monsterInformationController.hpValueLabel.getText());
         assertEquals("8", monsterInformationController.atkValueLabel.getText());
         assertEquals("6", monsterInformationController.defValueLabel.getText());
@@ -141,7 +141,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         waitForFxEvents();
         assertTrue(monsterInformationController.descriptionLabel.isVisible());
         assertFalse(monsterInformationController.infoGrid.isVisible());
-        assertEquals("AbilityDescription", monsterInformationController.descriptionLabel.getText());
+        assertEquals("abilityName:\nAbilityDescription", monsterInformationController.descriptionLabel.getText());
     }
 
 }

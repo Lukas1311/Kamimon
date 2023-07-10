@@ -64,6 +64,8 @@ public class MonsterInformationController extends Controller {
     @Inject
     IResourceService resourceService;
 
+    private String monsterDescription;
+
     @Inject
     public MonsterInformationController() {
     }
@@ -74,6 +76,7 @@ public class MonsterInformationController extends Controller {
         disposables.add(presetService.getMonster(id)
                 .observeOn(FX_SCHEDULER)
                 .subscribe(monsterTypeDto -> {
+                    monsterDescription = monsterTypeDto.description();
                     monsterNameLabel.setText(monsterTypeDto.name());
                     // Retrieves the list of types and updates the type list UI
                     List<String> types = monsterTypeDto.type();
@@ -92,7 +95,7 @@ public class MonsterInformationController extends Controller {
     private void updateTypeList(List<String> types) {
         // Update the UI with a list of types
         for (int i = 0; i < 5; i++) {
-            //start second row, because name is on first row
+            // start second row, because name is on first row
             removeNodeByRowColumnIndex(i + 1, 1, overviewGrid);
             if (i < types.size()) {
                 overviewGrid.add(typeLabel(null, types.get(i)), 1, i + 1);
@@ -106,9 +109,9 @@ public class MonsterInformationController extends Controller {
         monsterHpLabel.setText("HP: "
                 + monster.currentAttributes().health()
                 + "/" + monster.attributes().health());
-        monsterXpLabel.setText("XP: " + monster.experience()); //TODO what is the maximum experience
-
-        //TODO where should the current values (atk, def, speed, ..) shown?
+        monsterXpLabel.setText("XP: " + monster.experience()
+                + "/" + (int) (Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
+        
         hpValueLabel.setText(monster.attributes().health().toString());
         atkValueLabel.setText(monster.attributes().attack().toString());
         defValueLabel.setText(monster.attributes().defense().toString());
@@ -142,14 +145,13 @@ public class MonsterInformationController extends Controller {
 
     @SuppressWarnings("SameParameterValue")
     private Label typeLabel(Label label, String monsterType) {
-        MonsterType type = MonsterType.valueOf(monsterType.toUpperCase());
         if (label == null) {
             label = new Label();
-            label.setId(type.getTypeName().toUpperCase() + "_label");
+            label.setId(monsterType.toUpperCase() + "_label");
         }
-        label.setText(type.getTypeName().toUpperCase());
+        label.setText(monsterType.toUpperCase());
         label.getStyleClass().clear();
-        label.getStyleClass().addAll("monster-type-general", type.getStyleClass());
+        label.getStyleClass().addAll("monster-type-general", "monster-type-" + monsterType);
         return label;
     }
 
@@ -165,15 +167,15 @@ public class MonsterInformationController extends Controller {
         nameLabel.setId("nameLabel_" + rowIndex);
 
         nameLabel.setOnMouseClicked(event -> {
-
-            if (descriptionLabel.isVisible() && descriptionLabel.getText().equals(ability.description())) {
+            if (!descriptionLabel.isVisible()
+                    || !descriptionLabel.getText().contains(ability.name() + ":\n" + ability.description())) {
+                descriptionLabel.setVisible(true);
+                descriptionLabel.setText(ability.name() + ":\n" + ability.description());
+                infoGrid.setVisible(false);
+            } else {
                 descriptionLabel.setVisible(false);
                 descriptionLabel.setText("");
                 infoGrid.setVisible(true);
-            } else {
-                descriptionLabel.setVisible(true);
-                descriptionLabel.setText(ability.description());
-                infoGrid.setVisible(false);
             }
         });
 
@@ -197,14 +199,15 @@ public class MonsterInformationController extends Controller {
         attackGrid.add(useLabel, 4, rowIndex);
     }
 
-
     private void cleanupAttackGrid() {
-        //iterate over rows
+        // iterate over rows
         for (int i = 1; i < 5; i++) {
-            //interate over columns
+            // interate over columns
             for (int j = 0; j < 5; j++) {
                 removeNodeByRowColumnIndex(i, j, attackGrid);
-                //TODO Add style classes
+                Label label = new Label("-");
+                attackGrid.add(label, j, i);
+                // TODO Add style classes
             }
         }
     }
@@ -215,6 +218,19 @@ public class MonsterInformationController extends Controller {
         loadBgImage(mainPane, "MonInfoView_v2.3-final.png");
         descriptionLabel.setVisible(false);
         descriptionLabel.setWrapText(true);
+
+        monsterImage.setOnMouseClicked(event -> {
+            if (!descriptionLabel.isVisible() || !descriptionLabel.getText().equals(monsterDescription)) {
+                descriptionLabel.setVisible(true);
+                descriptionLabel.setText(monsterDescription);
+                infoGrid.setVisible(false);
+            } else {
+                descriptionLabel.setVisible(false);
+                descriptionLabel.setText("");
+                infoGrid.setVisible(true);
+            }
+        });
+
         return parent;
     }
 

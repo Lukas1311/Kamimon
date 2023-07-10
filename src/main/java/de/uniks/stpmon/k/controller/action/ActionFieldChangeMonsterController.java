@@ -72,7 +72,7 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         if(userMonstersList != null && !userMonstersList.isEmpty()) {
             for (Monster monster : userMonstersList) {
-                if (activeMonster != monster) {
+                if (!activeMonster._id().equals(monster._id())) {
                     subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
                         selectedUserMonster = type.name();
                         addActionOption(type.name(), false);

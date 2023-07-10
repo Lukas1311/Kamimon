@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -18,8 +19,10 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ActionFieldChooseAbilityController extends Controller {
+
     @FXML
-    public VBox abilityBox;
+    public GridPane abilityGridPane;
+
 
     @Inject
     PresetService presetService;
@@ -30,6 +33,7 @@ public class ActionFieldChooseAbilityController extends Controller {
     Provider<ActionFieldController> actionFieldControllerProvider;
 
     public Monster monster;
+    private int count = 0;
 
     @Inject
     public ActionFieldChooseAbilityController() {
@@ -40,16 +44,16 @@ public class ActionFieldChooseAbilityController extends Controller {
         Parent parent = super.render();
 
         monster = encounterStorage.getSession().getMonster(new EncounterSlot(0, false));
-
+        addBackOption(translateString("back"));
         for (String id : monster.abilities().keySet()) {
             addAbility(id, monster.abilities().get(id));
         }
-
+        count = 0;
         return parent;
     }
 
     public void addAbility(String abilityId, Integer remainingUses) {
-        addBackOption(translateString("back"));
+
         subscribe(presetService.getAbility(abilityId), abilityDto -> addAbilityOption(abilityDto, remainingUses));
     }
 
@@ -70,12 +74,10 @@ public class ActionFieldChooseAbilityController extends Controller {
         });
 
         // set IDs for the options
-        int optionIndex = abilityBox.getChildren().size();
-        optionContainer.getChildren().get(1).setId("ability_" + optionIndex);
+        optionContainer.getChildren().get(1).setId(ability.name());
 
-        System.out.println(optionContainer.getChildren().get(1).getId());
-
-        abilityBox.getChildren().add(optionContainer);
+        abilityGridPane.add(optionContainer, 0, count);
+        count++;
     }
 
     public void chooseAbility() {
@@ -91,7 +93,7 @@ public class ActionFieldChooseAbilityController extends Controller {
 
         optionContainer.setOnMouseClicked(event -> actionFieldControllerProvider.get().openMainMenu());
 
-        abilityBox.getChildren().add(optionContainer);
+        abilityGridPane.add(optionContainer, 1, 3);
     }
 
     @Override

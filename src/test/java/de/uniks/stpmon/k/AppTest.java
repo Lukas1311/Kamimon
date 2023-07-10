@@ -369,11 +369,11 @@ class AppTest extends ApplicationTest {
         // walk to the right
         type(KeyCode.D, 3);
         // talk to prof
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
         waitForFxEvents();
 
         clickOn("#monster_label_0");
@@ -414,9 +414,9 @@ class AppTest extends ApplicationTest {
 
         type(KeyCode.S, 2);
         // start encounter
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         type(KeyCode.RIGHT);
-        type(KeyCode.ENTER);
+        type(KeyCode.E);
         verifyThat("#userMonsters", Node::isVisible);
 
     }

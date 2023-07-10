@@ -1,6 +1,9 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -16,6 +19,8 @@ public class ActionFieldMainMenuController extends Controller {
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     @FXML
     public Text textContent;
@@ -24,6 +29,7 @@ public class ActionFieldMainMenuController extends Controller {
 
     public String fight;
     public String changeMon;
+    public String flee;
 
     @Inject
     public ActionFieldMainMenuController() {}
@@ -35,8 +41,9 @@ public class ActionFieldMainMenuController extends Controller {
         textContent.setText(translateString("wannaDo"));
         fight = translateString("fight");
         changeMon = translateString("changeMon");
+        //TODO: Only show flee in wild encounter. Currently it is always shown to get out of the encounter
+        flee = translateString("flee");
 
-        //TODO: Add flight option for wild encounter
 
         setActions();
 
@@ -46,6 +53,7 @@ public class ActionFieldMainMenuController extends Controller {
     public void setActions() {
         addActionOption(fight);
         addActionOption(changeMon);
+        addActionOption(flee);
     }
 
     public void addActionOption(String option) {
@@ -64,6 +72,11 @@ public class ActionFieldMainMenuController extends Controller {
             openFight();
         } else if (option.equals(changeMon)) {
             openChangeMon();
+        }else if(option.equals(flee)){
+            IngameController.disableEncounter = true;
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
         }
     }
 
