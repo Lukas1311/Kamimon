@@ -3,8 +3,8 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
-import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.world.RouteData;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
@@ -28,13 +28,15 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 
 @Singleton
 public class MapOverviewController extends ToastedController {
+    private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
+    private final static int TILE_SIZE = 16;
 
     @FXML
     public Pane highlightPane;
@@ -56,17 +58,15 @@ public class MapOverviewController extends ToastedController {
     Text regionDescription;
 
     @Inject
-    TextureSetService textureSetService;
-    @Inject
     RegionStorage regionStorage;
     @Inject
     TextDeliveryService textDeliveryService;
+    @Inject
+    WorldRepository worldRepository;
+    @Inject
+    Provider<IngameController> ingameController;
 
-    private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
-    private final static int TILE_SIZE = 16;
-    private Image map;
-
-    Shape activeShape;
+    private Shape activeShape;
 
     @Inject
     public MapOverviewController() {
@@ -75,17 +75,19 @@ public class MapOverviewController extends ToastedController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        closeButton.setOnAction(click -> closeMap());
+        closeButton.setOnAction(click -> ingameController.get().closeMap());
         Region currentRegion = regionStorage.getRegion();
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
             int width = currentRegion.map().width() * TILE_SIZE;
             int height = currentRegion.map().height() * TILE_SIZE;
             subscribe(
-                    textureSetService.createMap(currentRegion),
-                    tileMap -> {
-                        BufferedImage renderedMap = tileMap.renderMap();
-                        map = SwingFXUtils.toFXImage(renderedMap, null);
+                    worldRepository.regionMap().onValue(),
+                    renderedMap -> {
+                        if (renderedMap.isEmpty()) {
+                            return;
+                        }
+                        Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
                         mapImageView.setImage(map);
                         mapImageView.setFitHeight(height);
                         mapImageView.setFitWidth(width);
@@ -111,10 +113,6 @@ public class MapOverviewController extends ToastedController {
         return parent;
     }
 
-    public void closeMap() {
-        mapOverviewContent.setVisible(false);
-    }
-
     private void renderMapDetails(List<RouteData> routeListData) {
         routeListData.forEach(routeData -> {
             if (!routeData.polygon().isEmpty()) {
@@ -135,6 +133,7 @@ public class MapOverviewController extends ToastedController {
     }
 
     private void addDetailShape(Shape shape, RouteData routeData) {
+        shape.setId("detail_" + routeData.id());
         shape.setFill(Color.TRANSPARENT);
         shape.setOpacity(0);
         shape.setStroke(Color.WHITESMOKE);
