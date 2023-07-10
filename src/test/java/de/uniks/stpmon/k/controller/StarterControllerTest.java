@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -13,8 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -44,10 +43,9 @@ public class StarterControllerTest extends ApplicationTest {
     @Test
     void testUI() {
         MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", "image.png", null, "description");
-        BufferedImage image = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
 
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
-        when(resourceService.getMonsterImage(anyString())).thenReturn(Observable.just(image));
+        when(resourceService.getMonsterImage(anyString())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
 
         starterController.setStarter("1");
 

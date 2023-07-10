@@ -6,8 +6,13 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.ICache;
+import de.uniks.stpmon.k.service.storage.cache.RegionCache;
+import de.uniks.stpmon.k.service.storage.cache.RegionMapCache;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -21,6 +26,10 @@ public class RegionService {
     RegionApiService regionApiService;
     @Inject
     UserStorage userStorage;
+    @Inject
+    RegionCache regionCache;
+    @Inject
+    RegionMapCache regionMapCache;
 
     @Inject
     public RegionService() {
@@ -61,11 +70,33 @@ public class RegionService {
 
     //------------------- Regions ---------------------------------
     public Observable<List<Region>> getRegions() {
-        return regionApiService.getRegions();
+        if (regionCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            regionCache.init();
+        }
+        return regionCache.onInitialized()
+                .andThen(regionCache.getValues().take(1));
     }
 
     public Observable<Region> getRegion(String id) {
-        return regionApiService.getRegion(id);
+        return regionCache.getValue(id).map(Observable::just)
+                .orElseGet(Observable::empty);
+    }
+
+    public Observable<RegionImage> getRegionImage(String regionId) {
+        if (regionMapCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            regionMapCache.init();
+        }
+        return regionMapCache.onInitialized()
+                .andThen(regionMapCache.getLazyValue(regionId).flatMap(op ->
+                        op.map(Observable::just).orElse(Observable.empty())));
+    }
+
+    public Completable loadAllRegionImages() {
+        if (regionMapCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            regionMapCache.init();
+        }
+        return regionMapCache.getLazyValues(regionCache.getIds())
+                .ignoreElements();
     }
 
     //---------------- Region Areas ------------------------------

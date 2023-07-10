@@ -3,10 +3,12 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -39,15 +41,20 @@ public class RegionListController extends PortalController {
         regionsFlowPane.getChildren().clear();
 
         for (int i = 0; i < regions.size(); i++) {
-            if(i > 2){
+            if (i > 2) {
                 continue;
             }
-            RegionController regionController = new RegionController(regions.get(i), this);
-            Parent parent = regionController.render();
+            int finalI = i;
+            subscribe(regionService.getRegionImage(regions.get(i)._id()), (regionImage) -> {
+                Image image = ImageUtils.scaledImageFX(regionImage.grayscaleImage(), 2);
+                RegionController regionController = new RegionController(regions.get(finalI),
+                        this, image);
+                Parent parent = regionController.render();
 
-            regionsFlowPane.getChildren().add(parent);
+                regionsFlowPane.getChildren().add(parent);
 
-            FlowPane.setMargin(parent, new Insets(25, 25, 0, 25));
+                FlowPane.setMargin(parent, new Insets(25, 25, 0, 25));
+            });
         }
         regionsFlowPane.autosize();
     }

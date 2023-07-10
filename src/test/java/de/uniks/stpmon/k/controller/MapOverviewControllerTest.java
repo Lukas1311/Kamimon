@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.TileMapData;
@@ -31,7 +32,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +91,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 10, 10, 20, 34, List.of());
         RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"), 10, 10, 0, 34, List.of());
         when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData, dummyData2, dummyData3)));
-        worldRepository.regionMap().setValue(new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB));
+        worldRepository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
         app.show(mapOverviewController);
         stage.requestFocus();
     }

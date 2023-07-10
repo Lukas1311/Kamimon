@@ -19,6 +19,7 @@ public class TileMap {
 
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
+    private final IMapProvider provider;
     private final Set<TileLayerData> floorLayers;
     private final Set<TileLayerData> decorationLayers;
     private final List<DecorationLayer> decorations;
@@ -29,6 +30,7 @@ public class TileMap {
     private final Map<TileLayerData, BufferedImage> layers = new HashMap<>();
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
+        this.provider = provider;
         this.data = provider.map();
         this.tilesetBySource = tilesetBySource;
         this.tileHeight = data.tileheight();
@@ -55,6 +57,10 @@ public class TileMap {
         }
         this.width = width;
         this.height = height;
+    }
+
+    public IMapProvider getProvider() {
+        return provider;
     }
 
     public TileMapData getData() {

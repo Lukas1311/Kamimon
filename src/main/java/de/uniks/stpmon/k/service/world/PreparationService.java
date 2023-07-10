@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
@@ -41,14 +42,18 @@ public class PreparationService {
     RegionStorage regionStorage;
     @Inject
     PresetService presetService;
+    @Inject
+    RegionService regionService;
 
     @Inject
     public PreparationService() {
     }
 
     public Completable prepareLobby() {
-        // Currently we don't need to load anything for the lobby.
-        return Completable.complete();
+        // Wait for region list to be loaded
+        return tryCompleteWithRateLimit(() -> regionService.getRegions().ignoreElements())
+                // Wait for region images to be loaded
+                .andThen(tryCompleteWithRateLimitAndWait(() -> regionService.loadAllRegionImages()));
     }
 
     /**
@@ -61,6 +66,20 @@ public class PreparationService {
         return tryCompleteWithRateLimit(this::loadAreaCharacters)
                 .andThen(tryCompleteWithRateLimit(this::loadRegionMap))
                 .andThen(tryCompleteWithRateLimit(this::loadAreaAndProps));
+    }
+
+    /**
+     * Tries to complete the supplied completable. If it fails, it will retry after a minute.
+     * If it fails again, it will direct the error down the stream.
+     * This will wait for the previous completable to complete before executing the next one.
+     *
+     * @param supplier Supplier which provides the completable to complete
+     * @return Completable which completes after the supplied completable completed.
+     */
+    public Completable tryCompleteWithRateLimitAndWait(Supplier<Completable> supplier) {
+        return Completable.create((e) -> e.setDisposable(
+                tryCompleteWithRateLimit(supplier).subscribe(e::onComplete, e::onError)));
+
     }
 
     /**
@@ -102,10 +121,9 @@ public class PreparationService {
         if (!worldRepository.regionMap().isEmpty()) {
             return Completable.complete();
         }
-        return textureSetService.createMap(region).flatMapCompletable(
-                (tileMap) -> {
-                    BufferedImage allLayersImage = tileMap.renderMap();
-                    worldRepository.regionMap().setValue(allLayersImage);
+        return regionService.getRegionImage(region._id()).flatMapCompletable(
+                (image) -> {
+                    worldRepository.regionMap().setValue(image.defaultImage());
                     return Completable.complete();
                 });
     }
