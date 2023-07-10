@@ -11,6 +11,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -67,6 +70,7 @@ public class MonBoxController extends Controller {
     private void showTeamMonster(List<Monster> monsters) {
         int monsterIndex = 0;
         // Team Monster max 6 slots
+
         for (Monster monster : monsters) {
             ImageView imageView = createMonsterImageView(monster);
             monTeam.add(imageView, monsterIndex, 0);
@@ -101,13 +105,48 @@ public class MonBoxController extends Controller {
         imageView.setFitWidth(IMAGESIZE);
 
         subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
-            // Scale and set the image
-            Image image = ImageUtils.scaledImageFX(imageUrl, 2.0);
+            // Scale and set the image for the Clipboard
+            Image image = ImageUtils.scaledImageFX(imageUrl, 0.5);
             imageView.setImage(image);
+            makeDraggable(imageView);
         });
 
         imageView.setOnMouseClicked(e -> triggerMonsterInformation(monster));
         return imageView;
+    }
+
+    double orgSceneX, orgSceneY;
+
+    private void makeDraggable(ImageView imageView) {
+        imageView.setOnDragDetected(event -> {
+            Dragboard dragboard = imageView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(imageView.getImage());
+            dragboard.setContent(content);
+            orgSceneX = event.getSceneX();
+            orgSceneY = event.getSceneY();
+            event.consume();
+        });
+
+        monTeam.setOnDragOver(event -> {
+            if (event.getGestureSource() != monTeam && event.getDragboard().hasImage()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        monTeam.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            if (dragboard.hasImage()) {
+                System.out.println(event.getSource());
+                monTeam.getChildren().remove(imageView);
+                monTeam.add(imageView, 2, 0);
+
+                event.setDropCompleted(true);
+            }
+            event.consume();
+        });
+
     }
 
     private void openMonsterInformation(Monster monster) {
