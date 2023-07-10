@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
+import de.uniks.stpmon.k.world.RouteData;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.embed.swing.SwingFXUtils;
@@ -21,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
@@ -28,6 +30,7 @@ import javafx.stage.Window;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 
 @Singleton
@@ -63,7 +66,7 @@ public class MapOverviewController extends ToastedController {
     private final static int TILE_SIZE = 16;
     private Image map;
 
-    Rectangle activeRectangle;
+    Shape activeShape;
 
     @Inject
     public MapOverviewController() {
@@ -93,7 +96,6 @@ public class MapOverviewController extends ToastedController {
             mapStackPane.scaleXProperty().bind(binding.map(v -> v.doubleValue() / width));
             mapStackPane.scaleYProperty().bind(binding.map(v -> v.doubleValue() / height));
             textFlowRegionDescription.prefWidthProperty().bind(mapOverviewContent.widthProperty());
-
         }
 
         Window parentWindow = app.getStage().getScene().getWindow();
@@ -103,39 +105,8 @@ public class MapOverviewController extends ToastedController {
         if (currentRegion.map() != null) {
             subscribe(
                     textDeliveryService.getRouteData(currentRegion),
-                    routeListData -> routeListData.forEach(routeData -> {
-                        if (!routeData.polygon().isEmpty()) {
-                            Polygon polygon = new Polygon();
-                            for (PolygonPoint point : routeData.polygon()) {
-                                polygon.getPoints().addAll(Double.valueOf(routeData.x() + point.x()), Double.valueOf(routeData.y() + point.y()));
-                            }
-                            polygon.setFill(Color.TRANSPARENT);
-                            polygon.setOpacity(0.25);
-                            polygon.setOnMouseClicked(event -> regionDescription.setText(routeData.routeText().description()));
-                            highlightPane.getChildren().add(polygon);
-                            return;
-                        }
-                        if (routeData.width() == 0 || routeData.height() == 0) {
-                            return;
-                        }
-                        Rectangle rectangle = new Rectangle(routeData.x(), routeData.y(), routeData.width(), routeData.height());
-                        rectangle.setFill(Color.TRANSPARENT);
-                        rectangle.setOpacity(0.25);
-                        highlightPane.getChildren().add(rectangle);
-                        rectangle.setOnMouseClicked(event -> {
-                            regionDescription.setText(routeData.routeText().description());
-                            if (activeRectangle != null) {
-                                activeRectangle.setOpacity(0);
-                            }
-                            rectangle.setStroke(Color.WHITE);
-                            rectangle.setStrokeWidth(3);
-                            rectangle.setOpacity(1);
-                            activeRectangle = rectangle;
-                        });
-                    }));
-
+                    this::renderMapDetails);
         }
-
 
         return parent;
     }
@@ -144,4 +115,52 @@ public class MapOverviewController extends ToastedController {
         mapOverviewContent.setVisible(false);
     }
 
+    private void renderMapDetails(List<RouteData> routeListData) {
+        routeListData.forEach(routeData -> {
+            if (!routeData.polygon().isEmpty()) {
+                Polygon polygon = new Polygon();
+                for (PolygonPoint point : routeData.polygon()) {
+                    polygon.getPoints().addAll(Double.valueOf(routeData.x() + point.x()),
+                            Double.valueOf(routeData.y() + point.y()));
+                }
+                addDetailShape(polygon, routeData);
+                return;
+            }
+            if (routeData.width() == 0 || routeData.height() == 0) {
+                return;
+            }
+            Rectangle rectangle = new Rectangle(routeData.x(), routeData.y(), routeData.width(), routeData.height());
+            addDetailShape(rectangle, routeData);
+        });
+    }
+
+    private void addDetailShape(Shape shape, RouteData routeData) {
+        shape.setFill(Color.TRANSPARENT);
+        shape.setOpacity(0);
+        shape.setStroke(Color.WHITESMOKE);
+        shape.setStrokeWidth(3);
+        highlightPane.getChildren().add(shape);
+
+        shape.setOnMouseClicked(event -> {
+            regionDescription.setText(routeData.routeText().description());
+            if (activeShape != null) {
+                activeShape.setOpacity(0);
+            }
+            shape.setOpacity(1);
+            activeShape = shape;
+        });
+
+        shape.setOnMouseEntered(event -> {
+            if (activeShape == shape) {
+                return;
+            }
+            shape.setOpacity(0.75);
+        });
+        shape.setOnMouseExited(event -> {
+            if (activeShape == shape) {
+                return;
+            }
+            shape.setOpacity(0);
+        });
+    }
 }
