@@ -53,6 +53,9 @@ public class EncounterOverviewController extends Controller {
     @Inject
     LoginController loginController;
 
+    @Inject
+    LoadingEncounterController loadingEncounterController;
+
     public List<Monster> userMonstersList;
     public List<Monster> opponentMonstersList;
 
@@ -80,8 +83,13 @@ public class EncounterOverviewController extends Controller {
 
         renderMonsterLists();
         animateMonsterEntrance();
+        animateEncounterStart();
 
         return parent;
+    }
+
+    private void animateEncounterStart() {
+        loadingEncounterController.render();
     }
 
     private void renderMonsterLists() {
