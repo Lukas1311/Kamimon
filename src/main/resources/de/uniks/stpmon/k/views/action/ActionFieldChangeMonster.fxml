@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldChangeMonsterController">
+   <TextFlow>
+      <VBox.margin>
+         <Insets bottom="5.0" />
+      </VBox.margin>
+      <Text fx:id="textContent" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+   </TextFlow>
+   <HBox fx:id="changeMonBox" prefHeight="200.0" prefWidth="100.0" />
+
+</VBox>

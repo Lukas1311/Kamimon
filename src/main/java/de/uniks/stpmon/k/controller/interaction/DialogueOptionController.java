@@ -32,5 +32,4 @@ public class DialogueOptionController extends Controller {
     public void onDeselected() {
         indicator.setVisible(false);
     }
-
 }
