@@ -32,6 +32,9 @@ public class ActionFieldController extends Controller {
 
     AbilityDto chosenAbility;
 
+    String abilityId;
+    String opponentId;
+
     @Inject
     public ActionFieldController() {
     }
@@ -87,6 +90,7 @@ public class ActionFieldController extends Controller {
 
     public HBox getOptionContainer(String option){
         Text arrowText = new Text(" >");
+
         Text optionText = new Text(option);
 
         arrowText.setVisible(false);

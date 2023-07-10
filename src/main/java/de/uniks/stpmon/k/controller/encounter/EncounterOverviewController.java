@@ -149,16 +149,15 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+        });
+
         return parent;
     }
 
-    @Override
-    public void init(){
-
-
-
-
-    }
 
 
     private void subscribeFight(){

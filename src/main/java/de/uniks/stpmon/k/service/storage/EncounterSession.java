@@ -123,6 +123,15 @@ public class EncounterSession extends DestructibleElement {
         );
     }
 
+    public Completable onEncounterCompleted() {
+        String opponent = getOpponentId(EncounterSlot.PARTY_FIRST);
+        if (opponent == null) {
+            return Completable.error(createOpponentNotFound(EncounterSlot.PARTY_FIRST));
+        }
+        return opponentCache.listenValue(opponent).filter(Optional::isEmpty).take(1).ignoreElements();
+    }
+
+
     public Opponent getOpponent(EncounterSlot slot) {
         String opponent = getOpponentId(slot);
         if (opponent == null) {
@@ -146,7 +155,7 @@ public class EncounterSession extends DestructibleElement {
                         ));
     }
 
-    public List<String> getAttackerTeam() {
+    public List<String> getEnemyTeam() {
         return Collections.unmodifiableList(attackerTeam);
     }
 

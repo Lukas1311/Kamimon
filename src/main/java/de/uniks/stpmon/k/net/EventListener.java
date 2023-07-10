@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -58,7 +59,7 @@ public class EventListener {
     }
 
     public <T> Observable<Event<T>> listen(Socket socket, String pattern, Class<T> type) {
-        return Observable.create(emitter -> {
+        return Observable.<Event<T>>create(emitter -> {
             SocketSender adapter = this.ensureOpen(socket);
             SocketReceiver endpoint = send(adapter, new Event<>("subscribe", pattern), true);
             if (endpoint == null) {
