@@ -65,6 +65,7 @@ public class IngameController extends PortalController {
     @Inject
     MonsterInformationController monsterInformationController;
 
+
     @Inject
     TrainerStorage trainerStorage;
 

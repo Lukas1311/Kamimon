@@ -2,12 +2,14 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.ParallelTransition;
@@ -27,6 +29,8 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EncounterOverviewController extends Controller {
 
@@ -54,8 +58,17 @@ public class EncounterOverviewController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
+    MonsterService monsterService;
+    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
+    LoginController loginController;
+
+    @Inject
+    LoadingEncounterController loadingEncounterController;
+
+    public List<Monster> userMonstersList;
+    public List<Monster> opponentMonstersList;
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SessionService sessionService;
@@ -64,6 +77,14 @@ public class EncounterOverviewController extends Controller {
 
     @Inject
     public EncounterOverviewController() {
+        opponentMonstersList = new ArrayList<>();
+    }
+
+    @Override
+    public void init() {
+        super.init();
+
+        subscribe(monsterService.getTeam(), team -> userMonstersList.addAll(team));
     }
 
     @Override
@@ -90,8 +111,13 @@ public class EncounterOverviewController extends Controller {
 
         renderMonsterLists();
         animateMonsterEntrance();
+        animateEncounterStart();
 
         return parent;
+    }
+
+    private void animateEncounterStart() {
+        loadingEncounterController.render();
     }
 
     private void renderMonsterLists() {
@@ -202,7 +228,9 @@ public class EncounterOverviewController extends Controller {
                 Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldBox);
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
+
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
+
         fullSequence.play();
     }
 
