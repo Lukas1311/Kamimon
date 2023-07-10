@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public class TrainerProvider extends SingleCache<Trainer> {
 
-    protected Trainer trainer;
-
     @Inject
     public TrainerProvider() {
     }

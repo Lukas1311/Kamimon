@@ -1,20 +1,24 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.views.world.EntityView;
-
 /**
  * Service which controls the rendering of images and animations.
  * It can be used to skip image loading and animations while testing or in other cases.
  */
+@SuppressWarnings("unused")
 public class EffectContext {
+
+    public static final int MOVEMENT_PERIOD = 200;
+    public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
 
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
-    private int walkingSpeed = EntityView.MOVEMENT_PERIOD;
-    private int walkingAnimationSpeed = EntityView.WALKING_ANIMATION_PERIOD;
+    private int walkingSpeed = MOVEMENT_PERIOD;
+    private int walkingAnimationSpeed = WALKING_ANIMATION_PERIOD;
     private double textureScale = 3.0d;
     private int dialogAnimationSpeed = 450;
+
+    private double encounterAnimationSpeed = 1000;
 
 
     /**
@@ -104,6 +108,7 @@ public class EffectContext {
      *
      * @param walkingAnimationSpeed The walking animation speed of the player in milliseconds per 6 frames
      */
+    @SuppressWarnings("unused")
     public EffectContext setWalkingAnimationSpeed(int walkingAnimationSpeed) {
         this.walkingAnimationSpeed = walkingAnimationSpeed;
         return this;
@@ -156,4 +161,22 @@ public class EffectContext {
         return dialogAnimationSpeed;
     }
 
+    /**
+     * Sets the speed of the encounter animation.
+     *
+     * @param encounterAnimationSpeed speed of the encounter animation
+     */
+    public EffectContext setEncounterAnimationSpeed(double encounterAnimationSpeed) {
+        this.encounterAnimationSpeed = encounterAnimationSpeed;
+        return this;
+    }
+
+    /**
+     * Returns the speed of the encounter animation.
+     *
+     * @return speed of the encounter animation
+     */
+    public double getEncounterAnimationSpeed() {
+        return encounterAnimationSpeed;
+    }
 }

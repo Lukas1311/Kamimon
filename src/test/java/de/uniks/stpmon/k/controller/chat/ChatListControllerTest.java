@@ -40,7 +40,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 class ChatListControllerTest extends ApplicationTest {
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
     @Mock
     GroupService groupService;
     @Mock
@@ -48,7 +48,7 @@ class ChatListControllerTest extends ApplicationTest {
     @Mock
     EventListener eventListener;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
@@ -58,11 +58,11 @@ class ChatListControllerTest extends ApplicationTest {
     @InjectMocks
     ChatListController chatListController;
 
-    Subject<Event<Group>> groupEvents = PublishSubject.create();
+    final Subject<Event<Group>> groupEvents = PublishSubject.create();
     final ArrayList<Group> groups = new ArrayList<>();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         groups.add(new Group(null, null, "0", "Peter", null));

@@ -11,6 +11,7 @@ import retrofit2.http.*;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public interface RegionApiService {
 
     //---------------- Region Trainers ----------------------------
@@ -64,6 +65,6 @@ public interface RegionApiService {
     Observable<List<Monster>> getMonsters(@Path("region") String region, @Path("trainer") String trainerId);
 
     @GET("regions/{region}/trainers/{trainer}/monsters/{id}")
-    Observable<Monster> getMonster(@Path("region") String region, @Path("id") String monsterId);
+    Observable<Monster> getMonster(@Path("region") String region, @Path("trainer") String trainer, @Path("id") String monsterId);
 
 }

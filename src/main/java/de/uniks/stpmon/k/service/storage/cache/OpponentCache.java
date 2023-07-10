@@ -15,10 +15,9 @@ public class OpponentCache extends ListenerCache<Opponent, String> {
     public OpponentCache() {
     }
 
-    public OpponentCache setup(String encounterId, List<Opponent> initialOpponents) {
+    public void setup(String encounterId, List<Opponent> initialOpponents) {
         this.encounterId = encounterId;
         this.initialOpponents = initialOpponents;
-        return this;
     }
 
     @Override
@@ -28,7 +27,7 @@ public class OpponentCache extends ListenerCache<Opponent, String> {
 
     @Override
     protected String getEventName() {
-        return "encounters.%s.opponents.*.*".formatted(
+        return "encounters.%s.trainers.*.opponents.*.*".formatted(
                 encounterId
         );
     }

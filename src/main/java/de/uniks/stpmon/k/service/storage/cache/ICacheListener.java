@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
+@SuppressWarnings("unused")
 public interface ICacheListener<T> {
 
     default void beforeAdd(T value) {

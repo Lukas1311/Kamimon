@@ -42,20 +42,20 @@ public class UserManagementControllerTest extends ApplicationTest {
     @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Spy
-    ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Spy
-    App app = new App(null);
+    final App app = new App(null);
 
     @Spy
     @InjectMocks
     UserManagementController userManagementController;
 
-    User dummyUser = new User("0", "Bob", "on", "av", null);
+    final User dummyUser = new User("0", "Bob", "on", "av", null);
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(userService.getMe()).thenReturn(dummyUser);

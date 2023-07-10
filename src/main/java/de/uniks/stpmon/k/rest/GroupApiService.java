@@ -24,11 +24,6 @@ public interface GroupApiService {
             @Query("members") String members
     );
 
-    @GET("groups/{id}")
-    Observable<Group> getGroup(
-            @Path("id") String id
-    );
-
     @PATCH("groups/{id}")
     Observable<Group> editGroup(
             @Path("id") String id,

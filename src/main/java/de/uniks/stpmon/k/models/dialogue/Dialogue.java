@@ -8,7 +8,7 @@ public final class Dialogue {
     public static Dialogue create(String trainerId, DialogueItem... items) {
         Dialogue dialogue = new Dialogue(trainerId, items);
         for (int i = 0; i < items.length - 1; i++) {
-            items[i].setup(dialogue, items[i + 1]);
+            items[i].setup(items[i + 1]);
         }
         return dialogue;
     }

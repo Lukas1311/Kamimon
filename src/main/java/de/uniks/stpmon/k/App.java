@@ -42,7 +42,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         System.setProperty("prism.lcdtext", "false");
         stage = primaryStage;
         //initial window size

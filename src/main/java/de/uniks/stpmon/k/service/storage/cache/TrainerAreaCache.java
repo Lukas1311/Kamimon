@@ -111,6 +111,7 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
         }
 
         @Override
+        @SuppressWarnings("unused")
         public void beforeAdd(Trainer value) {
             Optional<Trainer> oldTrainer = trainerAreaCache.getValue(value._id());
             // Remove old trainer if he exists
@@ -118,6 +119,7 @@ public class TrainerAreaCache extends SimpleCache<Trainer, String> {
         }
 
         @Override
+        @SuppressWarnings("unused")
         public void beforeUpdate(Trainer value) {
             Optional<Trainer> oldTrainer = trainerAreaCache.getValue(value._id());
             // Remove old trainer if he exists

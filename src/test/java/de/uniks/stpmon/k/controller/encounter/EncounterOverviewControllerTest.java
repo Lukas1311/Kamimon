@@ -1,13 +1,14 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.MonsterService;
+import de.uniks.stpmon.k.service.SessionService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -21,7 +22,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,12 +33,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class EncounterOverviewControllerTest extends ApplicationTest {
     @Spy
+    final
     App app = new App(null);
 
     @Mock
     IResourceService resourceService;
     @Mock
-    MonsterService monsterService;
+    SessionService sessionService;
     @Mock
     Provider<StatusController> statusControllerProvider;
     @InjectMocks
@@ -47,23 +48,31 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
-    Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
-    List<Monster> userMonsterList = new ArrayList<>();
-    List<Monster> opponentMonsterList = new ArrayList<>();
-    BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
+    final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
+    final BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
 
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
 
+        // Defines used slots of the encounter
+        when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
+                EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
+
         Monster userMonster1 = MonsterBuilder.builder().setId("2").setTrainer(dummytrainer._id()).setType(1).create();
-        Monster userMonster2 = MonsterBuilder.builder().setId("3").setTrainer(dummytrainer._id()).setType(2).create();
-        userMonsterList.add(userMonster1);
-        userMonsterList.add(userMonster2);
+        Monster userMonster2 = MonsterBuilder.builder(userMonster1).setId("3").setType(2).create();
+        // Assigns the monsters to the team slots
+        when(sessionService.getMonster(EncounterSlot.PARTY_FIRST)).thenReturn(userMonster1);
+        when(sessionService.getMonster(EncounterSlot.PARTY_SECOND)).thenReturn(userMonster2);
+
+        // Assigns the monsters to the enemy slots
+        when(sessionService.getMonster(EncounterSlot.ENEMY_FIRST))
+                .thenReturn(MonsterBuilder.builder().setId("2").setType(1).create());
+        when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
+                .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
 
         when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(monsterImage));
-        when(monsterService.getTeam()).thenReturn(Observable.just(userMonsterList));
 
         when(statusControllerProvider.get()).thenAnswer(invocation -> {
             VBox statusBox = new VBox();
@@ -75,15 +84,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
             when(statusController.render()).thenReturn(statusController.fullBox);
             return statusController;
         });
-
-        encounterOverviewController.userMonstersList = userMonsterList;
-
-        opponentMonsterList.addAll(List.of(
-                MonsterBuilder.builder().setId("2").setType(1).create(),
-                MonsterBuilder.builder().setId("3").setType(2).create()
-        ));
-
-        encounterOverviewController.opponentMonstersList = opponentMonsterList;
 
         app.show(encounterOverviewController);
         stage.requestFocus();

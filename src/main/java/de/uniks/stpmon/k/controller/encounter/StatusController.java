@@ -1,11 +1,10 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.SessionService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
@@ -34,59 +33,61 @@ public class StatusController extends Controller {
     @Inject
     PresetService presetService;
     @Inject
-    RegionService regionService;
-    @Inject
-    RegionStorage regionStorage;
-    @Inject
-    TrainerService trainerService;
+    SessionService sessionService;
 
-    public Monster monster;
+    public EncounterSlot slot;
 
     @Inject
     public StatusController() {
     }
 
-    public void setMonster(Monster monster) {
-        this.monster = monster;
+    public void setSlot(EncounterSlot slot) {
+        this.slot = slot;
     }
 
     @Override
     public Parent render() {
         final Parent parent;
-        if (monster.trainer().equals(trainerService.getMe()._id())) {
+        if (sessionService.isSelf(slot)) {
             parent = load("UserMonsterStatus");
             loadImage(monsterStatusView, "encounter/userMonsterStatus.png");
-            loadMonsterInformation();
         } else {
             parent = load("OpponentMonsterStatus");
             loadImage(monsterStatusView, "encounter/opponentMonsterStatus.png");
-            loadMonsterInformation();
         }
+        parent.setId(slot.partyIndex() + (slot.enemy() ? "_enemy" : "_party"));
+        loadMonsterInformation();
         return parent;
     }
 
     public void loadMonsterInformation() {
+        // Initial state
+        updateState(sessionService.getMonster(slot));
         // used to get the monster information for the monster of the trainer in the active region
-        disposables.add(regionService.getMonster(regionStorage.getRegion()._id(), monster._id())
-                .observeOn(FX_SCHEDULER)
-                .subscribe(monster1 -> {
-                    monsterHp.setText(monster1.currentAttributes().health() + " / " + monster1.attributes().health());
-                    monsterLevel.setText("Lvl. " + monster1.level().toString());
+        subscribe(sessionService.listenMonster(slot), this::updateState);
+    }
 
-                    double maxHp = monster1.attributes().health();
-                    double currentHp = monster1.currentAttributes().health();
-                    double hpProgress = currentHp / maxHp;
+    private void updateState(Monster monster) {
+        loadMonsterDto(Integer.toString(monster.type()));
 
-                    hpBar.setProgress(hpProgress);
+        monsterLevel.setText("Lvl. " + monster.level().toString());
 
-                    if (trainerService.getMe().team().contains(monster1._id())) {
-                        double maxExp = Math.pow(monster1.level(), 3) - Math.pow(monster1.level() - 1, 3);
-                        double currentExp = monster1.experience();
-                        double expProgress = currentExp / maxExp;
+        double maxHp = monster.attributes().health();
+        double currentHp = monster.currentAttributes().health();
+        double hpProgress = currentHp / maxHp;
 
-                        experienceBar.setProgress(expProgress);
-                    }
-                }));
+        hpBar.setProgress(hpProgress);
+
+        if (!sessionService.isSelf(slot)) {
+            return;
+        }
+        monsterHp.setText(monster.currentAttributes().health() + " / " + monster.attributes().health());
+
+        double maxExp = Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3);
+        double currentExp = monster.experience();
+        double expProgress = currentExp / maxExp;
+
+        experienceBar.setProgress(expProgress);
     }
 
 

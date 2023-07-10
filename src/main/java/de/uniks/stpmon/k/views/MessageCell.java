@@ -43,7 +43,7 @@ public class MessageCell extends ListCell<Message> {
                 setGraphic(invitationController.render());
                 setDisable(false);
             } else {
-                final MessageController messageController = new MessageController(item, sender, me, isOwnMessage(item));
+                final MessageController messageController = new MessageController(item, sender, isOwnMessage(item));
                 setGraphic(messageController.render());
                 setDisable(!isOwnMessage(item));
             }

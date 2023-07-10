@@ -25,6 +25,7 @@ public class TabController extends ToastedController {
     /**
      * Push a new tab to the tab stack
      */
+    @SuppressWarnings("SameParameterValue")
     protected void pushTab(SidebarTab tab) {
         hybridControllerProvider.get().pushTab(tab);
     }

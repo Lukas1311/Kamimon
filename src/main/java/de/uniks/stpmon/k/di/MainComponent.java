@@ -21,6 +21,7 @@ public interface MainComponent {
 
     LoginController loginController();
 
+    @SuppressWarnings("EmptyMethod")
     HybridController hybridController();
 
     LoadingScreenController loadingScreenController();
@@ -35,6 +36,7 @@ public interface MainComponent {
         @BindsInstance
         Builder mainApp(App app);
 
+        @SuppressWarnings("EmptyMethod")
         MainComponent build();
 
     }
