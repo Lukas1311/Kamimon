@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
+import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.InputHandler;
 import javafx.scene.control.Button;
@@ -56,6 +58,12 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     StarterController starterController;
+    @Mock
+    @SuppressWarnings("unused")
+    WorldTimerController worldTimerController;
+    @Mock
+    @SuppressWarnings("unused")
+    NightOverlayController nightOverlayController;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
