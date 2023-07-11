@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.InputEvent;
 import javafx.scene.layout.*;
 
 import javax.inject.Inject;
@@ -97,14 +98,7 @@ public class IngameController extends PortalController {
                         event.consume();
                     }
                 }
-                case M -> {
-                    if (mapOverview != null) {
-                        closeMap();
-                    } else {
-                        openMap();
-                    }
-                    event.consume();
-                }
+                case M -> openOrCloseMap(event);
 
                 case ESCAPE -> {
                     if (mapOverview != null) {
@@ -191,10 +185,7 @@ public class IngameController extends PortalController {
         }
 
         if (miniMap != null) {
-            miniMap.setOnMouseClicked(click -> {
-                openMap();
-                click.consume();
-            });
+            miniMap.setOnMouseClicked(this::openOrCloseMap);
         }
 
         Parent starter = this.starterController.render();
@@ -205,6 +196,15 @@ public class IngameController extends PortalController {
         }
 
         return parent;
+    }
+
+    private void openOrCloseMap(InputEvent event) {
+        if (mapOverview == null) {
+            openMap();
+        } else {
+            closeMap();
+        }
+        event.consume();
     }
 
     public void openMap() {

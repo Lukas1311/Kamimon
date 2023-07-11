@@ -4,6 +4,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Provider;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -114,6 +115,11 @@ public class CacheProxy<C extends ICache<V, K>, V, K> implements ICache<V, K> {
             return Status.UNINITIALIZED;
         }
         return cache.getStatus();
+    }
+
+    @Override
+    public Collection<K> getIds() {
+        return ensureCreation().getIds();
     }
 
     @Override

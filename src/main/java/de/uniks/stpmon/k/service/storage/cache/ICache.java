@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.service.ILifecycleService;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,6 +136,8 @@ public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
      * @return The status of the cache.
      */
     Status getStatus();
+
+    Collection<K> getIds();
 
     enum Status {
         UNINITIALIZED,

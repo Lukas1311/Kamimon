@@ -91,7 +91,7 @@ public class RegionService {
 
     public Completable loadAllRegionImages() {
         return regionImageCache.ensureInit()
-                .flatMap((c)->c.getLazyValues(c.getIds()))
+                .flatMap((c) -> c.getLazyValues(regionCache.getIds()))
                 .ignoreElements();
 
     }
