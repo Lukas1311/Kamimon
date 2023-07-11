@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.overworld;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.service.world.FastClock;
 import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -12,8 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @Singleton
 public class WorldTimerController extends Controller {
@@ -26,37 +25,23 @@ public class WorldTimerController extends Controller {
     public Text label;
     @Inject
     public WorldService worldService;
+    @Inject
+    public FastClock clockService;
 
     @Inject
     public WorldTimerController() {
+    }
+
+    private void applyTime(LocalTime now) {
+        label.setText(formatter.format(now));
     }
 
     @Override
     public Parent render() {
         Parent render = super.render();
         loadBgImage(background, "overworld/clock_clear.png");
-        applyTime();
+        subscribe(clockService.onTime(), this::applyTime);
         return render;
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        LocalTime currentTime = worldService.getCurrentTime();
-        int offsetSecond = 60 - currentTime.getSecond();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                applyTime();
-            }
-        }, offsetSecond * 1000, 1000);
-        onDestroy(timer::cancel);
-    }
-
-    private void applyTime() {
-        LocalTime currentTime = worldService.getCurrentTime();
-        label.setText(formatter.format(currentTime));
     }
 
     @Override
