@@ -8,7 +8,7 @@ import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -97,7 +97,7 @@ public class IngameController extends PortalController {
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (mapOverview != null) {
                 switch (event.getCode()) {
-                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B, E-> {
+                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B, E -> {
                         // Block movement and backpack, if map overview is shown
                         if (mapOverview.isVisible()) {
                             event.consume();
@@ -134,14 +134,15 @@ public class IngameController extends PortalController {
                 EncounterOverviewController controller = encounterProvider.get();
                 app.show(controller);
             });
-            subscribe(encounterService.listenForEncounter()
-                    .subscribeOn(Schedulers.computation()), () -> {
+            disposables.add(encounterService.listenForEncounter().subscribe(() -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                EncounterOverviewController controller = encounterProvider.get();
-                app.show(controller);
-            });
+                Platform.runLater(() -> {
+                    EncounterOverviewController controller = encounterProvider.get();
+                    app.show(controller);
+                });
+            }));
         }
     }
 
