@@ -1,17 +1,16 @@
 package de.uniks.stpmon.k.service.dummies;
 
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class WorldDummy {
 
     public static void addWorldDummy(WorldRepository repository) {
-        BufferedImage dummyImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        repository.regionMap().setValue(dummyImage);
-        repository.minimapImage().setValue(dummyImage);
-        repository.floorImage().setValue(dummyImage);
+        repository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
+        repository.minimapImage().setValue(DummyConstants.EMPTY_IMAGE);
+        repository.floorImage().setValue(DummyConstants.EMPTY_IMAGE);
         repository.props().setValue(List.of());
     }
 

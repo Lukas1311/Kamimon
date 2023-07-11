@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,4 +138,8 @@ public class FriendCacheDummy implements IFriendCache {
         return Status.INITIALIZED;
     }
 
+    @Override
+    public Collection<String> getIds() {
+        return List.of();
+    }
 }

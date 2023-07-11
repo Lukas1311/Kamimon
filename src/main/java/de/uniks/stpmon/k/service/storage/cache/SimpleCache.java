@@ -283,4 +283,7 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         return status;
     }
 
+    public Collection<K> getIds() {
+        return valuesById.keySet();
+    }
 }

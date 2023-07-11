@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.*;
 import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.controller.chat.ChatListController;
 import de.uniks.stpmon.k.controller.chat.CreateChatController;
+import de.uniks.stpmon.k.controller.lobby.LobbyController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;

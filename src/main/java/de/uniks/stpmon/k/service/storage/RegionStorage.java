@@ -27,6 +27,7 @@ public class RegionStorage {
     public void setRegion(Region region) {
         this.region = region;
         if (region == null) {
+            area = null;
             regionEvents.onNext(RegionEvent.EMPTY);
         }
     }

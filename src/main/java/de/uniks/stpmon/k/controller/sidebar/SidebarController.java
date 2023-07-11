@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -47,6 +48,8 @@ public class SidebarController extends Controller {
     Provider<ChatController> chatControlleProvider;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    RegionStorage regionStorage;
     @Inject
     InputHandler inputHandler;
     boolean ingame = false;
@@ -101,6 +104,7 @@ public class SidebarController extends Controller {
         logoutButton.setOnAction(event -> {
             if (ingame) {
                 trainerStorage.setTrainer(null);
+                regionStorage.setRegion(null);
                 backtoLobby();
             } else {
                 logout();
