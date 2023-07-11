@@ -6,11 +6,17 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheProxy;
+import de.uniks.stpmon.k.service.storage.cache.RegionCache;
+import de.uniks.stpmon.k.service.storage.cache.RegionImageCache;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -21,6 +27,14 @@ public class RegionService {
     RegionApiService regionApiService;
     @Inject
     UserStorage userStorage;
+    @Inject
+    Provider<RegionCache> regionCacheProvider;
+    @Inject
+    Provider<RegionImageCache> regionMapCacheProvider;
+    private final CacheProxy<RegionCache, Region, String> regionCache
+            = new CacheProxy<>(() -> regionCacheProvider);
+    private final CacheProxy<RegionImageCache, RegionImage, String> regionImageCache
+            = new CacheProxy<>(() -> regionMapCacheProvider);
 
     @Inject
     public RegionService() {
@@ -61,11 +75,25 @@ public class RegionService {
 
     //------------------- Regions ---------------------------------
     public Observable<List<Region>> getRegions() {
-        return regionApiService.getRegions();
+        return regionCache.onInitialized()
+                .andThen(regionCache.singleValues());
     }
 
     public Observable<Region> getRegion(String id) {
-        return regionApiService.getRegion(id);
+        return regionCache.onInitialized()
+                .andThen(regionCache.singleValue(id));
+    }
+
+    public Observable<RegionImage> getRegionImage(String regionId) {
+        return regionImageCache.ensureInit()
+                .flatMap(c->c.singleLazyValue(regionId));
+    }
+
+    public Completable loadAllRegionImages() {
+        return regionImageCache.ensureInit()
+                .flatMap((c) -> c.getLazyValues(regionCache.getIds()))
+                .ignoreElements();
+
     }
 
     //---------------- Region Areas ------------------------------

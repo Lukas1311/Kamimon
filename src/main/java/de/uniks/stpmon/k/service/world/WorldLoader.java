@@ -77,11 +77,11 @@ public class WorldLoader implements ILifecycleService {
                     if (trainer == NoneConstants.NONE_TRAINER) {
                         return Observable.just(trainer);
                     }
-                    trainerStorage.setTrainer(trainer);
                     return regionService.getArea(region._id(), trainer.area())
                             .map((area) -> {
                                 regionStorage.setRegion(region);
                                 regionStorage.setArea(area);
+                                trainerStorage.setTrainer(trainer);
 
                                 loadRegion();
                                 return trainer;
