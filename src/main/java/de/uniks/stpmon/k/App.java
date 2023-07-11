@@ -74,6 +74,7 @@ public class App extends Application {
         addInputHandler(component);
 
         LoadingScreenController loadingScreen = component.loadingScreenController();
+        loadingScreen.setMinTime(0);
         loadingScreen.startLoading(this::onFinishedLoading);
     }
 

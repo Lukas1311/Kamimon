@@ -3,9 +3,9 @@ package de.uniks.stpmon.k.net;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 public class WSEndpoint implements SocketReceiver, SocketSender {
 
     private final URI endpointURI;
-    protected final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new ArrayList<>());
+    protected final List<Consumer<String>> messageHandlers = Collections.synchronizedList(new CopyOnWriteArrayList<>());
 
     Session userSession;
 
@@ -33,7 +33,7 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
 
     @Override
     public boolean canClose() {
-        return !this.messageHandlers.isEmpty();
+        return this.messageHandlers.isEmpty();
     }
 
     @Override

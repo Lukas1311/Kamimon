@@ -8,7 +8,7 @@
             fx:controller="de.uniks.stpmon.k.controller.IngameController">
     <center>
         <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
-            <BorderPane>
+            <BorderPane fx:id="mainPain">
                 <top>
                     <HBox prefHeight="40.0" prefWidth="380.0" BorderPane.alignment="CENTER">
                         <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0"/>
