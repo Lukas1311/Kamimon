@@ -19,6 +19,12 @@
     -fx-fill: white;
 }
 
+/* --------------------    Timer      -------------------- */
+
+.timer-label {
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 36px;
+}
 
 /* -------------------- Backpack Menu -------------------- */
 .backpack-menu {

@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
@@ -61,6 +62,8 @@ public class IngameController extends PortalController {
     @Inject
     Provider<EncounterOverviewController> encounterProvider;
     @Inject
+    WorldTimerController worldTimerController;
+    @Inject
     InteractionStorage interactionStorage;
     @Inject
     MonsterInformationController monsterInformationController;
@@ -93,6 +96,7 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
+        worldTimerController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (mapOverview != null) {
@@ -156,6 +160,7 @@ public class IngameController extends PortalController {
         backpackController.destroy();
         dialogueController.destroy();
         starterController.destroy();
+        worldTimerController.destroy();
     }
 
     @Override
@@ -179,6 +184,11 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(0, miniMap);
         }
 
+        Parent worldTimer = this.worldTimerController.render();
+        if (worldTimer != null) {
+            rightVbox.getChildren().add(0, worldTimer);
+        }
+
         mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
@@ -192,6 +202,7 @@ public class IngameController extends PortalController {
             ingameStack.setAlignment(Pos.CENTER);
             mapOverview.setVisible(false);
         }
+
 
         Parent dialogue = this.dialogueController.render();
         if (dialogue != null) {
