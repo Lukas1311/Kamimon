@@ -1,6 +1,12 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
@@ -27,13 +33,14 @@ public class ActionFieldChooseOpponentController extends Controller {
     EncounterStorage encounterStorage;
 
     @Inject
+    EncounterService encounterService;
+
+    @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
 
     public List<String> opponentMonstersList;
 
-    private int count = 0;
-
-    public String back;
+    private int optionIndex = 0;
 
     @Inject
     public ActionFieldChooseOpponentController(){
@@ -43,38 +50,39 @@ public class ActionFieldChooseOpponentController extends Controller {
     public Parent render() {
         Parent parent = super.render();
 
-        back = translateString("back");
+        addMonsterOption(null, null, true);
 
-        //show all monsters of enemy
-        //get team of enemy
-        opponentMonstersList = encounterStorage.getSession().getAttackerTeam();
+        Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
+        Opponent opponent2 = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_SECOND);
 
-        addMonsters();
+        if(opponent != null){
+            subscribe(presetService.getMonster(opponent.monster()),
+                    monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
+        }
+        if (opponent2 != null) {
+            subscribe(presetService.getMonster(opponent2.monster()),
+                    monsterDto -> addMonsterOption(opponent2, monsterDto.name(), false));
+        }
 
         return parent;
     }
 
-    public void addMonsters() {
-        count = 0;
-        addMonsterOption(back, true);
-
-        if(opponentMonstersList != null) {
-            for (String monster : opponentMonstersList) {
-                subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name(), false));
-            }
-        }
-    }
-
-    public void addMonsterOption(String option, boolean isBackOption) {
-        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+    public void addMonsterOption(Opponent opponent, String monsterName, boolean isBackOption) {
+        HBox optionContainer = actionFieldControllerProvider.get()
+                .getOptionContainer(isBackOption ? translateString("back") : monsterName);
 
         optionContainer.setOnMouseClicked(event -> {
-            //TODO: make move
-            showBattleLog(option);
+            if (isBackOption){
+                actionFieldControllerProvider.get().openChooseAbility();
+            } else {
+                actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
+                actionFieldControllerProvider.get().executeAbilityMove();
+                actionFieldControllerProvider.get().openBattleLog();
+            }
         });
 
         // each column containing a maximum of 2 options
-        int index = count / 2;
+        int index = optionIndex / 2;
         if (chooseOpponentBox.getChildren().size() <= index) {
             VBox vbox = new VBox();
             chooseOpponentBox.getChildren().add(vbox);
@@ -92,15 +100,7 @@ public class ActionFieldChooseOpponentController extends Controller {
             vbox.getChildren().add(0, optionContainer);
         }
 
-        count++;
-    }
-
-    private void showBattleLog(String option) {
-        if (option.equals(back)) {
-            actionFieldControllerProvider.get().openChooseAbility();
-        } else {
-            actionFieldControllerProvider.get().openBattleLog();
-        }
+        this.optionIndex++;
     }
 
     @Override

@@ -102,12 +102,17 @@ public class EncounterService {
         );
     }
 
-    public Observable<Opponent> makeAbilityMove(Monster attacker, int ability, Monster target) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(
+    public Observable<Opponent> makeAbilityMove(int abilityId, String targetId) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(null, new AbilityMove(
                 Moves.ABILITY.toString(),
-                ability,
-                target._id())
+                abilityId,
+                targetId)
         );
+
+        if (encounterStorage.getSession() == null) {
+            throw new IllegalStateException("There is no encounter o_O");
+        }
+
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),

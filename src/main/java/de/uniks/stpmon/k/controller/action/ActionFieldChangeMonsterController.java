@@ -84,7 +84,7 @@ public class ActionFieldChangeMonsterController extends Controller {
         count = 0;
         addActionOption(back, true);
 
-        activeMonster = encounterStorage.getSession().getMonster(new EncounterSlot(0, false));
+        activeMonster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
 
         if (userMonstersList != null && !userMonstersList.isEmpty()) {
             for (Monster monster : userMonstersList) {

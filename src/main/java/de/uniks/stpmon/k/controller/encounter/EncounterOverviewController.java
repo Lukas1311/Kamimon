@@ -123,41 +123,20 @@ public class EncounterOverviewController extends Controller {
             attackAnimations.put(slot, translation);
         }
 
-        onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            switch (event.getCode()) {
-                    case G -> {
-                        // Block movement and backpack, if map overview is shown
-                        renderAttack(EncounterSlot.PARTY_FIRST);
-                        event.consume();
-                    }
-
-                    case H -> {
-                        // Block movement and backpack, if map overview is shown
-                        renderAttack(EncounterSlot.ENEMY_FIRST);
-                        event.consume();
-                    }
-
-                    default -> {
-                    }
-
-                }
-        }));
-
         subscribeFight();
 
         renderMonsterLists();
         animateMonsterEntrance();
 
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+        });
+
         return parent;
     }
 
-    @Override
-    public void init(){
-
-
-
-
-    }
 
 
     private void subscribeFight(){
