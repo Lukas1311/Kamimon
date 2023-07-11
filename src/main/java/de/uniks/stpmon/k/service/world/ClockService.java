@@ -33,9 +33,7 @@ public class ClockService {
                 Observable.just(currentTime),
                 Observable.interval(60, TimeUnit.SECONDS)
                         .map(ticks -> currentTime.plus(ticks + 1, ChronoUnit.MINUTES))
-        ).doOnDispose(() -> {
-            clockObservable = null;
-        }).replay(1).refCount();
+        ).doOnDispose(() -> clockObservable = null).replay(1).refCount();
     }
 
     private LocalTime getCurrentTime() {

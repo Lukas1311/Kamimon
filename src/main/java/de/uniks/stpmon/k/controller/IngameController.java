@@ -190,18 +190,11 @@ public class IngameController extends PortalController {
             ingameStack.getChildren().add(1, nightOverlay);
         }
 
-        mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
             ingameWrappingHBox.getChildren().add(backPack);
             ingameStack.setAlignment(Pos.TOP_RIGHT);
-        }
-
-        if (mapOverview != null) {
-            ingameStack.getChildren().add(mapOverview);
-            ingameStack.setAlignment(Pos.CENTER);
-            mapOverview.setVisible(false);
         }
 
         Parent dialogue = this.dialogueController.render();

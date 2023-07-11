@@ -22,8 +22,6 @@ public class FastClock extends ClockService {
                 Observable.just(currentTime),
                 Observable.interval(offsetSecond, 100, TimeUnit.MILLISECONDS)
                         .map(ticks -> currentTime.plus(ticks + 1, ChronoUnit.MINUTES))
-        ).doOnDispose(() -> {
-            clockObservable = null;
-        }).replay(1).refCount();
+        ).doOnDispose(() -> clockObservable = null).replay(1).refCount();
     }
 }
