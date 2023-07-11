@@ -10,16 +10,14 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.time.Instant;
-import java.time.ZoneId;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
 
 @Singleton
 public class WorldTimerController extends Controller {
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm")
-            .withZone(ZoneId.systemDefault());
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     @FXML
     public HBox timer;
     @FXML
@@ -44,10 +42,9 @@ public class WorldTimerController extends Controller {
     @Override
     public void init() {
         super.init();
-        Instant currentTime = worldService.getCurrentTime();
+        LocalTime currentTime = worldService.getCurrentTime();
+        int offsetSecond = 60 - currentTime.getSecond();
         Timer timer = new Timer();
-        long second = currentTime.getEpochSecond() % 60;
-        long offsetSecond = 60 - second;
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -58,7 +55,7 @@ public class WorldTimerController extends Controller {
     }
 
     private void applyTime() {
-        Instant currentTime = worldService.getCurrentTime();
+        LocalTime currentTime = worldService.getCurrentTime();
         label.setText(formatter.format(currentTime));
     }
 

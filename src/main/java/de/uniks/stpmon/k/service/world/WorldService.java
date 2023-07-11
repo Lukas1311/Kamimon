@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,8 +26,14 @@ public class WorldService {
     public WorldService() {
     }
 
-    public Instant getCurrentTime() {
-        return Instant.now();
+    public LocalTime getCurrentTime() {
+        return Instant.now().atZone(ZoneId.systemDefault()).toLocalTime();
+    }
+
+    public float getNightFactor(LocalTime time) {
+        int hour = time.getHour();
+        int factor = ((hour - 20) + 24) % 24 - 6;
+        return (int) (Math.max(0, -((1f) / (36f)) * factor * factor + 1) * 100) / 100.0f;
     }
 
     public CharacterSet getCharacter(String name) {
