@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,6 +22,10 @@ public class WorldService {
 
     @Inject
     public WorldService() {
+    }
+
+    public Instant getCurrentTime() {
+        return Instant.now();
     }
 
     public CharacterSet getCharacter(String name) {
