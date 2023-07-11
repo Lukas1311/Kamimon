@@ -118,9 +118,7 @@ public class ChooseSpriteController extends ToastedController {
      * If there are characters, load the sprite image for the currently selected character based on the currentSpriteIndex
      */
     public void getCharactersList(List<String> charactersList) {
-        List<String> preMadeCharacters = charactersList.subList(0, Math.min(charactersList.size(), 20));
-
-        this.characters.setAll(preMadeCharacters);
+        this.characters.setAll(charactersList);
 
         if (!charactersList.isEmpty()) {
             String selectedCharacter = charactersList.get(currentSpriteIndex);

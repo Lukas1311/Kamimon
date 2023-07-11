@@ -6,7 +6,9 @@ import de.uniks.stpmon.k.controller.popup.PopUpScenario;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.utils.Direction;
 import javafx.beans.binding.Bindings;
@@ -14,6 +16,8 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -26,9 +30,17 @@ import javafx.scene.layout.StackPane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.prefs.Preferences;
 
 @Singleton
 public class CreateTrainerController extends PortalController {
+
+    protected final ObservableList<String> characters = FXCollections.observableArrayList();
+    private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
+
+    protected int currentSpriteIndex;
+    protected int previousSpriteIndex;
 
     @FXML
     public TextField createTrainerInput;
@@ -39,8 +51,6 @@ public class CreateTrainerController extends PortalController {
     @FXML
     public ImageView trainerSprite;
     @FXML
-    public Button createSpriteButton;
-    @FXML
     public Button createTrainerButton;
     @FXML
     public AnchorPane createTrainerContent;
@@ -48,11 +58,19 @@ public class CreateTrainerController extends PortalController {
     public StackPane spriteContainer;
     @FXML
     public ImageView spriteBackground;
+    @FXML
+    public Button spriteLeft;
+    @FXML
+    public Button spriteRight;
 
     @Inject
     RegionService regionService;
     @Inject
-    ChooseSpriteController chooseSpriteController;
+    PresetService presetService;
+    @Inject
+    Preferences preferences;
+    @Inject
+    TrainerService trainerService;
     @Inject
     Provider<PopUpController> popUpControllerProvider;
     @Inject
@@ -62,7 +80,6 @@ public class CreateTrainerController extends PortalController {
 
     private Region chosenRegion;
     private String chosenSprite = "Premade_Character_01.png";
-    private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
 
     @Inject
@@ -95,11 +112,20 @@ public class CreateTrainerController extends PortalController {
 
         // these three elements have to be disabled when pop up is shown
         trainerSprite.disableProperty().bind(isPopUpShown);
-        createSpriteButton.disableProperty().bind(isPopUpShown);
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
 
-        createTrainerButton.setOnAction(click -> createTrainer());
+        createTrainerButton.setOnAction(click -> {
+            saveSprite();
+            createTrainer();
+        });
         closeButton.setOnAction(click -> closeWindow());
+
+        // Retrieve the sprite index from the preferences
+        currentSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
+        previousSpriteIndex = currentSpriteIndex;
+
+        // Load the list of available sprites
+        loadSpriteList();
 
         return parent;
     }
@@ -109,16 +135,6 @@ public class CreateTrainerController extends PortalController {
                 setSpriteImage(spriteContainer, trainerSprite, Direction.BOTTOM, selectedCharacter, textureService, 120, 120),
                 this::handleError
         );
-    }
-
-    public void trainerSprite() {
-        createSprite();
-    }
-
-    public void createSprite() {
-        chooseSpriteController.setCreationMode(true);
-        createTrainerContent.getChildren().clear();
-        createTrainerContent.getChildren().addAll(chooseSpriteController.render());
     }
 
     // set file ID of the chosen sprite
@@ -154,5 +170,80 @@ public class CreateTrainerController extends PortalController {
         hybridControllerProvider.get().openMain(MainWindow.LOBBY);
     }
 
-}
+    // -------------------------- Choose Sprite -------------------------- //
 
+
+    /**
+     * Load the list of available sprites from the preset service
+     */
+    public void loadSpriteList() {
+        disposables.add(presetService.getCharacters()
+                .observeOn(FX_SCHEDULER)
+                .subscribe(response -> {
+                            getCharactersList(response);
+                            currentSpriteIndex %= characters.size();
+                            previousSpriteIndex %= characters.size();
+                        }
+                        , this::handleError));
+    }
+
+    /**
+     * Update the characters list with the names of the available characters
+     * If there are characters, load the sprite image for the currently selected character based on the currentSpriteIndex
+     */
+    public void getCharactersList(List<String> charactersList) {
+        this.characters.setAll(charactersList);
+
+        if (!charactersList.isEmpty()) {
+            String selectedCharacter = charactersList.get(currentSpriteIndex);
+            // Load the sprite image
+            loadSprite(selectedCharacter);
+        }
+    }
+
+    /**
+     * Navigate to the previous sprite character
+     */
+    public void toLeft() {
+        if (!characters.isEmpty()) {
+            currentSpriteIndex--;
+            if (currentSpriteIndex < 0) {
+                currentSpriteIndex = characters.size() - 1;
+            }
+            String selectedCharacter = characters.get(currentSpriteIndex);
+            // Load the sprite image
+            loadSprite(selectedCharacter);
+        }
+
+    }
+
+    /**
+     * Navigate to the next sprite character
+     */
+    public void toRight() {
+        if (!characters.isEmpty()) {
+            currentSpriteIndex++;
+            if (currentSpriteIndex >= characters.size()) {
+                currentSpriteIndex = 0;
+            }
+            String selectedCharacter = characters.get(currentSpriteIndex);
+            // Load the sprite image
+            loadSprite(selectedCharacter);
+        }
+    }
+
+    /**
+     * Save the selected sprite character
+     * Check if the selected character is different from the previous character and shows a pop-up for confirmation
+     */
+    public void saveSprite() {
+        // Save the currentSpriteIndex to the preferences
+        preferences.putInt("currentSpriteIndex", currentSpriteIndex);
+        disposables.add(
+                trainerService.setImage(characters.get(currentSpriteIndex))
+                        .observeOn(FX_SCHEDULER)
+                        .subscribe(trainer -> {
+                        }, this::handleError));
+    }
+
+}
