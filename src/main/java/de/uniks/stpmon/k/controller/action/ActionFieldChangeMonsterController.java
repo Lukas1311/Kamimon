@@ -143,15 +143,8 @@ public class ActionFieldChangeMonsterController extends Controller {
         } else {
             subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster),
                     next -> {
-                        System.out.println("Selected ID: " + selectedUserMonster._id());
-                        System.out.println("New Monster: " + next.monster());
+                        //nothing to see here
                     }, error -> {
-                        //remove unnecessary souts
-                        System.out.println("Trainer: " + activeMonster.trainer());
-                        System.out.println("Active ID: " + activeMonster._id());
-                        System.out.println("Selected ID: " + selectedUserMonster._id());
-                        System.out.println("Me: " + encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id());
-                        System.out.println("Enemy: " + encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST)._id());
                         HttpException err = (HttpException) error;
                         String text = new String(Objects.requireNonNull(Objects.requireNonNull(err.response()).errorBody()).bytes(), StandardCharsets.UTF_8);
                         System.out.println(text);

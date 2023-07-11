@@ -6,7 +6,6 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
@@ -21,7 +20,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -80,8 +78,6 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
-        userMonster0.setOnMouseClicked(event -> changeMonsterTransition());
-
         //click on the first mon of opponent to get out of the encounter
         //Note: the encounter is still active after this
         opponentMonster0.setOnMouseClicked(e -> {
@@ -116,14 +112,13 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterSlot slot) {
-        Monster monster = sessionService.getMonster(slot);
         StatusController statusController = statusControllerProvider.get();
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
-        subscribe(sessionService.listenMonster(slot), (newMonster)-> {
-            loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
-        });
+        subscribe(sessionService.listenMonster(slot), (newMonster) ->
+                loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy())
+        );
 
         if (slot.partyIndex() == 0) {
             if (!slot.enemy()) {
@@ -215,15 +210,6 @@ public class EncounterOverviewController extends Controller {
         //the first monster of the user and opponent always gets rendered
         return new ParallelTransition(createNodeTransition(status, attacker), createNodeTransition(image, attacker));
     }
-
-    public void changeMonsterTransition() {
-
-        ObservableList<Node> teamMonsters = userMonsters.getChildren();
-        ParallelTransition userFullTransition1 =
-                createMonsterTransition(userMonster0, teamMonsters.get(0), false);
-        userFullTransition1.play();
-    }
-
 
     private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
         TranslateTransition transition = new TranslateTransition(
