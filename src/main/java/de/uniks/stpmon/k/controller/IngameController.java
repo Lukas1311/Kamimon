@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
@@ -64,6 +65,8 @@ public class IngameController extends PortalController {
     @Inject
     WorldTimerController worldTimerController;
     @Inject
+    NightOverlayController nightOverlayController;
+    @Inject
     InteractionStorage interactionStorage;
     @Inject
     MonsterInformationController monsterInformationController;
@@ -97,6 +100,7 @@ public class IngameController extends PortalController {
         backpackController.init();
         dialogueController.init();
         worldTimerController.init();
+        nightOverlayController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             if (mapOverview != null) {
@@ -161,6 +165,7 @@ public class IngameController extends PortalController {
         dialogueController.destroy();
         starterController.destroy();
         worldTimerController.destroy();
+        nightOverlayController.destroy();
     }
 
     @Override
@@ -187,6 +192,11 @@ public class IngameController extends PortalController {
         Parent worldTimer = this.worldTimerController.render();
         if (worldTimer != null) {
             rightVbox.getChildren().add(0, worldTimer);
+        }
+
+        Parent nightOverlay = this.nightOverlayController.render();
+        if (nightOverlay != null) {
+            ingameStack.getChildren().add(1, nightOverlay);
         }
 
         mapOverview = this.mapOverviewController.render();
