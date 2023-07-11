@@ -5,13 +5,11 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.*;
-import de.uniks.stpmon.k.service.MonsterService;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Result;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
-import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.text.Text;
@@ -19,7 +17,10 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Singleton
 public class ActionFieldBattleLogController extends Controller {
@@ -35,18 +36,6 @@ public class ActionFieldBattleLogController extends Controller {
 
     @Inject
     PresetService presetService;
-
-    @Inject
-    EncounterStorage encounterStorage;
-
-    @Inject
-    TrainerStorage trainerService;
-
-    @Inject
-    MonsterService monsterService;
-
-
-
 
     private final List<String> texts = new ArrayList<>();
 
@@ -90,49 +79,39 @@ public class ActionFieldBattleLogController extends Controller {
                             };
                             addTextSection(translateString(translationVar), false);
                         }
-                        case "target-defeated" -> {
-                            //TODO target is the Trainer in R3, in R4 it is the monster
-                            addTextSection(translateString("target-defeated", monster.name()), false);
-                        }
+
+                        case "target-defeated" -> //TODO target is the Trainer in R3, in R4 it is the monster
+                                addTextSection(translateString("target-defeated", monster.name()), false);
+
                         case "monster-changed" -> {
                             //handled above
                         }
-                        case "monster-defeated" -> {
-                            addTextSection(translateString("monster-defeated", monster.name()), false);
-                        }
-                        case "monster-levelup" -> {
-                            //TODO add level here
-                            addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+
+                        case "monster-defeated" ->
+                                addTextSection(translateString("monster-defeated", monster.name()), false);
+
+                        case "monster-levelup" -> //TODO add level here
                             //TODO add Level up handling here?
-                        }
-                        case "monster-evolved" -> {
-                            addTextSection(translateString("monster-evolved", monster.name()), false);
-                            //TODO #evolve animation? v4
-                        }
-                        case "monster-learned" -> {
-                            addTextSection(translateString("monster-learned", monster.name(),
-                                    presetService.getAbility(result.ability()).blockingFirst().name()), false);
-                        }
-                        case "monster-dead" -> {
-                            addTextSection(translateString("monster-dead", monster.name()), false);
-                        }
-                        case "ability-unknown" -> {
-                            addTextSection(translateString("ability-unknown",
-                                            presetService.getAbility(result.ability()).blockingFirst().name(), monster.name())
-                                    , false);
-                        }
-                        case "ability-no-uses" -> {
-                            addTextSection(translateString("ability-no-uses",
-                                            presetService.getAbility(result.ability()).blockingFirst().name())
-                                    , false);
-                        }
-                        case "target-unknown" -> {
-                            addTextSection(translateString("target-unknown"), false);
-                        }
-                        case "target-dead" -> {
-                            //TODO target is the Trainer in R3, in R4 it is the monster
-                            addTextSection(translateString("target-dead", monster.name()), false);
-                        }
+                                addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+
+                        case "monster-evolved" -> //TODO #evolve animation? v4
+                                addTextSection(translateString("monster-evolved", monster.name()), false);
+
+                        case "monster-learned" -> addTextSection(translateString("monster-learned", monster.name(),
+                                presetService.getAbility(result.ability()).blockingFirst().name()), false);
+
+                        case "monster-dead" -> addTextSection(translateString("monster-dead", monster.name()), false);
+
+                        case "ability-unknown" -> addTextSection(translateString("ability-unknown",
+                                presetService.getAbility(result.ability()).blockingFirst().name(), monster.name()), false);
+
+                        case "ability-no-uses" -> addTextSection(translateString("ability-no-uses",
+                                presetService.getAbility(result.ability()).blockingFirst().name()), false);
+
+                        case "target-unknown" -> addTextSection(translateString("target-unknown"), false);
+
+                        case "target-dead" -> //TODO target is the Trainer in R3, in R4 it is the monster
+                                addTextSection(translateString("target-dead", monster.name()), false);
                     }
                 }
             });
@@ -145,8 +124,9 @@ public class ActionFieldBattleLogController extends Controller {
         myTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-            javafx.application.Platform.runLater(() -> actionFieldControllerProvider.get().openMainMenu());
-            }}, 3000);
+                javafx.application.Platform.runLater(() -> actionFieldControllerProvider.get().openMainMenu());
+            }
+        }, 3000);
 
         logText.setOnMouseClicked(event -> actionFieldControllerProvider.get().openMainMenu());
 

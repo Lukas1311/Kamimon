@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.InputHandler;
@@ -34,8 +35,9 @@ public class EncounterOverviewController extends Controller {
 
     private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
 
-    private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
+    private final HashMap<EncounterSlot, Transition> changeAnimations = new HashMap<>(4);
 
+    private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
 
     @FXML
     public StackPane fullBox;
@@ -105,7 +107,7 @@ public class EncounterOverviewController extends Controller {
         });
 
         //add a translation transition to all monster images
-        for ( EncounterSlot slot : monsterImages.keySet()) {
+        for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
 
@@ -121,6 +123,23 @@ public class EncounterOverviewController extends Controller {
             translation.setCycleCount(2);
 
             attackAnimations.put(slot, translation);
+        }
+
+        for (EncounterSlot slot : monsterImages.keySet()) {
+            ImageView view = monsterImages.get(slot);
+
+            TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
+            if(slot.enemy()) {
+                translation.setByY(0);
+                translation.setByX(1000);
+            } else {
+                translation.setByY(0);
+                translation.setByX(-1000);
+            }
+            translation.setAutoReverse(true);
+            translation.setCycleCount(2);
+
+            changeAnimations.put(slot, translation);
         }
 
         subscribeFight();
@@ -147,9 +166,15 @@ public class EncounterOverviewController extends Controller {
                 //using IMove to animate attack
                 if(next.move() instanceof AbilityMove){
                     renderAttack(slot);
+                } else if (next.move() instanceof ChangeMonsterMove) {
+                    renderChange(slot);
                 }
             });
         }
+    }
+
+    private void renderChange(EncounterSlot slot) {
+        changeAnimations.get(slot).play();
     }
 
 
