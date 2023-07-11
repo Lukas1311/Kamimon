@@ -1,6 +1,8 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.lobby;
 
 import de.uniks.stpmon.k.constants.NoneConstants;
+import de.uniks.stpmon.k.controller.CreateTrainerController;
+import de.uniks.stpmon.k.controller.PortalController;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.utils.ImageUtils;

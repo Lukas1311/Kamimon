@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.lobby;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Region;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -27,7 +28,7 @@ public class RegionController extends Controller {
     public RegionController(Region region, RegionListController listController, Image image) {
         this.region = region;
         this.listController = listController;
-        this.effectContext = listController.effectContext;
+        this.effectContext = listController.getEffectContext();
         this.image = image;
     }
 

@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.lobby;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
