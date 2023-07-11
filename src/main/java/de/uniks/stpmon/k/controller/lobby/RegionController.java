@@ -46,8 +46,8 @@ public class RegionController extends Controller {
             listController.createNewTrainer(region);
         });
         regionImage.setFitWidth(vboxWidth - borderSize * 2);
-        imageWrappingPane.setPrefWidth(400);
-        imageWrappingPane.setPrefHeight(regionImage.getFitHeight() + borderSize * 2);
+        imageWrappingPane.setMinWidth(regionImage.getFitWidth() + borderSize * 2);
+        imageWrappingPane.setMinHeight(regionImage.getFitHeight() + borderSize * 2);
 
         return parent;
     }
