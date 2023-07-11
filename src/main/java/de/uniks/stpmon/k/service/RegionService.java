@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.UserStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheProxy;
 import de.uniks.stpmon.k.service.storage.cache.RegionCache;
 import de.uniks.stpmon.k.service.storage.cache.RegionImageCache;
 import io.reactivex.rxjava3.core.Completable;
@@ -30,8 +31,10 @@ public class RegionService {
     Provider<RegionCache> regionCacheProvider;
     @Inject
     Provider<RegionImageCache> regionMapCacheProvider;
-    private RegionCache regionCache;
-    private RegionImageCache regionImageCache;
+    private final CacheProxy<RegionCache, Region, String> regionCache
+            = new CacheProxy<>(() -> regionCacheProvider);
+    private final CacheProxy<RegionImageCache, RegionImage, String> regionImageCache
+            = new CacheProxy<>(() -> regionMapCacheProvider);
 
     @Inject
     public RegionService() {
@@ -72,40 +75,25 @@ public class RegionService {
 
     //------------------- Regions ---------------------------------
     public Observable<List<Region>> getRegions() {
-        if (regionCache == null) {
-            regionCache = regionCacheProvider.get();
-            regionCache.init();
-        }
         return regionCache.onInitialized()
-                .andThen(regionCache.getValues().take(1));
+                .andThen(regionCache.singleValues());
     }
 
     public Observable<Region> getRegion(String id) {
-        if (regionCache == null) {
-            regionCache = regionCacheProvider.get();
-            regionCache.init();
-        }
-        return regionCache.getValue(id).map(Observable::just)
-                .orElseGet(Observable::empty);
+        return regionCache.onInitialized()
+                .andThen(regionCache.singleValue(id));
     }
 
     public Observable<RegionImage> getRegionImage(String regionId) {
-        if (regionImageCache == null) {
-            regionImageCache = regionMapCacheProvider.get();
-            regionImageCache.init();
-        }
-        return regionImageCache.onInitialized()
-                .andThen(regionImageCache.getLazyValue(regionId).flatMap(op ->
-                        op.map(Observable::just).orElse(Observable.empty())));
+        return regionImageCache.ensureInit()
+                .flatMap(c->c.singleLazyValue(regionId));
     }
 
     public Completable loadAllRegionImages() {
-        if (regionImageCache == null) {
-            regionImageCache = regionMapCacheProvider.get();
-            regionImageCache.init();
-        }
-        return regionImageCache.getLazyValues(regionCache.getIds())
+        return regionImageCache.ensureInit()
+                .flatMap((c)->c.getLazyValues(c.getIds()))
                 .ignoreElements();
+
     }
 
     //---------------- Region Areas ------------------------------
