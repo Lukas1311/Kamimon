@@ -238,6 +238,7 @@ public class CreateTrainerController extends PortalController {
      */
     public void saveSprite() {
         // Save the currentSpriteIndex to the preferences
+        setTrainerImage(characters.get(currentSpriteIndex));
         preferences.putInt("currentSpriteIndex", currentSpriteIndex);
         disposables.add(
                 trainerService.setImage(characters.get(currentSpriteIndex))
