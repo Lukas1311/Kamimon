@@ -211,6 +211,13 @@ public class EncounterOverviewController extends Controller {
         return new ParallelTransition(createNodeTransition(status, attacker), createNodeTransition(image, attacker));
     }
 
+    public void changeMonsterTransition() {
+        TranslateTransition transition = new TranslateTransition(
+                Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldBox);
+        transition.setFromX(0);
+        transition.setToX(-600);
+    }
+
 
     private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
         TranslateTransition transition = new TranslateTransition(

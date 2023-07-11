@@ -50,29 +50,29 @@ public class ActionFieldController extends Controller {
         return "action/";
     }
 
-    public void openMainMenu(){
+    public void openMainMenu() {
         open(mainMenuControllerProvider);
     }
 
-    public void openChangeMonster(){
+    public void openChangeMonster() {
         open(changeMonsterControllerProvider);
     }
 
-    public void openChooseAbility(){
+    public void openChooseAbility() {
         open(chooseAbilityControllerProvider);
     }
 
-    public void openChooseOpponent(){
-        if(chosenAbility != null){
+    public void openChooseOpponent() {
+        if (chosenAbility != null) {
             open(chooseOpponentControllerProvider);
         }
     }
 
-    public void openBattleLog(){
+    public void openBattleLog() {
         open(battleLogControllerProvider);
     }
 
-    private void open(Provider<? extends Controller> provider){
+    private void open(Provider<? extends Controller> provider) {
         actionFieldContent.getChildren().clear();
         actionFieldContent.getChildren().add(provider.get().render());
     }
@@ -81,11 +81,11 @@ public class ActionFieldController extends Controller {
         this.chosenAbility = chosenAbility;
     }
 
-    public AbilityDto getChosenAbility(){
+    public AbilityDto getChosenAbility() {
         return chosenAbility;
     }
 
-    public HBox getOptionContainer(String option){
+    public HBox getOptionContainer(String option) {
         Text arrowText = new Text(" >");
         Text optionText = new Text(option);
 
