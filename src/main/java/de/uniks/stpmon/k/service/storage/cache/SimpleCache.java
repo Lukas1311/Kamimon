@@ -14,7 +14,7 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
 
     protected final BehaviorSubject<List<T>> subject = BehaviorSubject.createDefault(List.of());
     protected final Map<K, T> valuesById = Collections.synchronizedMap(new LinkedHashMap<>());
-    protected final Map<K, ObservableEmitter<Optional<T>>> listenersById = new LinkedHashMap<>();
+    protected final Map<K, BehaviorSubject<Optional<T>>> listenersById = new LinkedHashMap<>();
     protected final PublishSubject<T> onCreate = PublishSubject.create();
     protected final PublishSubject<T> onUpdate = PublishSubject.create();
     protected final PublishSubject<T> onRemove = PublishSubject.create();
@@ -235,12 +235,8 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
 
     @Override
     public Observable<Optional<T>> listenValue(K id) {
-        return Observable.create((emitter -> {
-            listenersById.put(id, emitter);
-            emitter.onNext(getValue(id));
-            disposables.add(Disposable.fromRunnable(emitter::onComplete));
-            emitter.setCancellable(() -> listenersById.remove(id));
-        }));
+        return listenersById.computeIfAbsent(id, (k) -> BehaviorSubject
+                .createDefault(getValue(id)));
     }
 
     @Override

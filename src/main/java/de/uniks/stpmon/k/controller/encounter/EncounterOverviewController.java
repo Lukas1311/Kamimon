@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -79,6 +80,8 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
+        userMonster0.setOnMouseClicked(event -> changeMonsterTransition());
+
         //click on the first mon of opponent to get out of the encounter
         //Note: the encounter is still active after this
         opponentMonster0.setOnMouseClicked(e -> {
@@ -118,15 +121,17 @@ public class EncounterOverviewController extends Controller {
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
+        subscribe(sessionService.listenMonster(slot), (newMonster)-> {
+            loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
+        });
+
         if (slot.partyIndex() == 0) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
             if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 0));
             } else {
                 VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
             }
         } else if (slot.partyIndex() == 1) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
             if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 125));
             }
@@ -212,10 +217,11 @@ public class EncounterOverviewController extends Controller {
     }
 
     public void changeMonsterTransition() {
-        TranslateTransition transition = new TranslateTransition(
-                Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldBox);
-        transition.setFromX(0);
-        transition.setToX(-600);
+
+        ObservableList<Node> teamMonsters = userMonsters.getChildren();
+        ParallelTransition userFullTransition1 =
+                createMonsterTransition(userMonster0, teamMonsters.get(0), false);
+        userFullTransition1.play();
     }
 
 

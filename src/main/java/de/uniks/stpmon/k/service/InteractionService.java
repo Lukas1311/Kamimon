@@ -60,7 +60,7 @@ public class InteractionService implements ILifecycleService {
         List<String> starters = info.starters();
         Trainer me = trainerService.getMe();
 
-        if (starters != null && !starters.isEmpty()) {
+        if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
             return getStarterDialogue(starters, me, trainer);
         }
         if (info.encounterOnTalk()) {
