@@ -5,8 +5,10 @@ import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
+import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
@@ -30,6 +33,14 @@ class EncounterServiceTest {
 
     @Mock
     EncounterApiService encounterApiService;
+
+    @Mock
+    SessionService sessionService;
+
+    @Mock
+    Provider<SessionService> sessionServiceProvider;
+
+
     @Spy
     RegionStorage regionStorage;
     @Spy
@@ -68,11 +79,11 @@ class EncounterServiceTest {
                         0,
                         "targetId"
                 ),
-                new Result(
+                List.of(new Result(
                         "ability-success",
                         0,
                         "effective"
-                ),
+                )),
                 0);
         Opponent opponent2 = new Opponent(
                 "1",
@@ -85,11 +96,11 @@ class EncounterServiceTest {
                         "change-monster",
                         "monster3Id"
                 ),
-                new Result(
+                List.of(new Result(
                         "monster-changed",
                         null,
                         null
-                ),
+                )),
                 1);
         return List.of(opponent1, opponent2);
     }
@@ -129,6 +140,8 @@ class EncounterServiceTest {
                 .thenReturn(Observable.just(encounter));
 
         when(encounterStorage.getEncounter()).thenReturn(encounter);
+
+        encounterService.encounterStorage = encounterStorage;
 
         //action
         final Encounter returnEncounter = encounterService
@@ -170,7 +183,7 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponents.get(0).isNPC());
         assertEquals("monster1Id", returnOpponents.get(0).monster());
         assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponents.get(0).move());
-        assertEquals(new Result("ability-success", 0, "effective"), returnOpponents.get(0).result());
+        assertEquals(new Result("ability-success", 0, "effective"), returnOpponents.get(0).results().get(0));
         assertEquals(0, returnOpponents.get(0).coins());
 
         //check mock
@@ -204,7 +217,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponents.get(0).isNPC());
         assertEquals("monster2Id", returnOpponents.get(0).monster());
         assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponents.get(0).move());
-        assertEquals(new Result("monster-changed", null, null), returnOpponents.get(0).result());
+        assertEquals(new Result("monster-changed", null, null), returnOpponents.get(0).results().get(0));
         assertEquals(1, returnOpponents.get(0).coins());
 
         //check mock
@@ -222,7 +235,13 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
-        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
+        when(sessionService.getOpponent(any())).thenReturn(opponent);
+
+        when(sessionServiceProvider.get()).thenReturn(sessionService);
+
+        //when(encounterStorage.getSession().getOpponent(any())).thenReturn(opponent);
 
         //action
         final Opponent returnOpponent = encounterService.getEncounterOpponent().blockingFirst();
@@ -235,7 +254,7 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponent.isNPC());
         assertEquals("monster1Id", returnOpponent.monster());
         assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.move());
-        assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.result());
+        assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.results().get(0));
         assertEquals(0, returnOpponent.coins());
 
         // check mock
@@ -258,10 +277,19 @@ class EncounterServiceTest {
         when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
+
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
-        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+        when(sessionService.getOpponent(any())).thenReturn(opponent);
+
+        when(sessionServiceProvider.get()).thenReturn(sessionService);
+
+        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
+        //when(encounterStorage.getSession()).thenReturn(encounterSession);
+
+        //when(encounterStorage.getSession().getOpponent(any())).thenReturn(opponent);
 
         //action
         final Opponent returnOpponent = encounterService
@@ -276,7 +304,7 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponent.isNPC());
         assertEquals("monster1Id", returnOpponent.monster());
         assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.move());
-        assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.result());
+        assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.results().get(0));
         assertEquals(0, returnOpponent.coins());
 
         //check mock
@@ -292,13 +320,19 @@ class EncounterServiceTest {
         Monster nextMonster = MonsterBuilder.builder().setId("1").create();
 
         //define mock
+        when(sessionServiceProvider.get()).thenReturn(sessionService);
+
+        when(sessionService.getOpponent(any())).thenReturn(opponent);
+
         when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
+
+        //when(encounterStorage.getSession().getOpponent(any())).thenReturn(opponent);
 
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
-        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
 
         //action
         final Opponent returnOpponent = encounterService
@@ -313,7 +347,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponent.isNPC());
         assertEquals("monster2Id", returnOpponent.monster());
         assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.move());
-        assertEquals(new Result("monster-changed", null, null), returnOpponent.result());
+        assertEquals(new Result("monster-changed", null, null), returnOpponent.results().get(0));
         assertEquals(1, returnOpponent.coins());
 
         //check mock
@@ -325,13 +359,19 @@ class EncounterServiceTest {
         Opponent opponent = getDummyOpponents().get(1);
 
         //define mock
+        when(sessionServiceProvider.get()).thenReturn(sessionService);
+        when(sessionService.getOpponent(any())).thenReturn(opponent);
+
         when(encounterApiService.fleeEncounter(any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
+
 
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
-        when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
+
+
 
         //action
         final Opponent returnOpponent = encounterService
@@ -346,7 +386,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponent.isNPC());
         assertEquals("monster2Id", returnOpponent.monster());
         assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.move());
-        assertEquals(new Result("monster-changed", null, null), returnOpponent.result());
+        assertEquals(new Result("monster-changed", null, null), returnOpponent.results().get(0));
         assertEquals(1, returnOpponent.coins());
 
         //check mock
