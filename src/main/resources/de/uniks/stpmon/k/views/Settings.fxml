@@ -45,7 +45,7 @@
         </ImageView>
         <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
                    StackPane.alignment="CENTER">
-            <Image url="@../controller/spritePlacehoder.png"/>
+            <Image url="@../controller/spritePlaceholder.png"/>
         </ImageView>
     </StackPane>
     <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
