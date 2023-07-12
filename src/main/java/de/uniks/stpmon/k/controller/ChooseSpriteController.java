@@ -38,13 +38,9 @@ public class ChooseSpriteController extends ToastedController {
     @FXML
     public Text chooseTrainer;
     @FXML
-    public Button spriteLeft;
-    @FXML
     public StackPane spriteContainer;
     @FXML
     public ImageView spriteImage;
-    @FXML
-    public Button spriteRight;
     @FXML
     public Button saveSprite;
     @FXML
@@ -137,62 +133,6 @@ public class ChooseSpriteController extends ToastedController {
         );
     }
 
-
-    /**
-     * Navigate to the previous sprite character
-     */
-    public void toLeft() {
-        if (!characters.isEmpty()) {
-            currentSpriteIndex--;
-            if (currentSpriteIndex < 0) {
-                currentSpriteIndex = characters.size() - 1;
-            }
-            String selectedCharacter = characters.get(currentSpriteIndex);
-            // Load the sprite image
-            loadSprite(selectedCharacter);
-        }
-
-    }
-
-    /**
-     * Navigate to the next sprite character
-     */
-    public void toRight() {
-        if (!characters.isEmpty()) {
-            currentSpriteIndex++;
-            if (currentSpriteIndex >= characters.size()) {
-                currentSpriteIndex = 0;
-            }
-            String selectedCharacter = characters.get(currentSpriteIndex);
-            // Load the sprite image
-            loadSprite(selectedCharacter);
-        }
-    }
-
-    /**
-     * Save the selected sprite character
-     * Check if the selected character is different from the previous character and shows a pop-up for confirmation
-     */
-    public void saveSprite() {
-        if (currentSpriteIndex != previousSpriteIndex) {
-            // Show a pop-up
-            showPopUp(PopUpScenario.SAVE_CHANGES, result -> {
-                if (!result) return;
-                // Save the currentSpriteIndex to the preferences
-                preferences.putInt("currentSpriteIndex", currentSpriteIndex);
-                closeAndReturn();
-                disposables.add(
-                        trainerService.setImage(characters.get(currentSpriteIndex))
-                                .observeOn(FX_SCHEDULER)
-                                .subscribe(trainer -> {
-                                }, this::handleError));
-            });
-        } else {
-            closeAndReturn();
-        }
-
-    }
-
     /**
      * Display a pop-up window with a specified scenario and a callback function
      */
@@ -202,17 +142,6 @@ public class ChooseSpriteController extends ToastedController {
         popUp.setScenario(scenario);
         popUp.showModal(callback);
         isPopUpShown.set(false);
-    }
-
-    private void closeAndReturn() {
-        if (isCreation) {
-            createTrainerControllerProvider.get().setTrainerImage(characters.get(currentSpriteIndex));
-            chooseTrainerContent.getChildren().clear();
-            chooseTrainerContent.getChildren().setAll(createTrainerControllerProvider.get().render());
-        } else {
-            chooseTrainerContent.getChildren().clear();
-            hybridControllerProvider.get().popTab();
-        }
     }
 
 }

@@ -6,8 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import java.lang.String?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <AnchorPane fx:id="createTrainerContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="450.0" prefWidth="500.0"
             stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
@@ -34,7 +34,7 @@
                 <padding>
                     <Insets left="15.0"/>
                 </padding>
-                <Label styleClass="create-trainer-background" text="%createTrainer"/>
+                <Label fx:id="createTrainerText" styleClass="create-trainer-background" text="%createTrainer"/>
             </HBox>
             <HBox alignment="TOP_RIGHT" prefHeight="70.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                 <padding>
@@ -51,7 +51,7 @@
         </HBox>
         <HBox alignment="CENTER" prefWidth="500.0">
             <HBox maxHeight="75.0" prefWidth="230.0">
-                <Label text="Trainer:" underline="true"/>
+                <Label fx:id="trainerLabel" text="Trainer:" underline="true"/>
             </HBox>
             <VBox alignment="TOP_RIGHT" maxHeight="75.0" prefWidth="230.0">
                 <TextField fx:id="createTrainerInput" prefHeight="23.0" prefWidth="197.0" promptText="%enterName"
@@ -71,13 +71,8 @@
                     </font>
                 </Button>
             </VBox>
-            <StackPane fx:id="spriteContainer" maxHeight="217.0">
-                <ImageView fx:id="spriteBackground" fitHeight="130.0" fitWidth="130.0" pickOnBounds="true"
-                           preserveRatio="true" StackPane.alignment="CENTER">
-                </ImageView>
-                <ImageView fx:id="trainerSprite" fitHeight="130.0" fitWidth="130.0" pickOnBounds="true"
-                           preserveRatio="true" StackPane.alignment="CENTER">
-                </ImageView>
+            <StackPane fx:id="spriteContainer" prefHeight="244.0" prefWidth="244.0">
+                <ImageView fx:id="trainerSprite" pickOnBounds="true" preserveRatio="true"/>
             </StackPane>
             <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                 <Button fx:id="spriteRight" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"

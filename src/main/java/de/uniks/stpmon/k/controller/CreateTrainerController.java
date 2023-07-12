@@ -43,6 +43,10 @@ public class CreateTrainerController extends PortalController {
     protected int previousSpriteIndex;
 
     @FXML
+    public Label trainerLabel;
+    @FXML
+    public Label createTrainerText;
+    @FXML
     public TextField createTrainerInput;
     @FXML
     public Label trainerNameInfo;
@@ -56,8 +60,6 @@ public class CreateTrainerController extends PortalController {
     public AnchorPane createTrainerContent;
     @FXML
     public StackPane spriteContainer;
-    @FXML
-    public ImageView spriteBackground;
     @FXML
     public Button spriteLeft;
     @FXML
@@ -92,9 +94,8 @@ public class CreateTrainerController extends PortalController {
 
     @Override
     public Parent render() {
-        final Parent parent = super.render();
+        final Parent parent = load("CreateTrainer");
 
-        loadImage(spriteBackground, "spriteBackground.png");
         loadImage(trainerSprite, "spritePlacehoder.png");
 
         BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
@@ -126,6 +127,17 @@ public class CreateTrainerController extends PortalController {
 
         // Load the list of available sprites
         loadSpriteList();
+
+        if (trainerService.getMe() != null) {
+            createTrainerText.setText(translateString("createSprite"));
+
+            createTrainerInput.setVisible(false);
+            trainerNameInfo.setVisible(false);
+            trainerLabel.setVisible(false);
+
+            createTrainerButton.setText(translateString("saveChanges"));
+            createTrainerButton.disableProperty().unbind();
+        }
 
         return parent;
     }
@@ -167,11 +179,14 @@ public class CreateTrainerController extends PortalController {
     }
 
     public void closeWindow() {
-        hybridControllerProvider.get().openMain(MainWindow.LOBBY);
+        if (trainerService.getMe() != null) {
+            hybridControllerProvider.get().popTab();
+        } else {
+            hybridControllerProvider.get().openMain(MainWindow.LOBBY);
+        }
     }
 
     // -------------------------- Choose Sprite -------------------------- //
-
 
     /**
      * Load the list of available sprites from the preset service
