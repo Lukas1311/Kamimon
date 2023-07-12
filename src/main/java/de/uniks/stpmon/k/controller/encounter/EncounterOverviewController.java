@@ -71,6 +71,8 @@ public class EncounterOverviewController extends Controller {
     @Inject
     ActionFieldController actionFieldController;
 
+     private boolean suspendTimer = false;
+
     @Inject
     InputHandler inputHandler;
 
@@ -130,26 +132,36 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
-        Timer myTimer = new Timer();
+        if(!suspendTimer) {
+            Timer myTimer = new Timer();
 
-        onDestroy(myTimer::cancel);
+            onDestroy(myTimer::cancel);
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
+            subscribe(sessionService.onEncounterCompleted(), () -> {
 
-            ///TODO Animate win / lose here  R4?
-            myTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    javafx.application.Platform.runLater(() -> {
-                        HybridController controller = hybridControllerProvider.get();
-                        app.show(controller);
-                        controller.openMain(MainWindow.INGAME);
-                    });
-                }}, 5000);
+                ///TODO Animate win / lose here  R4?
+                myTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        javafx.application.Platform.runLater(() -> {
+                            if(hybridControllerProvider == null){
+                                cancel();
+                                return;
+                            }
+                            HybridController controller = hybridControllerProvider.get();
+                            app.show(controller);
+                            controller.openMain(MainWindow.INGAME);
+                        });
+                    }}, 5000);
+            });
+        }
 
-        });
 
         return parent;
+    }
+
+    public void suspendTimer(){
+        suspendTimer = true;
     }
 
 

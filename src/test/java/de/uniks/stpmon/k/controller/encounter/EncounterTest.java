@@ -15,6 +15,8 @@ import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -67,6 +69,7 @@ public class EncounterTest extends ApplicationTest {
         regionStorage.setArea(DummyConstants.AREA);
         encounterApiDummy.startEncounter(true);
         sessionService.tryLoadEncounter().blockingAwait();
+        controller.suspendTimer();
 
         app.show(controller);
         stage.requestFocus();
@@ -108,6 +111,12 @@ public class EncounterTest extends ApplicationTest {
 
         // New monster should be selected
         verifyThat("#0_party #monsterHp", hasText("1 / 12"));
+    }
+
+    @AfterEach
+    void closeAll(){
+        controller.destroy();
+
     }
 
 }
