@@ -24,7 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
@@ -57,8 +57,6 @@ public class CreateTrainerController extends PortalController {
     public ImageView trainerSprite;
     @FXML
     public Button createTrainerButton;
-    @FXML
-    public AnchorPane createTrainerContent;
     @FXML
     public StackPane spriteContainer;
     @FXML
@@ -112,7 +110,7 @@ public class CreateTrainerController extends PortalController {
         );
 
         // Retrieve the sprite index from the preferences
-        currentSpriteIndex = randomSpriteIndex() + 1;
+        currentSpriteIndex = randomSpriteIndex();
         previousSpriteIndex = currentSpriteIndex;
 
         // these three elements have to be disabled when pop up is shown
@@ -275,10 +273,10 @@ public class CreateTrainerController extends PortalController {
                 trainerService.setImage(characters.get(currentSpriteIndex))
                         .observeOn(FX_SCHEDULER)
                         .subscribe(trainer -> {
+                            if (trainerService.getMe() != null) {
+                                hybridControllerProvider.get().popTab();
+                            }
                         }, this::handleError));
-        if (trainerService.getMe() != null) {
-            hybridControllerProvider.get().popTab();
-        }
-    }
+            }
 
 }
