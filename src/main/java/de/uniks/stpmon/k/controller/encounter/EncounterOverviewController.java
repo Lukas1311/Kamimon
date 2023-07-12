@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -70,11 +71,9 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-
-     private boolean suspendTimer = false;
-
     @Inject
     InputHandler inputHandler;
+
 
     @Inject
     public EncounterOverviewController() {
@@ -100,21 +99,12 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
-        //click on the first mon of opponent to get out of the encounter
-        //Note: the encounter is still active after this
-        opponentMonster0.setOnMouseClicked(e -> {
-            IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
-
         //add a translation transition to all monster images
-        for ( EncounterSlot slot : monsterImages.keySet()) {
+        for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
             TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
-            if(slot.enemy()) {
+            if (slot.enemy()) {
                 translation.setByY(30);
                 translation.setByX(-60);
             } else {
@@ -132,39 +122,19 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
-        if(!suspendTimer) {
-            Timer myTimer = new Timer();
-
-            onDestroy(myTimer::cancel);
-
-            subscribe(sessionService.onEncounterCompleted(), () -> {
-
-                ///TODO Animate win / lose here  R4?
-                myTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        javafx.application.Platform.runLater(() -> {
-                            if(hybridControllerProvider == null){
-                                cancel();
-                                return;
-                            }
-                            HybridController controller = hybridControllerProvider.get();
-                            app.show(controller);
-                            controller.openMain(MainWindow.INGAME);
-                        });
-                    }}, 5000);
-            });
-        }
-
+        //subscribe(sessionService.onEncounterCompleted(), () -> {
+        //    javafx.application.Platform.runLater(() -> {
+        //        if (hybridControllerProvider == null) {
+        //            return;
+        //        }
+        //        HybridController controller = hybridControllerProvider.get();
+        //        app.show(controller);
+        //        controller.openMain(MainWindow.INGAME);
+        //    });
+        //});
 
         return parent;
     }
-
-    public void suspendTimer(){
-        suspendTimer = true;
-    }
-
-
 
     private void subscribeFight(){
         for (EncounterSlot slot : sessionService.getSlots()) {

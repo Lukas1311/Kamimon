@@ -1,11 +1,15 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Result;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -16,13 +20,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class ActionFieldBattleLogController extends Controller {
@@ -35,6 +38,9 @@ public class ActionFieldBattleLogController extends Controller {
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
+
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
     @Inject
     SessionService sessionService;
@@ -51,12 +57,7 @@ public class ActionFieldBattleLogController extends Controller {
     @Inject
     MonsterService monsterService;
 
-
-
-
-    private final List<String> texts = new ArrayList<>();
-
-    private final boolean initialized = false;
+    private boolean encounterFinished = false;
 
     @Inject
     public ActionFieldBattleLogController() {
@@ -67,6 +68,8 @@ public class ActionFieldBattleLogController extends Controller {
     public Parent render() {
         Parent parent = super.render();
 
+        encounterFinished = false;
+
         scrollPane.needsLayoutProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 scrollPane.setVvalue(1.0);
@@ -75,25 +78,24 @@ public class ActionFieldBattleLogController extends Controller {
 
         initListeners();
 
-        Timer myTimer = new Timer();
-
-        onDestroy(myTimer::cancel);
-        myTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-            javafx.application.Platform.runLater(() -> {
-                vBox.getChildren().clear();
-                actionFieldControllerProvider.get().openMainMenu();
-
-            });
-            }}, 5000);
-
-        scrollPane.setOnMouseClicked(event -> {
-            vBox.getChildren().clear();
-            actionFieldControllerProvider.get().openMainMenu();
+        scrollPane.setOnMouseReleased(event -> {
+            nextWindow();
         });
 
         return parent;
+    }
+
+    public void nextWindow() {
+        if(encounterFinished){
+            if (hybridControllerProvider == null) {
+                return;
+            }
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+        } else {
+            actionFieldControllerProvider.get().openMainMenu();
+        }
     }
 
 
@@ -106,23 +108,22 @@ public class ActionFieldBattleLogController extends Controller {
 
     public void addTextSection(String text, boolean overwriteAll) {
         //replace whole text in battle log
-        if (overwriteAll) {
-            vBox.getChildren().clear();
-            //texts.clear();
-            //texts.add(text);
-        }
-        //else if (texts.size() >= 2) {
-        //    texts.remove(0);
+        //if (overwriteAll) {
+        //    vBox.getChildren().clear();
         //}
+
         Label text1 = new Label(text + "\n");
         text1.setWrapText(true);
         text1.setMaxWidth(290);
         vBox.getChildren().add(text1);
-        //texts.add(text);
-        //renewText();
     }
 
-    private void initListeners(){
+    private void initListeners() {
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            encounterFinished = true;
+            sessionService.clearEncounter();
+        });
+
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot).skip(1), opp -> {
 
@@ -159,24 +160,24 @@ public class ActionFieldBattleLogController extends Controller {
                             };
                             addTextSection(translateString(translationVar), false);
                         }
+
                         case "target-defeated" -> {
                             //TODO target is the Trainer in R3, in R4 it is the monster
-                            addTextSection(translateString("target-defeated", monster.name()), false);
+                            //when last monster is dead
+                            addTextSection(translateString("target-defeated", "Targeted monster"), false);
                         }
                         case "monster-changed" -> {
                             //handled above
                         }
                         case "monster-defeated" -> {
+                            //called when not dying, eg another monster is available
                             addTextSection(translateString("monster-defeated", monster.name()), false);
                         }
                         case "monster-levelup" -> {
-                            //TODO add level here
                             addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
-                            //TODO add Level up handling here?
                         }
                         case "monster-evolved" -> {
                             addTextSection(translateString("monster-evolved", monster.name()), false);
-                            //TODO #evolve animation? v4
                         }
                         case "monster-learned" -> {
                             addTextSection(translateString("monster-learned", monster.name(),
@@ -200,23 +201,12 @@ public class ActionFieldBattleLogController extends Controller {
                         }
                         case "target-dead" -> {
                             //TODO target is the Trainer in R3, in R4 it is the monster
-                            addTextSection(translateString("target-dead", monster.name()), false);
+                            addTextSection(translateString("target-dead", "Targeted monster"), false);
                         }
                     }
                 }
             });
         }
-    }
-
-
-    private void renewText() {
-        //StringBuilder sb = new StringBuilder();
-        for (String str : texts) {
-            //sb.append(str).append("\n");
-
-
-        }
-        //logText.setText(sb.toString());
     }
 
     @Override

@@ -69,7 +69,6 @@ public class EncounterTest extends ApplicationTest {
         regionStorage.setArea(DummyConstants.AREA);
         encounterApiDummy.startEncounter(true);
         sessionService.tryLoadEncounter().blockingAwait();
-        controller.suspendTimer();
 
         app.show(controller);
         stage.requestFocus();

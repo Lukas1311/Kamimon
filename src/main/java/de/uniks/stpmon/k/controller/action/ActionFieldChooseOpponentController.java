@@ -76,8 +76,8 @@ public class ActionFieldChooseOpponentController extends Controller {
                 actionFieldControllerProvider.get().openChooseAbility();
             } else {
                 actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
-                actionFieldControllerProvider.get().executeAbilityMove();
                 actionFieldControllerProvider.get().openBattleLog();
+                actionFieldControllerProvider.get().executeAbilityMove();
             }
         });
 
