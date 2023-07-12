@@ -116,8 +116,7 @@ public class CreateTrainerController extends PortalController {
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
 
         createTrainerButton.setOnAction(click -> {
-            saveSprite();
-            createTrainer();
+            manageButtonBehavior();
         });
         closeButton.setOnAction(click -> closeWindow());
 
@@ -136,10 +135,17 @@ public class CreateTrainerController extends PortalController {
             trainerLabel.setVisible(false);
 
             createTrainerButton.setText(translateString("saveChanges"));
-            createTrainerButton.disableProperty().unbind();
+            createTrainerButton.disableProperty().bind(trainerNameInvalid.not());
         }
 
         return parent;
+    }
+
+    private void manageButtonBehavior() {
+        if (trainerService.getMe() == null) {
+            createTrainer();
+        }
+        saveSprite();
     }
 
     public void loadSprite(String selectedCharacter) {
