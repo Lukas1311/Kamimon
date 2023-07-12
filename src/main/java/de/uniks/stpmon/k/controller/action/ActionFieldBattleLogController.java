@@ -24,8 +24,6 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
 
 @Singleton
 public class ActionFieldBattleLogController extends Controller {
@@ -78,15 +76,13 @@ public class ActionFieldBattleLogController extends Controller {
 
         initListeners();
 
-        scrollPane.setOnMouseReleased(event -> {
-            nextWindow();
-        });
+        scrollPane.setOnMouseReleased(event -> nextWindow());
 
         return parent;
     }
 
     public void nextWindow() {
-        if(encounterFinished){
+        if (encounterFinished) {
             if (hybridControllerProvider == null) {
                 return;
             }
@@ -108,9 +104,9 @@ public class ActionFieldBattleLogController extends Controller {
 
     public void addTextSection(String text, boolean overwriteAll) {
         //replace whole text in battle log
-        //if (overwriteAll) {
-        //    vBox.getChildren().clear();
-        //}
+        if (overwriteAll) {
+            vBox.getChildren().clear();
+        }
 
         Label text1 = new Label(text + "\n");
         text1.setWrapText(true);
@@ -161,48 +157,23 @@ public class ActionFieldBattleLogController extends Controller {
                             addTextSection(translateString(translationVar), false);
                         }
 
-                        case "target-defeated" -> {
-                            //TODO target is the Trainer in R3, in R4 it is the monster
-                            //when last monster is dead
-                            addTextSection(translateString("target-defeated", "Targeted monster"), false);
-                        }
-                        case "monster-changed" -> {
-                            //handled above
-                        }
-                        case "monster-defeated" -> {
-                            //called when not dying, eg another monster is available
-                            addTextSection(translateString("monster-defeated", monster.name()), false);
-                        }
-                        case "monster-levelup" -> {
-                            addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
-                        }
-                        case "monster-evolved" -> {
-                            addTextSection(translateString("monster-evolved", monster.name()), false);
-                        }
-                        case "monster-learned" -> {
-                            addTextSection(translateString("monster-learned", monster.name(),
-                                    presetService.getAbility(result.ability()).blockingFirst().name()), false);
-                        }
-                        case "monster-dead" -> {
-                            addTextSection(translateString("monster-dead", monster.name()), false);
-                        }
-                        case "ability-unknown" -> {
-                            addTextSection(translateString("ability-unknown",
-                                            presetService.getAbility(result.ability()).blockingFirst().name(), monster.name())
-                                    , false);
-                        }
-                        case "ability-no-uses" -> {
-                            addTextSection(translateString("ability-no-uses",
-                                            presetService.getAbility(result.ability()).blockingFirst().name())
-                                    , false);
-                        }
-                        case "target-unknown" -> {
-                            addTextSection(translateString("target-unknown"), false);
-                        }
-                        case "target-dead" -> {
-                            //TODO target is the Trainer in R3, in R4 it is the monster
-                            addTextSection(translateString("target-dead", "Targeted monster"), false);
-                        }
+                        case "target-defeated" -> addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
+                        case "monster-changed" -> {}
+                        case "monster-defeated" -> addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
+                        case "monster-levelup" -> addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+                        case "monster-evolved" -> addTextSection(translateString("monster-evolved", monster.name()), false);
+                        case "monster-learned" -> addTextSection(translateString("monster-learned", monster.name(),
+                                presetService.getAbility(result.ability()).blockingFirst().name()), false);
+                        case "monster-dead" -> addTextSection(translateString("monster-dead", monster.name()), false);
+                        case "ability-unknown" -> addTextSection(translateString("ability-unknown",
+                                        presetService.getAbility(result.ability()).blockingFirst().name(), monster.name())
+                                , false);
+                        case "ability-no-uses" -> addTextSection(translateString("ability-no-uses",
+                                        presetService.getAbility(result.ability()).blockingFirst().name())
+                                , false);
+                        case "target-unknown" -> addTextSection(translateString("target-unknown"), false);
+                        case "target-dead" -> addTextSection(translateString("target-dead", "Targeted monster"), false);
+                        default -> System.out.println("unknown result type");
                     }
                 }
             });
