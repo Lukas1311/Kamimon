@@ -28,6 +28,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class StatusControllerTest extends ApplicationTest {
+
     @Spy
     final
     App app = new App(null);
@@ -111,4 +112,5 @@ public class StatusControllerTest extends ApplicationTest {
 
         assertEquals("monster", statusController.monsterName.getText());
     }
+
 }

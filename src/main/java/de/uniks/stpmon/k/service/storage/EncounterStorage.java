@@ -32,9 +32,4 @@ public class EncounterStorage extends SingleCache<Encounter> {
     public EncounterSession getSession() {
         return encounterSession;
     }
-
-    public List<Opponent> getOpponentList() {
-        return List.of();
-    }
-
 }

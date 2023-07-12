@@ -15,8 +15,10 @@ import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -51,6 +53,9 @@ public class EncounterTest extends ApplicationTest {
     final EncounterApiDummy encounterApiDummy = component.encounterApi();
     final EventDummy eventDummy = component.eventDummy();
 
+    @SuppressWarnings("unused")
+    final HybridController hybridController = Mockito.mock(HybridController.class);
+
     @Override
     public void start(Stage stage) {
         app.start(stage);
@@ -67,6 +72,7 @@ public class EncounterTest extends ApplicationTest {
 
     @Test
     void changeMonster() {
+
         // First monster should be selected
         verifyThat("#0_party #monsterHp", hasText("10 / 20"));
         // Send event for updating selected monster
@@ -98,6 +104,12 @@ public class EncounterTest extends ApplicationTest {
 
         // New monster should be selected
         verifyThat("#0_party #monsterHp", hasText("1 / 12"));
+    }
+
+    @AfterEach
+    void closeAll() {
+        controller.destroy();
+
     }
 
 }

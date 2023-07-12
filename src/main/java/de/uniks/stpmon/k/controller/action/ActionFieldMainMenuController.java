@@ -53,7 +53,7 @@ public class ActionFieldMainMenuController extends Controller {
 
         HBox optionContainer = actionFieldControllerProvider
                 .get()
-                .getOptionContainer(optionText);
+                .getOptionContainer(translateString(optionText));
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 

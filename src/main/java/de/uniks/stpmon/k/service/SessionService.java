@@ -196,11 +196,12 @@ public class SessionService extends DestructibleElement {
     }
 
     public Completable onEncounterCompleted() {
-        return encounterStorage.getSession().onEncounterCompleted().doOnComplete(() -> {
-            encounterStorage.setEncounter(null);
-            encounterStorage.setSession(null);
-        });
+        return encounterStorage.getSession().onEncounterCompleted().doOnComplete(() -> {});
     }
 
+    public void clearEncounter() {
+        encounterStorage.setEncounter(null);
+        encounterStorage.setSession(null);
+    }
 
 }

@@ -128,9 +128,8 @@ public class ActionFieldController extends Controller {
 
     public void executeAbilityMove(){
         subscribe(encounterServiceProvider.get().makeAbilityMove(abilityId, enemyTrainerId),
-                next -> {
-                    //do nothing here
-                }, error -> {
+                next -> {},
+                error -> {
                     //TODO removed if fixed
 
                     //HttpException err = (HttpException) error;
