@@ -24,7 +24,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 import javax.inject.Inject;
@@ -192,7 +191,7 @@ public class CreateTrainerController extends PortalController {
         }
     }
 
-    private int randomSpriteIndex() {
+    public int randomSpriteIndex() {
         if (!characters.isEmpty()) {
             return random.nextInt(characters.size());
         }
@@ -277,6 +276,6 @@ public class CreateTrainerController extends PortalController {
                                 hybridControllerProvider.get().popTab();
                             }
                         }, this::handleError));
-            }
+    }
 
 }
