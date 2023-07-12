@@ -40,6 +40,11 @@ public class LoadingEncounterController extends Controller {
         fullBox.setAlignment(Pos.CENTER);
         StackPane.setAlignment(blackPoint, Pos.CENTER);
 
+        showEncounterAnimation();
+        return parent;
+    }
+
+    public void showEncounterAnimation() {
         ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(3), blackPoint);
         scaleTransition.setToX(40);
         scaleTransition.setToY(40);
@@ -59,7 +64,6 @@ public class LoadingEncounterController extends Controller {
         });
 
         scaleTransition.play();
-        return parent;
     }
 
     @Override

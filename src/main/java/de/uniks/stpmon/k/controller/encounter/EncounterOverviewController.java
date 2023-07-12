@@ -69,6 +69,10 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
+    Provider<LoadingEncounterController> loadingEncounterControllerProvider;
+    @Inject
+    LoadingEncounterController loadingEncounterController;
+    @Inject
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
@@ -85,6 +89,9 @@ public class EncounterOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        loadingEncounterController = loadingEncounterControllerProvider.get();
+        loadingEncounterController.showEncounterAnimation();
 
         // relations between Encounter slots and image views
         monsterImages.put(EncounterSlot.PARTY_FIRST, userMonster0);
