@@ -46,4 +46,9 @@ public abstract class LazyCache<T, K> extends SimpleCache<T, K> {
                 ));
     }
 
+    public Observable<T> singleLazyValue(K id) {
+        return getLazyValue(id).flatMap(op ->
+                op.map(Observable::just).orElse(Observable.empty()));
+    }
+
 }
