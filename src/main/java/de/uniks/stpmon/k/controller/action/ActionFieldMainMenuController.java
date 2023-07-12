@@ -67,13 +67,17 @@ public class ActionFieldMainMenuController extends Controller {
         switch (option) {
             case CHANGE_MON -> openChangeMon();
             case FIGHT -> openFight();
-            case FLEE -> {
-                IngameController.disableEncounter = true;
-                HybridController controller = hybridControllerProvider.get();
-                app.show(controller);
-                controller.openMain(MainWindow.INGAME);
-            }
+            case FLEE -> openFlee();
+
         }
+    }
+
+    public void openFlee() {
+        actionFieldControllerProvider.get().openFleeWildMonster();
+        IngameController.disableEncounter = true;
+        HybridController controller = hybridControllerProvider.get();
+        app.show(controller);
+        controller.openMain(MainWindow.INGAME);
     }
 
     public void openFight() {

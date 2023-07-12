@@ -29,6 +29,9 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
+    @Inject
+    Provider<ActionFieldFleeController> fleeControllerProvider;
+
 
     AbilityDto chosenAbility;
 
@@ -63,6 +66,10 @@ public class ActionFieldController extends Controller {
 
     public void openChooseAbility(){
         open(chooseAbilityControllerProvider);
+    }
+
+    public void openFleeWildMonster() {
+        open(fleeControllerProvider);
     }
 
     public void openChooseOpponent(){
