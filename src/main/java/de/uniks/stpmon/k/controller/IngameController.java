@@ -28,7 +28,7 @@ import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 @Singleton
 public class IngameController extends PortalController {
     // TODO: Remove if encounter leave is implemented
-    public static boolean disableEncounter = false;
+    //public static boolean disableEncounter = false;
     private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
@@ -117,9 +117,6 @@ public class IngameController extends PortalController {
         starterController.init();
 
         if (encounterService != null) {
-            if (disableEncounter) {
-                return;
-            }
             subscribe(encounterService.tryLoadEncounter(), () -> {
                 if (encounterService.hasNoEncounter()) {
                     return;

@@ -103,7 +103,7 @@ public class EncounterOverviewController extends Controller {
         //click on the first mon of opponent to get out of the encounter
         //Note: the encounter is still active after this
         opponentMonster0.setOnMouseClicked(e -> {
-            IngameController.disableEncounter = true;
+            //IngameController.disableEncounter = true;
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);

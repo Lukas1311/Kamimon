@@ -7,12 +7,20 @@ import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.di.HttpModule_AuthApiFactory;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class ActionFieldFleeController extends Controller {
+
+    @FXML
+    ImageView blackScreen;
+    @FXML
+    VBox vbox;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
@@ -38,7 +46,9 @@ public class ActionFieldFleeController extends Controller {
     }
 
     private void fleeFromWildEncounter() {
-        IngameController.disableEncounter = true;
+        //IngameController.disableEncounter = true;
+
+
         HybridController controller = hybridControllerProvider.get();
         app.show(controller);
         controller.openMain(MainWindow.INGAME);
