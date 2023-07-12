@@ -14,10 +14,7 @@ import io.reactivex.rxjava3.core.Observable;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiFunction;
 
 /**
@@ -146,6 +143,9 @@ public class SessionService extends DestructibleElement {
 
     public boolean isSelf(EncounterSlot slot) {
         Trainer trainer = trainerStorage.getTrainer();
+        if(encounterStorage.getSession() == null){
+            return false;
+        }
         return Objects.equals(trainer._id(), getTrainer(slot));
     }
 
@@ -171,7 +171,7 @@ public class SessionService extends DestructibleElement {
         if (session == null) {
             return Collections.emptyList();
         }
-        return session.getAttackerTeam();
+        return session.getEnemyTeam();
     }
 
     public List<String> getOwnTeam() {
@@ -181,5 +181,16 @@ public class SessionService extends DestructibleElement {
         }
         return session.getOwnTeam();
     }
+
+    public Completable onEncounterCompleted() {
+        return encounterStorage.getSession().onEncounterCompleted().doOnComplete(() -> {
+            encounterStorage.setEncounter(null);
+            encounterStorage.setSession(null);
+        });
+    }
+
+
+
+
 
 }

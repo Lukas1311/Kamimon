@@ -53,8 +53,11 @@ public class InteractionService implements ILifecycleService {
         if (info == null) {
             return null;
         }
+
         if (info.canHeal()) {
-            return Dialogue.builder().addItem("Can heal ?").create();
+            return Dialogue.builder().addItem().setText("Can heal ?").addAction(() -> {
+                talkTo(trainer, trainerService.getMe(), null);
+            }).endItem().create();
         }
 
         List<String> starters = info.starters();

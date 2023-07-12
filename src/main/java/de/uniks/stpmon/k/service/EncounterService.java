@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.Encounter;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.net.EventListener;
@@ -97,20 +98,25 @@ public class EncounterService {
         return encounterApiService.getEncounterOpponent(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id()
+                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id()
         );
     }
 
-    public Observable<Opponent> makeAbilityMove(Monster attacker, int ability, Monster target) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(
+    public Observable<Opponent> makeAbilityMove(int abilityId, String targetId) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(null, new AbilityMove(
                 Moves.ABILITY.toString(),
-                ability,
-                target._id())
+                abilityId,
+                targetId)
         );
+
+        if (encounterStorage.getSession() == null) {
+            throw new IllegalStateException("There is no encounter o_O");
+        }
+
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id(),
+                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
                 dto
         );
     }
@@ -123,7 +129,7 @@ public class EncounterService {
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id(),
+                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
                 dto
         );
     }
@@ -132,7 +138,7 @@ public class EncounterService {
         return encounterApiService.fleeEncounter(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id()
+                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id()
         );
     }
 

@@ -111,6 +111,11 @@ public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
      */
     Observable<List<T>> getValues();
 
+
+    default List<T> getCurrentValues() {
+        return List.of();
+    }
+
     /**
      * Retrieve the status of the cache.
      *

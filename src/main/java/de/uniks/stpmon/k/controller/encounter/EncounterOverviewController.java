@@ -6,15 +6,15 @@ import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
+import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -29,12 +29,17 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class EncounterOverviewController extends Controller {
 
     public static final double IMAGE_SCALE = 6.0;
+
+    private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
+
+    private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
+
+
     @FXML
     public StackPane fullBox;
     @FXML
@@ -58,17 +63,8 @@ public class EncounterOverviewController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
-    LoginController loginController;
-
-    @Inject
-    LoadingEncounterController loadingEncounterController;
-
-    public List<Monster> userMonstersList;
-    public List<Monster> opponentMonstersList;
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SessionService sessionService;
@@ -76,20 +72,22 @@ public class EncounterOverviewController extends Controller {
     ActionFieldController actionFieldController;
 
     @Inject
+    InputHandler inputHandler;
+
+    @Inject
     public EncounterOverviewController() {
-        opponentMonstersList = new ArrayList<>();
-    }
-
-    @Override
-    public void init() {
-        super.init();
-
-        subscribe(monsterService.getTeam(), team -> userMonstersList.addAll(team));
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        // relations between Encounter slots and image views
+        monsterImages.put(EncounterSlot.PARTY_FIRST, userMonster0);
+        monsterImages.put(EncounterSlot.PARTY_SECOND, userMonster1);
+        monsterImages.put(EncounterSlot.ENEMY_FIRST, opponentMonster0);
+        monsterImages.put(EncounterSlot.ENEMY_SECOND, opponentMonster1);
+
 
         loadImage(background, "encounter/FOREST.png");
         background.fitHeightProperty().bind(fullBox.heightProperty());
@@ -109,16 +107,79 @@ public class EncounterOverviewController extends Controller {
             controller.openMain(MainWindow.INGAME);
         });
 
+        //add a translation transition to all monster images
+        for ( EncounterSlot slot : monsterImages.keySet()) {
+            ImageView view = monsterImages.get(slot);
+
+
+            TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
+            if(slot.enemy()) {
+                translation.setByY(30);
+                translation.setByX(-60);
+            } else {
+                translation.setByY(-30);
+                translation.setByX(60);
+            }
+            translation.setAutoReverse(true);
+            translation.setCycleCount(2);
+
+            attackAnimations.put(slot, translation);
+        }
+
+        onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            switch (event.getCode()) {
+                    case G -> {
+                        // Block movement and backpack, if map overview is shown
+                        renderAttack(EncounterSlot.PARTY_FIRST);
+                        event.consume();
+                    }
+
+                    case H -> {
+                        // Block movement and backpack, if map overview is shown
+                        renderAttack(EncounterSlot.ENEMY_FIRST);
+                        event.consume();
+                    }
+
+                    default -> {
+                    }
+
+                }
+        }));
+
+        subscribeFight();
+
         renderMonsterLists();
         animateMonsterEntrance();
-        animateEncounterStart();
+
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+        });
 
         return parent;
     }
 
-    private void animateEncounterStart() {
-        loadingEncounterController.render();
+
+
+    private void subscribeFight(){
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            subscribe(sessionService.listenOpponent(slot), next -> {
+                //using result to print text to action field
+
+                //using IMove to animate attack
+                if(next.move() instanceof AbilityMove){
+                    renderAttack(slot);
+                }
+            });
+        }
     }
+
+
+    private void renderAttack(EncounterSlot slot){
+        attackAnimations.get(slot).play();
+    }
+
 
     private void renderMonsterLists() {
         for (EncounterSlot slot : sessionService.getSlots()) {
@@ -228,9 +289,7 @@ public class EncounterOverviewController extends Controller {
                 Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldBox);
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
-
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
-
         fullSequence.play();
     }
 

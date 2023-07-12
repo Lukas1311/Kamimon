@@ -265,7 +265,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .makeAbilityMove(attacker, attacker.abilities().get("Tackle"), target)
+                .makeAbilityMove(attacker.abilities().get("Tackle"), target._id())
                 .blockingFirst();
 
         //check value
