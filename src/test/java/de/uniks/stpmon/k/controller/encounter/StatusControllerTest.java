@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.encounter;
 
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
@@ -21,8 +20,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Provider;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -31,6 +28,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class StatusControllerTest extends ApplicationTest {
+
     @Spy
     final
     App app = new App(null);
@@ -41,10 +39,6 @@ public class StatusControllerTest extends ApplicationTest {
     @Spy
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
-
-
-    //@Spy
-    //Provider<HybridController> hybridControllerProvider;
 
     @InjectMocks
     @Spy
@@ -118,4 +112,5 @@ public class StatusControllerTest extends ApplicationTest {
 
         assertEquals("monster", statusController.monsterName.getText());
     }
+
 }
