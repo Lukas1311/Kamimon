@@ -17,12 +17,16 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextMatchers.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -51,6 +55,9 @@ public class EncounterTest extends ApplicationTest {
     final EncounterApiDummy encounterApiDummy = component.encounterApi();
     final EventDummy eventDummy = component.eventDummy();
 
+    @SuppressWarnings("unused")
+    final HybridController hybridController = Mockito.mock(HybridController.class);
+
     @Override
     public void start(Stage stage) {
         app.start(stage);
@@ -67,6 +74,9 @@ public class EncounterTest extends ApplicationTest {
 
     @Test
     void changeMonster() {
+
+        //when(hybridControllerProvider.get()).thenReturn(hybridController);
+        //doNothing().when(app).show(hybridController);
         // First monster should be selected
         verifyThat("#0_party #monsterHp", hasText("10 / 20"));
         // Send event for updating selected monster

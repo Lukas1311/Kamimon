@@ -111,7 +111,6 @@ public class EncounterOverviewController extends Controller {
         for ( EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-
             TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
             if(slot.enemy()) {
                 translation.setByY(30);
@@ -158,8 +157,6 @@ public class EncounterOverviewController extends Controller {
     private void subscribeFight(){
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), next -> {
-                //using result to print text to action field
-
                 //using IMove to animate attack
                 if(next.move() instanceof AbilityMove){
                     renderAttack(slot);
@@ -218,9 +215,9 @@ public class EncounterOverviewController extends Controller {
             // Scale and set the image
             Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
             if (attacker) {
-                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-            } else {
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            } else {
+                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
         });
