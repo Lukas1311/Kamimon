@@ -132,32 +132,25 @@ public class InteractionService implements ILifecycleService {
     }
 
     private Dialogue getHealDialogue(Trainer trainer, Trainer me) {
-        DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder()
+        DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
-                .addItem().setText(translateString("heal.intro"));
-
-        DialogueBuilder nextDialogueBuilder = Dialogue.builder();
-
-        for (int i = 0; i < 2; i++) {
-            String dots = new String(new char[i + 1]).replace("\0", "... ");
-            nextDialogueBuilder.addItem().addAction(this::applyOverlayEffect).setText(dots).endItem();
-        }
-
-        itemBuilder.addOption()
+                .addItem().setText(translateString("heal.intro"))
+                .addOption()
                 .setText(translateString("yes"))
                 .addAction(this::applyOverlayEffect)
-                .setNext(nextDialogueBuilder
+                .setNext(Dialogue.builder()
                         .addItem().setText("... ... ...")
                         .addAction(() -> talkTo(trainer, me, null))
                         .endItem()
                         .addItem().setText(translateString("dialogue.healed"))
                         .endItem()
                         .create())
-                .endOption();
+                .endOption()
+                .addOption().setText(translateString("no"))
+                .endOption()
+                .endItem();
 
-        itemBuilder.addOption().setText(translateString("no")).endOption();
-
-        return itemBuilder.endItem().create();
+        return itemBuilder.create();
     }
 
     private void talkTo(Trainer trainer, Trainer me, Integer selection) {
@@ -212,6 +205,7 @@ public class InteractionService implements ILifecycleService {
                 new KeyFrame(Duration.seconds(1), new KeyValue(overlayPane.opacityProperty(), 0.0))
         );
 
+        timeline.setCycleCount(3);
         timeline.setAutoReverse(true);
         timeline.play();
 
