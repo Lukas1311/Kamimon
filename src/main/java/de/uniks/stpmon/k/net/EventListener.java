@@ -59,7 +59,7 @@ public class EventListener {
     }
 
     public <T> Observable<Event<T>> listen(Socket socket, String pattern, Class<T> type) {
-        return Observable.<Event<T>>create(emitter -> {
+        return Observable.create(emitter -> {
             SocketSender adapter = this.ensureOpen(socket);
             SocketReceiver endpoint = send(adapter, new Event<>("subscribe", pattern), true);
             if (endpoint == null) {

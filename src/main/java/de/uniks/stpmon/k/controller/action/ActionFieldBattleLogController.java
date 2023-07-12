@@ -56,7 +56,7 @@ public class ActionFieldBattleLogController extends Controller {
 
     private final List<String> texts = new ArrayList<>();
 
-    private boolean initialized = false;
+    private final boolean initialized = false;
 
     @Inject
     public ActionFieldBattleLogController() {

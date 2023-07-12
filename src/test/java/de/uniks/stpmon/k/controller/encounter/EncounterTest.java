@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
-import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
@@ -18,14 +17,12 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
 
-import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextMatchers.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -34,6 +31,7 @@ import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 public class EncounterTest extends ApplicationTest {
 
     @Spy
+    @SuppressWarnings("unused")
     Provider<HybridController> hybridControllerProvider;
 
     @Spy
@@ -62,8 +60,6 @@ public class EncounterTest extends ApplicationTest {
         regionStorage.setArea(DummyConstants.AREA);
         encounterApiDummy.startEncounter(true);
         sessionService.tryLoadEncounter().blockingAwait();
-
-        //when(hybridControllerProvider.get()).thenReturn(new HybridController()
 
         app.show(controller);
         stage.requestFocus();

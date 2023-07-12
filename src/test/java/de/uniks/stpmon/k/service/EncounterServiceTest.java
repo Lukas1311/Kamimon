@@ -5,10 +5,8 @@ import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
-import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -235,13 +233,9 @@ class EncounterServiceTest {
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
-        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
-
         when(sessionService.getOpponent(any())).thenReturn(opponent);
 
         when(sessionServiceProvider.get()).thenReturn(sessionService);
-
-        //when(encounterStorage.getSession().getOpponent(any())).thenReturn(opponent);
 
         //action
         final Opponent returnOpponent = encounterService.getEncounterOpponent().blockingFirst();
@@ -277,7 +271,6 @@ class EncounterServiceTest {
         when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
-
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
 
@@ -285,11 +278,6 @@ class EncounterServiceTest {
 
         when(sessionServiceProvider.get()).thenReturn(sessionService);
 
-        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
-
-        //when(encounterStorage.getSession()).thenReturn(encounterSession);
-
-        //when(encounterStorage.getSession().getOpponent(any())).thenReturn(opponent);
 
         //action
         final Opponent returnOpponent = encounterService
@@ -327,12 +315,8 @@ class EncounterServiceTest {
         when(encounterApiService.makeMove(any(), any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
-        //when(encounterStorage.getSession().getOpponent(any())).thenReturn(opponent);
-
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
-
-        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
 
         //action
         final Opponent returnOpponent = encounterService
@@ -365,13 +349,8 @@ class EncounterServiceTest {
         when(encounterApiService.fleeEncounter(any(), any(), any()))
                 .thenReturn(Observable.just(opponent));
 
-
         Encounter encounter = getDummyEncounters();
         when(encounterStorage.getEncounter()).thenReturn(encounter);
-
-        //when(encounterStorage.getOpponentList()).thenReturn(List.of(opponent));
-
-
 
         //action
         final Opponent returnOpponent = encounterService

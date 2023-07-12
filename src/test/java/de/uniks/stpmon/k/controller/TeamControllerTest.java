@@ -2,13 +2,10 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.storage.cache.ICache;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -22,7 +19,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,10 +53,6 @@ public class TeamControllerTest extends ApplicationTest {
     TeamController teamController;
 
 
-
-
-
-
     @Override
     public void start(Stage stage) {
         // show app
@@ -71,7 +66,6 @@ public class TeamControllerTest extends ApplicationTest {
 
         when(monsterService.getTeamCache().getCurrentValues()).
                 thenReturn(List.of(MonsterBuilder.builder().setId("1").setType(1).create()));
-
 
 
         when(presetService.getMonster("1")).thenReturn(
