@@ -58,9 +58,9 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Mock
     PresetService presetService;
     @Mock
-    Preferences preferences;
-    @Mock
     TrainerService trainerService;
+    @Mock
+    Preferences preferences;
 
     @Spy
     @InjectMocks
@@ -79,9 +79,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         final Observable<List<String>> characterList = Observable.just(List.of("Sprite1", "Sprite2", "Sprite3"));
         when(presetService.getCharacters()).thenReturn(characterList);
 
-        when(createTrainerController.randomSpriteIndex()).thenReturn(2);
-
         createTrainerController.setChosenRegion(dummyRegion);
+        createTrainerController.setRandomSeed(12345);
 
         app.show(createTrainerController);
         stage.requestFocus();
@@ -113,9 +112,11 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         final PopUpController popupMock = Mockito.mock(PopUpController.class);
 
         // define mocks:
+
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
         when(trainerService.setImage(anyString())).thenReturn(Observable.empty());
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
+       // when(preferences.getInt(anyString(), anyInt())).thenReturn(0);
         when(popUpControllerProvider.get()).thenReturn(popupMock);
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
@@ -130,7 +131,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         // verify mocks:
         verify(createTrainerController).createTrainer();
         verify(popupMock).showModal(any());
-        verify(regionService).createTrainer("1", "Tom", "Sprite3");
+        verify(regionService).createTrainer("1", "Tom", "Sprite2");
         verify(worldLoader).tryEnterRegion(any());
     }
 

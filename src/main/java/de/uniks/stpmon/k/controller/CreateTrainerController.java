@@ -108,10 +108,6 @@ public class CreateTrainerController extends PortalController {
                         .otherwise("")
         );
 
-        // Retrieve the sprite index from the preferences
-        currentSpriteIndex = randomSpriteIndex();
-        previousSpriteIndex = currentSpriteIndex;
-
         // these three elements have to be disabled when pop up is shown
         trainerSprite.disableProperty().bind(isPopUpShown);
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
@@ -192,10 +188,11 @@ public class CreateTrainerController extends PortalController {
     }
 
     public int randomSpriteIndex() {
-        if (!characters.isEmpty()) {
-            return random.nextInt(characters.size());
-        }
-        return random.nextInt(66);
+        return random.nextInt(characters.size());
+    }
+
+    public void setRandomSeed(long seed) {
+        this.random.setSeed(seed);
     }
 
     // -------------------------- Choose Sprite -------------------------- //
@@ -206,12 +203,7 @@ public class CreateTrainerController extends PortalController {
     public void loadSpriteList() {
         disposables.add(presetService.getCharacters()
                 .observeOn(FX_SCHEDULER)
-                .subscribe(response -> {
-                            getCharactersList(response);
-                            currentSpriteIndex %= characters.size();
-                            previousSpriteIndex %= characters.size();
-                        }
-                        , this::handleError));
+                .subscribe(this::getCharactersList, this::handleError));
     }
 
     /**
@@ -220,6 +212,10 @@ public class CreateTrainerController extends PortalController {
      */
     public void getCharactersList(List<String> charactersList) {
         this.characters.setAll(charactersList);
+
+        // Retrieve the sprite index from the preferences
+        currentSpriteIndex = randomSpriteIndex();
+        previousSpriteIndex = currentSpriteIndex;
 
         if (!charactersList.isEmpty()) {
             String selectedCharacter = charactersList.get(currentSpriteIndex);
