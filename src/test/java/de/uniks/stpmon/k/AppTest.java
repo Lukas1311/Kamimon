@@ -285,6 +285,7 @@ class AppTest extends ApplicationTest {
                 null
         );
         component.userStorage().setUser(user);
+        waitForFxEvents();
 
         //join region
         clickOn("#regionVBox");
@@ -324,10 +325,23 @@ class AppTest extends ApplicationTest {
                 .setArea("id0_0")
                 .setDirection(Direction.TOP)
                 .setNpc(new NPCInfo(false, true, false,
-                        List.of(), List.of()))
+                        null, List.of()))
                 .create();
 
         trainerCache.addValue(attacker);
+
+        Trainer nurse = TrainerBuilder.builder()
+                .setId("nurse")
+                .setX(1)
+                .setY(5)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, false, true,
+                        List.of(), List.of()))
+                .create();
+
+        trainerCache.addValue(nurse);
 
         //shortcut tests
         type(KeyCode.C);
