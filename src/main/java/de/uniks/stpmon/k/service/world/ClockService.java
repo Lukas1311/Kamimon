@@ -29,9 +29,10 @@ public class ClockService {
 
     protected Observable<LocalTime> createObservable() {
         LocalTime currentTime = getCurrentTime();
+        int offsetSecond = 60 - currentTime.getSecond();
         return Observable.merge(
                 Observable.just(currentTime),
-                Observable.interval(60, TimeUnit.SECONDS)
+                Observable.interval(offsetSecond, 60, TimeUnit.SECONDS)
                         .map(ticks -> currentTime.plus(ticks + 1, ChronoUnit.MINUTES))
         ).doOnDispose(() -> clockObservable = null).replay(1).refCount();
     }
