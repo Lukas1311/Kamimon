@@ -22,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import org.glassfish.grizzly.streams.Input;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -170,11 +169,16 @@ public class ActionFieldBattleLogController extends Controller {
                             addTextSection(translateString(translationVar), false);
                         }
 
-                        case "target-defeated" -> addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
-                        case "monster-changed" -> {}
-                        case "monster-defeated" -> addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
-                        case "monster-levelup" -> addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
-                        case "monster-evolved" -> addTextSection(translateString("monster-evolved", monster.name()), false);
+                        case "target-defeated" ->
+                                addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
+                        case "monster-changed" -> {
+                        }
+                        case "monster-defeated" ->
+                                addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
+                        case "monster-levelup" ->
+                                addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+                        case "monster-evolved" ->
+                                addTextSection(translateString("monster-evolved", monster.name()), false);
                         case "monster-learned" -> addTextSection(translateString("monster-learned", monster.name(),
                                 presetService.getAbility(result.ability()).blockingFirst().name()), false);
                         case "monster-dead" -> addTextSection(translateString("monster-dead", monster.name()), false);

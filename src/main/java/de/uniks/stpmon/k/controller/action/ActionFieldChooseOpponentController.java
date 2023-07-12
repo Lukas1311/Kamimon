@@ -1,13 +1,12 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -18,7 +17,6 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class ActionFieldChooseOpponentController extends Controller {
@@ -31,14 +29,13 @@ public class ActionFieldChooseOpponentController extends Controller {
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
-
     @Inject
     EncounterService encounterService;
+    @Inject
+    SessionService sessionService;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
-
-    public List<String> opponentMonstersList;
 
     private int optionIndex = 0;
 
@@ -52,15 +49,17 @@ public class ActionFieldChooseOpponentController extends Controller {
 
         addMonsterOption(null, null, true);
 
-        Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
-        Opponent opponent2 = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_SECOND);
+        Monster monster1 = sessionService.getMonster(EncounterSlot.ENEMY_FIRST);
+        Monster monster2 = sessionService.getMonster(EncounterSlot.ENEMY_SECOND);
+        Opponent opponent1 = sessionService.getOpponent(EncounterSlot.ENEMY_FIRST);
+        Opponent opponent2 = sessionService.getOpponent(EncounterSlot.ENEMY_SECOND);
 
-        if(opponent != null){
-            subscribe(presetService.getMonster(opponent.monster()),
-                    monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
+        if(monster1 != null){
+            subscribe(presetService.getMonster(monster1.type()),
+                    monsterDto -> addMonsterOption(opponent1, monsterDto.name(), false));
         }
-        if (opponent2 != null) {
-            subscribe(presetService.getMonster(opponent2.monster()),
+        if (monster2 != null) {
+            subscribe(presetService.getMonster(monster2.type()),
                     monsterDto -> addMonsterOption(opponent2, monsterDto.name(), false));
         }
 

@@ -89,13 +89,9 @@ public class ActionFieldChangeMonsterController extends Controller {
         if (userMonstersList != null && !userMonstersList.isEmpty()) {
             for (Monster monster : userMonstersList) {
                 if (!activeMonster._id().equals(monster._id())) {
-                    subscribe(presetService.getMonster(String.valueOf(monster.type())), type -> {
-                        disposables.add(regionService.getMonster(regionStorage.getRegion()._id(), trainerStorage.getTrainer()._id(), monster._id())
-                                .observeOn(FX_SCHEDULER)
-                                .subscribe(monster1 -> {
-                                    selectedUserMonster = monster1;
-                                    addActionOption(monster1._id() + " " + type.name(), false);
-                                }));
+                    subscribe(presetService.getMonster(monster.type()), type -> {
+                        selectedUserMonster = monster;
+                        addActionOption(monster._id() + " " + type.name(), false);
                     });
                 }
             }
