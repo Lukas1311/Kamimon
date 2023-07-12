@@ -74,10 +74,6 @@ public class ActionFieldMainMenuController extends Controller {
 
     public void openFlee() {
         actionFieldControllerProvider.get().openFleeWildMonster();
-        IngameController.disableEncounter = true;
-        HybridController controller = hybridControllerProvider.get();
-        app.show(controller);
-        controller.openMain(MainWindow.INGAME);
     }
 
     public void openFight() {
