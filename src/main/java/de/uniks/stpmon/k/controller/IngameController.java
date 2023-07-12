@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
