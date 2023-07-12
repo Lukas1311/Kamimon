@@ -5,11 +5,12 @@
 <?import javafx.scene.layout.*?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="81.0" prefWidth="295.0" styleClass="transparent-background" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController">
-    <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="81.0" prefWidth="295.0" vbarPolicy="NEVER">
-      <content>
-         <VBox fx:id="vBox" spacing="5" styleClass="ingame" />
-      </content>
-      <VBox.margin>
-         <Insets />
-      </VBox.margin></ScrollPane>
+    <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                minWidth="-Infinity" prefHeight="81.0" prefWidth="295.0" vbarPolicy="NEVER"
+                styleClass="transparent-background">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <VBox fx:id="vBox" spacing="5" styleClass="ingame"/>
+    </ScrollPane>
 </VBox>
