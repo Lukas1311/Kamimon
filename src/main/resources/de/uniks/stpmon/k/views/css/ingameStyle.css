@@ -8,6 +8,8 @@
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
     -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-border-width: 0px;
 }
 
 
