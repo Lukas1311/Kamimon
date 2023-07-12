@@ -60,7 +60,7 @@
             <Image url="@../controller/spriteBackground.png"/>
         </ImageView>
         <ImageView fx:id="trainerSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../controller/spritePlacehoder.png"/>
+            <Image url="@../controller/spritePlaceholder.png"/>
         </ImageView>
     </StackPane>
 
