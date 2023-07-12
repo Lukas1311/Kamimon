@@ -27,10 +27,6 @@ public class ActionFieldMainMenuController extends Controller {
     @FXML
     public VBox mainMenuBox;
 
-    public String fight;
-    public String changeMon;
-    public String flee;
-
     @Inject
     public ActionFieldMainMenuController() {}
 
@@ -39,25 +35,25 @@ public class ActionFieldMainMenuController extends Controller {
         Parent parent = super.render();
 
         textContent.setText(translateString("wannaDo"));
-        fight = translateString("fight");
-        changeMon = translateString("changeMon");
-        //TODO: Only show flee in wild encounter. Currently it is always shown to get out of the encounter
-        flee = translateString("flee");
 
+        addActionOption(OptionType.FIGHT);
+        addActionOption(OptionType.CHANGE_MON);
 
-        setActions();
-
+        //TODO: only call flee when wild encounter
+        addActionOption(OptionType.FLEE);
         return parent;
     }
 
-    public void setActions() {
-        addActionOption(fight);
-        addActionOption(changeMon);
-        addActionOption(flee);
-    }
+    public void addActionOption(OptionType option) {
+        String optionText = switch (option) {
+            case FIGHT -> "fight";
+            case CHANGE_MON -> "changeMon";
+            case FLEE -> "flee";
+        };
 
-    public void addActionOption(String option) {
-        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+        HBox optionContainer = actionFieldControllerProvider
+                .get()
+                .getOptionContainer(translateString(optionText));
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
@@ -67,16 +63,16 @@ public class ActionFieldMainMenuController extends Controller {
         mainMenuBox.getChildren().add(optionContainer);
     }
 
-    public void openAction(String option) {
-        if(option.equals(fight)) {
-            openFight();
-        } else if (option.equals(changeMon)) {
-            openChangeMon();
-        }else if(option.equals(flee)){
-            IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
+    public void openAction(OptionType option) {
+        switch (option) {
+            case CHANGE_MON -> openChangeMon();
+            case FIGHT -> openFight();
+            case FLEE -> {
+                IngameController.disableEncounter = true;
+                HybridController controller = hybridControllerProvider.get();
+                app.show(controller);
+                controller.openMain(MainWindow.INGAME);
+            }
         }
     }
 
@@ -92,4 +88,12 @@ public class ActionFieldMainMenuController extends Controller {
     public String getResourcePath() {
         return "action/";
     }
+
+    public enum OptionType {
+        FIGHT,
+        CHANGE_MON,
+        FLEE
+    }
+
+
 }

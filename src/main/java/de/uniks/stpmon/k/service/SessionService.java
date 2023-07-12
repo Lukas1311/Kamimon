@@ -126,7 +126,17 @@ public class SessionService extends DestructibleElement {
     }
 
 
-    //---------------- Session Getters -------------------------
+    //---------------- Session Getters -------------------------D
+    public EncounterSlot getTarget(String targetId) {
+        EncounterSession session = encounterStorage.getSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        if (targetId == null) {
+            throw new IllegalArgumentException("Target id must not be null");
+        }
+        return session.getSlotForTrainer(targetId);
+    }
 
     public Monster getMonster(EncounterSlot slot) {
         return applyIfEncounter(EncounterSession::getMonster, slot);
@@ -146,6 +156,9 @@ public class SessionService extends DestructibleElement {
 
     public boolean isSelf(EncounterSlot slot) {
         Trainer trainer = trainerStorage.getTrainer();
+        if (encounterStorage.getSession() == null) {
+            return false;
+        }
         return Objects.equals(trainer._id(), getTrainer(slot));
     }
 
@@ -171,7 +184,7 @@ public class SessionService extends DestructibleElement {
         if (session == null) {
             return Collections.emptyList();
         }
-        return session.getAttackerTeam();
+        return session.getEnemyTeam();
     }
 
     public List<String> getOwnTeam() {
@@ -180,6 +193,15 @@ public class SessionService extends DestructibleElement {
             return Collections.emptyList();
         }
         return session.getOwnTeam();
+    }
+
+    public Completable onEncounterCompleted() {
+        return encounterStorage.getSession().onEncounterCompleted().doOnComplete(() -> {});
+    }
+
+    public void clearEncounter() {
+        encounterStorage.setEncounter(null);
+        encounterStorage.setSession(null);
     }
 
 }

@@ -68,6 +68,7 @@ public class InteractionService implements ILifecycleService {
         if (info == null) {
             return null;
         }
+
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
         }
@@ -202,8 +203,7 @@ public class InteractionService implements ILifecycleService {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(overlayPane.opacityProperty(), 0.0)),
                 new KeyFrame(Duration.seconds(0.5), new KeyValue(overlayPane.opacityProperty(), 0.5)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(overlayPane.opacityProperty(), 0.0))
-        );
+                new KeyFrame(Duration.seconds(1), new KeyValue(overlayPane.opacityProperty(), 0.0)));
 
         timeline.setCycleCount(3);
         timeline.setAutoReverse(true);

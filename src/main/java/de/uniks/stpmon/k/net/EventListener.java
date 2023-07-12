@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.service.storage.TokenStorage;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

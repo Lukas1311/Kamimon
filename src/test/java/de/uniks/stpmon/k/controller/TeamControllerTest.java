@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -39,13 +40,17 @@ public class TeamControllerTest extends ApplicationTest {
     @Mock
     Provider<MonsterBarController> monsterBarControllerProvider;
 
-    @InjectMocks
-    TeamController teamController;
-
     @Mock
     PresetService presetService;
+
     @Mock
     MonsterService monsterService;
+
+    @Mock
+    MonsterCache monsterCache;
+
+    @InjectMocks
+    TeamController teamController;
 
 
     @Override
@@ -57,9 +62,15 @@ public class TeamControllerTest extends ApplicationTest {
                 List.of(MonsterBuilder.builder().setId("1").setType(1).create()
                 )));
 
+        when(monsterService.getTeamCache()).thenReturn(monsterCache);
+
+        when(monsterService.getTeamCache().getCurrentValues()).
+                thenReturn(List.of(MonsterBuilder.builder().setId("1").setType(1).create()));
+
 
         when(presetService.getMonster("1")).thenReturn(
                 Observable.just(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
+
         when(resourceBundleProvider.get()).thenReturn(resources);
 
         MonsterBarController mock = Mockito.mock(MonsterBarController.class);

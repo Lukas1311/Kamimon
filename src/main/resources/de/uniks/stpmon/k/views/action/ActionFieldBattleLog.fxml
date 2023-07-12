@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-<VBox xmlns="http://javafx.com/javafx/11.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController">
-      <TextFlow prefHeight="25.0" prefWidth="295.0">
-         <VBox.margin>
-            <Insets bottom="5.0"/>
-         </VBox.margin>
-         <Text fx:id="logText" strokeType="OUTSIDE" strokeWidth="0.0" text="Battlelog: remove this text in fxml after real text is implemented"/>
-      </TextFlow>
-</VBox>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="81.0" prefWidth="295.0" styleClass="transparent-background" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController">
+    <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                minWidth="-Infinity" prefHeight="81.0" prefWidth="295.0" vbarPolicy="NEVER"
+                styleClass="transparent-background">
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+        <VBox fx:id="vBox" spacing="5" styleClass="ingame"/>
+    </ScrollPane>
+</VBox>
