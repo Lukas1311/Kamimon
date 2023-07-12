@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane fx:id="nightOverlay" xmlns="http://javafx.com/javafx/19"
+            fx:controller="de.uniks.stpmon.k.controller.overworld.NightOverlayController"
+            opacity="0.0" styleClass="night-plane" visible="false"
+            xmlns:fx="http://javafx.com/fxml/1"/>

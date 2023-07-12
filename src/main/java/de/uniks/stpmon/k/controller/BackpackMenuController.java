@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -72,7 +71,7 @@ public class BackpackMenuController extends Controller {
             // delete dummy method after functionality is implemented
             case MONSTER -> triggerMonBox();
             case TEAM -> monsterBarControllerProvider.get().showMonsters();
-            case MAP -> dummyMethod();
+            case MAP -> openMinimap();
         }
 
     }
@@ -81,9 +80,8 @@ public class BackpackMenuController extends Controller {
         return backpackMenuOptions.indexOf(option);
     }
 
-    @SuppressWarnings("EmptyMethod")
-    private void dummyMethod() {
-        // Dummy method for the moment
+    private void openMinimap() {
+        ingameControllerProvider.get().openMap();
     }
 
     public void openMonBox() {

@@ -1,42 +1,43 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.TilesetSource;
-import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
-import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
-import de.uniks.stpmon.k.world.TileMap;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.matcher.control.TextFlowMatchers.hasText;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -45,8 +46,8 @@ public class MapOverviewControllerTest extends ApplicationTest {
     @Spy
     final App app = new App(null);
 
-    @Mock
-    TextureSetService textureSetService;
+    @Spy
+    WorldRepository worldRepository;
     @Spy
     RegionStorage regionStorage;
     @Mock
@@ -61,41 +62,36 @@ public class MapOverviewControllerTest extends ApplicationTest {
 
 
     private TileMapData createDummyMap() {
-        ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
-                2, 2,
-                0, 0);
         ObjectData object = new ObjectData(0, "Route 101", List.of(), List.of(
                 new Property("Route 101", "Route", "text")
         ), "Route", false, 0, 0, 0, 0, 0);
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), List.of(), List.of(object),
+        TileLayerData layer = new TileLayerData(1, "Ground", List.of(), List.of(), List.of(object),
                 0, 0,
                 2, 2,
-                0, 0, "tilelayer", true, List.of());
+                0, 0, "objectgroup", true, List.of());
         return new TileMapData(
                 2, 2,
                 false, List.of(layer),
                 1, 1,
-                List.of(new TilesetSource(1, "grass.json")),
+                List.of(),
                 "map");
     }
 
     final TileMapData dummyMap = createDummyMap();
     final Region dummyRegion = new Region("1", "reg", null, dummyMap);
-    final TileMap tileMapMock = mock(TileMap.class);
 
 
     @Override
     public void start(Stage stage) {
         app.start(stage);
-        // mapOverviewController.mapImageView = mapImageViewMock;
 
         when(regionStorage.getRegion()).thenReturn(dummyRegion);
-        RouteData dummyData = new RouteData(1, new RouteText("Route 66", "HiWay", "Route"), 1, 2, 16, 32, List.of(new PolygonPoint(1, 2)));
-        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay", "Route"), 1, 2, 20, 34, List.of());
-        RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay", "Route"), 0, 2, 20, 34, List.of());
+        RouteData dummyData = new RouteData(1, new RouteText("Route 66", "HiWay1", "Route"), 0, 0, 0, 0,
+                List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(20, 20), new PolygonPoint(0, 20)));
+        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 10, 10, 20, 34, List.of());
+        RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"), 10, 10, 0, 34, List.of());
         when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData, dummyData2, dummyData3)));
-        when(textureSetService.createMap(any()))
-                .thenReturn(Observable.just(tileMapMock));
+        worldRepository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
         app.show(mapOverviewController);
         stage.requestFocus();
     }
@@ -103,15 +99,8 @@ public class MapOverviewControllerTest extends ApplicationTest {
     @Test
     void testRender() {
         // prep:
-        BufferedImage renderedMapMock = mock(BufferedImage.class);
         ImageView mapImageViewMock = mock(ImageView.class);
         ImageView mapImageView = lookup("#mapImageView").queryAs(ImageView.class);
-        MockedStatic<SwingFXUtils> mockedStatic = Mockito.mockStatic(SwingFXUtils.class);
-        WritableImage dummyMapWritableImage = new WritableImage(10, 10);
-
-        // mock mocks:
-        when(tileMapMock.renderMap()).thenReturn(renderedMapMock);
-        mockedStatic.when(() -> SwingFXUtils.toFXImage(renderedMapMock, null)).thenReturn(dummyMapWritableImage);
 
         // action: render() already done automatically by this time
 
@@ -131,15 +120,34 @@ public class MapOverviewControllerTest extends ApplicationTest {
         assertTrue(mapOverviewController.mapOverviewContent.isVisible());
 
         // check mocks:
-        verify(mapOverviewController, times(1)).handleError(any());
         verifyNoMoreInteractions(mapImageViewMock);
         verify(app).getStage();
         verify(regionStorage).getRegion();
         verify(textDeliveryService).getRouteData(dummyRegion);
-        verify(textureSetService).createMap(dummyRegion);
-
-        // close static mock:
-        mockedStatic.close();
+        // No detail should be visible
+        verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0);
+        // move to first route
+        moveTo("#detail_1");
+        // Detail should be half highlighted
+        verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.75);
+        // Click on first route
+        clickOn(MouseButton.PRIMARY);
+        // Detail should be full highlighted
+        verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
+        // Route description should be visible
+        verifyThat("#textFlowRegionDescription", hasText("HiWay1"));
+        // Move to second route
+        moveTo("#detail_2");
+        // First route should still be full highlighted
+        verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
+        // Second route should be half highlighted
+        verifyThat("#detail_2", (Node t) -> t.getOpacity() >= 0.75);
+        // Click on second route
+        clickOn(MouseButton.PRIMARY);
+        // First route should not be highlighted anymore
+        verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0);
+        // Second route should be full highlighted
+        verifyThat("#detail_2", (Node t) -> t.getOpacity() >= 0.95);
     }
 
 }

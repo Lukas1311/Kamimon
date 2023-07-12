@@ -89,5 +89,7 @@ public abstract class Viewable {
         disposables.add(observable.observeOn(FX_SCHEDULER).subscribe(onNext, onError));
     }
 
-
+    public EffectContext getEffectContext() {
+        return effectContext;
+    }
 }
