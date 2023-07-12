@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Random;
 import java.util.prefs.Preferences;
 
 @Singleton
@@ -80,8 +81,9 @@ public class CreateTrainerController extends PortalController {
     @Inject
     TextureSetService textureService;
 
+    private final Random random = new Random();
     private Region chosenRegion;
-    private String chosenSprite = "Premade_Character_01.png";
+    private String chosenSprite;
     private final SimpleStringProperty trainerName = new SimpleStringProperty();
 
     @Inject
@@ -96,7 +98,7 @@ public class CreateTrainerController extends PortalController {
     public Parent render() {
         final Parent parent = load("CreateTrainer");
 
-        loadImage(trainerSprite, "spritePlacehoder.png");
+        loadImage(trainerSprite, "spritePlaceholder.png");
 
         BooleanBinding trainerNameTooLong = trainerName.length().greaterThan(32);
         BooleanBinding trainerNameInvalid = trainerName.isEmpty().or(trainerNameTooLong);
@@ -109,32 +111,32 @@ public class CreateTrainerController extends PortalController {
                         .otherwise("")
         );
 
-        loadSprite(chosenSprite);
+        // Retrieve the sprite index from the preferences
+        currentSpriteIndex = randomSpriteIndex() + 1;
+        previousSpriteIndex = currentSpriteIndex;
 
         // these three elements have to be disabled when pop up is shown
         trainerSprite.disableProperty().bind(isPopUpShown);
         createTrainerButton.disableProperty().bind(isPopUpShown.or(trainerNameInvalid));
 
-        createTrainerButton.setOnAction(click -> {
-            manageButtonBehavior();
-        });
+        createTrainerButton.setOnAction(click -> manageButtonBehavior());
         closeButton.setOnAction(click -> closeWindow());
-
-        // Retrieve the sprite index from the preferences
-        currentSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
-        previousSpriteIndex = currentSpriteIndex;
 
         // Load the list of available sprites
         loadSpriteList();
 
         if (trainerService.getMe() != null) {
+            currentSpriteIndex = preferences.getInt("currentSpriteIndex", 0);
+
             createTrainerText.setText(translateString("createSprite"));
 
+            createTrainerInput.clear();
             createTrainerInput.setVisible(false);
             trainerNameInfo.setVisible(false);
             trainerLabel.setVisible(false);
 
             createTrainerButton.setText(translateString("saveChanges"));
+
             createTrainerButton.disableProperty().bind(trainerNameInvalid.not());
         }
 
@@ -142,10 +144,10 @@ public class CreateTrainerController extends PortalController {
     }
 
     private void manageButtonBehavior() {
+        saveSprite();
         if (trainerService.getMe() == null) {
             createTrainer();
         }
-        saveSprite();
     }
 
     public void loadSprite(String selectedCharacter) {
@@ -190,6 +192,13 @@ public class CreateTrainerController extends PortalController {
         } else {
             hybridControllerProvider.get().openMain(MainWindow.LOBBY);
         }
+    }
+
+    private int randomSpriteIndex() {
+        if (!characters.isEmpty()) {
+            return random.nextInt(characters.size());
+        }
+        return random.nextInt(66);
     }
 
     // -------------------------- Choose Sprite -------------------------- //
@@ -260,12 +269,16 @@ public class CreateTrainerController extends PortalController {
     public void saveSprite() {
         // Save the currentSpriteIndex to the preferences
         setTrainerImage(characters.get(currentSpriteIndex));
+
         preferences.putInt("currentSpriteIndex", currentSpriteIndex);
         disposables.add(
                 trainerService.setImage(characters.get(currentSpriteIndex))
                         .observeOn(FX_SCHEDULER)
                         .subscribe(trainer -> {
                         }, this::handleError));
+        if (trainerService.getMe() != null) {
+            hybridControllerProvider.get().popTab();
+        }
     }
 
 }
