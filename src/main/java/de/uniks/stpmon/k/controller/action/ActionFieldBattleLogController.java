@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Result;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -19,7 +20,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import org.glassfish.grizzly.streams.Input;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -55,6 +58,9 @@ public class ActionFieldBattleLogController extends Controller {
     @Inject
     MonsterService monsterService;
 
+    @Inject
+    InputHandler inputHandler;
+
     private boolean encounterFinished = false;
 
     @Inject
@@ -77,6 +83,13 @@ public class ActionFieldBattleLogController extends Controller {
         initListeners();
 
         scrollPane.setOnMouseReleased(event -> nextWindow());
+
+        onDestroy(inputHandler.addPressedKeyHandler(event -> {
+            if (event.getCode() == KeyCode.E) {
+                nextWindow();
+                event.consume();
+            }
+        }));
 
         return parent;
     }
