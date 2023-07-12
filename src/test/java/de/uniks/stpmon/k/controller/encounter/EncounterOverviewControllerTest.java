@@ -5,12 +5,14 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -75,7 +77,21 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
                 .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
 
+        when(sessionService.onEncounterCompleted()).thenReturn(Completable.complete());
+
         when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
+
+        when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
+                "o_1",
+                null,
+                null,
+                false,
+                false,
+                null,
+                null,
+                List.of(),
+                0
+        )));
 
         when(statusControllerProvider.get()).thenAnswer(invocation -> {
             VBox statusBox = new VBox();

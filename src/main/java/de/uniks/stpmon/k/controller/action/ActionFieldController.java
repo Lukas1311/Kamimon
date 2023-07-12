@@ -43,6 +43,8 @@ public class ActionFieldController extends Controller {
     private String enemyTrainerId;
     private int abilityId;
 
+    private Controller controller;
+
     @Inject
     public ActionFieldController() {
     }
@@ -82,8 +84,13 @@ public class ActionFieldController extends Controller {
     }
 
     private void open(Provider<? extends Controller> provider){
+        if(controller != null && controller instanceof ActionFieldBattleLogController){
+            controller.destroy();
+        }
         actionFieldContent.getChildren().clear();
-        actionFieldContent.getChildren().add(provider.get().render());
+        controller = provider.get();
+        controller.init();
+        actionFieldContent.getChildren().add(controller.render());
     }
 
 

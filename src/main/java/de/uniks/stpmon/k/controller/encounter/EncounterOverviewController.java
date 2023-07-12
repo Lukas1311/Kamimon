@@ -28,6 +28,8 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class EncounterOverviewController extends Controller {
 
@@ -147,10 +149,23 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
+        Timer myTimer = new Timer();
+
+        onDestroy(myTimer::cancel);
+
         subscribe(sessionService.onEncounterCompleted(), () -> {
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
+
+            ///TODO Animate win / lose here  R4?
+            myTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    javafx.application.Platform.runLater(() -> {
+                        HybridController controller = hybridControllerProvider.get();
+                        app.show(controller);
+                        controller.openMain(MainWindow.INGAME);
+                    });
+                }}, 5000);
+
         });
 
         return parent;
