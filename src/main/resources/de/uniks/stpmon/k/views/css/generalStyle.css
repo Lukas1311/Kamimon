@@ -890,6 +890,7 @@ Load fonts
 
 /* -------------------- Border for RegionPane -------------------- */
 .region-pane-border {
+    -fx-background-color: black; /* Border color */
     -fx-border-color: black; /* Border color */
     -fx-border-width: 10px; /* Border width */
 }

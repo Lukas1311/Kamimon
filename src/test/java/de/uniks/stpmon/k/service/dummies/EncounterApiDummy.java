@@ -157,7 +157,7 @@ public class EncounterApiDummy implements EncounterApiService {
                     false,
                     opponentDto.monster(),
                     opponentDto.move(),
-                    result,
+                    List.of(result),
                     1
             );
             sendOpponentEvent(opponent, "updated");
@@ -194,7 +194,7 @@ public class EncounterApiDummy implements EncounterApiService {
                     true,
                     opponentDto.monster(),
                     opponentDto.move(),
-                    result,
+                    List.of(result),
                     1
             );
 
@@ -272,11 +272,11 @@ public class EncounterApiDummy implements EncounterApiService {
                             0,
                             "targetId"
                     ),
-                    new Result(
+                    List.of(new Result(
                             "ability-success",
                             0,
                             "effective"
-                    ),
+                    )),
                     0
             );
             Opponent opponent1 = new Opponent(
@@ -290,11 +290,11 @@ public class EncounterApiDummy implements EncounterApiService {
                             "change-monster",
                             "monster2Id"
                     ),
-                    new Result(
+                    List.of(new Result(
                             "monster-changed",
                             null,
                             null
-                    ),
+                    )),
                     0
             );
             if (!big) {
@@ -311,11 +311,11 @@ public class EncounterApiDummy implements EncounterApiService {
                             "change-monster",
                             "monster2Id"
                     ),
-                    new Result(
+                    List.of(new Result(
                             "monster-changed",
                             null,
                             null
-                    ),
+                    )),
                     0
             );
             Opponent opponent3 = new Opponent(
@@ -329,11 +329,11 @@ public class EncounterApiDummy implements EncounterApiService {
                             "change-monster",
                             "monster2Id"
                     ),
-                    new Result(
+                    List.of(new Result(
                             "monster-changed",
                             null,
                             null
-                    ),
+                    )),
                     0
             );
             return List.of(opponent0, opponent1, opponent2, opponent3);

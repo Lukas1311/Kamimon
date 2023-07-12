@@ -2,6 +2,10 @@ package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -33,10 +37,16 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldFleeController> fleeControllerProvider;
 
 
-    AbilityDto chosenAbility;
+    @Inject
+    Provider<EncounterStorage> encounterStorageProvider;
 
-    String abilityId;
-    String opponentId;
+    @Inject
+    Provider<EncounterService> encounterServiceProvider;
+
+    private String enemyTrainerId;
+    private int abilityId;
+
+    private Controller controller;
 
     @Inject
     public ActionFieldController() {
@@ -73,9 +83,7 @@ public class ActionFieldController extends Controller {
     }
 
     public void openChooseOpponent(){
-        if(chosenAbility != null){
-            open(chooseOpponentControllerProvider);
-        }
+        open(chooseOpponentControllerProvider);
     }
 
     public void openBattleLog(){
@@ -83,17 +91,15 @@ public class ActionFieldController extends Controller {
     }
 
     private void open(Provider<? extends Controller> provider){
+        if(controller != null && controller instanceof ActionFieldBattleLogController){
+            controller.destroy();
+        }
         actionFieldContent.getChildren().clear();
-        actionFieldContent.getChildren().add(provider.get().render());
+        controller = provider.get();
+        controller.init();
+        actionFieldContent.getChildren().add(controller.render());
     }
 
-    public void setChosenAbility(AbilityDto chosenAbility) {
-        this.chosenAbility = chosenAbility;
-    }
-
-    public AbilityDto getChosenAbility(){
-        return chosenAbility;
-    }
 
     public HBox getOptionContainer(String option){
         Text arrowText = new Text(" >");
@@ -108,4 +114,39 @@ public class ActionFieldController extends Controller {
 
         return optionContainer;
     }
+
+    public void setAbilityId(int abilityId) {
+        this.abilityId = abilityId;
+    }
+
+    @SuppressWarnings("unused")
+    public int getAbilityId() {
+        return abilityId;
+    }
+
+    public void setEnemyTrainerId(String trainerId) {
+        this.enemyTrainerId = trainerId;
+    }
+
+    @SuppressWarnings("unused")
+    public String getEnemyTrainerId() {
+        return enemyTrainerId;
+    }
+
+    public void executeAbilityMove(){
+        subscribe(encounterServiceProvider.get().makeAbilityMove(abilityId, enemyTrainerId),
+                next -> {},
+                error -> {
+                    //TODO removed if fixed
+
+                    //HttpException err = (HttpException) error;
+                    //String text = new String(err.response().errorBody().bytes(), StandardCharsets.UTF_8);
+                    ////String text2 = new String(err.response().raw().request().body()., StandardCharsets.UTF_8);
+                    //System.out.println(text);
+                    System.out.println(error.getMessage());
+                }
+        );
+
+    }
+
 }

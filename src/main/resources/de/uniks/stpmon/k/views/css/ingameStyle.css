@@ -3,6 +3,13 @@
     -fx-font-size: 20px;
 }
 
+.transparent-background{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+}
+
 
 /* -------------------- Pause Screen -------------------- */
 .pause-inner-containers {
@@ -235,8 +242,9 @@
     -fx-border-insets: 10;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 23px;
 }
-
 
 .map-overview-label {
     -fx-text-alignment: center;
@@ -247,6 +255,10 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: lightgray;
+}
+
+.map-overview-header {
+    -fx-font-size: 34px;
 }
 
 /* -------------------- Encounter -------------------- */
@@ -270,3 +282,6 @@
 .monster-hp-bar .track {
     -fx-padding: 0;
 }
+
+/* -------------------- Action Field  -------------------- */
+

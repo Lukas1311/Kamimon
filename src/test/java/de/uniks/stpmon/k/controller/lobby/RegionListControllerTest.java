@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.lobby;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
@@ -56,6 +56,7 @@ public class RegionListControllerTest extends ApplicationTest {
     public void start(Stage stage) {
         final Observable<List<Region>> regionMock = Observable.just(List.of(new Region("0", "Test", new Spawn("0", 0, 0), null)));
         when(regionService.getRegions()).thenReturn(regionMock);
+        when(regionService.getRegionImage(any())).thenReturn(Observable.just(DummyConstants.IMAGE));
 
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);

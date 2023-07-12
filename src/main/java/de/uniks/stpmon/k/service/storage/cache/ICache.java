@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.service.ILifecycleService;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +76,16 @@ public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
     Optional<T> getValue(K id);
 
     /**
+     * Retrieves a single value as an observable which will just emit one value.
+     * @param id The id of the value to retrieve.
+     * @return Observable which will retrieve a single value, if any, and then complete
+     */
+    default Observable<T> singleValue(K id) {
+        return getValue(id).map(Observable::just)
+                .orElseGet(Observable::empty);
+    }
+
+    /**
      * Retrieves an observable that emits the value with the given id.
      *
      * @param id The id of the value to retrieve.
@@ -117,11 +128,21 @@ public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
     }
 
     /**
+     * Retrieves an observable which will emit a single list of the current values.
+     * @return An observable of all values in the cache.
+     */
+    default Observable<List<T>> singleValues() {
+        return getValues().take(1);
+    }
+
+    /**
      * Retrieve the status of the cache.
      *
      * @return The status of the cache.
      */
     Status getStatus();
+
+    Collection<K> getIds();
 
     enum Status {
         UNINITIALIZED,
