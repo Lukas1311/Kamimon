@@ -30,6 +30,8 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class EncounterOverviewController extends Controller {
 
@@ -71,6 +73,8 @@ public class EncounterOverviewController extends Controller {
     @Inject
     ActionFieldController actionFieldController;
 
+     private boolean suspendTimer = false;
+
     @Inject
     InputHandler inputHandler;
 
@@ -101,7 +105,7 @@ public class EncounterOverviewController extends Controller {
         //click on the first mon of opponent to get out of the encounter
         //Note: the encounter is still active after this
         opponentMonster0.setOnMouseClicked(e -> {
-            IngameController.disableEncounter = true;
+            //IngameController.disableEncounter = true;
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);
@@ -110,7 +114,6 @@ public class EncounterOverviewController extends Controller {
         //add a translation transition to all monster images
         for ( EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
-
 
             TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
             if(slot.enemy()) {
@@ -126,38 +129,41 @@ public class EncounterOverviewController extends Controller {
             attackAnimations.put(slot, translation);
         }
 
-        onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            switch (event.getCode()) {
-                    case G -> {
-                        // Block movement and backpack, if map overview is shown
-                        renderAttack(EncounterSlot.PARTY_FIRST);
-                        event.consume();
-                    }
-
-                    case H -> {
-                        // Block movement and backpack, if map overview is shown
-                        renderAttack(EncounterSlot.ENEMY_FIRST);
-                        event.consume();
-                    }
-
-                    default -> {
-                    }
-
-                }
-        }));
-
         subscribeFight();
 
         renderMonsterLists();
         animateMonsterEntrance();
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
+        if(!suspendTimer) {
+            Timer myTimer = new Timer();
+
+            onDestroy(myTimer::cancel);
+
+            subscribe(sessionService.onEncounterCompleted(), () -> {
+
+                ///TODO Animate win / lose here  R4?
+                myTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        javafx.application.Platform.runLater(() -> {
+                            if(hybridControllerProvider == null){
+                                cancel();
+                                return;
+                            }
+                            HybridController controller = hybridControllerProvider.get();
+                            app.show(controller);
+                            controller.openMain(MainWindow.INGAME);
+                        });
+                    }}, 5000);
+            });
+        }
+
 
         return parent;
+    }
+
+    public void suspendTimer(){
+        suspendTimer = true;
     }
 
 
@@ -165,8 +171,6 @@ public class EncounterOverviewController extends Controller {
     private void subscribeFight(){
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), next -> {
-                //using result to print text to action field
-
                 //using IMove to animate attack
                 if(next.move() instanceof AbilityMove){
                     renderAttack(slot);
@@ -225,9 +229,9 @@ public class EncounterOverviewController extends Controller {
             // Scale and set the image
             Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
             if (attacker) {
-                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-            } else {
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            } else {
+                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
         });

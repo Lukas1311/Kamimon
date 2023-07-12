@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -53,7 +51,7 @@ public class ActionFieldMainMenuController extends Controller {
 
         HBox optionContainer = actionFieldControllerProvider
                 .get()
-                .getOptionContainer(optionText);
+                .getOptionContainer(translateString(optionText));
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
@@ -67,13 +65,13 @@ public class ActionFieldMainMenuController extends Controller {
         switch (option) {
             case CHANGE_MON -> openChangeMon();
             case FIGHT -> openFight();
-            case FLEE -> {
-                IngameController.disableEncounter = true;
-                HybridController controller = hybridControllerProvider.get();
-                app.show(controller);
-                controller.openMain(MainWindow.INGAME);
-            }
+            case FLEE -> openFlee();
+
         }
+    }
+
+    public void openFlee() {
+        actionFieldControllerProvider.get().openFleeWildMonster();
     }
 
     public void openFight() {

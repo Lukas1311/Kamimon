@@ -46,6 +46,9 @@ public class EncounterService {
     RegionStorage regionStorage;
 
     @Inject
+    Provider<SessionService> sessionServiceProvider;
+
+    @Inject
     EncounterStorage encounterStorage;
     @Inject
     EventListener eventListener;
@@ -98,7 +101,7 @@ public class EncounterService {
         return encounterApiService.getEncounterOpponent(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id()
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id()
         );
     }
 
@@ -109,14 +112,14 @@ public class EncounterService {
                 targetId)
         );
 
-        if (encounterStorage.getSession() == null) {
+        if (sessionServiceProvider.get().hasNoEncounter()) {
             throw new IllegalStateException("There is no encounter o_O");
         }
 
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
                 dto
         );
     }
@@ -129,7 +132,7 @@ public class EncounterService {
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
                 dto
         );
     }
@@ -138,7 +141,7 @@ public class EncounterService {
         return encounterApiService.fleeEncounter(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getSession().getOpponent(EncounterSlot.PARTY_FIRST)._id()
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id()
         );
     }
 

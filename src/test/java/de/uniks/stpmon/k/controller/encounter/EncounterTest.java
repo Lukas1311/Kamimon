@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.models.*;
@@ -14,18 +15,31 @@ import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextMatchers.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterTest extends ApplicationTest {
+
+    @Spy
+    @SuppressWarnings("unused")
+    Provider<HybridController> hybridControllerProvider;
+
     @Spy
     final
     App app = new App(null);
@@ -43,6 +57,9 @@ public class EncounterTest extends ApplicationTest {
     final EncounterApiDummy encounterApiDummy = component.encounterApi();
     final EventDummy eventDummy = component.eventDummy();
 
+    @SuppressWarnings("unused")
+    final HybridController hybridController = Mockito.mock(HybridController.class);
+
     @Override
     public void start(Stage stage) {
         app.start(stage);
@@ -52,6 +69,7 @@ public class EncounterTest extends ApplicationTest {
         regionStorage.setArea(DummyConstants.AREA);
         encounterApiDummy.startEncounter(true);
         sessionService.tryLoadEncounter().blockingAwait();
+        controller.suspendTimer();
 
         app.show(controller);
         stage.requestFocus();
@@ -59,6 +77,9 @@ public class EncounterTest extends ApplicationTest {
 
     @Test
     void changeMonster() {
+
+        //when(hybridControllerProvider.get()).thenReturn(hybridController);
+        //doNothing().when(app).show(hybridController);
         // First monster should be selected
         verifyThat("#0_party #monsterHp", hasText("10 / 20"));
         // Send event for updating selected monster
@@ -90,6 +111,12 @@ public class EncounterTest extends ApplicationTest {
 
         // New monster should be selected
         verifyThat("#0_party #monsterHp", hasText("1 / 12"));
+    }
+
+    @AfterEach
+    void closeAll(){
+        controller.destroy();
+
     }
 
 }

@@ -9,15 +9,18 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.InputEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -28,8 +31,6 @@ import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends PortalController {
-    //TODO: Remove if encounter leave is implemented
-    public static boolean disableEncounter = false;
     private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
@@ -101,8 +102,6 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
-        worldTimerController.init();
-        nightOverlayController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             switch (event.getCode()) {
@@ -129,9 +128,6 @@ public class IngameController extends PortalController {
         starterController.init();
 
         if (encounterService != null) {
-            if (disableEncounter) {
-                return;
-            }
             subscribe(encounterService.tryLoadEncounter(), () -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
@@ -139,14 +135,15 @@ public class IngameController extends PortalController {
                 EncounterOverviewController controller = encounterProvider.get();
                 app.show(controller);
             });
-            subscribe(encounterService.listenForEncounter()
-                    .subscribeOn(Schedulers.computation()), () -> {
+            disposables.add(encounterService.listenForEncounter().subscribe(() -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                EncounterOverviewController controller = encounterProvider.get();
-                app.show(controller);
-            });
+                Platform.runLater(() -> {
+                    EncounterOverviewController controller = encounterProvider.get();
+                    app.show(controller);
+                });
+            }));
         }
     }
 
@@ -161,8 +158,6 @@ public class IngameController extends PortalController {
         backpackController.destroy();
         dialogueController.destroy();
         starterController.destroy();
-        worldTimerController.destroy();
-        nightOverlayController.destroy();
     }
 
     @Override
@@ -184,16 +179,6 @@ public class IngameController extends PortalController {
         // Null if unit testing world view
         if (miniMap != null) {
             rightVbox.getChildren().add(0, miniMap);
-        }
-
-        Parent worldTimer = this.worldTimerController.render();
-        if (worldTimer != null) {
-            rightVbox.getChildren().add(0, worldTimer);
-        }
-
-        Parent nightOverlay = this.nightOverlayController.render();
-        if (nightOverlay != null) {
-            ingameStack.getChildren().add(1, nightOverlay);
         }
 
         Parent backPack = this.backpackController.render();
@@ -276,7 +261,6 @@ public class IngameController extends PortalController {
             children.remove(0);
         }
     }
-
 
     public void openMonsterInfo(Monster monster) {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();

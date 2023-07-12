@@ -3,6 +3,13 @@
     -fx-font-size: 20px;
 }
 
+.transparent-background{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+}
+
 
 /* -------------------- Pause Screen -------------------- */
 .pause-inner-containers {
@@ -285,3 +292,6 @@
 .monster-hp-bar .track {
     -fx-padding: 0;
 }
+
+/* -------------------- Action Field  -------------------- */
+

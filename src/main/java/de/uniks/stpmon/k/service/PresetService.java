@@ -46,6 +46,10 @@ public class PresetService {
         return typeCache.getValues();
     }
 
+    public Observable<MonsterTypeDto> getMonster(int id) {
+        return getMonster(Integer.toString(id));
+    }
+
     public Observable<MonsterTypeDto> getMonster(String id) {
         CacheManager manager = cacheManagerProvider.get();
         MonsterTypeCache typeCache = manager.monsterTypeCache();
@@ -63,6 +67,10 @@ public class PresetService {
         CacheManager manager = cacheManagerProvider.get();
         AbilityCache abilityCache = manager.abilityCache();
         return abilityCache.getValues();
+    }
+
+    public Observable<AbilityDto> getAbility(int id) {
+        return getAbility(Integer.toString(id));
     }
 
     public Observable<AbilityDto> getAbility(String id) {
