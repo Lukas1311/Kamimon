@@ -1,10 +1,8 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
-import de.uniks.stpmon.k.di.HttpModule_AuthApiFactory;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.animation.PauseTransition;
