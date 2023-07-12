@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.overworld;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.FastClock;
 import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.fxml.FXML;
@@ -21,7 +22,7 @@ public class NightOverlayController extends Controller {
     @Inject
     public WorldService worldService;
     @Inject
-    public FastClock clockService;
+    public ClockService clockService;
 
 
     @Inject
