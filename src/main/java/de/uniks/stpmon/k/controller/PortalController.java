@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.sources.IPortalController;
 import de.uniks.stpmon.k.service.sources.PortalSource;
 import de.uniks.stpmon.k.service.world.WorldLoader;
@@ -17,8 +16,6 @@ public class PortalController extends ToastedController implements IPortalContro
 
     @Inject
     LoadingRegionController loadingRegionController;
-    @Inject
-    RegionService regionService;
     @Inject
     PortalSource portalSource;
     @Inject

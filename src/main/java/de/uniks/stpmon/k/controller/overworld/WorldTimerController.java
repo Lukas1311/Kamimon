@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.overworld;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.world.ClockService;
-import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -23,8 +22,6 @@ public class WorldTimerController extends Controller {
     public VBox background;
     @FXML
     public Text label;
-    @Inject
-    public WorldService worldService;
     @Inject
     public ClockService clockService;
 

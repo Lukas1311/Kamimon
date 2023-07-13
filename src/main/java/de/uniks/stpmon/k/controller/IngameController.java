@@ -8,7 +8,6 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
-import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,11 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.InputEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -70,8 +65,6 @@ public class IngameController extends PortalController {
     WorldTimerController worldTimerController;
     @Inject
     NightOverlayController nightOverlayController;
-    @Inject
-    InteractionStorage interactionStorage;
     @Inject
     MonsterInformationController monsterInformationController;
     @Inject
