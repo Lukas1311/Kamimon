@@ -10,6 +10,8 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterSession;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.application.Platform;
@@ -67,10 +69,11 @@ public class IngameController extends PortalController {
     DialogueController dialogueController;
     @Inject
     StarterController starterController;
-    //@Inject
-    //Provider<LoadingEncounterController> encounterProvider;
     @Inject
-    Provider<LoadingWildEncounterController> encounterProvider;
+    Provider<LoadingEncounterController> encounterProvider;
+    @Inject
+    Provider<LoadingWildEncounterController> encounterWildProvider;
+
 
     @Inject
     WorldTimerController worldTimerController;
@@ -91,6 +94,8 @@ public class IngameController extends PortalController {
     InputHandler inputHandler;
     @Inject
     SessionService encounterService;
+    @Inject
+    EncounterStorage encounterStorage;
 
     private Parent mapOverview;
 
@@ -138,16 +143,26 @@ public class IngameController extends PortalController {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                LoadingWildEncounterController controller = encounterProvider.get();
-                app.show(controller);
+                if(encounterStorage.getEncounter().isWild()) {
+                    LoadingWildEncounterController wildController = encounterWildProvider.get();
+                    app.show(wildController);
+                }else {
+                    LoadingEncounterController controller = encounterProvider.get();
+                    app.show(controller);
+                }
             });
             disposables.add(encounterService.listenForEncounter().subscribe(() -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
                 Platform.runLater(() -> {
-                    LoadingWildEncounterController controller = encounterProvider.get();
-                    app.show(controller);
+                    if(encounterStorage.getEncounter().isWild()) {
+                        LoadingWildEncounterController wildController = encounterWildProvider.get();
+                        app.show(wildController);
+                    }else {
+                        LoadingEncounterController controller = encounterProvider.get();
+                        app.show(controller);
+                    }
                 });
             }));
         }
