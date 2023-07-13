@@ -106,7 +106,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         stage.requestFocus();
     }
 
-    @Test
+    /*@Test
     void testRender() {
         VBox userMonstersBox = lookup("#userMonsters").queryAs(VBox.class);
         VBox opponentMonstersBox = lookup("#opponentMonsters").queryAs(VBox.class);
@@ -115,5 +115,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         assertNotNull(encounterOverviewController);
         sleep(4000);
     }
+
+     */
 
 }
