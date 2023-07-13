@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounter;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityDto;
@@ -10,10 +11,11 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Result;
-import de.uniks.stpmon.k.service.*;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -49,14 +51,6 @@ public class ActionFieldBattleLogController extends Controller {
     @Inject
     PresetService presetService;
 
-    @Inject
-    EncounterStorage encounterStorage;
-
-    @Inject
-    TrainerStorage trainerService;
-
-    @Inject
-    MonsterService monsterService;
     @Inject
     RegionService regionService;
     @Inject
@@ -137,7 +131,7 @@ public class ActionFieldBattleLogController extends Controller {
         vBox.getChildren().add(text1);
     }
 
-    public void closeEncounter(EncounterService.CloseEncounter closeEncounter){
+    public void closeEncounter(CloseEncounter closeEncounter) {
         addTextSection(translateString(closeEncounter.toString()), true);
         encounterFinished = true;
         closeTimer = new Timer();
@@ -151,11 +145,9 @@ public class ActionFieldBattleLogController extends Controller {
     }
 
     private void initListeners() {
-
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot).skip(1), opp -> {
-
-                if (encounterStorage.getSession() == null) {
+                if (sessionService.hasNoEncounter()) {
                     return;
                 }
                 MonsterTypeDto monster = getTypeForSlot(slot);
@@ -180,8 +172,8 @@ public class ActionFieldBattleLogController extends Controller {
 
                 if (opp.move() instanceof ChangeMonsterMove move) {
                     subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
-                        addTextSection(translateString("monster-changed",
-                                presetService.getMonster(monster1.type()).blockingFirst().name()), false)
+                            addTextSection(translateString("monster-changed",
+                                    presetService.getMonster(monster1.type()).blockingFirst().name()), false)
                     );
                     return;
                 }
@@ -202,7 +194,8 @@ public class ActionFieldBattleLogController extends Controller {
 
                         case "target-defeated" ->
                                 addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
-                        case "monster-changed" -> {}
+                        case "monster-changed" -> {
+                        }
                         case "monster-defeated" ->
                                 addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
                         case "monster-levelup" ->

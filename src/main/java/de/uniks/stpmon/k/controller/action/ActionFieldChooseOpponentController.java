@@ -3,10 +3,8 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
@@ -30,10 +28,6 @@ public class ActionFieldChooseOpponentController extends Controller {
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
-    @Inject
-    EncounterService encounterService;
-    @Inject
-    SessionService sessionService;
     @Inject
     RegionService regionService;
     @Inject

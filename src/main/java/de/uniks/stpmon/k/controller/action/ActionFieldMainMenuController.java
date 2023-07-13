@@ -1,20 +1,15 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounter;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -25,8 +20,6 @@ public class ActionFieldMainMenuController extends Controller {
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
-    @Inject
-    Provider<HybridController> hybridControllerProvider;
     @FXML
     public Text textContent;
     @FXML
@@ -40,7 +33,8 @@ public class ActionFieldMainMenuController extends Controller {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @Inject
-    public ActionFieldMainMenuController() {}
+    public ActionFieldMainMenuController() {
+    }
 
     @Override
     public Parent render() {
@@ -51,7 +45,7 @@ public class ActionFieldMainMenuController extends Controller {
         addActionOption(OptionType.FIGHT);
         addActionOption(OptionType.CHANGE_MON);
 
-        if (encounterStorage.getEncounter().isWild()){
+        if (encounterStorage.getEncounter().isWild()) {
             addActionOption(OptionType.FLEE);
         }
 
@@ -86,9 +80,8 @@ public class ActionFieldMainMenuController extends Controller {
     }
 
     public void openFlee() {
-        subscribe(encounterService.fleeEncounter(), e -> {
-            encounterOverviewControllerProvider.get().setCloseEncounter(EncounterService.CloseEncounter.FLEE);
-        });
+        subscribe(encounterService.fleeEncounter(), e ->
+                encounterOverviewControllerProvider.get().setCloseEncounter(CloseEncounter.FLEE));
 
     }
 

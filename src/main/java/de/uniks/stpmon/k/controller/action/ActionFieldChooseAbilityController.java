@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
@@ -29,8 +28,6 @@ public class ActionFieldChooseAbilityController extends Controller {
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
-    @Inject
-    EncounterService encounterService;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;

@@ -3,10 +3,11 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.*;
+import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.service.MonsterService;
+import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -35,12 +36,6 @@ public class ActionFieldChangeMonsterController extends Controller {
     EncounterService encounterService;
     @Inject
     EncounterStorage encounterStorage;
-    @Inject
-    RegionStorage regionStorage;
-    @Inject
-    TrainerStorage trainerStorage;
-    @Inject
-    SessionService sessionService;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
@@ -134,11 +129,9 @@ public class ActionFieldChangeMonsterController extends Controller {
             actionFieldControllerProvider.get().openMainMenu();
         } else {
             if (activeMonster == null || activeMonster.currentAttributes().health() == 0) {
-                subscribe(encounterService.changeDeadMonster(selectedUserMonster),
-                        opponent -> {});
+                subscribe(encounterService.changeDeadMonster(selectedUserMonster));
             } else {
-                subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster),
-                        next -> {});
+                subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster));
             }
 
             actionFieldControllerProvider.get().openBattleLog();

@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -32,9 +31,6 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
-
-    @Inject
-    Provider<EncounterStorage> encounterStorageProvider;
 
     @Inject
     Provider<EncounterService> encounterServiceProvider;
@@ -66,28 +62,28 @@ public class ActionFieldController extends Controller {
         return "action/";
     }
 
-    public void openMainMenu(){
+    public void openMainMenu() {
         open(mainMenuControllerProvider);
     }
 
-    public void openChangeMonster(){
+    public void openChangeMonster() {
         open(changeMonsterControllerProvider);
     }
 
-    public void openChooseAbility(){
+    public void openChooseAbility() {
         open(chooseAbilityControllerProvider);
     }
 
-    public void openChooseOpponent(){
+    public void openChooseOpponent() {
         open(chooseOpponentControllerProvider);
     }
 
-    public void openBattleLog(){
+    public void openBattleLog() {
         open(battleLogControllerProvider);
     }
 
-    private void open(Provider<? extends Controller> provider){
-        if(controller != null && controller instanceof ActionFieldBattleLogController){
+    private void open(Provider<? extends Controller> provider) {
+        if (controller != null && controller instanceof ActionFieldBattleLogController) {
             controller.destroy();
         }
         actionFieldContent.getChildren().clear();
@@ -97,7 +93,7 @@ public class ActionFieldController extends Controller {
     }
 
 
-    public HBox getOptionContainer(String option){
+    public HBox getOptionContainer(String option) {
         Text arrowText = new Text(" >");
 
         Text optionText = new Text(option);
@@ -115,24 +111,13 @@ public class ActionFieldController extends Controller {
         this.abilityId = abilityId;
     }
 
-    @SuppressWarnings("unused")
-    public int getAbilityId() {
-        return abilityId;
-    }
-
     public void setEnemyTrainerId(String trainerId) {
         this.enemyTrainerId = trainerId;
     }
 
-    @SuppressWarnings("unused")
-    public String getEnemyTrainerId() {
-        return enemyTrainerId;
-    }
-
-    public void executeAbilityMove(){
-        subscribe(encounterServiceProvider.get().makeAbilityMove(abilityId, enemyTrainerId),
-                next -> {}
-        );
+    public void executeAbilityMove() {
+        subscribe(encounterServiceProvider.get()
+                .makeAbilityMove(abilityId, enemyTrainerId));
     }
 
     public void checkDeadMonster() {

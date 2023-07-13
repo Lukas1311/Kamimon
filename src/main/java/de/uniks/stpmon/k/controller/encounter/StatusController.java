@@ -59,7 +59,7 @@ public class StatusController extends Controller {
         } else {
             parent = load("OpponentMonsterStatus");
             loadImage(monsterStatusView, "encounter/opponentMonsterStatus.png");
-            if(encounterStorage.getEncounter().isWild()){
+            if (encounterStorage.getEncounter().isWild()) {
                 loadImage(wildEncounterIconView, "encounter/kami_30px.png");
             }
         }

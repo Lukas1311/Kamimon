@@ -8,9 +8,7 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.ParallelTransition;
@@ -64,7 +62,6 @@ public class EncounterOverviewController extends Controller {
     @FXML
     public VBox actionFieldBox;
 
-
     @Inject
     IResourceService resourceService;
     @Inject
@@ -77,10 +74,8 @@ public class EncounterOverviewController extends Controller {
     ActionFieldController actionFieldController;
     @Inject
     Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
-    @Inject
-    InputHandler inputHandler;
 
-    EncounterService.CloseEncounter closeEncounter;
+    private CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
@@ -128,7 +123,7 @@ public class EncounterOverviewController extends Controller {
             ImageView view = monsterImages.get(slot);
 
             TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
-            if(slot.enemy()) {
+            if (slot.enemy()) {
                 translation.setByY(0);
                 translation.setByX(1000);
             } else {
@@ -149,7 +144,7 @@ public class EncounterOverviewController extends Controller {
         subscribe(sessionService.onEncounterCompleted(), () -> {
             actionFieldController.openBattleLog();
             //check why encounter is close
-            if (closeEncounter != null){
+            if (closeEncounter != null) {
                 actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
                 closeEncounter = null;
             }
@@ -166,17 +161,16 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
-    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter){
+    public void setCloseEncounter(CloseEncounter closeEncounter) {
         this.closeEncounter = closeEncounter;
     }
 
 
-
-    private void subscribeFight(){
+    private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), next -> {
                 //using IMove to animate attack
-                if(next.move() instanceof AbilityMove){
+                if (next.move() instanceof AbilityMove) {
                     renderAttack(slot);
                 } else if (next.move() instanceof ChangeMonsterMove) {
                     renderChange(slot);
@@ -190,7 +184,7 @@ public class EncounterOverviewController extends Controller {
     }
 
 
-    private void renderAttack(EncounterSlot slot){
+    private void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
     }
 
