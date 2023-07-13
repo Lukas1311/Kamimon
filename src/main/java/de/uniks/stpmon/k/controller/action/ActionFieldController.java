@@ -76,7 +76,7 @@ public class ActionFieldController extends Controller {
     }
 
     public void openFleeWildMonster() {
-        open(fleeControllerProvider);
+        //
     }
 
     public void openChooseOpponent(){
