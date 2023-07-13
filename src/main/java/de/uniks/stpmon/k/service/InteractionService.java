@@ -74,13 +74,14 @@ public class InteractionService implements ILifecycleService {
 
         List<String> starters = info.starters();
 
-        if (starters != null && !starters.isEmpty()) {
+       if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
             return getStarterDialogue(starters, me, trainer);
         }
         if (info.encounterOnTalk()) {
             return getEncounterDialogue(trainer, me);
         }
 
+        //TODO: Add dialogue for healing
         return null;
     }
 

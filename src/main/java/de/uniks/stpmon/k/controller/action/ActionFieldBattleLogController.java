@@ -10,23 +10,23 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Result;
-import de.uniks.stpmon.k.service.InputHandler;
-import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import org.glassfish.grizzly.streams.Input;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Singleton
 public class ActionFieldBattleLogController extends Controller {
@@ -57,11 +57,16 @@ public class ActionFieldBattleLogController extends Controller {
 
     @Inject
     MonsterService monsterService;
+    @Inject
+    RegionService regionService;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     InputHandler inputHandler;
 
     private boolean encounterFinished = false;
+    private Timer closeTimer;
 
     @Inject
     public ActionFieldBattleLogController() {
@@ -99,9 +104,11 @@ public class ActionFieldBattleLogController extends Controller {
             if (hybridControllerProvider == null) {
                 return;
             }
+            closeTimer.cancel();
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);
+            encounterFinished = false;
         } else {
             actionFieldControllerProvider.get().openMainMenu();
         }
@@ -110,6 +117,9 @@ public class ActionFieldBattleLogController extends Controller {
 
     private MonsterTypeDto getTypeForSlot(EncounterSlot slot) {
         Monster monster = sessionService.getMonster(slot);
+        if (monster == null) {
+            return null;
+        }
         // Blocking can be used here because values are already loaded in the cache
         return presetService.getMonster(monster.type()).blockingFirst();
     }
@@ -127,11 +137,20 @@ public class ActionFieldBattleLogController extends Controller {
         vBox.getChildren().add(text1);
     }
 
+    public void closeEncounter(EncounterService.CloseEncounter closeEncounter){
+        addTextSection(translateString(closeEncounter.toString()), true);
+        encounterFinished = true;
+        closeTimer = new Timer();
+        closeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> nextWindow());
+            }
+        }, 1300);
+
+    }
+
     private void initListeners() {
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            encounterFinished = true;
-            sessionService.clearEncounter();
-        });
 
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot).skip(1), opp -> {
@@ -141,18 +160,29 @@ public class ActionFieldBattleLogController extends Controller {
                 }
                 MonsterTypeDto monster = getTypeForSlot(slot);
 
+                if (monster == null) {
+                    return;
+                }
+
                 if (opp.move() instanceof AbilityMove move) {
                     // Blocking can be used here because values are already loaded in the cache
                     AbilityDto ability = presetService.getAbility(move.ability()).blockingFirst();
                     EncounterSlot targetSlot = sessionService.getTarget(((AbilityMove) opp.move()).target());
                     MonsterTypeDto eneMon = getTypeForSlot(targetSlot);
+
+                    if (eneMon == null) {
+                        return;
+                    }
+
                     addTextSection(translateString("monsterAttacks", monster.name(), eneMon.name(), ability.name()), false);
                     return;
                 }
 
                 if (opp.move() instanceof ChangeMonsterMove move) {
-                    addTextSection(translateString("monster-changed",
-                            presetService.getMonster(move.monster()).blockingFirst().name()), false);
+                    subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
+                        addTextSection(translateString("monster-changed",
+                                presetService.getMonster(monster1.type()).blockingFirst().name()), false)
+                    );
                     return;
                 }
 
@@ -170,20 +200,22 @@ public class ActionFieldBattleLogController extends Controller {
                             addTextSection(translateString(translationVar), false);
                         }
 
-                        case "target-defeated" -> addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
+                        case "target-defeated" ->
+                                addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
                         case "monster-changed" -> {}
-                        case "monster-defeated" -> addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
-                        case "monster-levelup" -> addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
-                        case "monster-evolved" -> addTextSection(translateString("monster-evolved", monster.name()), false);
-                        case "monster-learned" -> addTextSection(translateString("monster-learned", monster.name(),
-                                presetService.getAbility(result.ability()).blockingFirst().name()), false);
+                        case "monster-defeated" ->
+                                addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
+                        case "monster-levelup" ->
+                                addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+                        case "monster-evolved" ->
+                                addTextSection(translateString("monster-evolved", monster.name()), false);
+                        case "monster-learned" ->
+                                addTextSection(translateString("monster-learned", monster.name(), presetService.getAbility(result.ability()).blockingFirst().name()), false);
                         case "monster-dead" -> addTextSection(translateString("monster-dead", monster.name()), false);
-                        case "ability-unknown" -> addTextSection(translateString("ability-unknown",
-                                        presetService.getAbility(result.ability()).blockingFirst().name(), monster.name())
-                                , false);
-                        case "ability-no-uses" -> addTextSection(translateString("ability-no-uses",
-                                        presetService.getAbility(result.ability()).blockingFirst().name())
-                                , false);
+                        case "ability-unknown" ->
+                                addTextSection(translateString("ability-unknown", presetService.getAbility(result.ability()).blockingFirst().name(), monster.name()), false);
+                        case "ability-no-uses" ->
+                                addTextSection(translateString("ability-no-uses", presetService.getAbility(result.ability()).blockingFirst().name()), false);
                         case "target-unknown" -> addTextSection(translateString("target-unknown"), false);
                         case "target-dead" -> addTextSection(translateString("target-dead", "Targeted monster"), false);
                         default -> System.out.println("unknown result type");

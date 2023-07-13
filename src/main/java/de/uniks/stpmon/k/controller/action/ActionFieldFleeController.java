@@ -50,7 +50,7 @@ public class ActionFieldFleeController extends Controller {
         subscribe(encounterService.fleeEncounter(), e -> {
             loadImage(blackScreen, "action/blackScreen.png");
             vbox.setAlignment(Pos.CENTER);
-            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(1));
             pauseTransition.setOnFinished(f -> {
                 HybridController controller = hybridControllerProvider.get();
                 app.show(controller);

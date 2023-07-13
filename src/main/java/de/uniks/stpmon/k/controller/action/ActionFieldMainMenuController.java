@@ -1,12 +1,20 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.controller.sidebar.MainWindow;
+import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,11 +27,17 @@ public class ActionFieldMainMenuController extends Controller {
     Provider<ActionFieldController> actionFieldControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-
     @FXML
     public Text textContent;
     @FXML
     public VBox mainMenuBox;
+
+    @Inject
+    EncounterStorage encounterStorage;
+    @Inject
+    EncounterService encounterService;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @Inject
     public ActionFieldMainMenuController() {}
@@ -37,8 +51,10 @@ public class ActionFieldMainMenuController extends Controller {
         addActionOption(OptionType.FIGHT);
         addActionOption(OptionType.CHANGE_MON);
 
-        //TODO: only call flee when wild encounter
-        addActionOption(OptionType.FLEE);
+        if (encounterStorage.getEncounter().isWild()){
+            addActionOption(OptionType.FLEE);
+        }
+
         return parent;
     }
 
@@ -66,12 +82,14 @@ public class ActionFieldMainMenuController extends Controller {
             case CHANGE_MON -> openChangeMon();
             case FIGHT -> openFight();
             case FLEE -> openFlee();
-
         }
     }
 
     public void openFlee() {
-        actionFieldControllerProvider.get().openFleeWildMonster();
+        subscribe(encounterService.fleeEncounter(), e -> {
+            encounterOverviewControllerProvider.get().setCloseEncounter(EncounterService.CloseEncounter.FLEE);
+        });
+
     }
 
     public void openFight() {

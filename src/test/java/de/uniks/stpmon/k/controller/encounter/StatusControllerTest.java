@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
@@ -10,6 +11,7 @@ import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,8 @@ public class StatusControllerTest extends ApplicationTest {
     PresetService presetService;
     @Mock
     SessionService sessionService;
+    @Mock
+    EncounterStorage encounterStorage;
     @Spy
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
@@ -76,6 +80,7 @@ public class StatusControllerTest extends ApplicationTest {
     @Test
     void testRender() {
         when(sessionService.isSelf(EncounterSlot.ENEMY_FIRST)).thenReturn(false);
+        when(encounterStorage.getEncounter()).thenReturn(new Encounter("0", "0", false));
         doNothing().when(statusController).loadMonsterInformation();
 
         statusController.setSlot(EncounterSlot.PARTY_FIRST);
@@ -87,6 +92,8 @@ public class StatusControllerTest extends ApplicationTest {
         // one time for app start (because monster has to be initially set), two times for invocation
         verify(statusController, times(3)).loadMonsterInformation();
     }
+
+
 
     @Test
     void testLoadUserMonsterInformation() {
