@@ -60,7 +60,7 @@ public class ActionFieldController extends Controller {
         subscribe(sessionService.onEncounterCompleted(), () -> {
             // If user won or lost
             if (closeTrigger == null) {
-                closeTrigger = CloseEncounterTrigger.LOST;
+                closeTrigger = sessionService.hasWon() ? CloseEncounterTrigger.WON : CloseEncounterTrigger.LOST;
             }
 
             closeEncounter(closeTrigger);

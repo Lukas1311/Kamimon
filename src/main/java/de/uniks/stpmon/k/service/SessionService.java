@@ -139,6 +139,18 @@ public class SessionService extends DestructibleElement {
         return monster.currentAttributes().health() <= 0;
     }
 
+    public boolean hasWon() {
+        for (EncounterSlot slot : getSlots()) {
+            if (!slot.enemy()) {
+                continue;
+            }
+            if (!isMonsterDead(slot)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     //---------------- Session Getters -------------------------
     public EncounterSlot getTarget(String targetId) {
         EncounterSession session = encounterStorage.getSession();
@@ -215,5 +227,4 @@ public class SessionService extends DestructibleElement {
         encounterStorage.setEncounter(null);
         encounterStorage.setSession(null);
     }
-
 }
