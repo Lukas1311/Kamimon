@@ -62,6 +62,7 @@ public class ActionFieldBattleLogController extends Controller {
     InputHandler inputHandler;
 
     private boolean encounterFinished = false;
+    private Timer closeTimer;
 
     @Inject
     public ActionFieldBattleLogController() {
@@ -99,6 +100,7 @@ public class ActionFieldBattleLogController extends Controller {
             if (hybridControllerProvider == null) {
                 return;
             }
+            closeTimer.cancel();
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);
@@ -131,12 +133,11 @@ public class ActionFieldBattleLogController extends Controller {
     public void closeEncounter(EncounterService.CloseEncounter closeEncounter){
         addTextSection(translateString(closeEncounter.toString()), true);
         encounterFinished = true;
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        closeTimer = new Timer();
+        closeTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Platform.runLater(() -> nextWindow());
-
             }
         }, 1300);
 
