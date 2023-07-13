@@ -54,7 +54,7 @@ public abstract class Viewable {
     }
 
     /**
-     * Subscribes to an observable on the FX thread.
+     * Subscribes to a completable on the FX thread.
      * This method is only a utility method to avoid boilerplate code.
      *
      * @param completable the completable to subscribe to
@@ -65,7 +65,7 @@ public abstract class Viewable {
     }
 
     /**
-     * Subscribes to an observable on the FX thread.
+     * Subscribes to a completable on the FX thread.
      * This method is only a utility method to avoid boilerplate code.
      *
      * @param completable the completable to subscribe to
@@ -84,6 +84,18 @@ public abstract class Viewable {
      */
     protected <@NonNull T> void subscribe(Observable<T> observable) {
         subscribe(observable.ignoreElements());
+    }
+
+    /**
+     * Subscribes to an observable on the FX thread.
+     * This method is only a utility method to avoid boilerplate code.
+     *
+     * @param observable the observable to subscribe to
+     * @param onComplete the consumer to call on each event
+     * @param <T>        the type of the items emitted by the Observable
+     */
+    protected <@NonNull T> void subscribe(Observable<T> observable, Action onComplete) {
+        subscribe(observable.ignoreElements(), onComplete);
     }
 
     /**

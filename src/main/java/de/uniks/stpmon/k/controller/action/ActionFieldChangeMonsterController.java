@@ -115,13 +115,9 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
         if (option.equals(back)) {
             getActionField().openMainMenu();
         } else {
-            if (changeDeadMonster) {
-                subscribe(encounterService.changeDeadMonster(selectedUserMonster));
-            } else {
-                subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster));
-            }
-
-            getActionField().openBattleLog();
+            subscribe(changeDeadMonster ? encounterService.changeDeadMonster(selectedUserMonster) :
+                            encounterService.makeChangeMonsterMove(selectedUserMonster),
+                    () -> getActionField().openBattleLog());
         }
     }
 
