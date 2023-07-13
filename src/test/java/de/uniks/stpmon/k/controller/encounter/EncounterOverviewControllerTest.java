@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -57,6 +58,8 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     public void start(Stage stage) {
         app.start(stage);
 
+        // Defines used slots of the encounter
+        when(sessionService.onEncounterCompleted()).thenReturn(Completable.never());
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
@@ -71,7 +74,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 .thenReturn(MonsterBuilder.builder().setId("2").setType(1).create());
         when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
                 .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
-        // No monster updates
+
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
 
         when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
@@ -111,6 +114,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         assertNotNull(encounterOverviewController);
         sleep(4000);
     }
+
 
 
 }

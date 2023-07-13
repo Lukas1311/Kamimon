@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
@@ -80,8 +79,6 @@ public class EncounterOverviewController extends Controller {
     Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
     @Inject
     InputHandler inputHandler;
-    @Inject
-    EncounterService encounterService;
 
     EncounterService.CloseEncounter closeEncounter;
 
@@ -108,15 +105,6 @@ public class EncounterOverviewController extends Controller {
         if (actionField != null) {
             actionFieldBox.getChildren().add(actionField);
         }
-
-        //click on the first mon of opponent to get out of the encounter
-        //Note: the encounter is still active after this
-        opponentMonster0.setOnMouseClicked(e -> {
-            //IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
 
         //add a translation transition to all monster images
         for (EncounterSlot slot : monsterImages.keySet()) {

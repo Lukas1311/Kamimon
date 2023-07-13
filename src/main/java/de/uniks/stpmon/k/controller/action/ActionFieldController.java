@@ -32,6 +32,7 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
+    @SuppressWarnings("unused")
     @Inject
     Provider<ActionFieldFleeController> fleeControllerProvider;
 
