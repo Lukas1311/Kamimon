@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
+import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
@@ -66,8 +67,11 @@ public class IngameController extends PortalController {
     DialogueController dialogueController;
     @Inject
     StarterController starterController;
+    //@Inject
+    //Provider<LoadingEncounterController> encounterProvider;
     @Inject
-    Provider<LoadingEncounterController> encounterProvider;
+    Provider<LoadingWildEncounterController> encounterProvider;
+
     @Inject
     WorldTimerController worldTimerController;
     @Inject
@@ -134,7 +138,7 @@ public class IngameController extends PortalController {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                LoadingEncounterController controller = encounterProvider.get();
+                LoadingWildEncounterController controller = encounterProvider.get();
                 app.show(controller);
             });
             disposables.add(encounterService.listenForEncounter().subscribe(() -> {
@@ -142,7 +146,7 @@ public class IngameController extends PortalController {
                     return;
                 }
                 Platform.runLater(() -> {
-                    LoadingEncounterController controller = encounterProvider.get();
+                    LoadingWildEncounterController controller = encounterProvider.get();
                     app.show(controller);
                 });
             }));

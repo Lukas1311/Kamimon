@@ -51,8 +51,8 @@ public class LoadingWildEncounterController extends Controller {
         PauseTransition pauseTransition = new PauseTransition(Duration.millis(500));
         SequentialTransition sequentialTransition = new SequentialTransition(parallelTransition,pauseTransition, wildTransition);
         sequentialTransition.setOnFinished(event -> {
-            //EncounterOverviewController controller = encounterOverviewControllerProvider.get();
-            //app.show(controller);
+            EncounterOverviewController controller = encounterOverviewControllerProvider.get();
+            app.show(controller);
         });
         sequentialTransition.play();
 
