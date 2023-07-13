@@ -141,8 +141,8 @@ public class EncounterOverviewController extends Controller {
             actionFieldController.openBattleLog();
             //check why encounter is close
             if (closeEncounter != null){
-                closeEncounter = null;
                 actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
+                closeEncounter = null;
             }
 
             javafx.application.Platform.runLater(() -> {
