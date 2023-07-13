@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.encounter.CloseEncounter;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityDto;
@@ -129,7 +129,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         vBox.getChildren().add(text1);
     }
 
-    public void closeEncounter(CloseEncounter closeEncounter) {
+    public void closeEncounter(CloseEncounterTrigger closeEncounter) {
         addTextSection(translateString(closeEncounter.toString()), true);
         encounterFinished = true;
         closeTimer = new Timer();
@@ -138,7 +138,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             public void run() {
                 Platform.runLater(() -> nextWindow());
             }
-        }, 1300);
+        }, 2300);
     }
 
     private void initListeners() {

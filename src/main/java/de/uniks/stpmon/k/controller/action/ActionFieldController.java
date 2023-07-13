@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -41,7 +42,8 @@ public class ActionFieldController extends Controller {
     private String enemyTrainerId;
     private int abilityId;
 
-    private Controller controller;
+    private Controller openController;
+    private CloseEncounterTrigger closeTrigger;
 
     @Inject
     public ActionFieldController() {
@@ -55,12 +57,27 @@ public class ActionFieldController extends Controller {
 
         checkDeadMonster();
 
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            // If user won or lost
+            if (closeTrigger == null) {
+                closeTrigger = CloseEncounterTrigger.LOST;
+            }
+
+            closeEncounter(closeTrigger);
+            closeTrigger = null;
+        });
+
         return parent;
     }
 
     @Override
     public String getResourcePath() {
         return "action/";
+    }
+
+    public void closeEncounter(CloseEncounterTrigger closeEncounter) {
+        openBattleLog();
+        battleLogControllerProvider.get().closeEncounter(closeEncounter);
     }
 
     public void openMainMenu() {
@@ -84,20 +101,28 @@ public class ActionFieldController extends Controller {
     }
 
     private <T extends Controller> void open(Provider<T> provider, Consumer<T> setup) {
-        if (controller != null && controller instanceof ActionFieldBattleLogController) {
-            controller.destroy();
+        if (openController != null) {
+            openController.destroy();
         }
         if (setup != null) {
             setup.accept(provider.get());
         }
         actionFieldContent.getChildren().clear();
-        controller = provider.get();
-        controller.init();
-        actionFieldContent.getChildren().add(controller.render());
+        openController = provider.get();
+        openController.init();
+        actionFieldContent.getChildren().add(openController.render());
     }
 
     private void open(Provider<? extends Controller> provider) {
         open(provider, null);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (openController != null) {
+            openController.destroy();
+        }
     }
 
     public HBox getOptionContainer(String option) {
@@ -135,4 +160,8 @@ public class ActionFieldController extends Controller {
         });
     }
 
+
+    protected void setFleeEncounter() {
+        this.closeTrigger = CloseEncounterTrigger.FLEE;
+    }
 }

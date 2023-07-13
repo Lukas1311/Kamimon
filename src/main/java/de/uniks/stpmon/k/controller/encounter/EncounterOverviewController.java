@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
@@ -69,13 +68,25 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-    @Inject
-    Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
-
-    private CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        if (actionFieldController != null) {
+            actionFieldController.init();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (actionFieldController != null) {
+            actionFieldController.destroy();
+        }
     }
 
     @Override
@@ -87,7 +98,6 @@ public class EncounterOverviewController extends Controller {
         monsterImages.put(EncounterSlot.PARTY_SECOND, userMonster1);
         monsterImages.put(EncounterSlot.ENEMY_FIRST, opponentMonster0);
         monsterImages.put(EncounterSlot.ENEMY_SECOND, opponentMonster1);
-
 
         loadImage(background, "encounter/FOREST.png");
         background.fitHeightProperty().bind(fullBox.heightProperty());
@@ -138,22 +148,7 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            actionFieldController.openBattleLog();
-            // If user won or lost
-            if (closeEncounter == null) {
-                closeEncounter = CloseEncounter.LOST;
-            }
-
-            actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
-            closeEncounter = null;
-        });
-
         return parent;
-    }
-
-    public void setCloseEncounter(CloseEncounter closeEncounter) {
-        this.closeEncounter = closeEncounter;
     }
 
     private void subscribeFight() {

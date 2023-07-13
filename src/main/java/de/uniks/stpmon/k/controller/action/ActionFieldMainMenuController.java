@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.encounter.CloseEncounter;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -69,9 +68,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openFlee() {
-        subscribe(encounterService.fleeEncounter(), e ->
-                encounterOverviewProvider.get().setCloseEncounter(CloseEncounter.FLEE));
-
+        subscribe(encounterService.fleeEncounter(), e -> getActionField().setFleeEncounter());
     }
 
     public void openFight() {
