@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.function.Consumer;
 
 @Singleton
 public class ActionFieldController extends Controller {
@@ -66,8 +67,8 @@ public class ActionFieldController extends Controller {
         open(mainMenuControllerProvider);
     }
 
-    public void openChangeMonster() {
-        open(changeMonsterControllerProvider);
+    public void openChangeMonster(boolean dead) {
+        open(changeMonsterControllerProvider, (c) -> c.setChangeDeadMonster(dead));
     }
 
     public void openChooseAbility() {
@@ -82,9 +83,12 @@ public class ActionFieldController extends Controller {
         open(battleLogControllerProvider);
     }
 
-    private void open(Provider<? extends Controller> provider) {
+    private <T extends Controller> void open(Provider<T> provider, Consumer<T> setup) {
         if (controller != null && controller instanceof ActionFieldBattleLogController) {
             controller.destroy();
+        }
+        if (setup != null) {
+            setup.accept(provider.get());
         }
         actionFieldContent.getChildren().clear();
         controller = provider.get();
@@ -92,6 +96,9 @@ public class ActionFieldController extends Controller {
         actionFieldContent.getChildren().add(controller.render());
     }
 
+    private void open(Provider<? extends Controller> provider) {
+        open(provider, null);
+    }
 
     public HBox getOptionContainer(String option) {
         Text arrowText = new Text(" >");
@@ -122,8 +129,8 @@ public class ActionFieldController extends Controller {
 
     public void checkDeadMonster() {
         subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
-            if (opponent.monster() == null) {
-                openChangeMonster();
+            if (sessionService.isMonsterDead(EncounterSlot.PARTY_FIRST)) {
+                openChangeMonster(true);
             }
         });
     }

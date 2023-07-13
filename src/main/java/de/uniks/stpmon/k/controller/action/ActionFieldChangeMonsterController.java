@@ -23,16 +23,20 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
     @Inject
     MonsterService monsterService;
 
-    public List<Monster> userMonstersList;
-    public Monster activeMonster;
-    public Monster selectedUserMonster;
+    private Monster selectedUserMonster;
+    private boolean changeDeadMonster = false;
 
     private int count = 0;
-    public String back;
+    private String back;
 
 
     @Inject
     public ActionFieldChangeMonsterController() {
+    }
+
+
+    public void setChangeDeadMonster(boolean changeDeadMonster) {
+        this.changeDeadMonster = changeDeadMonster;
     }
 
     @Override
@@ -43,8 +47,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
 
         textContent.setText(translateString("chooseMon"));
 
-        userMonstersList = monsterService.getTeam().blockingFirst();
-
         showOptions();
 
         return parent;
@@ -52,13 +54,18 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
 
     public void showOptions() {
         count = 0;
-        addActionOption(back, true);
 
-        activeMonster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
+        // Don't show the back option if the player monster is dead
+        if (!changeDeadMonster) {
+            addActionOption(back, true);
+        }
+
+        Monster activeMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
+        List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
 
         if (userMonstersList != null && !userMonstersList.isEmpty()) {
             for (Monster monster : userMonstersList) {
-                if (monster.currentAttributes().health() > 0 &&
+                if (!sessionService.isMonsterDead(monster) &&
                         (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
                     subscribe(presetService.getMonster(monster.type()), type -> {
                         selectedUserMonster = monster;
@@ -108,7 +115,7 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
         if (option.equals(back)) {
             getActionField().openMainMenu();
         } else {
-            if (activeMonster == null || activeMonster.currentAttributes().health() == 0) {
+            if (changeDeadMonster) {
                 subscribe(encounterService.changeDeadMonster(selectedUserMonster));
             } else {
                 subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster));

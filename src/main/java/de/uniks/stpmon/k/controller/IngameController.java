@@ -8,6 +8,9 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.InputEvent;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -275,5 +279,23 @@ public class IngameController extends PortalController {
         controller.loadMonsterTypeDto(String.valueOf(monster.type()));
         controller.loadMonster(monster);
         children.add(0, monsterInfo);
+    }
+
+    public void applyHealEffect() {
+        Pane overlayPane = new Pane();
+        overlayPane.setStyle("-fx-background-color: rgba(0, 255, 0, 0.5);");
+
+        ingameStack.getChildren().add(overlayPane);
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(overlayPane.opacityProperty(), 0.0)),
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(overlayPane.opacityProperty(), 0.5)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(overlayPane.opacityProperty(), 0.0)));
+
+        timeline.setCycleCount(3);
+        timeline.setAutoReverse(true);
+        timeline.play();
+
+        timeline.setOnFinished(event -> ingameStack.getChildren().remove(overlayPane));
     }
 }

@@ -88,6 +88,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             if (hybridControllerProvider == null) {
                 return;
             }
+            sessionService.clearEncounter();
             closeTimer.cancel();
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
@@ -98,13 +99,18 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         }
     }
 
+    private MonsterTypeDto getMonsterType(int id) {
+        // Blocking can be used here because values are already loaded in the cache
+        return presetService.getMonster(id).blockingFirst();
+    }
+
     private MonsterTypeDto getTypeForSlot(EncounterSlot slot) {
         Monster monster = sessionService.getMonster(slot);
         if (monster == null) {
             return null;
         }
         // Blocking can be used here because values are already loaded in the cache
-        return presetService.getMonster(monster.type()).blockingFirst();
+        return getMonsterType(monster.type());
     }
 
     private void addTranslatedSection(String word, String... args) {
@@ -133,7 +139,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
                 Platform.runLater(() -> nextWindow());
             }
         }, 1300);
-
     }
 
     private void initListeners() {
@@ -169,9 +174,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
         if (opp.move() instanceof ChangeMonsterMove move) {
             subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
-                    addTranslatedSection("monster-changed",
-                            getAbility(monster1.type()).name()
-                    ));
+                    addTranslatedSection("monster-changed", getMonsterType(monster1.type()).name()));
             return;
         }
 

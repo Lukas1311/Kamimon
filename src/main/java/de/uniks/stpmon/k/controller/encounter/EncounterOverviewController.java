@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller.encounter;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
@@ -66,8 +65,6 @@ public class EncounterOverviewController extends Controller {
     IResourceService resourceService;
     @Inject
     Provider<StatusController> statusControllerProvider;
-    @Inject
-    Provider<HybridController> hybridControllerProvider;
     @Inject
     SessionService sessionService;
     @Inject
@@ -143,19 +140,13 @@ public class EncounterOverviewController extends Controller {
 
         subscribe(sessionService.onEncounterCompleted(), () -> {
             actionFieldController.openBattleLog();
-            //check why encounter is close
-            if (closeEncounter != null) {
-                actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
-                closeEncounter = null;
+            // If user won or lost
+            if (closeEncounter == null) {
+                closeEncounter = CloseEncounter.LOST;
             }
 
-            javafx.application.Platform.runLater(() -> {
-                if (hybridControllerProvider == null) {
-                    return;
-                }
-                sessionService.clearEncounter();
-
-            });
+            actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
+            closeEncounter = null;
         });
 
         return parent;
@@ -164,7 +155,6 @@ public class EncounterOverviewController extends Controller {
     public void setCloseEncounter(CloseEncounter closeEncounter) {
         this.closeEncounter = closeEncounter;
     }
-
 
     private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {

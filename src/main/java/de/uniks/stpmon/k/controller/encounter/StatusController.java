@@ -77,8 +77,10 @@ public class StatusController extends Controller {
 
     private void updateState(Monster monster) {
         if (monster == null) {
+            fullBox.setVisible(false);
             return;
         }
+        fullBox.setVisible(true);
         loadMonsterDto(Integer.toString(monster.type()));
 
         monsterLevel.setText("Lvl. " + monster.level().toString());

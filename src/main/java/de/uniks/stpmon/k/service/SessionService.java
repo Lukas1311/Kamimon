@@ -125,8 +125,21 @@ public class SessionService extends DestructibleElement {
         return getter.apply(session, slot);
     }
 
+    //---------------- Session Helpers -------------------------
+    public boolean isMonsterDead(EncounterSlot slot) {
+        Opponent opponent = getOpponent(slot);
+        if (opponent == null || opponent.monster() == null) {
+            return true;
+        }
+        Monster monster = getMonster(slot);
+        return monster == null || isMonsterDead(monster);
+    }
 
-    //---------------- Session Getters -------------------------D
+    public boolean isMonsterDead(Monster monster) {
+        return monster.currentAttributes().health() <= 0;
+    }
+
+    //---------------- Session Getters -------------------------
     public EncounterSlot getTarget(String targetId) {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {

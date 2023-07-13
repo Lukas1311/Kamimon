@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -37,36 +38,31 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
 
         addMonsterOption(null, null, true);
 
-        Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
-        Opponent opponent2 = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_SECOND);
-
-        if (opponent != null) {
-            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opponent._id(), opponent.monster()), monster ->
-                    subscribe(presetService.getMonster(monster.type()),
-                            monsterDto -> addMonsterOption(opponent, monsterDto.name(), false))
-            );
-        }
-        if (opponent2 != null) {
-            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opponent2._id(), opponent2.monster()), monster ->
-                    subscribe(presetService.getMonster(monster.type()),
-                            monsterDto -> addMonsterOption(opponent, monsterDto.name(), false))
-            );
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            if (!slot.enemy()) {
+                continue;
+            }
+            Opponent opponent = sessionService.getOpponent(slot);
+            Monster oppMonster = sessionService.getMonster(slot);
+            subscribe(presetService.getMonster(oppMonster.type()),
+                    monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
         }
 
         return parent;
     }
 
     public void addMonsterOption(Opponent opponent, String monsterName, boolean isBackOption) {
-        HBox optionContainer = actionFieldControllerProvider.get()
+        ActionFieldController actionField = getActionField();
+        HBox optionContainer = actionField
                 .getOptionContainer(isBackOption ? translateString("back") : monsterName);
 
         optionContainer.setOnMouseClicked(event -> {
             if (isBackOption) {
-                actionFieldControllerProvider.get().openChooseAbility();
+                actionField.openChooseAbility();
             } else {
-                actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
-                actionFieldControllerProvider.get().openBattleLog();
-                actionFieldControllerProvider.get().executeAbilityMove();
+                actionField.setEnemyTrainerId(opponent.trainer());
+                actionField.openBattleLog();
+                actionField.executeAbilityMove();
             }
         });
 

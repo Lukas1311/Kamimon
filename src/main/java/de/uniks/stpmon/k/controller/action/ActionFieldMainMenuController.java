@@ -79,7 +79,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openChangeMon() {
-        getActionField().openChangeMonster();
+        getActionField().openChangeMonster(false);
     }
 
     @Override

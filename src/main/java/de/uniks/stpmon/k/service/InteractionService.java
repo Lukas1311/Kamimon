@@ -13,11 +13,6 @@ import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -82,7 +77,6 @@ public class InteractionService implements ILifecycleService {
             return getEncounterDialogue(trainer, me);
         }
 
-        //TODO: Add dialogue for healing
         return null;
     }
 
@@ -196,20 +190,6 @@ public class InteractionService implements ILifecycleService {
     }
 
     private void applyOverlayEffect() {
-        Pane overlayPane = new Pane();
-        overlayPane.setStyle("-fx-background-color: rgba(0, 255, 0, 0.5);");
-
-        ingameControllerProvider.get().ingameStack.getChildren().add(overlayPane);
-
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(overlayPane.opacityProperty(), 0.0)),
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(overlayPane.opacityProperty(), 0.5)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(overlayPane.opacityProperty(), 0.0)));
-
-        timeline.setCycleCount(3);
-        timeline.setAutoReverse(true);
-        timeline.play();
-
-        timeline.setOnFinished(event -> ingameControllerProvider.get().ingameStack.getChildren().remove(overlayPane));
+        ingameControllerProvider.get().applyHealEffect();
     }
 }
