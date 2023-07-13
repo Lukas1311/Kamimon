@@ -1,9 +1,6 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
@@ -33,6 +30,9 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
+    @Inject
+    Provider<ActionFieldFleeController> fleeControllerProvider;
+
 
     @Inject
     Provider<EncounterStorage> encounterStorageProvider;
@@ -73,6 +73,10 @@ public class ActionFieldController extends Controller {
 
     public void openChooseAbility(){
         open(chooseAbilityControllerProvider);
+    }
+
+    public void openFleeWildMonster() {
+        //
     }
 
     public void openChooseOpponent(){
