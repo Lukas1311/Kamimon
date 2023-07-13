@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
@@ -10,9 +9,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
-import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -41,8 +38,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     App app = new App(null);
 
     @Mock
-    IResourceService resourceService;
-    @Mock
     SessionService sessionService;
     @Mock
     Provider<StatusController> statusControllerProvider;
@@ -62,8 +57,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     public void start(Stage stage) {
         app.start(stage);
 
-        // Defines used slots of the encounter
-        when(sessionService.onEncounterCompleted()).thenReturn(Completable.never());
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
@@ -78,8 +71,8 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 .thenReturn(MonsterBuilder.builder().setId("2").setType(1).create());
         when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
                 .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
-
-        when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
+        // No monster updates
+        when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
 
         when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
                 "o_1",
