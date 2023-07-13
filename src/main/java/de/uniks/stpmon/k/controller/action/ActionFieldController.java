@@ -1,7 +1,9 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -30,15 +32,14 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
-    @Inject
-    Provider<ActionFieldFleeController> fleeControllerProvider;
-
 
     @Inject
     Provider<EncounterStorage> encounterStorageProvider;
 
     @Inject
     Provider<EncounterService> encounterServiceProvider;
+    @Inject
+    SessionService sessionService;
 
     private String enemyTrainerId;
     private int abilityId;
@@ -54,6 +55,8 @@ public class ActionFieldController extends Controller {
         Parent parent = super.render();
         loadBgImage(actionFieldPane, "action_menu_background.png");
         openMainMenu();
+
+        checkDeadMonster();
 
         return parent;
     }
@@ -73,10 +76,6 @@ public class ActionFieldController extends Controller {
 
     public void openChooseAbility(){
         open(chooseAbilityControllerProvider);
-    }
-
-    public void openFleeWildMonster() {
-        //
     }
 
     public void openChooseOpponent(){
@@ -132,18 +131,16 @@ public class ActionFieldController extends Controller {
 
     public void executeAbilityMove(){
         subscribe(encounterServiceProvider.get().makeAbilityMove(abilityId, enemyTrainerId),
-                next -> {},
-                error -> {
-                    //TODO removed if fixed
-
-                    //HttpException err = (HttpException) error;
-                    //String text = new String(err.response().errorBody().bytes(), StandardCharsets.UTF_8);
-                    ////String text2 = new String(err.response().raw().request().body()., StandardCharsets.UTF_8);
-                    //System.out.println(text);
-                    System.out.println(error.getMessage());
-                }
+                next -> {}
         );
+    }
 
+    public void checkDeadMonster() {
+        subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
+            if (opponent.monster() == null) {
+                openChangeMonster();
+            }
+        });
     }
 
 }

@@ -1,12 +1,11 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.EncounterService;
@@ -14,7 +13,10 @@ import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import javafx.animation.*;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -39,8 +41,9 @@ public class EncounterOverviewController extends Controller {
 
     private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
 
-    private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
+    private final HashMap<EncounterSlot, Transition> changeAnimations = new HashMap<>(4);
 
+    private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
 
     @FXML
     public StackPane fullBox;
@@ -76,8 +79,6 @@ public class EncounterOverviewController extends Controller {
     Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
     @Inject
     InputHandler inputHandler;
-    @Inject
-    EncounterService encounterService;
 
     EncounterService.CloseEncounter closeEncounter;
 
@@ -105,15 +106,6 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
-        //click on the first mon of opponent to get out of the encounter
-        //Note: the encounter is still active after this
-        opponentMonster0.setOnMouseClicked(e -> {
-            //IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
-
         //add a translation transition to all monster images
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
@@ -130,6 +122,23 @@ public class EncounterOverviewController extends Controller {
             translation.setCycleCount(2);
 
             attackAnimations.put(slot, translation);
+        }
+
+        for (EncounterSlot slot : monsterImages.keySet()) {
+            ImageView view = monsterImages.get(slot);
+
+            TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
+            if(slot.enemy()) {
+                translation.setByY(0);
+                translation.setByX(1000);
+            } else {
+                translation.setByY(0);
+                translation.setByX(-1000);
+            }
+            translation.setAutoReverse(true);
+            translation.setCycleCount(2);
+
+            changeAnimations.put(slot, translation);
         }
 
         subscribeFight();
@@ -169,9 +178,15 @@ public class EncounterOverviewController extends Controller {
                 //using IMove to animate attack
                 if(next.move() instanceof AbilityMove){
                     renderAttack(slot);
+                } else if (next.move() instanceof ChangeMonsterMove) {
+                    renderChange(slot);
                 }
             });
         }
+    }
+
+    private void renderChange(EncounterSlot slot) {
+        changeAnimations.get(slot).play();
     }
 
 
@@ -204,15 +219,21 @@ public class EncounterOverviewController extends Controller {
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
+        if (monster == null) {
+            return;
+        }
+
+        subscribe(sessionService.listenMonster(slot), (newMonster) ->
+                loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy())
+        );
+
         if (slot.partyIndex() == 0) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
             if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 0));
             } else {
                 VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
             }
         } else if (slot.partyIndex() == 1) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
             if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 125));
             }
@@ -296,7 +317,6 @@ public class EncounterOverviewController extends Controller {
         //the first monster of the user and opponent always gets rendered
         return new ParallelTransition(createNodeTransition(status, attacker), createNodeTransition(image, attacker));
     }
-
 
     private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
         TranslateTransition transition = new TranslateTransition(

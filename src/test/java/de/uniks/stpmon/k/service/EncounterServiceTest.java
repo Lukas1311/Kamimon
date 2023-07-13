@@ -304,7 +304,6 @@ class EncounterServiceTest {
         Opponent opponent = getDummyOpponents().get(1);
 
         // Create new monsters
-        Monster attacker = MonsterBuilder.builder().setId("0").create();
         Monster nextMonster = MonsterBuilder.builder().setId("1").create();
 
         //define mock
@@ -320,7 +319,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .makeChangeMonsterMove(attacker, nextMonster)
+                .makeChangeMonsterMove(nextMonster)
                 .blockingFirst();
 
         //check value

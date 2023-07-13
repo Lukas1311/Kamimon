@@ -76,6 +76,9 @@ public class StatusController extends Controller {
     }
 
     private void updateState(Monster monster) {
+        if (monster == null) {
+            return;
+        }
         loadMonsterDto(Integer.toString(monster.type()));
 
         monsterLevel.setText("Lvl. " + monster.level().toString());
