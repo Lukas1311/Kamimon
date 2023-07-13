@@ -1,7 +1,5 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
-import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -11,7 +9,6 @@ import javafx.scene.input.KeyCode;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.PrimitiveIterator;
 
 @Singleton
 public class BackpackController extends Controller {
@@ -21,8 +18,6 @@ public class BackpackController extends Controller {
 
     private Controller backpackMenu;
 
-    @Inject
-    Provider<LoadingEncounterController> loadingEncounterControllerProvider;
 
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
@@ -63,11 +58,8 @@ public class BackpackController extends Controller {
     }
 
     public void openBackPackMenu() {
-        backpackMenu = loadingEncounterControllerProvider.get();
+        backpackMenu = backpackMenuControllerProvider.get();
         ingameControllerProvider.get().pushController(backpackMenu);
-
-        //backpackMenu = backpackMenuControllerProvider.get();
-        //ingameControllerProvider.get().pushController(backpackMenu);
     }
 
     public void closeBackPackMenu() {
