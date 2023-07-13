@@ -10,8 +10,7 @@ import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
-import de.uniks.stpmon.k.service.dummies.MonsterDummy;
-import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.dummies.TestHelper;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
@@ -63,7 +62,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV1() {
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
 
         app.show(component.loginController());
 
@@ -186,19 +185,18 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV2() {
-        MovementDummy.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
 
         app.show(component.hybridController());
 
         //set User
-        ArrayList<String> friends = new ArrayList<>();
-        friends.add("id1");
         User user = new User(
-                "00",
+                "01",
                 "T",
                 "online",
                 null,
-                friends
+                new ArrayList<>()
         );
         component.userStorage().setUser(user);
 
@@ -224,6 +222,17 @@ class AppTest extends ApplicationTest {
         //join region
         clickOn("#regionVBox");
         waitForFxEvents();
+
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        component.regionApi().addMonster("0", "0", true);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", Node::isVisible);
@@ -270,7 +279,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV3() {
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
         app.addInputHandler(component);
@@ -299,7 +308,7 @@ class AppTest extends ApplicationTest {
         clickOn("#approveButton");
         waitForFxEvents();
 
-        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy, component.encounterApi());
+        TestHelper.listenStarterMonster(component.trainerStorage(), eventDummy, component.encounterApi());
 
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
@@ -432,7 +441,6 @@ class AppTest extends ApplicationTest {
         type(KeyCode.RIGHT);
         type(KeyCode.E);
         verifyThat("#userMonsters", Node::isVisible);
-
     }
 
 }

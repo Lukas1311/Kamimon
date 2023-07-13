@@ -6,8 +6,7 @@ import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.dummies.MovementDummy;
-import de.uniks.stpmon.k.service.dummies.WorldDummy;
+import de.uniks.stpmon.k.service.dummies.TestHelper;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
@@ -44,9 +43,9 @@ public class WorldViewTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         super.start(stage);
 
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
         trainerStorage.setTrainer(regionService.createTrainer("id0", "Uwe", "t.png").blockingFirst());
-        WorldDummy.addWorldDummy(worldRepository);
+        TestHelper.addWorldDummy(worldRepository);
         regionStorage.setRegion(DummyConstants.REGION);
         regionStorage.setArea(regionService.getArea("id0", "id0_0").blockingFirst());
 
