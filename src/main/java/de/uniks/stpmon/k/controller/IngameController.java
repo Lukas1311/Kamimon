@@ -16,7 +16,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.InputEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -27,8 +31,6 @@ import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends PortalController {
-    // TODO: Remove if encounter leave is implemented
-    public static boolean disableEncounter = false;
     private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
@@ -123,9 +125,6 @@ public class IngameController extends PortalController {
         starterController.init();
 
         if (encounterService != null) {
-            if (disableEncounter) {
-                return;
-            }
             subscribe(encounterService.tryLoadEncounter(), () -> {
                 if (encounterService.hasNoEncounter()) {
                     return;

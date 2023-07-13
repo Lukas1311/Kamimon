@@ -1,12 +1,15 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
@@ -29,8 +32,10 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import java.util.HashMap;
 
+@Singleton
 public class EncounterOverviewController extends Controller {
 
     public static final double IMAGE_SCALE = 6.0;
@@ -72,8 +77,13 @@ public class EncounterOverviewController extends Controller {
     @Inject
     ActionFieldController actionFieldController;
     @Inject
+    Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
+    @Inject
     InputHandler inputHandler;
+    @Inject
+    EncounterService encounterService;
 
+    EncounterService.CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
@@ -98,6 +108,15 @@ public class EncounterOverviewController extends Controller {
         if (actionField != null) {
             actionFieldBox.getChildren().add(actionField);
         }
+
+        //click on the first mon of opponent to get out of the encounter
+        //Note: the encounter is still active after this
+        opponentMonster0.setOnMouseClicked(e -> {
+            //IngameController.disableEncounter = true;
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+        });
 
         //add a translation transition to all monster images
         for (EncounterSlot slot : monsterImages.keySet()) {
@@ -139,8 +158,31 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            actionFieldController.openBattleLog();
+            //check why encounter is close
+            if (closeEncounter != null){
+                actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
+                closeEncounter = null;
+            }
+
+            javafx.application.Platform.runLater(() -> {
+                if (hybridControllerProvider == null) {
+                    return;
+                }
+                sessionService.clearEncounter();
+
+            });
+        });
+
         return parent;
     }
+
+    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter){
+        this.closeEncounter = closeEncounter;
+    }
+
+
 
     private void subscribeFight(){
         for (EncounterSlot slot : sessionService.getSlots()) {

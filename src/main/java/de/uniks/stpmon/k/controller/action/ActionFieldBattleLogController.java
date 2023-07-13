@@ -14,6 +14,7 @@ import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -24,6 +25,8 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Singleton
 public class ActionFieldBattleLogController extends Controller {
@@ -63,6 +66,7 @@ public class ActionFieldBattleLogController extends Controller {
     InputHandler inputHandler;
 
     private boolean encounterFinished = false;
+    private Timer closeTimer;
 
     @Inject
     public ActionFieldBattleLogController() {
@@ -100,9 +104,11 @@ public class ActionFieldBattleLogController extends Controller {
             if (hybridControllerProvider == null) {
                 return;
             }
+            closeTimer.cancel();
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);
+            encounterFinished = false;
         } else {
             actionFieldControllerProvider.get().openMainMenu();
         }
@@ -131,11 +137,20 @@ public class ActionFieldBattleLogController extends Controller {
         vBox.getChildren().add(text1);
     }
 
+    public void closeEncounter(EncounterService.CloseEncounter closeEncounter){
+        addTextSection(translateString(closeEncounter.toString()), true);
+        encounterFinished = true;
+        closeTimer = new Timer();
+        closeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> nextWindow());
+            }
+        }, 1300);
+
+    }
+
     private void initListeners() {
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            encounterFinished = true;
-            sessionService.clearEncounter();
-        });
 
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot).skip(1), opp -> {
