@@ -80,8 +80,8 @@ public class ActionFieldChooseAbilityController extends Controller {
             if(encounterStorage.getSession().getEnemyTeam().size() == 1){
                 Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
                 actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
-                actionFieldControllerProvider.get().executeAbilityMove();
                 actionFieldControllerProvider.get().openBattleLog();
+                actionFieldControllerProvider.get().executeAbilityMove();
             }else{
                 actionFieldControllerProvider.get().openChooseOpponent();
             }

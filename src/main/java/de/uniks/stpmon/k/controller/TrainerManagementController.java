@@ -160,7 +160,6 @@ public class TrainerManagementController extends ToastedController {
         if (!trainerNameInvalid.get()) {
             saveTrainerName(trainerName.get());
         }
-        // TODO: change sprite here
     }
 
     private void saveTrainerName(String newTrainerName) {
