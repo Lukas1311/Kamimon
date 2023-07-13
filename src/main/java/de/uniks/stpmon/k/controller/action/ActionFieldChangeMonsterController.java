@@ -3,10 +3,7 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.EncounterService;
-import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -15,14 +12,11 @@ import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Objects;
 
 @Singleton
 public class ActionFieldChangeMonsterController extends Controller {
@@ -45,6 +39,8 @@ public class ActionFieldChangeMonsterController extends Controller {
     RegionStorage regionStorage;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    SessionService sessionService;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
@@ -88,7 +84,7 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         if (userMonstersList != null && !userMonstersList.isEmpty()) {
             for (Monster monster : userMonstersList) {
-                if (!activeMonster._id().equals(monster._id())) {
+                if (monster.currentAttributes().health() > 0 && (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
                     subscribe(presetService.getMonster(monster.type()), type -> {
                         selectedUserMonster = monster;
                         addActionOption(monster._id() + " " + type.name(), false);
@@ -137,15 +133,14 @@ public class ActionFieldChangeMonsterController extends Controller {
         if (option.equals(back)) {
             actionFieldControllerProvider.get().openMainMenu();
         } else {
-            subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster),
-                    next -> {
-                        //nothing to see here
-                    }, error -> {
-                        HttpException err = (HttpException) error;
-                        String text = new String(Objects.requireNonNull(Objects.requireNonNull(err.response()).errorBody()).bytes(), StandardCharsets.UTF_8);
-                        System.out.println(text);
-                        System.out.println(error.getMessage());
-                    });
+            if (activeMonster == null || activeMonster.currentAttributes().health() == 0) {
+                subscribe(encounterService.changeDeadMonster(selectedUserMonster),
+                        opponent -> {});
+            } else {
+                subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster),
+                        next -> {});
+            }
+
             actionFieldControllerProvider.get().openBattleLog();
         }
     }

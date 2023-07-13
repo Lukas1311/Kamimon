@@ -137,6 +137,17 @@ public class EncounterService {
         );
     }
 
+    public Observable<Opponent> changeDeadMonster(Monster nextMonster) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(nextMonster._id(), null);
+
+        return encounterApiService.makeMove(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                dto
+        );
+    }
+
     public Observable<Opponent> fleeEncounter() {
         return encounterApiService.fleeEncounter(
                 regionStorage.getRegion()._id(),

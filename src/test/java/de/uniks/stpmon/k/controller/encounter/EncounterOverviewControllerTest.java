@@ -12,6 +12,7 @@ import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -62,6 +63,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         app.start(stage);
 
         // Defines used slots of the encounter
+        when(sessionService.onEncounterCompleted()).thenReturn(Completable.never());
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
@@ -108,6 +110,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
+
         VBox userMonstersBox = lookup("#userMonsters").queryAs(VBox.class);
         VBox opponentMonstersBox = lookup("#opponentMonsters").queryAs(VBox.class);
         assertNotNull(userMonstersBox);
@@ -115,5 +118,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         assertNotNull(encounterOverviewController);
         sleep(4000);
     }
+
 
 }

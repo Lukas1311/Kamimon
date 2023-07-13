@@ -111,6 +111,9 @@ public class ActionFieldBattleLogController extends Controller {
 
     private MonsterTypeDto getTypeForSlot(EncounterSlot slot) {
         Monster monster = sessionService.getMonster(slot);
+        if (monster == null) {
+            return null;
+        }
         // Blocking can be used here because values are already loaded in the cache
         return presetService.getMonster(monster.type()).blockingFirst();
     }
@@ -142,11 +145,20 @@ public class ActionFieldBattleLogController extends Controller {
                 }
                 MonsterTypeDto monster = getTypeForSlot(slot);
 
+                if (monster == null) {
+                    return;
+                }
+
                 if (opp.move() instanceof AbilityMove move) {
                     // Blocking can be used here because values are already loaded in the cache
                     AbilityDto ability = presetService.getAbility(move.ability()).blockingFirst();
                     EncounterSlot targetSlot = sessionService.getTarget(((AbilityMove) opp.move()).target());
                     MonsterTypeDto eneMon = getTypeForSlot(targetSlot);
+
+                    if (eneMon == null) {
+                        return;
+                    }
+
                     addTextSection(translateString("monsterAttacks", monster.name(), eneMon.name(), ability.name()), false);
                     return;
                 }
@@ -175,8 +187,7 @@ public class ActionFieldBattleLogController extends Controller {
 
                         case "target-defeated" ->
                                 addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
-                        case "monster-changed" -> {
-                        }
+                        case "monster-changed" -> {}
                         case "monster-defeated" ->
                                 addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
                         case "monster-levelup" ->

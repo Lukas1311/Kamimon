@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
@@ -183,9 +184,14 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterSlot slot) {
+        Monster monster = sessionService.getMonster(slot);
         StatusController statusController = statusControllerProvider.get();
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
+
+        if (monster == null) {
+            return;
+        }
 
         subscribe(sessionService.listenMonster(slot), (newMonster) ->
                 loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy())
