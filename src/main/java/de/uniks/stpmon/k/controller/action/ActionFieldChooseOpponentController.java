@@ -1,11 +1,8 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -14,27 +11,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class ActionFieldChooseOpponentController extends Controller {
+public class ActionFieldChooseOpponentController extends BaseActionFieldController {
     @FXML
     public Text chooseOpponentText;
     @FXML
     public HBox chooseOpponentBox;
 
     @Inject
-    PresetService presetService;
-    @Inject
-    EncounterStorage encounterStorage;
-    @Inject
     RegionService regionService;
     @Inject
     RegionStorage regionStorage;
-
-    @Inject
-    Provider<ActionFieldController> actionFieldControllerProvider;
 
     private int optionIndex = 0;
 

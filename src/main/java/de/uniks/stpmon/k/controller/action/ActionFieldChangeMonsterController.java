@@ -1,13 +1,8 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -15,12 +10,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class ActionFieldChangeMonsterController extends Controller {
+public class ActionFieldChangeMonsterController extends BaseActionFieldController {
     @FXML
     public Text textContent;
     @FXML
@@ -28,17 +22,6 @@ public class ActionFieldChangeMonsterController extends Controller {
 
     @Inject
     MonsterService monsterService;
-    @Inject
-    PresetService presetService;
-    @Inject
-    RegionService regionService;
-    @Inject
-    EncounterService encounterService;
-    @Inject
-    EncounterStorage encounterStorage;
-
-    @Inject
-    Provider<ActionFieldController> actionFieldControllerProvider;
 
     public List<Monster> userMonstersList;
     public Monster activeMonster;
@@ -95,10 +78,10 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         HBox optionContainer;
         if (option.equals(back)) {
-            optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+            optionContainer = getActionField().getOptionContainer(option);
             optionContainer.setOnMouseClicked(event -> openAction(option));
         } else {
-            optionContainer = actionFieldControllerProvider.get().getOptionContainer(idAndName[1]);
+            optionContainer = getActionField().getOptionContainer(idAndName[1]);
             optionContainer.setOnMouseClicked(event -> openAction(idAndName[0]));
         }
 
@@ -126,7 +109,7 @@ public class ActionFieldChangeMonsterController extends Controller {
 
     public void openAction(String option) {
         if (option.equals(back)) {
-            actionFieldControllerProvider.get().openMainMenu();
+            getActionField().openMainMenu();
         } else {
             if (activeMonster == null || activeMonster.currentAttributes().health() == 0) {
                 subscribe(encounterService.changeDeadMonster(selectedUserMonster));
@@ -134,7 +117,7 @@ public class ActionFieldChangeMonsterController extends Controller {
                 subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster));
             }
 
-            actionFieldControllerProvider.get().openBattleLog();
+            getActionField().openBattleLog();
         }
     }
 

@@ -178,8 +178,7 @@ public class SessionService extends DestructibleElement {
         return session.getSlots();
     }
 
-
-    public List<String> getAttackerTeam() {
+    public List<String> getEnemyTeam() {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
             return Collections.emptyList();
@@ -196,7 +195,7 @@ public class SessionService extends DestructibleElement {
     }
 
     public Completable onEncounterCompleted() {
-        return encounterStorage.getSession().onEncounterCompleted().doOnComplete(() -> {});
+        return encounterStorage.getSession().onEncounterCompleted();
     }
 
     public void clearEncounter() {
