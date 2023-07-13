@@ -8,6 +8,8 @@
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
     -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-border-width: 0px;
 }
 
 
@@ -26,6 +28,16 @@
     -fx-fill: white;
 }
 
+/* --------------------    Timer      -------------------- */
+
+.timer-label {
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 36px;
+}
+
+.night-plane {
+    -fx-background-color: rgba(25, 25, 112, 0.65);
+}
 
 /* -------------------- Backpack Menu -------------------- */
 .backpack-menu {

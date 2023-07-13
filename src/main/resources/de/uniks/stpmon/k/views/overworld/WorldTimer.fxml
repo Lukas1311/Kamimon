@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<HBox fx:id="timer" alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.overworld.WorldTimerController">
+    <padding>
+        <Insets right="30.0"/>
+    </padding>
+    <VBox fx:id="background" alignment="CENTER" maxHeight="41.0" maxWidth="98.0" minHeight="41.0" minWidth="98.0">
+        <Text fx:id="label" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="timer-label" text="12:00">
+            <VBox.margin>
+                <Insets bottom="5.0"/>
+            </VBox.margin>
+        </Text>
+    </VBox>
+</HBox>

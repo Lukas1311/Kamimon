@@ -37,9 +37,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Mock
-    @SuppressWarnings("unused")
-    ChooseSpriteController chooseSpriteController;
-    @Mock
     Provider<PopUpController> popUpControllerProvider;
     @Mock
     TrainerService trainerService;
