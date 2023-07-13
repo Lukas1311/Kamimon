@@ -144,6 +144,8 @@ public class EncounterSession extends DestructibleElement {
         return null;
     }
 
+    // Suppressed because it will be used in the future R4
+    @SuppressWarnings("unused")
     public EncounterSlot getSlotForOpponent(String opponentId) {
         for (EncounterSlot slot : slots) {
             if (Objects.equals(getOpponentId(slot), opponentId)) {

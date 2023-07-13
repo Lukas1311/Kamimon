@@ -35,10 +35,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
     public ActionFieldChangeMonsterController() {
     }
 
-    public void setMonster(Monster monster) {
-        activeMonster = monster;
-    }
-
     @Override
     public Parent render() {
         Parent parent = super.render();
@@ -62,7 +58,8 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
 
         if (userMonstersList != null && !userMonstersList.isEmpty()) {
             for (Monster monster : userMonstersList) {
-                if (monster.currentAttributes().health() > 0 && (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
+                if (monster.currentAttributes().health() > 0 &&
+                        (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
                     subscribe(presetService.getMonster(monster.type()), type -> {
                         selectedUserMonster = monster;
                         addActionOption(monster._id() + " " + type.name(), false);

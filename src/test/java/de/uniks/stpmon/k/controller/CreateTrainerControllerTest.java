@@ -60,6 +60,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     @Mock
     TrainerService trainerService;
     @Mock
+    @SuppressWarnings("unused")
     Preferences preferences;
 
     @Spy
@@ -211,7 +212,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
 
         createTrainerController.characters.addAll("Sprite1", "Sprite2", "Sprite3");
         createTrainerController.currentSpriteIndex = 0;
-        createTrainerController.previousSpriteIndex = 1;
 
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
