@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+
+
+<VBox fx:id="vbox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldFleeController">
+    <ImageView fx:id="blackScreen" fitHeight="1000.0" fitWidth="1500.0" />
+</VBox>

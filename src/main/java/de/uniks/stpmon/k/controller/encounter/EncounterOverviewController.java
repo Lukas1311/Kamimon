@@ -1,20 +1,19 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.LoginController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.InputHandler;
-import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import javafx.animation.*;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -70,9 +69,9 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-
     @Inject
     InputHandler inputHandler;
+
 
     @Inject
     public EncounterOverviewController() {
@@ -98,22 +97,12 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
-        //click on the first mon of opponent to get out of the encounter
-        //Note: the encounter is still active after this
-        opponentMonster0.setOnMouseClicked(e -> {
-            IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
-
         //add a translation transition to all monster images
-        for ( EncounterSlot slot : monsterImages.keySet()) {
+        for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-
             TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
-            if(slot.enemy()) {
+            if (slot.enemy()) {
                 translation.setByY(30);
                 translation.setByX(-60);
             } else {
@@ -126,47 +115,28 @@ public class EncounterOverviewController extends Controller {
             attackAnimations.put(slot, translation);
         }
 
-        onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            switch (event.getCode()) {
-                    case G -> {
-                        // Block movement and backpack, if map overview is shown
-                        renderAttack(EncounterSlot.PARTY_FIRST);
-                        event.consume();
-                    }
-
-                    case H -> {
-                        // Block movement and backpack, if map overview is shown
-                        renderAttack(EncounterSlot.ENEMY_FIRST);
-                        event.consume();
-                    }
-
-                    default -> {
-                    }
-
-                }
-        }));
-
         subscribeFight();
 
         renderMonsterLists();
         animateMonsterEntrance();
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
+        //subscribe(sessionService.onEncounterCompleted(), () -> {
+        //    javafx.application.Platform.runLater(() -> {
+        //        if (hybridControllerProvider == null) {
+        //            return;
+        //        }
+        //        HybridController controller = hybridControllerProvider.get();
+        //        app.show(controller);
+        //        controller.openMain(MainWindow.INGAME);
+        //    });
+        //});
 
         return parent;
     }
 
-
-
     private void subscribeFight(){
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), next -> {
-                //using result to print text to action field
-
                 //using IMove to animate attack
                 if(next.move() instanceof AbilityMove){
                     renderAttack(slot);
@@ -225,9 +195,9 @@ public class EncounterOverviewController extends Controller {
             // Scale and set the image
             Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
             if (attacker) {
-                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-            } else {
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            } else {
+                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
         });

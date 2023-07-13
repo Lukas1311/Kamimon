@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.lobby;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;

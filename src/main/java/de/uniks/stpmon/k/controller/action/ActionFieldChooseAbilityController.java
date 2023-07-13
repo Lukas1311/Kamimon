@@ -61,7 +61,6 @@ public class ActionFieldChooseAbilityController extends Controller {
     }
 
     public void addAbility(String abilityId, Integer remainingUses) {
-
         subscribe(presetService.getAbility(abilityId), abilityDto -> addAbilityOption(abilityDto, remainingUses));
     }
 
@@ -77,8 +76,15 @@ public class ActionFieldChooseAbilityController extends Controller {
         optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> {
-            actionFieldControllerProvider.get().setChosenAbility(ability);
-            chooseAbility();
+            actionFieldControllerProvider.get().setAbilityId(ability.id());
+            if(encounterStorage.getSession().getEnemyTeam().size() == 1){
+                Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
+                actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
+                actionFieldControllerProvider.get().openBattleLog();
+                actionFieldControllerProvider.get().executeAbilityMove();
+            }else{
+                actionFieldControllerProvider.get().openChooseOpponent();
+            }
         });
 
         // set IDs for the options
@@ -86,29 +92,6 @@ public class ActionFieldChooseAbilityController extends Controller {
 
         abilityGridPane.add(optionContainer, 0, count);
         count++;
-    }
-
-    public void chooseAbility() {
-        if(encounterStorage.getSession().getEnemyTeam().size() == 1){
-            Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
-            AbilityDto ability = actionFieldControllerProvider.get().chosenAbility;
-            subscribe(encounterService.makeAbilityMove(ability.id(), opponent.trainer()),
-                    next -> {
-                        //do nothing here
-                    }, error -> {
-                        //TODO removed if fixed
-
-                        //HttpException err = (HttpException) error;
-                        //String text = new String(err.response().errorBody().bytes(), StandardCharsets.UTF_8);
-                        ////String text2 = new String(err.response().raw().request().body()., StandardCharsets.UTF_8);
-                        //System.out.println(text);
-                        //System.out.println(error.getMessage());
-                    }
-            );
-            actionFieldControllerProvider.get().openBattleLog();
-        }else{
-            actionFieldControllerProvider.get().openChooseOpponent();
-        }
     }
 
     public void addBackOption(String option) {

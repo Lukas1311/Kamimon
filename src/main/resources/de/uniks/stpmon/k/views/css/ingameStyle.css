@@ -3,6 +3,15 @@
     -fx-font-size: 20px;
 }
 
+.transparent-background{
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-border-color: transparent;
+    -fx-border-width: 0px;
+}
+
 
 /* -------------------- Pause Screen -------------------- */
 .pause-inner-containers {
@@ -19,6 +28,16 @@
     -fx-fill: white;
 }
 
+/* --------------------    Timer      -------------------- */
+
+.timer-label {
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 36px;
+}
+
+.night-plane {
+    -fx-background-color: rgba(25, 25, 112, 0.65);
+}
 
 /* -------------------- Backpack Menu -------------------- */
 .backpack-menu {
@@ -235,8 +254,9 @@
     -fx-border-insets: 10;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 23px;
 }
-
 
 .map-overview-label {
     -fx-text-alignment: center;
@@ -247,6 +267,10 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: lightgray;
+}
+
+.map-overview-header {
+    -fx-font-size: 34px;
 }
 
 /* -------------------- Encounter -------------------- */
@@ -270,3 +294,6 @@
 .monster-hp-bar .track {
     -fx-padding: 0;
 }
+
+/* -------------------- Action Field  -------------------- */
+

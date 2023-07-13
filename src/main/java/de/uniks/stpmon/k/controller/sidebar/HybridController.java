@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.*;
 import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.controller.chat.ChatListController;
 import de.uniks.stpmon.k.controller.chat.CreateChatController;
+import de.uniks.stpmon.k.controller.lobby.LobbyController;
 import de.uniks.stpmon.k.models.Group;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.GroupService;
@@ -75,7 +76,7 @@ public class HybridController extends Controller {
     @Inject
     Provider<TrainerManagementController> trainerManagementControllerProvider;
     @Inject
-    ChooseSpriteController chooseSpriteController;
+    CreateTrainerController createTrainerController;
     @Inject
     InputHandler inputHandler;
 
@@ -203,8 +204,7 @@ public class HybridController extends Controller {
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
             case CHOOSE_SPRITE -> {
-                chooseSpriteController.setCreationMode(false);
-                pushController(chooseSpriteController, setup);
+                pushController(createTrainerController, setup);
             }
             case NONE -> {
             }

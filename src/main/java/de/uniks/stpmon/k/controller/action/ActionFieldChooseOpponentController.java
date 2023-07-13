@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
@@ -49,34 +50,34 @@ public class ActionFieldChooseOpponentController extends Controller {
     public Parent render() {
         Parent parent = super.render();
 
-        addMonsterOption(null, true);
+        addMonsterOption(null, null, true);
 
-        opponentMonstersList = encounterStorage.getSession().getEnemyTeam();
-        if(opponentMonstersList != null) {
-            for (String monster : opponentMonstersList) {
-                subscribe(presetService.getMonster(monster), monsterDto -> addMonsterOption(monsterDto, false));
-            }
+        Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
+        Opponent opponent2 = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_SECOND);
+
+        if(opponent != null){
+            subscribe(presetService.getMonster(opponent.monster()),
+                    monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
         }
+        if (opponent2 != null) {
+            subscribe(presetService.getMonster(opponent2.monster()),
+                    monsterDto -> addMonsterOption(opponent2, monsterDto.name(), false));
+        }
+
         return parent;
     }
 
-    public void addMonsterOption(MonsterTypeDto enemyMonster, boolean isBackOption) {
+    public void addMonsterOption(Opponent opponent, String monsterName, boolean isBackOption) {
         HBox optionContainer = actionFieldControllerProvider.get()
-                .getOptionContainer(isBackOption ? translateString("back") : enemyMonster.name());
+                .getOptionContainer(isBackOption ? translateString("back") : monsterName);
 
         optionContainer.setOnMouseClicked(event -> {
             if (isBackOption){
                 actionFieldControllerProvider.get().openChooseAbility();
             } else {
-                AbilityDto ability = actionFieldControllerProvider.get().chosenAbility;
-                subscribe(encounterService.makeAbilityMove(ability.id(), enemyMonster.id().toString()),
-                        next -> {
-                            //do nothing here
-                        }, error -> {
-                            System.out.println(error.getMessage());
-                        }
-                        );
+                actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
                 actionFieldControllerProvider.get().openBattleLog();
+                actionFieldControllerProvider.get().executeAbilityMove();
             }
         });
 

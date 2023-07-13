@@ -1,9 +1,11 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
@@ -22,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EncounterOverviewControllerTest extends ApplicationTest {
+
     @Spy
     final
     App app = new App(null);
@@ -54,8 +56,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
     final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
-    final BufferedImage monsterImage = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR);
-
 
     @Override
     public void start(Stage stage) {
@@ -77,7 +77,19 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
                 .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
 
-        when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(monsterImage));
+        when(resourceService.getMonsterImage(any())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
+
+        when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
+                "o_1",
+                null,
+                null,
+                false,
+                false,
+                null,
+                null,
+                List.of(),
+                0
+        )));
 
         when(statusControllerProvider.get()).thenAnswer(invocation -> {
             VBox statusBox = new VBox();
@@ -103,4 +115,5 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         assertNotNull(encounterOverviewController);
         sleep(4000);
     }
+
 }

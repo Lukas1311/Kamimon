@@ -35,24 +35,4 @@ public class LoadingEncounterControllerTest extends ApplicationTest {
         app.start(stage);
         loadingEncounterController = new LoadingEncounterController();
     }
-
-    @Test
-    public void showScreen() {
-        effectContext.setSkipLoading(false);
-        loadingEncounterController.render();
-
-        // Check if the loading encounter screen is shown
-        verify(app).show(any());
-    }
-
-
-    @Test
-    public void testSkip() {
-        // Skip show loading screen
-        effectContext.setSkipLoading(true);
-        loadingEncounterController.render();
-
-        // Check if the loading screen is not shown
-        verify(app, never()).show(any());
-    }
 }

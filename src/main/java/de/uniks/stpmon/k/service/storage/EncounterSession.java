@@ -135,6 +135,23 @@ public class EncounterSession extends DestructibleElement {
         return opponentCache.listenValue(opponent).filter(Optional::isEmpty).take(1).ignoreElements();
     }
 
+    public EncounterSlot getSlotForTrainer(String trainerId) {
+        for (EncounterSlot slot : slots) {
+            if (Objects.equals(getTrainer(slot), trainerId)) {
+                return slot;
+            }
+        }
+        return null;
+    }
+
+    public EncounterSlot getSlotForOpponent(String opponentId) {
+        for (EncounterSlot slot : slots) {
+            if (Objects.equals(getOpponentId(slot), opponentId)) {
+                return slot;
+            }
+        }
+        return null;
+    }
 
     public Opponent getOpponent(EncounterSlot slot) {
         String opponent = getOpponentId(slot);

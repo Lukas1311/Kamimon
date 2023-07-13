@@ -1,20 +1,28 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
+import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
+import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.layout.*;
+import javafx.scene.input.InputEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -25,8 +33,6 @@ import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends PortalController {
-    //TODO: Remove if encounter leave is implemented
-    public static boolean disableEncounter = false;
     private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
@@ -43,6 +49,8 @@ public class IngameController extends PortalController {
     public HBox dialogueBox;
     @FXML
     public VBox starterBox;
+    @FXML
+    public BorderPane mainPain;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -59,7 +67,11 @@ public class IngameController extends PortalController {
     @Inject
     StarterController starterController;
     @Inject
-    Provider<EncounterOverviewController> encounterProvider;
+    Provider<LoadingEncounterController> encounterProvider;
+    @Inject
+    WorldTimerController worldTimerController;
+    @Inject
+    NightOverlayController nightOverlayController;
     @Inject
     InteractionStorage interactionStorage;
     @Inject
@@ -71,10 +83,8 @@ public class IngameController extends PortalController {
 
     @Inject
     WorldController worldController;
-
     @Inject
     InputHandler inputHandler;
-
     @Inject
     SessionService encounterService;
 
@@ -96,53 +106,46 @@ public class IngameController extends PortalController {
         dialogueController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
-            if (mapOverview != null) {
-                switch (event.getCode()) {
-                    case A, D, W, S, LEFT, RIGHT, UP, DOWN, B, E-> {
-                        // Block movement and backpack, if map overview is shown
-                        if (mapOverview.isVisible()) {
-                            event.consume();
-                        }
-                    }
-                    case M -> {
-                        mapOverview.setVisible(!mapOverview.isVisible());
+            switch (event.getCode()) {
+                case A, D, W, S, LEFT, RIGHT, UP, DOWN, B, E -> {
+                    // Block movement and backpack, if map overview is shown
+                    if (mapOverview != null) {
                         event.consume();
                     }
-
-                    case ESCAPE -> {
-                        if (mapOverview.isVisible()) {
-                            mapOverview.setVisible(false);
-                            event.consume();
-                        }
-                    }
-
-                    default -> {
-                    }
-
                 }
+                case M -> openOrCloseMap(event);
+
+                case ESCAPE -> {
+                    if (mapOverview != null) {
+                        closeMap();
+                        event.consume();
+                    }
+                }
+
+                default -> {
+                }
+
             }
         }));
         starterController.init();
 
         if (encounterService != null) {
-            if (disableEncounter) {
-                return;
-            }
             subscribe(encounterService.tryLoadEncounter(), () -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                EncounterOverviewController controller = encounterProvider.get();
+                LoadingEncounterController controller = encounterProvider.get();
                 app.show(controller);
             });
-            subscribe(encounterService.listenForEncounter()
-                    .subscribeOn(Schedulers.computation()), () -> {
+            disposables.add(encounterService.listenForEncounter().subscribe(() -> {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                EncounterOverviewController controller = encounterProvider.get();
-                app.show(controller);
-            });
+                Platform.runLater(() -> {
+                    LoadingEncounterController controller = encounterProvider.get();
+                    app.show(controller);
+                });
+            }));
         }
     }
 
@@ -180,18 +183,11 @@ public class IngameController extends PortalController {
             rightVbox.getChildren().add(0, miniMap);
         }
 
-        mapOverview = this.mapOverviewController.render();
         Parent backPack = this.backpackController.render();
         // Null if unit testing world view
         if (backPack != null) {
             ingameWrappingHBox.getChildren().add(backPack);
             ingameStack.setAlignment(Pos.TOP_RIGHT);
-        }
-
-        if (mapOverview != null) {
-            ingameStack.getChildren().add(mapOverview);
-            ingameStack.setAlignment(Pos.CENTER);
-            mapOverview.setVisible(false);
         }
 
         Parent dialogue = this.dialogueController.render();
@@ -201,8 +197,8 @@ public class IngameController extends PortalController {
             dialogue.setVisible(false);
         }
 
-        if (miniMap != null && mapOverview != null) {
-            miniMap.setOnMouseClicked(click -> mapOverview.setVisible(true));
+        if (miniMap != null) {
+            miniMap.setOnMouseClicked(this::openOrCloseMap);
         }
 
         Parent starter = this.starterController.render();
@@ -213,6 +209,37 @@ public class IngameController extends PortalController {
         }
 
         return parent;
+    }
+
+    private void openOrCloseMap(InputEvent event) {
+        if (mapOverview == null) {
+            openMap();
+        } else {
+            closeMap();
+        }
+        event.consume();
+    }
+
+    public void openMap() {
+        if (mapOverviewController == null) {
+            return;
+        }
+        mapOverview = this.mapOverviewController.render();
+        ingameStack.getChildren().add(mapOverview);
+        mainPain.setOnMouseClicked(click -> {
+            closeMap();
+            click.consume();
+        });
+        ingameStack.setAlignment(Pos.CENTER);
+    }
+
+    public void closeMap() {
+        if (mapOverview == null) {
+            return;
+        }
+        ingameStack.getChildren().remove(mapOverview);
+        mainPain.setOnMouseClicked(null);
+        mapOverview = null;
     }
 
     public void closeSidebar() {
@@ -236,7 +263,6 @@ public class IngameController extends PortalController {
             children.remove(0);
         }
     }
-
 
     public void openMonsterInfo(Monster monster) {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();
