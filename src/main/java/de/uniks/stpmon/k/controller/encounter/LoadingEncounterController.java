@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
 import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -12,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 public class LoadingEncounterController extends Controller {
 
@@ -20,6 +23,9 @@ public class LoadingEncounterController extends Controller {
 
     @FXML
     Circle blackPoint;
+
+    @Inject
+    Provider<EncounterOverviewController> encounterProvider;
 
 
     @Inject
@@ -58,12 +64,22 @@ public class LoadingEncounterController extends Controller {
             fullBox.getChildren().add(vsBackground);
 
             PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
-            pauseTransition.setOnFinished(e -> loadImage(vsBackground, "encounter/trainerEncounter1.png"));
+            pauseTransition.setOnFinished(e -> {
+                loadImage(vsBackground, "encounter/trainerEncounter1.png");
+
+                PauseTransition pauseTransition1 = new PauseTransition(Duration.seconds(2));
+                pauseTransition1.setOnFinished(f -> {
+                    EncounterOverviewController controller = encounterProvider.get();
+                    app.show(controller);
+                });
+                pauseTransition1.play();
+            });
 
             pauseTransition.play();
         });
 
         scaleTransition.play();
+
     }
 
     @Override
