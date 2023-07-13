@@ -85,8 +85,6 @@ public class LoadingWildEncounterController extends Controller {
     private FadeTransition getWildTransition(){
         ImageView vsWildBackground = new ImageView();
         loadImage(vsWildBackground, "encounter/wildEncounter.png");
-        vsWildBackground.setFitHeight(720);
-        vsWildBackground.setFitWidth(1280);
         fullBox.getChildren().add(vsWildBackground);
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), vsWildBackground);
         fadeTransition.setFromValue(0.0);
