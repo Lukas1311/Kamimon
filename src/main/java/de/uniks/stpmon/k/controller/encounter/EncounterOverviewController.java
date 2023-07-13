@@ -1,10 +1,8 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
@@ -12,7 +10,10 @@ import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import javafx.animation.*;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -21,7 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -29,8 +29,6 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class EncounterOverviewController extends Controller {
 
@@ -139,17 +137,6 @@ public class EncounterOverviewController extends Controller {
 
         renderMonsterLists();
         animateMonsterEntrance();
-
-        //subscribe(sessionService.onEncounterCompleted(), () -> {
-        //    javafx.application.Platform.runLater(() -> {
-        //        if (hybridControllerProvider == null) {
-        //            return;
-        //        }
-        //        HybridController controller = hybridControllerProvider.get();
-        //        app.show(controller);
-        //        controller.openMain(MainWindow.INGAME);
-        //    });
-        //});
 
         return parent;
     }

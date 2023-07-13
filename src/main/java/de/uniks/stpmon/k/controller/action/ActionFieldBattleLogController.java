@@ -10,11 +10,9 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Result;
-import de.uniks.stpmon.k.service.InputHandler;
-import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -56,6 +54,10 @@ public class ActionFieldBattleLogController extends Controller {
 
     @Inject
     MonsterService monsterService;
+    @Inject
+    RegionService regionService;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     InputHandler inputHandler;
@@ -150,8 +152,10 @@ public class ActionFieldBattleLogController extends Controller {
                 }
 
                 if (opp.move() instanceof ChangeMonsterMove move) {
-                    addTextSection(translateString("monster-changed",
-                            presetService.getMonster(move.monster()).blockingFirst().name()), false);
+                    subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
+                        addTextSection(translateString("monster-changed",
+                                presetService.getMonster(monster1.type()).blockingFirst().name()), false)
+                    );
                     return;
                 }
 
@@ -179,15 +183,13 @@ public class ActionFieldBattleLogController extends Controller {
                                 addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
                         case "monster-evolved" ->
                                 addTextSection(translateString("monster-evolved", monster.name()), false);
-                        case "monster-learned" -> addTextSection(translateString("monster-learned", monster.name(),
-                                presetService.getAbility(result.ability()).blockingFirst().name()), false);
+                        case "monster-learned" ->
+                                addTextSection(translateString("monster-learned", monster.name(), presetService.getAbility(result.ability()).blockingFirst().name()), false);
                         case "monster-dead" -> addTextSection(translateString("monster-dead", monster.name()), false);
-                        case "ability-unknown" -> addTextSection(translateString("ability-unknown",
-                                        presetService.getAbility(result.ability()).blockingFirst().name(), monster.name())
-                                , false);
-                        case "ability-no-uses" -> addTextSection(translateString("ability-no-uses",
-                                        presetService.getAbility(result.ability()).blockingFirst().name())
-                                , false);
+                        case "ability-unknown" ->
+                                addTextSection(translateString("ability-unknown", presetService.getAbility(result.ability()).blockingFirst().name(), monster.name()), false);
+                        case "ability-no-uses" ->
+                                addTextSection(translateString("ability-no-uses", presetService.getAbility(result.ability()).blockingFirst().name()), false);
                         case "target-unknown" -> addTextSection(translateString("target-unknown"), false);
                         case "target-dead" -> addTextSection(translateString("target-dead", "Targeted monster"), false);
                         default -> System.out.println("unknown result type");
