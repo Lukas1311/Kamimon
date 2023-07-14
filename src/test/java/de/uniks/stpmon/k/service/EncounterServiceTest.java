@@ -31,14 +31,10 @@ class EncounterServiceTest {
 
     @Mock
     EncounterApiService encounterApiService;
-
     @Mock
     SessionService sessionService;
-
     @Mock
     Provider<SessionService> sessionServiceProvider;
-
-
     @Spy
     RegionStorage regionStorage;
     @Spy

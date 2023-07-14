@@ -18,6 +18,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class StarterControllerTest extends ApplicationTest {
@@ -48,6 +49,7 @@ public class StarterControllerTest extends ApplicationTest {
         when(resourceService.getMonsterImage(anyString())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
 
         starterController.setStarter("1");
+        waitForFxEvents();
 
         assertEquals("monster", starterController.monsterNameLabel.getText());
         assertEquals("description", starterController.descriptionText.getText());

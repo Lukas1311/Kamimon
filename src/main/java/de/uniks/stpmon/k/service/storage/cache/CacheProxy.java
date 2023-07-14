@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+// suppress unused warning because this is a utility class
+@SuppressWarnings("unused")
 public class CacheProxy<C extends ICache<V, K>, V, K> implements ICache<V, K> {
     private final Supplier<Provider<C>> provider;
     private final Consumer<C> setupCallback;

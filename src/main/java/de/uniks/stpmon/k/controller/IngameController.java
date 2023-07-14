@@ -12,18 +12,20 @@ import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.service.storage.InteractionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.application.Platform;
-import javafx.scene.input.InputEvent;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.InputEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -74,21 +76,14 @@ public class IngameController extends PortalController {
     @Inject
     AnimationService animationService;
 
-
     @Inject
     WorldTimerController worldTimerController;
     @Inject
     NightOverlayController nightOverlayController;
     @Inject
-    Provider<EncounterOverviewController> encounterProvider;
-
-    @Inject
     MonsterInformationController monsterInformationController;
-
-
     @Inject
-    TrainerStorage trainerStorage;
-
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     WorldController worldController;
 
@@ -154,20 +149,25 @@ public class IngameController extends PortalController {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                Platform.runLater(() -> {
-                    startEncounterAnimation(encounterStorage.getEncounter().isWild());
-                });
+                Platform.runLater(() -> startEncounterAnimation(encounterStorage.getEncounter().isWild()));
             }));
         }
     }
 
-    private void startEncounterAnimation(boolean isWild){
+    private void startEncounterAnimation(boolean isWild) {
+        if (effectContext.shouldSkipLoading()) {
+            EncounterOverviewController controller = encounterOverviewControllerProvider.get();
+            app.show(controller);
+            return;
+        }
+
         //init
         StackPane overlayPane = new StackPane();
         overlayPane.setStyle("-fx-background-color: transparent");
         Circle blackpoint = new Circle(25.0);
         overlayPane.getChildren().add(blackpoint);
         ingameStack.getChildren().add(overlayPane);
+
         Transition transition = animationService.createEncounterAnimation(blackpoint);
 
         if(isWild){
@@ -198,7 +198,6 @@ public class IngameController extends PortalController {
         starterController.destroy();
         worldTimerController.destroy();
         nightOverlayController.destroy();
-
     }
 
     @Override
@@ -324,5 +323,23 @@ public class IngameController extends PortalController {
         controller.loadMonsterTypeDto(String.valueOf(monster.type()));
         controller.loadMonster(monster);
         children.add(0, monsterInfo);
+    }
+
+    public void applyHealEffect() {
+        Pane overlayPane = new Pane();
+        overlayPane.setStyle("-fx-background-color: rgba(0, 255, 0, 0.5);");
+
+        ingameStack.getChildren().add(overlayPane);
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(overlayPane.opacityProperty(), 0.0)),
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(overlayPane.opacityProperty(), 0.5)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(overlayPane.opacityProperty(), 0.0)));
+
+        timeline.setCycleCount(3);
+        timeline.setAutoReverse(true);
+        timeline.play();
+
+        timeline.setOnFinished(event -> ingameStack.getChildren().remove(overlayPane));
     }
 }

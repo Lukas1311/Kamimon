@@ -61,7 +61,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         when(regionStorage.getRegion()).thenReturn(region);
 
         // Defines used slots of the encounter
-        when(sessionService.onEncounterCompleted()).thenReturn(Completable.never());
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 

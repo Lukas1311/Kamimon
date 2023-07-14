@@ -109,8 +109,8 @@ public class TeamController extends Controller {
         List<Monster> monsters = monsterService.getTeamCache().getCurrentValues();
         for (int slot = 0; slot < monsters.size(); slot++) {
             Monster monster = monsters.get(slot);
-            int currentHP = monster.currentAttributes().health();
-            int maxHP = monster.attributes().health();
+            float currentHP = monster.currentAttributes().health();
+            float maxHP = monster.attributes().health();
             monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP);
         }
     }

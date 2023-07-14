@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityDto;
@@ -9,11 +9,12 @@ import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Result;
-import de.uniks.stpmon.k.service.*;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -29,39 +30,24 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Singleton
-public class ActionFieldBattleLogController extends Controller {
+public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @FXML
     public ScrollPane scrollPane;
 
     @FXML
     public VBox vBox;
-
-    @Inject
-    Provider<ActionFieldController> actionFieldControllerProvider;
+    @FXML
+    public VBox battleLog;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
-
-    @Inject
-    SessionService sessionService;
-
     @Inject
     PresetService presetService;
-
-    @Inject
-    EncounterStorage encounterStorage;
-
-    @Inject
-    TrainerStorage trainerService;
-
-    @Inject
-    MonsterService monsterService;
     @Inject
     RegionService regionService;
     @Inject
     RegionStorage regionStorage;
-
     @Inject
     InputHandler inputHandler;
 
@@ -104,16 +90,21 @@ public class ActionFieldBattleLogController extends Controller {
             if (hybridControllerProvider == null) {
                 return;
             }
+            sessionService.clearEncounter();
             closeTimer.cancel();
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);
             encounterFinished = false;
         } else {
-            actionFieldControllerProvider.get().openMainMenu();
+            getActionField().openMainMenu();
         }
     }
 
+    private MonsterTypeDto getMonsterType(int id) {
+        // Blocking can be used here because values are already loaded in the cache
+        return presetService.getMonster(id).blockingFirst();
+    }
 
     private MonsterTypeDto getTypeForSlot(EncounterSlot slot) {
         Monster monster = sessionService.getMonster(slot);
@@ -121,11 +112,14 @@ public class ActionFieldBattleLogController extends Controller {
             return null;
         }
         // Blocking can be used here because values are already loaded in the cache
-        return presetService.getMonster(monster.type()).blockingFirst();
+        return getMonsterType(monster.type());
     }
 
+    private void addTranslatedSection(String word, String... args) {
+        addTextSection(translateString(word, args), false);
+    }
 
-    public void addTextSection(String text, boolean overwriteAll) {
+    private void addTextSection(String text, boolean overwriteAll) {
         //replace whole text in battle log
         if (overwriteAll) {
             vBox.getChildren().clear();
@@ -137,7 +131,7 @@ public class ActionFieldBattleLogController extends Controller {
         vBox.getChildren().add(text1);
     }
 
-    public void closeEncounter(EncounterService.CloseEncounter closeEncounter){
+    public void closeEncounter(CloseEncounterTrigger closeEncounter) {
         addTextSection(translateString(closeEncounter.toString()), true);
         encounterFinished = true;
         closeTimer = new Timer();
@@ -146,83 +140,87 @@ public class ActionFieldBattleLogController extends Controller {
             public void run() {
                 Platform.runLater(() -> nextWindow());
             }
-        }, 1300);
-
+        }, (int) (effectContext.getEncounterAnimationSpeed() * 2.3f));
     }
 
     private void initListeners() {
-
         for (EncounterSlot slot : sessionService.getSlots()) {
-            subscribe(sessionService.listenOpponent(slot).skip(1), opp -> {
-
-                if (encounterStorage.getSession() == null) {
-                    return;
-                }
-                MonsterTypeDto monster = getTypeForSlot(slot);
-
-                if (monster == null) {
-                    return;
-                }
-
-                if (opp.move() instanceof AbilityMove move) {
-                    // Blocking can be used here because values are already loaded in the cache
-                    AbilityDto ability = presetService.getAbility(move.ability()).blockingFirst();
-                    EncounterSlot targetSlot = sessionService.getTarget(((AbilityMove) opp.move()).target());
-                    MonsterTypeDto eneMon = getTypeForSlot(targetSlot);
-
-                    if (eneMon == null) {
-                        return;
-                    }
-
-                    addTextSection(translateString("monsterAttacks", monster.name(), eneMon.name(), ability.name()), false);
-                    return;
-                }
-
-                if (opp.move() instanceof ChangeMonsterMove move) {
-                    subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
-                        addTextSection(translateString("monster-changed",
-                                presetService.getMonster(monster1.type()).blockingFirst().name()), false)
-                    );
-                    return;
-                }
-
-                for (Result result : opp.results()) {
-                    switch (result.type()) {
-                        case "ability-success" -> {
-                            String translationVar = switch (result.effectiveness()) {
-                                case "super-effective" -> "super-effective-atk";
-                                case "effective" -> "effective-atk";
-                                case "normal" -> "normal-atk";
-                                case "ineffective" -> "ineffective-atk";
-                                case "no-effect" -> "no-effect-atk";
-                                default -> "";
-                            };
-                            addTextSection(translateString(translationVar), false);
-                        }
-
-                        case "target-defeated" ->
-                                addTextSection(translateString("target-defeated", "Targeted monster"), false); //when last monster is dead
-                        case "monster-changed" -> {}
-                        case "monster-defeated" ->
-                                addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
-                        case "monster-levelup" ->
-                                addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
-                        case "monster-evolved" ->
-                                addTextSection(translateString("monster-evolved", monster.name()), false);
-                        case "monster-learned" ->
-                                addTextSection(translateString("monster-learned", monster.name(), presetService.getAbility(result.ability()).blockingFirst().name()), false);
-                        case "monster-dead" -> addTextSection(translateString("monster-dead", monster.name()), false);
-                        case "ability-unknown" ->
-                                addTextSection(translateString("ability-unknown", presetService.getAbility(result.ability()).blockingFirst().name(), monster.name()), false);
-                        case "ability-no-uses" ->
-                                addTextSection(translateString("ability-no-uses", presetService.getAbility(result.ability()).blockingFirst().name()), false);
-                        case "target-unknown" -> addTextSection(translateString("target-unknown"), false);
-                        case "target-dead" -> addTextSection(translateString("target-dead", "Targeted monster"), false);
-                        default -> System.out.println("unknown result type");
-                    }
-                }
-            });
+            // Skip first value because it is always the existing value
+            subscribe(sessionService.listenOpponent(slot).skip(1), opp -> handleOpponentUpdate(slot, opp));
         }
+    }
+
+    private void handleOpponentUpdate(EncounterSlot slot, Opponent opp) {
+        if (sessionService.hasNoEncounter()) {
+            return;
+        }
+        MonsterTypeDto monster = getTypeForSlot(slot);
+
+        if (monster == null) {
+            return;
+        }
+
+        if (opp.move() instanceof AbilityMove move) {
+            // Blocking can be used here because values are already loaded in the cache
+            AbilityDto ability = getAbility(move.ability());
+            EncounterSlot targetSlot = sessionService.getTarget(move.target());
+            MonsterTypeDto eneMon = getTypeForSlot(targetSlot);
+
+            if (eneMon == null) {
+                return;
+            }
+
+            addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+            return;
+        }
+
+        if (opp.move() instanceof ChangeMonsterMove move) {
+            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
+                    addTranslatedSection("monster-changed", getMonsterType(monster1.type()).name()));
+            return;
+        }
+
+        for (Result result : opp.results()) {
+            handleResult(monster, result);
+        }
+    }
+
+    private void handleResult(MonsterTypeDto monster, Result result) {
+        final Integer ability = result.ability();
+        switch (result.type()) {
+            case "ability-success" -> {
+                String translationVar = switch (result.effectiveness()) {
+                    case "super-effective" -> "super-effective-atk";
+                    case "effective" -> "effective-atk";
+                    case "normal" -> "normal-atk";
+                    case "ineffective" -> "ineffective-atk";
+                    case "no-effect" -> "no-effect-atk";
+                    default -> "";
+                };
+                addTranslatedSection(translationVar);
+            }
+            //when last monster is dead
+            case "target-defeated" -> addTranslatedSection("target-defeated", "Targeted monster");
+            case "monster-changed" -> {
+            }
+            //called when not dying, e.g. another monster is available
+            case "monster-defeated" -> addTranslatedSection("monster-defeated", monster.name());
+            case "monster-levelup" -> addTranslatedSection("monster-levelup", monster.name(), "0");
+            case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
+            case "monster-learned" ->
+                    addTranslatedSection("monster-learned", monster.name(), getAbility(ability).name());
+            case "monster-dead" -> addTranslatedSection("monster-dead", monster.name());
+            case "ability-unknown" ->
+                    addTranslatedSection("ability-unknown", getAbility(ability).name(), monster.name());
+            case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
+            case "target-unknown" -> addTranslatedSection("target-unknown");
+            case "target-dead" -> addTranslatedSection("target-dead", "Targeted monster");
+            default -> System.out.println("unknown result type");
+        }
+    }
+
+    private AbilityDto getAbility(int id) {
+        return presetService.getAbility(id).blockingFirst();
     }
 
     @Override

@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
-import de.uniks.stpmon.k.service.world.TextureSetService;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
@@ -17,7 +16,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class MinimapController extends Controller {
 
@@ -29,10 +27,6 @@ public class MinimapController extends Controller {
     public ImageView miniMapBorder;
     @FXML
     public StackPane miniMapStackPane;
-    @Inject
-    Provider<MapOverviewController> mapOverviewControllerProvider;
-    @Inject
-    TextureSetService textureSetService;
     @Inject
     RegionStorage regionStorage;
     @Inject
