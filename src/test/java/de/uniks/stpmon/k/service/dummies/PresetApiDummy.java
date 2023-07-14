@@ -49,7 +49,7 @@ public class PresetApiDummy implements PresetApiService {
         if (monsters.size() > 0) {
             throw new IllegalStateException("Monsters already initialized");
         }
-        int amount = 3;
+        int amount = 5;
 
         for (int i = 0; i < amount; i++) {
             String name = "TestMonster" + i;
@@ -75,7 +75,7 @@ public class PresetApiDummy implements PresetApiService {
             String description = "description" + i;
             int maxUses = 3;
             double accuracy = 0.5;
-            int power = 5;
+            int power = 5 * i;
             abilities.add(new AbilityDto(i, name, description, type, maxUses, accuracy, power));
         }
 

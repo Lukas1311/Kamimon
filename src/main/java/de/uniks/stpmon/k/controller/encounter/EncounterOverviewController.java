@@ -112,7 +112,8 @@ public class EncounterOverviewController extends Controller {
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-            TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
+            TranslateTransition translation =
+                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() * 0.25), view);
             if (slot.enemy()) {
                 translation.setByY(30);
                 translation.setByX(-60);
@@ -129,7 +130,8 @@ public class EncounterOverviewController extends Controller {
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-            TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
+            TranslateTransition translation =
+                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() * 0.35f), view);
             if (slot.enemy()) {
                 translation.setByY(0);
                 translation.setByX(1000);

@@ -138,7 +138,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             public void run() {
                 Platform.runLater(() -> nextWindow());
             }
-        }, 2300);
+        }, (int) (effectContext.getEncounterAnimationSpeed() * 2.3f));
     }
 
     private void initListeners() {

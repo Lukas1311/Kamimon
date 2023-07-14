@@ -51,6 +51,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
         arrowText.setVisible(false);
 
         HBox optionContainer = new HBox(arrowText, ablitiyNameText, useLabel);
+        optionContainer.setId("ability_" + ability.id());
 
         optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));

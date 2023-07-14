@@ -8,25 +8,29 @@ import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @Singleton
 public class RegionApiDummy implements RegionApiService {
-    final String USER_ID = "0";
+    private static final String TRAINER_ID = "0";
+    public static final String REGION_ID = "id0";
     int trainerIdCount = 1;
     int monsterIdCount = 0;
     final List<Region> regions = new ArrayList<>();
-    //String is regionId
-    final Map<String, List<Area>> areasHashMap = new LinkedHashMap<>();
-    final Map<String, List<Trainer>> trainersHashMap = new LinkedHashMap<>();
-
-    final List<Monster> monsters = new ArrayList<>();
+    final List<Area> areas = new ArrayList<>();
+    final Map<String, Trainer> trainers = new LinkedHashMap<>();
+    final Map<String, Monster> monstersById = new HashMap<>();
+    final Map<String, List<Monster>> monstersByTrainer = new HashMap<>();
+    @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    EventDummy eventDummy;
 
     @Inject
     public RegionApiDummy() {
@@ -37,7 +41,7 @@ public class RegionApiDummy implements RegionApiService {
      * names {"TestRegion0", "TestRegion1"}
      */
     private void initDummyRegions() {
-        Region region0 = new Region("id0", "TestRegion0", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
+        Region region0 = new Region(REGION_ID, "TestRegion0", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
         Region region1 = new Region("id1", "TestRegion1", new Spawn("id0_0", 0, 0), DummyConstants.EMPTY_MAP_DATA);
 
         regions.add(region0);
@@ -51,15 +55,11 @@ public class RegionApiDummy implements RegionApiService {
      * id = [regionId]_[i]> -> e.g. id0_0
      */
     private void initDummyAreas() {
-        for (Region region : regions) {
-            List<Area> areas = new ArrayList<>();
-            for (int i = 0; i < 2; i++) {
-                String id = region._id() + "_" + i;
-                String name = region.name() + "DummyArea" + i;
-                Area area = new Area(id, region._id(), name, DummyConstants.AREA_MAP_DATA);
-                areas.add(area);
-            }
-            areasHashMap.put(region._id(), areas);
+        for (int i = 0; i < 2; i++) {
+            String id = REGION_ID + "_" + i;
+            String name = "DummyArea" + i;
+            Area area = new Area(id, REGION_ID, name, DummyConstants.AREA_MAP_DATA);
+            areas.add(area);
         }
         initDummyTrainers();
     }
@@ -74,34 +74,43 @@ public class RegionApiDummy implements RegionApiService {
         abilities.put("7", 5);
         abilities.put("10", 0);
 
-        MonsterAttributes attributes = new MonsterAttributes(0, 0, 0, 0);
-        MonsterAttributes currentAttributes = new MonsterAttributes(0, 0, 0, 0);
+        MonsterAttributes attributes = new MonsterAttributes(0f, 0f, 0f, 0f);
+        MonsterAttributes currentAttributes = new MonsterAttributes(0f, 0f, 0f, 0f);
 
-        monsters.add(MonsterBuilder.builder()
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
-                .setAttributes(new MonsterAttributes(20, 0, 0, 0))
-                .setCurrentAttributes(new MonsterAttributes(10, 0, 0, 0))
+                .setAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
+                .setLevel(1)
                 .create());
 
-        monsters.add(MonsterBuilder.builder()
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
-                .setAttributes(new MonsterAttributes(12, 0, 0, 0))
-                .setCurrentAttributes(new MonsterAttributes(5, 0, 0, 0))
+                .setType(2)
+                .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setLevel(2)
                 .create());
 
-        for (List<Trainer> trainerList : trainersHashMap.values()) {
-            for (Trainer trainer : trainerList) {
-                monsters.add(MonsterBuilder.builder()
-                        .setId(monsterIdCount++)
-                        .setTrainer(trainer._id())
-                        .setAbilities(abilities)
-                        .setAttributes(attributes)
-                        .setCurrentAttributes(currentAttributes)
-                        .create());
-            }
-        }
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
+                .setId(monsterIdCount++)
+                .setAbilities(abilities)
+                .setType(0)
+                .setAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setLevel(2)
+                .create());
+
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
+                .setId(monsterIdCount++)
+                .setAbilities(abilities)
+                .setType(3)
+                .setAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setLevel(2)
+                .create());
     }
 
     /**
@@ -109,24 +118,21 @@ public class RegionApiDummy implements RegionApiService {
      */
     private void initDummyTrainers() {
         int monsterIdCount = 2;
-        for (Region region : regions) {
-            for (Area area : areasHashMap.get(region._id())) {
-                String name = region.name() + area.name() + "DummyTrainer";
-                String trainerImage = "trainer_" + trainerIdCount + ".png";
-                Trainer trainer = TrainerBuilder.builder()
-                        .setId(trainerIdCount)
-                        .setRegion(region)
-                        .setArea(area)
-                        .setName(name)
-                        .setImage(trainerImage)
-                        .setUser(USER_ID)
-                        .addTeam(Integer.toString(monsterIdCount++))
-                        .create();
-                ArrayList<Trainer> trainers = new ArrayList<>();
-                trainers.add(trainer);
-                trainersHashMap.put(area._id(), trainers);
-                trainerIdCount++;
-            }
+        int userIdCount = 1;
+        for (Area area : areas) {
+            String name = REGION_ID + area.name() + "DummyTrainer";
+            String trainerImage = "trainer_" + trainerIdCount + ".png";
+            Trainer trainer = TrainerBuilder.builder()
+                    .setId(trainerIdCount)
+                    .setRegion(REGION_ID)
+                    .setArea(area)
+                    .setName(name)
+                    .setImage(trainerImage)
+                    .setUser(Integer.toString(userIdCount++))
+                    .addTeam(Integer.toString(monsterIdCount++))
+                    .create();
+            trainers.put(trainer._id(), trainer);
+            trainerIdCount++;
         }
         initDummyMonsters();
     }
@@ -135,14 +141,7 @@ public class RegionApiDummy implements RegionApiService {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        for (String areaId : trainersHashMap.keySet()) {
-            List<Trainer> trainers = trainersHashMap.get(areaId);
-            Optional<Trainer> trainerOp = trainers.stream().filter(t -> t._id().equals(trainerId)).findFirst();
-            if (trainerOp.isPresent()) {
-                return trainerOp.get();
-            }
-        }
-        return null;
+        return trainers.get(trainerId);
     }
 
     /**
@@ -153,47 +152,112 @@ public class RegionApiDummy implements RegionApiService {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        Area area = areasHashMap.get(regionId).get(0);
+        if (!regionId.equals(REGION_ID)) {
+            return Observable.empty();
+        }
+        Area area = areas.get(0);
 
         Trainer trainer = TrainerBuilder.builder()
                 .setId(0)
                 .setRegion(regionId)
                 .setArea(area)
-                .setUser(USER_ID)
+                .setUser(TRAINER_ID)
                 .applyCreate(trainerDto)
                 .create();
-        List<Trainer> trainers = trainersHashMap.get(area._id());
-        trainers.add(trainer);
+        trainers.put(TRAINER_ID, trainer);
 
         return Observable.just(trainer);
     }
 
+    public void addMonster(String trainerId, String monsterId, boolean team) {
+        Trainer trainer = getTrainerById(trainerId);
+        if (team) {
+            Trainer updated = TrainerBuilder.builder(trainer)
+                    .addTeam(monsterId)
+                    .create();
+            trainers.put(trainerId, updated);
+            if (trainerId.equals(TRAINER_ID)) {
+                trainerStorage.setTrainer(updated);
+            }
+            eventDummy.sendEvent(new Event<>("regions.%s.trainers.%s.updated".formatted(REGION_ID, trainerId), updated));
+        }
+        Monster monster = monstersById.get(monsterId);
+        Monster updated = MonsterBuilder.builder(monster)
+                .setTrainer(trainerId)
+                .create();
+        monstersById.put(monsterId, updated);
+        monstersByTrainer.putIfAbsent(trainerId, new ArrayList<>());
+        List<Monster> monsters = monstersByTrainer.get(trainerId);
+        monsters.add(updated);
+        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
+                .formatted(trainerId, monsterId), updated));
+        List<Monster> oldMonsters = monstersByTrainer.get(monster.trainer());
+        if (oldMonsters != null) {
+            oldMonsters.removeIf(m -> m._id().equals(monsterId));
+            eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.removed"
+                    .formatted(monster.trainer(), monsterId), monster));
+        }
+    }
+
+    public void updateMonster(Monster updatedTarget) {
+        monstersById.put(updatedTarget._id(), updatedTarget);
+        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.updated".formatted(
+                updatedTarget.trainer(),
+                updatedTarget._id()),
+                updatedTarget));
+        Monster old = monstersById.get(updatedTarget._id());
+        checkUpdateTrainer(old, updatedTarget);
+    }
+
+    private void checkUpdateTrainer(Monster oldMonster, Monster newMonster) {
+        String trainerId = oldMonster.trainer();
+        String monsterId = oldMonster._id();
+        monstersByTrainer.putIfAbsent(trainerId, new ArrayList<>());
+        List<Monster> monsters = monstersByTrainer.get(trainerId);
+        int index = monsters.indexOf(newMonster);
+        if (index == -1) {
+            monsters.add(newMonster);
+        } else {
+            monsters.set(index, newMonster);
+        }
+        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
+                .formatted(trainerId, monsterId), newMonster));
+        List<Monster> oldMonsters = monstersByTrainer.get(oldMonster.trainer());
+        if (oldMonsters != null) {
+            oldMonsters.removeIf(m -> m._id().equals(monsterId));
+            eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.removed"
+                    .formatted(oldMonster.trainer(), monsterId), oldMonster));
+        }
+    }
+
+    public void addTrainer(Trainer trainer) {
+        trainers.put(trainer._id(), trainer);
+        eventDummy.sendEvent(new Event<>("regions.%s.trainers.%s.created"
+                .formatted(REGION_ID, trainer._id()), trainer));
+    }
+
     @Override
     public Observable<List<Trainer>> getTrainers(String regionId, String areaId) {
-        List<Trainer> trainerList = trainersHashMap.get(areaId);
-        if (trainerList != null) {
-            return Observable.just(trainerList);
+        if (!regionId.equals(REGION_ID)) {
+            return Observable.just(List.of());
         }
-        return Observable.empty();
+        return Observable.just(List.copyOf(trainers.values()));
     }
 
     @Override
     public Observable<List<Trainer>> getTrainers(String regionId) {
+        if (!regionId.equals(REGION_ID)) {
+            return Observable.empty();
+        }
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        return Observable.just(trainersHashMap.values()
-                .stream().flatMap(List::stream)
-                .collect(Collectors.toList()));
+        return Observable.just(List.copyOf(trainers.values()));
     }
 
     @Override
     public Observable<List<Trainer>> getMainTrainers(String regionId, String userId) {
-        if (userId.equals("00")) {
-            List<Trainer> t = trainersHashMap.get("id0_0");
-            return Observable.just(t);
-        }
-        return getTrainer("", "0")
+        return getTrainer("", TRAINER_ID)
                 .switchIfEmpty(Observable.just(NoneConstants.NONE_TRAINER))
                 .map(t -> List.of(Objects.requireNonNullElse(t, NoneConstants.NONE_TRAINER)));
     }
@@ -217,8 +281,7 @@ public class RegionApiDummy implements RegionApiService {
     public Observable<Trainer> deleteTrainer(String regionID, String trainerId) {
         Trainer trainer = getTrainerById(trainerId);
         if (trainer != null) {
-            List<Trainer> trainerList = trainersHashMap.get(trainer.area());
-            trainerList.remove(trainer);
+            trainers.remove(trainer._id());
             return Observable.just(trainer);
         }
         return Observable.error(new Throwable("404 Not found"));
@@ -254,11 +317,10 @@ public class RegionApiDummy implements RegionApiService {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        List<Area> areaList = areasHashMap.get(region);
-        if (areaList != null) {
-            return Observable.just(areaList);
+        if (!region.equals(REGION_ID)) {
+            return Observable.just(List.of());
         }
-        return Observable.empty();
+        return Observable.just(areas);
     }
 
     @Override
@@ -266,11 +328,10 @@ public class RegionApiDummy implements RegionApiService {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        List<Area> areaList = areasHashMap.get(region);
-        if (areaList == null || areaList.isEmpty()) {
+        if (areas.isEmpty()) {
             return Observable.error(new Throwable("404 Not found"));
         }
-        Optional<Area> areaOptional = areaList.stream().filter(a -> a._id().equals(id)).findFirst();
+        Optional<Area> areaOptional = areas.stream().filter(a -> a._id().equals(id)).findFirst();
         return areaOptional.map(Observable::just).orElseGet(Observable::empty);
     }
 
@@ -279,7 +340,11 @@ public class RegionApiDummy implements RegionApiService {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        return Observable.just(monsters.stream().filter(m -> m.trainer().equals(trainerId)).toList());
+
+        if (!regionId.equals(REGION_ID) || !monstersByTrainer.containsKey(trainerId)) {
+            return Observable.just(List.of());
+        }
+        return Observable.just(monstersByTrainer.get(trainerId));
     }
 
     @Override
@@ -287,9 +352,7 @@ public class RegionApiDummy implements RegionApiService {
         if (regions.isEmpty()) {
             initDummyRegions();
         }
-        Optional<Monster> monsterOptional = monsters
-                .stream().filter(m -> m._id().equals(monsterId)).findFirst();
-        return monsterOptional.map(m -> Observable.just(monsterOptional.get())).orElseGet(()
-                -> Observable.error(new Throwable("404 Not found")));
+        Monster monster = monstersById.get(monsterId);
+        return monster != null ? Observable.just(monster) : Observable.error(new Throwable("404 Not found"));
     }
 }
