@@ -22,7 +22,7 @@
                        preserveRatio="true">
             </ImageView>
             <BorderPane.margin>
-                <Insets top="15.0"/>
+                <Insets top="10.0"/>
             </BorderPane.margin>
         </StackPane>
     </center>
