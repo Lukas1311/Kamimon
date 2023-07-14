@@ -3,6 +3,8 @@ package de.uniks.stpmon.k.models;
 import de.uniks.stpmon.k.dto.IMove;
 import de.uniks.stpmon.k.dto.IMoves;
 
+import java.util.List;
+
 public record Opponent(
 
         String _id, // objectId: example: 507f191e810c19729de860ea
@@ -20,7 +22,7 @@ public record Opponent(
 
         IMove move,
 
-        Result result, // The results of the last round.
+        List<Result> results, // The results of the last round.
 
         Integer coins // The number of coins that will be earned when the encounter is won.
 

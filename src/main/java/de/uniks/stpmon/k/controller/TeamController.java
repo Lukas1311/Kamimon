@@ -106,7 +106,7 @@ public class TeamController extends Controller {
      * Updates the monster status in the monster list.
      */
     public void updateStatus() {
-        List<Monster> monsters = monsterService.getTeam().blockingFirst();
+        List<Monster> monsters = monsterService.getTeamCache().getCurrentValues();
         for (int slot = 0; slot < monsters.size(); slot++) {
             Monster monster = monsters.get(slot);
             int currentHP = monster.currentAttributes().health();

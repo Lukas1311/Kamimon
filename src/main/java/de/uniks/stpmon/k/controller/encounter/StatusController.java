@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
@@ -29,11 +30,15 @@ public class StatusController extends Controller {
     public Text monsterHp;
     @FXML
     public ProgressBar experienceBar;
+    @FXML
+    public ImageView wildEncounterIconView;
 
     @Inject
     PresetService presetService;
     @Inject
     SessionService sessionService;
+    @Inject
+    EncounterStorage encounterStorage;
 
     public EncounterSlot slot;
 
@@ -54,6 +59,9 @@ public class StatusController extends Controller {
         } else {
             parent = load("OpponentMonsterStatus");
             loadImage(monsterStatusView, "encounter/opponentMonsterStatus.png");
+            if(encounterStorage.getEncounter().isWild()){
+                loadImage(wildEncounterIconView, "encounter/kami_30px.png");
+            }
         }
         parent.setId(slot.partyIndex() + (slot.enemy() ? "_enemy" : "_party"));
         loadMonsterInformation();
@@ -68,6 +76,9 @@ public class StatusController extends Controller {
     }
 
     private void updateState(Monster monster) {
+        if (monster == null) {
+            return;
+        }
         loadMonsterDto(Integer.toString(monster.type()));
 
         monsterLevel.setText("Lvl. " + monster.level().toString());

@@ -30,15 +30,21 @@
                 <HBox HBox.hgrow="ALWAYS" />
                 <Text fx:id="monsterLevel" strokeType="OUTSIDE" strokeWidth="0.0">
                     <HBox.margin>
-                        <Insets right="95.0" top="12.0" />
+                        <Insets right="15.0" top="12.0" />
                     </HBox.margin>
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Text>
+                <ImageView fx:id="wildEncounterIconView">
+                    <HBox.margin>
+                        <Insets right="35.0" top="4.0" />
+                    </HBox.margin>
+                </ImageView>
                 <StackPane.margin>
                     <Insets top="14.0" />
                 </StackPane.margin>
+
             </HBox>
         </StackPane>
     </VBox>

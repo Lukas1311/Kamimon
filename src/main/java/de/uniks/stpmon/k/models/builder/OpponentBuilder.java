@@ -4,6 +4,9 @@ import de.uniks.stpmon.k.dto.IMove;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Result;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class OpponentBuilder {
 
@@ -22,7 +25,7 @@ public class OpponentBuilder {
     private boolean isNPC;
     private String monster;
     private IMove move;
-    private Result result;
+    private final List<Result> results = new ArrayList<>();
     private int coins;
 
     private OpponentBuilder() {
@@ -63,8 +66,14 @@ public class OpponentBuilder {
         return this;
     }
 
-    public OpponentBuilder setResult(Result result) {
-        this.result = result;
+    public OpponentBuilder setResults(List<Result> results) {
+        this.results.clear();
+        this.results.addAll(results);
+        return this;
+    }
+
+    public OpponentBuilder addResult(Result result) {
+        this.results.add(result);
         return this;
     }
 
@@ -81,12 +90,12 @@ public class OpponentBuilder {
                 .setNPC(opponent.isNPC())
                 .setMonster(opponent.monster())
                 .setMove(opponent.move())
-                .setResult(opponent.result())
+                .setResults(opponent.results())
                 .setCoins(opponent.coins());
     }
 
     public Opponent create() {
-        return new Opponent(id, encounter, trainer, isAttacker, isNPC, monster, move, result, coins);
+        return new Opponent(id, encounter, trainer, isAttacker, isNPC, monster, move, results, coins);
     }
 
 }

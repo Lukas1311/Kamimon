@@ -4,13 +4,14 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -28,6 +29,8 @@ public class ActionFieldChooseAbilityController extends Controller {
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
+    @Inject
+    EncounterService encounterService;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
@@ -53,7 +56,6 @@ public class ActionFieldChooseAbilityController extends Controller {
     }
 
     public void addAbility(String abilityId, Integer remainingUses) {
-
         subscribe(presetService.getAbility(abilityId), abilityDto -> addAbilityOption(abilityDto, remainingUses));
     }
 
@@ -69,8 +71,15 @@ public class ActionFieldChooseAbilityController extends Controller {
         optionContainer.setOnMouseEntered(event -> arrowText.setVisible(true));
         optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> {
-            actionFieldControllerProvider.get().setChosenAbility(ability);
-            chooseAbility();
+            actionFieldControllerProvider.get().setAbilityId(ability.id());
+            if(encounterStorage.getSession().getEnemyTeam().size() == 1){
+                Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
+                actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
+                actionFieldControllerProvider.get().openBattleLog();
+                actionFieldControllerProvider.get().executeAbilityMove();
+            }else{
+                actionFieldControllerProvider.get().openChooseOpponent();
+            }
         });
 
         // set IDs for the options
@@ -78,14 +87,6 @@ public class ActionFieldChooseAbilityController extends Controller {
 
         abilityGridPane.add(optionContainer, 0, count);
         count++;
-    }
-
-    public void chooseAbility() {
-        if(encounterStorage.getSession().getAttackerTeam().size() == 1){
-            actionFieldControllerProvider.get().openBattleLog();
-        }else{
-            actionFieldControllerProvider.get().openChooseOpponent();
-        }
     }
 
     public void addBackOption(String option) {

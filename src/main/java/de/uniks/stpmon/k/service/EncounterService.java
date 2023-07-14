@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.Encounter;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.net.EventListener;
@@ -38,11 +39,29 @@ public class EncounterService {
         }
     }
 
+    public enum CloseEncounter {
+        FLEE("you.flee"),
+        WON("you.won"),
+        LOST("you.lost");
+
+        private final String closeCause;
+
+        CloseEncounter(final String closeCause){
+            this.closeCause = closeCause;
+        }
+
+        @Override
+        public String toString(){return closeCause;}
+    }
+
     @Inject
     EncounterApiService encounterApiService;
 
     @Inject
     RegionStorage regionStorage;
+
+    @Inject
+    Provider<SessionService> sessionServiceProvider;
 
     @Inject
     EncounterStorage encounterStorage;
@@ -97,33 +116,49 @@ public class EncounterService {
         return encounterApiService.getEncounterOpponent(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id()
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id()
         );
     }
 
-    public Observable<Opponent> makeAbilityMove(Monster attacker, int ability, Monster target) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(attacker._id(), new AbilityMove(
+    public Observable<Opponent> makeAbilityMove(int abilityId, String targetId) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(null, new AbilityMove(
                 Moves.ABILITY.toString(),
-                ability,
-                target._id())
+                abilityId,
+                targetId)
         );
+
+        if (sessionServiceProvider.get().hasNoEncounter()) {
+            throw new IllegalStateException("There is no encounter o_O");
+        }
+
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
                 dto
         );
     }
 
-    public Observable<Opponent> makeChangeMonsterMove(Monster currentMonster, Monster nextMonster) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), new ChangeMonsterMove(
+    public Observable<Opponent> makeChangeMonsterMove(Monster nextMonster) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(null, new ChangeMonsterMove(
                 Moves.CHANGE_MONSTER.toString(),
                 nextMonster._id())
         );
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                dto
+        );
+    }
+
+    public Observable<Opponent> changeDeadMonster(Monster nextMonster) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(nextMonster._id(), null);
+
+        return encounterApiService.makeMove(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
                 dto
         );
     }
@@ -132,7 +167,7 @@ public class EncounterService {
         return encounterApiService.fleeEncounter(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                encounterStorage.getOpponentList().get(0)._id()
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id()
         );
     }
 

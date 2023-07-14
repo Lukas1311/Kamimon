@@ -151,4 +151,27 @@ public class InteractionServiceTest {
         assertEquals("first", fourthDialogue.getTrainerId());
     }
 
+    @Test
+    void healDialogue() {
+        // Empty at first
+        assertNull(interactionStorage.getDialogue());
+
+        Trainer trainer = TrainerBuilder.builder()
+                .setNpc(new NPCInfo(false,
+                        false,
+                        true,
+                        null,
+                        List.of()))
+                .create();
+
+        when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(trainer));
+        when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
+        when(resourceBundleProvider.get()).thenReturn(resources);
+
+        // Search for dialogue in facing trainer
+        interactionService.tryUpdateDialogue();
+        // Found dialogue
+        Dialogue dialogue = interactionStorage.getDialogue();
+        assertNotNull(dialogue);
+    }
 }

@@ -1,14 +1,20 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
+import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -21,15 +27,17 @@ public class ActionFieldMainMenuController extends Controller {
     Provider<ActionFieldController> actionFieldControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-
     @FXML
     public Text textContent;
     @FXML
     public VBox mainMenuBox;
 
-    public String fight;
-    public String changeMon;
-    public String flee;
+    @Inject
+    EncounterStorage encounterStorage;
+    @Inject
+    EncounterService encounterService;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @Inject
     public ActionFieldMainMenuController() {}
@@ -39,25 +47,27 @@ public class ActionFieldMainMenuController extends Controller {
         Parent parent = super.render();
 
         textContent.setText(translateString("wannaDo"));
-        fight = translateString("fight");
-        changeMon = translateString("changeMon");
-        //TODO: Only show flee in wild encounter. Currently it is always shown to get out of the encounter
-        flee = translateString("flee");
 
+        addActionOption(OptionType.FIGHT);
+        addActionOption(OptionType.CHANGE_MON);
 
-        setActions();
+        if (encounterStorage.getEncounter().isWild()){
+            addActionOption(OptionType.FLEE);
+        }
 
         return parent;
     }
 
-    public void setActions() {
-        addActionOption(fight);
-        addActionOption(changeMon);
-        addActionOption(flee);
-    }
+    public void addActionOption(OptionType option) {
+        String optionText = switch (option) {
+            case FIGHT -> "fight";
+            case CHANGE_MON -> "changeMon";
+            case FLEE -> "flee";
+        };
 
-    public void addActionOption(String option) {
-        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+        HBox optionContainer = actionFieldControllerProvider
+                .get()
+                .getOptionContainer(translateString(optionText));
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
@@ -67,17 +77,19 @@ public class ActionFieldMainMenuController extends Controller {
         mainMenuBox.getChildren().add(optionContainer);
     }
 
-    public void openAction(String option) {
-        if(option.equals(fight)) {
-            openFight();
-        } else if (option.equals(changeMon)) {
-            openChangeMon();
-        }else if(option.equals(flee)){
-            IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
+    public void openAction(OptionType option) {
+        switch (option) {
+            case CHANGE_MON -> openChangeMon();
+            case FIGHT -> openFight();
+            case FLEE -> openFlee();
         }
+    }
+
+    public void openFlee() {
+        subscribe(encounterService.fleeEncounter(), e -> {
+            encounterOverviewControllerProvider.get().setCloseEncounter(EncounterService.CloseEncounter.FLEE);
+        });
+
     }
 
     public void openFight() {
@@ -92,4 +104,12 @@ public class ActionFieldMainMenuController extends Controller {
     public String getResourcePath() {
         return "action/";
     }
+
+    public enum OptionType {
+        FIGHT,
+        CHANGE_MON,
+        FLEE
+    }
+
+
 }

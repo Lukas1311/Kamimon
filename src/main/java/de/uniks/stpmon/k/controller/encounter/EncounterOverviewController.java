@@ -1,17 +1,21 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
+import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,10 +31,20 @@ import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.util.HashMap;
 
+@Singleton
 public class EncounterOverviewController extends Controller {
 
     public static final double IMAGE_SCALE = 6.0;
+
+    private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
+
+    private final HashMap<EncounterSlot, Transition> changeAnimations = new HashMap<>(4);
+
+    private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
+
     @FXML
     public StackPane fullBox;
     @FXML
@@ -61,6 +75,12 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
+    @Inject
+    Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
+    @Inject
+    InputHandler inputHandler;
+
+    EncounterService.CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
@@ -69,6 +89,13 @@ public class EncounterOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        // relations between Encounter slots and image views
+        monsterImages.put(EncounterSlot.PARTY_FIRST, userMonster0);
+        monsterImages.put(EncounterSlot.PARTY_SECOND, userMonster1);
+        monsterImages.put(EncounterSlot.ENEMY_FIRST, opponentMonster0);
+        monsterImages.put(EncounterSlot.ENEMY_SECOND, opponentMonster1);
+
 
         loadImage(background, "encounter/FOREST.png");
         background.fitHeightProperty().bind(fullBox.heightProperty());
@@ -79,20 +106,94 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
-        //click on the first mon of opponent to get out of the encounter
-        //Note: the encounter is still active after this
-        opponentMonster0.setOnMouseClicked(e -> {
-            IngameController.disableEncounter = true;
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-        });
+        //add a translation transition to all monster images
+        for (EncounterSlot slot : monsterImages.keySet()) {
+            ImageView view = monsterImages.get(slot);
+
+            TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
+            if (slot.enemy()) {
+                translation.setByY(30);
+                translation.setByX(-60);
+            } else {
+                translation.setByY(-30);
+                translation.setByX(60);
+            }
+            translation.setAutoReverse(true);
+            translation.setCycleCount(2);
+
+            attackAnimations.put(slot, translation);
+        }
+
+        for (EncounterSlot slot : monsterImages.keySet()) {
+            ImageView view = monsterImages.get(slot);
+
+            TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
+            if(slot.enemy()) {
+                translation.setByY(0);
+                translation.setByX(1000);
+            } else {
+                translation.setByY(0);
+                translation.setByX(-1000);
+            }
+            translation.setAutoReverse(true);
+            translation.setCycleCount(2);
+
+            changeAnimations.put(slot, translation);
+        }
+
+        subscribeFight();
 
         renderMonsterLists();
         animateMonsterEntrance();
 
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            actionFieldController.openBattleLog();
+            //check why encounter is close
+            if (closeEncounter != null){
+                actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
+                closeEncounter = null;
+            }
+
+            javafx.application.Platform.runLater(() -> {
+                if (hybridControllerProvider == null) {
+                    return;
+                }
+                sessionService.clearEncounter();
+
+            });
+        });
+
         return parent;
     }
+
+    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter){
+        this.closeEncounter = closeEncounter;
+    }
+
+
+
+    private void subscribeFight(){
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            subscribe(sessionService.listenOpponent(slot), next -> {
+                //using IMove to animate attack
+                if(next.move() instanceof AbilityMove){
+                    renderAttack(slot);
+                } else if (next.move() instanceof ChangeMonsterMove) {
+                    renderChange(slot);
+                }
+            });
+        }
+    }
+
+    private void renderChange(EncounterSlot slot) {
+        changeAnimations.get(slot).play();
+    }
+
+
+    private void renderAttack(EncounterSlot slot){
+        attackAnimations.get(slot).play();
+    }
+
 
     private void renderMonsterLists() {
         for (EncounterSlot slot : sessionService.getSlots()) {
@@ -118,15 +219,21 @@ public class EncounterOverviewController extends Controller {
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
+        if (monster == null) {
+            return;
+        }
+
+        subscribe(sessionService.listenMonster(slot), (newMonster) ->
+                loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy())
+        );
+
         if (slot.partyIndex() == 0) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
             if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-18, 0, 0, 0));
             } else {
                 VBox.setMargin(statusController.fullBox, new Insets(0, 125, 0, 0));
             }
         } else if (slot.partyIndex() == 1) {
-            loadMonsterImage(String.valueOf(monster.type()), monsterImageView, slot.enemy());
             if (!slot.enemy()) {
                 VBox.setMargin(statusController.fullBox, new Insets(-5, 0, 0, 125));
             }
@@ -138,9 +245,9 @@ public class EncounterOverviewController extends Controller {
             // Scale and set the image
             Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
             if (attacker) {
-                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
-            } else {
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+            } else {
+                monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
         });
@@ -210,7 +317,6 @@ public class EncounterOverviewController extends Controller {
         //the first monster of the user and opponent always gets rendered
         return new ParallelTransition(createNodeTransition(status, attacker), createNodeTransition(image, attacker));
     }
-
 
     private TranslateTransition createNodeTransition(Node node, boolean fromRight) {
         TranslateTransition transition = new TranslateTransition(

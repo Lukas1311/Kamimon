@@ -2,7 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IngameController">
+<BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+            minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.IngameController">
     <center>
         <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
             <BorderPane fx:id="mainPain">
@@ -17,7 +20,7 @@
                         <HBox fx:id="ingameWrappingHBox" alignment="TOP_RIGHT"/>
                         <BorderPane.margin>
                             <Insets top="-40.0"/>
-                            </BorderPane.margin>
+                        </BorderPane.margin>
                     </VBox>
                 </right>
                 <center>

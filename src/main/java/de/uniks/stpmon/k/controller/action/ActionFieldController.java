@@ -1,7 +1,10 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -30,7 +33,18 @@ public class ActionFieldController extends Controller {
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
 
-    AbilityDto chosenAbility;
+    @Inject
+    Provider<EncounterStorage> encounterStorageProvider;
+
+    @Inject
+    Provider<EncounterService> encounterServiceProvider;
+    @Inject
+    SessionService sessionService;
+
+    private String enemyTrainerId;
+    private int abilityId;
+
+    private Controller controller;
 
     @Inject
     public ActionFieldController() {
@@ -41,6 +55,8 @@ public class ActionFieldController extends Controller {
         Parent parent = super.render();
         loadBgImage(actionFieldPane, "action_menu_background.png");
         openMainMenu();
+
+        checkDeadMonster();
 
         return parent;
     }
@@ -63,9 +79,7 @@ public class ActionFieldController extends Controller {
     }
 
     public void openChooseOpponent(){
-        if(chosenAbility != null){
-            open(chooseOpponentControllerProvider);
-        }
+        open(chooseOpponentControllerProvider);
     }
 
     public void openBattleLog(){
@@ -73,20 +87,19 @@ public class ActionFieldController extends Controller {
     }
 
     private void open(Provider<? extends Controller> provider){
+        if(controller != null && controller instanceof ActionFieldBattleLogController){
+            controller.destroy();
+        }
         actionFieldContent.getChildren().clear();
-        actionFieldContent.getChildren().add(provider.get().render());
+        controller = provider.get();
+        controller.init();
+        actionFieldContent.getChildren().add(controller.render());
     }
 
-    public void setChosenAbility(AbilityDto chosenAbility) {
-        this.chosenAbility = chosenAbility;
-    }
-
-    public AbilityDto getChosenAbility(){
-        return chosenAbility;
-    }
 
     public HBox getOptionContainer(String option){
         Text arrowText = new Text(" >");
+
         Text optionText = new Text(option);
 
         arrowText.setVisible(false);
@@ -97,4 +110,37 @@ public class ActionFieldController extends Controller {
 
         return optionContainer;
     }
+
+    public void setAbilityId(int abilityId) {
+        this.abilityId = abilityId;
+    }
+
+    @SuppressWarnings("unused")
+    public int getAbilityId() {
+        return abilityId;
+    }
+
+    public void setEnemyTrainerId(String trainerId) {
+        this.enemyTrainerId = trainerId;
+    }
+
+    @SuppressWarnings("unused")
+    public String getEnemyTrainerId() {
+        return enemyTrainerId;
+    }
+
+    public void executeAbilityMove(){
+        subscribe(encounterServiceProvider.get().makeAbilityMove(abilityId, enemyTrainerId),
+                next -> {}
+        );
+    }
+
+    public void checkDeadMonster() {
+        subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
+            if (opponent.monster() == null) {
+                openChangeMonster();
+            }
+        });
+    }
+
 }

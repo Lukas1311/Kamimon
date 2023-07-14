@@ -1,8 +1,14 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -12,7 +18,6 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class ActionFieldChooseOpponentController extends Controller {
@@ -25,56 +30,65 @@ public class ActionFieldChooseOpponentController extends Controller {
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
+    @Inject
+    EncounterService encounterService;
+    @Inject
+    SessionService sessionService;
+    @Inject
+    RegionService regionService;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
 
-    public List<String> opponentMonstersList;
-
-    private int count = 0;
-
-    public String back;
+    private int optionIndex = 0;
 
     @Inject
-    public ActionFieldChooseOpponentController(){
+    public ActionFieldChooseOpponentController() {
     }
 
     @Override
     public Parent render() {
         Parent parent = super.render();
 
-        back = translateString("back");
+        addMonsterOption(null, null, true);
 
-        //show all monsters of enemy
-        //get team of enemy
-        opponentMonstersList = encounterStorage.getSession().getAttackerTeam();
+        Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
+        Opponent opponent2 = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_SECOND);
 
-        addMonsters();
+        if (opponent != null) {
+            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opponent._id(), opponent.monster()), monster ->
+                    subscribe(presetService.getMonster(monster.type()),
+                            monsterDto -> addMonsterOption(opponent, monsterDto.name(), false))
+            );
+        }
+        if (opponent2 != null) {
+            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opponent2._id(), opponent2.monster()), monster ->
+                    subscribe(presetService.getMonster(monster.type()),
+                            monsterDto -> addMonsterOption(opponent, monsterDto.name(), false))
+            );
+        }
 
         return parent;
     }
 
-    public void addMonsters() {
-        count = 0;
-        addMonsterOption(back, true);
-
-        if(opponentMonstersList != null) {
-            for (String monster : opponentMonstersList) {
-                subscribe(presetService.getMonster(monster), type -> addMonsterOption(type.name(), false));
-            }
-        }
-    }
-
-    public void addMonsterOption(String option, boolean isBackOption) {
-        HBox optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+    public void addMonsterOption(Opponent opponent, String monsterName, boolean isBackOption) {
+        HBox optionContainer = actionFieldControllerProvider.get()
+                .getOptionContainer(isBackOption ? translateString("back") : monsterName);
 
         optionContainer.setOnMouseClicked(event -> {
-            //TODO: make move
-            showBattleLog(option);
+            if (isBackOption) {
+                actionFieldControllerProvider.get().openChooseAbility();
+            } else {
+                actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());
+                actionFieldControllerProvider.get().openBattleLog();
+                actionFieldControllerProvider.get().executeAbilityMove();
+            }
         });
 
         // each column containing a maximum of 2 options
-        int index = count / 2;
+        int index = optionIndex / 2;
         if (chooseOpponentBox.getChildren().size() <= index) {
             VBox vbox = new VBox();
             chooseOpponentBox.getChildren().add(vbox);
@@ -92,15 +106,7 @@ public class ActionFieldChooseOpponentController extends Controller {
             vbox.getChildren().add(0, optionContainer);
         }
 
-        count++;
-    }
-
-    private void showBattleLog(String option) {
-        if (option.equals(back)) {
-            actionFieldControllerProvider.get().openChooseAbility();
-        } else {
-            actionFieldControllerProvider.get().openBattleLog();
-        }
+        this.optionIndex++;
     }
 
     @Override

@@ -76,7 +76,7 @@ public class HybridController extends Controller {
     @Inject
     Provider<TrainerManagementController> trainerManagementControllerProvider;
     @Inject
-    ChooseSpriteController chooseSpriteController;
+    CreateTrainerController createTrainerController;
     @Inject
     InputHandler inputHandler;
 
@@ -204,8 +204,7 @@ public class HybridController extends Controller {
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
             case CHOOSE_SPRITE -> {
-                chooseSpriteController.setCreationMode(false);
-                pushController(chooseSpriteController, setup);
+                pushController(createTrainerController, setup);
             }
             case NONE -> {
             }
