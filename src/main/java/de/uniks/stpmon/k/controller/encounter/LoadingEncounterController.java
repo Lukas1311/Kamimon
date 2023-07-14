@@ -1,16 +1,12 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.IngameController;
-import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
-import javafx.application.Platform;
+import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import javafx.animation.*;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -20,12 +16,10 @@ public class LoadingEncounterController extends Controller {
 
     @FXML
     StackPane fullBox;
-
-    @FXML
-    Circle blackPoint;
-
     @Inject
     Provider<EncounterOverviewController> encounterProvider;
+    @Inject
+    Provider<HybridController> hybridControllerProvider;
 
 
     @Inject
@@ -40,46 +34,57 @@ public class LoadingEncounterController extends Controller {
 
     @Override
     public Parent render() {
-
         final Parent parent = super.render();
-
-        fullBox.setAlignment(Pos.CENTER);
-        StackPane.setAlignment(blackPoint, Pos.CENTER);
-
-        showEncounterAnimation();
+        playVSAnimation();
         return parent;
     }
 
-    public void showEncounterAnimation() {
-        ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(3), blackPoint);
-        scaleTransition.setToX(40);
-        scaleTransition.setToY(40);
 
-        scaleTransition.setOnFinished(event -> {
-            ImageView vsBackground = new ImageView();
-            loadImage(vsBackground, "encounter/trainerEncounter0.png");
-            vsBackground.setFitHeight(800);
-            vsBackground.setFitWidth(1200);
 
-            fullBox.getChildren().add(vsBackground);
+    private void playVSAnimation(){
+        ImageView vsBackground0 = new ImageView();
+        ImageView vsBackground1 = new ImageView();
 
-            PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
-            pauseTransition.setOnFinished(e -> {
-                loadImage(vsBackground, "encounter/trainerEncounter1.png");
+        loadImage(vsBackground0, "encounter/trainerEncounter0.png");
+        loadImage(vsBackground1, "encounter/trainerEncounter1.png");
 
-                PauseTransition pauseTransition1 = new PauseTransition(Duration.seconds(2));
-                pauseTransition1.setOnFinished(f -> {
-                    EncounterOverviewController controller = encounterProvider.get();
-                    app.show(controller);
-                });
-                pauseTransition1.play();
-            });
 
-            pauseTransition.play();
+
+        fullBox.getChildren().add(vsBackground0);
+        fullBox.getChildren().add(vsBackground1);
+        vsBackground1.setOpacity(0.0);
+
+        FadeTransition fadeOutTransition0 = createFadeTransition(vsBackground0, 1.0, 0.0);
+        FadeTransition fadeInTransition0 = createFadeTransition(vsBackground0, 0.0, 1.0);
+        FadeTransition fadeOutTransition1 = createFadeTransition(vsBackground1, 1.0, 0.0);
+        FadeTransition fadeInTransition1 = createFadeTransition(vsBackground1, 0.0, 1.0);
+
+        SequentialTransition sequentialTransition = new SequentialTransition();
+        sequentialTransition.getChildren().addAll(createParallelTransition(fadeOutTransition0, fadeInTransition1),
+                createParallelTransition(fadeOutTransition1, fadeInTransition0));
+
+        sequentialTransition.setCycleCount(5);
+
+        sequentialTransition.setOnFinished(event -> {
+            EncounterOverviewController controller = encounterProvider.get();
+            app.show(controller);
         });
 
-        scaleTransition.play();
+        sequentialTransition.play();
 
+    }
+
+    private FadeTransition createFadeTransition(ImageView imageView, double from, double to){
+        FadeTransition f = new FadeTransition(Duration.millis(200), imageView);
+        f.setFromValue(from);
+        f.setToValue(to);
+        return f;
+    }
+
+    private ParallelTransition createParallelTransition(FadeTransition fadeTransition1, FadeTransition fadeTransition2) {
+        ParallelTransition parallelTransition = new ParallelTransition();
+        parallelTransition.getChildren().addAll(fadeTransition1, fadeTransition2);
+        return parallelTransition;
     }
 
     @Override

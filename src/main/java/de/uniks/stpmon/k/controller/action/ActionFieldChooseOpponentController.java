@@ -1,14 +1,14 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class ActionFieldChooseOpponentController extends Controller {
@@ -31,19 +30,22 @@ public class ActionFieldChooseOpponentController extends Controller {
     PresetService presetService;
     @Inject
     EncounterStorage encounterStorage;
-
     @Inject
     EncounterService encounterService;
+    @Inject
+    SessionService sessionService;
+    @Inject
+    RegionService regionService;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     Provider<ActionFieldController> actionFieldControllerProvider;
 
-    public List<String> opponentMonstersList;
-
     private int optionIndex = 0;
 
     @Inject
-    public ActionFieldChooseOpponentController(){
+    public ActionFieldChooseOpponentController() {
     }
 
     @Override
@@ -55,13 +57,17 @@ public class ActionFieldChooseOpponentController extends Controller {
         Opponent opponent = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_FIRST);
         Opponent opponent2 = encounterStorage.getSession().getOpponent(EncounterSlot.ENEMY_SECOND);
 
-        if(opponent != null){
-            subscribe(presetService.getMonster(opponent.monster()),
-                    monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
+        if (opponent != null) {
+            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opponent._id(), opponent.monster()), monster ->
+                    subscribe(presetService.getMonster(monster.type()),
+                            monsterDto -> addMonsterOption(opponent, monsterDto.name(), false))
+            );
         }
         if (opponent2 != null) {
-            subscribe(presetService.getMonster(opponent2.monster()),
-                    monsterDto -> addMonsterOption(opponent2, monsterDto.name(), false));
+            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opponent2._id(), opponent2.monster()), monster ->
+                    subscribe(presetService.getMonster(monster.type()),
+                            monsterDto -> addMonsterOption(opponent, monsterDto.name(), false))
+            );
         }
 
         return parent;
@@ -72,7 +78,7 @@ public class ActionFieldChooseOpponentController extends Controller {
                 .getOptionContainer(isBackOption ? translateString("back") : monsterName);
 
         optionContainer.setOnMouseClicked(event -> {
-            if (isBackOption){
+            if (isBackOption) {
                 actionFieldControllerProvider.get().openChooseAbility();
             } else {
                 actionFieldControllerProvider.get().setEnemyTrainerId(opponent.trainer());

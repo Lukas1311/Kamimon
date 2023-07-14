@@ -39,6 +39,21 @@ public class EncounterService {
         }
     }
 
+    public enum CloseEncounter {
+        FLEE("you.flee"),
+        WON("you.won"),
+        LOST("you.lost");
+
+        private final String closeCause;
+
+        CloseEncounter(final String closeCause){
+            this.closeCause = closeCause;
+        }
+
+        @Override
+        public String toString(){return closeCause;}
+    }
+
     @Inject
     EncounterApiService encounterApiService;
 
@@ -124,11 +139,22 @@ public class EncounterService {
         );
     }
 
-    public Observable<Opponent> makeChangeMonsterMove(Monster currentMonster, Monster nextMonster) {
-        UpdateOpponentDto dto = new UpdateOpponentDto(currentMonster._id(), new ChangeMonsterMove(
+    public Observable<Opponent> makeChangeMonsterMove(Monster nextMonster) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(null, new ChangeMonsterMove(
                 Moves.CHANGE_MONSTER.toString(),
                 nextMonster._id())
         );
+        return encounterApiService.makeMove(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                dto
+        );
+    }
+
+    public Observable<Opponent> changeDeadMonster(Monster nextMonster) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(nextMonster._id(), null);
+
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),

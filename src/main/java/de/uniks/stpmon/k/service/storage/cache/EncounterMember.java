@@ -45,6 +45,11 @@ public class EncounterMember extends SingleCache<Monster> {
             disposables = new CompositeDisposable();
         }
 
+        if (monsterId == null) {
+            onInitialized = Completable.complete();
+            return;
+        }
+
         // Set initial value
         onInitialized = regionService.getMonster(region._id(), trainerId, monsterId)
                 .doOnNext(this::setValue).ignoreElements().cache();
