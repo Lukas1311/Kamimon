@@ -365,12 +365,15 @@ class AppTest extends ApplicationTest {
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
         //open MonBox
+        component.regionApi().addMonster("0", "1", false);
         clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
         verifyThat("#monBoxStackPane", Node::isVisible);
 
         GridPane teamGrid = lookup("#monTeam").query();
         Node teamMon = teamGrid.getChildren().get(0);
+
+
         clickOn(teamMon);
         verifyThat("#mainPane", Node::isVisible);
 
