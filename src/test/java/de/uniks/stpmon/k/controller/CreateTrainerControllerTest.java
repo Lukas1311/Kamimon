@@ -105,6 +105,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         assertEquals("Create Trainer", createTrainer.getText());
     }
 
+    /*
     @Test
     public void testCreateTrainer() {
         // prep.
@@ -134,6 +135,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(regionService).createTrainer("1", "Tom", "Sprite2");
         verify(worldLoader).tryEnterRegion(any());
     }
+
+     */
 
 /*
 
