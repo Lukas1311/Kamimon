@@ -206,6 +206,7 @@ public class ActionFieldBattleLogController extends Controller {
                         case "monster-defeated" ->
                                 addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
                         case "monster-levelup" ->
+                                // TODO: add the change of exp
                                 addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
                         case "monster-evolved" ->
                                 addTextSection(translateString("monster-evolved", monster.name()), false);

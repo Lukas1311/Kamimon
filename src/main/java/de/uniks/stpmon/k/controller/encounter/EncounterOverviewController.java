@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.MonsterInformationController;
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
@@ -63,6 +64,8 @@ public class EncounterOverviewController extends Controller {
     public ImageView opponentMonster1;
     @FXML
     public VBox actionFieldBox;
+    @FXML
+    public VBox monsterInformationBox;
 
 
     @Inject
@@ -75,6 +78,8 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
+    @Inject
+    MonsterInformationController monsterInformationController;
     @Inject
     Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
     @Inject
@@ -104,6 +109,11 @@ public class EncounterOverviewController extends Controller {
         Parent actionField = this.actionFieldController.render();
         if (actionField != null) {
             actionFieldBox.getChildren().add(actionField);
+        }
+
+        Parent monInformation = this.monsterInformationController.render();
+        if (monInformation != null) {
+            monsterInformationBox.getChildren().add(monInformation);
         }
 
         //add a translation transition to all monster images

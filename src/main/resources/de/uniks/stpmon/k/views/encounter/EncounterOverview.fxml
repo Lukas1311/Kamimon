@@ -11,13 +11,13 @@
     <VBox>
         <StackPane VBox.vgrow="ALWAYS">
             <VBox fx:id="userMonsters">
-            <StackPane.margin>
-               <Insets top="20.0" />
-            </StackPane.margin></VBox>
+                <StackPane.margin>
+                    <Insets top="20.0" />
+                </StackPane.margin></VBox>
             <VBox fx:id="opponentMonsters" alignment="TOP_RIGHT">
-            <StackPane.margin>
-               <Insets top="20.0" />
-            </StackPane.margin></VBox>
+                <StackPane.margin>
+                    <Insets top="20.0" />
+                </StackPane.margin></VBox>
             <HBox alignment="CENTER" fillHeight="false">
                 <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
                     <StackPane HBox.hgrow="ALWAYS">
@@ -46,11 +46,18 @@
             </HBox>
         </StackPane>
     </VBox>
-    <VBox alignment="BOTTOM_RIGHT">
-        <VBox fx:id="actionFieldBox" prefHeight="111.0" prefWidth="335.0">
-           <VBox.margin>
-               <Insets bottom="10.0" left="900.0" right="30.0" />
-           </VBox.margin>
+    <StackPane prefHeight="150.0" prefWidth="200.0">
+        <VBox alignment="BOTTOM_RIGHT">
+            <VBox fx:id="monsterInformationBox" alignment="BOTTOM_RIGHT" prefHeight="371.0" prefWidth="350.0">
+                <VBox.margin>
+                    <Insets left="900.0" right="30.0"/>
+                </VBox.margin>
+            </VBox>
+            <VBox fx:id="actionFieldBox" prefHeight="111.0" prefWidth="335.0">
+                <VBox.margin>
+                    <Insets bottom="10.0" left="900.0" right="30.0"/>
+                </VBox.margin>
+            </VBox>
         </VBox>
-    </VBox>
+    </StackPane>
 </StackPane>

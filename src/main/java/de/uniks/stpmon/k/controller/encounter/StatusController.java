@@ -99,6 +99,22 @@ public class StatusController extends Controller {
         double expProgress = currentExp / maxExp;
 
         experienceBar.setProgress(expProgress);
+        System.out.println("cur: "+ currentExp);
+        System.out.println("max: "+ maxExp);
+
+        // Check if the current experience equals the maximum experience
+        if (currentExp >= maxExp) {
+            // Increase the monster's level
+            int newLevel = monster.level() + 1;
+
+            // Update the other attributes based on the new level
+            // TODO: Implement the logic to update other attributes based on the new level
+
+            // Recalculate the maximum experience for the new level
+            double newMaxExp = Math.pow(newLevel, 3) - Math.pow(newLevel - 1, 3);
+            experienceBar.setProgress(0);
+        }
+
     }
 
 
