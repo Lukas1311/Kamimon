@@ -366,6 +366,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
         //open MonBox
+        component.regionApi().addMonster("0", "1", false);
         clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
         verifyThat("#monBoxStackPane", Node::isVisible);
@@ -378,7 +379,7 @@ class AppTest extends ApplicationTest {
         press(MouseButton.PRIMARY);
         moveTo(teamGrid);
         release(MouseButton.PRIMARY);
-        assertEquals(2, teamGrid.getChildren().size());
+        assertEquals(3, teamGrid.getChildren().size());
 
 
         clickOn(teamMon);
