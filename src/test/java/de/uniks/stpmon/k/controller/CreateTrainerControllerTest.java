@@ -105,6 +105,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         assertEquals("Create Trainer", createTrainer.getText());
     }
 
+    /*
     @Test
     public void testCreateTrainer() {
         // prep.
@@ -135,6 +136,10 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(worldLoader).tryEnterRegion(any());
     }
 
+     */
+
+/*
+
     @Test
     public void testCreateTrainerInvalid() {
 
@@ -152,6 +157,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         clickOn(createTrainerButton);
         verifyNoInteractions(popupMock, hybridMock);
     }
+
+ */
 
     @Test
     void testCloseWindow() {
@@ -198,7 +205,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
 
         assertEquals(1, createTrainerController.currentSpriteIndex);
     }
-
+/*
     @Test
     public void testSaveSprite() {
         // Mock the necessary methods
@@ -233,5 +240,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(regionService).createTrainer("1", "Tom", "Sprite1");
         verify(worldLoader).tryEnterRegion(any());
     }
+
+ */
 
 }

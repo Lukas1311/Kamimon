@@ -68,7 +68,6 @@ public class InteractionService implements ILifecycleService {
         if (info == null) {
             return null;
         }
-
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
         }
