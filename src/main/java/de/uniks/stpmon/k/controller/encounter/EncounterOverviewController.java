@@ -29,8 +29,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -69,6 +71,9 @@ public class EncounterOverviewController extends Controller {
     @FXML
     public VBox actionFieldBox;
 
+    private final Pane blackPane = new Pane();
+    @FXML
+    public VBox wrappingVBox;
 
     @Inject
     IResourceService resourceService;
@@ -145,6 +150,7 @@ public class EncounterOverviewController extends Controller {
 
         Parent actionField = this.actionFieldController.render();
         if (actionField != null) {
+            actionFieldBox.setOpacity(0.0);
             actionFieldBox.getChildren().add(actionField);
         }
 
@@ -181,12 +187,24 @@ public class EncounterOverviewController extends Controller {
             translation.setCycleCount(2);
 
             changeAnimations.put(slot, translation);
+
+            subscribeFight();
+
+            Transition openingTransition = playOpeningAnimation();
+
+            if(openingTransition != null){
+                openingTransition.setOnFinished(event -> {
+                    fullBox.getChildren().remove(blackPane);
+                    renderMonsterLists();
+                    wrappingVBox.setOpacity(1.0);
+                    animateMonsterEntrance();
+                });
+
+                openingTransition.play();
+            }
+
+
         }
-
-        subscribeFight();
-
-        renderMonsterLists();
-        animateMonsterEntrance();
 
         subscribe(sessionService.onEncounterCompleted(), () -> {
             actionFieldController.openBattleLog();
@@ -212,6 +230,28 @@ public class EncounterOverviewController extends Controller {
         this.closeEncounter = closeEncounter;
     }
 
+    private Transition playOpeningAnimation(){
+        if(fullBox.getChildren().contains(blackPane)){
+            return null;
+        }
+        blackPane.setPrefWidth(1280);
+        blackPane.setPrefHeight(720);
+        Rectangle rectangleTop = new Rectangle(1280, 360);
+        Rectangle rectangleBottom = new Rectangle(1280, 360);
+        rectangleBottom.setY(360);
+
+        blackPane.getChildren().addAll(rectangleTop, rectangleBottom);
+
+        fullBox.getChildren().add(blackPane);
+
+        TranslateTransition rTopTransition = new TranslateTransition(Duration.seconds(1), rectangleTop);
+        TranslateTransition rDownTransition = new TranslateTransition(Duration.seconds(1), rectangleBottom);
+
+        rTopTransition.setToY(-800);
+        rDownTransition.setToY(721);
+
+        return new ParallelTransition(rTopTransition, rDownTransition);
+    }
 
     private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {
@@ -351,6 +391,7 @@ public class EncounterOverviewController extends Controller {
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
+
         fullSequence.play();
     }
 
