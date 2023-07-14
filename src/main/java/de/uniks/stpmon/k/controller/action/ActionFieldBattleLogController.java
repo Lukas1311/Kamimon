@@ -37,6 +37,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @FXML
     public VBox vBox;
+    @FXML
+    public VBox battleLog;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;

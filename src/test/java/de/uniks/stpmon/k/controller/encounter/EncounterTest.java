@@ -63,7 +63,7 @@ public class EncounterTest extends ApplicationTest {
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         regionStorage.setRegion(new Region("id0", "", null, DummyConstants.EMPTY_MAP_DATA));
         regionStorage.setArea(DummyConstants.AREA);
-        encounterApiDummy.startEncounter(true);
+        encounterApiDummy.startEncounter(true, false);
         sessionService.tryLoadEncounter().blockingAwait();
 
         app.show(controller);

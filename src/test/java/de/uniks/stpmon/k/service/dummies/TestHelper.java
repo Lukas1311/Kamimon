@@ -4,11 +4,18 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.Event;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
+import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.util.List;
@@ -49,6 +56,18 @@ public class TestHelper {
                 encounterApi.startEncounter();
                 return;
             }
+            if (dto.target().equals("attacker1")) {
+                encounterApi.startEncounter(true, true);
+                return;
+            }
+            if (dto.target().equals("nurse")) {
+                for (Monster monster : regionApi.getMonsters(RegionApiDummy.REGION_ID, trainer._id()).blockingFirst()) {
+                    regionApi.updateMonster(MonsterBuilder.builder(monster)
+                            .setCurrentAttributes(monster.attributes())
+                            .create());
+                }
+                return;
+            }
 
             // Not same as trainer, subscription could be called to a totally different time so the trainer could be changed
             Trainer currentTrainer = storage.getTrainer();
@@ -56,5 +75,62 @@ public class TestHelper {
             regionApi.addMonster(currentTrainer._id(), "3", true);
         });
 
+    }
+
+    public static void addTestNpcs(TestComponent component) {
+        CacheManager cacheManager = component.cacheManager();
+        TrainerCache trainerCache = cacheManager.trainerCache();
+
+        Trainer prof = TrainerBuilder.builder()
+                .setId("prof")
+                .setX(4)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.LEFT)
+                .setNpc(new NPCInfo(false, false, false,
+                        List.of("0", "1", "2"), List.of()))
+                .create();
+
+        trainerCache.addValue(prof);
+
+        Trainer attacker = TrainerBuilder.builder()
+                .setId("attacker")
+                .setX(3)
+                .setY(3)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, true, false,
+                        null, List.of()))
+                .create();
+        Trainer attacker1 = TrainerBuilder.builder()
+                .setId("attacker1")
+                .setX(4)
+                .setY(4)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, true, false,
+                        null, List.of()))
+                .create();
+
+
+        component.regionApi().addTrainer(attacker);
+        component.regionApi().addMonster("attacker", "1", true);
+        component.regionApi().addTrainer(attacker1);
+        component.regionApi().addMonster("attacker1", "2", true);
+
+        Trainer nurse = TrainerBuilder.builder()
+                .setId("nurse")
+                .setX(1)
+                .setY(5)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, false, true,
+                        List.of(), List.of()))
+                .create();
+
+        component.regionApi().addTrainer(nurse);
     }
 }
