@@ -41,7 +41,7 @@
 
 /* -------------------- Backpack Menu -------------------- */
 .backpack-menu {
-    -fx-padding: 12 0 0 0;
+    -fx-padding: 13 0 0 0;
 }
 
 .backpack-menu-list .list-view {

@@ -88,6 +88,10 @@ public class MonsterBarController extends Controller {
         }
 
         ImageView monsterSlot = monsterSlots[slot];
+        if(monsterSlot == null){
+            return;
+        }
+
         if (currentHP <= 0) {
             monsterSlot.setId("slot_" + slot + "_zero");
             loadImage(monsterSlot, "healthPointsZero.png");
