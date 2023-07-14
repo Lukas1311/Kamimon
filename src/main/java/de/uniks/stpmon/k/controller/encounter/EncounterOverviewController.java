@@ -140,7 +140,6 @@ public class EncounterOverviewController extends Controller {
         }
 
         // load image dependent on area
-        //loadImage(background, "encounter/FOREST.png");
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
