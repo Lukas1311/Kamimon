@@ -26,8 +26,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -65,6 +67,10 @@ public class EncounterOverviewController extends Controller {
     public ImageView opponentMonster1;
     @FXML
     public VBox actionFieldBox;
+
+    private final Pane blackPane = new Pane();
+    @FXML
+    public VBox wrappingVBox;
 
     @Inject
     IResourceService resourceService;
@@ -189,16 +195,62 @@ public class EncounterOverviewController extends Controller {
             translation.setCycleCount(2);
 
             changeAnimations.put(slot, translation);
+
+            if (effectContext.shouldSkipLoading()) {
+                renderMonsterLists();
+                animateMonsterEntrance();
+                return parent;
+            }
+
+            subscribeFight();
+
+            actionFieldBox.setOpacity(0);
+
+            Transition openingTransition = playOpeningAnimation();
+
+            if(openingTransition != null){
+                openingTransition.setOnFinished(event -> {
+                    fullBox.getChildren().remove(blackPane);
+                    renderMonsterLists();
+                    wrappingVBox.setOpacity(1.0);
+                    animateMonsterEntrance();
+                });
+
+                openingTransition.play();
+            }
+
+
         }
-
-        subscribeFight();
-
-        renderMonsterLists();
-        animateMonsterEntrance();
 
         return parent;
     }
 
+    private Transition playOpeningAnimation(){
+        if(fullBox.getChildren().contains(blackPane)){
+            return null;
+        }
+        blackPane.setPrefWidth(1280);
+        blackPane.setPrefHeight(720);
+        Rectangle rectangleTop = new Rectangle(1280, 360);
+        rectangleTop.widthProperty().bind(fullBox.widthProperty());
+        rectangleTop.heightProperty().bind(fullBox.heightProperty());
+        Rectangle rectangleBottom = new Rectangle(1280, 360);
+        rectangleBottom.widthProperty().bind(fullBox.widthProperty());
+        rectangleBottom.heightProperty().bind(fullBox.heightProperty());
+        rectangleBottom.setY(360);
+
+        blackPane.getChildren().addAll(rectangleTop, rectangleBottom);
+
+        fullBox.getChildren().add(blackPane);
+
+        TranslateTransition rTopTransition = new TranslateTransition(Duration.seconds(1), rectangleTop);
+        TranslateTransition rDownTransition = new TranslateTransition(Duration.seconds(1), rectangleBottom);
+
+        rTopTransition.setToY(-800);
+        rDownTransition.setToY(721);
+
+        return new ParallelTransition(rTopTransition, rDownTransition);
+    }
 
     private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {
@@ -292,7 +344,6 @@ public class EncounterOverviewController extends Controller {
             attackerMonsters.get(1).setOpacity(0);
             opponentMonster1.setOpacity(0);
         }
-        actionFieldBox.setOpacity(0);
 
         //the first monster of the user and opponent always gets rendered
         ParallelTransition userFullTransition1 =
@@ -303,6 +354,7 @@ public class EncounterOverviewController extends Controller {
         ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
 
         parallel1.setOnFinished(e -> {
+            wrappingVBox.setOpacity(1);
             if (teamMonsters.size() > 1) {
                 teamMonsters.get(1).setOpacity(1);
                 userMonster1.setOpacity(1);
@@ -338,6 +390,7 @@ public class EncounterOverviewController extends Controller {
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
+
         fullSequence.play();
     }
 

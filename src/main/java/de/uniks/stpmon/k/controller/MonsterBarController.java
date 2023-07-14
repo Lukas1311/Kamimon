@@ -54,7 +54,7 @@ public class MonsterBarController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadImage(arrow, "../controller/monsterbarArrow.png");
+        loadImage(arrow, "monsterbarArrow.png");
         createMonsterSlots();
         return parent;
     }
