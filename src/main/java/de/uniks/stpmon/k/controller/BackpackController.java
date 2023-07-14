@@ -18,6 +18,7 @@ public class BackpackController extends Controller {
 
     private Controller backpackMenu;
 
+
     @Inject
     Provider<BackpackMenuController> backpackMenuControllerProvider;
 
