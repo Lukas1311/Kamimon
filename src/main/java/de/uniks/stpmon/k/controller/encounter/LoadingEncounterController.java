@@ -48,10 +48,7 @@ public class LoadingEncounterController extends Controller {
         loadImage(vsBackground0, "encounter/trainerEncounter0.png");
         loadImage(vsBackground1, "encounter/trainerEncounter1.png");
 
-        vsBackground0.setFitHeight(800);
-        vsBackground1.setFitHeight(800);
-        vsBackground0.setFitWidth(1200);
-        vsBackground1.setFitWidth(1200);
+
 
         fullBox.getChildren().add(vsBackground0);
         fullBox.getChildren().add(vsBackground1);
