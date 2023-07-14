@@ -149,9 +149,7 @@ public class IngameController extends PortalController {
                 if (encounterService.hasNoEncounter()) {
                     return;
                 }
-                Platform.runLater(() -> {
-                    startEncounterAnimation(encounterStorage.getEncounter().isWild());
-                });
+                Platform.runLater(() -> startEncounterAnimation(encounterStorage.getEncounter().isWild()));
             }));
         }
     }

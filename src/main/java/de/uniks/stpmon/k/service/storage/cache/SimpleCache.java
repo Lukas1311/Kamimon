@@ -282,6 +282,8 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
         return status;
     }
 
+    @SuppressWarnings("unused")
+    @Override
     public Collection<K> getIds() {
         return valuesById.keySet();
     }
