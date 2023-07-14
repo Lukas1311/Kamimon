@@ -54,7 +54,6 @@ public class LoadingEncounterController extends Controller {
         fullBox.getChildren().add(vsBackground1);
         vsBackground1.setOpacity(0.0);
 
-
         FadeTransition fadeOutTransition0 = createFadeTransition(vsBackground0, 1.0, 0.0);
         FadeTransition fadeInTransition0 = createFadeTransition(vsBackground0, 0.0, 1.0);
         FadeTransition fadeOutTransition1 = createFadeTransition(vsBackground1, 1.0, 0.0);
