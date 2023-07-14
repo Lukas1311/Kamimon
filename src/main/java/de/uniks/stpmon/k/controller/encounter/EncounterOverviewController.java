@@ -198,6 +198,8 @@ public class EncounterOverviewController extends Controller {
 
             subscribeFight();
 
+            actionFieldBox.setOpacity(0);
+
             Transition openingTransition = playOpeningAnimation();
 
             if(openingTransition != null){
@@ -217,10 +219,6 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
-    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter) {
-        this.closeEncounter = closeEncounter;
-    }
-
     private Transition playOpeningAnimation(){
         if(fullBox.getChildren().contains(blackPane)){
             return null;
@@ -228,7 +226,11 @@ public class EncounterOverviewController extends Controller {
         blackPane.setPrefWidth(1280);
         blackPane.setPrefHeight(720);
         Rectangle rectangleTop = new Rectangle(1280, 360);
+        rectangleTop.widthProperty().bind(fullBox.widthProperty());
+        rectangleTop.heightProperty().bind(fullBox.heightProperty());
         Rectangle rectangleBottom = new Rectangle(1280, 360);
+        rectangleBottom.widthProperty().bind(fullBox.widthProperty());
+        rectangleBottom.heightProperty().bind(fullBox.heightProperty());
         rectangleBottom.setY(360);
 
         blackPane.getChildren().addAll(rectangleTop, rectangleBottom);
@@ -336,7 +338,6 @@ public class EncounterOverviewController extends Controller {
             attackerMonsters.get(1).setOpacity(0);
             opponentMonster1.setOpacity(0);
         }
-        actionFieldBox.setOpacity(0);
 
         //the first monster of the user and opponent always gets rendered
         ParallelTransition userFullTransition1 =
@@ -347,6 +348,7 @@ public class EncounterOverviewController extends Controller {
         ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
 
         parallel1.setOnFinished(e -> {
+            wrappingVBox.setOpacity(1);
             if (teamMonsters.size() > 1) {
                 teamMonsters.get(1).setOpacity(1);
                 userMonster1.setOpacity(1);
