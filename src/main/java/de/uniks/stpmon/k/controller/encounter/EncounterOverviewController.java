@@ -196,6 +196,12 @@ public class EncounterOverviewController extends Controller {
 
             changeAnimations.put(slot, translation);
 
+            if (effectContext.shouldSkipLoading()) {
+                renderMonsterLists();
+                animateMonsterEntrance();
+                return parent;
+            }
+
             subscribeFight();
 
             actionFieldBox.setOpacity(0);
