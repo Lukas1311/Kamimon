@@ -2,14 +2,13 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
-import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -50,12 +49,16 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @Spy
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
-
+    @Mock
+    RegionStorage regionStorage;
     final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
 
     @Override
     public void start(Stage stage) {
         app.start(stage);
+
+        Region region = new Region("0", "region", null, null);
+        when(regionStorage.getRegion()).thenReturn(region);
 
         // Defines used slots of the encounter
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,

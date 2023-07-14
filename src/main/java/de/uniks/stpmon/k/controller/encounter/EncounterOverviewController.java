@@ -6,9 +6,14 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.world.RouteData;
+import de.uniks.stpmon.k.world.RouteText;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -29,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
+import java.util.List;
 
 @Singleton
 public class EncounterOverviewController extends Controller {
@@ -63,6 +69,10 @@ public class EncounterOverviewController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
+    RegionStorage regionStorage;
+    @Inject
+    TextDeliveryService textDeliveryService;
+    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
     SessionService sessionService;
@@ -89,6 +99,34 @@ public class EncounterOverviewController extends Controller {
         }
     }
 
+    private TerrainType getEncounterTerrainType(List<RouteData> routeListData) {
+        String currentAreaName = regionStorage.getArea().name();
+
+        for (RouteData routeData : routeListData) {
+            RouteText routeText = routeData.routeText();
+            if (routeText.name().equals(currentAreaName)) {
+                // this will be terrain type switch case in v4. yet its hardcoded
+                return switch (routeText.type()) {
+                    case "Route" -> switch (routeText.name()) {
+                        case "Route 101", "Route 105", "Route 108", "Route 112", "Route 109", "Route 110", "Route 111" ->
+                                TerrainType.PLAINS;
+                        case "Second Bridge", "First Bridge", "Victory Road", "Entrance" -> TerrainType.CAVE;
+                        default -> TerrainType.FOREST;
+                    };
+                    case "Town" -> TerrainType.TOWN;
+                    case "Lake" -> TerrainType.LAKE;
+                    case "Place" -> switch (routeData.id()) { // coasts
+                        case 61, 62, 63, 65 -> TerrainType.COAST;
+                        default -> // Final Trainer & Starting Area
+                                TerrainType.CITY;
+                    };
+                    default -> TerrainType.CITY;
+                };
+            }
+        }
+        return TerrainType.CITY;
+    }
+
     @Override
     public Parent render() {
         final Parent parent = super.render();
@@ -99,7 +137,15 @@ public class EncounterOverviewController extends Controller {
         monsterImages.put(EncounterSlot.ENEMY_FIRST, opponentMonster0);
         monsterImages.put(EncounterSlot.ENEMY_SECOND, opponentMonster1);
 
-        loadImage(background, "encounter/FOREST.png");
+        Region currentRegion = regionStorage.getRegion();
+        if (currentRegion.map() != null) {
+            subscribe(
+                    textDeliveryService.getRouteData(currentRegion), // switch this to night when its night
+                    data -> loadImage(background, "encounter/terrain/" + getEncounterTerrainType(data).name() + "_DAY" + ".png")
+            );
+        }
+
+        // load image dependent on area
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
@@ -152,6 +198,7 @@ public class EncounterOverviewController extends Controller {
 
         return parent;
     }
+
 
     private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {

@@ -81,7 +81,7 @@ public class RegionApiDummy implements RegionApiService {
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
                 .setAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
-                .setCurrentAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(1f, 0f, 0f, 0f))
                 .setLevel(1)
                 .create());
 
@@ -98,8 +98,8 @@ public class RegionApiDummy implements RegionApiService {
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
                 .setType(0)
-                .setAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
-                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setAttributes(new MonsterAttributes(100f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(100f, 0f, 0f, 0f))
                 .setLevel(2)
                 .create());
 
@@ -107,8 +107,17 @@ public class RegionApiDummy implements RegionApiService {
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
                 .setType(3)
-                .setAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
-                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setLevel(2)
+                .create());
+
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
+                .setId(monsterIdCount++)
+                .setAbilities(abilities)
+                .setType(2)
+                .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(0f, 0f, 0f, 0f))
                 .setLevel(2)
                 .create());
     }
@@ -212,6 +221,13 @@ public class RegionApiDummy implements RegionApiService {
     private void checkUpdateTrainer(Monster oldMonster, Monster newMonster) {
         String trainerId = oldMonster.trainer();
         String monsterId = oldMonster._id();
+        List<Monster> oldMonsters = monstersByTrainer.get(oldMonster.trainer());
+        if (oldMonsters != null) {
+            oldMonsters.removeIf(m -> m._id().equals(monsterId));
+            eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.removed"
+                    .formatted(oldMonster.trainer(), monsterId), oldMonster));
+        }
+
         monstersByTrainer.putIfAbsent(trainerId, new ArrayList<>());
         List<Monster> monsters = monstersByTrainer.get(trainerId);
         int index = monsters.indexOf(newMonster);
@@ -222,12 +238,6 @@ public class RegionApiDummy implements RegionApiService {
         }
         eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
                 .formatted(trainerId, monsterId), newMonster));
-        List<Monster> oldMonsters = monstersByTrainer.get(oldMonster.trainer());
-        if (oldMonsters != null) {
-            oldMonsters.removeIf(m -> m._id().equals(monsterId));
-            eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.removed"
-                    .formatted(oldMonster.trainer(), monsterId), oldMonster));
-        }
     }
 
     public void addTrainer(Trainer trainer) {
@@ -344,7 +354,7 @@ public class RegionApiDummy implements RegionApiService {
         if (!regionId.equals(REGION_ID) || !monstersByTrainer.containsKey(trainerId)) {
             return Observable.just(List.of());
         }
-        return Observable.just(monstersByTrainer.get(trainerId));
+        return Observable.just(List.copyOf(monstersByTrainer.get(trainerId)));
     }
 
     @Override

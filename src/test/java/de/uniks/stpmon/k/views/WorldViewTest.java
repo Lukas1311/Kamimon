@@ -43,9 +43,9 @@ public class WorldViewTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         super.start(stage);
 
-        TestHelper.addMovementDummy(component.eventListener());
         trainerStorage.setTrainer(regionService.createTrainer("id0", "Uwe", "t.png").blockingFirst());
         TestHelper.addWorldDummy(worldRepository);
+        component.eventDummy().ensureMock();
         regionStorage.setRegion(DummyConstants.REGION);
         regionStorage.setArea(regionService.getArea("id0", "id0_0").blockingFirst());
 

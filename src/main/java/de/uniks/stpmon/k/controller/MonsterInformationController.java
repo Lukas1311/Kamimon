@@ -111,8 +111,8 @@ public class MonsterInformationController extends Controller {
         // Set all labels
         monsterLevelLabel.setText("Lvl. " + monster.level());
         monsterHpLabel.setText("HP: "
-                + monster.currentAttributes().health()
-                + "/" + monster.attributes().health());
+                + attToString(monster.currentAttributes().health())
+                + "/" + attToString(monster.attributes().health()));
         monsterXpLabel.setText("XP: " + monster.experience()
                 + "/" + (int) (Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
 
