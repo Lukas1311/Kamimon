@@ -6,10 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <HBox fx:id="timer" alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.overworld.WorldTimerController">
-    <padding>
-        <Insets right="30.0"/>
-    </padding>
+      fx:controller="de.uniks.stpmon.k.controller.overworld.WorldTimerController" style="-fx-border-color: green;">
     <VBox fx:id="background" alignment="CENTER" maxHeight="41.0" maxWidth="98.0" minHeight="41.0" minWidth="98.0">
         <Text fx:id="label" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="timer-label" text="12:00">
             <VBox.margin>

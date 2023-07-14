@@ -48,6 +48,10 @@ public class IngameController extends PortalController {
     public VBox starterBox;
     @FXML
     public BorderPane mainPain;
+    @FXML
+    public BorderPane rightMenuBorderPane;
+    @FXML
+    public VBox miniMapVBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -160,6 +164,9 @@ public class IngameController extends PortalController {
     public Parent render() {
         final Parent parent = super.render();
 
+        rightMenuBorderPane.setPickOnBounds(false);
+        ingameWrappingHBox.setPickOnBounds(false);
+
         Parent world = this.worldController.render();
         // Null if unit testing world view
         if (world != null) {
@@ -174,12 +181,12 @@ public class IngameController extends PortalController {
         Parent miniMap = this.minimapController.render();
         // Null if unit testing world view
         if (miniMap != null) {
-            rightVbox.getChildren().add(0, miniMap);
+            miniMapVBox.getChildren().add(0, miniMap);
         }
 
         Parent worldTimer = this.worldTimerController.render();
         if (worldTimer != null) {
-            rightVbox.getChildren().add(0, worldTimer);
+            miniMapVBox.getChildren().add(0, worldTimer);
         }
 
         Parent nightOverlay = this.nightOverlayController.render();

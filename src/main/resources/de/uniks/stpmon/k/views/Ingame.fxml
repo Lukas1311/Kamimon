@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-            minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.IngameController">
+
+<BorderPane fx:id="ingame" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#closeSidebar" prefHeight="380.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.IngameController">
     <center>
         <StackPane fx:id="ingameStack" BorderPane.alignment="CENTER">
             <BorderPane fx:id="mainPain">
                 <top>
                     <HBox prefHeight="40.0" prefWidth="380.0" BorderPane.alignment="CENTER">
-                        <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0"/>
+                        <Pane fx:id="pane" prefHeight="200.0" prefWidth="200.0" />
                     </HBox>
                 </top>
-                <right>
-                    <VBox fx:id="rightVbox" alignment="TOP_RIGHT" prefHeight="310.0" prefWidth="120.0"
-                          BorderPane.alignment="CENTER">
-                        <HBox fx:id="ingameWrappingHBox" alignment="TOP_RIGHT"/>
-                        <BorderPane.margin>
-                            <Insets top="-40.0"/>
-                        </BorderPane.margin>
-                    </VBox>
-                </right>
                 <center>
-                    <VBox fx:id="starterBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-                          prefHeight="332.0" prefWidth="250.0" BorderPane.alignment="CENTER">
-                        <BorderPane.margin>
-                            <Insets left="200.0"/>
-                        </BorderPane.margin>
+                    <VBox fx:id="starterBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="332.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                     </VBox>
                 </center>
                 <bottom>
-                    <HBox fx:id="dialogueBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0"
-                          BorderPane.alignment="CENTER"/>
+                    <HBox fx:id="dialogueBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
                 </bottom>
+            </BorderPane>
+            <BorderPane fx:id="rightMenuBorderPane" prefHeight="310.0" prefWidth="120.0">
+                <right>
+                    <VBox fx:id="rightVbox" alignment="TOP_RIGHT" prefHeight="250.0" prefWidth="120.0" BorderPane.alignment="TOP_RIGHT" style="-fx-border-color: yellow; ">
+                        <VBox fx:id="miniMapVBox" alignment="TOP_CENTER" fillWidth="false" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" style="-fx-border-color: red; " />
+                        <HBox fx:id="ingameWrappingHBox" alignment="TOP_RIGHT" style="-fx-border-color: blue;">
+                            <padding>
+                                <Insets top="-80"/>
+                            </padding>
+                        </HBox>
+                        <BorderPane.margin>
+                        </BorderPane.margin>
+                    </VBox>
+                </right>
             </BorderPane>
         </StackPane>
     </center>
