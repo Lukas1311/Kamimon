@@ -97,8 +97,8 @@ public class EncounterTest extends ApplicationTest {
         eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
                 .formatted("0", "0"),
                 MonsterBuilder.builder(monster)
-                        .setCurrentAttributes(new MonsterAttributes(1, 10, 10, 10))
-                        .setAttributes(new MonsterAttributes(12, 10, 10, 10))
+                        .setCurrentAttributes(new MonsterAttributes(1f, 10f, 10f, 10f))
+                        .setAttributes(new MonsterAttributes(12f, 10f, 10f, 10f))
                         .create()));
         waitForFxEvents();
 

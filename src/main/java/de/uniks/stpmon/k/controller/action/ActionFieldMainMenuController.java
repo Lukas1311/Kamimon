@@ -53,8 +53,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
-        int index = mainMenuBox.getChildren().size();
-        optionContainer.getChildren().get(1).setId("main_menu_" + index);
+        optionContainer.setId("main_menu_" + optionText);
 
         mainMenuBox.getChildren().add(optionContainer);
     }

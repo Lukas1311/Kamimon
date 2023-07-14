@@ -19,7 +19,7 @@ import java.util.*;
 @Singleton
 public class RegionApiDummy implements RegionApiService {
     private static final String TRAINER_ID = "0";
-    private static final String REGION_ID = "id0";
+    public static final String REGION_ID = "id0";
     int trainerIdCount = 1;
     int monsterIdCount = 0;
     final List<Region> regions = new ArrayList<>();
@@ -74,21 +74,42 @@ public class RegionApiDummy implements RegionApiService {
         abilities.put("7", 5);
         abilities.put("10", 0);
 
-        MonsterAttributes attributes = new MonsterAttributes(0, 0, 0, 0);
-        MonsterAttributes currentAttributes = new MonsterAttributes(0, 0, 0, 0);
+        MonsterAttributes attributes = new MonsterAttributes(0f, 0f, 0f, 0f);
+        MonsterAttributes currentAttributes = new MonsterAttributes(0f, 0f, 0f, 0f);
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
-                .setAttributes(new MonsterAttributes(20, 0, 0, 0))
-                .setCurrentAttributes(new MonsterAttributes(10, 0, 0, 0))
+                .setAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
+                .setLevel(1)
                 .create());
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
                 .setId(monsterIdCount++)
                 .setAbilities(abilities)
-                .setAttributes(new MonsterAttributes(12, 0, 0, 0))
-                .setCurrentAttributes(new MonsterAttributes(5, 0, 0, 0))
+                .setType(2)
+                .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setLevel(2)
+                .create());
+
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
+                .setId(monsterIdCount++)
+                .setAbilities(abilities)
+                .setType(0)
+                .setAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setLevel(2)
+                .create());
+
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
+                .setId(monsterIdCount++)
+                .setAbilities(abilities)
+                .setType(3)
+                .setAttributes(new MonsterAttributes(2f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setLevel(2)
                 .create());
     }
 
@@ -176,6 +197,43 @@ public class RegionApiDummy implements RegionApiService {
             eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.removed"
                     .formatted(monster.trainer(), monsterId), monster));
         }
+    }
+
+    public void updateMonster(Monster updatedTarget) {
+        monstersById.put(updatedTarget._id(), updatedTarget);
+        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.updated".formatted(
+                updatedTarget.trainer(),
+                updatedTarget._id()),
+                updatedTarget));
+        Monster old = monstersById.get(updatedTarget._id());
+        checkUpdateTrainer(old, updatedTarget);
+    }
+
+    private void checkUpdateTrainer(Monster oldMonster, Monster newMonster) {
+        String trainerId = oldMonster.trainer();
+        String monsterId = oldMonster._id();
+        monstersByTrainer.putIfAbsent(trainerId, new ArrayList<>());
+        List<Monster> monsters = monstersByTrainer.get(trainerId);
+        int index = monsters.indexOf(newMonster);
+        if (index == -1) {
+            monsters.add(newMonster);
+        } else {
+            monsters.set(index, newMonster);
+        }
+        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
+                .formatted(trainerId, monsterId), newMonster));
+        List<Monster> oldMonsters = monstersByTrainer.get(oldMonster.trainer());
+        if (oldMonsters != null) {
+            oldMonsters.removeIf(m -> m._id().equals(monsterId));
+            eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.removed"
+                    .formatted(oldMonster.trainer(), monsterId), oldMonster));
+        }
+    }
+
+    public void addTrainer(Trainer trainer) {
+        trainers.put(trainer._id(), trainer);
+        eventDummy.sendEvent(new Event<>("regions.%s.trainers.%s.created"
+                .formatted(REGION_ID, trainer._id()), trainer));
     }
 
     @Override

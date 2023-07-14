@@ -308,7 +308,7 @@ class AppTest extends ApplicationTest {
         clickOn("#approveButton");
         waitForFxEvents();
 
-        TestHelper.listenStarterMonster(component.trainerStorage(), eventDummy, component.encounterApi());
+        TestHelper.listenStarterMonster(component.trainerStorage(), component);
 
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
@@ -336,8 +336,23 @@ class AppTest extends ApplicationTest {
                 .setNpc(new NPCInfo(false, true, false,
                         null, List.of()))
                 .create();
+        Trainer attacker1 = TrainerBuilder.builder()
+                .setId("attacker1")
+                .setX(4)
+                .setY(4)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .addTeam("2")
+                .setDirection(Direction.TOP)
+                .setNpc(new NPCInfo(false, true, false,
+                        null, List.of()))
+                .create();
 
-        trainerCache.addValue(attacker);
+
+        component.regionApi().addTrainer(attacker);
+        component.regionApi().addMonster("attacker", "1", true);
+        component.regionApi().addMonster("attacker1", "2", true);
+        component.regionApi().addTrainer(attacker1);
 
         Trainer nurse = TrainerBuilder.builder()
                 .setId("nurse")
@@ -350,7 +365,7 @@ class AppTest extends ApplicationTest {
                         List.of(), List.of()))
                 .create();
 
-        trainerCache.addValue(nurse);
+        component.regionApi().addTrainer(nurse);
 
         //shortcut tests
         type(KeyCode.C);
@@ -441,6 +456,16 @@ class AppTest extends ApplicationTest {
         type(KeyCode.RIGHT);
         type(KeyCode.E);
         verifyThat("#userMonsters", Node::isVisible);
+
+        // open fight menu
+        clickOn("#main_menu_fight");
+        // check if fight menu is visible
+        clickOn("#ability_1");
+        waitForFxEvents();
+        // Check if won and left encounter
+        verifyThat("#monsterBar", Node::isVisible);
+        type(KeyCode.D);
+        type(KeyCode.S);
     }
 
 }

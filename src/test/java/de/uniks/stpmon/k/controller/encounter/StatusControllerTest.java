@@ -48,8 +48,8 @@ public class StatusControllerTest extends ApplicationTest {
     @Spy
     StatusController statusController;
 
-    final MonsterAttributes attributes1 = new MonsterAttributes(10, 8, 6, 4);
-    final MonsterAttributes currentAttributes1 = new MonsterAttributes(5, 4, 3, 2);
+    final MonsterAttributes attributes1 = new MonsterAttributes(10f, 8f, 6f, 4f);
+    final MonsterAttributes currentAttributes1 = new MonsterAttributes(5f, 4f, 3f, 2f);
     final Monster dummyMonster1 = MonsterBuilder.builder()
             .setId("id1")
             .setTrainer("id")
