@@ -9,7 +9,7 @@ import de.uniks.stpmon.k.models.Message;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.dummies.MovementDummy;
+import de.uniks.stpmon.k.service.dummies.TestHelper;
 import de.uniks.stpmon.k.service.storage.UserStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.input.KeyCode;
@@ -93,7 +93,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void toIngame() {
         // mock udp listener
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
 
         // pressing Region button and check if ingame is shown
         clickOn("#regionVBox");
@@ -145,7 +145,7 @@ class HybridControllerTest extends ApplicationTest {
     @Test
     public void closeSidebar() {
         // mock udp listener
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
 
 
         when(eventListener.<Group>listen(eq(Socket.WS), any(), any())).thenReturn(Observable.empty());

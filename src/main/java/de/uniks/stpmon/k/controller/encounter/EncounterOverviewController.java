@@ -1,15 +1,12 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -69,7 +66,6 @@ public class EncounterOverviewController extends Controller {
     @FXML
     public VBox actionFieldBox;
 
-
     @Inject
     IResourceService resourceService;
     @Inject
@@ -79,18 +75,28 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
-    Provider<HybridController> hybridControllerProvider;
-    @Inject
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-    @Inject
-    Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
-
-    EncounterService.CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        if (actionFieldController != null) {
+            actionFieldController.init();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (actionFieldController != null) {
+            actionFieldController.destroy();
+        }
     }
 
     private TerrainType getEncounterTerrainType(List<RouteData> routeListData) {
@@ -152,7 +158,8 @@ public class EncounterOverviewController extends Controller {
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-            TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
+            TranslateTransition translation =
+                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() * 0.25), view);
             if (slot.enemy()) {
                 translation.setByY(30);
                 translation.setByX(-60);
@@ -169,7 +176,8 @@ public class EncounterOverviewController extends Controller {
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-            TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
+            TranslateTransition translation =
+                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() * 0.35f), view);
             if (slot.enemy()) {
                 translation.setByY(0);
                 translation.setByX(1000);
@@ -188,28 +196,7 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            actionFieldController.openBattleLog();
-            //check why encounter is close
-            if (closeEncounter != null) {
-                actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
-                closeEncounter = null;
-            }
-
-            javafx.application.Platform.runLater(() -> {
-                if (hybridControllerProvider == null) {
-                    return;
-                }
-                sessionService.clearEncounter();
-
-            });
-        });
-
         return parent;
-    }
-
-    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter) {
-        this.closeEncounter = closeEncounter;
     }
 
 

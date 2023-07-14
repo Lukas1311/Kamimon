@@ -157,7 +157,7 @@ class SessionServiceTest {
         assertThrows(IllegalStateException.class, () -> sessionService.getMonster(EncounterSlot.PARTY_FIRST));
         // List should just be empty
         assertEquals(List.of(), sessionService.getSlots());
-        assertEquals(List.of(), sessionService.getAttackerTeam());
+        assertEquals(List.of(), sessionService.getEnemyTeam());
         assertEquals(List.of(), sessionService.getOwnTeam());
 
         EncounterSession session = Mockito.mock(EncounterSession.class);
@@ -169,7 +169,7 @@ class SessionServiceTest {
 
         when(session.getEnemyTeam()).thenReturn(List.of("10"));
 
-        assertEquals(List.of("10"), sessionService.getAttackerTeam());
+        assertEquals(List.of("10"), sessionService.getEnemyTeam());
 
         Opponent opponent = OpponentBuilder.builder().create();
         when(session.getOpponent(EncounterSlot.PARTY_FIRST)).thenReturn(opponent);

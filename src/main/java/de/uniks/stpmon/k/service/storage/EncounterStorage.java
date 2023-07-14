@@ -1,12 +1,10 @@
 package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.models.Encounter;
-import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class EncounterStorage extends SingleCache<Encounter> {

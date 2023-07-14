@@ -1,10 +1,10 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.function.Consumer;
 
 @Singleton
 public class ActionFieldController extends Controller {
@@ -34,9 +35,6 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
 
     @Inject
-    Provider<EncounterStorage> encounterStorageProvider;
-
-    @Inject
     Provider<EncounterService> encounterServiceProvider;
     @Inject
     SessionService sessionService;
@@ -44,7 +42,8 @@ public class ActionFieldController extends Controller {
     private String enemyTrainerId;
     private int abilityId;
 
-    private Controller controller;
+    private Controller openController;
+    private CloseEncounterTrigger closeTrigger;
 
     @Inject
     public ActionFieldController() {
@@ -58,6 +57,16 @@ public class ActionFieldController extends Controller {
 
         checkDeadMonster();
 
+        subscribe(sessionService.onEncounterCompleted(), () -> {
+            // If user won or lost
+            if (closeTrigger == null) {
+                closeTrigger = sessionService.hasWon() ? CloseEncounterTrigger.WON : CloseEncounterTrigger.LOST;
+            }
+
+            closeEncounter(closeTrigger);
+            closeTrigger = null;
+        });
+
         return parent;
     }
 
@@ -66,38 +75,57 @@ public class ActionFieldController extends Controller {
         return "action/";
     }
 
-    public void openMainMenu(){
+    public void closeEncounter(CloseEncounterTrigger closeEncounter) {
+        openBattleLog();
+        battleLogControllerProvider.get().closeEncounter(closeEncounter);
+    }
+
+    public void openMainMenu() {
         open(mainMenuControllerProvider);
     }
 
-    public void openChangeMonster(){
-        open(changeMonsterControllerProvider);
+    public void openChangeMonster(boolean dead) {
+        open(changeMonsterControllerProvider, (c) -> c.setChangeDeadMonster(dead));
     }
 
-    public void openChooseAbility(){
+    public void openChooseAbility() {
         open(chooseAbilityControllerProvider);
     }
 
-    public void openChooseOpponent(){
+    public void openChooseOpponent() {
         open(chooseOpponentControllerProvider);
     }
 
-    public void openBattleLog(){
+    public void openBattleLog() {
         open(battleLogControllerProvider);
     }
 
-    private void open(Provider<? extends Controller> provider){
-        if(controller != null && controller instanceof ActionFieldBattleLogController){
-            controller.destroy();
+    private <T extends Controller> void open(Provider<T> provider, Consumer<T> setup) {
+        if (openController != null) {
+            openController.destroy();
+        }
+        if (setup != null) {
+            setup.accept(provider.get());
         }
         actionFieldContent.getChildren().clear();
-        controller = provider.get();
-        controller.init();
-        actionFieldContent.getChildren().add(controller.render());
+        openController = provider.get();
+        openController.init();
+        actionFieldContent.getChildren().add(openController.render());
     }
 
+    private void open(Provider<? extends Controller> provider) {
+        open(provider, null);
+    }
 
-    public HBox getOptionContainer(String option){
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (openController != null) {
+            openController.destroy();
+        }
+    }
+
+    public HBox getOptionContainer(String option) {
         Text arrowText = new Text(" >");
 
         Text optionText = new Text(option);
@@ -115,32 +143,25 @@ public class ActionFieldController extends Controller {
         this.abilityId = abilityId;
     }
 
-    @SuppressWarnings("unused")
-    public int getAbilityId() {
-        return abilityId;
-    }
-
     public void setEnemyTrainerId(String trainerId) {
         this.enemyTrainerId = trainerId;
     }
 
-    @SuppressWarnings("unused")
-    public String getEnemyTrainerId() {
-        return enemyTrainerId;
-    }
-
-    public void executeAbilityMove(){
-        subscribe(encounterServiceProvider.get().makeAbilityMove(abilityId, enemyTrainerId),
-                next -> {}
-        );
+    public void executeAbilityMove() {
+        subscribe(encounterServiceProvider.get()
+                .makeAbilityMove(abilityId, enemyTrainerId));
     }
 
     public void checkDeadMonster() {
         subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
-            if (opponent.monster() == null) {
-                openChangeMonster();
+            if (sessionService.isMonsterDead(EncounterSlot.PARTY_FIRST)) {
+                openChangeMonster(true);
             }
         });
     }
 
+
+    protected void setFleeEncounter() {
+        this.closeTrigger = CloseEncounterTrigger.FLEE;
+    }
 }

@@ -125,8 +125,33 @@ public class SessionService extends DestructibleElement {
         return getter.apply(session, slot);
     }
 
+    //---------------- Session Helpers -------------------------
+    public boolean isMonsterDead(EncounterSlot slot) {
+        Opponent opponent = getOpponent(slot);
+        if (opponent == null || opponent.monster() == null) {
+            return true;
+        }
+        Monster monster = getMonster(slot);
+        return monster == null || isMonsterDead(monster);
+    }
 
-    //---------------- Session Getters -------------------------D
+    public boolean isMonsterDead(Monster monster) {
+        return monster.currentAttributes().health() <= 0;
+    }
+
+    public boolean hasWon() {
+        for (EncounterSlot slot : getSlots()) {
+            if (!slot.enemy()) {
+                continue;
+            }
+            if (!isMonsterDead(slot)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //---------------- Session Getters -------------------------
     public EncounterSlot getTarget(String targetId) {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
@@ -178,8 +203,7 @@ public class SessionService extends DestructibleElement {
         return session.getSlots();
     }
 
-
-    public List<String> getAttackerTeam() {
+    public List<String> getEnemyTeam() {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
             return Collections.emptyList();
@@ -196,12 +220,11 @@ public class SessionService extends DestructibleElement {
     }
 
     public Completable onEncounterCompleted() {
-        return encounterStorage.getSession().onEncounterCompleted().doOnComplete(() -> {});
+        return encounterStorage.getSession().onEncounterCompleted();
     }
 
     public void clearEncounter() {
         encounterStorage.setEncounter(null);
         encounterStorage.setSession(null);
     }
-
 }

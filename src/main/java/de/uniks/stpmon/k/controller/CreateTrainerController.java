@@ -40,7 +40,6 @@ public class CreateTrainerController extends PortalController {
     private final BooleanProperty isPopUpShown = new SimpleBooleanProperty(false);
 
     protected int currentSpriteIndex;
-    protected int previousSpriteIndex;
 
     @FXML
     public Label trainerLabel;
@@ -215,7 +214,6 @@ public class CreateTrainerController extends PortalController {
 
         // Retrieve the sprite index from the preferences
         currentSpriteIndex = randomSpriteIndex();
-        previousSpriteIndex = currentSpriteIndex;
 
         if (!charactersList.isEmpty()) {
             String selectedCharacter = charactersList.get(currentSpriteIndex);

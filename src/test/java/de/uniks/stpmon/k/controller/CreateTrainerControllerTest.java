@@ -48,23 +48,27 @@ public class CreateTrainerControllerTest extends ApplicationTest {
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Mock
+    @SuppressWarnings("unused")
     RegionService regionService;
     @Mock
+    @SuppressWarnings("unused")
     Provider<PopUpController> popUpControllerProvider;
     @Mock
     Provider<HybridController> hybridControllerProvider;
     @Mock
-    WorldLoader worldLoader;
-    @Mock
     PresetService presetService;
     @Mock
+    @SuppressWarnings("unused")
     TrainerService trainerService;
     @Mock
+    @SuppressWarnings("unused")
     Preferences preferences;
 
     @Spy
     @InjectMocks
     CreateTrainerController createTrainerController;
+    @Mock
+    WorldLoader worldLoader;
     @Spy
     @SuppressWarnings("unused")
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
@@ -105,7 +109,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         assertEquals("Create Trainer", createTrainer.getText());
     }
 
-    /*
     @Test
     public void testCreateTrainer() {
         // prep.
@@ -117,7 +120,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
         when(trainerService.setImage(anyString())).thenReturn(Observable.empty());
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
-       // when(preferences.getInt(anyString(), anyInt())).thenReturn(0);
+        // when(preferences.getInt(anyString(), anyInt())).thenReturn(0);
         when(popUpControllerProvider.get()).thenReturn(popupMock);
         doAnswer(invocation -> {
             ModalCallback callback = invocation.getArgument(0);
@@ -135,10 +138,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(regionService).createTrainer("1", "Tom", "Sprite2");
         verify(worldLoader).tryEnterRegion(any());
     }
-
-     */
-
-/*
 
     @Test
     public void testCreateTrainerInvalid() {
@@ -158,7 +157,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verifyNoInteractions(popupMock, hybridMock);
     }
 
- */
 
     @Test
     void testCloseWindow() {
@@ -205,7 +203,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
 
         assertEquals(1, createTrainerController.currentSpriteIndex);
     }
-/*
+
     @Test
     public void testSaveSprite() {
         // Mock the necessary methods
@@ -218,7 +216,6 @@ public class CreateTrainerControllerTest extends ApplicationTest {
 
         createTrainerController.characters.addAll("Sprite1", "Sprite2", "Sprite3");
         createTrainerController.currentSpriteIndex = 0;
-        createTrainerController.previousSpriteIndex = 1;
 
         when(regionService.createTrainer(anyString(), anyString(), anyString())).thenReturn(Observable.just(dummyTrainer));
         when(worldLoader.tryEnterRegion(any())).thenReturn(Observable.empty());
@@ -241,6 +238,5 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(worldLoader).tryEnterRegion(any());
     }
 
- */
 
 }

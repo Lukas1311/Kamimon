@@ -24,10 +24,6 @@ public class BackpackController extends Controller {
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
-    @Inject
-    Provider<MonBoxController> monBoxControllerProvider;
-    @Inject
-    Provider<MonsterInformationController> monsterInformationControllerProvider;
 
     @Inject
     InputHandler inputHandler;

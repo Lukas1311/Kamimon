@@ -165,7 +165,7 @@ public class DummyConstants {
     );
 
     public static final Region REGION = new Region(
-            "region_0",
+            "id0",
             "Test Region",
             new Spawn("area_0", 0, 0),
             AREA_MAP_DATA

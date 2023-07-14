@@ -1,10 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
-import de.uniks.stpmon.k.service.EncounterService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -16,7 +13,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class ActionFieldFleeController extends Controller {
+public class ActionFieldFleeController extends BaseActionFieldController {
 
     @FXML
     ImageView blackScreen;
@@ -24,17 +21,11 @@ public class ActionFieldFleeController extends Controller {
     VBox vbox;
 
     @Inject
-    Provider<ActionFieldController> actionFieldControllerProvider;
-    @Inject
     Provider<HybridController> hybridControllerProvider;
-    @Inject
-    EncounterService encounterService;
-    @Inject
-    EncounterStorage encounterStorage;
 
 
     @Inject
-    public ActionFieldFleeController(){
+    public ActionFieldFleeController() {
     }
 
     @Override
