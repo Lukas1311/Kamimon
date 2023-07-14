@@ -383,7 +383,9 @@ class AppTest extends ApplicationTest {
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
-        //verifyThat("#userMonsters", Node::isVisible);
+        waitForFxEvents();
+
+        verifyThat("#userMonsters", Node::isVisible);
 
         // open fight menu
         clickOn("#main_menu_fight");
@@ -472,7 +474,6 @@ class AppTest extends ApplicationTest {
 
         verifyThat("#userMonsters", Node::isVisible);
 
-        sleep(2000);
         clickOn("#main_menu_flee");
         waitForFxEvents();
 

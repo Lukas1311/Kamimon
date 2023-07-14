@@ -12,23 +12,19 @@ import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.service.storage.InteractionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import javafx.animation.Transition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.application.Platform;
-import javafx.scene.input.InputEvent;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.scene.input.InputEvent;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -80,21 +76,14 @@ public class IngameController extends PortalController {
     @Inject
     AnimationService animationService;
 
-
     @Inject
     WorldTimerController worldTimerController;
     @Inject
     NightOverlayController nightOverlayController;
     @Inject
-    Provider<EncounterOverviewController> encounterProvider;
-
-    @Inject
     MonsterInformationController monsterInformationController;
-
-
     @Inject
-    TrainerStorage trainerStorage;
-
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     WorldController worldController;
 
@@ -167,13 +156,20 @@ public class IngameController extends PortalController {
         }
     }
 
-    private void startEncounterAnimation(boolean isWild){
+    private void startEncounterAnimation(boolean isWild) {
+        if (effectContext.shouldSkipLoading()) {
+            EncounterOverviewController controller = encounterOverviewControllerProvider.get();
+            app.show(controller);
+            return;
+        }
+
         //init
         StackPane overlayPane = new StackPane();
         overlayPane.setStyle("-fx-background-color: transparent");
         Circle blackpoint = new Circle(25.0);
         overlayPane.getChildren().add(blackpoint);
         ingameStack.getChildren().add(overlayPane);
+
         Transition transition = animationService.createEncounterAnimation(blackpoint);
 
         if(isWild){

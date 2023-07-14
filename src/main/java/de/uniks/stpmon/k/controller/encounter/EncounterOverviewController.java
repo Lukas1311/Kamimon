@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -79,10 +78,6 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-    @Inject
-    Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
-
-    EncounterService.CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
@@ -201,28 +196,7 @@ public class EncounterOverviewController extends Controller {
         renderMonsterLists();
         animateMonsterEntrance();
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            actionFieldController.openBattleLog();
-            //check why encounter is close
-            if (closeEncounter != null) {
-                actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
-                closeEncounter = null;
-            }
-
-            javafx.application.Platform.runLater(() -> {
-                if (hybridControllerProvider == null) {
-                    return;
-                }
-                sessionService.clearEncounter();
-
-            });
-        });
-
         return parent;
-    }
-
-    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter) {
-        this.closeEncounter = closeEncounter;
     }
 
 
