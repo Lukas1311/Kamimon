@@ -4,8 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
-import de.uniks.stpmon.k.service.dummies.MovementDummy;
-import de.uniks.stpmon.k.service.dummies.WorldDummy;
+import de.uniks.stpmon.k.service.dummies.TestHelper;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
@@ -35,7 +34,7 @@ public class WorldControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         super.start(stage);
 
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         // Needed for trainer cache
         regionStorage.setRegion(DummyConstants.REGION);
@@ -57,7 +56,7 @@ public class WorldControllerTest extends ApplicationTest {
 
     @Test
     public void worldExists() {
-        WorldDummy.addWorldDummy(worldRepository);
+        TestHelper.addWorldDummy(worldRepository);
 
         app.show(worldController);
 

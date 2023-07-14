@@ -70,6 +70,7 @@ public class MonsterBarController extends Controller {
             monsterSlot.setFitWidth(30);
             loadImage(monsterSlot, "freeSlot.png");
             monsterSlotsHBox.getChildren().add(monsterSlot);
+            monsterSlot.setId("slot_" + i + "_free");
             monsterSlots[i] = monsterSlot;
         }
     }
@@ -81,18 +82,21 @@ public class MonsterBarController extends Controller {
      * @param currentHP The current HP of the monster
      * @param maxHP     The maximum HP of the monster
      */
-    public void setMonsterStatus(int slot, int currentHP, int maxHP) {
+    public void setMonsterStatus(int slot, float currentHP, float maxHP) {
         if (slot < 0 || slot >= monsterSlots.length) {
             return;
         }
 
         ImageView monsterSlot = monsterSlots[slot];
         if (currentHP <= 0) {
+            monsterSlot.setId("slot_" + slot + "_zero");
             loadImage(monsterSlot, "healthPointsZero.png");
         } else if (currentHP < maxHP * 0.2) {
             loadImage(monsterSlot, "healthPointsLow.png");
+            monsterSlot.setId("slot_" + slot + "_low");
         } else {
             loadImage(monsterSlot, "healthPointsNormal.png");
+            monsterSlot.setId("slot_" + slot + "_normal");
         }
     }
 

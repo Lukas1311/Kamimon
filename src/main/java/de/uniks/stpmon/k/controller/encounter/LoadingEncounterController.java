@@ -2,7 +2,9 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
@@ -24,12 +26,6 @@ public class LoadingEncounterController extends Controller {
 
     @Inject
     public LoadingEncounterController() {
-
-    }
-
-    @Override
-    public void init() {
-        super.init();
     }
 
     @Override

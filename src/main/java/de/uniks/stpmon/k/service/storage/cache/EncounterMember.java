@@ -46,6 +46,7 @@ public class EncounterMember extends SingleCache<Monster> {
         }
 
         if (monsterId == null) {
+            reset();
             onInitialized = Completable.complete();
             return;
         }

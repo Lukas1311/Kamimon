@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WorldServiceTest {
 
-    WorldService worldService = new WorldService();
+    final WorldService worldService = new WorldService();
 
     @Test
     void getNightFactor() {

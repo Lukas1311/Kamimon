@@ -2,20 +2,14 @@ package de.uniks.stpmon.k;
 
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
-import de.uniks.stpmon.k.models.builder.TrainerBuilder;
+import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
-import de.uniks.stpmon.k.service.dummies.MonsterDummy;
-import de.uniks.stpmon.k.service.dummies.MovementDummy;
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
-import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
-import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.service.dummies.TestHelper;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -32,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,7 +56,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV1() {
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
 
         app.show(component.loginController());
 
@@ -186,19 +179,18 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV2() {
-        MovementDummy.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
 
         app.show(component.hybridController());
 
         //set User
-        ArrayList<String> friends = new ArrayList<>();
-        friends.add("id1");
         User user = new User(
-                "00",
+                "01",
                 "T",
                 "online",
                 null,
-                friends
+                new ArrayList<>()
         );
         component.userStorage().setUser(user);
 
@@ -224,6 +216,17 @@ class AppTest extends ApplicationTest {
         //join region
         clickOn("#regionVBox");
         waitForFxEvents();
+
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("Tom");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        component.regionApi().addMonster("0", "0", true);
 
         clickOn("#monsterBar");
         verifyThat("#monsterList", Node::isVisible);
@@ -270,7 +273,7 @@ class AppTest extends ApplicationTest {
 
     @Test
     void criticalPathV3() {
-        MovementDummy.addMovementDummy(component.eventListener());
+        TestHelper.addMovementDummy(component.eventListener());
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
         app.addInputHandler(component);
@@ -299,49 +302,8 @@ class AppTest extends ApplicationTest {
         clickOn("#approveButton");
         waitForFxEvents();
 
-        MonsterDummy.addMonsterDummy(component.trainerStorage(), eventDummy, component.encounterApi());
-
-        CacheManager cacheManager = component.cacheManager();
-        TrainerCache trainerCache = cacheManager.trainerCache();
-
-        Trainer me = component.trainerStorage().getTrainer();
-        Trainer prof = TrainerBuilder.builder()
-                .setId("prof")
-                .setX(4)
-                .setRegion("id0")
-                .setArea("id0_0")
-                .setDirection(Direction.LEFT)
-                .setNpc(new NPCInfo(false, false, false,
-                        List.of("0", "1", "2"), List.of()))
-                .create();
-
-        trainerCache.addValue(prof);
-
-        Trainer attacker = TrainerBuilder.builder()
-                .setId("attacker")
-                .setX(3)
-                .setY(3)
-                .setRegion("id0")
-                .setArea("id0_0")
-                .setDirection(Direction.TOP)
-                .setNpc(new NPCInfo(false, true, false,
-                        null, List.of()))
-                .create();
-
-        trainerCache.addValue(attacker);
-
-        Trainer nurse = TrainerBuilder.builder()
-                .setId("nurse")
-                .setX(1)
-                .setY(5)
-                .setRegion("id0")
-                .setArea("id0_0")
-                .setDirection(Direction.TOP)
-                .setNpc(new NPCInfo(false, false, true,
-                        List.of(), List.of()))
-                .create();
-
-        trainerCache.addValue(nurse);
+        TestHelper.listenStarterMonster(component.trainerStorage(), component);
+        TestHelper.addTestNpcs(component);
 
         //shortcut tests
         type(KeyCode.C);
@@ -377,6 +339,8 @@ class AppTest extends ApplicationTest {
 
         clickOn("#monsterBar");
         waitForFxEvents();
+
+        Trainer me = component.trainerStorage().getTrainer();
         // verify that the monster list is empty
         assertThat(me.team()).isEmpty();
 
@@ -400,18 +364,6 @@ class AppTest extends ApplicationTest {
 
         verifyThat("#backpackMenuHBox", Node::isVisible);
 
-        // Update trainer (position and direction)
-        me = component.trainerStorage().getTrainer();
-        //add Monsters to inventory
-        Monster teamMonster = MonsterBuilder.builder().setId("monster1")
-                .setTrainer(me._id()).create();
-        Monster storageMonster = MonsterBuilder.builder().setId("monster2")
-                .setTrainer(me._id()).create();
-        MonsterCache monsterCache = cacheManager.requestMonsters(me._id());
-        monsterCache.addValue(storageMonster);
-        monsterCache.addValue(teamMonster);
-        trainerCache.updateValue(TrainerBuilder.builder(me).addTeam(teamMonster._id()).create());
-
         //open MonBox
         clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
@@ -431,8 +383,102 @@ class AppTest extends ApplicationTest {
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
-        //verifyThat("#userMonsters", Node::isVisible);
+        waitForFxEvents();
 
+        verifyThat("#userMonsters", Node::isVisible);
+
+        // open fight menu
+        clickOn("#main_menu_fight");
+        // attack
+        clickOn("#ability_1");
+        waitForFxEvents();
+
+        // Check if won and left encounter
+        verifyThat("#monsterBar", Node::isVisible);
+        type(KeyCode.D);
+        type(KeyCode.S);
+
+        // start 2v2 encounter
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        // Check if encounter is started
+        verifyThat("#userMonsters", Node::isVisible);
+
+        EncounterApiDummy encounterApi = component.encounterApi();
+        encounterApi.addMove("attacker", new UpdateOpponentDto(null,
+                new AbilityMove("ability", 2, "0")));
+
+        clickOn("#main_menu_changeMon");
+        clickOn("#user_monster_1");
+        waitForFxEvents();
+
+        verifyThat("#changeMonBox", Node::isVisible);
+        // no back button, monster is option 0
+        clickOn("#user_monster_0");
+        waitForFxEvents();
+
+        encounterApi.addMove("attacker", new UpdateOpponentDto(null,
+                new AbilityMove("ability", 2, "0")));
+        encounterApi.addMove("attacker1", new UpdateOpponentDto(null,
+                new AbilityMove("ability", 2, "0")));
+        clickOn("#battleLog");
+
+        // open fight menu
+        clickOn("#main_menu_fight");
+        // attack with ability 1
+        clickOn("#ability_1");
+        // attack opponent 0
+        clickOn("#user_monster_1");
+        waitForFxEvents();
+
+        // Check if lost and left encounter
+        verifyThat("#monsterBar", Node::isVisible);
+        // Check if hp is 0
+        verifyThat("#monsterBar #slot_0_zero", Node::isVisible);
+        verifyThat("#monsterBar #slot_1_zero", Node::isVisible);
+
+        // Walk to nurse
+        type(KeyCode.D);
+        type(KeyCode.S);
+        type(KeyCode.S);
+        type(KeyCode.S);
+        type(KeyCode.S);
+        type(KeyCode.A);
+        type(KeyCode.A);
+        type(KeyCode.A);
+        type(KeyCode.A);
+        type(KeyCode.W);
+
+        // Talk to nurse
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        type(KeyCode.E);
+        waitForFxEvents();
+
+        // Check if hp is full again
+        verifyThat("#monsterBar #slot_0_normal", Node::isVisible);
+        verifyThat("#monsterBar #slot_1_normal", Node::isVisible);
+
+        type(KeyCode.D);
+        type(KeyCode.D);
+        type(KeyCode.D);
+        type(KeyCode.W);
+
+        // Start encounter wild encounter
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        waitForFxEvents();
+
+        verifyThat("#userMonsters", Node::isVisible);
+
+        clickOn("#main_menu_flee");
+        waitForFxEvents();
+
+        // Check if left encounter
+        verifyThat("#monsterBar", Node::isVisible);
     }
 
 }
