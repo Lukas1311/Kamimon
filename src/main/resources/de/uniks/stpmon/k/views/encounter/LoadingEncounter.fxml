@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="fullBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="720.0" prefWidth="1287.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.LoadingEncounterController"
+            style="-fx-background-color: black">
+</StackPane>
