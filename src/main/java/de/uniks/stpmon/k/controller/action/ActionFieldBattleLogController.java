@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.MonsterInformationController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityDto;
@@ -61,6 +63,10 @@ public class ActionFieldBattleLogController extends Controller {
     RegionService regionService;
     @Inject
     RegionStorage regionStorage;
+    @Inject
+    MonsterInformationController monsterInformationController;
+    @Inject
+    EncounterOverviewController encounterOverviewController;
 
     @Inject
     InputHandler inputHandler;
@@ -76,6 +82,7 @@ public class ActionFieldBattleLogController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
+        showMonsterInformation();
 
         encounterFinished = false;
 
@@ -150,6 +157,13 @@ public class ActionFieldBattleLogController extends Controller {
 
     }
 
+    public void showMonsterInformation() {
+        Monster monster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
+        monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
+        monsterInformationController.loadMonster(monster);
+        encounterOverviewController.monsterInformationBox.setVisible(true);
+    }
+
     private void initListeners() {
 
         for (EncounterSlot slot : sessionService.getSlots()) {
@@ -179,9 +193,10 @@ public class ActionFieldBattleLogController extends Controller {
                 }
 
                 if (opp.move() instanceof ChangeMonsterMove move) {
-                    subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
-                        addTextSection(translateString("monster-changed",
-                                presetService.getMonster(monster1.type()).blockingFirst().name()), false)
+                    subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 -> {
+                                addTextSection(translateString("monster-changed",
+                                        presetService.getMonster(monster1.type()).blockingFirst().name()), false);
+                            }
                     );
                     return;
                 }
@@ -205,9 +220,11 @@ public class ActionFieldBattleLogController extends Controller {
                         case "monster-changed" -> {}
                         case "monster-defeated" ->
                                 addTextSection(translateString("monster-defeated", monster.name()), false); //called when not dying, eg another monster is available
-                        case "monster-levelup" ->
-                                // TODO: add the change of exp
-                                addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+                        case "monster-levelup" -> {
+                            // TODO: add the change of exp
+                            //showMonsterInformation();
+                            addTextSection(translateString("monster-levelup", monster.name(), "0"), false);
+                        }
                         case "monster-evolved" ->
                                 addTextSection(translateString("monster-evolved", monster.name()), false);
                         case "monster-learned" ->

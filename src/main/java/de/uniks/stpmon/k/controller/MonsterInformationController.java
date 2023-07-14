@@ -122,7 +122,7 @@ public class MonsterInformationController extends Controller {
         int i = 1;
         for (String key : monster.abilities().keySet()) {
             if (monster.abilities().containsKey(key)) {
-                fillAbilityTable(key, i);
+                fillAbilityTable(key, i, monster.abilities().get(key));
                 i++;
             }
         }
@@ -155,12 +155,12 @@ public class MonsterInformationController extends Controller {
         return label;
     }
 
-    private void fillAbilityTable(String abilityId, int rowIndex) {
+    private void fillAbilityTable(String abilityId, int rowIndex, Integer remainingUses) {
         subscribe(presetService.getAbility(abilityId),
-                ability -> fillAbilityRow(ability, rowIndex));
+                ability -> fillAbilityRow(ability, rowIndex, remainingUses));
     }
 
-    private void fillAbilityRow(AbilityDto ability, int rowIndex) {
+    private void fillAbilityRow(AbilityDto ability, int rowIndex, Integer remainingUses) {
         Label typeLabel = typeLabel(null, ability.type());
         typeLabel.setId("typeLabel_" + rowIndex);
         Label nameLabel = new Label(ability.name());
@@ -185,7 +185,7 @@ public class MonsterInformationController extends Controller {
         Label accLabel = new Label(String.valueOf((int) (ability.accuracy().doubleValue() * 100.0)));
         accLabel.setId("accLabel_" + rowIndex);
 
-        Label useLabel = new Label("??" + "/" + ability.maxUses());
+        Label useLabel = new Label(remainingUses.toString() + "/" + ability.maxUses());
         useLabel.setId("useLabel_" + rowIndex);
 
         for (int i = 0; i < 5; i++) {

@@ -114,6 +114,7 @@ public class EncounterOverviewController extends Controller {
         Parent monInformation = this.monsterInformationController.render();
         if (monInformation != null) {
             monsterInformationBox.getChildren().add(monInformation);
+            monsterInformationBox.setVisible(false);
         }
 
         //add a translation transition to all monster images
@@ -203,7 +204,6 @@ public class EncounterOverviewController extends Controller {
     private void renderAttack(EncounterSlot slot){
         attackAnimations.get(slot).play();
     }
-
 
     private void renderMonsterLists() {
         for (EncounterSlot slot : sessionService.getSlots()) {
