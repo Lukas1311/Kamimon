@@ -26,7 +26,7 @@ public class EncounterApiDummy implements EncounterApiService {
     RegionApiDummy regionApi;
     @Inject
     PresetApiDummy presetApiDummy;
-    Deque<Pair<String, UpdateOpponentDto>> moveQueue = new LinkedList<>();
+    final Deque<Pair<String, UpdateOpponentDto>> moveQueue = new LinkedList<>();
 
     @Inject
     public EncounterApiDummy() {

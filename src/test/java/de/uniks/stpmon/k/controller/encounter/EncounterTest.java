@@ -74,7 +74,7 @@ public class EncounterTest extends ApplicationTest {
     void changeMonster() {
 
         // First monster should be selected
-        verifyThat("#0_party #monsterHp", hasText("10 / 20"));
+        verifyThat("#0_party #monsterHp", hasText("1 / 20"));
         // Send event for updating selected monster
         eventDummy.sendEvent(new Event<>("encounters.%s.trainers.%s.opponents.%s.%s".formatted("0", "0", "0", "updated"),
                 OpponentBuilder.builder().setEncounter("0")
@@ -85,13 +85,13 @@ public class EncounterTest extends ApplicationTest {
         waitForFxEvents();
 
         // New monster should be selected
-        verifyThat("#0_party #monsterHp", hasText("5 / 12"));
+        verifyThat("#0_party #monsterHp", hasText("2 / 12"));
     }
 
     @Test
     void updateMonster() {
         // First monster should be selected
-        verifyThat("#0_party #monsterHp", hasText("10 / 20"));
+        verifyThat("#0_party #monsterHp", hasText("1 / 20"));
         Monster monster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
         // Send event for updating selected monster
         eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"

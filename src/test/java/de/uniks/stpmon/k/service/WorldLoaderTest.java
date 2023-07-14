@@ -94,7 +94,7 @@ public class WorldLoaderTest {
     @Test
     void enterNewRegion() {
         when(regionService.getMainTrainer(any())).thenReturn(Observable.just(DummyConstants.TRAINER));
-        when(regionService.getArea("region_0", "area_0")).thenReturn(Observable.just(DummyConstants.AREA));
+        when(regionService.getArea("id0", "area_0")).thenReturn(Observable.just(DummyConstants.AREA));
         Observable<Trainer> world = worldLoader.tryEnterRegion(DummyConstants.REGION);
         // Check if all values are set correctly
         assertEquals(DummyConstants.TRAINER, world.blockingFirst());
