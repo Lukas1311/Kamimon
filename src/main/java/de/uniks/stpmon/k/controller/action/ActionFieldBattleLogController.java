@@ -212,7 +212,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
                     addTranslatedSection("ability-unknown", getAbility(ability).name(), monster.name());
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
-            case "target-dead" -> addTranslatedSection("target-dead", "Targeted monster");
+            case "target-dead" -> addTranslatedSection("target-dead");
             default -> System.out.println("unknown result type");
         }
     }
