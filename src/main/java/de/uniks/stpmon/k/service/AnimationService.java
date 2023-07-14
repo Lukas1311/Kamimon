@@ -22,7 +22,7 @@ public class AnimationService {
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
-    public Transition createTrainerEncounterAnimation(Circle blackPoint) {
+    public Transition createEncounterAnimation(Circle blackPoint) {
         ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(3), blackPoint);
         scaleTransition.setToX(40);
         scaleTransition.setToY(40);
@@ -32,4 +32,5 @@ public class AnimationService {
         parallelTransition.play();
         return parallelTransition;
     }
+
 }

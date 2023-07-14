@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
@@ -15,17 +16,13 @@ import de.uniks.stpmon.k.service.storage.InteractionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.animation.Transition;
 import javafx.application.Platform;
+import javafx.scene.input.InputEvent;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.input.InputEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 
 import javax.inject.Inject;
@@ -83,7 +80,8 @@ public class IngameController extends PortalController {
     @Inject
     NightOverlayController nightOverlayController;
     @Inject
-    InteractionStorage interactionStorage;
+    Provider<EncounterOverviewController> encounterProvider;
+
     @Inject
     MonsterInformationController monsterInformationController;
 
@@ -93,8 +91,10 @@ public class IngameController extends PortalController {
 
     @Inject
     WorldController worldController;
+
     @Inject
     InputHandler inputHandler;
+
     @Inject
     SessionService encounterService;
     @Inject
@@ -116,8 +116,8 @@ public class IngameController extends PortalController {
         mapOverviewController.init();
         backpackController.init();
         dialogueController.init();
-        nightOverlayController.init();
         worldTimerController.init();
+        nightOverlayController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             switch (event.getCode()) {
@@ -168,18 +168,22 @@ public class IngameController extends PortalController {
         Circle blackpoint = new Circle(25.0);
         overlayPane.getChildren().add(blackpoint);
         ingameStack.getChildren().add(overlayPane);
+        Transition transition = animationService.createEncounterAnimation(blackpoint);
 
         if(isWild){
-            //TODO: Add animation for wild encounter
+            transition.setOnFinished(event -> {
+                app.show(encounterWildProvider.get());
+                ingameStack.getChildren().remove(overlayPane);
+            });
         }else{
-            Transition transition = animationService.createTrainerEncounterAnimation(blackpoint);
             transition.setOnFinished(event -> {
                 app.show(loadingEncounterControllerProvider.get());
                 ingameStack.getChildren().remove(overlayPane);
             });
-        }
-    }
 
+        }
+
+    }
 
     @Override
     public void destroy() {
@@ -192,7 +196,9 @@ public class IngameController extends PortalController {
         backpackController.destroy();
         dialogueController.destroy();
         starterController.destroy();
+        worldTimerController.destroy();
         nightOverlayController.destroy();
+
     }
 
     @Override
