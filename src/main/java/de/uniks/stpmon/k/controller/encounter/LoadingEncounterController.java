@@ -48,11 +48,15 @@ public class LoadingEncounterController extends Controller {
         loadImage(vsBackground0, "encounter/trainerEncounter0.png");
         loadImage(vsBackground1, "encounter/trainerEncounter1.png");
 
-
+        vsBackground0.setFitHeight(800);
+        vsBackground1.setFitHeight(800);
+        vsBackground0.setFitWidth(1200);
+        vsBackground1.setFitWidth(1200);
 
         fullBox.getChildren().add(vsBackground0);
         fullBox.getChildren().add(vsBackground1);
         vsBackground1.setOpacity(0.0);
+
 
         FadeTransition fadeOutTransition0 = createFadeTransition(vsBackground0, 1.0, 0.0);
         FadeTransition fadeInTransition0 = createFadeTransition(vsBackground0, 0.0, 1.0);
