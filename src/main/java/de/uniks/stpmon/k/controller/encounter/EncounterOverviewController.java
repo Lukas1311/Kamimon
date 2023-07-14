@@ -8,11 +8,15 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.world.RouteData;
+import de.uniks.stpmon.k.world.RouteText;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -33,6 +37,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
+import java.util.List;
 
 @Singleton
 public class EncounterOverviewController extends Controller {
@@ -68,6 +73,10 @@ public class EncounterOverviewController extends Controller {
     @Inject
     IResourceService resourceService;
     @Inject
+    RegionStorage regionStorage;
+    @Inject
+    TextDeliveryService textDeliveryService;
+    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -77,13 +86,39 @@ public class EncounterOverviewController extends Controller {
     ActionFieldController actionFieldController;
     @Inject
     Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
-    @Inject
-    InputHandler inputHandler;
 
     EncounterService.CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
+    }
+
+    private TerrainType getEncounterTerrainType(List<RouteData> routeListData) {
+        String currentAreaName = regionStorage.getArea().name();
+
+        for (RouteData routeData : routeListData) {
+            RouteText routeText = routeData.routeText();
+            if (routeText.name().equals(currentAreaName)) {
+                // this will be terrain type switch case in v4. yet its hardcoded
+                return switch (routeText.type()) {
+                    case "Route" -> switch (routeText.name()) {
+                        case "Route 101", "Route 105", "Route 108", "Route 112", "Route 109", "Route 110", "Route 111" ->
+                                TerrainType.PLAINS;
+                        case "Second Bridge", "First Bridge", "Victory Road", "Entrance" -> TerrainType.CAVE;
+                        default -> TerrainType.FOREST;
+                    };
+                    case "Town" -> TerrainType.TOWN;
+                    case "Lake" -> TerrainType.LAKE;
+                    case "Place" -> switch (routeData.id()) { // coasts
+                        case 61, 62, 63, 65 -> TerrainType.COAST;
+                        default -> // Final Trainer & Starting Area
+                                TerrainType.CITY;
+                    };
+                    default -> TerrainType.CITY;
+                };
+            }
+        }
+        return TerrainType.CITY;
     }
 
     @Override
@@ -96,8 +131,15 @@ public class EncounterOverviewController extends Controller {
         monsterImages.put(EncounterSlot.ENEMY_FIRST, opponentMonster0);
         monsterImages.put(EncounterSlot.ENEMY_SECOND, opponentMonster1);
 
+        Region currentRegion = regionStorage.getRegion();
+        if (currentRegion.map() != null) {
+            subscribe(
+                    textDeliveryService.getRouteData(currentRegion), // switch this to night when its night
+                    data -> loadImage(background, "encounter/terrain/" + getEncounterTerrainType(data).name() + "_DAY" + ".png")
+            );
+        }
 
-        loadImage(background, "encounter/FOREST.png");
+        // load image dependent on area
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
@@ -128,7 +170,7 @@ public class EncounterOverviewController extends Controller {
             ImageView view = monsterImages.get(slot);
 
             TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
-            if(slot.enemy()) {
+            if (slot.enemy()) {
                 translation.setByY(0);
                 translation.setByX(1000);
             } else {
@@ -149,7 +191,7 @@ public class EncounterOverviewController extends Controller {
         subscribe(sessionService.onEncounterCompleted(), () -> {
             actionFieldController.openBattleLog();
             //check why encounter is close
-            if (closeEncounter != null){
+            if (closeEncounter != null) {
                 actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
                 closeEncounter = null;
             }
@@ -166,17 +208,16 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
-    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter){
+    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter) {
         this.closeEncounter = closeEncounter;
     }
 
 
-
-    private void subscribeFight(){
+    private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), next -> {
                 //using IMove to animate attack
-                if(next.move() instanceof AbilityMove){
+                if (next.move() instanceof AbilityMove) {
                     renderAttack(slot);
                 } else if (next.move() instanceof ChangeMonsterMove) {
                     renderChange(slot);
@@ -190,7 +231,7 @@ public class EncounterOverviewController extends Controller {
     }
 
 
-    private void renderAttack(EncounterSlot slot){
+    private void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
     }
 
