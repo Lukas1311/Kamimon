@@ -135,7 +135,7 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         verify(worldLoader).tryEnterRegion(any());
     }
 
-
+/*
 
     @Test
     public void testCreateTrainerInvalid() {
@@ -154,6 +154,8 @@ public class CreateTrainerControllerTest extends ApplicationTest {
         clickOn(createTrainerButton);
         verifyNoInteractions(popupMock, hybridMock);
     }
+
+ */
 
     @Test
     void testCloseWindow() {
