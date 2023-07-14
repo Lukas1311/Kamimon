@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -419,6 +420,15 @@ class AppTest extends ApplicationTest {
 
         GridPane teamGrid = lookup("#monTeam").query();
         Node teamMon = teamGrid.getChildren().get(0);
+        GridPane monGrid = lookup("#monStorage").query();
+        Node monStorage = monGrid.getChildren().get(0);
+        moveTo(monStorage);
+        press(MouseButton.PRIMARY);
+        moveTo(teamGrid);
+        release(MouseButton.PRIMARY);
+        assertEquals(2, teamGrid.getChildren().size());
+
+
         clickOn(teamMon);
         verifyThat("#mainPane", Node::isVisible);
 

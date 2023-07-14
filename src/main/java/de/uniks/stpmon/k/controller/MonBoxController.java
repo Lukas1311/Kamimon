@@ -124,7 +124,7 @@ public class MonBoxController extends Controller {
 
         subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
             // Scale and set the image for the Clipboard
-            Image image = ImageUtils.scaledImageFX(imageUrl, 0.5);
+            Image image = ImageUtils.scaledImageFX(imageUrl, 1.2);
             imageView.setImage(image);
             draggableimage(imageView);
         });
