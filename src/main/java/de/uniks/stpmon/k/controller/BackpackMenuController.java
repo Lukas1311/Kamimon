@@ -49,6 +49,8 @@ public class BackpackMenuController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        backpackMenuHBox.setPickOnBounds(false);
+
         loadBgImage(backpackMenuListView, "backpackMenuBox.png");
         loadImage(arrowImageView, "arrow_right.png");
 
