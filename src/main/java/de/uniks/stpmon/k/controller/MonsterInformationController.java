@@ -103,6 +103,10 @@ public class MonsterInformationController extends Controller {
         }
     }
 
+    private String attToString(Float value) {
+        return Integer.toString((int) Math.ceil(value));
+    }
+
     public void loadMonster(Monster monster) {
         // Set all labels
         monsterLevelLabel.setText("Lvl. " + monster.level());
@@ -111,11 +115,11 @@ public class MonsterInformationController extends Controller {
                 + "/" + monster.attributes().health());
         monsterXpLabel.setText("XP: " + monster.experience()
                 + "/" + (int) (Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
-        
-        hpValueLabel.setText(monster.attributes().health().toString());
-        atkValueLabel.setText(monster.attributes().attack().toString());
-        defValueLabel.setText(monster.attributes().defense().toString());
-        speValueLabel.setText(monster.attributes().speed().toString());
+
+        hpValueLabel.setText(attToString(monster.attributes().health()));
+        atkValueLabel.setText(attToString(monster.attributes().attack()));
+        defValueLabel.setText(attToString(monster.attributes().defense()));
+        speValueLabel.setText(attToString(monster.attributes().speed()));
 
         // Iterate over the abilities of the monster
         cleanupAttackGrid();

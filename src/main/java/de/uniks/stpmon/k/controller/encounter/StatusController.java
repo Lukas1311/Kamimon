@@ -94,7 +94,7 @@ public class StatusController extends Controller {
         if (!sessionService.isSelf(slot)) {
             return;
         }
-        monsterHp.setText(monster.currentAttributes().health() + " / " + monster.attributes().health());
+        monsterHp.setText((int) Math.ceil(currentHp) + " / " + (int) Math.ceil(maxHp));
 
         double maxExp = Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3);
         double currentExp = monster.experience();

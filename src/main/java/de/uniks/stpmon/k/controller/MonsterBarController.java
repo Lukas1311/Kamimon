@@ -81,7 +81,7 @@ public class MonsterBarController extends Controller {
      * @param currentHP The current HP of the monster
      * @param maxHP     The maximum HP of the monster
      */
-    public void setMonsterStatus(int slot, int currentHP, int maxHP) {
+    public void setMonsterStatus(int slot, float currentHP, float maxHP) {
         if (slot < 0 || slot >= monsterSlots.length) {
             return;
         }
