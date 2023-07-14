@@ -7,5 +7,5 @@ public enum TerrainType {
     CITY,
     PLAINS,
     COAST,
-    CAVE;
+    CAVE
 }
