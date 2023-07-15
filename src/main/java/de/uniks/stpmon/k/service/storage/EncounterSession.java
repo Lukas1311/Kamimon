@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service.storage;
 
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterState;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.DestructibleElement;
 import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
@@ -77,7 +78,7 @@ public class EncounterSession extends DestructibleElement {
                 return;
             }
             Opponent opponent = opponentOptional.get();
-            if(opponent.monster() == null) {
+            if (opponent.monster() == null) {
                 return;
             }
             EncounterMember cache = cacheByOpponent.get(slot);
@@ -97,6 +98,15 @@ public class EncounterSession extends DestructibleElement {
     public String getTrainer(EncounterSlot slot) {
         EncounterMember cache = cacheByOpponent.get(slot);
         return cache == null ? null : cache.getTrainerId();
+    }
+
+    public MonsterState getMonsterState(EncounterSlot slot) {
+        EncounterMember cache = cacheByOpponent.get(slot);
+        if (cache == null || !cache.isInitialized()) {
+            return MonsterState.UNKNOWN;
+        }
+        Monster monster = cache.asNullable();
+        return monster.currentAttributes().health() <= 0 ? MonsterState.DEAD : MonsterState.ALIVE;
     }
 
     public Monster getMonster(EncounterSlot slot) {

@@ -195,31 +195,29 @@ public class EncounterOverviewController extends Controller {
             translation.setCycleCount(2);
 
             changeAnimations.put(slot, translation);
+        }
 
-            if (effectContext.shouldSkipLoading()) {
+        if (effectContext.shouldSkipLoading()) {
+            renderMonsterLists();
+            animateMonsterEntrance();
+            return parent;
+        }
+
+        subscribeFight();
+
+        actionFieldBox.setOpacity(0);
+
+        Transition openingTransition = playOpeningAnimation();
+
+        if (openingTransition != null) {
+            openingTransition.setOnFinished(event -> {
+                fullBox.getChildren().remove(blackPane);
                 renderMonsterLists();
+                wrappingVBox.setOpacity(1.0);
                 animateMonsterEntrance();
-                return parent;
-            }
+            });
 
-            subscribeFight();
-
-            actionFieldBox.setOpacity(0);
-
-            Transition openingTransition = playOpeningAnimation();
-
-            if(openingTransition != null){
-                openingTransition.setOnFinished(event -> {
-                    fullBox.getChildren().remove(blackPane);
-                    renderMonsterLists();
-                    wrappingVBox.setOpacity(1.0);
-                    animateMonsterEntrance();
-                });
-
-                openingTransition.play();
-            }
-
-
+            openingTransition.play();
         }
 
         return parent;
