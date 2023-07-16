@@ -91,12 +91,13 @@ public class MonsterCache extends ListenerCache<Monster, String> {
         public ICache<Monster, String> init() {
             // listen to trainer changes and update monster cache
             disposables.add(parent.trainerCache.listenValue(parent.trainerId)
-                    .map(trainer -> trainer.map(Trainer::team).orElse(Set.of()))
+                    .map(trainer -> trainer.map(Trainer::team).orElse(List.of()))
                     .subscribe(this::updateTeam));
             return super.init();
         }
 
-        private void updateTeam(Set<String> teamIds) {
+        private void updateTeam(List<String> team) {
+            Set<String> teamIds = new HashSet<>(team);
             if (currentTeam == null) {
                 currentTeam = teamIds;
                 addValues(parent.valuesById.values());

@@ -8,10 +8,7 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.utils.Direction;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class TrainerBuilder {
@@ -24,7 +21,7 @@ public class TrainerBuilder {
         return builder().apply(trainer);
     }
 
-    private final Set<String> team = new HashSet<>();
+    private final List<String> team = new LinkedList<>();
     private final Set<Integer> encounteredMonsterTypes = new HashSet<>();
     private NPCInfo npc = new NPCInfo(false, false, false, List.of(), List.of());
     private String _id = "";
@@ -109,6 +106,7 @@ public class TrainerBuilder {
     }
 
     public TrainerBuilder addTeam(Collection<String> team) {
+        this.team.clear();
         this.team.addAll(team);
         return this;
     }

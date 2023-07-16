@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.constants;
 
 import de.uniks.stpmon.k.models.Trainer;
 
+import java.util.List;
 import java.util.Set;
 
 public class NoneConstants {
@@ -18,7 +19,7 @@ public class NoneConstants {
             0,
             0,
             null,
-            Set.of(), Set.of()
+            List.of(), Set.of()
     );
 
 }

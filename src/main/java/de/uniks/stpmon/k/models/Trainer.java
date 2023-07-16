@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.models;
 
+import java.util.List;
 import java.util.Set;
 
 public record Trainer(
@@ -14,7 +15,7 @@ public record Trainer(
         Integer y,
         Integer direction,
         NPCInfo npc,
-        Set<String> team, // up to 6 ids
+        List<String> team, // up to 6 ids
         Set<Integer> encounteredMonsterTypes) {
 
 }
