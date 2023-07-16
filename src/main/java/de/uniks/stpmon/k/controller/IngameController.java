@@ -119,6 +119,11 @@ public class IngameController extends PortalController {
         nightOverlayController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
+            // Block user input if he is in an encounter
+            if (!encounterStorage.isEmpty()) {
+                event.consume();
+                return;
+            }
             switch (event.getCode()) {
                 case A, D, W, S, LEFT, RIGHT, UP, DOWN, B, E -> {
                     // Block movement and backpack, if map overview is shown
@@ -138,6 +143,12 @@ public class IngameController extends PortalController {
                 default -> {
                 }
 
+            }
+        }));
+        // Block user input if he is in an encounter
+        onDestroy(inputHandler.addReleasedKeyFilter(event -> {
+            if (!encounterStorage.isEmpty()) {
+                event.consume();
             }
         }));
         starterController.init();
@@ -174,12 +185,12 @@ public class IngameController extends PortalController {
 
         Transition transition = animationService.createEncounterAnimation(blackpoint);
 
-        if(isWild){
+        if (isWild) {
             transition.setOnFinished(event -> {
                 app.show(encounterWildProvider.get());
                 ingameStack.getChildren().remove(overlayPane);
             });
-        }else{
+        } else {
             transition.setOnFinished(event -> {
                 app.show(loadingEncounterControllerProvider.get());
                 ingameStack.getChildren().remove(overlayPane);
