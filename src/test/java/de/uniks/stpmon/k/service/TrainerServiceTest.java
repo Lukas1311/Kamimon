@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -111,7 +112,7 @@ public class TrainerServiceTest {
                 .thenReturn(Observable.just(
                         new Trainer("1", "0", "0", "0", "101", 0, "0",
                                 0, 0, 0, DummyConstants.NPC_INFO,
-                                Set.of(), Set.of())
+                                List.of(), Set.of())
                 ));
 
         //action

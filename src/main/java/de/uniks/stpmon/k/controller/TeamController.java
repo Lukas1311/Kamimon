@@ -111,7 +111,7 @@ public class TeamController extends Controller {
             Monster monster = slot >= monsters.size() ? null : monsters.get(slot);
             float currentHP = monster == null ? 0 : monster.currentAttributes().health();
             float maxHP = monster == null ? 0 : monster.attributes().health();
-            monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP);
+            monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP, monster == null);
         }
     }
 
