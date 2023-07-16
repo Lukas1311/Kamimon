@@ -107,10 +107,10 @@ public class TeamController extends Controller {
      */
     public void updateStatus() {
         List<Monster> monsters = monsterService.getTeamCache().getCurrentValues();
-        for (int slot = 0; slot < monsters.size(); slot++) {
-            Monster monster = monsters.get(slot);
-            float currentHP = monster.currentAttributes().health();
-            float maxHP = monster.attributes().health();
+        for (int slot = 0; slot < 6; slot++) {
+            Monster monster = slot >= monsters.size() ? null : monsters.get(slot);
+            float currentHP = monster == null ? 0 : monster.currentAttributes().health();
+            float maxHP = monster == null ? 0 : monster.attributes().health();
             monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP);
         }
     }

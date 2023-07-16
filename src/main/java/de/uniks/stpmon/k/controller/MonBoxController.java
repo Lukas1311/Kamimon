@@ -11,13 +11,11 @@ import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.PickResult;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -197,11 +195,6 @@ public class MonBoxController extends Controller {
         });
 
         gridPane.setOnDragDropped(event -> {
-            PickResult result = event.getPickResult();
-            if (result == null) {
-                return;
-            }
-            Node node = result.getIntersectedNode();
             Dragboard dragboard = event.getDragboard();
             if (dragboard.hasImage()) {
                 ImageView imageView = monImage;
