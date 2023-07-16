@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Map.Entry;
 
 @Singleton
 public class MonsterInformationController extends Controller {
@@ -124,9 +125,9 @@ public class MonsterInformationController extends Controller {
         // Iterate over the abilities of the monster
         cleanupAttackGrid();
         int i = 1;
-        for (String key : monster.abilities().keySet()) {
-            if (monster.abilities().containsKey(key)) {
-                fillAbilityTable(key, i);
+        for (Entry<String, Integer> entry : monster.abilities().entrySet()) {
+            if (monster.abilities().containsKey(entry.getKey())) {
+                fillAbilityTable(entry, i);
                 i++;
             }
         }
@@ -159,12 +160,15 @@ public class MonsterInformationController extends Controller {
         return label;
     }
 
-    private void fillAbilityTable(String abilityId, int rowIndex) {
+    private void fillAbilityTable(Entry<String, Integer> abilityEntry, int rowIndex) {
+        String abilityId = abilityEntry.getKey();
+        int currentUses = abilityEntry.getValue();
         subscribe(presetService.getAbility(abilityId),
-                ability -> fillAbilityRow(ability, rowIndex));
+                ability -> fillAbilityRow(ability, currentUses, rowIndex)
+        );
     }
 
-    private void fillAbilityRow(AbilityDto ability, int rowIndex) {
+    private void fillAbilityRow(AbilityDto ability, int currentUses, int rowIndex) {
         Label typeLabel = typeLabel(null, ability.type());
         typeLabel.setId("typeLabel_" + rowIndex);
         Label nameLabel = new Label(ability.name());
@@ -189,7 +193,7 @@ public class MonsterInformationController extends Controller {
         Label accLabel = new Label(String.valueOf((int) (ability.accuracy().doubleValue() * 100.0)));
         accLabel.setId("accLabel_" + rowIndex);
 
-        Label useLabel = new Label("??" + "/" + ability.maxUses());
+        Label useLabel = new Label(currentUses + "/" + ability.maxUses());
         useLabel.setId("useLabel_" + rowIndex);
 
         for (int i = 0; i < 5; i++) {

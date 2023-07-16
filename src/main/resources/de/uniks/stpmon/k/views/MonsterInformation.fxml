@@ -73,10 +73,10 @@
         <Label fx:id="atkValueLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Label fx:id="defValueLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label fx:id="speValueLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Label fx:id="hpUpdateLabel" text="+3" GridPane.columnIndex="2" />
-        <Label fx:id="atkUpdateLabel" text="+3" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Label fx:id="defUpdateLabel" text="+4" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Label fx:id="speUpdateLabel" text="+5" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <Label fx:id="hpUpdateLabel" GridPane.columnIndex="2" />
+        <Label fx:id="atkUpdateLabel" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Label fx:id="defUpdateLabel" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Label fx:id="speUpdateLabel" GridPane.columnIndex="2" GridPane.rowIndex="3" />
     </GridPane>
     <Label fx:id="descriptionLabel" layoutX="31.0" layoutY="306.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="76.0" prefWidth="258.0" text="Label" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="10.0" />
 </AnchorPane>
