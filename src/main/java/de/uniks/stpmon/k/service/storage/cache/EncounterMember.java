@@ -22,7 +22,7 @@ public class EncounterMember extends SingleCache<Monster> {
     protected String trainerId;
     protected String monsterId;
     protected Completable onInitialized;
-
+    protected boolean isInitialized;
 
     @Inject
     public EncounterMember() {
@@ -43,10 +43,13 @@ public class EncounterMember extends SingleCache<Monster> {
         if (onInitialized != null) {
             destroy();
             disposables = new CompositeDisposable();
+            isInitialized = false;
+            reset();
         }
 
         if (monsterId == null) {
             reset();
+            isInitialized = true;
             onInitialized = Completable.complete();
             return;
         }
@@ -54,19 +57,23 @@ public class EncounterMember extends SingleCache<Monster> {
         // Set initial value
         onInitialized = regionService.getMonster(region._id(), trainerId, monsterId)
                 .doOnNext(this::setValue).ignoreElements().cache();
-        disposables.add(onInitialized.subscribe());
+        disposables.add(onInitialized.subscribe(() -> isInitialized = true));
         // Listen to changes to the monster
         disposables.add(listener.listen(Socket.WS,
                         "trainers.%s.monsters.%s.*".formatted(trainerId, monsterId),
                         Monster.class)
                 .subscribe(event -> {
-                    final Monster value = event.data();
-                    switch (event.suffix()) {
-                        case "created", "updated" -> setValue(value);
-                        case "deleted" -> reset();
-                    }
+                            final Monster value = event.data();
+                            switch (event.suffix()) {
+                                case "created", "updated" -> setValue(value);
+                                case "deleted" -> reset();
+                            }
                         }
                 ));
+    }
+
+    public boolean isInitialized() {
+        return isInitialized;
     }
 
     public Completable onInitialized() {

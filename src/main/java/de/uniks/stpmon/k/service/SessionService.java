@@ -127,12 +127,16 @@ public class SessionService extends DestructibleElement {
 
     //---------------- Session Helpers -------------------------
     public boolean isMonsterDead(EncounterSlot slot) {
-        Opponent opponent = getOpponent(slot);
+        EncounterSession session = encounterStorage.getSession();
+        if (session == null) {
+            throw new IllegalStateException("No encounter session available");
+        }
+        Opponent opponent = session.getOpponent(slot);
         if (opponent == null || opponent.monster() == null) {
             return true;
         }
-        Monster monster = getMonster(slot);
-        return monster == null || isMonsterDead(monster);
+        MonsterState state = session.getMonsterState(slot);
+        return state == MonsterState.DEAD;
     }
 
     public boolean isMonsterDead(Monster monster) {
