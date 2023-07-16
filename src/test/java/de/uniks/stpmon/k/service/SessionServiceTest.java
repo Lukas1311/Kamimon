@@ -65,7 +65,6 @@ class SessionServiceTest {
         when(cacheManager.trainerCache()).thenReturn(trainerCache);
         // Mock single monster cache
         EncounterMember monsterCache = Mockito.mock(EncounterMember.class);
-        // when(monsterCache.onInitialized()).thenReturn(Completable.complete());
         when(monsterCache.getTrainerId()).thenReturn("0");
         when(monsterCacheProvider.get()).thenReturn(monsterCache);
     }

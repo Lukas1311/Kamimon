@@ -57,15 +57,13 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
         Monster activeMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
         List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
 
-        if (userMonstersList != null) {
-            for (Monster monster : userMonstersList) {
-                if (!sessionService.isMonsterDead(monster) &&
-                        (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
-                    subscribe(presetService.getMonster(monster.type()), type -> {
-                        selectedUserMonster = monster;
-                        addActionOption(monster._id() + " " + type.name(), false);
-                    });
-                }
+        for (Monster monster : userMonstersList) {
+            if (!sessionService.isMonsterDead(monster) &&
+                    (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
+                subscribe(presetService.getMonster(monster.type()), type -> {
+                    selectedUserMonster = monster;
+                    addActionOption(monster._id() + " " + type.name(), false);
+                });
             }
         }
     }
