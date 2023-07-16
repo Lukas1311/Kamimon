@@ -6,7 +6,9 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
+import de.uniks.stpmon.k.service.storage.cache.EncounterMonsters;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
@@ -36,9 +38,13 @@ public class SessionService extends DestructibleElement {
     @Inject
     Provider<EncounterMember> monsterCacheProvider;
     @Inject
+    Provider<EncounterMonsters> monstersProvider;
+    @Inject
     Provider<OpponentCache> opponentCacheProvider;
     @Inject
     EncounterService encounterService;
+    @Inject
+    CacheManager cacheManager;
 
     @Inject
     public SessionService() {
@@ -110,7 +116,8 @@ public class SessionService extends DestructibleElement {
             return opponentCache.onInitialized().andThen(Observable.just(opponentCache));
         }).flatMapCompletable(cache -> {
             EncounterSession session = new EncounterSession(cache);
-            session.setup(monsterCacheProvider, trainerStorage.getTrainer()._id());
+            session.setup(monsterCacheProvider, monstersProvider,
+                    cacheManager.trainerCache(), trainerStorage.getTrainer()._id());
             encounterStorage.setSession(session);
 
             return session.waitForLoad();
@@ -197,6 +204,14 @@ public class SessionService extends DestructibleElement {
 
     public boolean hasSlot(EncounterSlot slot) {
         return applyIfEncounter(EncounterSession::hasSlot, slot);
+    }
+
+    public Monster getMonsterById(String id) {
+        EncounterSession session = encounterStorage.getSession();
+        if (session == null) {
+            return null;
+        }
+        return session.getMonsterById(id);
     }
 
     public Collection<EncounterSlot> getSlots() {

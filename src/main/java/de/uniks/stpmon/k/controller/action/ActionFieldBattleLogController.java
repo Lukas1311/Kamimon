@@ -13,8 +13,6 @@ import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Result;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -26,6 +24,8 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,7 +34,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @FXML
     public ScrollPane scrollPane;
-
     @FXML
     public VBox vBox;
     @FXML
@@ -45,12 +44,9 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     @Inject
     PresetService presetService;
     @Inject
-    RegionService regionService;
-    @Inject
-    RegionStorage regionStorage;
-    @Inject
     InputHandler inputHandler;
-
+    private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
+    private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private boolean encounterFinished = false;
     private Timer closeTimer;
 
@@ -116,15 +112,10 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     }
 
     private void addTranslatedSection(String word, String... args) {
-        addTextSection(translateString(word, args), false);
+        addTextSection(translateString(word, args));
     }
 
-    private void addTextSection(String text, boolean overwriteAll) {
-        //replace whole text in battle log
-        if (overwriteAll) {
-            vBox.getChildren().clear();
-        }
-
+    private void addTextSection(String text) {
         Label text1 = new Label(text + "\n");
         text1.setWrapText(true);
         text1.setMaxWidth(290);
@@ -132,7 +123,11 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     }
 
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {
-        addTextSection(translateString(closeEncounter.toString()), true);
+        // Check if any events were logged beforehand
+        if (!vBox.getChildren().isEmpty()) {
+            addTextSection("--------------------------------------");
+        }
+        addTextSection(translateString(closeEncounter.toString()));
         encounterFinished = true;
         closeTimer = new Timer();
         closeTimer.schedule(new TimerTask() {
@@ -140,52 +135,77 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             public void run() {
                 Platform.runLater(() -> nextWindow());
             }
-        }, (int) (effectContext.getEncounterAnimationSpeed() * 2.3f));
+        }, (int) (effectContext.getEncounterAnimationSpeed() * 5f));
     }
 
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
-            // Skip first value because it is always the existing value
-            subscribe(sessionService.listenOpponent(slot).skip(1), opp -> handleOpponentUpdate(slot, opp));
+            subscribe(sessionService.listenOpponent(slot), opp -> {
+                // Skip first value because it is always the existing value
+                if (!lastOpponents.containsKey(slot)) {
+                    // Cache the first value
+                    lastOpponents.put(slot, opp);
+                    return;
+                }
+                handleOpponentUpdate(slot, opp);
+                lastOpponents.put(slot, opp);
+            });
         }
+        onDestroy(lastOpponents::clear);
+        onDestroy(attackedMonsters::clear);
     }
 
     private void handleOpponentUpdate(EncounterSlot slot, Opponent opp) {
         if (sessionService.hasNoEncounter()) {
             return;
         }
-        MonsterTypeDto monster = getTypeForSlot(slot);
-
-        if (monster == null) {
-            return;
-        }
-
-        if (opp.move() instanceof AbilityMove move) {
-            // Blocking can be used here because values are already loaded in the cache
-            AbilityDto ability = getAbility(move.ability());
-            EncounterSlot targetSlot = sessionService.getTarget(move.target());
-            MonsterTypeDto eneMon = getTypeForSlot(targetSlot);
-
-            if (eneMon == null) {
-                return;
-            }
-
-            addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+        Opponent lastOpponent = lastOpponents.get(slot);
+        if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
+            Monster newMonster = sessionService.getMonsterById(opp.monster());
+            addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             return;
         }
 
         if (opp.move() instanceof ChangeMonsterMove move) {
-            subscribe(regionService.getMonster(regionStorage.getRegion()._id(), opp._id(), move.monster()), monster1 ->
-                    addTranslatedSection("monster-changed", getMonsterType(monster1.type()).name()));
+            Monster newMonster = sessionService.getMonsterById(move.monster());
+            addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             return;
         }
 
+        // Save attacked monster before it is changed or dead
+        if (opp.move() instanceof AbilityMove move) {
+            EncounterSlot targetSlot = sessionService.getTarget(move.target());
+            MonsterTypeDto eneMon = getTypeForSlot(targetSlot);
+            if (eneMon != null) {
+                attackedMonsters.put(slot, eneMon);
+            } else {
+                attackedMonsters.remove(slot);
+            }
+        }
+
+        MonsterTypeDto monster = getTypeForSlot(slot);
+        if (monster == null) {
+            return;
+        }
+
+        String target = null;
+        // Use last opponent to get the ability, this way we print the ability together with the result
+        if (lastOpponent.move() instanceof AbilityMove move) {
+            // Blocking can be used here because values are already loaded in the cache
+            AbilityDto ability = getAbility(move.ability());
+            MonsterTypeDto eneMon = attackedMonsters.get(slot);
+            if (eneMon != null) {
+                addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+            }
+            target = move.target();
+        }
+
         for (Result result : opp.results()) {
-            handleResult(monster, result);
+            handleResult(monster, result, target);
         }
     }
 
-    private void handleResult(MonsterTypeDto monster, Result result) {
+    private void handleResult(MonsterTypeDto monster, Result result, String target) {
         final Integer ability = result.ability();
         switch (result.type()) {
             case "ability-success" -> {
@@ -200,7 +220,16 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
                 addTranslatedSection(translationVar);
             }
             //when last monster is dead
-            case "target-defeated" -> addTranslatedSection("target-defeated", "Targeted monster");
+            case "target-defeated" -> {
+                String monsterName = "Targeted monster";
+                if (target != null) {
+                    MonsterTypeDto targetType = getTypeForSlot(sessionService.getTarget(target));
+                    if (targetType != null) {
+                        monsterName = targetType.name();
+                    }
+                }
+                addTranslatedSection("target-defeated", monsterName);
+            }
             case "monster-changed" -> {
             }
             //called when not dying, e.g. another monster is available
