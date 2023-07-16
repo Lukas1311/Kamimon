@@ -30,7 +30,7 @@ import java.util.List;
 @Singleton
 public class MonBoxController extends Controller {
 
-    public final static int IMAGESIZE = 67;
+    public final static int IMAGE_SIZE = 67;
 
     @FXML
     public StackPane monBoxStackPane;
@@ -73,7 +73,11 @@ public class MonBoxController extends Controller {
         trainerCache = cacheManager.trainerCache();
         targetGrid(monStorage);
         targetGrid(monTeam);
-        subscribe(monsterCache.getTeam().getValues(), this::showTeamMonster);
+        subscribe(monsterCache.getTeam().getValues().take(1), this::showTeamMonster);
+        subscribe(monsterCache.getTeam().getValues(), monsters -> {
+            showTeamMonster(monsters);
+            showMonsterList(monsterCache.getValues().blockingFirst());
+        });
         subscribe(monsterCache.getValues(), this::showMonsterList);
         loadImage(monBoxImage, "monGrid_v4.png");
 
@@ -129,8 +133,8 @@ public class MonBoxController extends Controller {
 
     private ImageView createMonsterImageView(Monster monster, String id) {
         ImageView imageView = new ImageView();
-        imageView.setFitHeight(IMAGESIZE);
-        imageView.setFitWidth(IMAGESIZE);
+        imageView.setFitHeight(IMAGE_SIZE);
+        imageView.setFitWidth(IMAGE_SIZE);
 
         subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
             // Scale and set the image for the Clipboard
