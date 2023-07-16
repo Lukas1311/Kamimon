@@ -56,6 +56,20 @@ public class DummyConstants {
             null,
             Set.of(), Set.of()
     );
+    public static final Trainer TRAINER_OTHER = new Trainer(
+            "attacker",
+            "region_0",
+            "user_1",
+            "Test Trainer",
+            "trainer_1",
+            0,
+            "area_0",
+            0,
+            0,
+            0,
+            null,
+            Set.of(), Set.of()
+    );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "1",
             "region_0",

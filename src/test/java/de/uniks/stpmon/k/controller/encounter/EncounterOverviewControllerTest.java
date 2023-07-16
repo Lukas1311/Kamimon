@@ -2,13 +2,14 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
-import de.uniks.stpmon.k.models.*;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -63,18 +64,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         // Defines used slots of the encounter
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
-
-        Monster userMonster1 = MonsterBuilder.builder().setId("2").setTrainer(dummytrainer._id()).setType(1).create();
-        Monster userMonster2 = MonsterBuilder.builder(userMonster1).setId("3").setType(2).create();
-        // Assigns the monsters to the team slots
-        when(sessionService.getMonster(EncounterSlot.PARTY_FIRST)).thenReturn(userMonster1);
-        when(sessionService.getMonster(EncounterSlot.PARTY_SECOND)).thenReturn(userMonster2);
-
-        // Assigns the monsters to the enemy slots
-        when(sessionService.getMonster(EncounterSlot.ENEMY_FIRST))
-                .thenReturn(MonsterBuilder.builder().setId("2").setType(1).create());
-        when(sessionService.getMonster(EncounterSlot.ENEMY_SECOND))
-                .thenReturn(MonsterBuilder.builder().setId("3").setType(2).create());
 
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
 
