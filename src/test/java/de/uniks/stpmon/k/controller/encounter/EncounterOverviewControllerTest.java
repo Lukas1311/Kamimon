@@ -5,8 +5,6 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -52,7 +50,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
     @Mock
     RegionStorage regionStorage;
-    final Trainer dummytrainer = TrainerBuilder.builder().setId("1").create();
 
     @Override
     public void start(Stage stage) {

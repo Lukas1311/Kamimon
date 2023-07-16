@@ -129,7 +129,9 @@ public class ActionFieldController extends Controller {
         super.destroy();
         if (openController != null) {
             openController.destroy();
+            openController = null;
         }
+        ownMonsterDead = false;
     }
 
     public HBox getOptionContainer(String option) {
