@@ -66,7 +66,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(zeroHP);
 
-        monsterBarController.setMonsterStatus(0, 0, 100);
+        monsterBarController.setMonsterStatus(0, 0, 100, false);
         Thread.sleep(1000);
 
         // Check if the image is the same when HP is 0%
@@ -80,7 +80,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(normalHP);
 
-        monsterBarController.setMonsterStatus(1, 50, 100);
+        monsterBarController.setMonsterStatus(1, 50, 100, false);
         Thread.sleep(1000);
 
         // Check if the image is the same when HP is higher than 20%
@@ -94,7 +94,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(lowHP);
 
-        monsterBarController.setMonsterStatus(2, 10, 100);
+        monsterBarController.setMonsterStatus(2, 10, 100, false);
         Thread.sleep(1000);
 
         // Check if the image is the same when HP is lower than 20%

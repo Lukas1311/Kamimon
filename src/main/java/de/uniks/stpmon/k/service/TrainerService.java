@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
 
 @Singleton
@@ -56,7 +57,7 @@ public class TrainerService {
                 .setName(trainername)
                 .create();
         trainerStorage.setTrainer(newTrainer);
-        UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null);
+        UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null, List.of());
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 
@@ -69,7 +70,16 @@ public class TrainerService {
                 .setImage(image)
                 .create();
         trainerStorage.setTrainer(newTrainer);
-        UpdateTrainerDto dto = new UpdateTrainerDto(null, image);
+        UpdateTrainerDto dto = new UpdateTrainerDto(null, image, List.of());
+        return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
+    }
+
+    public Observable<Trainer> setTeam(List<String> team) {
+        Trainer trainer = trainerStorage.getTrainer();
+        if (trainer == null) {
+            return Observable.empty();
+        }
+        UpdateTrainerDto dto = new UpdateTrainerDto(null, null, team);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 

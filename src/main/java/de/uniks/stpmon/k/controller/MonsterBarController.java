@@ -81,14 +81,20 @@ public class MonsterBarController extends Controller {
      * @param slot      The slot index of the monster
      * @param currentHP The current HP of the monster
      * @param maxHP     The maximum HP of the monster
+     * @param empty     The slot is empty
      */
-    public void setMonsterStatus(int slot, float currentHP, float maxHP) {
+    public void setMonsterStatus(int slot, float currentHP, float maxHP, boolean empty) {
         if (slot < 0 || slot >= monsterSlots.length) {
             return;
         }
 
         ImageView monsterSlot = monsterSlots[slot];
-        if(monsterSlot == null){
+        if (monsterSlot == null) {
+            return;
+        }
+
+        if (empty) {
+            loadImage(monsterSlot, "freeSlot.png");
             return;
         }
 
