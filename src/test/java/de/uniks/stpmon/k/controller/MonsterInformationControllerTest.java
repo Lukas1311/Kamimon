@@ -111,7 +111,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         FxAssert.verifyThat("#nameLabel_1", hasText("abilityName"));
         FxAssert.verifyThat("#powLabel_1", hasText("25"));
         FxAssert.verifyThat("#accLabel_1", hasText("100"));
-        FxAssert.verifyThat("#useLabel_1", hasText("??/20"));
+        FxAssert.verifyThat("#useLabel_1", hasText("15/20"));
     }
 
     @Test
