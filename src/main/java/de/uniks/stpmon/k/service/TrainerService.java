@@ -79,10 +79,6 @@ public class TrainerService {
         if (trainer == null) {
             return Observable.empty();
         }
-        Trainer newTrainer = TrainerBuilder.builder(trainer)
-                .addTeam(team)
-                .create();
-        //trainerStorage.setTrainer(newTrainer);
         UpdateTrainerDto dto = new UpdateTrainerDto(null, null, team);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
