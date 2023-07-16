@@ -151,11 +151,13 @@ public class SessionService extends DestructibleElement {
     }
 
     public boolean hasWon() {
+        EncounterSession session = encounterStorage.getSession();
         for (EncounterSlot slot : getSlots()) {
             if (!slot.enemy()) {
                 continue;
             }
-            if (!isMonsterDead(slot)) {
+            MonsterState state = session.getMonsterState(slot);
+            if (state == MonsterState.ALIVE) {
                 return false;
             }
         }
