@@ -9,8 +9,7 @@ import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
-import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
+import de.uniks.stpmon.k.service.storage.cache.*;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.inject.Provider;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +42,10 @@ class SessionServiceTest {
     @Mock
     Provider<EncounterMember> monsterCacheProvider;
     @Mock
+    Provider<EncounterMonsters> monstersCacheProvider;
+    @Mock
+    CacheManager cacheManager;
+    @Mock
     EventListener listener;
     @InjectMocks
     SessionService sessionService;
@@ -53,9 +57,14 @@ class SessionServiceTest {
         when(cache.onInitialized()).thenReturn(Completable.complete());
         when(cache.listenValue(any())).thenReturn(Observable.empty());
         when(opponentCacheProvider.get()).thenReturn(cache);
+        EncounterMonsters monsters = Mockito.mock(EncounterMonsters.class);
+        when(monsters.onInitialized()).thenReturn(Completable.complete());
+        when(monstersCacheProvider.get()).thenReturn(monsters);
+        TrainerCache trainerCache = Mockito.mock(TrainerCache.class);
+        when(trainerCache.getValue(any())).thenReturn(Optional.empty());
+        when(cacheManager.trainerCache()).thenReturn(trainerCache);
         // Mock single monster cache
         EncounterMember monsterCache = Mockito.mock(EncounterMember.class);
-        when(monsterCache.onInitialized()).thenReturn(Completable.complete());
         when(monsterCache.getTrainerId()).thenReturn("0");
         when(monsterCacheProvider.get()).thenReturn(monsterCache);
     }

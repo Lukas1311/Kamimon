@@ -1,12 +1,11 @@
 package de.uniks.stpmon.k.service.storage;
 
-import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.MonsterState;
-import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.service.DestructibleElement;
 import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
+import de.uniks.stpmon.k.service.storage.cache.EncounterMonsters;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableSource;
 import io.reactivex.rxjava3.core.Observable;
@@ -22,19 +21,23 @@ public class EncounterSession extends DestructibleElement {
 
     private final OpponentCache opponentCache;
     private final List<String> ownTeam;
-    private final List<String> attackerTeam;
+    private final List<String> enemyTeam;
     private final Map<EncounterSlot, EncounterMember> cacheByOpponent = new HashMap<>();
+    private EncounterMonsters allMonsterCache;
     private final Set<EncounterSlot> slots = new LinkedHashSet<>();
 
     public EncounterSession(OpponentCache opponentCache) {
         this.opponentCache = opponentCache;
-        this.attackerTeam = new LinkedList<>();
+        this.enemyTeam = new LinkedList<>();
         this.ownTeam = new ArrayList<>();
         // Initialize with empty values to allow other teammates to be added after the self trainer
         this.ownTeam.add("");
     }
 
-    public void setup(Provider<EncounterMember> cacheProvider, String selfTrainer) {
+    public void setup(Provider<EncounterMember> cacheProvider,
+                      Provider<EncounterMonsters> monstersProvider,
+                      TrainerCache trainerCache,
+                      String selfTrainer) {
         int teamIndex = 1;
         int attackerIndex = 0;
 
@@ -47,11 +50,13 @@ public class EncounterSession extends DestructibleElement {
             }
         }
 
+        allMonsterCache = monstersProvider.get();
+        Set<String> allMonsters = new HashSet<>();
+        Set<String> allTrainers = new HashSet<>();
         // does not block because it is initialized with the initial values
         for (Opponent op : opponentCache.getCurrentValues()) {
             EncounterMember monsterCache = cacheProvider.get();
-            monsterCache.setup(op.trainer(), op.monster());
-            monsterCache.init();
+            monsterCache.setup(op.trainer(), op.monster(), allMonsterCache);
             EncounterSlot member;
             // self trainer is always in the first position
             if (op.trainer().equals(selfTrainer)) {
@@ -62,13 +67,21 @@ public class EncounterSession extends DestructibleElement {
                 member = new EncounterSlot(teamIndex++, false);
                 ownTeam.add(op._id());
             } else {
-                attackerTeam.add(op._id());
+                enemyTeam.add(op._id());
                 member = new EncounterSlot(attackerIndex++, true);
             }
+            allMonsters.add(op.monster());
+            allTrainers.add(op.trainer());
             slots.add(member);
             cacheByOpponent.put(member, monsterCache);
             listenToOpponentMonster(op._id(), member);
         }
+        for (String trainer : allTrainers) {
+            Optional<Trainer> maybeTrainer = trainerCache.getValue(trainer);
+            maybeTrainer.ifPresent(value -> allMonsters.addAll(value.team()));
+        }
+        allMonsterCache.setup(allTrainers, allMonsters);
+        allMonsterCache.init();
         onDestroy(opponentCache::destroy);
     }
 
@@ -78,14 +91,12 @@ public class EncounterSession extends DestructibleElement {
                 return;
             }
             Opponent opponent = opponentOptional.get();
-            if (opponent.monster() == null) {
-                return;
-            }
             EncounterMember cache = cacheByOpponent.get(slot);
             Monster monster = cache.asNullable();
 
-            if (monster != null && !Objects.equals(opponent.monster(), monster._id())) {
-                cache.setup(cache.getTrainerId(), opponent.monster());
+            if (monster == null && opponent.monster() != null
+                    || opponent.monster() != null && !Objects.equals(opponent.monster(), monster._id())) {
+                cache.setup(cache.getTrainerId(), opponent.monster(), allMonsterCache);
                 cache.init();
             }
         }));
@@ -102,11 +113,19 @@ public class EncounterSession extends DestructibleElement {
 
     public MonsterState getMonsterState(EncounterSlot slot) {
         EncounterMember cache = cacheByOpponent.get(slot);
-        if (cache == null || !cache.isInitialized()) {
+        if (cache == null) {
             return MonsterState.UNKNOWN;
         }
         Monster monster = cache.asNullable();
+        // Currently the monster is switched out if it is dead
+        if (monster == null) {
+            return MonsterState.UNKNOWN;
+        }
         return monster.currentAttributes().health() <= 0 ? MonsterState.DEAD : MonsterState.ALIVE;
+    }
+
+    public Monster getMonsterById(String id) {
+        return allMonsterCache.getValue(id).orElse(null);
     }
 
     public Monster getMonster(EncounterSlot slot) {
@@ -177,19 +196,19 @@ public class EncounterSession extends DestructibleElement {
         if (slot.partyIndex() < 0) {
             return null;
         }
-        List<String> team = slot.enemy() ? attackerTeam : ownTeam;
+        List<String> team = slot.enemy() ? enemyTeam : ownTeam;
         return slot.partyIndex() >= team.size() ? null : team.get(slot.partyIndex());
     }
 
     private IllegalStateException createOpponentNotFound(EncounterSlot slot) {
         return new IllegalStateException(
                 "Opponent not found: Member: %s, Own-Team: %s, Att-Team: %s"
-                        .formatted(slot, ownTeam, attackerTeam
+                        .formatted(slot, ownTeam, enemyTeam
                         ));
     }
 
     public List<String> getEnemyTeam() {
-        return Collections.unmodifiableList(attackerTeam);
+        return Collections.unmodifiableList(enemyTeam);
     }
 
     public List<String> getOwnTeam() {
@@ -198,8 +217,11 @@ public class EncounterSession extends DestructibleElement {
 
     public CompletableSource waitForLoad() {
         return opponentCache.onInitialized()
+                .andThen(allMonsterCache.onInitialized())
                 .andThen(Completable.merge(cacheByOpponent.values().stream()
-                        .map(EncounterMember::onInitialized).toList()));
+                        .map(EncounterMember::init)
+                        .map((c) -> Completable.complete())
+                        .toList()));
     }
 
     public Collection<EncounterSlot> getSlots() {

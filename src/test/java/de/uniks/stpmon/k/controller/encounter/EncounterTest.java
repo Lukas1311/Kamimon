@@ -12,6 +12,7 @@ import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
+import de.uniks.stpmon.k.service.dummies.RegionApiDummy;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import javafx.stage.Stage;
@@ -52,6 +53,7 @@ public class EncounterTest extends ApplicationTest {
     final TrainerStorage trainerStorage = component.trainerStorage();
     final EncounterApiDummy encounterApiDummy = component.encounterApi();
     final EventDummy eventDummy = component.eventDummy();
+    final RegionApiDummy regionApiDummy = component.regionApi();
 
     @SuppressWarnings("unused")
     final HybridController hybridController = Mockito.mock(HybridController.class);
@@ -59,6 +61,11 @@ public class EncounterTest extends ApplicationTest {
     @Override
     public void start(Stage stage) {
         app.start(stage);
+
+        regionApiDummy.addTrainer(DummyConstants.TRAINER);
+        regionApiDummy.addTrainer(DummyConstants.TRAINER_OTHER);
+        regionApiDummy.addMonster("0", "0", true);
+        regionApiDummy.addMonster("attacker", "1", true);
 
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         regionStorage.setRegion(new Region("id0", "", null, DummyConstants.EMPTY_MAP_DATA));
@@ -94,13 +101,14 @@ public class EncounterTest extends ApplicationTest {
         verifyThat("#0_party #monsterHp", hasText("1 / 20"));
         Monster monster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
         // Send event for updating selected monster
-        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
+        eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.updated"
                 .formatted("0", "0"),
                 MonsterBuilder.builder(monster)
                         .setCurrentAttributes(new MonsterAttributes(1f, 10f, 10f, 10f))
                         .setAttributes(new MonsterAttributes(12f, 10f, 10f, 10f))
                         .create()));
         waitForFxEvents();
+        sleep(200);
 
         // New monster should be selected
         verifyThat("#0_party #monsterHp", hasText("1 / 12"));

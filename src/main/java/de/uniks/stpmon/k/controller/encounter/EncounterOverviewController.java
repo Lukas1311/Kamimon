@@ -3,9 +3,7 @@ package de.uniks.stpmon.k.controller.encounter;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.dto.AbilityMove;
-import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -37,6 +35,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class EncounterOverviewController extends Controller {
@@ -48,6 +47,7 @@ public class EncounterOverviewController extends Controller {
     private final HashMap<EncounterSlot, Transition> changeAnimations = new HashMap<>(4);
 
     private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
+    private final Map<EncounterSlot, String> slotMonsters = new HashMap<>(4);
 
     @FXML
     public StackPane fullBox;
@@ -103,6 +103,7 @@ public class EncounterOverviewController extends Controller {
         if (actionFieldController != null) {
             actionFieldController.destroy();
         }
+        slotMonsters.clear();
     }
 
     private TerrainType getEncounterTerrainType(List<RouteData> routeListData) {
@@ -223,8 +224,8 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
-    private Transition playOpeningAnimation(){
-        if(fullBox.getChildren().contains(blackPane)){
+    private Transition playOpeningAnimation() {
+        if (fullBox.getChildren().contains(blackPane)) {
             return null;
         }
         blackPane.setPrefWidth(1280);
@@ -256,8 +257,6 @@ public class EncounterOverviewController extends Controller {
                 //using IMove to animate attack
                 if (next.move() instanceof AbilityMove) {
                     renderAttack(slot);
-                } else if (next.move() instanceof ChangeMonsterMove) {
-                    renderChange(slot);
                 }
             });
         }
@@ -271,7 +270,6 @@ public class EncounterOverviewController extends Controller {
     private void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
     }
-
 
     private void renderMonsterLists() {
         for (EncounterSlot slot : sessionService.getSlots()) {
@@ -292,17 +290,23 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterSlot slot) {
-        Monster monster = sessionService.getMonster(slot);
         StatusController statusController = statusControllerProvider.get();
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
-        if (monster == null) {
-            return;
-        }
-
-        subscribe(sessionService.listenMonster(slot), (newMonster) ->
-                loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy())
+        subscribe(sessionService.listenMonster(slot), (newMonster) -> {
+                    if (newMonster == null) {
+                        return;
+                    }
+                    String oldMonsterId = slotMonsters.get(slot);
+                    if (oldMonsterId == null) {
+                        loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
+                    } else if (!oldMonsterId.equals(newMonster._id())) {
+                        loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
+                        renderChange(slot);
+                    }
+                    slotMonsters.put(slot, newMonster._id());
+                }
         );
 
         if (slot.partyIndex() == 0) {

@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
 import javafx.fxml.FXML;
@@ -15,7 +16,6 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.function.Consumer;
 
 @Singleton
 public class ActionFieldController extends Controller {
@@ -41,6 +41,7 @@ public class ActionFieldController extends Controller {
 
     private String enemyTrainerId;
     private int abilityId;
+    private boolean ownMonsterDead;
 
     private Controller openController;
     private CloseEncounterTrigger closeTrigger;
@@ -81,11 +82,20 @@ public class ActionFieldController extends Controller {
     }
 
     public void openMainMenu() {
+        if (ownMonsterDead) {
+            open(changeMonsterControllerProvider);
+            return;
+        }
         open(mainMenuControllerProvider);
     }
 
     public void openChangeMonster(boolean dead) {
-        open(changeMonsterControllerProvider, (c) -> c.setChangeDeadMonster(dead));
+        setOwnMonsterDead(dead);
+        // If battle log is open, don't open change monster, will be opened after battle log
+        if (openController instanceof ActionFieldBattleLogController) {
+            return;
+        }
+        open(changeMonsterControllerProvider);
     }
 
     public void openChooseAbility() {
@@ -97,15 +107,16 @@ public class ActionFieldController extends Controller {
     }
 
     public void openBattleLog() {
+        // Only open battle log if it's not already open
+        if (openController instanceof ActionFieldBattleLogController) {
+            return;
+        }
         open(battleLogControllerProvider);
     }
 
-    private <T extends Controller> void open(Provider<T> provider, Consumer<T> setup) {
+    private <T extends Controller> void open(Provider<T> provider) {
         if (openController != null) {
             openController.destroy();
-        }
-        if (setup != null) {
-            setup.accept(provider.get());
         }
         actionFieldContent.getChildren().clear();
         openController = provider.get();
@@ -113,16 +124,14 @@ public class ActionFieldController extends Controller {
         actionFieldContent.getChildren().add(openController.render());
     }
 
-    private void open(Provider<? extends Controller> provider) {
-        open(provider, null);
-    }
-
     @Override
     public void destroy() {
         super.destroy();
         if (openController != null) {
             openController.destroy();
+            openController = null;
         }
+        ownMonsterDead = false;
     }
 
     public HBox getOptionContainer(String option) {
@@ -160,6 +169,20 @@ public class ActionFieldController extends Controller {
         });
     }
 
+    public void executeMonsterChange(Monster selectedMonster) {
+        EncounterService encounterService = encounterServiceProvider.get();
+        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(selectedMonster) :
+                encounterService.makeChangeMonsterMove(selectedMonster));
+        setOwnMonsterDead(false);
+    }
+
+    public void setOwnMonsterDead(boolean ownMonsterDead) {
+        this.ownMonsterDead = ownMonsterDead;
+    }
+
+    public boolean isOwnMonsterDead() {
+        return ownMonsterDead;
+    }
 
     protected void setFleeEncounter() {
         this.closeTrigger = CloseEncounterTrigger.FLEE;

@@ -416,6 +416,9 @@ class AppTest extends ApplicationTest {
         clickOn("#user_monster_1");
         waitForFxEvents();
 
+        verifyThat("#battleLog", Node::isVisible);
+        clickOn("#battleLog");
+
         verifyThat("#changeMonBox", Node::isVisible);
         // no back button, monster is option 0
         clickOn("#user_monster_0");
@@ -440,7 +443,6 @@ class AppTest extends ApplicationTest {
         // Check if hp is 0
         verifyThat("#monsterBar #slot_0_zero", Node::isVisible);
         verifyThat("#monsterBar #slot_1_zero", Node::isVisible);
-
         // Walk to nurse
         type(KeyCode.D);
         type(KeyCode.S);
@@ -472,11 +474,12 @@ class AppTest extends ApplicationTest {
         // Start encounter wild encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
+        sleep(4000);
         type(KeyCode.E);
         waitForFxEvents();
 
         verifyThat("#userMonsters", Node::isVisible);
-
+        sleep(8000);
         clickOn("#main_menu_flee");
         waitForFxEvents();
 

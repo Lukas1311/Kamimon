@@ -36,6 +36,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
     public Parent render() {
         Parent parent = super.render();
 
+        optionIndex = 0;
         addMonsterOption(null, null, true);
 
         for (EncounterSlot slot : sessionService.getSlots()) {
