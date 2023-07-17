@@ -47,6 +47,7 @@ public class TextureSetServiceTest {
         return new TileMapData(
                 2, 2,
                 false, List.of(layer),
+                List.of(),
                 1, 1,
                 List.of(new TilesetSource(1, "grass.json")),
                 "map");
