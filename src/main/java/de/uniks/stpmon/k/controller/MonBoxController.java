@@ -32,8 +32,6 @@ public class MonBoxController extends Controller {
     public GridPane monTeam;
     @FXML
     public GridPane monStorage;
-
-
     @FXML
     public AnchorPane monBoxMenuHolder;
 
@@ -47,6 +45,8 @@ public class MonBoxController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     TrainerService trainerService;
+
+
     private MonsterCache monsterCache;
     private TrainerCache trainerCache;
     private Monster activeMonster;
