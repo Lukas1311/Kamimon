@@ -114,6 +114,7 @@ public class DummyConstants {
                     true,
                     List.of()
             )),
+            List.of(),
             1, 1,
             List.of(),
             "map"
@@ -145,6 +146,7 @@ public class DummyConstants {
                             List.of()
                     )
             ),
+            List.of(),
             16, 16,
             List.of(
                     new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")

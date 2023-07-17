@@ -38,6 +38,7 @@ public class TextDeliveryServiceTest {
         return new TileMapData(
                 2, 2,
                 false, List.of(layer),
+                List.of(),
                 1, 1,
                 List.of(),
                 "map");
