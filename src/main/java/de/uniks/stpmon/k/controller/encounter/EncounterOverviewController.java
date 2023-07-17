@@ -82,6 +82,10 @@ public class EncounterOverviewController extends Controller {
     @Inject
     TextDeliveryService textDeliveryService;
     @Inject
+    WorldService worldService;
+    @Inject
+    ClockService clockService;
+    @Inject
     Provider<StatusController> statusControllerProvider;
     @Inject
     SessionService sessionService;
@@ -133,8 +137,19 @@ public class EncounterOverviewController extends Controller {
         return TerrainType.TOWN;
     }
 
+    private String getTerrainTypeName() {
+        float nightFactor = worldService.getNightFactor(clockService.onTime().blockingFirst());
+        TerrainType terrainType = getEncounterTerrainType();
+        if (terrainType == TerrainType.CAVE) {
+            return TerrainType.CAVE.name();
+        } else {
+            String timeOfDay = (nightFactor > 0) ? "NIGHT" : "DAY";
+            return terrainType.name() + "_" + timeOfDay;
+        }
+    }
 
-        return TerrainType.CITY;
+    private String getTerrainImagePath(List<RouteData> routeListData) {
+        return getResourcePath() + "terrain/" + getTerrainTypeName() + ".png";
     }
 
     @Override
@@ -150,8 +165,8 @@ public class EncounterOverviewController extends Controller {
         Region currentRegion = regionStorage.getRegion();
         if (currentRegion.map() != null) {
             subscribe(
-                    textDeliveryService.getRouteData(currentRegion), // switch this to night when its night
-                    data -> loadImage(background, "encounter/terrain/" + getEncounterTerrainType(data).name() + "_DAY" + ".png")
+                textDeliveryService.getRouteData(currentRegion),
+                data -> loadImage(background, getTerrainImagePath(data)) // load bg image dependant on area
             );
         }
 
