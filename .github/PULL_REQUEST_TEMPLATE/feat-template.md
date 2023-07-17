@@ -14,6 +14,8 @@ Is there any work in progress?
 
 Which ticket/tickets are solved with this feature?
 
+[STP23K-XXX](https://jira.uniks.de/browse/STP23K-XXX)
+
 ## Covered with tests?
 
 Did you implement a test for the new feature?
