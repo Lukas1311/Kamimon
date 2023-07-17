@@ -79,7 +79,7 @@ public class MonBoxController extends Controller {
             showMonsterList(monsterCache.getValues().blockingFirst());
         });
         subscribe(monsterCache.getValues(), this::showMonsterList);
-        loadImage(monBoxImage, "monGrid_v4.png");
+        loadImage(monBoxImage, "monBox_v5.png");
 
         return parent;
     }
