@@ -6,10 +6,11 @@ import de.uniks.stpmon.k.utils.Direction;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
+
 public class ImageConnectionRule implements ConnectionRule {
 
     public static final int CHECKED_PIXELS = 3;
-    public static final int TILE_SIZE = 16;
 
     @Override
     public RuleResult apply(TileInfo current, TileInfo other,

@@ -37,13 +37,13 @@ public class ChunkBuffer {
             return ID_INVALID;
         }
         if (layerData.data() != null) {
-            return layerData.getIdFromData(x, y);
+            return layerData.getTileId(x, y);
         }
         ChunkData chunk = getChunk(x, y);
         if (chunk == null) {
             return 0;
         }
-        return chunk.getId(x, y);
+        return chunk.getTileId(x, y);
     }
 
     public ChunkData getChunk(int x, int y) {

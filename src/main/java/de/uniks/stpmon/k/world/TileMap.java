@@ -160,7 +160,7 @@ public class TileMap {
 
         for (int x = 0; x < provider.width(); x++) {
             for (int y = 0; y < provider.height(); y++) {
-                int data = provider.data().get(x + y * provider.width());
+                int data = provider.getTileIdFromLocal(x, y);
                 if (data == 0) {
                     continue;
                 }
