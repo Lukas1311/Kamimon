@@ -13,7 +13,7 @@ import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @SuppressWarnings("unused")
 public class DummyConstants {
@@ -129,7 +129,7 @@ public class DummyConstants {
                             0, "Ground",
                             List.of(
                                     new ChunkData(
-                                            IntStream.range(0, 256).map(i -> 482)
+                                            LongStream.range(0, 256).map(i -> 482)
                                                     .boxed().toList(),
                                             16, 16,
                                             0, 0
