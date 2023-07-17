@@ -9,18 +9,14 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
-import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -31,18 +27,15 @@ import java.util.List;
 @Singleton
 public class MonBoxController extends Controller {
 
-    public final static int IMAGE_SIZE = 67;
 
-    @FXML
-    public StackPane monBoxStackPane;
     @FXML
     public GridPane monTeam;
     @FXML
     public GridPane monStorage;
+
+
     @FXML
-    public ImageView monBoxImage;
-    @FXML
-    public VBox monBoxVbox;
+    public AnchorPane monBoxMenuHolder;
 
     @Inject
     CacheManager cacheManager;
@@ -57,7 +50,6 @@ public class MonBoxController extends Controller {
     private MonsterCache monsterCache;
     private TrainerCache trainerCache;
     private Monster activeMonster;
-    private ImageView monImage;
     private List<String> monTeamList = new ArrayList<>();
     private int monsterIndexStorage = 0;
     private String selectedMonster;
@@ -82,7 +74,7 @@ public class MonBoxController extends Controller {
             showMonsterList2(monsterCache.getValues().blockingFirst());
         });
         subscribe(monsterCache.getValues(), this::showMonsterList2);
-        loadImage(monBoxImage, "monBox_v5.png");
+        loadBgImage(monBoxMenuHolder, "MonBox_v6.png");
 
         return parent;
     }
@@ -105,7 +97,6 @@ public class MonBoxController extends Controller {
             Parent parent = createMonsterItem(monster);
             parent.setId("team_" + i);
             monTeam.add(parent, monsterIndexTeam, 0);
-            monBoxVbox.toFront();
             monTeamList.add(monster._id());
             monsterIndexTeam++;
         }
@@ -127,15 +118,13 @@ public class MonBoxController extends Controller {
                     Node node = createMonsterItem(monster);
                     node.setId("storage_" + row + "_" + column);
                     monStorage.add(node, column, row);
-                    monBoxVbox.toFront();
                     monsterIndexStorage++;
                 }
             }
         }
     }
 
-    private Parent createMonsterItem(Monster monster)
-    {
+    private Parent createMonsterItem(Monster monster) {
         MonItemController mon = new MonItemController(monster, resourceService);
         Parent parent = mon.render();
         draggableMonItem(mon, monster._id());
@@ -155,10 +144,12 @@ public class MonBoxController extends Controller {
             }
         }
     }
+
     private void openMonsterInformation(Monster monster) {
         activeMonster = monster;
         ingameControllerProvider.get().openMonsterInfo(monster);
     }
+
     private void closeMonsterInformation() {
         ingameControllerProvider.get().removeChildren(2);
         activeMonster = null;
@@ -167,7 +158,7 @@ public class MonBoxController extends Controller {
 
     private void draggableMonItem(MonItemController monItem, String id) {
         Parent parent = monItem.getParent();
-        if(parent == null) {
+        if (parent == null) {
             return;
         }
         parent.setOnDragDetected(event -> {
@@ -183,7 +174,7 @@ public class MonBoxController extends Controller {
 
         parent.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                monImage = null;
+                monParent = null;
             }
             event.consume();
         });
