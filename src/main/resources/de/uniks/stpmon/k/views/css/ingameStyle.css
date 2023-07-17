@@ -295,5 +295,33 @@
     -fx-padding: 0;
 }
 
-/* -------------------- Action Field  -------------------- */
+/* -------------------- Mon Box  -------------------- */
 
+.hp-progressbar {
+    -fx-border-color: black;
+    -fx-border-radius: 2px;
+    -fx-background-color: transparent;
+}
+
+.hp-progressbar .track {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.hp-progressbar .bar {
+    -fx-padding: 1px;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2px;
+}
+
+.hp-progressbar-red .bar {
+    -fx-background-color: red;
+}
+
+.hp-progressbar-orange .bar {
+    -fx-background-color: orange;
+}
+
+.hp-progressbar-green .bar {
+    -fx-background-color: green;
+}
