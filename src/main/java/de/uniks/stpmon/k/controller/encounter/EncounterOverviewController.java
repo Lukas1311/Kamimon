@@ -5,13 +5,15 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
+import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.world.RouteData;
-import de.uniks.stpmon.k.world.RouteText;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -33,6 +35,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,31 +109,31 @@ public class EncounterOverviewController extends Controller {
         slotMonsters.clear();
     }
 
-    private TerrainType getEncounterTerrainType(List<RouteData> routeListData) {
-        String currentAreaName = regionStorage.getArea().name();
+    private TerrainType getEncounterTerrainType() {
+        List<Property> properties = regionStorage.getArea().map().properties();
 
-        for (RouteData routeData : routeListData) {
-            RouteText routeText = routeData.routeText();
-            if (routeText.name().equals(currentAreaName)) {
-                // this will be terrain type switch case in v4. yet its hardcoded
-                return switch (routeText.type()) {
-                    case "Route" -> switch (routeText.name()) {
-                        case "Route 101", "Route 105", "Route 108", "Route 112", "Route 109", "Route 110", "Route 111" ->
-                                TerrainType.PLAINS;
-                        case "Second Bridge", "First Bridge", "Victory Road", "Entrance" -> TerrainType.CAVE;
-                        default -> TerrainType.FOREST;
-                    };
+        if (properties == null) {
+            return TerrainType.TOWN;
+        }
+
+        for (Property prop : properties) {
+            if (prop.name().equals("Terrain")) {
+                return switch (prop.value()) {
+                    case "Lake" ->  TerrainType.LAKE;
+                    case "Forest" -> TerrainType.FOREST;
+                    case "Plains" -> TerrainType.PLAINS;
+                    case "City" -> TerrainType.CITY;
                     case "Town" -> TerrainType.TOWN;
-                    case "Lake" -> TerrainType.LAKE;
-                    case "Place" -> switch (routeData.id()) { // coasts
-                        case 61, 62, 63, 65 -> TerrainType.COAST;
-                        default -> // Final Trainer & Starting Area
-                                TerrainType.CITY;
-                    };
-                    default -> TerrainType.CITY;
+                    case "Coast" -> TerrainType.COAST;
+                    case "Cave" -> TerrainType.CAVE;
+                    default -> TerrainType.TOWN;
                 };
             }
         }
+        return TerrainType.TOWN;
+    }
+
+
         return TerrainType.CITY;
     }
 
@@ -152,7 +155,6 @@ public class EncounterOverviewController extends Controller {
             );
         }
 
-        // load image dependent on area
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
