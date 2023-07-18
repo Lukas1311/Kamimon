@@ -2,7 +2,7 @@ package de.uniks.stpmon.k.utils;
 
 import de.uniks.stpmon.k.models.Trainer;
 
-import static de.uniks.stpmon.k.world.PropInspector.TILE_SIZE;
+import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 
 public enum Direction {
     RIGHT,

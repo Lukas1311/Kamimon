@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
+import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
+
 /**
  * The PropInspector is responsible for creating the props from the given tile map data and the decoration layers.
  * These layers are used to determine the props and their positions. These textures are then used to create the props.
@@ -22,7 +24,6 @@ import java.util.*;
  */
 public class PropInspector {
     private static final RuleRegistry registry = BasicRules.registerRules();
-    public static final int TILE_SIZE = 16;
     private final PropGrid[] grids;
     /**
      * The offset to the tile id that a different layer has.

@@ -36,7 +36,7 @@ public class TextureSetServiceTest {
     TextureSetService msgService;
 
     private TileMapData createDummyMap() {
-        ChunkData chunk = new ChunkData(List.of(4, 2, 1, 3),
+        ChunkData chunk = new ChunkData(List.of(4L, 2L, 1L, 3L),
                 2, 2,
                 0, 0);
         ObjectData object = new ObjectData(0, null, List.of(), null, null, false, 0, 0, 0, 0, 0);
