@@ -46,7 +46,7 @@ public record Tileset(
         int imageHeight = data.tileheight();
         applyTransform(graphics, flippedHorizontally, flippedVertically, flippedDiagonally, imageX, imageY);
         graphics.drawImage(image.getSubimage(posX, posY, data.tilewidth(), data.tileheight()),
-                -(int) (data.tilewidth() / 2.0f), -(int) (data.tileheight() / 2.0f), imageWidth, imageHeight, null);
+                -(int) Math.ceil(data.tilewidth() / 2.0f), -(int) Math.ceil(data.tileheight() / 2.0f), imageWidth, imageHeight, null);
     }
 
     /**
@@ -87,7 +87,7 @@ public record Tileset(
         }
 
         AffineTransform transform = new AffineTransform();
-        transform.translate(imageX + data.tilewidth() / 2.0, imageY + data.tileheight() / 2.0);
+        transform.translate(imageX + Math.ceil(data.tilewidth() / 2.0), imageY + Math.ceil(data.tileheight() / 2.0));
         transform.quadrantRotate(rotation);
         transform.scale(scaleX, scaleY);
         graphics.setTransform(transform);
