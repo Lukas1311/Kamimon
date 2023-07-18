@@ -44,9 +44,7 @@ public record Tileset(
         int imageY = y * data.tileheight();
         int imageWidth = data.tilewidth();
         int imageHeight = data.tileheight();
-        if (flippedHorizontally || flippedDiagonally || flippedVertically) {
-            applyTransform(graphics, flippedHorizontally, flippedVertically, flippedDiagonally, imageX, imageY);
-        }
+        applyTransform(graphics, flippedHorizontally, flippedVertically, flippedDiagonally, imageX, imageY);
         graphics.drawImage(image.getSubimage(posX, posY, data.tilewidth(), data.tileheight()),
                 0, 0, imageWidth, imageHeight, null);
     }
