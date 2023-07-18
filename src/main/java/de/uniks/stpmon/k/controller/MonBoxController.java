@@ -106,7 +106,7 @@ public class MonBoxController extends Controller {
         List<Monster> currentMonsters = new ArrayList<>(monsters);
         List<Monster> teamMonsters = monsterCache.getTeam().getValues().blockingFirst();
         int columnCount = 6;
-        int rowCount = 5;
+        int rowCount = 4;
         currentMonsters.removeAll(teamMonsters);
         monStorage.getChildren().clear();
         monsterIndexStorage = 0;
@@ -191,13 +191,12 @@ public class MonBoxController extends Controller {
         gridPane.setOnDragDropped(event -> {
             Dragboard dragboard = event.getDragboard();
             if (dragboard.hasImage()) {
-                //ImageView imageView = monImage;
                 Parent parent = monParent;
 
                 if (gridPane.equals(monStorage) && !monStorage.getChildren().contains(parent)) {
                     monTeamList.remove(selectedMonster);
 
-                    monStorage.add(parent, monsterIndexStorage, 0);
+                    monStorage.add(parent, monsterIndexStorage % 6, monsterIndexStorage / 6);
                     monsterIndexStorage++;
 
                     Trainer trainer = trainerStorage.getTrainer();

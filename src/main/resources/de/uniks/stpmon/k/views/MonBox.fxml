@@ -13,7 +13,7 @@
             <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="71.0" minHeight="71.0" prefHeight="71.0" valignment="CENTER" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="72.5" minHeight="72.5" prefHeight="72.5" valignment="CENTER" vgrow="ALWAYS" />
         </rowConstraints>
     </GridPane>
     <GridPane fx:id="monStorage" alignment="CENTER" gridLinesVisible="true" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="107.0">
