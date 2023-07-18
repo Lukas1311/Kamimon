@@ -46,7 +46,7 @@ public record Tileset(
         int imageHeight = data.tileheight();
         applyTransform(graphics, flippedHorizontally, flippedVertically, flippedDiagonally, imageX, imageY);
         graphics.drawImage(image.getSubimage(posX, posY, data.tilewidth(), data.tileheight()),
-                0, 0, imageWidth, imageHeight, null);
+                -(int) Math.ceil(data.tilewidth() / 2.0f), -(int) Math.ceil(data.tileheight() / 2.0f), imageWidth, imageHeight, null);
     }
 
     /**
@@ -70,7 +70,7 @@ public record Tileset(
         boolean vertically = flippedVertically;
         float scaleX = 1.0f;
         float scaleY = 1.0f;
-        // Flips the image diagonally, swapping the x and y axis
+        // Flips the image diagonally, swapping the x and y-axis
         if (flippedDiagonally) {
             rotation = 1;
 
@@ -79,18 +79,16 @@ public record Tileset(
         }
         // Flips the image horizontally
         if (horizontally) {
-            imageX += data.tilewidth();
             scaleX *= -1.0f;
         }
         // Flips the image vertically
         if (vertically) {
-            imageY += data.tileheight();
             scaleY *= -1.0f;
         }
 
         AffineTransform transform = new AffineTransform();
-        transform.translate(imageX, imageY);
-        transform.quadrantRotate(rotation, data.tilewidth() / 2.0, data.tileheight() / 2.0);
+        transform.translate(imageX + Math.ceil(data.tilewidth() / 2.0), imageY + Math.ceil(data.tileheight() / 2.0));
+        transform.quadrantRotate(rotation);
         transform.scale(scaleX, scaleY);
         graphics.setTransform(transform);
     }

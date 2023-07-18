@@ -175,7 +175,7 @@ public class TileMap {
                 tileset.drawTile(graphics, x, y, data,
                         (globalId & TileConstants.FLAG_FLIPPED_HORIZONTALLY) > 0,
                         (globalId & TileConstants.FLAG_FLIPPED_VERTICALLY) > 0,
-                        false);
+                        (globalId & TileConstants.FLAG_FLIPPED_DIAGONALLY) > 0);
             }
         }
         graphics.dispose();

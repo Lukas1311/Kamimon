@@ -92,6 +92,14 @@ public class BasicRules {
         // Modular fence entangled
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(32294, 37, 7, 176));
+        // Farm fence entangled
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 310, 4, 4, 16),
+                new IdSource.Rectangle(41713 + 256, 1, 4, 16));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 256, 4, 6, 16),
+                new IdSource.Rectangle(41713 + 308, 4, 4, 16));
+
         // Lantern entangled
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(3001, 1, 4, 176));
@@ -193,6 +201,18 @@ public class BasicRules {
         registry.markBottom(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(177, 2, 1, 176),
                 new IdSource.Rectangle(1598, 2, 1, 176));
+
+        // hedge exclusion
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(37490, 4, 1, 176),
+                new IdSource.Rectangle(37849, 4, 1, 176),
+                new IdSource.Rectangle(38193, 4, 1, 176),
+                new IdSource.Rectangle(39081, 4, 1, 176),
+                new IdSource.Single(38025),
+                new IdSource.Single(38906),
+                new IdSource.Single(38908));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(37138, 13, 14, 176));
 
         // add decoration rules
         registry.addConnection(new EntangledRule(registry));
