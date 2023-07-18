@@ -1,19 +1,16 @@
 package de.uniks.stpmon.k.world;
 
-import de.uniks.stpmon.k.models.map.Property;
-import de.uniks.stpmon.k.models.map.Tile;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.BitSet;
 
 public record Tileset(
         TilesetSource source,
         TilesetData data,
-        BufferedImage image,
-        BitSet tallGrassData) {
+        BufferedImage image) {
 
     public void drawTile(Graphics2D graphics, int x, int y, int index,
                          boolean flippedHorizontally, boolean flippedVertically, boolean flippedDiagonally) {
@@ -25,17 +22,41 @@ public record Tileset(
         int imageY = y * data.tileheight();
         int imageWidth = data.tilewidth();
         int imageHeight = data.tileheight();
-        if (flippedHorizontally) {
-            imageX += data.tilewidth();
-            imageWidth *= -1;
+        if (flippedHorizontally || flippedDiagonally || flippedVertically) {
+            applyTransform(graphics, flippedHorizontally, flippedVertically, flippedDiagonally, imageX, imageY);
         }
-        if (flippedVertically) {
+        graphics.drawImage(image.getSubimage(posX, posY, data.tilewidth(), data.tileheight()),
+                0, 0, imageWidth, imageHeight, null);
+    }
+
+    private void applyTransform(Graphics2D graphics,
+                                boolean flippedHorizontally, boolean flippedVertically, boolean flippedDiagonally,
+                                int imageX, int imageY) {
+        int rotation = 0;
+        boolean horizontally = flippedHorizontally;
+        boolean vertically = flippedVertically;
+        float scaleX = 1.0f;
+        float scaleY = 1.0f;
+        if (flippedDiagonally) {
+            rotation = 1;
+
+            horizontally = vertically;
+            vertically = !flippedHorizontally;
+        }
+        if (horizontally) {
+            imageX += data.tilewidth();
+            scaleX *= -1.0f;
+        }
+        if (vertically) {
             imageY += data.tileheight();
-            imageHeight *= -1;
+            scaleY *= -1.0f;
         }
 
-        graphics.drawImage(image.getSubimage(posX, posY, data.tilewidth(), data.tileheight()),
-                imageX, imageY, imageWidth, imageHeight, null);
+        AffineTransform transform = new AffineTransform();
+        transform.translate(imageX, imageY);
+        transform.quadrantRotate(rotation, data.tilewidth() / 2.0, data.tileheight() / 2.0);
+        transform.scale(scaleX, scaleY);
+        graphics.setTransform(transform);
     }
 
     public static Tileset.Builder builder() {
@@ -66,21 +87,7 @@ public record Tileset(
         }
 
         public Tileset build() {
-            BitSet tallGrassData = new BitSet(data.tilecount());
-            boolean anyTallGrass = false;
-            if (data.tiles() != null) {
-                for (Tile tile : data.tiles()) {
-                    for (Property property : tile.properties()) {
-                        if (property.name().equals("TallGrass")) {
-                            boolean walkable = Boolean.parseBoolean(property.value());
-                            tallGrassData.set(tile.id(), walkable);
-                            anyTallGrass |= walkable;
-                        }
-                    }
-                }
-            }
-            return new Tileset(source, data, image,
-                    anyTallGrass ? tallGrassData : null);
+            return new Tileset(source, data, image);
         }
 
     }
