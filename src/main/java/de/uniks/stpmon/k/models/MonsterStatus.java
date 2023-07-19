@@ -21,6 +21,10 @@ public enum MonsterStatus {
         this.status = status;
     }
 
+    public String getIconName() {
+        return "status/" + status + "_icon.png";
+    }
+
     @Override
     public String toString() {
         return status;
