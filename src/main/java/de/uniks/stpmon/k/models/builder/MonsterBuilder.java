@@ -2,8 +2,11 @@ package de.uniks.stpmon.k.models.builder;
 
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.models.MonsterStatus;
 
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedMap;
 
 @SuppressWarnings("unused")
@@ -25,6 +28,7 @@ public class MonsterBuilder {
     private SortedMap<String, Integer> abilities = Collections.emptySortedMap();
     private MonsterAttributes attributes = new MonsterAttributes(0f, 0f, 0f, 0f);
     private MonsterAttributes currentAttributes = new MonsterAttributes(0f, 0f, 0f, 0f);
+    private final List<MonsterStatus> status = new LinkedList<>();
 
     private MonsterBuilder() {
     }
@@ -73,6 +77,12 @@ public class MonsterBuilder {
         return this;
     }
 
+    public MonsterBuilder setStatus(List<MonsterStatus> status) {
+        this.status.clear();
+        this.status.addAll(status);
+        return this;
+    }
+
     private MonsterBuilder apply(Monster monster) {
         return setId(monster._id())
                 .setTrainer(monster.trainer())
@@ -81,11 +91,12 @@ public class MonsterBuilder {
                 .setExperience(monster.experience())
                 .setAbilities(monster.abilities())
                 .setAttributes(monster.attributes())
-                .setCurrentAttributes(monster.currentAttributes());
+                .setCurrentAttributes(monster.currentAttributes())
+                .setStatus(monster.status());
     }
 
     public Monster create() {
-        return new Monster(_id, trainer, type, level, experience, abilities, attributes, currentAttributes);
+        return new Monster(_id, trainer, type, level, experience, abilities, attributes, currentAttributes, status);
     }
 
 }

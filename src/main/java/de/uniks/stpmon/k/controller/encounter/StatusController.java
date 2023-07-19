@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.monsters.MonsterStatusController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterStatus;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
@@ -10,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -32,6 +35,8 @@ public class StatusController extends Controller {
     public ProgressBar experienceBar;
     @FXML
     public ImageView wildEncounterIconView;
+    @FXML
+    public HBox effectContainer;
 
     @Inject
     PresetService presetService;
@@ -90,6 +95,11 @@ public class StatusController extends Controller {
         double hpProgress = currentHp / maxHp;
 
         hpBar.setProgress(hpProgress);
+        effectContainer.getChildren().clear();
+        for (MonsterStatus status : monster.status()) {
+            MonsterStatusController monsterStatusController = new MonsterStatusController(status);
+            effectContainer.getChildren().add(monsterStatusController.render());
+        }
 
         if (!sessionService.isSelf(slot)) {
             return;
