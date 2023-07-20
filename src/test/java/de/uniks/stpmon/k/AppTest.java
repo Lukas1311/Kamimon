@@ -368,7 +368,7 @@ class AppTest extends ApplicationTest {
         component.regionApi().addMonster("0", "1", false);
         clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
-        verifyThat("#monBoxStackPane", Node::isVisible);
+        verifyThat("#monBoxMenuHolder", Node::isVisible);
 
         GridPane teamGrid = lookup("#monTeam").query();
         Node teamMon = teamGrid.getChildren().get(0);

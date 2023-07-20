@@ -101,7 +101,7 @@ public class MonsterBarController extends Controller {
         if (currentHP <= 0) {
             monsterSlot.setId("slot_" + slot + "_zero");
             loadImage(monsterSlot, "healthPointsZero.png");
-        } else if (currentHP < maxHP * 0.2) {
+        } else if (currentHP/maxHP <= 0.33f) {
             loadImage(monsterSlot, "healthPointsLow.png");
             monsterSlot.setId("slot_" + slot + "_low");
         } else {
