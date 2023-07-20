@@ -4,10 +4,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
 import de.uniks.stpmon.k.models.MonsterStatus;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedMap;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class MonsterBuilder {
@@ -80,6 +77,11 @@ public class MonsterBuilder {
     public MonsterBuilder setStatus(List<MonsterStatus> status) {
         this.status.clear();
         this.status.addAll(status);
+        return this;
+    }
+
+    public MonsterBuilder addStatus(MonsterStatus... status) {
+        this.status.addAll(Arrays.asList(status));
         return this;
     }
 
