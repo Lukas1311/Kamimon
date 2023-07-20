@@ -15,12 +15,18 @@ public enum MonsterStatus {
     ASLEEP("asleep"),
     @JsonProperty("poisoned")
     POISONED("poisoned"),
+    //TODO: Remove, if server status is fixed
     @JsonProperty("burn")
     BURNED("burned"),
+    @JsonProperty("burned")
+    BURN("burned"),
     @JsonProperty("frozen")
     FROZEN("frozen"),
+    @JsonProperty("confused")
+    CONFUSED("confused"),
+    //TODO: Remove, if server status is fixed
     @JsonProperty("confusion")
-    CONFUSED("confused");
+    CONFUSION("confused");
 
     private final String status;
 

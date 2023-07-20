@@ -77,7 +77,7 @@ public class StatusController extends Controller {
         // Initial state
         updateState(sessionService.getMonster(slot));
         // used to get the monster information for the monster of the trainer in the active region
-        subscribe(sessionService.listenMonster(slot), this::updateState);
+        subscribe(sessionService.listenMonster(slot).skip(1), this::updateState);
     }
 
     private void updateState(Monster monster) {
