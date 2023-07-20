@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.overworld;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.world.ClockService;
-import de.uniks.stpmon.k.service.world.FastClock;
 import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -14,7 +13,6 @@ import java.time.LocalTime;
 
 @Singleton
 public class NightOverlayController extends Controller {
-
 
     @FXML
     public BorderPane nightOverlay;

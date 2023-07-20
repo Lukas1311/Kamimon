@@ -1,19 +1,19 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.MonsterInformationController;
-import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.AbilityMove;
-import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.EncounterService;
+import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.world.ClockService;
+import de.uniks.stpmon.k.service.world.TextDeliveryService;
+import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import de.uniks.stpmon.k.world.RouteData;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -26,14 +26,19 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class EncounterOverviewController extends Controller {
@@ -45,6 +50,7 @@ public class EncounterOverviewController extends Controller {
     private final HashMap<EncounterSlot, Transition> changeAnimations = new HashMap<>(4);
 
     private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
+    private final Map<EncounterSlot, String> slotMonsters = new HashMap<>(4);
 
     @FXML
     public StackPane fullBox;
@@ -67,28 +73,85 @@ public class EncounterOverviewController extends Controller {
     @FXML
     public VBox monsterInformationBox;
 
+    private final Pane blackPane = new Pane();
+    @FXML
+    public VBox wrappingVBox;
 
     @Inject
     IResourceService resourceService;
     @Inject
-    Provider<StatusController> statusControllerProvider;
+    RegionStorage regionStorage;
     @Inject
-    Provider<HybridController> hybridControllerProvider;
+    TextDeliveryService textDeliveryService;
+    @Inject
+    WorldService worldService;
+    @Inject
+    ClockService clockService;
+    @Inject
+    Provider<StatusController> statusControllerProvider;
     @Inject
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-    @Inject
-    MonsterInformationController monsterInformationController;
-    @Inject
-    Provider<ActionFieldBattleLogController> actionFieldBattleLogControllerProvider;
-    @Inject
-    InputHandler inputHandler;
-
-    EncounterService.CloseEncounter closeEncounter;
 
     @Inject
     public EncounterOverviewController() {
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        if (actionFieldController != null) {
+            actionFieldController.init();
+        }
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (actionFieldController != null) {
+            actionFieldController.destroy();
+        }
+        slotMonsters.clear();
+    }
+
+    private TerrainType getEncounterTerrainType() {
+        List<Property> properties = regionStorage.getArea().map().properties();
+
+        if (properties == null) {
+            return TerrainType.TOWN;
+        }
+
+        for (Property prop : properties) {
+            if (prop.name().equals("Terrain")) {
+                return switch (prop.value()) {
+                    case "Lake" ->  TerrainType.LAKE;
+                    case "Forest" -> TerrainType.FOREST;
+                    case "Plains" -> TerrainType.PLAINS;
+                    case "City" -> TerrainType.CITY;
+                    case "Town" -> TerrainType.TOWN;
+                    case "Coast" -> TerrainType.COAST;
+                    case "Cave" -> TerrainType.CAVE;
+                    default -> TerrainType.TOWN;
+                };
+            }
+        }
+        return TerrainType.TOWN;
+    }
+
+    private String getTerrainTypeName() {
+        float nightFactor = worldService.getNightFactor(clockService.onTime().blockingFirst());
+        TerrainType terrainType = getEncounterTerrainType();
+        if (terrainType == TerrainType.CAVE) {
+            return TerrainType.CAVE.name();
+        } else {
+            String timeOfDay = (nightFactor > 0) ? "NIGHT" : "DAY";
+            return terrainType.name() + "_" + timeOfDay;
+        }
+    }
+
+    private String getTerrainImagePath(List<RouteData> routeListData) {
+        return getResourcePath() + "terrain/" + getTerrainTypeName() + ".png";
     }
 
     @Override
@@ -101,8 +164,14 @@ public class EncounterOverviewController extends Controller {
         monsterImages.put(EncounterSlot.ENEMY_FIRST, opponentMonster0);
         monsterImages.put(EncounterSlot.ENEMY_SECOND, opponentMonster1);
 
+        Region currentRegion = regionStorage.getRegion();
+        if (currentRegion.map() != null) {
+            subscribe(
+                textDeliveryService.getRouteData(currentRegion),
+                data -> loadImage(background, getTerrainImagePath(data)) // load bg image dependant on area
+            );
+        }
 
-        loadImage(background, "encounter/FOREST.png");
         background.fitHeightProperty().bind(fullBox.heightProperty());
         background.fitWidthProperty().bind(fullBox.widthProperty());
 
@@ -111,17 +180,12 @@ public class EncounterOverviewController extends Controller {
             actionFieldBox.getChildren().add(actionField);
         }
 
-        Parent monInformation = this.monsterInformationController.render();
-        if (monInformation != null) {
-            monsterInformationBox.getChildren().add(monInformation);
-            monsterInformationBox.setVisible(false);
-        }
-
         //add a translation transition to all monster images
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-            TranslateTransition translation = new TranslateTransition(Duration.millis(250), view);
+            TranslateTransition translation =
+                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() * 0.25), view);
             if (slot.enemy()) {
                 translation.setByY(30);
                 translation.setByX(-60);
@@ -138,8 +202,9 @@ public class EncounterOverviewController extends Controller {
         for (EncounterSlot slot : monsterImages.keySet()) {
             ImageView view = monsterImages.get(slot);
 
-            TranslateTransition translation = new TranslateTransition(Duration.millis(350), view);
-            if(slot.enemy()) {
+            TranslateTransition translation =
+                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() * 0.35f), view);
+            if (slot.enemy()) {
                 translation.setByY(0);
                 translation.setByX(1000);
             } else {
@@ -152,45 +217,65 @@ public class EncounterOverviewController extends Controller {
             changeAnimations.put(slot, translation);
         }
 
+        if (effectContext.shouldSkipLoading()) {
+            renderMonsterLists();
+            animateMonsterEntrance();
+            return parent;
+        }
+
         subscribeFight();
 
-        renderMonsterLists();
-        animateMonsterEntrance();
+        actionFieldBox.setOpacity(0);
 
-        subscribe(sessionService.onEncounterCompleted(), () -> {
-            actionFieldController.openBattleLog();
-            //check why encounter is close
-            if (closeEncounter != null){
-                actionFieldBattleLogControllerProvider.get().closeEncounter(closeEncounter);
-                closeEncounter = null;
-            }
+        Transition openingTransition = playOpeningAnimation();
 
-            javafx.application.Platform.runLater(() -> {
-                if (hybridControllerProvider == null) {
-                    return;
-                }
-                sessionService.clearEncounter();
-
+        if (openingTransition != null) {
+            openingTransition.setOnFinished(event -> {
+                fullBox.getChildren().remove(blackPane);
+                renderMonsterLists();
+                wrappingVBox.setOpacity(1.0);
+                animateMonsterEntrance();
             });
-        });
+
+            openingTransition.play();
+        }
 
         return parent;
     }
 
-    public void setCloseEncounter(EncounterService.CloseEncounter closeEncounter){
-        this.closeEncounter = closeEncounter;
+    private Transition playOpeningAnimation() {
+        if (fullBox.getChildren().contains(blackPane)) {
+            return null;
+        }
+        blackPane.setPrefWidth(1280);
+        blackPane.setPrefHeight(720);
+        Rectangle rectangleTop = new Rectangle(1280, 360);
+        rectangleTop.widthProperty().bind(fullBox.widthProperty());
+        rectangleTop.heightProperty().bind(fullBox.heightProperty());
+        Rectangle rectangleBottom = new Rectangle(1280, 360);
+        rectangleBottom.widthProperty().bind(fullBox.widthProperty());
+        rectangleBottom.heightProperty().bind(fullBox.heightProperty());
+        rectangleBottom.setY(360);
+
+        blackPane.getChildren().addAll(rectangleTop, rectangleBottom);
+
+        fullBox.getChildren().add(blackPane);
+
+        TranslateTransition rTopTransition = new TranslateTransition(Duration.seconds(1), rectangleTop);
+        TranslateTransition rDownTransition = new TranslateTransition(Duration.seconds(1), rectangleBottom);
+
+        rTopTransition.setToY(-800);
+        rDownTransition.setToY(721);
+
+        return new ParallelTransition(rTopTransition, rDownTransition);
     }
 
-
-
-    private void subscribeFight(){
+    private void subscribeFight() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), next -> {
                 //using IMove to animate attack
-                if(next.move() instanceof AbilityMove){
+                if (next.move() instanceof AbilityMove) {
                     renderAttack(slot);
-                } else if (next.move() instanceof ChangeMonsterMove) {
-                    renderChange(slot);
                 }
             });
         }
@@ -201,7 +286,7 @@ public class EncounterOverviewController extends Controller {
     }
 
 
-    private void renderAttack(EncounterSlot slot){
+    private void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
     }
 
@@ -224,17 +309,23 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterSlot slot) {
-        Monster monster = sessionService.getMonster(slot);
         StatusController statusController = statusControllerProvider.get();
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
 
-        if (monster == null) {
-            return;
-        }
-
-        subscribe(sessionService.listenMonster(slot), (newMonster) ->
-                loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy())
+        subscribe(sessionService.listenMonster(slot), (newMonster) -> {
+                    if (newMonster == null) {
+                        return;
+                    }
+                    String oldMonsterId = slotMonsters.get(slot);
+                    if (oldMonsterId == null) {
+                        loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
+                    } else if (!oldMonsterId.equals(newMonster._id())) {
+                        loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
+                        renderChange(slot);
+                    }
+                    slotMonsters.put(slot, newMonster._id());
+                }
         );
 
         if (slot.partyIndex() == 0) {
@@ -274,7 +365,6 @@ public class EncounterOverviewController extends Controller {
             attackerMonsters.get(1).setOpacity(0);
             opponentMonster1.setOpacity(0);
         }
-        actionFieldBox.setOpacity(0);
 
         //the first monster of the user and opponent always gets rendered
         ParallelTransition userFullTransition1 =
@@ -285,6 +375,7 @@ public class EncounterOverviewController extends Controller {
         ParallelTransition parallel1 = new ParallelTransition(userFullTransition1, opponentFullTransition1);
 
         parallel1.setOnFinished(e -> {
+            wrappingVBox.setOpacity(1);
             if (teamMonsters.size() > 1) {
                 teamMonsters.get(1).setOpacity(1);
                 userMonster1.setOpacity(1);
@@ -320,6 +411,7 @@ public class EncounterOverviewController extends Controller {
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
+
         fullSequence.play();
     }
 

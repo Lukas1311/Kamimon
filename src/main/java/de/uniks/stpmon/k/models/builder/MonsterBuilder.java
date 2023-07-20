@@ -23,8 +23,8 @@ public class MonsterBuilder {
     private Integer level = 0;
     private Integer experience = 0;
     private SortedMap<String, Integer> abilities = Collections.emptySortedMap();
-    private MonsterAttributes attributes = new MonsterAttributes(0, 0, 0, 0);
-    private MonsterAttributes currentAttributes = new MonsterAttributes(0, 0, 0, 0);
+    private MonsterAttributes attributes = new MonsterAttributes(0f, 0f, 0f, 0f);
+    private MonsterAttributes currentAttributes = new MonsterAttributes(0f, 0f, 0f, 0f);
 
     private MonsterBuilder() {
     }

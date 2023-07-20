@@ -59,7 +59,7 @@ public class StatusController extends Controller {
         } else {
             parent = load("OpponentMonsterStatus");
             loadImage(monsterStatusView, "encounter/opponentMonsterStatus.png");
-            if(encounterStorage.getEncounter().isWild()){
+            if (encounterStorage.getEncounter().isWild()) {
                 loadImage(wildEncounterIconView, "encounter/kami_30px.png");
             }
         }
@@ -77,8 +77,10 @@ public class StatusController extends Controller {
 
     private void updateState(Monster monster) {
         if (monster == null) {
+            fullBox.setVisible(false);
             return;
         }
+        fullBox.setVisible(true);
         loadMonsterDto(Integer.toString(monster.type()));
 
         monsterLevel.setText("Lvl. " + monster.level().toString());
@@ -92,7 +94,7 @@ public class StatusController extends Controller {
         if (!sessionService.isSelf(slot)) {
             return;
         }
-        monsterHp.setText(monster.currentAttributes().health() + " / " + monster.attributes().health());
+        monsterHp.setText((int) Math.ceil(currentHp) + " / " + (int) Math.ceil(maxHp));
 
         double maxExp = Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3);
         double currentExp = monster.experience();

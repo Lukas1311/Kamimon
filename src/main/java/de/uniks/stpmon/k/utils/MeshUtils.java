@@ -42,8 +42,8 @@ public class MeshUtils {
                 w / 2f, h, 0
         };
         // Offset to reduce texture bleeding
-        float uPadding = (1 / (512f + 32f)) * (16.0f / w);
-        float vPadding = (1 / (512f - 256f)) * (32.0f / h);
+        float uPadding = (1 / (512f + 32f)) * (16.0f / (w * 0.15f));
+        float vPadding = (1 / (512f - 256f)) * (32.0f / (h * 0.15f));
         float[] texCoords = {
                 0f + uPadding, 0f + vPadding,
                 1f - uPadding, 0f + vPadding,

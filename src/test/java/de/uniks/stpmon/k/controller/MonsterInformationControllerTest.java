@@ -84,8 +84,8 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         abilities.put("1", 15);
         abilities.put("2", 10);
         AbilityDto abilityDto = new AbilityDto(1, "abilityName", "abilityDescription", "fire", 20, 1, 25);
-        MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
-        MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
+        MonsterAttributes attributes = new MonsterAttributes(10f, 8f, 6f, 4f);
+        MonsterAttributes currentAttributes = new MonsterAttributes(5f, 4f, 3f, 2f);
         Monster monster = MonsterBuilder.builder().setId("id")
                 .setType(1)
                 .setLevel(1)
@@ -111,7 +111,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         FxAssert.verifyThat("#nameLabel_1", hasText("abilityName"));
         FxAssert.verifyThat("#powLabel_1", hasText("25"));
         FxAssert.verifyThat("#accLabel_1", hasText("100"));
-        FxAssert.verifyThat("#useLabel_1", hasText("??/20"));
+        FxAssert.verifyThat("#useLabel_1", hasText("15/20"));
     }
 
     @Test
@@ -121,8 +121,8 @@ public class MonsterInformationControllerTest extends ApplicationTest {
         abilities.put("1", 15);
         abilities.put("2", 10);
         AbilityDto abilityDto = new AbilityDto(1, "abilityName", "AbilityDescription", "fire", 20, 1, 25);
-        MonsterAttributes attributes = new MonsterAttributes(10, 8, 6, 4);
-        MonsterAttributes currentAttributes = new MonsterAttributes(5, 4, 3, 2);
+        MonsterAttributes attributes = new MonsterAttributes(10f, 8f, 6f, 4f);
+        MonsterAttributes currentAttributes = new MonsterAttributes(5f, 4f, 3f, 2f);
         Monster monster = MonsterBuilder.builder().setId("id")
                 .setType(1)
                 .setLevel(1)

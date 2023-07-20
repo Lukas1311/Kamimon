@@ -10,7 +10,7 @@ import java.util.List;
  * @param y      Y coordinate in tiles
  */
 public record ChunkData(
-        List<Integer> data,
+        List<Long> data,
         int width,
         int height,
         int x,
@@ -23,11 +23,6 @@ public record ChunkData(
 
     public int starty() {
         return y;
-    }
-
-    public int getId(int x, int y) {
-        int index = (y - starty()) * width() + (x - startx());
-        return data().get(index);
     }
 
 }

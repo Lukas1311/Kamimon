@@ -2,7 +2,9 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.SequentialTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
@@ -24,17 +26,12 @@ public class LoadingEncounterController extends Controller {
 
     @Inject
     public LoadingEncounterController() {
-
-    }
-
-    @Override
-    public void init() {
-        super.init();
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        fullBox.setStyle("-fx-background-color: black");
         playVSAnimation();
         return parent;
     }
@@ -58,10 +55,10 @@ public class LoadingEncounterController extends Controller {
         vsBackground1.setOpacity(0.0);
 
 
-        FadeTransition fadeOutTransition0 = createFadeTransition(vsBackground0, 1.0, 0.0);
-        FadeTransition fadeInTransition0 = createFadeTransition(vsBackground0, 0.0, 1.0);
-        FadeTransition fadeOutTransition1 = createFadeTransition(vsBackground1, 1.0, 0.0);
-        FadeTransition fadeInTransition1 = createFadeTransition(vsBackground1, 0.0, 1.0);
+        FadeTransition fadeOutTransition0 = createFadeTransition(vsBackground0, 1.0, 0.0, 200);
+        FadeTransition fadeInTransition0 = createFadeTransition(vsBackground0, 0.0, 1.0, 200);
+        FadeTransition fadeOutTransition1 = createFadeTransition(vsBackground1, 1.0, 0.0, 200);
+        FadeTransition fadeInTransition1 = createFadeTransition(vsBackground1, 0.0, 1.0, 200);
 
         SequentialTransition sequentialTransition = new SequentialTransition();
         sequentialTransition.getChildren().addAll(createParallelTransition(fadeOutTransition0, fadeInTransition1),
@@ -69,17 +66,22 @@ public class LoadingEncounterController extends Controller {
 
         sequentialTransition.setCycleCount(5);
 
-        sequentialTransition.setOnFinished(event -> {
+        sequentialTransition.setOnFinished(event -> vsBackground0.setOpacity(0.0));
+
+        FadeTransition longFadeOut = createFadeTransition(vsBackground1, 1.0, 0.0, 500);
+
+        SequentialTransition sequentialTransition1 = new SequentialTransition(sequentialTransition, longFadeOut);
+
+        sequentialTransition1.setOnFinished(event -> {
             EncounterOverviewController controller = encounterProvider.get();
             app.show(controller);
         });
 
-        sequentialTransition.play();
-
+        sequentialTransition1.play();
     }
 
-    private FadeTransition createFadeTransition(ImageView imageView, double from, double to){
-        FadeTransition f = new FadeTransition(Duration.millis(200), imageView);
+    private FadeTransition createFadeTransition(ImageView imageView, double from, double to, int millis){
+        FadeTransition f = new FadeTransition(Duration.millis(millis), imageView);
         f.setFromValue(from);
         f.setToValue(to);
         return f;

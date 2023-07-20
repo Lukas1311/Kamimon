@@ -1,46 +1,29 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.MainWindow;
-import de.uniks.stpmon.k.service.EncounterService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-public class ActionFieldMainMenuController extends Controller {
-
-    @Inject
-    Provider<ActionFieldController> actionFieldControllerProvider;
-    @Inject
-    Provider<HybridController> hybridControllerProvider;
+public class ActionFieldMainMenuController extends BaseActionFieldController {
     @FXML
     public Text textContent;
     @FXML
     public VBox mainMenuBox;
 
     @Inject
-    EncounterStorage encounterStorage;
-    @Inject
-    EncounterService encounterService;
-    @Inject
-    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
+    Provider<EncounterOverviewController> encounterOverviewProvider;
 
     @Inject
-    public ActionFieldMainMenuController() {}
+    public ActionFieldMainMenuController() {
+    }
 
     @Override
     public Parent render() {
@@ -51,7 +34,7 @@ public class ActionFieldMainMenuController extends Controller {
         addActionOption(OptionType.FIGHT);
         addActionOption(OptionType.CHANGE_MON);
 
-        if (encounterStorage.getEncounter().isWild()){
+        if (encounterStorage.getEncounter().isWild()) {
             addActionOption(OptionType.FLEE);
         }
 
@@ -65,14 +48,12 @@ public class ActionFieldMainMenuController extends Controller {
             case FLEE -> "flee";
         };
 
-        HBox optionContainer = actionFieldControllerProvider
-                .get()
+        HBox optionContainer = getActionField()
                 .getOptionContainer(translateString(optionText));
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
-        int index = mainMenuBox.getChildren().size();
-        optionContainer.getChildren().get(1).setId("main_menu_" + index);
+        optionContainer.setId("main_menu_" + optionText);
 
         mainMenuBox.getChildren().add(optionContainer);
     }
@@ -86,18 +67,16 @@ public class ActionFieldMainMenuController extends Controller {
     }
 
     public void openFlee() {
-        subscribe(encounterService.fleeEncounter(), e -> {
-            encounterOverviewControllerProvider.get().setCloseEncounter(EncounterService.CloseEncounter.FLEE);
-        });
-
+        getActionField().setFleeEncounter();
+        subscribe(encounterService.fleeEncounter());
     }
 
     public void openFight() {
-        actionFieldControllerProvider.get().openChooseAbility();
+        getActionField().openChooseAbility();
     }
 
     public void openChangeMon() {
-        actionFieldControllerProvider.get().openChangeMonster();
+        getActionField().openChangeMonster(false);
     }
 
     @Override
@@ -105,7 +84,7 @@ public class ActionFieldMainMenuController extends Controller {
         return "action/";
     }
 
-    public enum OptionType {
+    private enum OptionType {
         FIGHT,
         CHANGE_MON,
         FLEE

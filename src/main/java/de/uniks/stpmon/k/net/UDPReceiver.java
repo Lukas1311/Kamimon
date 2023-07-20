@@ -63,6 +63,9 @@ public class UDPReceiver implements SocketReceiver {
                 try {
                     DatagramPacket packet = new DatagramPacket(buf, buf.length);
                     socket.receive(packet);
+                    if (handler == null) {
+                        return;
+                    }
                     String received = new String(packet.getData());
                     handler.accept(received);
                 } catch (SocketTimeoutException ex) {

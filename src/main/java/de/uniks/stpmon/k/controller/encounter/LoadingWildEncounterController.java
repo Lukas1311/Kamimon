@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
@@ -29,27 +30,36 @@ public class LoadingWildEncounterController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        FadeTransition wildTransition = getWildTransition();
+        FadeTransition wildFadeInTransition = getWildTransition(true);
+        FadeTransition wildFadeOutTransition = getWildTransition(false);
 
-        wildTransition.setOnFinished(event -> {
+        SequentialTransition sequentialTransition = new SequentialTransition(wildFadeInTransition, wildFadeOutTransition);
+
+        sequentialTransition.setOnFinished(event -> {
             EncounterOverviewController controller = encounterOverviewControllerProvider.get();
             app.show(controller);
         });
 
-        wildTransition.play();
+        sequentialTransition.play();
 
         return parent;
     }
 
-    private FadeTransition getWildTransition(){
+    private FadeTransition getWildTransition(boolean isFadeIn){
         ImageView vsWildBackground = new ImageView();
         loadImage(vsWildBackground, "encounter/wild.png");
         vsWildBackground.setFitHeight(300);
         vsWildBackground.setOpacity(0.0);
         fullBox.setCenter(vsWildBackground);
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), vsWildBackground);
-        fadeTransition.setFromValue(0.0);
-        fadeTransition.setToValue(1.0);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1), vsWildBackground);
+        double fromValue = 1.0;
+        double toValue = 0.0;
+        if(isFadeIn){
+            fromValue = 0.0;
+            toValue = 1.0;
+        }
+        fadeTransition.setFromValue(fromValue);
+        fadeTransition.setToValue(toValue);
         return fadeTransition;
     }
 

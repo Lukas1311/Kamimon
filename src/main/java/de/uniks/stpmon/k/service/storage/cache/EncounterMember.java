@@ -1,75 +1,48 @@
 package de.uniks.stpmon.k.service.storage.cache;
 
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
 
 public class EncounterMember extends SingleCache<Monster> {
 
-    @Inject
-    protected EventListener listener;
-    @Inject
-    protected RegionService regionService;
-    @Inject
-    protected RegionStorage regionStorage;
+    protected EncounterMonsters monsters;
     protected String trainerId;
     protected String monsterId;
-    protected Completable onInitialized;
-
 
     @Inject
     public EncounterMember() {
     }
 
-    public void setup(String trainerId, String monsterId) {
+    public void setup(String trainerId, String monsterId, EncounterMonsters monsters) {
         this.trainerId = trainerId;
         this.monsterId = monsterId;
+        this.monsters = monsters;
     }
 
-    public void init() {
-        Region region = regionStorage.getRegion();
-        if (region == null) {
-            throw new IllegalStateException("Region not found");
-        }
-
+    public EncounterMember init() {
         // Reset disposable
-        if (onInitialized != null) {
-            destroy();
-            disposables = new CompositeDisposable();
-        }
+        destroy();
+        disposables = new CompositeDisposable();
+        reset();
 
         if (monsterId == null) {
-            onInitialized = Completable.complete();
-            return;
+            reset();
+            return this;
         }
 
-        // Set initial value
-        onInitialized = regionService.getMonster(region._id(), trainerId, monsterId)
-                .doOnNext(this::setValue).ignoreElements().cache();
-        disposables.add(onInitialized.subscribe());
         // Listen to changes to the monster
-        disposables.add(listener.listen(Socket.WS,
-                        "trainers.%s.monsters.%s.*".formatted(trainerId, monsterId),
-                        Monster.class)
+        disposables.add(monsters.listenValue(monsterId)
                 .subscribe(event -> {
-                    final Monster value = event.data();
-                    switch (event.suffix()) {
-                        case "created", "updated" -> setValue(value);
-                        case "deleted" -> reset();
-                    }
+                            if (event.isPresent()) {
+                                setValue(event.get());
+                            } else {
+                                reset();
+                            }
                         }
                 ));
-    }
-
-    public Completable onInitialized() {
-        return onInitialized;
+        return this;
     }
 
     public String getTrainerId() {

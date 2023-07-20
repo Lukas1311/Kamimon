@@ -56,7 +56,7 @@ public class PropInspectionTest {
         assertEquals(48, sourceImage.getHeight());
 
         TileLayerData layer = new TileLayerData(1, "Ground", List.of(),
-                List.of(1, 1, 1, 1), List.of(),
+                List.of(1L, 1L, 1L, 1L), List.of(),
                 0, 0,
                 2, 2,
                 0, 0,

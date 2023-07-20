@@ -13,7 +13,7 @@ import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @SuppressWarnings("unused")
 public class DummyConstants {
@@ -54,7 +54,21 @@ public class DummyConstants {
             0,
             0,
             null,
-            Set.of(), Set.of()
+            List.of(), Set.of()
+    );
+    public static final Trainer TRAINER_OTHER = new Trainer(
+            "attacker",
+            "region_0",
+            "user_1",
+            "Test Trainer",
+            "trainer_1",
+            0,
+            "area_0",
+            0,
+            0,
+            0,
+            null,
+            List.of(), Set.of()
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "1",
@@ -68,7 +82,7 @@ public class DummyConstants {
             0,
             0,
             DummyConstants.NPC_INFO,
-            Set.of(), Set.of()
+            List.of(), Set.of()
     );
 
     public static final Trainer TRAINER_OTHER_REGION = new Trainer(
@@ -83,7 +97,7 @@ public class DummyConstants {
             0,
             0,
             DummyConstants.NPC_INFO,
-            Set.of(), Set.of()
+            List.of(), Set.of()
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,
@@ -100,6 +114,7 @@ public class DummyConstants {
                     true,
                     List.of()
             )),
+            List.of(),
             1, 1,
             List.of(),
             "map"
@@ -114,7 +129,7 @@ public class DummyConstants {
                             0, "Ground",
                             List.of(
                                     new ChunkData(
-                                            IntStream.range(0, 256).map(i -> 482)
+                                            LongStream.range(0, 256).map(i -> 482)
                                                     .boxed().toList(),
                                             16, 16,
                                             0, 0
@@ -131,6 +146,7 @@ public class DummyConstants {
                             List.of()
                     )
             ),
+            List.of(),
             16, 16,
             List.of(
                     new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")
@@ -165,7 +181,7 @@ public class DummyConstants {
     );
 
     public static final Region REGION = new Region(
-            "region_0",
+            "id0",
             "Test Region",
             new Spawn("area_0", 0, 0),
             AREA_MAP_DATA

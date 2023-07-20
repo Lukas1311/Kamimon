@@ -9,6 +9,7 @@ import java.util.List;
  * @param height     Number of tile rows
  * @param infinite   Whether the map has infinite dimensions
  * @param layers     Array of Layers
+ * @param properties Array of Properties
  * @param tileheight Map grid height
  * @param tilesets   Array of Tilesets
  * @param tilewidth  Map grid width
@@ -21,6 +22,7 @@ public record TileMapData(
         int height,
         boolean infinite,
         List<TileLayerData> layers,
+        List<Property> properties,
         int tilewidth,
         int tileheight,
         List<TilesetSource> tilesets,

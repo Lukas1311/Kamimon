@@ -65,7 +65,7 @@ class RegionServiceTest {
                 0,
                 0,
                 DummyConstants.NPC_INFO,
-                Set.of(), Set.of()
+                List.of(), Set.of()
         );
     }
 

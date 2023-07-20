@@ -1,12 +1,8 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.*;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.MonsterService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -14,12 +10,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class ActionFieldChangeMonsterController extends Controller {
+public class ActionFieldChangeMonsterController extends BaseActionFieldController {
     @FXML
     public Text textContent;
     @FXML
@@ -27,38 +22,15 @@ public class ActionFieldChangeMonsterController extends Controller {
 
     @Inject
     MonsterService monsterService;
-    @Inject
-    PresetService presetService;
-    @Inject
-    RegionService regionService;
-    @Inject
-    EncounterService encounterService;
-    @Inject
-    EncounterStorage encounterStorage;
-    @Inject
-    RegionStorage regionStorage;
-    @Inject
-    TrainerStorage trainerStorage;
-    @Inject
-    SessionService sessionService;
 
-    @Inject
-    Provider<ActionFieldController> actionFieldControllerProvider;
-
-    public List<Monster> userMonstersList;
-    public Monster activeMonster;
-    public Monster selectedUserMonster;
+    private Monster selectedUserMonster;
 
     private int count = 0;
-    public String back;
+    private String back;
 
 
     @Inject
     public ActionFieldChangeMonsterController() {
-    }
-
-    public void setMonster(Monster monster) {
-        activeMonster = monster;
     }
 
     @Override
@@ -69,8 +41,6 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         textContent.setText(translateString("chooseMon"));
 
-        userMonstersList = monsterService.getTeam().blockingFirst();
-
         showOptions();
 
         return parent;
@@ -78,18 +48,22 @@ public class ActionFieldChangeMonsterController extends Controller {
 
     public void showOptions() {
         count = 0;
-        addActionOption(back, true);
 
-        activeMonster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
+        // Don't show the back option if the player monster is dead
+        if (!getActionField().isOwnMonsterDead()) {
+            addActionOption(back, true);
+        }
 
-        if (userMonstersList != null && !userMonstersList.isEmpty()) {
-            for (Monster monster : userMonstersList) {
-                if (monster.currentAttributes().health() > 0 && (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
-                    subscribe(presetService.getMonster(monster.type()), type -> {
-                        selectedUserMonster = monster;
-                        addActionOption(monster._id() + " " + type.name(), false);
-                    });
-                }
+        Monster activeMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
+        List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
+
+        for (Monster monster : userMonstersList) {
+            if (!sessionService.isMonsterDead(monster) &&
+                    (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
+                subscribe(presetService.getMonster(monster.type()), type -> {
+                    selectedUserMonster = monster;
+                    addActionOption(monster._id() + " " + type.name(), false);
+                });
             }
         }
     }
@@ -100,10 +74,10 @@ public class ActionFieldChangeMonsterController extends Controller {
 
         HBox optionContainer;
         if (option.equals(back)) {
-            optionContainer = actionFieldControllerProvider.get().getOptionContainer(option);
+            optionContainer = getActionField().getOptionContainer(option);
             optionContainer.setOnMouseClicked(event -> openAction(option));
         } else {
-            optionContainer = actionFieldControllerProvider.get().getOptionContainer(idAndName[1]);
+            optionContainer = getActionField().getOptionContainer(idAndName[1]);
             optionContainer.setOnMouseClicked(event -> openAction(idAndName[0]));
         }
 
@@ -131,17 +105,10 @@ public class ActionFieldChangeMonsterController extends Controller {
 
     public void openAction(String option) {
         if (option.equals(back)) {
-            actionFieldControllerProvider.get().openMainMenu();
+            getActionField().openMainMenu();
         } else {
-            if (activeMonster == null || activeMonster.currentAttributes().health() == 0) {
-                subscribe(encounterService.changeDeadMonster(selectedUserMonster),
-                        opponent -> {});
-            } else {
-                subscribe(encounterService.makeChangeMonsterMove(selectedUserMonster),
-                        next -> {});
-            }
-
-            actionFieldControllerProvider.get().openBattleLog();
+            getActionField().openBattleLog();
+            getActionField().executeMonsterChange(selectedUserMonster);
         }
     }
 

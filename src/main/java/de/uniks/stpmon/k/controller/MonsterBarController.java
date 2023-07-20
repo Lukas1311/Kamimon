@@ -54,7 +54,7 @@ public class MonsterBarController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadImage(arrow, "../controller/monsterbarArrow.png");
+        loadImage(arrow, "monsterbarArrow.png");
         createMonsterSlots();
         return parent;
     }
@@ -70,6 +70,7 @@ public class MonsterBarController extends Controller {
             monsterSlot.setFitWidth(30);
             loadImage(monsterSlot, "freeSlot.png");
             monsterSlotsHBox.getChildren().add(monsterSlot);
+            monsterSlot.setId("slot_" + i + "_free");
             monsterSlots[i] = monsterSlot;
         }
     }
@@ -80,19 +81,32 @@ public class MonsterBarController extends Controller {
      * @param slot      The slot index of the monster
      * @param currentHP The current HP of the monster
      * @param maxHP     The maximum HP of the monster
+     * @param empty     The slot is empty
      */
-    public void setMonsterStatus(int slot, int currentHP, int maxHP) {
+    public void setMonsterStatus(int slot, float currentHP, float maxHP, boolean empty) {
         if (slot < 0 || slot >= monsterSlots.length) {
             return;
         }
 
         ImageView monsterSlot = monsterSlots[slot];
+        if (monsterSlot == null) {
+            return;
+        }
+
+        if (empty) {
+            loadImage(monsterSlot, "freeSlot.png");
+            return;
+        }
+
         if (currentHP <= 0) {
+            monsterSlot.setId("slot_" + slot + "_zero");
             loadImage(monsterSlot, "healthPointsZero.png");
         } else if (currentHP < maxHP * 0.2) {
             loadImage(monsterSlot, "healthPointsLow.png");
+            monsterSlot.setId("slot_" + slot + "_low");
         } else {
             loadImage(monsterSlot, "healthPointsNormal.png");
+            monsterSlot.setId("slot_" + slot + "_normal");
         }
     }
 

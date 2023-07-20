@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Map.Entry;
 
 @Singleton
 public class MonsterInformationController extends Controller {
@@ -103,26 +104,30 @@ public class MonsterInformationController extends Controller {
         }
     }
 
+    private String attToString(Float value) {
+        return Integer.toString((int) Math.ceil(value));
+    }
+
     public void loadMonster(Monster monster) {
         // Set all labels
         monsterLevelLabel.setText("Lvl. " + monster.level());
         monsterHpLabel.setText("HP: "
-                + monster.currentAttributes().health()
-                + "/" + monster.attributes().health());
+                + attToString(monster.currentAttributes().health())
+                + "/" + attToString(monster.attributes().health()));
         monsterXpLabel.setText("XP: " + monster.experience()
                 + "/" + (int) (Math.pow(monster.level(), 3) - Math.pow(monster.level() - 1, 3)));
-        
-        hpValueLabel.setText(monster.attributes().health().toString());
-        atkValueLabel.setText(monster.attributes().attack().toString());
-        defValueLabel.setText(monster.attributes().defense().toString());
-        speValueLabel.setText(monster.attributes().speed().toString());
+
+        hpValueLabel.setText(attToString(monster.attributes().health()));
+        atkValueLabel.setText(attToString(monster.attributes().attack()));
+        defValueLabel.setText(attToString(monster.attributes().defense()));
+        speValueLabel.setText(attToString(monster.attributes().speed()));
 
         // Iterate over the abilities of the monster
         cleanupAttackGrid();
         int i = 1;
-        for (String key : monster.abilities().keySet()) {
-            if (monster.abilities().containsKey(key)) {
-                fillAbilityTable(key, i, monster.abilities().get(key));
+        for (Entry<String, Integer> entry : monster.abilities().entrySet()) {
+            if (monster.abilities().containsKey(entry.getKey())) {
+                fillAbilityTable(entry, i);
                 i++;
             }
         }
@@ -155,12 +160,15 @@ public class MonsterInformationController extends Controller {
         return label;
     }
 
-    private void fillAbilityTable(String abilityId, int rowIndex, Integer remainingUses) {
+    private void fillAbilityTable(Entry<String, Integer> abilityEntry, int rowIndex) {
+        String abilityId = abilityEntry.getKey();
+        int currentUses = abilityEntry.getValue();
         subscribe(presetService.getAbility(abilityId),
-                ability -> fillAbilityRow(ability, rowIndex, remainingUses));
+                ability -> fillAbilityRow(ability, currentUses, rowIndex)
+        );
     }
 
-    private void fillAbilityRow(AbilityDto ability, int rowIndex, Integer remainingUses) {
+    private void fillAbilityRow(AbilityDto ability, int currentUses, int rowIndex) {
         Label typeLabel = typeLabel(null, ability.type());
         typeLabel.setId("typeLabel_" + rowIndex);
         Label nameLabel = new Label(ability.name());
@@ -185,7 +193,7 @@ public class MonsterInformationController extends Controller {
         Label accLabel = new Label(String.valueOf((int) (ability.accuracy().doubleValue() * 100.0)));
         accLabel.setId("accLabel_" + rowIndex);
 
-        Label useLabel = new Label(remainingUses.toString() + "/" + ability.maxUses());
+        Label useLabel = new Label(currentUses + "/" + ability.maxUses());
         useLabel.setId("useLabel_" + rowIndex);
 
         for (int i = 0; i < 5; i++) {

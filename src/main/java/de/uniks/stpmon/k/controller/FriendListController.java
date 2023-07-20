@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
-import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.models.User;
-import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.UserService;
 import de.uniks.stpmon.k.views.FriendCell;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -42,10 +40,6 @@ public class FriendListController extends ToastedController {
 
     @Inject
     UserService userService;
-    @Inject
-    GroupService groupService;
-    @Inject
-    Provider<ChatController> chatControllerProvider;
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
