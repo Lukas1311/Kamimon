@@ -173,7 +173,14 @@ public class SessionService extends DestructibleElement {
         if (targetId == null) {
             throw new IllegalArgumentException("Target id must not be null");
         }
-        return session.getSlotForTrainer(targetId);
+        EncounterSlot slot = session.getSlotForOpponent(targetId);
+        if (slot == null) {
+            slot = session.getSlotForTrainer(targetId);
+        }
+        if (slot == null) {
+            throw new IllegalArgumentException("No slot found for target id: " + targetId);
+        }
+        return slot;
     }
 
     public Monster getMonster(EncounterSlot slot) {
