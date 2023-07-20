@@ -13,7 +13,6 @@ import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import de.uniks.stpmon.k.world.RouteData;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -35,7 +34,6 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +146,7 @@ public class EncounterOverviewController extends Controller {
         }
     }
 
-    private String getTerrainImagePath(List<RouteData> routeListData) {
+    private String getTerrainImagePath() {
         return getResourcePath() + "terrain/" + getTerrainTypeName() + ".png";
     }
 
@@ -164,10 +162,7 @@ public class EncounterOverviewController extends Controller {
 
         Region currentRegion = regionStorage.getRegion();
         if (currentRegion.map() != null) {
-            subscribe(
-                textDeliveryService.getRouteData(currentRegion),
-                data -> loadImage(background, getTerrainImagePath(data)) // load bg image dependant on area
-            );
+            loadImage(background, getTerrainImagePath());
         }
 
         background.fitHeightProperty().bind(fullBox.heightProperty());
