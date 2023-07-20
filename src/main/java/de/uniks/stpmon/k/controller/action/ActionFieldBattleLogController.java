@@ -13,6 +13,7 @@ import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Result;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.SessionService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -145,9 +146,9 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     public void showMonsterInformation() {
         Monster monster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
-        monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
+        /*monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
         monsterInformationController.loadMonster(monster);
-        encounterOverviewController.monsterInformationBox.setVisible(true);
+        encounterOverviewController.monsterInformationBox.setVisible(true);*/
     }
 
     private void initListeners() {
