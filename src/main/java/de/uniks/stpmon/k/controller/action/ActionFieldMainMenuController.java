@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -38,8 +40,18 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
             addActionOption(OptionType.FLEE);
         }
 
+        showMonsterInformation();
+
         return parent;
     }
+
+    private void showMonsterInformation() {
+        Monster monster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
+        /*monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
+        monsterInformationController.loadMonster(monster);
+        encounterOverviewController.monsterInformationBox.setVisible(true);*/
+    }
+
 
     public void addActionOption(OptionType option) {
         String optionText = switch (option) {
