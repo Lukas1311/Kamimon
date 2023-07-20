@@ -295,6 +295,40 @@
     -fx-padding: 0;
 }
 
+
+/* -------------------- Monster Status -------------------- */
+
+.monster-status-background {
+ -fx-border-radius: 4;
+ -fx-background-radius: 5;
+ -fx-border-color: black;
+ -fx-border-width: 1;
+}
+
+.monster-status-burned {
+ -fx-background-color: darkred;
+}
+
+.monster-status-poisoned {
+ -fx-background-color: orange;
+}
+
+.monster-status-frozen {
+ -fx-background-color: darkblue;
+}
+
+.monster-status-confused {
+ -fx-background-color: lightblue;
+}
+
+.monster-status-paralysed {
+ -fx-background-color: whitesmoke;
+}
+
+.monster-status-asleep {
+ -fx-background-color: thistle;
+}
+
 /* -------------------- Mon Box  -------------------- */
 
 .hp-progressbar {

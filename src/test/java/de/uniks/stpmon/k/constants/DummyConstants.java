@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.constants;
 
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
@@ -13,7 +14,7 @@ import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @SuppressWarnings("unused")
 public class DummyConstants {
@@ -114,6 +115,7 @@ public class DummyConstants {
                     true,
                     List.of()
             )),
+            List.of(),
             1, 1,
             List.of(),
             "map"
@@ -128,7 +130,7 @@ public class DummyConstants {
                             0, "Ground",
                             List.of(
                                     new ChunkData(
-                                            IntStream.range(0, 256).map(i -> 482)
+                                            LongStream.range(0, 256).map(i -> 482)
                                                     .boxed().toList(),
                                             16, 16,
                                             0, 0
@@ -145,6 +147,7 @@ public class DummyConstants {
                             List.of()
                     )
             ),
+            List.of(),
             16, 16,
             List.of(
                     new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")
@@ -185,16 +188,11 @@ public class DummyConstants {
             AREA_MAP_DATA
     );
 
-    public static final Monster MONSTER = new Monster(
-            "monster_0",
-            "trainer_0",
-            1,
-            0,
-            0,
-            null,
-            null,
-            null
-    );
+    public static final Monster MONSTER = MonsterBuilder.builder()
+            .setId("monster_0")
+            .setTrainer("trainer_0")
+            .setType(1)
+            .create();
     public static final MonsterTypeDto MONSTER_TYPE = new MonsterTypeDto(
             0,
             "monster",

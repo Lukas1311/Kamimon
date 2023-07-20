@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.world;
 
+import de.uniks.stpmon.k.constants.TileConstants;
 import de.uniks.stpmon.k.dto.IMapProvider;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
@@ -11,7 +12,6 @@ import de.uniks.stpmon.k.utils.ImageUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.util.List;
 import java.util.*;
 
@@ -156,11 +156,13 @@ public class TileMap {
 
     public BufferedImage renderData(ITileDataProvider provider) {
         BufferedImage chunkImage = createImage(provider.width(), provider.height());
-        WritableRaster raster = chunkImage.getRaster();
+        Graphics2D graphics = chunkImage.createGraphics();
 
         for (int x = 0; x < provider.width(); x++) {
             for (int y = 0; y < provider.height(); y++) {
-                int data = provider.data().get(x + y * provider.width());
+
+                long globalId = provider.getGlobalIdFromLocal(x, y);
+                int data = (int) (globalId & TileConstants.TILE_ID_MASK);
                 if (data == 0) {
                     continue;
                 }
@@ -170,9 +172,13 @@ public class TileMap {
                 if ((data - source.firstgid()) > tileset.data().tilecount()) {
                     continue;
                 }
-                tileset.setTile(raster, x, y, data);
+                tileset.drawTile(graphics, x, y, data,
+                        (globalId & TileConstants.FLAG_FLIPPED_HORIZONTALLY) > 0,
+                        (globalId & TileConstants.FLAG_FLIPPED_VERTICALLY) > 0,
+                        (globalId & TileConstants.FLAG_FLIPPED_DIAGONALLY) > 0);
             }
         }
+        graphics.dispose();
         return chunkImage;
     }
 

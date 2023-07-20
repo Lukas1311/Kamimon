@@ -24,7 +24,7 @@ public record TileLayerData(
         int id,
         String name,
         List<ChunkData> chunks,
-        List<Integer> data,
+        List<Long> data,
         List<ObjectData> objects,
         int x,
         int y,
@@ -43,11 +43,6 @@ public record TileLayerData(
 
     public boolean checkBounds(int x, int y) {
         return x >= startx() && x < startx() + width() && y >= starty() && y < starty() + height();
-    }
-
-    public int getIdFromData(int x, int y) {
-        int index = (x - startx()) + (y - starty()) * (width());
-        return data().get(index);
     }
 
 }

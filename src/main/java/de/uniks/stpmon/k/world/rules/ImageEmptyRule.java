@@ -1,10 +1,11 @@
 package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
-import de.uniks.stpmon.k.world.PropInspector;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
+
+import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 
 public class ImageEmptyRule implements LoneRule {
     public static final int RGB_EMPTY_THRESHOLD = 45;
@@ -13,11 +14,11 @@ public class ImageEmptyRule implements LoneRule {
     @Override
     public RuleResult apply(TileInfo current, List<DecorationLayer> layers) {
         BufferedImage image = layers.get(current.layer()).image();
-        for (int x = 0; x < PropInspector.TILE_SIZE; x++) {
-            for (int y = 0; y < PropInspector.TILE_SIZE; y++) {
+        for (int x = 0; x < TILE_SIZE; x++) {
+            for (int y = 0; y < TILE_SIZE; y++) {
 
-                int colorValue = image.getRGB(current.tileX() * PropInspector.TILE_SIZE + x,
-                        current.tileY() * PropInspector.TILE_SIZE + y);
+                int colorValue = image.getRGB(current.tileX() * TILE_SIZE + x,
+                        current.tileY() * TILE_SIZE + y);
                 int firstAlpha = (colorValue >> 24 & 0xFF);
                 if (firstAlpha < ALPHA_EMPTY_THRESHOLD) {
                     continue;

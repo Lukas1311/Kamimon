@@ -260,8 +260,13 @@ class EncounterServiceTest {
         sortedMap.put("Tackle", 10);
 
         // Create new monsters
-        Monster attacker = new Monster("0", null, null, null, null, sortedMap, null, null);
-        Monster target = new Monster("1", null, null, null, null, null, null, null);
+        Monster attacker = MonsterBuilder.builder()
+                .setId("0")
+                .setAbilities(sortedMap)
+                .create();
+        Monster target = MonsterBuilder.builder()
+                .setId("1")
+                .create();
 
         //define mock
         when(encounterApiService.makeMove(any(), any(), any(), any()))
