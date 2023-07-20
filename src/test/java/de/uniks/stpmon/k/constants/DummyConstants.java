@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.constants;
 
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
@@ -187,16 +188,11 @@ public class DummyConstants {
             AREA_MAP_DATA
     );
 
-    public static final Monster MONSTER = new Monster(
-            "monster_0",
-            "trainer_0",
-            1,
-            0,
-            0,
-            null,
-            null,
-            null
-    );
+    public static final Monster MONSTER = MonsterBuilder.builder()
+            .setId("monster_0")
+            .setTrainer("trainer_0")
+            .setType(1)
+            .create();
     public static final MonsterTypeDto MONSTER_TYPE = new MonsterTypeDto(
             0,
             "monster",
