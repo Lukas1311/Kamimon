@@ -5,10 +5,12 @@ import de.uniks.stpmon.k.controller.MonsterInformationController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
@@ -91,8 +93,14 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
+
+    // ---------- Remove Later -------
     @Inject
     Provider<MonsterInformationController> monInfoProvider;
+    @Inject
+    Provider<EncounterStorage> encounterStorageProvider;
+
+    // ------- Remove Later End --------
 
     @Inject
     public EncounterOverviewController() {
@@ -180,7 +188,7 @@ public class EncounterOverviewController extends Controller {
         Parent actionField = this.actionFieldController.render();
         if (actionField != null) {
             actionFieldWrapperBox.getChildren().add(actionField);
-            actionFieldWrapperBox.getChildren().add(0, monInfoProvider.get().render());
+
         }
 
         //add a translation transition to all monster images
@@ -243,11 +251,19 @@ public class EncounterOverviewController extends Controller {
             openingTransition.play();
         }
 
+        showLevelUp();
+
+
         return parent;
     }
 
     public void showLevelUp() {
-
+        Monster monster = encounterStorageProvider.get().getSession().getMonster(EncounterSlot.PARTY_FIRST);
+        MonsterInformationController monInfoController = monInfoProvider.get();
+        Parent monInfoPane = monInfoController.render();
+        monInfoController.loadMonsterTypeDto(String.valueOf(monster.type()));
+        monInfoController.loadMonster(monster);
+        actionFieldWrapperBox.getChildren().add(0, monInfoPane);
     }
 
     private Transition playOpeningAnimation() {

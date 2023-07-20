@@ -47,9 +47,11 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
     private void showMonsterInformation() {
         Monster monster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
-        /*monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
+        /*
+        monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
         monsterInformationController.loadMonster(monster);
-        encounterOverviewController.monsterInformationBox.setVisible(true);*/
+        encounterOverviewController.monsterInformationBox.setVisible(true);
+        */
     }
 
 
