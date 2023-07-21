@@ -23,6 +23,8 @@ public class BattleLogService {
     @Inject
     PresetService presetService;
     @Inject
+    MonsterService monsterService;
+    @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
@@ -37,6 +39,8 @@ public class BattleLogService {
     private boolean encounterIsOver = false;
     private CloseEncounterTrigger closeEncounterTrigger = null;
     private Timer closeTimer;
+    private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
+    private final Map<EncounterSlot, Monster> monsAfterLevelUp = new HashMap<>();
 
     @Inject
     public BattleLogService() {
@@ -94,10 +98,9 @@ public class BattleLogService {
                 //init closing
                 if (encounterIsOver) {
                     closeTimer.cancel();
-
-
-                } else { //user sees result of encounter
                     closeEncounter();
+                } else { //user sees result of encounter
+                    encounterIsOver = true;
                     closeTimer = new Timer();
                     closeTimer.schedule(new TimerTask() {
                         @Override
@@ -175,13 +178,14 @@ public class BattleLogService {
         for (Result result : opp.results()) {
             //battleLogPages.add(new BattleLogEntry(monster, result, target));
             BattleLogEntry entry = new BattleLogEntry(monster, result, target);
-            handleResult(entry);
+            handleResult(entry, slot);
         }
 
         lastOpponents.put(up.slot(), up.opponent());
+
     }
 
-    private void handleResult(BattleLogEntry battleLogEntry) {
+    private void handleResult(BattleLogEntry battleLogEntry, EncounterSlot slot) {
         Result result = battleLogEntry.result();
         MonsterTypeDto monster = battleLogEntry.monster();
         String target = battleLogEntry.target();
@@ -215,9 +219,7 @@ public class BattleLogService {
             //called when not dying, e.g. another monster is available
             case "monster-defeated" -> addTranslatedSection("monster-defeated", monster.name());
             case "monster-levelup" -> {
-                addTranslatedSection("monster-levelup", monster.name(), "0");
-
-                encounterOverviewControllerProvider.get().showLevelUp();
+                makeLevelUp(monster, slot);
             }
             case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
             case "monster-learned" ->
@@ -232,6 +234,24 @@ public class BattleLogService {
         }
     }
 
+    private void makeLevelUp(MonsterTypeDto monster, EncounterSlot slot) {
+        Monster oldMon = monsBeforeLevelUp.get(slot);
+        Monster newMon = monsAfterLevelUp.get(slot);
+        addTranslatedSection("monster-levelup", monster.name(), String.valueOf(newMon.level()));
+        encounterOverviewControllerProvider.get().showLevelUp(oldMon, newMon);
+        monsBeforeLevelUp.put(slot, newMon);
+    }
+
+    public void setMonster(EncounterSlot slot, Monster mon) {
+        //monster at start of encounter gets safed
+        if (!monsBeforeLevelUp.containsKey(slot)) {
+            monsBeforeLevelUp.put(slot, mon);
+        } else {
+            //level up
+            monsAfterLevelUp.put(slot, mon);
+        }
+    }
+
     private void addTranslatedSection(String word, String... args) {
         battleLogControllerProvider.get().addTranslatedSection(word, args);
     }
@@ -241,7 +261,7 @@ public class BattleLogService {
         return presetService.getMonster(id).blockingFirst();
     }
 
-    private MonsterTypeDto getTypeForSlot(EncounterSlot slot) {
+    public MonsterTypeDto getTypeForSlot(EncounterSlot slot) {
         Monster monster = sessionService.getMonster(slot);
         if (monster == null) {
             return null;

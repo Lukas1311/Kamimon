@@ -30,7 +30,7 @@
         </rowConstraints>
         <Label fx:id="monsterNameLabel" maxWidth="151.0" minWidth="151.0" prefWidth="151.0"
                styleClass="monster-information-name" text="Label" GridPane.columnSpan="2"/>
-        <Label fx:id="mosterLevelUpgradeLabel" text=" +1" translateX="35.0" GridPane.rowIndex="1"/>
+        <Label fx:id="monsterLevelUpgradeLabel" text="" translateX="35.0" GridPane.rowIndex="1"/>
         <Label fx:id="monsterLevelLabel" text="Label" GridPane.rowIndex="1"/>
         <Label fx:id="monsterHpLabel" text="Label" GridPane.rowIndex="3"/>
         <Label fx:id="monsterXpLabel" text="Label" GridPane.rowIndex="4"/>

@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
@@ -8,6 +7,7 @@ import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.SessionService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -37,22 +37,13 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @Inject
     SessionService sessionService;
-
-
+    @Inject
+    MonsterService monsterService;
     @Inject
     InputHandler inputHandler;
 
     @Inject
     BattleLogService battleLogService;
-
-
-
-    private boolean encounterFinished = false;
-
-
-
-    private final boolean encounterClosingTextIsShown = false;
-    private CloseEncounterTrigger closeEncounter;
 
     @Inject
     public ActionFieldBattleLogController() {
@@ -64,8 +55,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         Parent parent = super.render();
 
         battleLogService.setVBox(vBox);
-
-        encounterFinished = false;
 
         scrollPane.needsLayoutProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -90,8 +79,14 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), opp ->
-                battleLogService.queueUpdate(new OpponentUpdate(slot, opp))
+                    battleLogService.queueUpdate(new OpponentUpdate(slot, opp))
             );
+
+            if (!slot.enemy()) {
+                subscribe(sessionService.listenMonster(slot), mon -> {
+                    battleLogService.setMonster(slot, mon);
+                });
+            }
         }
         onDestroy(battleLogService::clearService);
     }

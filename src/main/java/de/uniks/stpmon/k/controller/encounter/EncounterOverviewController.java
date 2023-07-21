@@ -250,41 +250,18 @@ public class EncounterOverviewController extends Controller {
         }
 
         encounterSession = encounterStorageProvider.get().getSession();
-        initMonstersBeforeRound();
-        //showLevelUp();
+
 
 
         return parent;
     }
 
-    private void initMonstersBeforeRound() {
-        initMonstersBeforeRound(EncounterSlot.PARTY_FIRST, encounterSession.getMonster(EncounterSlot.PARTY_FIRST));
-
-        if (encounterSession.getOwnTeam().size() > 1) {
-            initMonstersBeforeRound(EncounterSlot.PARTY_SECOND, encounterSession.getMonster(EncounterSlot.PARTY_SECOND));
-        }
-    }
-
-    private void initMonstersBeforeRound(EncounterSlot encounterSlot, Monster monster) {
-        monstersBeforeRound.put(encounterSlot, monster);
-        encounterSession.listenMonster(encounterSlot).subscribe(mon -> {
-            if (!mon.level().equals(monstersBeforeRound.get(encounterSlot).level())) {
-                //trigger level up
-            }
-        });
-    }
-
-    public void showLevelUp() {
-      /*  EncounterSession encounterSession = encounterStorageProvider.get().getSession();
-        Monster oldMonster =
-        Monster monster = encounterSession.getMonster(EncounterSlot.PARTY_FIRST);
+    public void showLevelUp(Monster oldMon, Monster newMon) {
         MonsterInformationController monInfoController = monInfoProvider.get();
         Parent monInfoPane = monInfoController.render();
+        monInfoController.loadLevelUp(oldMon, newMon);
 
-        monInfoController.loadMonsterTypeDto(String.valueOf(monster.type())); //loads name, description and img of server (= always up to date)
-        //load old monster stats
-        monInfoController.loadMonster(monster);
-        actionFieldWrapperBox.getChildren().add(0, monInfoPane);*/
+        actionFieldWrapperBox.getChildren().add(0, monInfoPane);
     }
 
     private Transition playOpeningAnimation() {
