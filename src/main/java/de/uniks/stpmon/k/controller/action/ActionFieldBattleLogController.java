@@ -52,7 +52,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     @Inject
     BattleLogService battleLogService;
 
-
+    private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private boolean encounterFinished = false;
 
@@ -95,11 +95,19 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), opp -> {
-                battleLogService.queueUpdate(slot, opp);
 
 
 
 
+                // Skip first value because it is always the existing value
+                if (!lastOpponents.containsKey(slot)) {
+                    // Cache the first value
+                    lastOpponents.put(slot, opp);
+                    return;
+                }
+
+                queueOpponent(slot, opp);
+                lastOpponents.put(slot, opp);
             });
         }
         onDestroy(lastOpponents::clear);
