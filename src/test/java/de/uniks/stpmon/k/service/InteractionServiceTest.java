@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
@@ -71,11 +72,7 @@ public class InteractionServiceTest {
         assertNull(interactionStorage.getDialogue());
 
         Trainer trainer = TrainerBuilder.builder()
-                .setNpc(new NPCInfo(false,
-                        false,
-                        false,
-                        List.of("monster_0", "monster_1"),
-                        List.of()))
+                .setNpc(NPCInfoBuilder.builder().addStarters(List.of("monster_0", "monster_1")).create())
                 .create();
 
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(trainer));
@@ -95,11 +92,7 @@ public class InteractionServiceTest {
         // Mock values
         Trainer firstTrainer = TrainerBuilder.builder()
                 .setId("first")
-                .setNpc(new NPCInfo(false,
-                        false,
-                        false,
-                        List.of("monster_0", "monster_1"),
-                        List.of()))
+                .setNpc(NPCInfoBuilder.builder().addStarters(List.of("monster_0", "monster_1")).create())
                 .create();
         Trainer secondTrainer = TrainerBuilder.builder(firstTrainer)
                 .setId("second")
@@ -107,11 +100,7 @@ public class InteractionServiceTest {
         // Trainer with no dialogue
         Trainer dummyTrainer = TrainerBuilder.builder()
                 .setId("dummy")
-                .setNpc(new NPCInfo(false,
-                        false,
-                        false,
-                        List.of(),
-                        List.of()))
+                .setNpc(NPCInfoBuilder.builder().create())
                 .create();
 
         when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
@@ -160,6 +149,7 @@ public class InteractionServiceTest {
                 .setNpc(new NPCInfo(false,
                         false,
                         true,
+                        List.of(),
                         null,
                         List.of()))
                 .create();

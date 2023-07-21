@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
+import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
@@ -87,8 +88,7 @@ public class TestHelper {
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.LEFT)
-                .setNpc(new NPCInfo(false, false, false,
-                        List.of("0", "1", "2"), List.of()))
+                .setNpc(NPCInfoBuilder.builder().addStarters(List.of("0", "1", "2")).create())
                 .create();
 
         trainerCache.addValue(prof);
@@ -100,8 +100,7 @@ public class TestHelper {
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.TOP)
-                .setNpc(new NPCInfo(false, true, false,
-                        null, List.of()))
+                .setNpc(NPCInfoBuilder.builder().setEncounterOnTalk(true).create())
                 .create();
         Trainer attacker1 = TrainerBuilder.builder()
                 .setId("attacker1")
@@ -110,8 +109,7 @@ public class TestHelper {
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.TOP)
-                .setNpc(new NPCInfo(false, true, false,
-                        null, List.of()))
+                .setNpc(NPCInfoBuilder.builder().setEncounterOnTalk(true).create())
                 .create();
 
 
@@ -127,8 +125,7 @@ public class TestHelper {
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.TOP)
-                .setNpc(new NPCInfo(false, false, true,
-                        List.of(), List.of()))
+                .setNpc(NPCInfoBuilder.builder().setCanHeal(true).create())
                 .create();
 
         component.regionApi().addTrainer(nurse);
