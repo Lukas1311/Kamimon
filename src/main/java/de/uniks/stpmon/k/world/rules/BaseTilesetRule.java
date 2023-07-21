@@ -14,6 +14,10 @@ public abstract class BaseTilesetRule {
         this(tileSet, Arrays.asList(tileIds));
     }
 
+    public BaseTilesetRule(String tileSet, IdSource... tileIds) {
+        this(tileSet, Arrays.stream(tileIds).flatMap(s -> s.get().stream()).toList());
+    }
+
     public BaseTilesetRule(String tileSet, Collection<Integer> c) {
         this.tileIds = new HashSet<>(c);
         this.tileSet = tileSet;
