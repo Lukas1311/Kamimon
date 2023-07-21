@@ -53,6 +53,8 @@ public class PropView extends WorldViewable {
                     mesh.setMaterial(null);
                 }
             }
+            props.getChildren().clear();
+            props = null;
         }
     }
 }

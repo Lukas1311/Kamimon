@@ -30,6 +30,12 @@ public class LobbyController extends Controller {
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+        regionListController.destroy();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
 

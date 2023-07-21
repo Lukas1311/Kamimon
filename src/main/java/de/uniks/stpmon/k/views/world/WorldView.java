@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.views.world;
 
+import com.sun.prism.impl.Disposer;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -105,6 +106,8 @@ public class WorldView extends Viewable {
         floorView.destroy();
         propView.destroy();
         npcCollectiveView.destroy();
+        cameraStorage.setCamera(null);
+        Disposer.cleanUp();
         System.gc();
     }
 

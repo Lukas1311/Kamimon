@@ -52,6 +52,7 @@ public class NPCCollectiveView extends WorldViewable {
             view.setUserData(null);
         }
         npcViews.clear();
+        npcGroup.getChildren().clear();
         npcGroup = null;
     }
 

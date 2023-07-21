@@ -15,6 +15,7 @@ public class WorldController extends Controller {
     @Inject
     protected WorldView worldView;
     private SubScene scene;
+    private BorderPane parent;
 
     @Inject
     public WorldController() {
@@ -34,12 +35,16 @@ public class WorldController extends Controller {
         scene.heightProperty().unbind();
         // Clear the scene
         scene.setRoot(new Group());
+        scene.setCamera(null);
         scene = null;
+        if (parent != null) {
+            parent.getChildren().clear();
+        }
     }
 
     @Override
     public Parent render() {
-        BorderPane parent = (BorderPane) super.render();
+        parent = (BorderPane) super.render();
         scene = worldView.createScene();
         if (scene != null) {
             parent.getChildren().add(0, scene);

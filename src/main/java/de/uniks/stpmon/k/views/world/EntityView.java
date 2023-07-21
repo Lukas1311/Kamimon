@@ -76,6 +76,10 @@ public abstract class EntityView extends WorldViewable {
     }
 
     protected void applySprite(float[] data) {
+        if (entityNode == null) {
+            toString();
+            return;
+        }
         TriangleMesh mesh = (TriangleMesh) entityNode.getMesh();
         // Mesh is null if the entity was destroyed
         if (mesh == null) {
@@ -133,6 +137,10 @@ public abstract class EntityView extends WorldViewable {
     protected void applyMove(Trainer trainer, boolean newDirection) {
         trainerProvider.setTrainer(trainer);
 
+        // Stop if the entity was destroyed
+        if (entityNode == null) {
+            return;
+        }
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityNode);
         moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()));
@@ -141,6 +149,10 @@ public abstract class EntityView extends WorldViewable {
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
         moveTranslation.play();
         moveTranslation.setOnFinished((t) -> {
+            // Stop if the entity was destroyed
+            if (entityNode == null) {
+                return;
+            }
             if (nextTrainer == null) {
                 startIdleAnimation(trainer);
                 return;
@@ -188,6 +200,7 @@ public abstract class EntityView extends WorldViewable {
                 phongMaterial.setDiffuseMap(null);
             }
             entityNode.setMaterial(null);
+            entityNode = null;
         }
     }
 

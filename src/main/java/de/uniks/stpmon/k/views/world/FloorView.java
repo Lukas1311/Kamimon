@@ -47,6 +47,7 @@ public class FloorView extends WorldViewable {
                 phongMaterial.setDiffuseMap(null);
             }
             floor.setMaterial(null);
+            floor = null;
         }
     }
 }
