@@ -3,14 +3,9 @@ package de.uniks.stpmon.k.controller.monsters;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
-import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -38,19 +33,14 @@ public class MonsterInventoryController extends Controller {
     public AnchorPane monBoxMenuHolder;
 
     @Inject
-    CacheManager cacheManager;
-    @Inject
-    TrainerStorage trainerStorage;
-    @Inject
     IResourceService resourceService;
     @Inject
     Provider<IngameController> ingameControllerProvider;
     @Inject
     TrainerService trainerService;
+    @Inject
+    MonsterService monsterService;
 
-
-    private MonsterCache monsterCache;
-    private TrainerCache trainerCache;
     private Monster activeMonster;
     private List<String> monTeamList = new ArrayList<>();
     private int monsterIndexStorage = 0;
@@ -65,17 +55,14 @@ public class MonsterInventoryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        Trainer trainer = trainerStorage.getTrainer();
-        monsterCache = cacheManager.requestMonsters(trainer._id());
-        trainerCache = cacheManager.trainerCache();
-        targetGrid2(monStorage);
-        targetGrid2(monTeam);
-        subscribe(monsterCache.getTeam().getValues().take(1), this::showTeamMonster2);
-        subscribe(monsterCache.getTeam().getValues(), monsters -> {
-            showTeamMonster2(monsters);
-            showMonsterList2(monsterCache.getValues().blockingFirst());
+        targetGrid(monStorage);
+        targetGrid(monTeam);
+        subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
+        subscribe(monsterService.getTeam(), monsters -> {
+            showTeamMonster(monsters);
+            showMonsterList(monsterService.getMonsters().blockingFirst());
         });
-        subscribe(monsterCache.getValues(), this::showMonsterList2);
+        subscribe(monsterService.getMonsters(), this::showMonsterList);
         loadBgImage(monBoxMenuHolder, "MonBox_v6.png");
 
         return parent;
@@ -88,7 +75,7 @@ public class MonsterInventoryController extends Controller {
         ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
     }
 
-    private void showTeamMonster2(List<Monster> monsters) {
+    private void showTeamMonster(List<Monster> monsters) {
         int monsterIndexTeam = 0;
         monTeamList = new ArrayList<>();
         monTeam.getChildren().clear();
@@ -104,9 +91,9 @@ public class MonsterInventoryController extends Controller {
         }
     }
 
-    private void showMonsterList2(List<Monster> monsters) {
+    private void showMonsterList(List<Monster> monsters) {
         List<Monster> currentMonsters = new ArrayList<>(monsters);
-        List<Monster> teamMonsters = monsterCache.getTeam().getValues().blockingFirst();
+        List<Monster> teamMonsters = monsterService.getTeam().blockingFirst();
         int columnCount = 6;
         int rowCount = 4;
         currentMonsters.removeAll(teamMonsters);
@@ -182,7 +169,7 @@ public class MonsterInventoryController extends Controller {
         });
     }
 
-    private void targetGrid2(GridPane gridPane) {
+    private void targetGrid(GridPane gridPane) {
         gridPane.setOnDragOver(event -> {
             if (event.getGestureSource() != gridPane && event.getDragboard().hasImage()) {
                 event.acceptTransferModes(TransferMode.MOVE);
@@ -201,9 +188,7 @@ public class MonsterInventoryController extends Controller {
                     monStorage.add(parent, monsterIndexStorage % 6, monsterIndexStorage / 6);
                     monsterIndexStorage++;
 
-                    Trainer trainer = trainerStorage.getTrainer();
-                    Trainer newTrainer = TrainerBuilder.builder(trainer).addTeam(monTeamList).create();
-                    trainerCache.updateValue(newTrainer);
+                    trainerService.temporaryApplyTeam(monTeamList);
                 }
                 if (gridPane.equals(monTeam)
                         && !monTeam.getChildren().contains(parent)
@@ -212,9 +197,7 @@ public class MonsterInventoryController extends Controller {
 
                     monTeamList.add(selectedMonster);
                     monsterIndexStorage--;
-                    Trainer trainer = trainerStorage.getTrainer();
-                    Trainer newTrainer = TrainerBuilder.builder(trainer).addTeam(monTeamList).create();
-                    trainerCache.updateValue(newTrainer);
+                    trainerService.temporaryApplyTeam(monTeamList);
                 }
                 event.setDropCompleted(true);
             }
