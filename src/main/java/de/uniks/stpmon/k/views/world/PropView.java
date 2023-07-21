@@ -3,10 +3,9 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
+import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,13 +44,7 @@ public class PropView extends WorldViewable {
         super.destroy();
         if (props != null) {
             for (Node node : props.getChildren()) {
-                if (node instanceof MeshView mesh) {
-                    mesh.setMesh(null);
-                    if (mesh.getMaterial() instanceof PhongMaterial phongMaterial) {
-                        phongMaterial.setDiffuseMap(null);
-                    }
-                    mesh.setMaterial(null);
-                }
+                MeshUtils.disposeMesh(node);
             }
             props.getChildren().clear();
             props = null;

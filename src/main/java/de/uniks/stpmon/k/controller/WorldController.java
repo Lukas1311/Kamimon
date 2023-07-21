@@ -31,14 +31,19 @@ public class WorldController extends Controller {
     public void destroy() {
         super.destroy();
         worldView.destroy();
-        scene.widthProperty().unbind();
-        scene.heightProperty().unbind();
-        // Clear the scene
-        scene.setRoot(new Group());
-        scene.setCamera(null);
+        if (scene != null) {
+            scene.widthProperty().unbind();
+            scene.heightProperty().unbind();
+            Group group = (Group) scene.getRoot();
+            group.getChildren().clear();
+            // Clear the scene
+            scene.setRoot(new Group());
+            scene.setCamera(null);
+        }
         scene = null;
         if (parent != null) {
             parent.getChildren().clear();
+            parent = null;
         }
     }
 

@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -77,7 +78,6 @@ public abstract class EntityView extends WorldViewable {
 
     protected void applySprite(float[] data) {
         if (entityNode == null) {
-            toString();
             return;
         }
         TriangleMesh mesh = (TriangleMesh) entityNode.getMesh();
@@ -190,16 +190,14 @@ public abstract class EntityView extends WorldViewable {
         super.destroy();
         if (moveAnimation != null) {
             moveAnimation.stop();
+            moveAnimation = null;
         }
         if (idleAnimation != null) {
             idleAnimation.stop();
+            idleAnimation = null;
         }
         if (entityNode != null) {
-            entityNode.setMesh(null);
-            if (entityNode.getMaterial() instanceof PhongMaterial phongMaterial) {
-                phongMaterial.setDiffuseMap(null);
-            }
-            entityNode.setMaterial(null);
+            MeshUtils.disposeMesh(entityNode);
             entityNode = null;
         }
     }
@@ -223,9 +221,13 @@ public abstract class EntityView extends WorldViewable {
 
         @Override
         protected void interpolate(double frac) {
+            if (entityNode == null) {
+                stop();
+                return;
+            }
             characterSet.fillSpriteData(data,
                     Math.min((int) (frac * CharacterSet.SPRITES_PER_COLUMN), CharacterSet.SPRITES_PER_COLUMN - 1),
-                    Direction.values()[Math.min(Math.max(direction, 0), 3)],
+                    Direction.VALUES[Math.min(Math.max(direction, 0), 3)],
                     isMoving);
             applySprite(data);
         }

@@ -53,6 +53,7 @@ public class WorldRepository {
                 image.flush();
             }
         }
+        props.reset();
     }
 
     private void flushIfNotNull(SingleCache<BufferedImage> cache) {

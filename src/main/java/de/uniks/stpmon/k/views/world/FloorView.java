@@ -2,10 +2,10 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
+import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
@@ -42,11 +42,7 @@ public class FloorView extends WorldViewable {
     public void destroy() {
         super.destroy();
         if (floor != null) {
-            floor.setMesh(null);
-            if (floor.getMaterial() instanceof PhongMaterial phongMaterial) {
-                phongMaterial.setDiffuseMap(null);
-            }
-            floor.setMaterial(null);
+            MeshUtils.disposeMesh(floor);
             floor = null;
         }
     }
