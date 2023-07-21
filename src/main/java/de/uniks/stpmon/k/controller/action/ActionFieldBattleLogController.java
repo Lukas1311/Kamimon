@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -47,11 +48,15 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     PresetService presetService;
     @Inject
     InputHandler inputHandler;
-    private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
+
+    @Inject
+    BattleLogService battleLogService;
+
+
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private boolean encounterFinished = false;
 
-    private final List<BattleLogEntry> battleLogPages = new ArrayList<>();
+    private final List<Map.Entry<EncounterSlot, Opponent>> opponentUpdates = new ArrayList<>();
     private Timer closeTimer;
     private boolean encounterClosingTextIsShown = false;
     private CloseEncounterTrigger closeEncounter;
@@ -87,10 +92,25 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         return parent;
     }
 
+    private void initListeners() {
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            subscribe(sessionService.listenOpponent(slot), opp -> {
+                battleLogService.queueUpdate(slot, opp);
+
+
+
+
+            });
+        }
+        onDestroy(lastOpponents::clear);
+        onDestroy(attackedMonsters::clear);
+    }
+
     public void nextWindow() {
-        //check if battlelog has more pages
-        if (battleLogPages.isEmpty()) {
+        //check if more updates need to be handled
+        if (opponentUpdates.isEmpty()) {
             if (encounterClosingTextIsShown) {
+                //show text that user wins/loses
                 vBox.getChildren().clear();
                 addTextSection(translateString(closeEncounter.toString()));
                 closeTimer = new Timer();
@@ -119,10 +139,11 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             }
 
         } else {
-            //show next page of battlelog
+            //show the next update of opponent
             vBox.getChildren().clear();
-            handleResult(battleLogPages.get(0));
-            battleLogPages.remove(0);
+            handleOpponentUpdate(opponentUpdates.get(0).getKey(), opponentUpdates.get(0).getValue());
+            //handle results
+            opponentUpdates.remove(0);
         }
 
     }
@@ -154,38 +175,39 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {
         encounterClosingTextIsShown = true;
-        closeEncounter = closeEncounter;
+        this.closeEncounter = closeEncounter;
 
     }
 
-    private void initListeners() {
-        for (EncounterSlot slot : sessionService.getSlots()) {
-            subscribe(sessionService.listenOpponent(slot), opp -> {
-                // Skip first value because it is always the existing value
-                if (!lastOpponents.containsKey(slot)) {
-                    // Cache the first value
-                    lastOpponents.put(slot, opp);
-                    return;
-                }
-                handleOpponentUpdate(slot, opp);
-                lastOpponents.put(slot, opp);
-            });
-        }
-        onDestroy(lastOpponents::clear);
-        onDestroy(attackedMonsters::clear);
-    }
 
-    private void handleOpponentUpdate(EncounterSlot slot, Opponent opp) {
+
+    /**
+     *  Queues the updated opponents, so the user can click through the actions that happen in the encounter
+     * @param slot
+     * @param opp
+     */
+    private void queueOpponent(EncounterSlot slot, Opponent opp){
         if (sessionService.hasNoEncounter()) {
             return;
         }
+        opponentUpdates.add(new AbstractMap.SimpleEntry<>(slot, opp));
+        //check if this battle Log needs to start
+        if(vBox.getChildren().size() == 0){
+            nextWindow();
+        }
+    }
+
+    private void handleOpponentUpdate(EncounterSlot slot, Opponent opp) {
+
         Opponent lastOpponent = lastOpponents.get(slot);
+        //check if monster was changed because of 0 hp
         if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
             Monster newMonster = sessionService.getMonsterById(opp.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             return;
         }
 
+        //check if user changed monster
         if (opp.move() instanceof ChangeMonsterMove move) {
             Monster newMonster = sessionService.getMonsterById(move.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
