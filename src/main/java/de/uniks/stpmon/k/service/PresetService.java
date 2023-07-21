@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import de.uniks.stpmon.k.service.storage.cache.AbilityCache;
@@ -80,5 +81,21 @@ public class PresetService {
                 op.map(Observable::just).orElse(Observable.empty())
         );
     }
+
+    public Observable<List<ItemTypeDto>> getItems(){
+        return presetApiService.getItems();
+    }
+
+    public Observable<ItemTypeDto> getItem(String itemId){
+        return presetApiService.getItem(itemId);
+    }
+
+    public Observable<ResponseBody> getItemImage(String itemId) {
+        return presetApiService.getItemImage(itemId);
+    }
+
+
+
+
 
 }
