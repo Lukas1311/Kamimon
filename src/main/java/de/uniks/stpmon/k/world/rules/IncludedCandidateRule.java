@@ -10,6 +10,10 @@ public class IncludedCandidateRule extends BaseTilesetRule implements CandidateR
         super(tileSet, tileIds);
     }
 
+    public IncludedCandidateRule(String tileSet, IdSource... tileIds) {
+        super(tileSet, tileIds);
+    }
+
     @Override
     public TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers) {
         boolean first = tileIds.contains(current.tileId());

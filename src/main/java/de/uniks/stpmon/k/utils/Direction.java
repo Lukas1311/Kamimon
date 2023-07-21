@@ -10,11 +10,13 @@ public enum Direction {
     LEFT,
     BOTTOM;
 
+    public static final Direction[] VALUES = Direction.values();
+
     public static Direction from(Trainer trainer) {
-        if (trainer.direction() < 0 || trainer.direction() >= Direction.values().length) {
+        if (trainer.direction() < 0 || trainer.direction() >= VALUES.length) {
             throw new IllegalArgumentException("Invalid direction: " + trainer.direction());
         }
-        return Direction.values()[trainer.direction()];
+        return VALUES[trainer.direction()];
     }
 
     public int imageX(int i, int dist) {

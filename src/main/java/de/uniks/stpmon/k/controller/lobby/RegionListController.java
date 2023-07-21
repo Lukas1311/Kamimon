@@ -48,7 +48,7 @@ public class RegionListController extends PortalController {
             }
             int finalI = i;
             subscribe(regionService.getRegionImage(regions.get(i)._id()), (regionImage) -> {
-                Image image = ImageUtils.scaledImageFX(regionImage.grayscaleImage(), 2);
+                Image image = ImageUtils.scaledImageFX(regionImage.grayscaleImage(), 1);
                 RegionController regionController = new RegionController(regions.get(finalI),
                         this, image);
                 Parent parent = regionController.render();

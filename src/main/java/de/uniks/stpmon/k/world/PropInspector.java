@@ -24,6 +24,8 @@ import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
  */
 public class PropInspector {
     private static final RuleRegistry registry = BasicRules.registerRules();
+    public static final Direction[] WALK_DIRECTIONS = {Direction.RIGHT, Direction.TOP};
+    public static final Direction[] WALK_DIRECTIONS_OPPOSITS = {Direction.LEFT, Direction.BOTTOM};
     private final PropGrid[] grids;
     /**
      * The offset to the tile id that a different layer has.
@@ -118,7 +120,7 @@ public class PropInspector {
      */
     private boolean connectTo(PropContext context, PropGrid grid, int x, int y, TileInfo current) {
         boolean marked = false;
-        for (Direction dir : new Direction[]{Direction.RIGHT, Direction.TOP}) {
+        for (Direction dir : WALK_DIRECTIONS) {
             ConnectionResult result = findBestNeighbour(context, grid, x, y, current, dir);
             TileInfo bestCandidate = result.connectedTile;
             marked |= result.alreadyVisited;
@@ -278,7 +280,7 @@ public class PropInspector {
      * @return True if the tile was already visited, false otherwise
      */
     private static boolean checkOtherDirections(PropGrid grid, int x, int y) {
-        for (Direction dir : new Direction[]{Direction.LEFT, Direction.BOTTOM}) {
+        for (Direction dir : WALK_DIRECTIONS_OPPOSITS) {
             int otherX = x + dir.tileX();
             int otherY = y + dir.tileY();
             Direction otherDir = dir.opposite();
@@ -309,6 +311,81 @@ public class PropInspector {
     }
 
     /**
+     * Converts the current unique tile groups into a list of prototypes. Each prototype is a list of tiles
+     * which are connected to each other and can be used to create a prop.
+     *
+     * @return The list of all prototypes
+     */
+    private Map<Integer, List<PropPrototype>> createGroupedPrototypes() {
+        int width = grids[0].getWidth();
+        Map<Integer, List<PropPrototype>> prototypes = new HashMap<>();
+        for (HashSet<Integer> group : uniqueGroups()) {
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE;
+            int maxY = Integer.MIN_VALUE;
+            //Find min and max x and y values of the group
+            for (int i : group) {
+                int positionPart = i % layerOffset;
+                int x = positionPart % width;
+                int y = positionPart / width;
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+            prototypes.computeIfAbsent(maxY, k -> new ArrayList<>()).add(new PropPrototype(minX, minY,
+                    maxX - minX + 1, maxY - minY + 1, group));
+        }
+        return prototypes;
+    }
+
+    /**
+     * Combines the prototypes into bigger prototypes if they are connected to each other.
+     *
+     * @param groupedPrototypes The prototypes to combine
+     */
+    private List<PropPrototype> combinePrototypes(Map<Integer, List<PropPrototype>> groupedPrototypes) {
+        List<PropPrototype> prototypes = new ArrayList<>();
+        for (Map.Entry<Integer, List<PropPrototype>> entry : groupedPrototypes.entrySet()) {
+            prototypes.addAll(mergeIntersecting(entry.getValue()));
+        }
+        return prototypes;
+    }
+
+    /**
+     * Merges the given prototypes if they intersect with each other.
+     *
+     * @param prototypes The prototypes to merge
+     * @return The merged prototypes
+     */
+    private List<PropPrototype> mergeIntersecting(List<PropPrototype> prototypes) {
+        List<PropPrototype> mergedPrototypes = new ArrayList<>();
+
+        for (PropPrototype pro : prototypes) {
+            boolean merged = false;
+
+            // Check if the current prototype intersects with any previously merged prototype
+            for (int i = 0; i < mergedPrototypes.size(); i++) {
+                PropPrototype mergedRect = mergedPrototypes.get(i);
+                if (pro.intersect(mergedRect, 1)) {
+                    // Merge the intersecting prototypes and update the merged prototype in the list
+                    mergedPrototypes.set(i, pro.merge(mergedRect));
+                    merged = true;
+                    break;
+                }
+            }
+
+            // If the prototype did not intersect with any previously merged prototype, add it as a new merged prototype
+            if (!merged) {
+                mergedPrototypes.add(pro);
+            }
+        }
+
+        return mergedPrototypes;
+    }
+
+    /**
      * Extracts the props from the image and returns them in a prop map.
      * Each prop has its own image, position and size.
      * The decorations image is modified to remove the props and also contained in the map.
@@ -329,26 +406,15 @@ public class PropInspector {
             graphicsList.add(graphics);
             imagesList.add(floorDecorations);
         }
+        Map<Integer, List<PropPrototype>> groupedPrototypes = createGroupedPrototypes();
+        List<PropPrototype> prototypes = combinePrototypes(groupedPrototypes);
         List<TileProp> props = new ArrayList<>();
-        for (HashSet<Integer> group : uniqueGroups()) {
-            int minX = Integer.MAX_VALUE;
-            int minY = Integer.MAX_VALUE;
-            int maxX = Integer.MIN_VALUE;
-            int maxY = Integer.MIN_VALUE;
-            //Find min and max x and y values of the group
-            for (int i : group) {
-                int positionPart = i % layerOffset;
-                int x = positionPart % width;
-                int y = positionPart / width;
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                maxX = Math.max(maxX, x);
-                maxY = Math.max(maxY, y);
-            }
-
+        for (PropPrototype prototype : prototypes) {
+            Set<Integer> group = prototype.tiles();
             // Calculate bounds of the prop
-            int propWidth = maxX - minX + 1;
-            int propHeight = maxY - minY + 1;
+            int propWidth = prototype.width();
+            int propHeight = prototype.height();
+            int sortLayer = Integer.MIN_VALUE;
             BufferedImage img = new BufferedImage(propWidth * TILE_SIZE, propHeight * TILE_SIZE,
                     BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D propGraphics = img.createGraphics();
@@ -361,15 +427,17 @@ public class PropInspector {
                 BufferedImage source = decorationLayers.get(layer).image();
                 // Copy pixels from the decoration image to the prop image
                 propGraphics.drawImage(source.getSubimage(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE),
-                        null, (x - minX) * TILE_SIZE, (y - minY) * TILE_SIZE);
+                        null, (x - prototype.x()) * TILE_SIZE, (y - prototype.y()) * TILE_SIZE);
                 // Remove pixels from the decoration image
                 layerGraphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
                         TILE_SIZE, TILE_SIZE);
+                sortLayer = Math.max(sortLayer, layer);
             }
             propGraphics.dispose();
 
-            props.add(new TileProp(img, minX, minY, propWidth, propHeight));
+            props.add(new TileProp(img, prototype.x(), prototype.y(), propWidth, propHeight, sortLayer));
         }
+        props.sort(Comparator.comparingInt(TileProp::sortLayer).reversed());
         // take first layer to draw all decoration layers bottom up
         Graphics2D baseGraphics = graphicsList.get(0);
         for (int i = 1; i < graphicsList.size(); i++) {

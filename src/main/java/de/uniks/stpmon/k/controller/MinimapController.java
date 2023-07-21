@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import com.sun.javafx.scene.NodeHelper;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -8,7 +9,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -34,7 +34,6 @@ public class MinimapController extends Controller {
     @Inject
     WorldRepository worldRepository;
 
-    private Image map;
     private final static int TILE_SIZE = 16;
 
     @Inject
@@ -58,8 +57,7 @@ public class MinimapController extends Controller {
                         if (renderedMap.isEmpty()) {
                             return;
                         }
-                        map = SwingFXUtils.toFXImage(renderedMap.get(), null);
-                        miniMap.setImage(map);
+                        miniMap.setImage(SwingFXUtils.toFXImage(renderedMap.get(), null));
                     }
             );
         }
@@ -91,5 +89,15 @@ public class MinimapController extends Controller {
         return parent;
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        miniMap.getImage().cancel();
+        miniMap.setImage(null);
+        NodeHelper.updatePeer(miniMap);
+        miniMap = null;
+        miniMapBorder.setImage(null);
+        miniMapBorder = null;
+    }
 }
 

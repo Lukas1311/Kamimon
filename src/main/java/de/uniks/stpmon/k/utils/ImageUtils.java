@@ -20,7 +20,7 @@ public class ImageUtils {
         AffineTransform at = new AffineTransform();
         at.scale(scale, scale);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        return scaleOp.filter(image, new BufferedImage(w<=0?1:w, h<=0?1:h, BufferedImage.TYPE_INT_ARGB));
+        return scaleOp.filter(image, new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB));
     }
 
     public static Image scaledImageFX(BufferedImage image, double scale) {

@@ -2,13 +2,13 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.models.map.TrainerSprite;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -43,6 +43,7 @@ public abstract class EntityView extends WorldViewable {
     protected CharacterSet characterSet;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
+    private Transition idleAnimation;
 
     protected TrainerProvider getProvider() {
         return trainerProvider;
@@ -75,16 +76,23 @@ public abstract class EntityView extends WorldViewable {
         return character;
     }
 
-    protected void applySprite(TrainerSprite sprite) {
+    protected void applySprite(float[] data) {
+        if (entityNode == null) {
+            return;
+        }
         TriangleMesh mesh = (TriangleMesh) entityNode.getMesh();
+        // Mesh is null if the entity was destroyed
+        if (mesh == null) {
+            return;
+        }
         // Offset to reduce texture bleeding
-        float uPadding = (sprite.maxU() - sprite.minU()) / 64;
-        float vPadding = (sprite.maxV() - sprite.minV()) / 256;
+        float uPadding = (data[2] - data[0]) / 64;
+        float vPadding = (data[3] - data[1]) / 256;
         float[] texCoords = {
-                sprite.minU() + uPadding, sprite.minV() + vPadding,
-                sprite.maxU() - uPadding, sprite.minV() + vPadding,
-                sprite.minU() + uPadding, sprite.maxV() - vPadding,
-                sprite.maxU() - uPadding, sprite.maxV() - vPadding
+                data[0] + uPadding, data[1] + vPadding,
+                data[2] - uPadding, data[1] + vPadding,
+                data[0] + uPadding, data[3] - vPadding,
+                data[2] - uPadding, data[3] - vPadding
         };
         mesh.getTexCoords().setAll(texCoords);
     }
@@ -129,6 +137,10 @@ public abstract class EntityView extends WorldViewable {
     protected void applyMove(Trainer trainer, boolean newDirection) {
         trainerProvider.setTrainer(trainer);
 
+        // Stop if the entity was destroyed
+        if (entityNode == null) {
+            return;
+        }
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityNode);
         moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()));
@@ -137,6 +149,10 @@ public abstract class EntityView extends WorldViewable {
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
         moveTranslation.play();
         moveTranslation.setOnFinished((t) -> {
+            // Stop if the entity was destroyed
+            if (entityNode == null) {
+                return;
+            }
             if (nextTrainer == null) {
                 startIdleAnimation(trainer);
                 return;
@@ -155,7 +171,7 @@ public abstract class EntityView extends WorldViewable {
         if (moveAnimation != null) {
             moveAnimation.pause();
         }
-        Transition idleAnimation = new SpriteAnimation(characterSet, trainer.direction(), false);
+        idleAnimation = new SpriteAnimation(characterSet, trainer.direction(), false);
         idleAnimation.setCycleCount(Animation.INDEFINITE);
         idleAnimation.play();
     }
@@ -169,8 +185,27 @@ public abstract class EntityView extends WorldViewable {
     }
 
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (moveAnimation != null) {
+            moveAnimation.stop();
+            moveAnimation = null;
+        }
+        if (idleAnimation != null) {
+            idleAnimation.stop();
+            idleAnimation = null;
+        }
+        if (entityNode != null) {
+            MeshUtils.disposeMesh(entityNode);
+            entityNode = null;
+        }
+    }
+
+
     private class SpriteAnimation extends Transition {
 
+        private final float[] data = new float[4];
         private final CharacterSet characterSet;
         private final int direction;
         private final boolean isMoving;
@@ -186,10 +221,15 @@ public abstract class EntityView extends WorldViewable {
 
         @Override
         protected void interpolate(double frac) {
-            applySprite(characterSet.getSprite(
+            if (entityNode == null) {
+                stop();
+                return;
+            }
+            characterSet.fillSpriteData(data,
                     Math.min((int) (frac * CharacterSet.SPRITES_PER_COLUMN), CharacterSet.SPRITES_PER_COLUMN - 1),
-                    Direction.values()[Math.min(Math.max(direction, 0), 3)],
-                    isMoving));
+                    Direction.VALUES[Math.min(Math.max(direction, 0), 3)],
+                    isMoving);
+            applySprite(data);
         }
 
     }

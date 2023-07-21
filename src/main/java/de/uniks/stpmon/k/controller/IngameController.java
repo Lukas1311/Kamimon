@@ -204,6 +204,7 @@ public class IngameController extends PortalController {
     public void destroy() {
         super.destroy();
 
+        removeChildren(0);
         worldController.destroy();
         monsterBarController.destroy();
         minimapController.destroy();
@@ -213,6 +214,25 @@ public class IngameController extends PortalController {
         starterController.destroy();
         worldTimerController.destroy();
         nightOverlayController.destroy();
+        ingameStack.getChildren().clear();
+        ingame.getChildren().clear();
+        ingameWrappingHBox.getChildren().clear();
+        rightVbox.getChildren().clear();
+        dialogueBox.getChildren().clear();
+        starterBox.getChildren().clear();
+        mainPain.getChildren().clear();
+        rightMenuBorderPane.getChildren().clear();
+        miniMapVBox.getChildren().clear();
+        ingameStack = null;
+        ingame = null;
+        ingameWrappingHBox = null;
+        rightVbox = null;
+        dialogueBox = null;
+        starterBox = null;
+        mainPain = null;
+        rightMenuBorderPane = null;
+        miniMapVBox = null;
+        pane = null;
     }
 
     @Override
@@ -321,7 +341,6 @@ public class IngameController extends PortalController {
     }
 
     public void removeChildren(int endIndex) {
-
         for (int i = tabStack.size() - 1; i >= endIndex; i--) {
             ObservableList<Node> children = ingameWrappingHBox.getChildren();
             Controller controller = tabStack.pop();

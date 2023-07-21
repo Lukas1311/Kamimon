@@ -12,6 +12,8 @@ import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import javax.inject.Inject;
 
@@ -121,6 +123,18 @@ public abstract class Viewable {
      */
     protected <@NonNull T> void subscribe(Observable<T> observable, Consumer<T> onNext, @NonNull Consumer<? super Throwable> onError) {
         disposables.add(observable.observeOn(FX_SCHEDULER).subscribe(onNext, onError));
+    }
+
+    /**
+     * Adds a listener to a property and removes it on destroy.
+     *
+     * @param property the property or observable to listen to
+     * @param listener the listener to add
+     * @param <T>      the type of the property value
+     */
+    protected <T> void listen(ObservableValue<T> property, ChangeListener<? super T> listener) {
+        property.addListener(listener);
+        onDestroy(() -> property.removeListener(listener));
     }
 
     public EffectContext getEffectContext() {

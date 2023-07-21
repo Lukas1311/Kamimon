@@ -41,6 +41,21 @@ public class NPCCollectiveView extends WorldViewable {
         trainerCache = cacheManager.trainerAreaCache();
     }
 
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        for (Node view : npcViews.values()) {
+            if (view.getUserData() instanceof NPCView npcView) {
+                npcView.destroy();
+            }
+            view.setUserData(null);
+        }
+        npcViews.clear();
+        npcGroup.getChildren().clear();
+        npcGroup = null;
+    }
+
     private Group npcGroup;
 
     @Override
@@ -80,6 +95,8 @@ public class NPCCollectiveView extends WorldViewable {
         npcV.getProvider().setTrainer(trainer);
         npcV.init();
         Node rendered = npcV.render();
+
+        rendered.setUserData(npcV);
         npcGroup.getChildren().add(rendered);
         npcViews.put(trainer._id(), rendered);
     }

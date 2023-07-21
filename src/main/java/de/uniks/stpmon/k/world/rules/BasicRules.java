@@ -8,6 +8,7 @@ public class BasicRules {
     public static final String TILESET_MODERN_INTERIORS = TILESET_BASE + "Modern_Interiors_16x16.json";
 
     public static final String TILESET_ROOM_BUILDER = TILESET_BASE + "Room_Builder_16x16.json";
+    public static final String TILESET_PIXEL_WOODS = TILESET_BASE + "Pixel_Woods_16x16.json";
 
     public static RuleRegistry registerRules() {
         RuleRegistry registry = new RuleRegistry();
@@ -213,8 +214,50 @@ public class BasicRules {
                 new IdSource.Single(38908));
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(37138, 13, 14, 176));
+        // hedge arch exclusion
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(38559, 15, 4, 176));
+
+        // Victory road tree
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(801, 3, 3, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(973, 3, 3, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(754, 4, 4, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(926, 4, 4, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(839, 1, 2, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(1011, 1, 2, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(794, 2, 3, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(966, 2, 3, 43));
+
+
+        // Victory road bridge
+        registry.markDecoration(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(734, 7, 5, 43));
+        registry.markDecoration(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(870, 2, 2, 43));
+
+        // Prioritized candidate rules
+        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(16537, 4, 1, 176),
+                new IdSource.Rectangle(17417, 4, 1, 176)));
+
+        // Mark dead trees as entangled
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(3857, 8, 6, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(880, 10, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1052, 10, 1, 176));
 
         // add decoration rules
+        registry.addConnection(new BottomExclusivelyRule(registry));
         registry.addConnection(new EntangledRule(registry));
         registry.addConnection(new ImageConnectionRule());
         registry.addLone(new ImageEmptyRule());

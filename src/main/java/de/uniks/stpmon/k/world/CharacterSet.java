@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.world;
 
-import de.uniks.stpmon.k.models.map.TrainerSprite;
 import de.uniks.stpmon.k.utils.Direction;
 
 import java.awt.image.BufferedImage;
@@ -30,11 +29,13 @@ public record CharacterSet(String name, BufferedImage image) {
         return (isMoving ? MOVE_ROW : IDLE_ROW) * TRAINER_HEIGHT;
     }
 
-    public TrainerSprite getSprite(int index, Direction direction, boolean isMoving) {
+    public void fillSpriteData(float[] data, int index, Direction direction, boolean isMoving) {
         float x = getSpriteX(index, direction);
         float y = getSpriteY(isMoving);
-        return new TrainerSprite(x / image.getWidth(), y / image.getHeight(),
-                (x + TRAINER_WIDTH) / image.getWidth(), (y + TRAINER_HEIGHT) / image.getHeight());
+        data[0] = x / image.getWidth();
+        data[1] = y / image.getHeight();
+        data[2] = (x + TRAINER_WIDTH) / image.getWidth();
+        data[3] = (y + TRAINER_HEIGHT) / image.getHeight();
     }
 
 }

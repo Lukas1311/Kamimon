@@ -113,6 +113,15 @@ public class MapOverviewController extends ToastedController {
         return parent;
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (mapImageView != null) {
+            mapImageView.setImage(null);
+            mapImageView = null;
+        }
+    }
+
     private void renderMapDetails(List<RouteData> routeListData) {
         routeListData.forEach(routeData -> {
             if (!routeData.polygon().isEmpty()) {
