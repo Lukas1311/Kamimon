@@ -19,7 +19,6 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.Timer;
 
 @Singleton
 public class ActionFieldBattleLogController extends BaseActionFieldController {
@@ -51,8 +50,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     private boolean encounterFinished = false;
 
 
-    private Timer closeTimer;
-    private boolean encounterClosingTextIsShown = false;
+
+    private final boolean encounterClosingTextIsShown = false;
     private CloseEncounterTrigger closeEncounter;
 
     @Inject
@@ -99,54 +98,21 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     public void nextWindow() {
         battleLogService.showNextAction();
-        //check if more updates need to be handled
-        /*if (opponentUpdates.isEmpty()) {
-            if (encounterClosingTextIsShown) {
-                //show text that user wins/loses
-                vBox.getChildren().clear();
-                addTextSection(translateString(closeEncounter.toString()));
-                closeTimer = new Timer();
-                closeTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        Platform.runLater(() -> nextWindow());
-                    }
-                }, (int) (effectContext.getEncounterAnimationSpeed() * 5f));
-                encounterFinished = true;
-                encounterClosingTextIsShown = false;
-            } else {
-                if (encounterFinished) {
-                    if (hybridControllerProvider == null) {
-                        return;
-                    }
-                    //encounter over
-                    sessionService.clearEncounter();
-                    closeTimer.cancel();
-                    // -------
-                }
-
-
-            }
-
-        } else {
-            //show the next update of opponent
-            vBox.getChildren().clear();
-            handleOpponentUpdate(opponentUpdates.get(0).getKey(), opponentUpdates.get(0).getValue());
-            //handle results
-            opponentUpdates.remove(0);
-        }*/
-
     }
 
-    public void endRound(boolean encounterIsOver){
-        if(encounterIsOver){
+    public void endRound(boolean encounterIsOver) {
+        if (encounterIsOver) {
             HybridController controller = hybridControllerProvider.get();
             app.show(controller);
             controller.openMain(MainWindow.INGAME);
-            encounterFinished = false;
+            sessionService.clearEncounter();
         } else {
             getActionField().openMainMenu();
         }
+    }
+
+    public int getEffectContextTimerSpeed() {
+        return (int) (effectContext.getEncounterAnimationSpeed() * 5f);
     }
 
 
@@ -159,12 +125,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         text1.setWrapText(true);
         text1.setMaxWidth(290);
         vBox.getChildren().add(text1);
-    }
-
-    public void closeEncounter(CloseEncounterTrigger closeEncounter) {
-        encounterClosingTextIsShown = true;
-        this.closeEncounter = closeEncounter;
-
     }
 
     @Override

@@ -1,19 +1,20 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
+import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
+import javafx.application.Platform;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Singleton
 public class BattleLogService {
@@ -21,6 +22,8 @@ public class BattleLogService {
     SessionService sessionService;
     @Inject
     PresetService presetService;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
 
@@ -31,7 +34,9 @@ public class BattleLogService {
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private final List<OpponentUpdate> opponentUpdates = new ArrayList<>();
 
-    private final boolean encounterIsOver = false;
+    private boolean encounterIsOver = false;
+    private CloseEncounterTrigger closeEncounterTrigger = null;
+    private Timer closeTimer;
 
     @Inject
     public BattleLogService() {
@@ -51,7 +56,7 @@ public class BattleLogService {
             return;
         }
         queueOpponent(update);
-        lastOpponents.put(update.slot(), update.opponent());
+
     }
 
     /**
@@ -72,6 +77,7 @@ public class BattleLogService {
     }
 
     private void showActions() {
+        textBox.getChildren().clear();
         //check if more actions need to be handled
         if (!opponentUpdates.isEmpty()) {
             //there are more updates to be handled
@@ -81,11 +87,38 @@ public class BattleLogService {
 
         } else {
             //check if round or encounter is over
-            if (encounterIsOver) {
+            if (closeEncounterTrigger == null) {
+                //round is over
+                battleLogControllerProvider.get().endRound(false);
+            } else {
+                //init closing
+                if (encounterIsOver) {
+                    closeTimer.cancel();
+
+
+                } else { //user sees result of encounter
+                    closeEncounter();
+                    closeTimer = new Timer();
+                    closeTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> {
+                                closeEncounter();
+                            });
+                        }
+                    }, battleLogControllerProvider.get().getEffectContextTimerSpeed());
+                }
 
             }
         }
     }
+
+    private void closeEncounter() {
+        encounterIsOver = false;
+        closeEncounterTrigger = null;
+        battleLogControllerProvider.get().endRound(true);
+    }
+
 
     public void showNextAction() {
         showActions();
@@ -98,7 +131,7 @@ public class BattleLogService {
 
         //check which move was made
         //check if monster was changed because of 0 hp
-/*        if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
+        if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
             Monster newMonster = sessionService.getMonsterById(opp.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             return;
@@ -109,7 +142,7 @@ public class BattleLogService {
             Monster newMonster = sessionService.getMonsterById(move.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             return;
-        }*/
+        }
 
         // Save attacked monster before it is changed or dead
         if (opp.move() instanceof AbilityMove move) {
@@ -124,7 +157,7 @@ public class BattleLogService {
 
         MonsterTypeDto monster = getTypeForSlot(slot);
         if (monster == null) {
-            return;
+            showNextAction();
         }
 
         String target = null;
@@ -144,6 +177,8 @@ public class BattleLogService {
             BattleLogEntry entry = new BattleLogEntry(monster, result, target);
             handleResult(entry);
         }
+
+        lastOpponents.put(up.slot(), up.opponent());
     }
 
     private void handleResult(BattleLogEntry battleLogEntry) {
@@ -181,7 +216,8 @@ public class BattleLogService {
             case "monster-defeated" -> addTranslatedSection("monster-defeated", monster.name());
             case "monster-levelup" -> {
                 addTranslatedSection("monster-levelup", monster.name(), "0");
-                //showMonsterInformation();
+
+                encounterOverviewControllerProvider.get().showLevelUp();
             }
             case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
             case "monster-learned" ->
@@ -220,6 +256,10 @@ public class BattleLogService {
 
     public void setVBox(VBox vBox) {
         this.textBox = vBox;
+    }
+
+    public void closeEncounter(CloseEncounterTrigger trigger) {
+        this.closeEncounterTrigger = trigger;
     }
 
     public void clearService() {
