@@ -246,7 +246,7 @@
     -fx-background-color: transparent;
     -fx-border-style: hidden;
     -fx-font-size: 20px;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .map-overview-content {
@@ -271,6 +271,7 @@
 
 .map-overview-header {
     -fx-font-size: 34px;
+    -fx-text-fill: black;
 }
 
 /* -------------------- Encounter -------------------- */

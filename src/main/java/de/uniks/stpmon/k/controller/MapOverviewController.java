@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -38,22 +39,25 @@ public class MapOverviewController extends ToastedController {
     private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
     private final static int TILE_SIZE = 16;
 
+
     @FXML
-    public Pane highlightPane;
+    StackPane mapStackPane;
     @FXML
-    public StackPane mapStackPane;
+    TextFlow textFlowRegionDescription;
     @FXML
-    public TextFlow textFlowRegionDescription;
-    @FXML
-    BorderPane mapOverviewContent;
+    AnchorPane mapOverviewHolder;
     @FXML
     Label regionNameLabel;
     @FXML
-    public Button closeButton;
+    Label areaNameLabel;
+    @FXML
+    Button closeButton;
     @FXML
     ImageView mapImageView;
     @FXML
     VBox mapContainer;
+    @FXML
+    Pane highlightPane;
     @FXML
     Text regionDescription;
 
@@ -74,7 +78,9 @@ public class MapOverviewController extends ToastedController {
 
     @Override
     public Parent render() {
+        // System.out.println("test");
         final Parent parent = super.render();
+        loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
         closeButton.setOnAction(click -> ingameController.get().closeMap());
         Region currentRegion = regionStorage.getRegion();
         regionNameLabel.setText(currentRegion.name());
@@ -88,21 +94,22 @@ public class MapOverviewController extends ToastedController {
                             return;
                         }
                         Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
+                        //loadBgImage(mapContainer, map);
                         mapImageView.setImage(map);
                         mapImageView.setFitHeight(height);
                         mapImageView.setFitWidth(width);
                     }, this::handleError
             );
-            NumberBinding binding = Bindings.min(mapOverviewContent.widthProperty().multiply(0.6),
-                    mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
+            NumberBinding binding = Bindings.min(mapOverviewHolder.widthProperty().multiply(0.6),
+            mapOverviewHolder.heightProperty().multiply(MAP_OVERVIEW_SCALE));
             mapStackPane.scaleXProperty().bind(binding.map(v -> v.doubleValue() / width));
             mapStackPane.scaleYProperty().bind(binding.map(v -> v.doubleValue() / height));
-            textFlowRegionDescription.prefWidthProperty().bind(mapOverviewContent.widthProperty());
+            textFlowRegionDescription.prefWidthProperty().bind(mapOverviewHolder.widthProperty());
         }
 
         Window parentWindow = app.getStage().getScene().getWindow();
-        mapOverviewContent.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
-        mapOverviewContent.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
+        mapOverviewHolder.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
+        mapOverviewHolder.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
 
         if (currentRegion.map() != null) {
             subscribe(
