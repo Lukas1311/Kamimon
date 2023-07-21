@@ -13,6 +13,7 @@ public interface TrainerItemApiService {
 
     @POST("regions/{regionId}/trainers/{trainerId}/items")
     Observable<Item> updateItem(@Body UpdateItemDto dto,
+                                @Query("action") String action,
                                 @Path("regionId") String regionId,
                                 @Path("trainerId") String trainerId);
 
