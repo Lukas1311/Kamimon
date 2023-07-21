@@ -52,11 +52,11 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     @Inject
     BattleLogService battleLogService;
 
-    private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
+
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private boolean encounterFinished = false;
 
-    private final List<Map.Entry<EncounterSlot, Opponent>> opponentUpdates = new ArrayList<>();
+
     private Timer closeTimer;
     private boolean encounterClosingTextIsShown = false;
     private CloseEncounterTrigger closeEncounter;
@@ -69,6 +69,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     @Override
     public Parent render() {
         Parent parent = super.render();
+
+        battleLogService.setVBox(vBox);
 
         encounterFinished = false;
 
@@ -94,23 +96,13 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
-            subscribe(sessionService.listenOpponent(slot), opp -> {
-
-
-
-
-                // Skip first value because it is always the existing value
-                if (!lastOpponents.containsKey(slot)) {
-                    // Cache the first value
-                    lastOpponents.put(slot, opp);
-                    return;
-                }
-
-                queueOpponent(slot, opp);
-                lastOpponents.put(slot, opp);
-            });
+            subscribe(sessionService.listenOpponent(slot), opp ->
+                battleLogService.queueUpdate(slot, opp)
+            );
         }
-        onDestroy(lastOpponents::clear);
+        onDestroy(battleLogService::clearService);
+
+        //TODO: Add to clear Service
         onDestroy(attackedMonsters::clear);
     }
 
@@ -135,15 +127,13 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
                     if (hybridControllerProvider == null) {
                         return;
                     }
+                    //encounter over
                     sessionService.clearEncounter();
                     closeTimer.cancel();
-                    HybridController controller = hybridControllerProvider.get();
-                    app.show(controller);
-                    controller.openMain(MainWindow.INGAME);
-                    encounterFinished = false;
-                } else {
-                    getActionField().openMainMenu();
+                    // -------
                 }
+
+
             }
 
         } else {
@@ -154,6 +144,17 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             opponentUpdates.remove(0);
         }
 
+    }
+
+    public void endRound(boolean encounterIsOver){
+        if(encounterIsOver){
+            HybridController controller = hybridControllerProvider.get();
+            app.show(controller);
+            controller.openMain(MainWindow.INGAME);
+            encounterFinished = false;
+        } else {
+            getActionField().openMainMenu();
+        }
     }
 
     private MonsterTypeDto getMonsterType(int id) {
@@ -189,21 +190,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
 
 
-    /**
-     *  Queues the updated opponents, so the user can click through the actions that happen in the encounter
-     * @param slot
-     * @param opp
-     */
-    private void queueOpponent(EncounterSlot slot, Opponent opp){
-        if (sessionService.hasNoEncounter()) {
-            return;
-        }
-        opponentUpdates.add(new AbstractMap.SimpleEntry<>(slot, opp));
-        //check if this battle Log needs to start
-        if(vBox.getChildren().size() == 0){
-            nextWindow();
-        }
-    }
+
 
     private void handleOpponentUpdate(EncounterSlot slot, Opponent opp) {
 
