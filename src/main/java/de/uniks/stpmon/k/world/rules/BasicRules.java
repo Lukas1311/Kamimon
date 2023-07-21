@@ -235,7 +235,10 @@ public class BasicRules {
                 new IdSource.Rectangle(794, 2, 3, 43));
         registry.markEntangled(TILESET_PIXEL_WOODS,
                 new IdSource.Rectangle(966, 2, 3, 43));
-
+        registry.markBottom(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(880, 10, 1, 43));
+        registry.markBottom(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(1052, 10, 1, 43));
 
         // Victory road bridge
         registry.markDecoration(TILESET_PIXEL_WOODS,
@@ -251,10 +254,6 @@ public class BasicRules {
         // Mark dead trees as entangled
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(3857, 8, 6, 176));
-        registry.markBottom(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(880, 10, 1, 176));
-        registry.markBottom(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(1052, 10, 1, 176));
 
         // add decoration rules
         registry.addConnection(new BottomExclusivelyRule(registry));
