@@ -9,17 +9,14 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
-import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,18 +27,13 @@ import java.util.List;
 @Singleton
 public class MonBoxController extends Controller {
 
-    public final static int IMAGE_SIZE = 67;
 
-    @FXML
-    public StackPane monBoxStackPane;
     @FXML
     public GridPane monTeam;
     @FXML
     public GridPane monStorage;
     @FXML
-    public ImageView monBoxImage;
-    @FXML
-    public VBox monBoxVbox;
+    public AnchorPane monBoxMenuHolder;
 
     @Inject
     CacheManager cacheManager;
@@ -53,13 +45,16 @@ public class MonBoxController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     TrainerService trainerService;
+
+
     private MonsterCache monsterCache;
     private TrainerCache trainerCache;
     private Monster activeMonster;
-    private ImageView monImage;
     private List<String> monTeamList = new ArrayList<>();
     private int monsterIndexStorage = 0;
     private String selectedMonster;
+
+    private Parent monParent;
 
     @Inject
     public MonBoxController() {
@@ -71,15 +66,15 @@ public class MonBoxController extends Controller {
         Trainer trainer = trainerStorage.getTrainer();
         monsterCache = cacheManager.requestMonsters(trainer._id());
         trainerCache = cacheManager.trainerCache();
-        targetGrid(monStorage);
-        targetGrid(monTeam);
-        subscribe(monsterCache.getTeam().getValues().take(1), this::showTeamMonster);
+        targetGrid2(monStorage);
+        targetGrid2(monTeam);
+        subscribe(monsterCache.getTeam().getValues().take(1), this::showTeamMonster2);
         subscribe(monsterCache.getTeam().getValues(), monsters -> {
-            showTeamMonster(monsters);
-            showMonsterList(monsterCache.getValues().blockingFirst());
+            showTeamMonster2(monsters);
+            showMonsterList2(monsterCache.getValues().blockingFirst());
         });
-        subscribe(monsterCache.getValues(), this::showMonsterList);
-        loadImage(monBoxImage, "monGrid_v4.png");
+        subscribe(monsterCache.getValues(), this::showMonsterList2);
+        loadBgImage(monBoxMenuHolder, "MonBox_v6.png");
 
         return parent;
     }
@@ -91,7 +86,7 @@ public class MonBoxController extends Controller {
         ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
     }
 
-    private void showTeamMonster(List<Monster> monsters) {
+    private void showTeamMonster2(List<Monster> monsters) {
         int monsterIndexTeam = 0;
         monTeamList = new ArrayList<>();
         monTeam.getChildren().clear();
@@ -99,20 +94,19 @@ public class MonBoxController extends Controller {
         // Team Monster max 6 slots
         for (int i = 0; i < monsters.size(); i++) {
             Monster monster = monsters.get(i);
-            ImageView imageView = createMonsterImageView(monster, monster._id());
-            imageView.setId("team_" + i);
-            monTeam.add(imageView, monsterIndexTeam, 0);
-            monBoxVbox.toFront();
+            Parent parent = createMonsterItem(monster);
+            parent.setId("team_" + i);
+            monTeam.add(parent, monsterIndexTeam, 0);
             monTeamList.add(monster._id());
             monsterIndexTeam++;
         }
     }
 
-    private void showMonsterList(List<Monster> monsters) {
+    private void showMonsterList2(List<Monster> monsters) {
         List<Monster> currentMonsters = new ArrayList<>(monsters);
         List<Monster> teamMonsters = monsterCache.getTeam().getValues().blockingFirst();
         int columnCount = 6;
-        int rowCount = 5;
+        int rowCount = 4;
         currentMonsters.removeAll(teamMonsters);
         monStorage.getChildren().clear();
         monsterIndexStorage = 0;
@@ -121,35 +115,21 @@ public class MonBoxController extends Controller {
             for (int column = 0; column < columnCount; column++) {
                 if (monsterIndexStorage < currentMonsters.size()) {
                     Monster monster = currentMonsters.get(monsterIndexStorage);
-                    ImageView imageView = createMonsterImageView(monster, monster._id());
-                    imageView.setId("storage_" + row + "_" + column);
-                    monStorage.add(imageView, column, row);
-                    monBoxVbox.toFront();
+                    Node node = createMonsterItem(monster);
+                    node.setId("storage_" + row + "_" + column);
+                    monStorage.add(node, column, row);
                     monsterIndexStorage++;
                 }
             }
         }
     }
 
-    private ImageView createMonsterImageView(Monster monster, String id) {
-        ImageView imageView = new ImageView();
-        imageView.setFitHeight(IMAGE_SIZE);
-        imageView.setFitWidth(IMAGE_SIZE);
-
-        subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
-            // Scale and set the image for the Clipboard
-            Image image = ImageUtils.scaledImageFX(imageUrl, 1.2);
-            imageView.setImage(image);
-            draggableImage(imageView, id);
-        });
-
-        imageView.setOnMouseClicked(e -> triggerMonsterInformation(monster));
-        return imageView;
-    }
-
-    private void openMonsterInformation(Monster monster) {
-        activeMonster = monster;
-        ingameControllerProvider.get().openMonsterInfo(monster);
+    private Parent createMonsterItem(Monster monster) {
+        MonItemController mon = new MonItemController(monster, resourceService);
+        Parent parent = mon.render();
+        draggableMonItem(mon, monster._id());
+        parent.setOnMouseClicked(e -> triggerMonsterInformation(monster));
+        return parent;
     }
 
     public void triggerMonsterInformation(Monster monster) {
@@ -165,32 +145,42 @@ public class MonBoxController extends Controller {
         }
     }
 
+    private void openMonsterInformation(Monster monster) {
+        activeMonster = monster;
+        ingameControllerProvider.get().openMonsterInfo(monster);
+    }
+
     private void closeMonsterInformation() {
         ingameControllerProvider.get().removeChildren(2);
         activeMonster = null;
     }
 
 
-    private void draggableImage(ImageView imageView, String id) {
-        imageView.setOnDragDetected(event -> {
-            Dragboard dragboard = imageView.startDragAndDrop(TransferMode.MOVE);
+    private void draggableMonItem(MonItemController monItem, String id) {
+        Parent parent = monItem.getParent();
+        if (parent == null) {
+            return;
+        }
+        parent.setOnDragDetected(event -> {
+            Dragboard dragboard = parent.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putImage(imageView.getImage());
+            content.putImage(monItem.getMonImage());
+
             dragboard.setContent(content);
-            monImage = imageView;
+            monParent = parent;
             selectedMonster = id;
             event.consume();
         });
 
-        imageView.setOnDragDone(event -> {
+        parent.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                monImage = null;
+                monParent = null;
             }
             event.consume();
         });
     }
 
-    private void targetGrid(GridPane gridPane) {
+    private void targetGrid2(GridPane gridPane) {
         gridPane.setOnDragOver(event -> {
             if (event.getGestureSource() != gridPane && event.getDragboard().hasImage()) {
                 event.acceptTransferModes(TransferMode.MOVE);
@@ -201,11 +191,12 @@ public class MonBoxController extends Controller {
         gridPane.setOnDragDropped(event -> {
             Dragboard dragboard = event.getDragboard();
             if (dragboard.hasImage()) {
-                ImageView imageView = monImage;
-                if (gridPane.equals(monStorage) && !monStorage.getChildren().contains(imageView)) {
+                Parent parent = monParent;
+
+                if (gridPane.equals(monStorage) && !monStorage.getChildren().contains(parent)) {
                     monTeamList.remove(selectedMonster);
 
-                    monStorage.add(imageView, monsterIndexStorage, 0);
+                    monStorage.add(parent, monsterIndexStorage % 6, monsterIndexStorage / 6);
                     monsterIndexStorage++;
 
                     Trainer trainer = trainerStorage.getTrainer();
@@ -213,9 +204,9 @@ public class MonBoxController extends Controller {
                     trainerCache.updateValue(newTrainer);
                 }
                 if (gridPane.equals(monTeam)
-                        && !monTeam.getChildren().contains(imageView)
+                        && !monTeam.getChildren().contains(parent)
                         && monTeamList.size() < 6) {
-                    monStorage.getChildren().remove(imageView);
+                    monStorage.getChildren().remove(parent);
 
                     monTeamList.add(selectedMonster);
                     monsterIndexStorage--;
@@ -228,6 +219,5 @@ public class MonBoxController extends Controller {
             event.consume();
         });
     }
-
 
 }

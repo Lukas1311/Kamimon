@@ -14,6 +14,9 @@ public class ImageUtils {
     public static BufferedImage scaledImage(BufferedImage image, double scale) {
         int w = (int) (image.getWidth() * scale);
         int h = (int) (image.getHeight() * scale);
+        if ( w <= 0 || h <= 0 ){
+            return  image;
+        }
         AffineTransform at = new AffineTransform();
         at.scale(scale, scale);
         AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);

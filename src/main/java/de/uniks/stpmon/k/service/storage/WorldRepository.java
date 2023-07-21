@@ -38,12 +38,30 @@ public class WorldRepository {
 
     public void reset(boolean resetRegion) {
         if (resetRegion) {
-            regionMap.reset();
+            flushIfNotNull(regionMap);
         }
 
-        floorImage.reset();
-        minimapImage.reset();
+        BufferedImage image = this.floorImage.asNullable();
+        if (image != null) {
+            image.flush();
+        }
+        flushIfNotNull(floorImage);
+        flushIfNotNull(minimapImage);
+        for (TileProp prop : props.asOptional().orElse(List.of())) {
+            image = prop.image();
+            if (image != null) {
+                image.flush();
+            }
+        }
         props.reset();
+    }
+
+    private void flushIfNotNull(SingleCache<BufferedImage> cache) {
+        BufferedImage image = this.floorImage.asNullable();
+        if (image != null) {
+            image.flush();
+        }
+        cache.reset();
     }
 
     public boolean isEmpty() {

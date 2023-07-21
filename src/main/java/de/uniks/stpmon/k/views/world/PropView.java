@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
+import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -15,6 +16,7 @@ public class PropView extends WorldViewable {
 
     @Inject
     protected WorldRepository repository;
+    private Group props;
 
     @Inject
     public PropView() {
@@ -26,7 +28,7 @@ public class PropView extends WorldViewable {
         if (propCache.isEmpty()) {
             return new Group();
         }
-        Group props = new Group();
+        props = new Group();
         props.setId("props");
         for (TileProp prop : propCache.asNullable()) {
             Node propNode = createRectangleScaled(prop.image(), WorldView.WORLD_ANGLE);
@@ -37,4 +39,15 @@ public class PropView extends WorldViewable {
         return props;
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (props != null) {
+            for (Node node : props.getChildren()) {
+                MeshUtils.disposeMesh(node);
+            }
+            props.getChildren().clear();
+            props = null;
+        }
+    }
 }
