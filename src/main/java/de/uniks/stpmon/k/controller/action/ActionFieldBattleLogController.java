@@ -1,16 +1,14 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.models.Result;
+import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -25,10 +23,7 @@ import javafx.scene.layout.VBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Singleton
 public class ActionFieldBattleLogController extends BaseActionFieldController {
@@ -42,6 +37,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @Inject
     SessionService sessionService;
@@ -53,7 +50,11 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private boolean encounterFinished = false;
+
+    private final List<BattleLogEntry> battleLogPages = new ArrayList<>();
     private Timer closeTimer;
+    private boolean encounterClosingTextIsShown = false;
+    private CloseEncounterTrigger closeEncounter;
 
     @Inject
     public ActionFieldBattleLogController() {
@@ -63,7 +64,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        showMonsterInformation();
 
         encounterFinished = false;
 
@@ -88,19 +88,43 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     }
 
     public void nextWindow() {
-        if (encounterFinished) {
-            if (hybridControllerProvider == null) {
-                return;
+        //check if battlelog has more pages
+        if (battleLogPages.isEmpty()) {
+            if (encounterClosingTextIsShown) {
+                vBox.getChildren().clear();
+                addTextSection(translateString(closeEncounter.toString()));
+                closeTimer = new Timer();
+                closeTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> nextWindow());
+                    }
+                }, (int) (effectContext.getEncounterAnimationSpeed() * 5f));
+                encounterFinished = true;
+                encounterClosingTextIsShown = false;
+            } else {
+                if (encounterFinished) {
+                    if (hybridControllerProvider == null) {
+                        return;
+                    }
+                    sessionService.clearEncounter();
+                    closeTimer.cancel();
+                    HybridController controller = hybridControllerProvider.get();
+                    app.show(controller);
+                    controller.openMain(MainWindow.INGAME);
+                    encounterFinished = false;
+                } else {
+                    getActionField().openMainMenu();
+                }
             }
-            sessionService.clearEncounter();
-            closeTimer.cancel();
-            HybridController controller = hybridControllerProvider.get();
-            app.show(controller);
-            controller.openMain(MainWindow.INGAME);
-            encounterFinished = false;
+
         } else {
-            getActionField().openMainMenu();
+            //show next page of battlelog
+            vBox.getChildren().clear();
+            handleResult(battleLogPages.get(0));
+            battleLogPages.remove(0);
         }
+
     }
 
     private MonsterTypeDto getMonsterType(int id) {
@@ -129,26 +153,9 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     }
 
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {
-        // Check if any events were logged beforehand
-        if (!vBox.getChildren().isEmpty()) {
-            addTextSection("--------------------------------------");
-        }
-        addTextSection(translateString(closeEncounter.toString()));
-        encounterFinished = true;
-        closeTimer = new Timer();
-        closeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> nextWindow());
-            }
-        }, (int) (effectContext.getEncounterAnimationSpeed() * 5f));
-    }
+        encounterClosingTextIsShown = true;
+        closeEncounter = closeEncounter;
 
-    public void showMonsterInformation() {
-        Monster monster = encounterStorage.getSession().getMonster(EncounterSlot.PARTY_FIRST);
-        /*monsterInformationController.loadMonsterTypeDto(String.valueOf(monster.type()));
-        monsterInformationController.loadMonster(monster);
-        encounterOverviewController.monsterInformationBox.setVisible(true);*/
     }
 
     private void initListeners() {
@@ -213,12 +220,20 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             target = move.target();
         }
 
+        encounterOverviewControllerProvider.get().showLevelUp();
+
         for (Result result : opp.results()) {
-            handleResult(monster, result, target);
+            //battleLogPages.add(new BattleLogEntry(monster, result, target));
+            BattleLogEntry entry = new BattleLogEntry(monster, result, target);
+            handleResult(entry);
         }
     }
 
-    private void handleResult(MonsterTypeDto monster, Result result, String target) {
+    private void handleResult(BattleLogEntry battleLogEntry) {
+        Result result = battleLogEntry.result();
+        MonsterTypeDto monster = battleLogEntry.monster();
+        String target = battleLogEntry.target();
+
         final Integer ability = result.ability();
         switch (result.type()) {
             case "ability-success" -> {
@@ -247,7 +262,10 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
             }
             //called when not dying, e.g. another monster is available
             case "monster-defeated" -> addTranslatedSection("monster-defeated", monster.name());
-            case "monster-levelup" -> addTranslatedSection("monster-levelup", monster.name(), "0");
+            case "monster-levelup" -> {
+                addTranslatedSection("monster-levelup", monster.name(), "0");
+                //showMonsterInformation();
+            }
             case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
             case "monster-learned" ->
                     addTranslatedSection("monster-learned", monster.name(), getAbility(ability).name());

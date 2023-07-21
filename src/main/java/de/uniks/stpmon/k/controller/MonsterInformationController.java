@@ -133,6 +133,10 @@ public class MonsterInformationController extends Controller {
         }
     }
 
+    public void showLevelUp(Monster monster) {
+
+    }
+
     public void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         gridPane.getChildren().removeIf(node -> {
             if (row != 0 && (GridPane.getRowIndex(node) == null || GridPane.getRowIndex(node) == 0)) {

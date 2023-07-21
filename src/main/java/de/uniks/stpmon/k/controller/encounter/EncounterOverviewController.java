@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterSession;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
@@ -100,6 +101,9 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<EncounterStorage> encounterStorageProvider;
 
+    private EncounterSession encounterSession;
+    private final Map<EncounterSlot, Monster> monstersBeforeRound = new HashMap<>();
+
     // ------- Remove Later End --------
 
     @Inject
@@ -165,8 +169,6 @@ public class EncounterOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-
-        //StackPane.setAlignment(actionFieldBox, Pos.BOTTOM_RIGHT);
 
         // relations between Encounter slots and image views
         monsterImages.put(EncounterSlot.PARTY_FIRST, userMonster0);
@@ -251,19 +253,42 @@ public class EncounterOverviewController extends Controller {
             openingTransition.play();
         }
 
-        showLevelUp();
+        encounterSession = encounterStorageProvider.get().getSession();
+        initMonstersBeforeRound();
+        //showLevelUp();
 
 
         return parent;
     }
 
+    private void initMonstersBeforeRound() {
+        initMonstersBeforeRound(EncounterSlot.PARTY_FIRST, encounterSession.getMonster(EncounterSlot.PARTY_FIRST));
+
+        if (encounterSession.getOwnTeam().size() > 1) {
+            initMonstersBeforeRound(EncounterSlot.PARTY_SECOND, encounterSession.getMonster(EncounterSlot.PARTY_SECOND));
+        }
+    }
+
+    private void initMonstersBeforeRound(EncounterSlot encounterSlot, Monster monster) {
+        monstersBeforeRound.put(encounterSlot, monster);
+        encounterSession.listenMonster(encounterSlot).subscribe(mon -> {
+            if (!mon.level().equals(monstersBeforeRound.get(encounterSlot).level())) {
+                //trigger level up
+            }
+        });
+    }
+
     public void showLevelUp() {
-        Monster monster = encounterStorageProvider.get().getSession().getMonster(EncounterSlot.PARTY_FIRST);
+      /*  EncounterSession encounterSession = encounterStorageProvider.get().getSession();
+        Monster oldMonster =
+        Monster monster = encounterSession.getMonster(EncounterSlot.PARTY_FIRST);
         MonsterInformationController monInfoController = monInfoProvider.get();
         Parent monInfoPane = monInfoController.render();
-        monInfoController.loadMonsterTypeDto(String.valueOf(monster.type()));
+
+        monInfoController.loadMonsterTypeDto(String.valueOf(monster.type())); //loads name, description and img of server (= always up to date)
+        //load old monster stats
         monInfoController.loadMonster(monster);
-        actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+        actionFieldWrapperBox.getChildren().add(0, monInfoPane);*/
     }
 
     private Transition playOpeningAnimation() {
