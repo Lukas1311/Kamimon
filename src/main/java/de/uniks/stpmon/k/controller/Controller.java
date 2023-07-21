@@ -135,6 +135,21 @@ public abstract class Controller extends Viewable {
     }
 
     /**
+     * Sets a javafx image object into an BackgroundImage and returns it.
+     * If loadImages is false, this method does nothing.
+     * This flag is used to disable image loading for tests.
+     *
+     * @param image A javafx image object
+     *
+     */
+    protected BackgroundImage loadBgImage(Image image) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return null;
+        }
+        return new BackgroundImage(image, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, new BackgroundSize(1.0, 1.0, true, true, false, true));
+    }
+
+    /**
      * Loads an image from the resource folder and sets it to the given Region.
      * Every Region allows the placement of a background.
      * If loadImages is false, this method does nothing.
@@ -145,6 +160,24 @@ public abstract class Controller extends Viewable {
      * @param element Any element, that extends region class
      */
     protected void loadBgImage(Region element, String image) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
+        BackgroundImage bg = loadBgImage(image);
+        element.setBackground(new Background(bg));
+    }
+
+    /**
+     * Sets a javafx image object into the given Region.
+     * Every Region allows the placement of a background.
+     * If loadImages is false, this method does nothing.
+     * This flag is used to disable image loading for tests.
+     *
+     * @param image A javafx image object
+     *
+     * @param element Any element, that extends region class
+     */
+    protected void loadBgImage(Region element, Image image) {
         if (effectContext != null && effectContext.shouldSkipLoadImages()) {
             return;
         }
