@@ -105,6 +105,7 @@ public class WorldView extends Viewable {
         floorView.destroy();
         propView.destroy();
         npcCollectiveView.destroy();
+        System.gc();
     }
 
 }

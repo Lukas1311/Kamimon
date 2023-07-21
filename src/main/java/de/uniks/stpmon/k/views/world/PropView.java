@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,6 +17,7 @@ public class PropView extends WorldViewable {
 
     @Inject
     protected WorldRepository repository;
+    private Group props;
 
     @Inject
     public PropView() {
@@ -26,7 +29,7 @@ public class PropView extends WorldViewable {
         if (propCache.isEmpty()) {
             return new Group();
         }
-        Group props = new Group();
+        props = new Group();
         props.setId("props");
         for (TileProp prop : propCache.asNullable()) {
             Node propNode = createRectangleScaled(prop.image(), WorldView.WORLD_ANGLE);
@@ -37,4 +40,19 @@ public class PropView extends WorldViewable {
         return props;
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (props != null) {
+            for (Node node : props.getChildren()) {
+                if (node instanceof MeshView mesh) {
+                    mesh.setMesh(null);
+                    if (mesh.getMaterial() instanceof PhongMaterial phongMaterial) {
+                        phongMaterial.setDiffuseMap(null);
+                    }
+                    mesh.setMaterial(null);
+                }
+            }
+        }
+    }
 }
