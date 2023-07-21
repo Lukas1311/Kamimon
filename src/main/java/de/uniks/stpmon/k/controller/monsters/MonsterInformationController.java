@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monsters;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -240,6 +241,11 @@ public class MonsterInformationController extends Controller {
         });
 
         return parent;
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 
 }

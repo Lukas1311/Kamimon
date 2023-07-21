@@ -1,5 +1,7 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monsters;
 
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
-public class MonBoxController extends Controller {
+public class MonsterInventoryController extends Controller {
 
 
     @FXML
@@ -57,7 +59,7 @@ public class MonBoxController extends Controller {
     private Parent monParent;
 
     @Inject
-    public MonBoxController() {
+    public MonsterInventoryController() {
     }
 
     @Override
@@ -125,7 +127,7 @@ public class MonBoxController extends Controller {
     }
 
     private Parent createMonsterItem(Monster monster) {
-        MonItemController mon = new MonItemController(monster, resourceService);
+        MonsterItemController mon = new MonsterItemController(monster, resourceService);
         Parent parent = mon.render();
         draggableMonItem(mon, monster._id());
         parent.setOnMouseClicked(e -> triggerMonsterInformation(monster));
@@ -156,7 +158,7 @@ public class MonBoxController extends Controller {
     }
 
 
-    private void draggableMonItem(MonItemController monItem, String id) {
+    private void draggableMonItem(MonsterItemController monItem, String id) {
         Parent parent = monItem.getParent();
         if (parent == null) {
             return;
@@ -218,6 +220,11 @@ public class MonBoxController extends Controller {
             }
             event.consume();
         });
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 
 }

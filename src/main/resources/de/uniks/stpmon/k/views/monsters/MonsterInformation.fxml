@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
 <AnchorPane fx:id="mainPane" maxHeight="361.0" maxWidth="304.0" minHeight="361.0" minWidth="304.0" prefHeight="361.0"
-            prefWidth="304.0" stylesheets="@css/ingameStyle.css" translateY="6.0" xmlns="http://javafx.com/javafx/19"
+            prefWidth="304.0" stylesheets="@../css/ingameStyle.css" translateY="6.0" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.MonsterInformationController">
+            fx:controller="de.uniks.stpmon.k.controller.monsters.MonsterInformationController">
     <styleClass>
         <String fx:value="ingame"/>
         <String fx:value="monster-information-font"/>
