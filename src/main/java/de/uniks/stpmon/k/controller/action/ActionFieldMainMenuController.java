@@ -81,8 +81,10 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openFlee() {
-        getActionField().setFleeEncounter();
-        subscribe(encounterService.fleeEncounter());
+        subscribe(encounterService.fleeEncounter(), opp -> {
+            getActionField().setFleeEncounter();
+        });
+
     }
 
     public void openFight() {

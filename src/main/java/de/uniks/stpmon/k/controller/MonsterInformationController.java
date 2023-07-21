@@ -254,24 +254,22 @@ public class MonsterInformationController extends Controller {
 
     private void loadLevelUpDifference(Monster oldMon, Monster newMon) {
         monsterLevelUpgradeLabel.setStyle("-fx-text-fill: blue");
-        monsterLevelUpgradeLabel.setText("> +1");
+        monsterLevelUpgradeLabel.setText("  < " + oldMon.level());
 
-        int healthDiff = (int) (newMon.attributes().health() - oldMon.attributes().health());
-        setLevelUpText(hpUpdateLabel, healthDiff);
 
-        int atkDiff = (int) (newMon.attributes().attack() - oldMon.attributes().attack());
-        setLevelUpText(atkUpdateLabel, atkDiff);
+        setLevelUpText(hpUpdateLabel, Math.round(oldMon.attributes().health()));
 
-        int defDiff = (int) (newMon.attributes().defense() - oldMon.attributes().defense());
-        setLevelUpText(defUpdateLabel, defDiff);
 
-        int speedDiff = (int) (newMon.attributes().speed() - oldMon.attributes().speed());
-        setLevelUpText(speUpdateLabel, speedDiff);
+        setLevelUpText(atkUpdateLabel, Math.round(oldMon.attributes().attack()));
+
+        setLevelUpText(defUpdateLabel, Math.round(oldMon.attributes().defense()));
+
+        setLevelUpText(speUpdateLabel, Math.round(oldMon.attributes().speed()));
     }
 
     private void setLevelUpText(Label label, int diff) {
         label.setStyle("-fx-text-fill: blue");
-        label.setText("+ " + diff);
+        label.setText("< " + diff);
     }
 
 }

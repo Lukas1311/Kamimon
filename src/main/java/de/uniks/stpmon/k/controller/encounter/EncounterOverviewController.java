@@ -186,6 +186,7 @@ public class EncounterOverviewController extends Controller {
         Parent actionField = this.actionFieldController.render();
         if (actionField != null) {
             actionFieldWrapperBox.getChildren().add(actionField);
+            actionFieldWrapperBox.setSpacing(5);
 
         }
 

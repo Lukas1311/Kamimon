@@ -111,8 +111,6 @@ public class StatusController extends Controller {
         double expProgress = currentExp / maxExp;
 
         experienceBar.setProgress(expProgress);
-        System.out.println("cur: "+ currentExp);
-        System.out.println("max: "+ maxExp);
 
         // Check if the current experience equals the maximum experience
         if (currentExp >= maxExp) {

@@ -59,6 +59,7 @@ public class BattleLogService {
             lastOpponents.put(update.slot(), update.opponent());
             return;
         }
+
         queueOpponent(update);
 
     }
@@ -86,8 +87,12 @@ public class BattleLogService {
         if (!opponentUpdates.isEmpty()) {
             //there are more updates to be handled
             OpponentUpdate nextUpdate = opponentUpdates.get(0);
-            handleOpponentUpdate(nextUpdate);
-            opponentUpdates.remove(0);
+            //OpponentUpdate nextUpdate = getNextUpdate();
+            if (nextUpdate != null) {
+                handleOpponentUpdate(nextUpdate);
+                opponentUpdates.remove(nextUpdate);
+            }
+
 
         } else {
             //check if round or encounter is over
@@ -98,15 +103,17 @@ public class BattleLogService {
                 //init closing
                 if (encounterIsOver) {
                     closeTimer.cancel();
-                    closeEncounter();
+                    shutDownEncounter();
                 } else { //user sees result of encounter
+                    //show encounter result
+                    addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
                     closeTimer = new Timer();
                     closeTimer.schedule(new TimerTask() {
                         @Override
                         public void run() {
                             Platform.runLater(() -> {
-                                closeEncounter();
+                                shutDownEncounter();
                             });
                         }
                     }, battleLogControllerProvider.get().getEffectContextTimerSpeed());
@@ -116,7 +123,28 @@ public class BattleLogService {
         }
     }
 
-    private void closeEncounter() {
+    private OpponentUpdate getNextUpdate() {
+        OpponentUpdate next = null;
+        for (OpponentUpdate up : new ArrayList<>(opponentUpdates)) {
+            // remove the ones that don't produce text
+            /*if(up.opponent().move() == null){
+                lastOpponents.put(up.slot(), up.opponent());
+                opponentUpdates.remove(up);
+            }*/
+            //first return the attacker -> attacker attacks first
+            if (up.opponent().isAttacker()) {
+                next = up;
+            }
+        }
+
+        if (next == null && opponentUpdates.size() > 0) {
+            //no attacker was found
+            next = opponentUpdates.get(0);
+        }
+        return next;
+    }
+
+    private void shutDownEncounter() {
         encounterIsOver = false;
         closeEncounterTrigger = null;
         battleLogControllerProvider.get().endRound(true);

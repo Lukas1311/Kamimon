@@ -191,5 +191,8 @@ public class ActionFieldController extends Controller {
 
     protected void setFleeEncounter() {
         this.closeTrigger = CloseEncounterTrigger.FLEE;
+        battleLogService.closeEncounter(closeTrigger);
+        openBattleLog();
+        battleLogService.showNextAction();
     }
 }

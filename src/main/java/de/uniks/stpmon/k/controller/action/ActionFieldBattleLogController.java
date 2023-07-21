@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.SessionService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -78,8 +79,16 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
-            subscribe(sessionService.listenOpponent(slot), opp ->
-                    battleLogService.queueUpdate(new OpponentUpdate(slot, opp))
+            subscribe(sessionService.listenOpponent(slot), opp -> {
+                        if (!opp.isAttacker()) {
+                            Platform.runLater(() -> battleLogService.queueUpdate(new OpponentUpdate(slot, opp)));
+
+                        } else {
+                            battleLogService.queueUpdate(new OpponentUpdate(slot, opp));
+                        }
+                    }
+
+
             );
 
             if (!slot.enemy()) {
