@@ -63,7 +63,7 @@
               AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="10.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="81.0" minWidth="10.0" prefWidth="46.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="40.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="25.0"/>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="157.0"/>
         </columnConstraints>
         <rowConstraints>
