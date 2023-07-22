@@ -72,7 +72,17 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
-
+        when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
+        when(statusControllerProvider.get()).thenAnswer(invocation -> {
+            VBox statusBox = new VBox();
+            statusBox.setStyle("-fx-background-color: black;");
+            statusBox.setPrefWidth(50);
+            statusBox.setPrefHeight(20);
+            StatusController statusController = mock(StatusController.class);
+            statusController.fullBox = statusBox;
+            when(statusController.render()).thenReturn(statusController.fullBox);
+            return statusController;
+        });
 
         when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
                 "o_1",
@@ -93,17 +103,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
-        when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
-        when(statusControllerProvider.get()).thenAnswer(invocation -> {
-            VBox statusBox = new VBox();
-            statusBox.setStyle("-fx-background-color: black;");
-            statusBox.setPrefWidth(50);
-            statusBox.setPrefHeight(20);
-            StatusController statusController = mock(StatusController.class);
-            statusController.fullBox = statusBox;
-            when(statusController.render()).thenReturn(statusController.fullBox);
-            return statusController;
-        });
+
 
         VBox userMonstersBox = lookup("#userMonsters").queryAs(VBox.class);
         VBox opponentMonstersBox = lookup("#opponentMonsters").queryAs(VBox.class);
