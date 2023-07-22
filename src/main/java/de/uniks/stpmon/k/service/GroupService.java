@@ -7,8 +7,10 @@ import de.uniks.stpmon.k.rest.GroupApiService;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class GroupService {
 
     private final GroupApiService groupApiService;

@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.views.world.WorldView;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.layout.BorderPane;
@@ -13,6 +14,8 @@ public class WorldController extends Controller {
 
     @Inject
     protected WorldView worldView;
+    private SubScene scene;
+    private BorderPane parent;
 
     @Inject
     public WorldController() {
@@ -28,12 +31,26 @@ public class WorldController extends Controller {
     public void destroy() {
         super.destroy();
         worldView.destroy();
+        if (scene != null) {
+            scene.widthProperty().unbind();
+            scene.heightProperty().unbind();
+            Group group = (Group) scene.getRoot();
+            group.getChildren().clear();
+            // Clear the scene
+            scene.setRoot(new Group());
+            scene.setCamera(null);
+        }
+        scene = null;
+        if (parent != null) {
+            parent.getChildren().clear();
+            parent = null;
+        }
     }
 
     @Override
     public Parent render() {
-        BorderPane parent = (BorderPane) super.render();
-        SubScene scene = worldView.createScene();
+        parent = (BorderPane) super.render();
+        scene = worldView.createScene();
         if (scene != null) {
             parent.getChildren().add(0, scene);
 
@@ -45,5 +62,6 @@ public class WorldController extends Controller {
         }
         return parent;
     }
+
 
 }

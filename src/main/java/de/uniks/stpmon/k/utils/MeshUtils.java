@@ -1,9 +1,34 @@
 package de.uniks.stpmon.k.utils;
 
+import com.sun.javafx.scene.NodeHelper;
+import javafx.scene.Node;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
+/**
+ * Utility class for mesh operations.
+ * This class is not intended to be instantiated.
+ */
 public class MeshUtils {
+
+    /**
+     * Disposes the mesh of the given node. This is necessary to avoid memory leaks.
+     * JavaFX does not dispose the mesh automatically sometimes.
+     *
+     * @param node The node to dispose the mesh of.
+     */
+    public static void disposeMesh(Node node) {
+        if (!(node instanceof MeshView mesh)) {
+            return;
+        }
+        mesh.setMesh(null);
+        if (mesh.getMaterial() instanceof PhongMaterial phongMaterial) {
+            phongMaterial.setDiffuseMap(null);
+        }
+        mesh.setMaterial(null);
+        NodeHelper.updatePeer(mesh);
+    }
 
     public static MeshView createPlane(int l, int b) {
         TriangleMesh mesh = new TriangleMesh();
