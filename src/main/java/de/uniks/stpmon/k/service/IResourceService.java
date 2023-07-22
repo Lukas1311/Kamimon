@@ -15,4 +15,7 @@ public interface IResourceService {
 
     Observable<BufferedImage> getMonsterImage(String fileName);
 
+
+    Observable<BufferedImage> getItemImage(String fileName);
+
 }

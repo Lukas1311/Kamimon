@@ -22,9 +22,11 @@ public class BackpackController extends Controller {
 
 
     @Inject
+    public
     Provider<BackpackMenuController> backpackMenuControllerProvider;
 
     @Inject
+    public
     Provider<IngameController> ingameControllerProvider;
 
     @Inject
@@ -65,7 +67,6 @@ public class BackpackController extends Controller {
         backpackMenu = null;
         backpackMenuControllerProvider.get().setMonBoxNull();
     }
-
 
     public void triggerBackPackMenu() {
         if (backpackMenu == null) {
