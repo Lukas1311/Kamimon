@@ -63,7 +63,6 @@ public class MonsterInventoryControllerTest extends ApplicationTest {
         when(monsterService.getTeam()).thenReturn(team);
         when(resourceService.getMonsterImage(any()))
                 .thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
-        // when(ingameControllerProvider.get()).thenReturn(ingameController);
         app.show(inventoryController);
         stage.requestFocus();
     }
