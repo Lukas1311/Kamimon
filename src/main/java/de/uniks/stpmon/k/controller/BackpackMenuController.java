@@ -23,11 +23,8 @@ public class BackpackMenuController extends Controller {
 
     private final List<BackpackMenuOption> options = new ArrayList<>();
     private final Map<BackpackMenuOption, Controller> controllers = new HashMap<>();
-    private Controller monBoxController;
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
-
-    final List<BackpackMenuOption> backpackMenuOptions = new ArrayList<>();
 
 
     @FXML
@@ -68,12 +65,10 @@ public class BackpackMenuController extends Controller {
         loadBgImage(backpackMenuListView, "BackPackMenu_v2.png");
         loadImage(arrowImageView, "arrow_right.png");
 
-        if (backpackMenuOptions.isEmpty()) {
-            backpackMenuOptions.addAll(options);
-        }
+
         backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
 
-        backpackMenuListView.setItems(FXCollections.observableArrayList(backpackMenuOptions));
+        backpackMenuListView.setItems(FXCollections.observableArrayList(options));
 
 
         return parent;
@@ -91,7 +86,7 @@ public class BackpackMenuController extends Controller {
     }
 
     public int getId(BackpackMenuOption option) {
-        return backpackMenuOptions.indexOf(option);
+        return options.indexOf(option);
     }
 
     private void openMinimap() {
@@ -149,5 +144,6 @@ public class BackpackMenuController extends Controller {
         for (BackpackMenuOption option : options) {
             controllers.put(option, null);
         }
+        options.clear();
     }
 }

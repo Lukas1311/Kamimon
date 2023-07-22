@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane fx:id="monDexPane" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="de.uniks.stpmon.k.controller.MonDexController"
-            prefHeight="280.0" prefWidth="174.0" minWidth="174.0" maxWidth="174.0">
+            prefHeight="280.0" prefWidth="174.0" minWidth="174.0" maxWidth="174.0" style="-fx-border-color: blue">
+    <ListView fx:id="dexList" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0"
+              prefHeight="266.0" prefWidth="160.0">
+
+    </ListView>
 
 
 </AnchorPane>

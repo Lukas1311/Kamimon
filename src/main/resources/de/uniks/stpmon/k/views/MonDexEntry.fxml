@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" stylesheets="@css/ingameStyle.css"
+            fx:controller="de.uniks.stpmon.k.controller.MonDexEntryController"
+            prefHeight="32.0" prefWidth="162.0">
+    <styleClass>
+        <String fx:value="ingame"/>
+    </styleClass>
+    <ImageView fx:id="monImage" fitHeight="30" fitWidth="30" AnchorPane.topAnchor="1"/>
+    <Label fx:id="nameLabel" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="1" text="???" prefHeight="15"/>
+    <Label fx:id="typeLabel" AnchorPane.leftAnchor="50" AnchorPane.topAnchor="17" prefHeight="15"/>
+
+</AnchorPane>
