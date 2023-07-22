@@ -351,6 +351,10 @@ public class IngameController extends PortalController {
         }
     }
 
+    public void closeMonsterInfo() {
+        removeChildren(2);
+    }
+
     public void openMonsterInfo(Monster monster) {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();
 

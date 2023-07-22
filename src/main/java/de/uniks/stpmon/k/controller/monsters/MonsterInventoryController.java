@@ -73,6 +73,7 @@ public class MonsterInventoryController extends Controller {
     public void destroy() {
         super.destroy();
         // Update team if leave monbox
+        // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
         ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
     }
 
@@ -141,10 +142,9 @@ public class MonsterInventoryController extends Controller {
     }
 
     private void closeMonsterInformation() {
-        ingameControllerProvider.get().removeChildren(2);
+        ingameControllerProvider.get().closeMonsterInfo();
         activeMonster = null;
     }
-
 
     private void draggableMonItem(MonsterItemController monItem, String id) {
         Parent parent = monItem.getParent();
