@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.MonsterInformationController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Opponent;
@@ -43,8 +42,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     ActionFieldController actionFieldController;
-    @Mock
-    Provider<MonsterInformationController> monsterInformationControllerProvider;
 
     @InjectMocks
     EncounterOverviewController encounterOverviewController;
