@@ -129,7 +129,6 @@ public class EncounterOverviewController extends Controller {
                     case "Forest" -> TerrainType.FOREST;
                     case "Plains" -> TerrainType.PLAINS;
                     case "City" -> TerrainType.CITY;
-                    case "Town" -> TerrainType.TOWN;
                     case "Coast" -> TerrainType.COAST;
                     case "Cave" -> TerrainType.CAVE;
                     default -> TerrainType.TOWN;
