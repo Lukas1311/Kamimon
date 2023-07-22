@@ -72,7 +72,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         when(sessionService.getSlots()).thenReturn(List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND,
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
-        when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
+
 
         when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
                 "o_1",
@@ -86,6 +86,14 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 0
         )));
 
+
+        app.show(encounterOverviewController);
+        stage.requestFocus();
+    }
+
+    @Test
+    void testRender() {
+        when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
         when(statusControllerProvider.get()).thenAnswer(invocation -> {
             VBox statusBox = new VBox();
             statusBox.setStyle("-fx-background-color: black;");
@@ -97,15 +105,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
             return statusController;
         });
 
-        when(monsterInformationControllerProvider.get()).thenReturn(monsterInformationController);
-
-        app.show(encounterOverviewController);
-        stage.requestFocus();
-    }
-
-    @Test
-    void testRender() {
-
         VBox userMonstersBox = lookup("#userMonsters").queryAs(VBox.class);
         VBox opponentMonstersBox = lookup("#opponentMonsters").queryAs(VBox.class);
         assertNotNull(userMonstersBox);
@@ -116,7 +115,9 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
     @Test
     void testShowLevelUp() {
+        when(monsterInformationControllerProvider.get()).thenReturn(monsterInformationController);
         Platform.runLater(() -> {
+
             Monster oldMon = MonsterBuilder.builder().create();
             Monster newMon = MonsterBuilder.builder().create();
 
@@ -124,6 +125,9 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
             encounterOverviewController.showLevelUp(oldMon, newMon);
             assertEquals(1, encounterOverviewController.actionFieldWrapperBox.getChildren().size());
+
+            encounterOverviewController.removeMonInfoIfShown();
+            assertEquals(0, encounterOverviewController.actionFieldWrapperBox.getChildren().size());
         });
     }
 

@@ -94,6 +94,8 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<MonsterInformationController> monInfoProvider;
 
+    private Parent monInfoPane;
+
     @Inject
     public EncounterOverviewController() {
     }
@@ -243,16 +245,17 @@ public class EncounterOverviewController extends Controller {
 
     public void showLevelUp(Monster oldMon, Monster newMon) {
         MonsterInformationController monInfoController = monInfoProvider.get();
-        Parent monInfoPane = monInfoController.render();
+        monInfoPane = monInfoController.render();
         monInfoController.loadLevelUp(oldMon, newMon);
 
         actionFieldWrapperBox.getChildren().add(0, monInfoPane);
     }
 
     public void removeMonInfoIfShown() {
-        if (actionFieldWrapperBox.getChildren().size() > 1) {
+        if (monInfoPane != null) {
             actionFieldWrapperBox.getChildren().remove(0);
             monInfoProvider.get().destroy();
+            monInfoPane = null;
         }
     }
 
