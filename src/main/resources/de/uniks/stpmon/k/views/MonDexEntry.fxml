@@ -7,7 +7,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml" stylesheets="@css/ingameStyle.css"
             fx:controller="de.uniks.stpmon.k.controller.MonDexEntryController"
-            prefHeight="32.0" prefWidth="162.0">
+            prefHeight="32.0" prefWidth="100.0">
     <styleClass>
         <String fx:value="ingame"/>
     </styleClass>
