@@ -192,8 +192,8 @@ public class IngameController extends PortalController {
             });
         } else {
             transition.setOnFinished(event -> {
-                app.show(loadingEncounterControllerProvider.get());
                 ingameStack.getChildren().remove(overlayPane);
+                app.show(loadingEncounterControllerProvider.get());
             });
 
         }

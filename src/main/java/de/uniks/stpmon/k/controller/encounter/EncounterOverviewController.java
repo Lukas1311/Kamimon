@@ -10,8 +10,6 @@ import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
-import de.uniks.stpmon.k.service.storage.EncounterSession;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
@@ -93,17 +91,8 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
-
-    // ---------- Remove Later -------
     @Inject
     Provider<MonsterInformationController> monInfoProvider;
-    @Inject
-    Provider<EncounterStorage> encounterStorageProvider;
-
-    private EncounterSession encounterSession;
-    private final Map<EncounterSlot, Monster> monstersBeforeRound = new HashMap<>();
-
-    // ------- Remove Later End --------
 
     @Inject
     public EncounterOverviewController() {
@@ -250,10 +239,6 @@ public class EncounterOverviewController extends Controller {
             openingTransition.play();
         }
 
-        encounterSession = encounterStorageProvider.get().getSession();
-
-
-
         return parent;
     }
 
@@ -263,6 +248,13 @@ public class EncounterOverviewController extends Controller {
         monInfoController.loadLevelUp(oldMon, newMon);
 
         actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+    }
+
+    public void removeMonInfoIfShown() {
+        if (actionFieldWrapperBox.getChildren().size() > 1) {
+            actionFieldWrapperBox.getChildren().remove(0);
+            monInfoProvider.get().destroy();
+        }
     }
 
     private Transition playOpeningAnimation() {

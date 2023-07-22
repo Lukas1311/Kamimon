@@ -82,6 +82,7 @@ public class BattleLogService {
     }
 
     private void showActions() {
+        encounterOverviewControllerProvider.get().removeMonInfoIfShown();
         textBox.getChildren().clear();
         //check if more actions need to be handled
         if (!opponentUpdates.isEmpty()) {
@@ -121,27 +122,6 @@ public class BattleLogService {
 
             }
         }
-    }
-
-    private OpponentUpdate getNextUpdate() {
-        OpponentUpdate next = null;
-        for (OpponentUpdate up : new ArrayList<>(opponentUpdates)) {
-            // remove the ones that don't produce text
-            /*if(up.opponent().move() == null){
-                lastOpponents.put(up.slot(), up.opponent());
-                opponentUpdates.remove(up);
-            }*/
-            //first return the attacker -> attacker attacks first
-            if (up.opponent().isAttacker()) {
-                next = up;
-            }
-        }
-
-        if (next == null && opponentUpdates.size() > 0) {
-            //no attacker was found
-            next = opponentUpdates.get(0);
-        }
-        return next;
     }
 
     private void shutDownEncounter() {
