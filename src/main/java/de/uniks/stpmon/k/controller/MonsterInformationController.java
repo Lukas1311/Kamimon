@@ -133,10 +133,6 @@ public class MonsterInformationController extends Controller {
         }
     }
 
-    public void showLevelUp(Monster monster) {
-
-    }
-
     public void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         gridPane.getChildren().removeIf(node -> {
             if (row != 0 && (GridPane.getRowIndex(node) == null || GridPane.getRowIndex(node) == 0)) {
@@ -249,10 +245,10 @@ public class MonsterInformationController extends Controller {
     public void loadLevelUp(Monster oldMon, Monster newMon) {
         loadMonsterTypeDto(String.valueOf(newMon.type()));
         loadMonster(newMon);
-        loadLevelUpDifference(oldMon, newMon);
+        loadLevelUpDifference(oldMon);
     }
 
-    private void loadLevelUpDifference(Monster oldMon, Monster newMon) {
+    private void loadLevelUpDifference(Monster oldMon) {
         monsterLevelUpgradeLabel.setStyle("-fx-text-fill: blue");
         monsterLevelUpgradeLabel.setText("  < " + oldMon.level());
 
