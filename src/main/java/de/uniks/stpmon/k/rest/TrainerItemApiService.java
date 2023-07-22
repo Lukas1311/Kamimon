@@ -19,14 +19,18 @@ public interface TrainerItemApiService {
 
     @GET("regions/{regionId}/trainers/{trainerId}/items")
     Observable<List<Item>> getItems(@Path("regionId") String regionId,
-                                       @Path("trainerId") String trainerId,
-                                       @Query("types") List<String> types);
+                                    @Path("trainerId") String trainerId);
+
+    @GET("regions/{regionId}/trainers/{trainerId}/items")
+    Observable<List<Item>> getItems(@Path("regionId") String regionId,
+                                    @Path("trainerId") String trainerId,
+                                    @Query("types") List<String> types);
 
 
     @GET("regions/{regionId}/trainers/{trainerId}/items/{itemId}")
     Observable<Item> getItem(@Path("regionId") String regionId,
-                                   @Path("trainerId") String trainerId,
-                                   @Path("itemId") String itemId);
+                             @Path("trainerId") String trainerId,
+                             @Path("itemId") String itemId);
 
 
 }
