@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:id="MonDexPane" xmlns="http://javafx.com/javafx"
+<AnchorPane fx:id="monDexPane" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="de.uniks.stpmon.k.controller.MonDexController"
-            prefHeight="280.0" prefWidth="174.0">
+            prefHeight="280.0" prefWidth="174.0" minWidth="174.0" maxWidth="174.0">
 
 
 </AnchorPane>

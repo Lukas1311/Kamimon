@@ -12,14 +12,18 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.uniks.stpmon.k.controller.BackpackMenuOption.*;
 
 @Singleton
 public class BackpackMenuController extends Controller {
 
-    private Controller monBox;
+    private final List<BackpackMenuOption> options = new ArrayList<>();
+    private final Map<BackpackMenuOption, Controller> controllers = new HashMap<>();
+    private Controller monBoxController;
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
 
@@ -40,10 +44,20 @@ public class BackpackMenuController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<MonBoxController> monBoxControllerProvider;
+    @Inject
+    Provider<MonDexController> monDexControllerProvider;
 
     @Inject
     public BackpackMenuController() {
 
+    }
+
+    @Override
+    public void init() {
+        options.add(MONSTER);
+        options.add(TEAM);
+        options.add(MONDEX);
+        options.add(MAP);
     }
 
     @Override
@@ -55,9 +69,7 @@ public class BackpackMenuController extends Controller {
         loadImage(arrowImageView, "arrow_right.png");
 
         if (backpackMenuOptions.isEmpty()) {
-            backpackMenuOptions.add(MONSTER);
-            backpackMenuOptions.add(TEAM);
-            backpackMenuOptions.add(MAP);
+            backpackMenuOptions.addAll(options);
         }
         backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
 
@@ -71,9 +83,9 @@ public class BackpackMenuController extends Controller {
     public void openOption(BackpackMenuOption option) {
         switch (option) {
             // delete dummy method after functionality is implemented
-            case MONSTER -> triggerMonBox();
             case TEAM -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> openMinimap();
+            default -> triggerOption(option);
         }
 
     }
@@ -86,25 +98,56 @@ public class BackpackMenuController extends Controller {
         ingameControllerProvider.get().openMap();
     }
 
-    public void openMonBox() {
-        monBox = monBoxControllerProvider.get();
-        ingameControllerProvider.get().pushController(monBox);
-    }
-
-    public void closeMonBox() {
-        ingameControllerProvider.get().removeChildren(1);
-        monBox = null;
-    }
-
-    public void triggerMonBox() {
-        if (monBox == null) {
-            openMonBox();
+    private Provider<? extends Controller> getProvider(BackpackMenuOption option) {
+        Provider<? extends Controller> provider;
+        if (option == MONSTER) {
+            provider = monBoxControllerProvider;
         } else {
-            closeMonBox();
+            provider = monDexControllerProvider;
         }
+        return provider;
     }
 
-    public void setMonBoxNull() {
-        monBox = null;
+    private void openController(BackpackMenuOption option) {
+        Provider<? extends Controller> provider = getProvider(option);
+        Controller controller = provider.get();
+        //set the controller, so the triggerOption methode knows if it needs to be closed
+        controllers.put(option, controller);
+        ingameControllerProvider.get().pushController(controller);
+    }
+
+
+    private void closeController(BackpackMenuOption option) {
+        ingameControllerProvider.get().removeChildren(1);
+        controllers.put(option, null);
+    }
+
+    private void triggerOption(BackpackMenuOption option) {
+        //close all other controllers
+        for (BackpackMenuOption boption : options) {
+            if (boption == option) {
+                continue;
+            }
+            //check if controller is open
+            if (controllers.get(boption) != null) {
+                closeController(boption);
+            }
+        }
+        //open/close triggered controller
+        Controller controllerToOpen = controllers.get(option);
+        if (controllerToOpen == null) {
+            openController(option);
+        } else {
+            closeController(option);
+        }
+
+
+    }
+
+
+    public void setAllControllerNull() {
+        for (BackpackMenuOption option : options) {
+            controllers.put(option, null);
+        }
     }
 }

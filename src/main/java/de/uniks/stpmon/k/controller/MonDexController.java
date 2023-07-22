@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 public class MonDexController extends Controller {
 
     @FXML
-    public AnchorPane MonDexPane;
+    public AnchorPane monDexPane;
 
     @Inject
     public MonDexController() {
@@ -22,6 +22,7 @@ public class MonDexController extends Controller {
     public Parent render() {
         Parent parent = super.render();
 
+        loadBgImage(monDexPane, "inventoryBox.png");
 
         return parent;
     }

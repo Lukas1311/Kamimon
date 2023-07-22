@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 public enum BackpackMenuOption {
     MONSTER("monster"),
     TEAM("team"),
+    MONDEX("monDex"),
     MAP("map");
 
     private final String entryText;
