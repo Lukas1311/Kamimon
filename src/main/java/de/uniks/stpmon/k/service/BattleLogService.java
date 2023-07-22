@@ -48,7 +48,7 @@ public class BattleLogService {
     }
 
     /**
-     * This method is called by the listener in BattleLogController every time a update comes in
+     * This method is called by the listener in BattleLogController every time an update comes in
      *
      * @param update OpponentUpdate
      */
@@ -113,9 +113,7 @@ public class BattleLogService {
                     closeTimer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            Platform.runLater(() -> {
-                                shutDownEncounter();
-                            });
+                            Platform.runLater(() -> shutDownEncounter());
                         }
                     }, battleLogControllerProvider.get().getEffectContextTimerSpeed());
                 }
@@ -145,6 +143,7 @@ public class BattleLogService {
         if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
             Monster newMonster = sessionService.getMonsterById(opp.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
+            lastOpponents.put(up.slot(), up.opponent());
             return;
         }
 
@@ -152,6 +151,7 @@ public class BattleLogService {
         if (opp.move() instanceof ChangeMonsterMove move) {
             Monster newMonster = sessionService.getMonsterById(move.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
+            lastOpponents.put(up.slot(), up.opponent());
             return;
         }
 
@@ -177,7 +177,7 @@ public class BattleLogService {
             // Blocking can be used here because values are already loaded in the cache
             AbilityDto ability = getAbility(move.ability());
             MonsterTypeDto eneMon = attackedMonsters.get(slot);
-            if (eneMon != null) {
+            if (eneMon != null && monster != null) {
                 addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
             }
             target = move.target();
@@ -226,9 +226,7 @@ public class BattleLogService {
             }
             //called when not dying, e.g. another monster is available
             case "monster-defeated" -> addTranslatedSection("monster-defeated", monster.name());
-            case "monster-levelup" -> {
-                makeLevelUp(monster, slot);
-            }
+            case "monster-levelup" -> makeLevelUp(monster, slot);
             case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
             case "monster-learned" ->
                     addTranslatedSection("monster-learned", monster.name(), getAbility(ability).name());
