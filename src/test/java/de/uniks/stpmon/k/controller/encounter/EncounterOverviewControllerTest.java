@@ -96,6 +96,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 0
         )));
 
+        when(monsterInformationControllerProvider.get()).thenReturn(monsterInformationController);
 
         app.show(encounterOverviewController);
         stage.requestFocus();
@@ -115,7 +116,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
     @Test
     void testShowLevelUp() {
-        when(monsterInformationControllerProvider.get()).thenReturn(monsterInformationController);
+
         Platform.runLater(() -> {
 
             Monster oldMon = MonsterBuilder.builder().create();
