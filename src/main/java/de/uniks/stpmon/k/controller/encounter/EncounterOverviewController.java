@@ -244,11 +244,12 @@ public class EncounterOverviewController extends Controller {
     }
 
     public void showLevelUp(Monster oldMon, Monster newMon) {
-        MonsterInformationController monInfoController = monInfoProvider.get();
-        monInfoPane = monInfoController.render();
-        monInfoController.loadLevelUp(oldMon, newMon);
-
-        actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+        if (monInfoPane == null) {
+            MonsterInformationController monInfoController = monInfoProvider.get();
+            monInfoPane = monInfoController.render();
+            monInfoController.loadLevelUp(oldMon, newMon);
+            actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+        }
     }
 
     public void removeMonInfoIfShown() {
