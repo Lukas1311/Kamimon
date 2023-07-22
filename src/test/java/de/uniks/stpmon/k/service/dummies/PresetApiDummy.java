@@ -1,7 +1,10 @@
 package de.uniks.stpmon.k.service.dummies;
 
 import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
@@ -19,6 +22,7 @@ public class PresetApiDummy implements PresetApiService {
     final List<String> characters = new ArrayList<>();
     final List<MonsterTypeDto> monsters = new ArrayList<>();
     final List<AbilityDto> abilities = new ArrayList<>();
+    final List<ItemTypeDto> items = new ArrayList<>();
     final String[] types = {"fire", "water", "grass", "electro", "physics", "ground",
             "dragon", "poison", "ice", "normal", "dark", "flying", "fighting", "rock", "steel", "bug"};
 
@@ -81,6 +85,32 @@ public class PresetApiDummy implements PresetApiService {
 
     }
 
+    private void initDummyItems() {
+        if (items.size() > 0) {
+            throw new IllegalStateException("Monsters already initialized");
+        }
+
+        int amount = 8;
+        for (int i = 0; i < amount; i++ ) {
+            int id = 100 + i;
+            String image = "ItemImage_" + i;
+            String name = "Item_" + i;
+            int price = 5 + i;
+            String description = "ItemDescription_" + i;
+            ItemUse use = switch(i%4) {
+                case 0 -> ItemUse.BALL;
+                case 1 -> ItemUse.EFFECT;
+                case 2 -> ItemUse.ITEM_BOX;
+                case 3 -> ItemUse.MONSTER_BOX;
+                default -> throw new IllegalStateException("Unexpected value: " + i % 4);
+            };
+
+            items.add(new ItemTypeDto(id, image, name, price, description, use));
+        }
+
+
+    }
+
     @Override
     public Observable<ResponseBody> getFile(String filename) {
         // Provider in resource service
@@ -97,6 +127,35 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<ResponseBody> getCharacterFile(String filename) {
+        // Provider in resource service
+        return Observable.empty();
+    }
+
+    @Override
+    public Observable<List<ItemTypeDto>> getItems() {
+        if (items.size() == 0) {
+            initDummyItems();
+        }
+
+        return Observable.just(items);
+    }
+
+    @Override
+    public Observable<ItemTypeDto> getItem(String id) {
+        if (items.size() == 0) {
+            initDummyItems();
+        }
+
+        Optional<ItemTypeDto> returnItem = items.stream()
+                .filter(m -> Integer.parseInt(id) == m.id())
+                .findFirst();
+
+        return returnItem.map(r -> Observable.just(returnItem.get())).orElseGet(()
+                -> Observable.error(new Throwable("404 Not found")));
+    }
+
+    @Override
+    public Observable<ResponseBody> getItemImage(String id) {
         // Provider in resource service
         return Observable.empty();
     }

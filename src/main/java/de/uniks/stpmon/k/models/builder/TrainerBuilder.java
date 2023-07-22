@@ -23,7 +23,7 @@ public class TrainerBuilder {
 
     private final List<String> team = new LinkedList<>();
     private final Set<Integer> encounteredMonsterTypes = new HashSet<>();
-    private NPCInfo npc = new NPCInfo(false, false, false, List.of(), List.of());
+    private NPCInfo npc = NPCInfoBuilder.builder().create();
     private String _id = "";
     private String region = "";
     private String user = "";

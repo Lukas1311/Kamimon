@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.constants;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
+import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
@@ -199,7 +200,7 @@ public class DummyConstants {
             "",
             List.of("type1"),
             "");
-    public static final NPCInfo NPC_INFO = new NPCInfo(false, false, false, List.of(), List.of());
+    public static final NPCInfo NPC_INFO = NPCInfoBuilder.builder().create();
     public static final BufferedImage EMPTY_IMAGE = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
     public static final RegionImage IMAGE = new RegionImage("0", EMPTY_IMAGE, EMPTY_IMAGE);
 }
