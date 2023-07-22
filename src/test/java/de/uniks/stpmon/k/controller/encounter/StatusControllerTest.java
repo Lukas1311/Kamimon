@@ -131,7 +131,7 @@ public class StatusControllerTest extends ApplicationTest {
         verifyThat("#effectContainer #effect_paralysed", Node::isVisible);
         verifyThat("#effectContainer #effect_poisoned", Node::isVisible);
         assertEquals(0.5, statusController.hpBar.getProgress());
-        assertEquals(0.0, statusController.experienceBar.getProgress());
+        assertEquals(2.0, statusController.experienceBar.getProgress());
     }
 
 }
