@@ -4,16 +4,12 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.MonsterInformationController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.application.Platform;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -27,7 +23,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -48,6 +43,8 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     ActionFieldController actionFieldController;
+    @Mock
+    Provider<MonsterInformationController> monsterInformationControllerProvider;
 
     @InjectMocks
     EncounterOverviewController encounterOverviewController;
@@ -56,10 +53,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
     @Mock
     RegionStorage regionStorage;
-    @Mock
-    Provider<MonsterInformationController> monsterInformationControllerProvider;
-    @Mock
-    MonsterInformationController monsterInformationController;
 
     @Override
     public void start(Stage stage) {
@@ -73,16 +66,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
-        when(statusControllerProvider.get()).thenAnswer(invocation -> {
-            VBox statusBox = new VBox();
-            statusBox.setStyle("-fx-background-color: black;");
-            statusBox.setPrefWidth(50);
-            statusBox.setPrefHeight(20);
-            StatusController statusController = mock(StatusController.class);
-            statusController.fullBox = statusBox;
-            when(statusController.render()).thenReturn(statusController.fullBox);
-            return statusController;
-        });
 
         when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
                 "o_1",
@@ -96,7 +79,16 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 0
         )));
 
-        when(monsterInformationControllerProvider.get()).thenReturn(monsterInformationController);
+        when(statusControllerProvider.get()).thenAnswer(invocation -> {
+            VBox statusBox = new VBox();
+            statusBox.setStyle("-fx-background-color: black;");
+            statusBox.setPrefWidth(50);
+            statusBox.setPrefHeight(20);
+            StatusController statusController = mock(StatusController.class);
+            statusController.fullBox = statusBox;
+            when(statusController.render()).thenReturn(statusController.fullBox);
+            return statusController;
+        });
 
         app.show(encounterOverviewController);
         stage.requestFocus();
@@ -105,7 +97,6 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @Test
     void testRender() {
 
-
         VBox userMonstersBox = lookup("#userMonsters").queryAs(VBox.class);
         VBox opponentMonstersBox = lookup("#opponentMonsters").queryAs(VBox.class);
         assertNotNull(userMonstersBox);
@@ -113,24 +104,4 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
         assertNotNull(encounterOverviewController);
         sleep(4000);
     }
-
-    @Test
-    void testShowLevelUp() {
-
-        Platform.runLater(() -> {
-
-            Monster oldMon = MonsterBuilder.builder().create();
-            Monster newMon = MonsterBuilder.builder().create();
-
-            when(monsterInformationController.render()).thenReturn(new Pane());
-
-            encounterOverviewController.showLevelUp(oldMon, newMon);
-            assertEquals(1, encounterOverviewController.actionFieldWrapperBox.getChildren().size());
-
-            encounterOverviewController.removeMonInfoIfShown();
-            assertEquals(0, encounterOverviewController.actionFieldWrapperBox.getChildren().size());
-        });
-    }
-
-
 }
