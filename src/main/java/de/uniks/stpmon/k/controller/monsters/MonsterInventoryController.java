@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,7 +154,12 @@ public class MonsterInventoryController extends Controller {
         parent.setOnDragDetected(event -> {
             Dragboard dragboard = parent.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
-            content.putImage(monItem.getMonImage());
+            // string is used for testing, dragging images does not work in headless mode
+            if (GraphicsEnvironment.isHeadless()) {
+                content.putString("test_string");
+            } else {
+                content.putImage(monItem.getMonImage());
+            }
 
             dragboard.setContent(content);
             monParent = parent;
@@ -179,7 +185,8 @@ public class MonsterInventoryController extends Controller {
 
         gridPane.setOnDragDropped(event -> {
             Dragboard dragboard = event.getDragboard();
-            if (dragboard.hasImage()) {
+            // string is used for testing, dragging images does not work in headless mode
+            if (dragboard.hasImage() || dragboard.hasString()) {
                 Parent parent = monParent;
 
                 if (gridPane.equals(monStorage) && !monStorage.getChildren().contains(parent)) {
