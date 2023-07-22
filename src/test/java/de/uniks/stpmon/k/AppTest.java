@@ -421,6 +421,7 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
         clickOn("#scrollPane");
         clickOn("#scrollPane");
+        clickOn("#scrollPane");
 
         verifyThat("#changeMonBox", Node::isVisible);
         // no back button, monster is option 0
@@ -432,7 +433,6 @@ class AppTest extends ApplicationTest {
         encounterApi.addMove("attacker1", new UpdateOpponentDto(null,
                 new AbilityMove("ability", 2, "0")));
         clickOn("#battleLog");
-        clickOn("#scrollPane");
 
         // open fight menu
         clickOn("#main_menu_fight");
@@ -441,6 +441,10 @@ class AppTest extends ApplicationTest {
         // attack opponent 0
         clickOn("#user_monster_1");
         waitForFxEvents();
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
 
         // Check if lost and left encounter
         verifyThat("#monsterBar", Node::isVisible);
@@ -486,6 +490,7 @@ class AppTest extends ApplicationTest {
         sleep(8000);
         clickOn("#main_menu_flee");
         waitForFxEvents();
+        clickOn("#battleLog");
 
         // Check if left encounter
         verifyThat("#monsterBar", Node::isVisible);

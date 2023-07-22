@@ -144,7 +144,6 @@ public class BattleLogService {
             Monster newMonster = sessionService.getMonsterById(opp.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             lastOpponents.put(up.slot(), up.opponent());
-            return;
         }
 
         //check if user changed monster
@@ -152,7 +151,6 @@ public class BattleLogService {
             Monster newMonster = sessionService.getMonsterById(move.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             lastOpponents.put(up.slot(), up.opponent());
-            return;
         }
 
         // Save attacked monster before it is changed or dead
