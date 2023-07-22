@@ -1,5 +1,7 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.backpack;
 
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -38,7 +40,7 @@ public class BackpackController extends Controller {
     @Override
     public Parent render() {
         Parent render = super.render();
-        loadImage(backpackImage, "backpack.png");
+        loadImage(backpackImage, "backpack/backpack.png");
         return render;
     }
 
@@ -71,5 +73,10 @@ public class BackpackController extends Controller {
         } else {
             closeBackPackMenu();
         }
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "backpack/";
     }
 }

@@ -1,5 +1,10 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.backpack;
 
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.MonBoxController;
+import de.uniks.stpmon.k.controller.MonsterBarController;
+import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -14,12 +19,13 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.uniks.stpmon.k.controller.BackpackMenuOption.*;
+import static de.uniks.stpmon.k.controller.backpack.BackpackMenuOption.*;
 
 @Singleton
 public class BackpackMenuController extends Controller {
 
     private Controller monBox;
+    private Controller inventory;
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
 
@@ -40,6 +46,8 @@ public class BackpackMenuController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<MonBoxController> monBoxControllerProvider;
+    @Inject
+    Provider<InventoryController> inventoryControllerProvider;
 
     @Inject
     public BackpackMenuController() {
@@ -51,13 +59,14 @@ public class BackpackMenuController extends Controller {
         final Parent parent = super.render();
         backpackMenuHBox.setPickOnBounds(false);
 
-        loadBgImage(backpackMenuListView, "BackPackMenu_v2.png");
+        loadBgImage(backpackMenuListView, "backpack/BackPackMenu_v2.png");
         loadImage(arrowImageView, "arrow_right.png");
 
         if (backpackMenuOptions.isEmpty()) {
             backpackMenuOptions.add(MONSTER);
             backpackMenuOptions.add(TEAM);
             backpackMenuOptions.add(MAP);
+            backpackMenuOptions.add(INVENTORY);
         }
         backpackMenuListView.setCellFactory(param -> new BackpackMenuCell(this));
 
@@ -74,6 +83,7 @@ public class BackpackMenuController extends Controller {
             case MONSTER -> triggerMonBox();
             case TEAM -> monsterBarControllerProvider.get().showMonsters();
             case MAP -> openMinimap();
+            case INVENTORY -> triggerInventory();
         }
 
     }
@@ -106,5 +116,28 @@ public class BackpackMenuController extends Controller {
 
     public void setMonBoxNull() {
         monBox = null;
+    }
+
+    public void triggerInventory() {
+        if (inventory == null) {
+            openInventory();
+        } else {
+            closeInventory();
+        }
+    }
+
+    public void openInventory() {
+        inventory = inventoryControllerProvider.get();
+        ingameControllerProvider.get().pushController(inventory);
+    }
+
+    public void closeInventory() {
+        ingameControllerProvider.get().removeChildren(1);
+        inventory = null;
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "backpack/";
     }
 }
