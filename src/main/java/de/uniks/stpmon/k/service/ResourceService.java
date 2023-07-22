@@ -46,4 +46,9 @@ public class ResourceService implements IResourceService {
         return Observable.just(monsterImages.get(fileName));
     }
 
+    public Observable<BufferedImage> getItemImage(String itemId) {
+        return ResponseUtils.readImage(presetService.getItemImage(itemId));
+
+    }
+
 }
