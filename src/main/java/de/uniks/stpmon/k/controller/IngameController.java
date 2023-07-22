@@ -187,8 +187,9 @@ public class IngameController extends PortalController {
 
         if (isWild) {
             transition.setOnFinished(event -> {
-                app.show(encounterWildProvider.get());
                 ingameStack.getChildren().remove(overlayPane);
+                app.show(encounterWildProvider.get());
+
             });
         } else {
             transition.setOnFinished(event -> {

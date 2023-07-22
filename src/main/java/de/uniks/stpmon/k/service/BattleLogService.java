@@ -144,6 +144,7 @@ public class BattleLogService {
             Monster newMonster = sessionService.getMonsterById(opp.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             lastOpponents.put(up.slot(), up.opponent());
+            return;
         }
 
         //check if user changed monster
@@ -151,6 +152,7 @@ public class BattleLogService {
             Monster newMonster = sessionService.getMonsterById(move.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
             lastOpponents.put(up.slot(), up.opponent());
+            return;
         }
 
         // Save attacked monster before it is changed or dead
@@ -172,13 +174,16 @@ public class BattleLogService {
         String target = null;
         // Use last opponent to get the ability, this way we print the ability together with the result
         if (lastOpponent.move() instanceof AbilityMove move) {
-            // Blocking can be used here because values are already loaded in the cache
-            AbilityDto ability = getAbility(move.ability());
-            MonsterTypeDto eneMon = attackedMonsters.get(slot);
-            if (eneMon != null && monster != null) {
-                addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+            if (opp.results().stream().anyMatch(result -> result.type().equals("ability-success"))) {
+                // Blocking can be used here because values are already loaded in the cache
+                AbilityDto ability = getAbility(move.ability());
+                MonsterTypeDto eneMon = attackedMonsters.get(slot);
+                if (eneMon != null && monster != null) {
+                    addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+                }
+                target = move.target();
             }
-            target = move.target();
+
         }
 
         for (Result result : opp.results()) {
