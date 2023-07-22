@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
 import javafx.fxml.FXML;
@@ -38,6 +39,8 @@ public class ActionFieldController extends Controller {
     Provider<EncounterService> encounterServiceProvider;
     @Inject
     SessionService sessionService;
+    @Inject
+    BattleLogService battleLogService;
 
     private String enemyTrainerId;
     private int abilityId;
@@ -78,7 +81,8 @@ public class ActionFieldController extends Controller {
 
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {
         openBattleLog();
-        battleLogControllerProvider.get().closeEncounter(closeEncounter);
+
+        battleLogService.closeEncounter(closeEncounter);
     }
 
     public void openMainMenu() {
@@ -157,6 +161,7 @@ public class ActionFieldController extends Controller {
     }
 
     public void executeAbilityMove() {
+        //TODO: chache old Monster
         subscribe(encounterServiceProvider.get()
                 .makeAbilityMove(abilityId, enemyTrainerId));
     }
@@ -186,5 +191,8 @@ public class ActionFieldController extends Controller {
 
     protected void setFleeEncounter() {
         this.closeTrigger = CloseEncounterTrigger.FLEE;
+        battleLogService.closeEncounter(closeTrigger);
+        openBattleLog();
+        battleLogService.showNextAction();
     }
 }

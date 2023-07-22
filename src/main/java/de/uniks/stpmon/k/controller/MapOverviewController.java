@@ -150,7 +150,7 @@ public class MapOverviewController extends ToastedController {
         highlightPane.getChildren().add(shape);
 
         shape.setOnMouseClicked(event -> {
-            regionDescription.setText(routeData.routeText().description());
+            regionDescription.setText(routeData.routeText().name() + ":\n" + routeData.routeText().description());
             if (activeShape != null) {
                 activeShape.setOpacity(0);
             }
