@@ -182,19 +182,14 @@ public class BattleLogService {
         }
 
         for (Result result : opp.results()) {
-            //battleLogPages.add(new BattleLogEntry(monster, result, target));
-            BattleLogEntry entry = new BattleLogEntry(monster, result, target);
-            handleResult(entry, slot);
+            handleResult(monster, result, target, slot);
         }
 
         lastOpponents.put(up.slot(), up.opponent());
 
     }
 
-    private void handleResult(BattleLogEntry battleLogEntry, EncounterSlot slot) {
-        Result result = battleLogEntry.result();
-        MonsterTypeDto monster = battleLogEntry.monster();
-        String target = battleLogEntry.target();
+    private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot) {
 
         final Integer ability = result.ability();
         switch (result.type()) {
