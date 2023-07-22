@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0"
+      prefWidth="168.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.inventory.ItemController">
+    <HBox alignment="CENTER">
+        <HBox.margin>
+            <Insets left="5.0" right="5.0"/>
+        </HBox.margin>
+        <ImageView id="itemView" fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+        </ImageView>
+    </HBox>
+    <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+        <Text id="itemName" strokeType="OUTSIDE" strokeWidth="0.0" text="MonBall">
+            <HBox.margin>
+                <Insets right="3.0"/>
+            </HBox.margin>
+        </Text>
+        <Text id="itemAmount" strokeType="OUTSIDE" strokeWidth="0.0" text="x 1"/>
+    </HBox>
+</HBox>
