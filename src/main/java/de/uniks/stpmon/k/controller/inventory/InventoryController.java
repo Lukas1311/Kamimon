@@ -1,16 +1,16 @@
 package de.uniks.stpmon.k.controller.inventory;
 
-import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Item;
-import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.views.ItemCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -18,17 +18,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
-public class InventoryController extends Controller {
+public class InventoryController extends ToastedController {
     @Inject
     TrainerStorage trainerStorage;
     @Inject
     PresetService presetService;
     @Inject
-    IResourceService resourceService;
+    Provider<ResourceService> resourceServiceProvider;
+    @Inject
+    ItemService itemService;
     @FXML
     public AnchorPane fullPane;
     @FXML
@@ -39,6 +41,7 @@ public class InventoryController extends Controller {
     public ImageView coinView;
     @FXML
     public Text coinAmount;
+    private final ObservableList<Item> userItems = FXCollections.observableArrayList();
 
     @Inject
     public InventoryController() {
@@ -53,24 +56,19 @@ public class InventoryController extends Controller {
 
         setCoins();
 
-        ObservableList<Item> observableList = FXCollections.observableArrayList(dummyItems());
-        itemListView.setItems(observableList);
-        //itemListView.setCellFactory(param -> new ItemCell(this));
+        subscribe(itemService.getItems(), items -> {
+            if (!items.isEmpty()) {
+                userItems.setAll(items);
+                itemListView.setCellFactory(param -> new ItemCell(resourceServiceProvider, presetService));
+                itemListView.setItems(userItems);
+            } else {
+                System.out.println("Liste leer");
+            }
+            System.out.println(userItems);
+        });
 
-        itemListView.setCellFactory(param -> new ItemCell(this, resourceService, presetService));
 
         return parent;
-    }
-
-    private List<Item> dummyItems() {
-        return List.of(new Item("20",
-                        trainerStorage.getTrainer()._id(),
-                        1,
-                        1),
-                new Item("15",
-                        trainerStorage.getTrainer()._id(),
-                        1,
-                        12));
     }
 
     private void setCoins() {
