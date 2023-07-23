@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.MonDexController;
-import de.uniks.stpmon.k.controller.MonDexEntryController;
+import de.uniks.stpmon.k.controller.monDex.MonDexController;
+import de.uniks.stpmon.k.controller.monDex.MonDexEntryController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.ResourceService;
 import javafx.scene.control.ListCell;

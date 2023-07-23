@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monDex;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.ResourceService;
@@ -50,5 +51,10 @@ public class MonDexEntryController extends Controller {
 
 
         return parent;
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monDex/";
     }
 }
