@@ -234,8 +234,13 @@ public class BattleLogService {
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
+            case "earn-coins" -> earnCoins();
             default -> System.out.println("unknown result type");
         }
+    }
+
+    private void earnCoins() {
+        addTranslatedSection("earn-coins", "5");
     }
 
     private void makeLevelUp(MonsterTypeDto monster, EncounterSlot slot) {
