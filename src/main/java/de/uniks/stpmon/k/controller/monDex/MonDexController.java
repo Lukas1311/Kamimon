@@ -29,7 +29,6 @@ public class MonDexController extends Controller {
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
-    private AnchorPane detail;
     private MonsterTypeDto activeDetail;
 
     @Inject
@@ -50,20 +49,14 @@ public class MonDexController extends Controller {
     }
 
     @Override
-    public void init() {
-
-    }
-
-
-    @Override
     public Parent render() {
         Parent parent = super.render();
         loadBgImage(monDexPane, "monDexBox.png");
 
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {
-                allMonsters.addAll(monList.subList(0, 10));
-                //allMonsters.addAll(monList);
+                //allMonsters.addAll(monList.subList(0, 10));
+                allMonsters.addAll(monList);
                 dexList.setCellFactory(param -> new DexCell(this, resourceServiceProvider, trainerServiceProvider));
 
                 dexList.setItems(FXCollections.observableArrayList(allMonsters));

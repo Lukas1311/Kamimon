@@ -42,8 +42,6 @@ public class MonDexDetailController extends Controller {
     @Inject
     TrainerService trainerService;
 
-    private boolean isEncountered = false;
-
 
     @Inject
     public MonDexDetailController() {
@@ -58,7 +56,7 @@ public class MonDexDetailController extends Controller {
     }
 
     public void loadMon(MonsterTypeDto mon) {
-        isEncountered = trainerService.getMe().encounteredMonsterTypes().contains(mon.id());
+        boolean isEncountered = trainerService.getMe().encounteredMonsterTypes().contains(mon.id());
         BufferedImage buff = resourceService.getMonsterImage(String.valueOf(mon.id())).blockingFirst();
         //check if mon is encounterd
         if (isEncountered) {

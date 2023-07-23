@@ -29,15 +29,14 @@ public class MonDexEntryController extends Controller {
     MonsterService monService;
 
     private final MonsterTypeDto monster;
-    private final MonDexController monDexController;
+
     private BufferedImage bufferedImage;
     private final boolean isEncountered;
 
     @Inject
-    public MonDexEntryController(MonDexController monDexController, Provider<ResourceService> resourceServiceProvider,
+    public MonDexEntryController(Provider<ResourceService> resourceServiceProvider,
                                  MonsterTypeDto entry, Provider<TrainerService> trainerServiceProvider) {
         this.monster = entry;
-        this.monDexController = monDexController;
         this.bufferedImage = resourceServiceProvider.get().getMonsterImage(String.valueOf(entry.id())).blockingFirst();
 
         this.isEncountered = trainerServiceProvider.get().getMe().encounteredMonsterTypes().contains(entry.id());
