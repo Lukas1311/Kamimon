@@ -11,8 +11,8 @@
     <styleClass>
         <String fx:value="ingame"/>
     </styleClass>
-    <VBox prefHeight="266.0" prefWidth="160.0" AnchorPane.topAnchor="7.0" AnchorPane.leftAnchor="7.0"
-          alignment="TOP_CENTER" spacing="20">
+    <VBox prefHeight="260.0" prefWidth="154.0" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0"
+          alignment="TOP_CENTER" spacing="20" style="-fx-border-color: blue">
         <ImageView fx:id="monPic"/>
         <Label fx:id="name" text="???"/>
         <HBox fx:id="typeBox" prefWidth="159.0">

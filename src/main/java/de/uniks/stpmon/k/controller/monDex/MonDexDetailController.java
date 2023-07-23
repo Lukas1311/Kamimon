@@ -2,7 +2,9 @@ package de.uniks.stpmon.k.controller.monDex;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -34,8 +36,12 @@ public class MonDexDetailController extends Controller {
 
     @Inject
     ResourceService resourceService;
+    @Inject
+    MonsterService monsterService;
+    @Inject
+    TrainerService trainerService;
 
-    private final boolean isCatched = true;
+    private boolean isCatched = true;
 
     @Inject
     public MonDexDetailController() {
@@ -50,6 +56,7 @@ public class MonDexDetailController extends Controller {
     }
 
     public void loadMon(MonsterTypeDto mon) {
+        isCatched = trainerService.getMe().encounteredMonsterTypes().contains(mon.id());
         if (isCatched) {
             BufferedImage buff = resourceService.getMonsterImage(String.valueOf(mon.id())).blockingFirst();
             Image image = ImageUtils.scaledImageFX(buff, 1.0);

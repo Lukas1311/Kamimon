@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -27,27 +28,31 @@ public class MonDexEntryController extends Controller {
     @Inject
     MonsterService monService;
 
-    final MonsterTypeDto monster;
-    final MonDexController monDexController;
-    final Image monsterImage;
+    private final MonsterTypeDto monster;
+    private final MonDexController monDexController;
+    private final Image monsterImage;
+    private final boolean isEncountered;
 
     @Inject
-    public MonDexEntryController(MonDexController monDexController, Provider<ResourceService> resourceServiceProvider, MonsterTypeDto entry) {
+    public MonDexEntryController(MonDexController monDexController, Provider<ResourceService> resourceServiceProvider,
+                                 MonsterTypeDto entry, Provider<TrainerService> trainerServiceProvider) {
         this.monster = entry;
         this.monDexController = monDexController;
         BufferedImage buff = resourceServiceProvider.get().getMonsterImage(String.valueOf(entry.id())).blockingFirst();
         this.monsterImage = ImageUtils.scaledImageFX(buff, 1.0);
+        this.isEncountered = trainerServiceProvider.get().getMe().encounteredMonsterTypes().contains(entry.id());
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
 
+        if (isEncountered) {
+            nameLabel.setText(monster.name());
+            typeLabel.setText(String.valueOf(monster.id()));
+        }
 
         monImage.setImage(monsterImage);
-        nameLabel.setText(monster.name());
-
-        typeLabel.setText(String.valueOf(monster.id()));
 
 
         return parent;

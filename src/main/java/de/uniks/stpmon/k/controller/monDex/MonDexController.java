@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.views.DexCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,12 +38,19 @@ public class MonDexController extends Controller {
     PresetService presetService;
     @Inject
     Provider<ResourceService> resourceServiceProvider;
+    @Inject
+    Provider<TrainerService> trainerServiceProvider;
 
     private final ObservableList<MonsterTypeDto> allMonsters = FXCollections.observableArrayList();
 
 
     @Inject
     public MonDexController() {
+
+    }
+
+    @Override
+    public void init() {
 
     }
 
@@ -56,7 +64,7 @@ public class MonDexController extends Controller {
             if (!monList.isEmpty()) {
                 allMonsters.addAll(monList.subList(0, 10));
                 //allMonsters.addAll(monList);
-                dexList.setCellFactory(param -> new DexCell(this, resourceServiceProvider));
+                dexList.setCellFactory(param -> new DexCell(this, resourceServiceProvider, trainerServiceProvider));
 
                 dexList.setItems(FXCollections.observableArrayList(allMonsters));
             }

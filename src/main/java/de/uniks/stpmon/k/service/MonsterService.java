@@ -9,7 +9,6 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class MonsterService extends DestructibleElement {
@@ -66,17 +65,6 @@ public class MonsterService extends DestructibleElement {
         return getMonsterCache().getValues();
     }
 
-    public boolean isCatched(Integer type) {
-        init();
-        if (monsterCache == null) {
-            return false;
-        }
-        return getMonsterCache()
-                .getValues()
-                .blockingFirst()
-                .stream()
-                .anyMatch(mon -> Objects.equals(mon.type(), type));
-    }
 
     public ICache<Monster, String> getTeamCache() {
         return getMonsterCache().getTeam();
