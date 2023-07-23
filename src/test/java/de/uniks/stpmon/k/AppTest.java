@@ -496,4 +496,52 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar", Node::isVisible);
     }
 
+    @Test
+    void criticalPathV4() {
+        TestHelper.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
+        app.addInputHandler(component);
+        app.show(component.hybridController());
+
+        //set User
+        User user = new User(
+                "01",
+                "T",
+                "online",
+                null,
+                null
+        );
+        component.userStorage().setUser(user);
+        waitForFxEvents();
+
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("T");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        TestHelper.listenStarterMonster(component.trainerStorage(), component);
+        TestHelper.addTestNpcs(component);
+
+        //test monDex
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_2");
+        waitForFxEvents();
+        verifyThat("#monDexPane", Node::isVisible);
+
+        clickOn("#type0Label");
+        verifyThat("#monDexDetailBox", Node::isVisible);
+        clickOn("#type1Label");
+        clickOn("#backpackImage");
+
+
+    }
+
 }

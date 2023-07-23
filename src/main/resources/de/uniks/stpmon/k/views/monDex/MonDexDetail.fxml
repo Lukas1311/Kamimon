@@ -14,7 +14,7 @@
     </styleClass>
     <VBox prefHeight="370.0" prefWidth="180.0" AnchorPane.topAnchor="15.0" AnchorPane.leftAnchor="15.0"
           alignment="TOP_CENTER" spacing="12">
-        <ImageView fx:id="monPic"/>
+        <ImageView fx:id="monImg"/>
         <Text fx:id="name" text="???"/>
         <HBox fx:id="typeBox" prefWidth="180.0" alignment="CENTER" spacing="5">
         </HBox>

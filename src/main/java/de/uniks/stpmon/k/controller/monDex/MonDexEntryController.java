@@ -3,18 +3,14 @@ package de.uniks.stpmon.k.controller.monDex;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.awt.image.BufferedImage;
 
 public class MonDexEntryController extends Controller {
 
@@ -28,33 +24,30 @@ public class MonDexEntryController extends Controller {
     @Inject
     MonsterService monService;
 
+    private final MonDexController monDexController;
     private final MonsterTypeDto monster;
 
-    private BufferedImage bufferedImage;
     private final boolean isEncountered;
 
-    @Inject
-    public MonDexEntryController(Provider<ResourceService> resourceServiceProvider,
-                                 MonsterTypeDto entry, Provider<TrainerService> trainerServiceProvider) {
-        this.monster = entry;
-        this.bufferedImage = resourceServiceProvider.get().getMonsterImage(String.valueOf(entry.id())).blockingFirst();
 
+    @Inject
+    public MonDexEntryController(MonDexController monDexController, MonsterTypeDto entry,
+                                 Provider<TrainerService> trainerServiceProvider) {
+        this.monDexController = monDexController;
+        this.monster = entry;
         this.isEncountered = trainerServiceProvider.get().getMe().encounteredMonsterTypes().contains(entry.id());
     }
 
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        typeLabel.setId("type" + monster.id() + "Label");
 
-        if (isEncountered) {
-            nameLabel.setText(monster.name());
+        monDexController.setMonDexImage(monster, isEncountered, monImage);
 
-        } else {
-            bufferedImage = ImageUtils.blackOutImage(bufferedImage);
-            nameLabel.setText("???");
-        }
-        Image image = ImageUtils.scaledImageFX(bufferedImage, 1.0);
-        monImage.setImage(image);
+        String name = isEncountered ? monster.name() : "???";
+        nameLabel.setText(name);
+
         typeLabel.setText("#" + monster.id());
 
         return parent;

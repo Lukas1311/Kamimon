@@ -5,11 +5,9 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
-import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -17,7 +15,6 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.awt.image.BufferedImage;
 
 @Singleton
 public class MonDexDetailController extends Controller {
@@ -25,7 +22,7 @@ public class MonDexDetailController extends Controller {
     @FXML
     public AnchorPane monDexDetailBox;
     @FXML
-    public ImageView monPic;
+    public ImageView monImg;
     @FXML
     public Text name;
     @FXML
@@ -41,6 +38,8 @@ public class MonDexDetailController extends Controller {
     MonsterService monsterService;
     @Inject
     TrainerService trainerService;
+    @Inject
+    MonDexController monDexController;
 
 
     @Inject
@@ -57,7 +56,9 @@ public class MonDexDetailController extends Controller {
 
     public void loadMon(MonsterTypeDto mon) {
         boolean isEncountered = trainerService.getMe().encounteredMonsterTypes().contains(mon.id());
-        BufferedImage buff = resourceService.getMonsterImage(String.valueOf(mon.id())).blockingFirst();
+
+        monDexController.setMonDexImage(mon, isEncountered, monImg);
+
         //check if mon is encounterd
         if (isEncountered) {
             for (String type : mon.type()) {
@@ -66,12 +67,10 @@ public class MonDexDetailController extends Controller {
             name.setText(mon.name());
             description.setText(mon.description());
         } else {
-            buff = ImageUtils.blackOutImage(buff);
             addTypeLabel("unknown");
             description.setText(translateString("not.seen.yet"));
         }
-        Image image = ImageUtils.scaledImageFX(buff, 1.0);
-        monPic.setImage(image);
+
 
     }
 
