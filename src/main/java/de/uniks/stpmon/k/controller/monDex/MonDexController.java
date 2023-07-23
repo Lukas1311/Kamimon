@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.monDex;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -24,6 +25,11 @@ public class MonDexController extends Controller {
     public AnchorPane monDexPane;
     @FXML
     public ListView<MonsterTypeDto> dexList;
+
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    private AnchorPane detail;
+    private MonsterTypeDto activeDetail;
 
     @Inject
     MonsterService monService;
@@ -58,6 +64,29 @@ public class MonDexController extends Controller {
 
 
         return parent;
+    }
+
+    public void triggerDetail(MonsterTypeDto mon) {
+        if (activeDetail == null) {
+            openDetail(mon);
+        } else {
+            if (activeDetail == mon) {
+                closeDetail();
+            } else {
+                closeDetail();
+                openDetail(mon);
+            }
+        }
+    }
+
+    private void openDetail(MonsterTypeDto mon) {
+        activeDetail = mon;
+        ingameControllerProvider.get().openMonDexDetail(mon);
+    }
+
+    private void closeDetail() {
+        ingameControllerProvider.get().removeChildren(2);
+        activeDetail = null;
     }
 
     @Override

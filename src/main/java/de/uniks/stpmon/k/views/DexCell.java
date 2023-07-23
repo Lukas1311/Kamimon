@@ -25,7 +25,10 @@ public class DexCell extends ListCell<MonsterTypeDto> {
             setText(null);
             setGraphic(null);
         } else {
-            final MonDexEntryController entryController = new MonDexEntryController(monDexController, resServiceProvider, entry);
+            final MonDexEntryController entryController =
+                    new MonDexEntryController(monDexController, resServiceProvider, entry);
+
+            this.setOnMouseClicked(e -> monDexController.triggerDetail(entry));
             setGraphic(entryController.render());
         }
     }
