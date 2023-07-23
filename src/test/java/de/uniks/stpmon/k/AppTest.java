@@ -514,7 +514,6 @@ class AppTest extends ApplicationTest {
         );
         component.userStorage().setUser(user);
         waitForFxEvents();
-
         //join region
         clickOn("#regionVBox");
         waitForFxEvents();
@@ -528,6 +527,7 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
         TestHelper.listenStarterMonster(component.trainerStorage(), component);
+        TestHelper.addEncounteredMonsters(component.trainerStorage(), component);
         TestHelper.addTestNpcs(component);
 
         //test monDex
@@ -538,7 +538,7 @@ class AppTest extends ApplicationTest {
 
         clickOn("#type0Label");
         verifyThat("#monDexDetailBox", Node::isVisible);
-        clickOn("#type1Label");
+        clickOn("#type2Label");
         clickOn("#backpackImage");
 
 
