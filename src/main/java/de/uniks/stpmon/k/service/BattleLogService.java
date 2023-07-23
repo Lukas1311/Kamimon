@@ -187,14 +187,14 @@ public class BattleLogService {
         }
 
         for (Result result : opp.results()) {
-            handleResult(monster, result, target, slot);
+            handleResult(monster, result, target, slot, opp);
         }
 
         lastOpponents.put(up.slot(), up.opponent());
 
     }
 
-    private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot) {
+    private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot, Opponent opp) {
 
         final Integer ability = result.ability();
         switch (result.type()) {
@@ -234,13 +234,13 @@ public class BattleLogService {
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
-            case "earn-coins" -> earnCoins();
+            case "earn-coins" -> earnCoins(opp.coins());
             default -> System.out.println("unknown result type");
         }
     }
 
-    private void earnCoins() {
-        addTranslatedSection("earn-coins", "5");
+    private void earnCoins(int coins) {
+        addTranslatedSection("earn-coins", "" + coins + "");
     }
 
     private void makeLevelUp(MonsterTypeDto monster, EncounterSlot slot) {
