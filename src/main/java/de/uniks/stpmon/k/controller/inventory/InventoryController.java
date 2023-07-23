@@ -61,12 +61,8 @@ public class InventoryController extends ToastedController {
                 userItems.setAll(items);
                 itemListView.setCellFactory(param -> new ItemCell(resourceServiceProvider, presetService));
                 itemListView.setItems(userItems);
-            } else {
-                System.out.println("Liste leer");
             }
-            System.out.println(userItems);
         });
-
 
         return parent;
     }
