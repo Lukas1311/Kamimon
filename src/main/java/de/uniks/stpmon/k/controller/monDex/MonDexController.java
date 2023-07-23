@@ -58,7 +58,7 @@ public class MonDexController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadBgImage(monDexPane, "inventoryBox.png");
+        loadBgImage(monDexPane, "monDexBox.png");
 
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {

@@ -49,10 +49,11 @@ public class MonDexEntryController extends Controller {
 
         if (isEncountered) {
             nameLabel.setText(monster.name());
-            typeLabel.setText(String.valueOf(monster.id()));
-        }
 
+        }
+        typeLabel.setText("#" + monster.id());
         monImage.setImage(monsterImage);
+        nameLabel.setText("Wingardiumaven");
 
 
         return parent;

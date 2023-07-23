@@ -1,9 +1,15 @@
 .ingame {
     -fx-font-family: "Pokémon DS Font";
     -fx-font-size: 20px;
+    -fx-text-fill: black;
 }
 
-.transparent-background{
+.ingame-small {
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 15px;
+}
+
+.transparent-background {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: transparent;
@@ -212,6 +218,11 @@
 .monster-type-dragon {
     -fx-background-color: #7038F8;
     -fx-border-color: #4924A1;
+}
+
+.monster-type-unkown {
+    -fx-background-color: #9e9391;
+    -fx-border-color: #2f2b2a;
 }
 
 
