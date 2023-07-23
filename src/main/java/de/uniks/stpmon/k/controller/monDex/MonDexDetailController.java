@@ -62,24 +62,15 @@ public class MonDexDetailController extends Controller {
         BufferedImage buff = resourceService.getMonsterImage(String.valueOf(mon.id())).blockingFirst();
         //check if mon is encounterd
         if (isEncountered) {
-
             for (String type : mon.type()) {
                 addTypeLabel(type);
-                addTypeLabel(type);
             }
-
             name.setText(mon.name());
             description.setText(mon.description());
-            description.setText("Wingardiummaven is a dark raven and flies through the skies of Albertania with stealth and cunning. Its sleek black feathers conceal it from prying eyes, and its piercing gaze strikes fear into the hearts of those who dare to challenge it.");
-
         } else {
-            //buff = ImageUtils.blackOutImage(buff);
-
+            buff = ImageUtils.blackOutImage(buff);
             addTypeLabel("unknown");
-
-
             description.setText(translateString("not.seen.yet"));
-            description.setText("Obsidianwing, the colossal dark crow, casts a shadow of foreboding as it soars through the skies. Its obsidian feathers gleam with an eerie luster, and its piercing gaze instills fear in the hearts of all who witness its flight.");
         }
         Image image = ImageUtils.scaledImageFX(buff, 1.0);
         monPic.setImage(image);

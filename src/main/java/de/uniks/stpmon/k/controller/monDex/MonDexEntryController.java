@@ -30,7 +30,7 @@ public class MonDexEntryController extends Controller {
 
     private final MonsterTypeDto monster;
     private final MonDexController monDexController;
-    private final Image monsterImage;
+    private BufferedImage bufferedImage;
     private final boolean isEncountered;
 
     @Inject
@@ -38,8 +38,8 @@ public class MonDexEntryController extends Controller {
                                  MonsterTypeDto entry, Provider<TrainerService> trainerServiceProvider) {
         this.monster = entry;
         this.monDexController = monDexController;
-        BufferedImage buff = resourceServiceProvider.get().getMonsterImage(String.valueOf(entry.id())).blockingFirst();
-        this.monsterImage = ImageUtils.scaledImageFX(buff, 1.0);
+        this.bufferedImage = resourceServiceProvider.get().getMonsterImage(String.valueOf(entry.id())).blockingFirst();
+
         this.isEncountered = trainerServiceProvider.get().getMe().encounteredMonsterTypes().contains(entry.id());
     }
 
@@ -50,11 +50,13 @@ public class MonDexEntryController extends Controller {
         if (isEncountered) {
             nameLabel.setText(monster.name());
 
+        } else {
+            bufferedImage = ImageUtils.blackOutImage(bufferedImage);
+            nameLabel.setText("???");
         }
+        Image image = ImageUtils.scaledImageFX(bufferedImage, 1.0);
+        monImage.setImage(image);
         typeLabel.setText("#" + monster.id());
-        monImage.setImage(monsterImage);
-        nameLabel.setText("Wingardiumaven");
-
 
         return parent;
     }
