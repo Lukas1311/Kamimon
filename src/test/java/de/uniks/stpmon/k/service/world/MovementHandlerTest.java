@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
@@ -15,6 +16,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,11 +26,13 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.inject.Provider;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.testfx.util.WaitForAsyncUtils.sleep;
 
 @ExtendWith(MockitoExtension.class)
 public class MovementHandlerTest {
@@ -45,6 +49,9 @@ public class MovementHandlerTest {
     protected TrainerAreaCache areaCache;
     @Mock
     protected Provider<TrainerAreaCache> areaCacheProvider;
+    @Spy
+    @SuppressWarnings("unused")
+    protected EffectContext effectContext = new EffectContext().setWalkingTickPeriod(0);
     @InjectMocks
     protected TrainerCache trainerCache;
     @Spy
@@ -55,7 +62,8 @@ public class MovementHandlerTest {
         assertThrows(IllegalArgumentException.class, () -> movementHandler.setInitialTrainer(null));
     }
 
-    @Test
+
+    @RepeatedTest(100)
     void receiveMoves() {
         Subject<MoveTrainerDto> movements = ReplaySubject.create();
         when(listener.listen(any(), any(), any())).thenReturn(movements.map((dto) -> new Event<>("", dto)));
@@ -73,20 +81,24 @@ public class MovementHandlerTest {
 
         // walk right
         movements.onNext(new MoveTrainerDto("0", "area_0", 1, 0, 0));
+        sleep(20, TimeUnit.MILLISECONDS);
         // check if trainer has moved right
         result.assertValueAt(0, trainerForDto(1, 0, 0));
         // walk left
         movements.onNext(new MoveTrainerDto("0", "area_0", -1, 0, 0));
+        sleep(20, TimeUnit.MILLISECONDS);
         // check if trainer has moved left
         result.assertValueAt(1, trainerForDto(-1, 0, 0));
 
         // walk top
         movements.onNext(new MoveTrainerDto("0", "area_0", 0, 1, 0));
+        sleep(20, TimeUnit.MILLISECONDS);
         // check if trainer has moved top
         result.assertValueAt(2, trainerForDto(0, 1, 0));
 
         // walk bottom
         movements.onNext(new MoveTrainerDto("0", "area_0", 0, -1, 0));
+        sleep(20, TimeUnit.MILLISECONDS);
         // check if trainer has moved bottom
         result.assertValueAt(3, trainerForDto(0, -1, 0));
     }

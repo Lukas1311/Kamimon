@@ -14,6 +14,7 @@ public class EffectContext {
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
     private int walkingSpeed = MOVEMENT_PERIOD;
+    private int walkingTickPeriod = MOVEMENT_PERIOD;
     private int walkingAnimationSpeed = WALKING_ANIMATION_PERIOD;
     private double textureScale = 3.0d;
     private int dialogAnimationSpeed = 450;
@@ -178,5 +179,25 @@ public class EffectContext {
      */
     public double getEncounterAnimationSpeed() {
         return encounterAnimationSpeed;
+    }
+
+    /**
+     * Returns the tick period for walking.
+     *
+     * @return tick period for walking
+     */
+    public long getWalkingTickPeriod() {
+        return walkingTickPeriod;
+    }
+
+    /**
+     * Sets the tick period for walking.
+     *
+     * @param walkingTickPeriod tick period for walking
+     * @return The current instance for chaining method calls
+     */
+    public EffectContext setWalkingTickPeriod(int walkingTickPeriod) {
+        this.walkingTickPeriod = walkingTickPeriod;
+        return this;
     }
 }

@@ -474,12 +474,10 @@ class AppTest extends ApplicationTest {
         // Start encounter wild encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
-        sleep(4000);
         type(KeyCode.E);
         waitForFxEvents();
 
         verifyThat("#userMonsters", Node::isVisible);
-        sleep(8000);
         clickOn("#main_menu_flee");
         waitForFxEvents();
 

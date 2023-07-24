@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
@@ -11,11 +12,15 @@ import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
+import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 public class MovementHandler {
 
+    private final Deque<Trainer> movementQueue = new LinkedBlockingDeque<>();
     private MoveTrainerDto lastMovement;
     private boolean movementBlocked = false;
 
@@ -26,6 +31,8 @@ public class MovementHandler {
     protected TrainerAreaCache trainerCache;
     @Inject
     protected CacheManager cacheManager;
+    @Inject
+    protected EffectContext effectContext;
     // not injected, provider by parent user
     private TrainerProvider trainerProvider;
     private String trainerId;
@@ -56,12 +63,29 @@ public class MovementHandler {
         if (trainerProvider == null) {
             return Observable.error(new IllegalStateException("Trainer provider not set"));
         }
-        return trainerCache
-                .listenValue(trainerId)
-                // Skip initial value
-                .skip(1)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        Observable<Trainer> schedules =
+                Observable.interval(0, effectContext.getWalkingTickPeriod(), TimeUnit.MILLISECONDS)
+                        .flatMap((tick) -> {
+                            if (movementQueue.isEmpty()) {
+                                return Observable.empty();
+                            }
+                            System.out.println("get: " + Thread.currentThread().getName());
+                            if (movementQueue.peek() == null) {
+                                return Observable.empty();
+                            }
+                            return Observable.just(movementQueue.poll());
+                        }).share();
+        return Observable.merge(trainerCache
+                        .listenValue(trainerId)
+                        // Skip initial value
+                        .skip(1)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .flatMap((t) -> {
+                            System.out.println("A: " + Thread.currentThread().getName());
+                            movementQueue.add(t);
+                            return Observable.empty();
+                        }), schedules)
                 .flatMap(this::onMoveReceived);
     }
 
