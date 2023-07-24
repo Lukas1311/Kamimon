@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
+import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     @Spy
     Provider<MonsterBarController> monsterBarControllerProvider;
     @Spy
-    Provider<MonBoxController> monBoxControllerProvider;
+    Provider<MonsterInventoryController> monBoxControllerProvider;
     @Mock
     Provider<IngameController> ingameControllerProvider;
 
@@ -71,8 +73,8 @@ public class BackpackMenuControllerTest extends ApplicationTest {
 
     @Test
     void clickOnMonster_List() {
-        MonBoxController monBoxController = Mockito.mock(MonBoxController.class);
-        when(monBoxControllerProvider.get()).thenReturn(monBoxController);
+        MonsterInventoryController monsterInventoryController = Mockito.mock(MonsterInventoryController.class);
+        when(monBoxControllerProvider.get()).thenReturn(monsterInventoryController);
         IngameController ingameController = Mockito.mock(IngameController.class);
         when(ingameControllerProvider.get()).thenReturn(ingameController);
 

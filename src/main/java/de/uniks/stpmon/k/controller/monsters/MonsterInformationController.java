@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monsters;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -266,6 +267,11 @@ public class MonsterInformationController extends Controller {
     private void setLevelUpText(Label label, int diff) {
         label.setStyle("-fx-text-fill: blue");
         label.setText("< " + diff);
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 
 }

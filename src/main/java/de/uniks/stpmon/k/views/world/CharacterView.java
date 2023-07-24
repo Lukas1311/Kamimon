@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.world.MovementDispatcher;
 import de.uniks.stpmon.k.utils.Direction;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -15,6 +16,8 @@ import javax.inject.Singleton;
 @Singleton
 public class CharacterView extends EntityView {
 
+    @Inject
+    protected MovementDispatcher dispatcher;
     @Inject
     protected CameraStorage cameraStorage;
     @Inject
@@ -48,10 +51,10 @@ public class CharacterView extends EntityView {
 
     private void keyPressed(KeyEvent event) {
         switch (event.getCode()) {
-            case W, UP -> movementHandler.moveDirection(Direction.TOP);
-            case S, DOWN -> movementHandler.moveDirection(Direction.BOTTOM);
-            case A, LEFT -> movementHandler.moveDirection(Direction.LEFT);
-            case D, RIGHT -> movementHandler.moveDirection(Direction.RIGHT);
+            case W, UP -> dispatcher.moveDirection(Direction.TOP);
+            case S, DOWN -> dispatcher.moveDirection(Direction.BOTTOM);
+            case A, LEFT -> dispatcher.moveDirection(Direction.LEFT);
+            case D, RIGHT -> dispatcher.moveDirection(Direction.RIGHT);
             default -> {
             }
         }
@@ -63,4 +66,8 @@ public class CharacterView extends EntityView {
         onDestroy(inputHandler.addPressedKeyHandler(this::keyPressed));
     }
 
+    @Override
+    public MovementDispatcher getMovementHandler() {
+        return dispatcher;
+    }
 }
