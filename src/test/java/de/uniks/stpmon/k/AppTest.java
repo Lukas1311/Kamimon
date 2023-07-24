@@ -347,11 +347,7 @@ class AppTest extends ApplicationTest {
         // walk to the right
         type(KeyCode.D, 3);
         // talk to prof
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
+        type(KeyCode.E, 5);
         waitForFxEvents();
 
         clickOn("#monster_label_0");
@@ -381,7 +377,7 @@ class AppTest extends ApplicationTest {
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
         assertEquals(1, ingameWrappingHbox.getChildren().size());
 
-        type(KeyCode.S, 2);
+        type(KeyCode.S, 3);
         // start encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
@@ -399,8 +395,8 @@ class AppTest extends ApplicationTest {
 
         // Check if won and left encounter
         verifyThat("#monsterBar", Node::isVisible);
-        type(KeyCode.D);
-        type(KeyCode.S);
+        type(KeyCode.D, 2);
+        type(KeyCode.S, 2);
 
         // start 2v2 encounter
         type(KeyCode.E);
@@ -452,42 +448,29 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar #slot_0_zero", Node::isVisible);
         verifyThat("#monsterBar #slot_1_zero", Node::isVisible);
         // Walk to nurse
-        type(KeyCode.D);
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.W);
+        type(KeyCode.D, 2);
+        type(KeyCode.S, 5);
+        type(KeyCode.A, 5);
+        type(KeyCode.W, 2);
 
         // Talk to nurse
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
+        type(KeyCode.E, 4);
         waitForFxEvents();
 
         // Check if hp is full again
         verifyThat("#monsterBar #slot_0_normal", Node::isVisible);
         verifyThat("#monsterBar #slot_1_normal", Node::isVisible);
 
-        type(KeyCode.D);
-        type(KeyCode.D);
-        type(KeyCode.D);
-        type(KeyCode.W);
+        type(KeyCode.D, 4);
+        type(KeyCode.W, 2);
 
         // Start encounter wild encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
-        sleep(4000);
         type(KeyCode.E);
         waitForFxEvents();
 
         verifyThat("#userMonsters", Node::isVisible);
-        sleep(8000);
         clickOn("#main_menu_flee");
         waitForFxEvents();
         clickOn("#battleLog");
