@@ -28,6 +28,8 @@ public class CacheManager implements ILifecycleService {
     @Inject
     protected MonsterTypeCache monsterTypeCache;
     @Inject
+    protected ItemTypeCache itemTypeCache;
+    @Inject
     protected CharacterSetCache characterSetCache;
 
     protected TrainerCache trainerCache;
@@ -163,6 +165,19 @@ public class CacheManager implements ILifecycleService {
         return monsterTypeCache;
     }
 
+    /**
+     * Acquires the item type cache.
+     * If the cache does not exist yet, it will be created.
+     *
+     * @return A cache for item types
+     */
+    public ItemTypeCache itemTypeCache() {
+        if (itemTypeCache.getStatus() == ICache.Status.UNINITIALIZED) {
+            itemTypeCache.init();
+        }
+        return itemTypeCache;
+    }
+
 
     /**
      * Acquires the character set cache.
@@ -244,6 +259,9 @@ public class CacheManager implements ILifecycleService {
         }
         if (monsterTypeCache != null) {
             monsterTypeCache.destroy();
+        }
+        if (itemTypeCache != null) {
+            itemTypeCache.destroy();
         }
         if (characterSetCache != null) {
             characterSetCache.destroy();

@@ -2,9 +2,9 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.views.ItemCell;
 import javafx.collections.FXCollections;
@@ -18,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
@@ -28,7 +27,7 @@ public class InventoryController extends ToastedController {
     @Inject
     PresetService presetService;
     @Inject
-    Provider<ResourceService> resourceServiceProvider;
+    IResourceService resourceService;
     @Inject
     ItemService itemService;
     @FXML
@@ -59,7 +58,7 @@ public class InventoryController extends ToastedController {
         subscribe(itemService.getItems(), items -> {
             if (!items.isEmpty()) {
                 userItems.setAll(items);
-                itemListView.setCellFactory(param -> new ItemCell(resourceServiceProvider, presetService));
+                itemListView.setCellFactory(param -> new ItemCell(resourceService, presetService));
                 itemListView.setItems(userItems);
             }
         });
