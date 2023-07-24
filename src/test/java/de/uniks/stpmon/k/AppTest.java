@@ -347,11 +347,7 @@ class AppTest extends ApplicationTest {
         // walk to the right
         type(KeyCode.D, 3);
         // talk to prof
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
+        type(KeyCode.E, 5);
         waitForFxEvents();
 
         clickOn("#monster_label_0");
@@ -381,7 +377,7 @@ class AppTest extends ApplicationTest {
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
         assertEquals(1, ingameWrappingHbox.getChildren().size());
 
-        type(KeyCode.S, 2);
+        type(KeyCode.S, 3);
         // start encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
@@ -395,11 +391,12 @@ class AppTest extends ApplicationTest {
         // attack
         clickOn("#ability_1");
         waitForFxEvents();
+        clickOn("#scrollPane");
 
         // Check if won and left encounter
         verifyThat("#monsterBar", Node::isVisible);
-        type(KeyCode.D);
-        type(KeyCode.S);
+        type(KeyCode.D, 2);
+        type(KeyCode.S, 2);
 
         // start 2v2 encounter
         type(KeyCode.E);
@@ -418,6 +415,9 @@ class AppTest extends ApplicationTest {
 
         verifyThat("#battleLog", Node::isVisible);
         clickOn("#battleLog");
+        clickOn("#scrollPane");
+        clickOn("#scrollPane");
+        clickOn("#scrollPane");
 
         verifyThat("#changeMonBox", Node::isVisible);
         // no back button, monster is option 0
@@ -437,6 +437,10 @@ class AppTest extends ApplicationTest {
         // attack opponent 0
         clickOn("#user_monster_1");
         waitForFxEvents();
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
 
         // Check if lost and left encounter
         verifyThat("#monsterBar", Node::isVisible);
@@ -444,47 +448,83 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar #slot_0_zero", Node::isVisible);
         verifyThat("#monsterBar #slot_1_zero", Node::isVisible);
         // Walk to nurse
-        type(KeyCode.D);
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.W);
+        type(KeyCode.D, 2);
+        type(KeyCode.S, 5);
+        type(KeyCode.A, 5);
+        type(KeyCode.W, 2);
 
         // Talk to nurse
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
-        type(KeyCode.E);
+        type(KeyCode.E, 4);
         waitForFxEvents();
 
         // Check if hp is full again
         verifyThat("#monsterBar #slot_0_normal", Node::isVisible);
         verifyThat("#monsterBar #slot_1_normal", Node::isVisible);
 
-        type(KeyCode.D);
-        type(KeyCode.D);
-        type(KeyCode.D);
-        type(KeyCode.W);
+        type(KeyCode.D, 4);
+        type(KeyCode.W, 2);
 
         // Start encounter wild encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
-        sleep(4000);
         type(KeyCode.E);
         waitForFxEvents();
 
         verifyThat("#userMonsters", Node::isVisible);
-        sleep(8000);
         clickOn("#main_menu_flee");
         waitForFxEvents();
+        clickOn("#battleLog");
 
         // Check if left encounter
         verifyThat("#monsterBar", Node::isVisible);
+    }
+
+    @Test
+    void criticalPathV4() {
+        TestHelper.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
+        app.addInputHandler(component);
+        app.show(component.hybridController());
+
+        //set User
+        User user = new User(
+                "01",
+                "T",
+                "online",
+                null,
+                null
+        );
+        component.userStorage().setUser(user);
+        waitForFxEvents();
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("T");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        TestHelper.listenStarterMonster(component.trainerStorage(), component);
+        TestHelper.addEncounteredMonsters(component.trainerStorage(), component);
+        TestHelper.addTestNpcs(component);
+
+        //test monDex
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_2");
+        waitForFxEvents();
+        verifyThat("#monDexPane", Node::isVisible);
+
+        clickOn("#type0Label");
+        verifyThat("#monDexDetailBox", Node::isVisible);
+        clickOn("#type2Label");
+        clickOn("#backpackImage");
+
+
     }
 
 }

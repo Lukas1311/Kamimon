@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.StarterController;
-import de.uniks.stpmon.k.controller.TeamController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
@@ -39,11 +38,7 @@ public class InteractionService implements ILifecycleService {
     @Inject
     EventListener listener;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<IngameController> ingameControllerProvider;
-    @Inject
-    TeamController teamController;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
 
@@ -60,30 +55,30 @@ public class InteractionService implements ILifecycleService {
         NPCInfo info = trainer.npc();
         Trainer me = trainerService.getMe();
 
-        //no npc
+        // no npc
         if (info == null) {
             return null;
         }
 
-        //if npc is healer
+        // if npc is healer
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
         }
 
-        //if npc distributes starter mons
+        // if npc distributes starter mons
         List<String> starters = info.starters();
         if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
             return getStarterDialogue(starters, me, trainer);
         }
 
-        //if encounter starts with interaction
+        // if encounter starts with interaction
         if (info.encounterOnTalk()) {
             return getEncounterDialogue(trainer, me);
         }
 
-        //if npc trades mons
+        // if npc trades mons
         List<Integer> availableItems = info.sells();
-        if(availableItems != null && !availableItems.isEmpty()) {
+        if (availableItems != null && !availableItems.isEmpty()) {
             return getTradeDialogue(trainer, me);
         }
 

@@ -41,6 +41,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         return parent;
     }
 
+
     public void addActionOption(OptionType option) {
         String optionText = switch (option) {
             case FIGHT -> "fight";
@@ -67,8 +68,8 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openFlee() {
-        getActionField().setFleeEncounter();
-        subscribe(encounterService.fleeEncounter());
+        subscribe(encounterService.fleeEncounter(), opp -> getActionField().setFleeEncounter());
+
     }
 
     public void openFight() {

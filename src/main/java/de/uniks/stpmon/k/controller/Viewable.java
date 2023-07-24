@@ -84,7 +84,7 @@ public abstract class Viewable {
      * @param observable the observable to subscribe to
      * @param <T>        the type of the items emitted by the Observable
      */
-    protected <@NonNull T> void subscribe(Observable<T> observable) {
+    public <@NonNull T> void subscribe(Observable<T> observable) {
         subscribe(observable.ignoreElements());
     }
 

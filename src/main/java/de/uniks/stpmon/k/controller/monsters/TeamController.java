@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monsters;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -121,6 +122,11 @@ public class TeamController extends Controller {
         if (monsterListVBox != null) {
             monsterListVBox.getChildren().clear();
         }
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 
 }

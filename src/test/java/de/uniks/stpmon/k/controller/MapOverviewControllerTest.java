@@ -136,7 +136,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // Detail should be full highlighted
         verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
         // Route description should be visible
-        verifyThat("#textFlowRegionDescription", hasText("HiWay1"));
+        verifyThat("#textFlowRegionDescription", hasText("Route 66:\nHiWay1"));
         // Move to second route
         moveTo("#detail_2");
         // First route should still be full highlighted

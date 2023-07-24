@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
 <AnchorPane fx:id="mainPane" maxHeight="361.0" maxWidth="304.0" minHeight="361.0" minWidth="304.0" prefHeight="361.0"
-            prefWidth="304.0" stylesheets="@css/ingameStyle.css" translateY="6.0" xmlns="http://javafx.com/javafx/19"
+            prefWidth="304.0" stylesheets="@../css/ingameStyle.css" translateY="6.0" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.MonsterInformationController">
+            fx:controller="de.uniks.stpmon.k.controller.monsters.MonsterInformationController">
     <styleClass>
         <String fx:value="ingame"/>
         <String fx:value="monster-information-font"/>
@@ -30,7 +30,7 @@
         </rowConstraints>
         <Label fx:id="monsterNameLabel" maxWidth="151.0" minWidth="151.0" prefWidth="151.0"
                styleClass="monster-information-name" text="Label" GridPane.columnSpan="2"/>
-        <Label fx:id="mosterLevelUpgradeLabel" text=" +1" translateX="35.0" GridPane.rowIndex="1"/>
+        <Label fx:id="monsterLevelUpgradeLabel" text="" translateX="35.0" GridPane.rowIndex="1"/>
         <Label fx:id="monsterLevelLabel" text="Label" GridPane.rowIndex="1"/>
         <Label fx:id="monsterHpLabel" text="Label" GridPane.rowIndex="3"/>
         <Label fx:id="monsterXpLabel" text="Label" GridPane.rowIndex="4"/>
@@ -63,7 +63,7 @@
               AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="10.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="81.0" minWidth="10.0" prefWidth="46.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="60.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="25.0"/>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="157.0"/>
         </columnConstraints>
         <rowConstraints>

@@ -2,8 +2,10 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -67,7 +69,7 @@ public class EncounterOverviewController extends Controller {
     @FXML
     public ImageView opponentMonster1;
     @FXML
-    public VBox actionFieldBox;
+    public VBox actionFieldWrapperBox;
 
     private final Pane blackPane = new Pane();
     @FXML
@@ -89,6 +91,10 @@ public class EncounterOverviewController extends Controller {
     SessionService sessionService;
     @Inject
     ActionFieldController actionFieldController;
+    @Inject
+    Provider<MonsterInformationController> monInfoProvider;
+
+    private Parent monInfoPane;
 
     @Inject
     public EncounterOverviewController() {
@@ -125,7 +131,6 @@ public class EncounterOverviewController extends Controller {
                     case "Forest" -> TerrainType.FOREST;
                     case "Plains" -> TerrainType.PLAINS;
                     case "City" -> TerrainType.CITY;
-                    case "Town" -> TerrainType.TOWN;
                     case "Coast" -> TerrainType.COAST;
                     case "Cave" -> TerrainType.CAVE;
                     default -> TerrainType.TOWN;
@@ -170,7 +175,9 @@ public class EncounterOverviewController extends Controller {
 
         Parent actionField = this.actionFieldController.render();
         if (actionField != null) {
-            actionFieldBox.getChildren().add(actionField);
+            actionFieldWrapperBox.getChildren().add(actionField);
+            actionFieldWrapperBox.setSpacing(5);
+
         }
 
         //add a translation transition to all monster images
@@ -218,7 +225,7 @@ public class EncounterOverviewController extends Controller {
 
         subscribeFight();
 
-        actionFieldBox.setOpacity(0);
+        actionFieldWrapperBox.setOpacity(0);
 
         Transition openingTransition = playOpeningAnimation();
 
@@ -234,6 +241,23 @@ public class EncounterOverviewController extends Controller {
         }
 
         return parent;
+    }
+
+    public void showLevelUp(Monster oldMon, Monster newMon) {
+        if (monInfoPane == null) {
+            MonsterInformationController monInfoController = monInfoProvider.get();
+            monInfoPane = monInfoController.render();
+            monInfoController.loadLevelUp(oldMon, newMon);
+            actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+        }
+    }
+
+    public void removeMonInfoIfShown() {
+        if (monInfoPane != null) {
+            actionFieldWrapperBox.getChildren().remove(0);
+            monInfoProvider.get().destroy();
+            monInfoPane = null;
+        }
     }
 
     private Transition playOpeningAnimation() {
@@ -397,10 +421,10 @@ public class EncounterOverviewController extends Controller {
             parallel2.getChildren().add(opponentFullTransition2);
         }
         SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
-        sequence.setOnFinished(e -> actionFieldBox.setOpacity(1));
+        sequence.setOnFinished(e -> actionFieldWrapperBox.setOpacity(1));
 
         TranslateTransition actionFieldTransition = new TranslateTransition(
-                Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldBox);
+                Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldWrapperBox);
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
         SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);

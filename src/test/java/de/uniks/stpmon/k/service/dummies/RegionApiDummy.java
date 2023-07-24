@@ -208,6 +208,17 @@ public class RegionApiDummy implements RegionApiService {
         }
     }
 
+    public void addEncounteredMonsters(String trainerId, Integer monsterId) {
+        Trainer trainer = getTrainerById(trainerId);
+        Trainer updated = TrainerBuilder.builder(trainer)
+                .addEncountered(monsterId)
+                .create();
+        if (trainerId.equals(TRAINER_ID)) {
+            trainerStorage.setTrainer(updated);
+        }
+        eventDummy.sendEvent(new Event<>("regions.%s.trainers.%s.updated".formatted(REGION_ID, trainerId), updated));
+    }
+
     public void updateMonster(Monster updatedTarget) {
         monstersById.put(updatedTarget._id(), updatedTarget);
         eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.updated".formatted(
