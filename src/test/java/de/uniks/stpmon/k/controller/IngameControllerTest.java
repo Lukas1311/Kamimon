@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;

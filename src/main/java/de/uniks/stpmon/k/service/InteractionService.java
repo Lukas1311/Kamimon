@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.StarterController;
-import de.uniks.stpmon.k.controller.TeamController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
@@ -39,11 +38,7 @@ public class InteractionService implements ILifecycleService {
     @Inject
     EventListener listener;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<IngameController> ingameControllerProvider;
-    @Inject
-    TeamController teamController;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
 
@@ -69,7 +64,7 @@ public class InteractionService implements ILifecycleService {
 
         List<String> starters = info.starters();
 
-       if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
+        if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
             return getStarterDialogue(starters, me, trainer);
         }
         if (info.encounterOnTalk()) {

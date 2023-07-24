@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0"
       prefWidth="400.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/11.0.1"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MonsterBarController">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.monsters.MonsterBarController">
     <VBox fx:id="monsterBar" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
           minWidth="-Infinity" onMouseClicked="#showMonsters" prefHeight="55.0" prefWidth="200.0"
           style="-fx-background-color: transparent;">
