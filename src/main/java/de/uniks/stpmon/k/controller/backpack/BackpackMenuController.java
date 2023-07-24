@@ -60,11 +60,11 @@ public class BackpackMenuController extends Controller {
 
     @Override
     public void init() {
-        options.add(MONSTER);
         options.add(TEAM);
+        options.add(MONSTER);
+        options.add(INVENTORY);
         options.add(MONDEX);
         options.add(MAP);
-        options.add(INVENTORY);
     }
 
     @Override
@@ -147,10 +147,7 @@ public class BackpackMenuController extends Controller {
         } else {
             closeController(option);
         }
-
-
     }
-
 
     public void setAllControllerNull() {
         for (BackpackMenuOption option : options) {
