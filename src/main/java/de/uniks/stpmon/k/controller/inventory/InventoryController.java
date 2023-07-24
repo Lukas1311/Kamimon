@@ -31,7 +31,7 @@ public class InventoryController extends ToastedController {
     @Inject
     ItemService itemService;
     @FXML
-    public AnchorPane fullPane;
+    public AnchorPane inventoryPane;
     @FXML
     public ListView<Item> itemListView;
     @FXML
@@ -50,7 +50,7 @@ public class InventoryController extends ToastedController {
     public Parent render() {
         final Parent parent = super.render();
 
-        loadBgImage(fullPane, "inventory/inv_coins.png");
+        loadBgImage(inventoryPane, "inventory/inv_coins.png");
         loadImage(coinView, "inventory/coin.png");
 
         setCoins();

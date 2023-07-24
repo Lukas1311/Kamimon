@@ -362,7 +362,7 @@ class AppTest extends ApplicationTest {
 
         //open MonBox
         component.regionApi().addMonster("0", "1", false);
-        clickOn("#backpackMenuLabel_0");
+        clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#monBoxMenuHolder", Node::isVisible);
 
@@ -476,7 +476,7 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
 
         // Check if left encounter
-        verifyThat("#monsterBar", Node::isVisible);
+        verifyThat("#backpackImage", Node::isVisible);
     }
 
     @Test
@@ -515,7 +515,7 @@ class AppTest extends ApplicationTest {
 
         //test monDex
         clickOn("#backpackImage");
-        clickOn("#backpackMenuLabel_2");
+        clickOn("#backpackMenuLabel_3");
         waitForFxEvents();
         verifyThat("#monDexPane", Node::isVisible);
 
