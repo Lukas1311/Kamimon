@@ -26,4 +26,11 @@
         </styleClass>
     </Button>
     </HBox>
+    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
+        <CheckBox fx:id="musicOnOff" maxWidth="330.0" minWidth="330.0" mnemonicParsing="false" prefWidth="330.0"
+                  styleClass="login-check-box" text="Music"/>
+        <padding>
+            <Insets right="15.0"/>
+        </padding>
+    </VBox>
 </VBox>
