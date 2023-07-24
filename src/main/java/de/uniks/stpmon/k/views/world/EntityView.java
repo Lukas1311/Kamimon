@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
-import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
@@ -28,10 +27,6 @@ import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 public abstract class EntityView extends WorldViewable {
 
-    @Inject
-    protected MovementHandler movementHandler;
-    @Inject
-    protected WorldRepository worldRepository;
     @Inject
     protected WorldService worldService;
     @Inject
@@ -180,10 +175,12 @@ public abstract class EntityView extends WorldViewable {
     public void init() {
         super.init();
         initTrainer();
+        MovementHandler movementHandler = getMovementHandler();
         movementHandler.setInitialTrainer(trainerProvider);
         subscribe(movementHandler.onMovements(), this::onMoveReceived);
     }
 
+    public abstract MovementHandler getMovementHandler();
 
     @Override
     public void destroy() {
