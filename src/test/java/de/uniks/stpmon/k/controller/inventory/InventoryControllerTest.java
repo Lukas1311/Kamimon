@@ -7,9 +7,9 @@ import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.ListView;
@@ -24,13 +24,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,9 +42,7 @@ class InventoryControllerTest extends ApplicationTest {
     @Mock
     PresetService presetService;
     @Mock
-    ResourceService resourceService;
-    @Mock
-    Provider<ResourceService> resourceServiceProvider;
+    IResourceService resourceService;
     @Mock
     ItemService itemService;
 
@@ -71,8 +68,7 @@ class InventoryControllerTest extends ApplicationTest {
         items.add(item2);
 
         when(itemService.getItems()).thenReturn(Observable.just(items));
-        when(resourceServiceProvider.get()).thenReturn(resourceService);
-        when(resourceServiceProvider.get().getItemImage(anyString())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
+        when(resourceService.getItemImage(anyString())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
 
         ItemTypeDto item = new ItemTypeDto(
                 1,
@@ -81,7 +77,7 @@ class InventoryControllerTest extends ApplicationTest {
                 1,
                 "description",
                 null);
-        when(presetService.getItem(anyString())).thenReturn(Observable.just(item));
+        when(presetService.getItem(anyInt())).thenReturn(Observable.just(item));
 
         app.show(inventoryController);
         stage.requestFocus();
