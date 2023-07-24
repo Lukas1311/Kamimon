@@ -65,4 +65,9 @@ public class DummyResourceService implements IResourceService {
         return Observable.just(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
     }
 
+    @Override
+    public Observable<BufferedImage> getItemImage(String fileName) {
+        return Observable.just(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
+    }
+
 }
