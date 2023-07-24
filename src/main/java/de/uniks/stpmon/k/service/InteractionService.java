@@ -60,20 +60,31 @@ public class InteractionService implements ILifecycleService {
         NPCInfo info = trainer.npc();
         Trainer me = trainerService.getMe();
 
+        //no npc
         if (info == null) {
             return null;
         }
+
+        //if npc is healer
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
         }
 
+        //if npc distributes starter mons
         List<String> starters = info.starters();
-
-       if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
+        if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
             return getStarterDialogue(starters, me, trainer);
         }
+
+        //if encounter starts with interaction
         if (info.encounterOnTalk()) {
             return getEncounterDialogue(trainer, me);
+        }
+
+        //if npc trades mons
+        List<Integer> availableItems = info.sells();
+        if(availableItems != null && !availableItems.isEmpty()) {
+            return getTradeDialogue(trainer, me);
         }
 
         return null;
@@ -127,6 +138,28 @@ public class InteractionService implements ILifecycleService {
     }
 
     private Dialogue getHealDialogue(Trainer trainer, Trainer me) {
+        DialogueBuilder itemBuilder = Dialogue.builder()
+                .setTrainerId(trainer._id())
+                .addItem().setText(translateString("heal.intro"))
+                .addOption()
+                .setText(translateString("yes"))
+                .addAction(this::applyOverlayEffect)
+                .setNext(Dialogue.builder()
+                        .addItem().setText("... ... ...")
+                        .addAction(() -> talkTo(trainer, me, null))
+                        .endItem()
+                        .addItem().setText(translateString("dialogue.healed"))
+                        .endItem()
+                        .create())
+                .endOption()
+                .addOption().setText(translateString("no"))
+                .endOption()
+                .endItem();
+
+        return itemBuilder.create();
+    }
+
+    private Dialogue getTradeDialogue(Trainer trainer, Trainer me) {
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("heal.intro"))
