@@ -11,10 +11,7 @@ import de.uniks.stpmon.k.service.GroupService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.UserService;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -120,11 +117,13 @@ public class HybridController extends Controller {
         removeChildren(0);
     }
 
-    public Transition removeSidebarTransition(){
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), pane);
-        fadeTransition.setToValue(0.0);
+    public Transition removeSidebarTransition() {
+        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pane);
+        transition.setToX(-75);
+        SequentialTransition sequentialTransition = new SequentialTransition(pause, transition);
 
-        return fadeTransition;
+        return sequentialTransition;
     }
 
     @Override

@@ -111,6 +111,7 @@ public class StatusController extends Controller {
         double expProgress = currentExp / maxExp;
 
         experienceBar.setProgress(expProgress);
+
     }
 
 

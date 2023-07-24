@@ -29,7 +29,7 @@ public class MonsterInformationController extends Controller {
     @FXML
     public Label monsterNameLabel;
     @FXML
-    public Label mosterLevelUpgradeLabel;
+    public Label monsterLevelUpgradeLabel;
     @FXML
     public Label monsterLevelLabel;
     @FXML
@@ -241,6 +241,32 @@ public class MonsterInformationController extends Controller {
         });
 
         return parent;
+    }
+
+    public void loadLevelUp(Monster oldMon, Monster newMon) {
+        loadMonsterTypeDto(String.valueOf(newMon.type()));
+        loadMonster(newMon);
+        loadLevelUpDifference(oldMon);
+    }
+
+    private void loadLevelUpDifference(Monster oldMon) {
+        monsterLevelUpgradeLabel.setStyle("-fx-text-fill: blue");
+        monsterLevelUpgradeLabel.setText("  < " + oldMon.level());
+
+
+        setLevelUpText(hpUpdateLabel, Math.round(oldMon.attributes().health()));
+
+
+        setLevelUpText(atkUpdateLabel, Math.round(oldMon.attributes().attack()));
+
+        setLevelUpText(defUpdateLabel, Math.round(oldMon.attributes().defense()));
+
+        setLevelUpText(speUpdateLabel, Math.round(oldMon.attributes().speed()));
+    }
+
+    private void setLevelUpText(Label label, int diff) {
+        label.setStyle("-fx-text-fill: blue");
+        label.setText("< " + diff);
     }
 
     @Override
