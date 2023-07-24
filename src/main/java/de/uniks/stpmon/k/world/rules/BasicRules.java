@@ -255,6 +255,18 @@ public class BasicRules {
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(3857, 8, 6, 176));
 
+        // Entangle (store)
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(11484, 10, 9, 176));
+
+        // Ground block trees
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(18810, 15, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(19690, 15, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(20570, 15, 1, 176));
+
         // add decoration rules
         registry.addConnection(new BottomExclusivelyRule(registry));
         registry.addConnection(new EntangledRule(registry));
