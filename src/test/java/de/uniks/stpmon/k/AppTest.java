@@ -395,6 +395,7 @@ class AppTest extends ApplicationTest {
         // attack
         clickOn("#ability_1");
         waitForFxEvents();
+        clickOn("#scrollPane");
 
         // Check if won and left encounter
         verifyThat("#monsterBar", Node::isVisible);
@@ -418,6 +419,9 @@ class AppTest extends ApplicationTest {
 
         verifyThat("#battleLog", Node::isVisible);
         clickOn("#battleLog");
+        clickOn("#scrollPane");
+        clickOn("#scrollPane");
+        clickOn("#scrollPane");
 
         verifyThat("#changeMonBox", Node::isVisible);
         // no back button, monster is option 0
@@ -437,6 +441,10 @@ class AppTest extends ApplicationTest {
         // attack opponent 0
         clickOn("#user_monster_1");
         waitForFxEvents();
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
 
         // Check if lost and left encounter
         verifyThat("#monsterBar", Node::isVisible);
@@ -480,6 +488,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#userMonsters", Node::isVisible);
         clickOn("#main_menu_flee");
         waitForFxEvents();
+        clickOn("#battleLog");
 
         // Check if left encounter
         verifyThat("#monsterBar", Node::isVisible);
