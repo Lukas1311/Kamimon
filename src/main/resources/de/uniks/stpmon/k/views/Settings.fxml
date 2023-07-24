@@ -1,57 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
-<?import java.lang.*?>
-<VBox fx:id="settingsScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0"
-      styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.SettingsController">
+<?import org.kordamp.ikonli.javafx.*?>
+
+<VBox fx:id="settingsScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SettingsController">
     <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
         <Button fx:id="backButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
             <VBox.margin>
-                <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
+                <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
             </VBox.margin>
             <graphic>
-                <FontIcon iconLiteral="fa-mail-forward"/>
+                <FontIcon iconLiteral="fa-mail-forward" />
             </graphic>
             <tooltip>
-                <Tooltip text="%back"/>
+                <Tooltip text="%back" />
             </tooltip>
             <styleClass>
-                <String fx:value="chat-back-button"/>
-                <String fx:value="kgm-general-button-white"/>
+                <String fx:value="chat-back-button" />
+                <String fx:value="kgm-general-button-white" />
+            </styleClass>
+        </Button>
+        <Button fx:id="mdmzSettings" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
+            <VBox.margin>
+                <Insets bottom="5.0" left="10.0" right="15.0" top="5.0" />
+            </VBox.margin>
+            <graphic>
+                <FontIcon iconLiteral="fa-mail-forward" />
+            </graphic>
+            <tooltip>
+                <Tooltip text="%settings" />
+            </tooltip>
+            <styleClass>
+                <String fx:value="music-mdmz-settings" />
+                <String fx:value="kgm-general-button-white" />
             </styleClass>
         </Button>
         <VBox.margin>
-            <Insets/>
+            <Insets />
         </VBox.margin>
         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
     </HBox>
-    <StackPane fx:id="spriteContainer" prefHeight="150.0" maxWidth="1.7976931348623157E308" prefWidth="370.0">
-        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
-                   StackPane.alignment="CENTER">
-            <Image url="@../controller/spriteBackground.png"/>
+    <StackPane fx:id="spriteContainer" maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="370.0">
+        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@../controller/spriteBackground.png" />
         </ImageView>
-        <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
-                   StackPane.alignment="CENTER">
-            <Image url="@../controller/spritePlaceholder.png"/>
+        <ImageView fx:id="userSprite" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@../controller/spritePlaceholder.png" />
         </ImageView>
     </StackPane>
     <HBox maxWidth="1.7976931348623157E308" prefWidth="370.0">
         <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
             <padding>
-                <Insets left="30.0"/>
+                <Insets left="30.0" />
             </padding>
             <Text fx:id="username" strokeType="OUTSIDE" strokeWidth="0.0" text="%username" underline="true">
             </Text>
@@ -62,7 +69,7 @@
         </VBox>
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
             <padding>
-                <Insets right="30.0"/>
+                <Insets right="30.0" />
             </padding>
             <Text fx:id="usernameValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Bob">
             </Text>
@@ -72,24 +79,21 @@
             </Text>
         </VBox>
     </HBox>
-    <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-          prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-        <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-              spacing="20.0" HBox.hgrow="ALWAYS">
+    <HBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+        <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" HBox.hgrow="ALWAYS">
             <padding>
-                <Insets bottom="30.0"/>
+                <Insets bottom="30.0" />
             </padding>
-            <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0"
-                    text="%editTrainer">
+            <Button fx:id="editTrainerButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="%editTrainer">
                 <styleClass>
-                    <String fx:value="kgm-general-button-blue"/>
-                    <String fx:value="settings-button"/>
+                    <String fx:value="kgm-general-button-blue" />
+                    <String fx:value="settings-button" />
                 </styleClass>
             </Button>
             <Button fx:id="editUserButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="300.0" text="%editUser">
                 <styleClass>
-                    <String fx:value="kgm-general-button-blue"/>
-                    <String fx:value="settings-button"/>
+                    <String fx:value="kgm-general-button-blue" />
+                    <String fx:value="settings-button" />
                 </styleClass>
             </Button>
         </VBox>

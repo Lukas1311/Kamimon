@@ -28,6 +28,8 @@ public class SettingsController extends ToastedController {
     @FXML
     public Button backButton;
     @FXML
+    public Button mdmzSettings;
+    @FXML
     public Button editUserButton;
     @FXML
     public Button editTrainerButton;

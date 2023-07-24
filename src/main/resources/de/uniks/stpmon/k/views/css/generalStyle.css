@@ -683,7 +683,23 @@ Load fonts
     -fx-max-height: 35;
 }
 
+
 .chat-back-button .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
+    -fx-rotate: 180;
+}
+
+.music-mdmz-settings {
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
+}
+
+.music-mdmz-settings.ikonli-font-icon {
     -fx-icon-color: black;
     -fx-icon-size: 30px;
     -fx-rotate: 180;
