@@ -16,6 +16,16 @@ import javax.inject.Singleton;
 @Singleton
 public class WorldView extends Viewable {
 
+    public static final Color[] DAY_COLORS = {
+            Color.MIDNIGHTBLUE.brighter().brighter(),
+            Color.LIGHTSLATEGREY,
+            Color.LIGHTYELLOW,
+            Color.WHITE,
+            Color.LIGHTGOLDENRODYELLOW,
+            Color.LIGHTSLATEGREY,
+            Color.MIDNIGHTBLUE.brighter().brighter()
+    };
+
     public static final int WORLD_UNIT = 16;
     public static final int ENTITY_OFFSET_Y = 1;
     public static final int WORLD_ANGLE = -59;
@@ -66,7 +76,7 @@ public class WorldView extends Viewable {
 
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
-        ambient.setLightOn(true);
+        ambient.setColor(Color.WHITE);
 
         return new Group(floor, shadow, ambient, props, character, npc);
     }
@@ -110,6 +120,7 @@ public class WorldView extends Viewable {
         propView.destroy();
         npcCollectiveView.destroy();
         cameraStorage.setCamera(null);
+        shadowView.destroy();
         Disposer.cleanUp();
         System.gc();
     }

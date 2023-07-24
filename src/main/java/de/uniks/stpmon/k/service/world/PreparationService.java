@@ -181,17 +181,21 @@ public class PreparationService {
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = shadowImage.createGraphics();
         for (TileProp prop : props) {
-            BufferedImage original = prop.image();
+            BufferedImage original = ImageUtils.blackOutImage(prop.image(), 1f);
             AffineTransform transform = new AffineTransform();
-            BufferedImage shadow = ImageUtils.blackOutImage(original, 0.25f);
-            transform.translate(prop.x() * 16 + prop.width() * 8, prop.y() * 16 + prop.height() * 16);
-            transform.shear(-1, 0);
-            transform.scale(1, 0.25f);
-            transform.translate(-prop.width() * 8, -prop.height() * 16);
+            transform.translate(prop.x() * 16 - prop.width() * 8, prop.y() * 16 + prop.height() * 16);
+            transform.shear(-3f, 0);
+            //transform.scale(1, 1f);
+            transform.translate(+prop.width() * 8, -prop.height() * 16);
             g.setTransform(transform);
-            g.drawImage(shadow, 0, 0, null);
+            g.drawImage(original, 0, 0, null);
         }
+        g.setTransform(new AffineTransform());
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN));
+        g.setColor(new Color(0, 0, 0, 0.25f));
+        g.fillRect(0, 0, shadowImage.getWidth(), shadowImage.getHeight());
         g.dispose();
+
         return shadowImage;
     }
 
