@@ -81,7 +81,6 @@ public class WorldViewTest extends ApplicationTest {
 
         // test move down
         type(KeyCode.S, 2);
-        type(KeyCode.S);
         waitForFxEvents();
 
         // check if char moved down by 16
