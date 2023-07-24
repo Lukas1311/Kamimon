@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
@@ -31,10 +32,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class MovementHandlerTest {
+public class MovementDispatcherTest {
 
     @InjectMocks
-    public MovementHandler movementHandler;
+    public MovementDispatcher movementDispatcher;
     @Mock
     public WorldLoader worldLoader;
     @Mock
@@ -45,6 +46,9 @@ public class MovementHandlerTest {
     protected TrainerAreaCache areaCache;
     @Mock
     protected Provider<TrainerAreaCache> areaCacheProvider;
+    @Spy
+    @SuppressWarnings("unused")
+    protected EffectContext effectContext = new EffectContext();
     @InjectMocks
     protected TrainerCache trainerCache;
     @Spy
@@ -52,8 +56,9 @@ public class MovementHandlerTest {
 
     @Test
     void providerNull() {
-        assertThrows(IllegalArgumentException.class, () -> movementHandler.setInitialTrainer(null));
+        assertThrows(IllegalArgumentException.class, () -> movementDispatcher.setInitialTrainer(null));
     }
+
 
     @Test
     void receiveMoves() {
@@ -66,9 +71,9 @@ public class MovementHandlerTest {
         trainerCache.addValue(DummyConstants.TRAINER);
 
         trainerStorage.setTrainer(DummyConstants.TRAINER);
-        movementHandler.setInitialTrainer(trainerStorage);
+        movementDispatcher.setInitialTrainer(trainerStorage);
 
-        TestObserver<Trainer> result = movementHandler.onMovements().test();
+        TestObserver<Trainer> result = movementDispatcher.onMovements().test();
         result.assertNoErrors();
 
         // walk right
@@ -105,9 +110,9 @@ public class MovementHandlerTest {
 
 
         trainerStorage.setTrainer(DummyConstants.TRAINER);
-        movementHandler.setInitialTrainer(trainerStorage);
+        movementDispatcher.setInitialTrainer(trainerStorage);
 
-        TestObserver<Trainer> result = movementHandler.onMovements().test();
+        TestObserver<Trainer> result = movementDispatcher.onMovements().test();
         result.assertNoErrors();
 
         // look bottom
@@ -136,49 +141,49 @@ public class MovementHandlerTest {
         when(listener.listen(any(), any(), any())).thenReturn(Observable.empty());
 
         // should throw exception if initial trainer is not set
-        assertThrows(IllegalStateException.class, () -> movementHandler.moveDirection(Direction.BOTTOM));
+        assertThrows(IllegalStateException.class, () -> movementDispatcher.moveDirection(Direction.BOTTOM));
 
         // Setup cache
         when(areaCacheProvider.get()).thenReturn(areaCache);
         trainerCache.areaCache("area_0");
         when(cacheManager.trainerAreaCache()).thenReturn(areaCache);
 
-        assertThrows(IllegalArgumentException.class, () -> movementHandler.setInitialTrainer(trainerStorage));
+        assertThrows(IllegalArgumentException.class, () -> movementDispatcher.setInitialTrainer(trainerStorage));
         trainerStorage.setTrainer(DummyConstants.TRAINER);
-        movementHandler.setInitialTrainer(trainerStorage);
+        movementDispatcher.setInitialTrainer(trainerStorage);
 
         trainerStorage.setTrainer(DummyConstants.TRAINER);
         // should throw exception if direction is null
-        assertThrows(IllegalArgumentException.class, () -> movementHandler.moveDirection(null));
+        assertThrows(IllegalArgumentException.class, () -> movementDispatcher.moveDirection(null));
 
 
         // move one to bottom
-        movementHandler.moveDirection(Direction.BOTTOM);
+        movementDispatcher.moveDirection(Direction.BOTTOM, 2);
         // y should be 1 and direction should be 3
         assertEquals(new MoveTrainerDto("0", "area_0", 0, 1, 3), captor.getValue());
 
         // move one to left
-        movementHandler.moveDirection(Direction.LEFT);
+        movementDispatcher.moveDirection(Direction.LEFT, 2);
         // x should be -1 and direction should be 2
         assertEquals(new MoveTrainerDto("0", "area_0", -1, 0, 2), captor.getValue());
 
         // move one to top
-        movementHandler.moveDirection(Direction.TOP);
+        movementDispatcher.moveDirection(Direction.TOP, 2);
         // y should be -1 and direction should be 1
         assertEquals(new MoveTrainerDto("0", "area_0", 0, -1, 1), captor.getValue());
 
         // move one to right
-        movementHandler.moveDirection(Direction.RIGHT);
+        movementDispatcher.moveDirection(Direction.RIGHT, 2);
         // x should be 1 and direction should be 0
         assertEquals(new MoveTrainerDto("0", "area_0", 1, 0, 0), captor.getValue());
 
-        // moved 4 times
-        assertEquals(4, captor.getAllValues().size());
+        // moved 8 times, 4 direction changes, 4 actual movements
+        assertEquals(8, captor.getAllValues().size());
 
         // move one to right again
-        movementHandler.moveDirection(Direction.RIGHT);
+        movementDispatcher.moveDirection(Direction.RIGHT);
         // should not move two times into same direction
-        assertEquals(4, captor.getAllValues().size());
+        assertEquals(8, captor.getAllValues().size());
 
     }
 

@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.MonsterInformationController;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;

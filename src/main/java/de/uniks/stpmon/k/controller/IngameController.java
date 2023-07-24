@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
@@ -349,6 +351,10 @@ public class IngameController extends PortalController {
             controller.destroy();
             children.remove(0);
         }
+    }
+
+    public void closeMonsterInfo() {
+        removeChildren(2);
     }
 
     public void openMonsterInfo(Monster monster) {

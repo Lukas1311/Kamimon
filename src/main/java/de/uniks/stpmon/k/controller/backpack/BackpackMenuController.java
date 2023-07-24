@@ -1,9 +1,9 @@
 package de.uniks.stpmon.k.controller.backpack;
 
+import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.MonBoxController;
-import de.uniks.stpmon.k.controller.MonsterBarController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
@@ -45,7 +45,7 @@ public class BackpackMenuController extends Controller {
     @Inject
     Provider<IngameController> ingameControllerProvider;
     @Inject
-    Provider<MonBoxController> monBoxControllerProvider;
+    Provider<MonsterInventoryController> monBoxControllerProvider;
     @Inject
     Provider<InventoryController> inventoryControllerProvider;
 

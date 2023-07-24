@@ -1,16 +1,22 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monsters;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterStatus;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
-public class MonItemController extends Controller {
+import java.util.List;
+
+public class MonsterItemController extends Controller {
 
     @FXML
     public StackPane backgroundStackPane;
@@ -19,29 +25,24 @@ public class MonItemController extends Controller {
     @FXML
     public ImageView monsterImageView;
     @FXML
-    public ImageView monsterEffectImage;
-
+    public VBox monsterEffectRight;
+    @FXML
+    public VBox monsterEffectLeft;
 
     private final IResourceService resourceService;
-
-
     private final Monster monster;
-
     private Parent parent;
-
     private float currHp = 0.0f;
-
     private float maxHp = 1.0f;
 
 
-    public MonItemController(Monster monster, IResourceService resourceService) {
+    public MonsterItemController(Monster monster, IResourceService resourceService) {
         this.monster = monster;
         this.resourceService = resourceService;
 
         if (monster != null) {
             currHp = monster.currentAttributes().health();
             maxHp = monster.attributes().health();
-
         }
     }
 
@@ -63,10 +64,24 @@ public class MonItemController extends Controller {
             }
         });
 
-        healthBar.setProgress(currHp/maxHp);
-
+        healthBar.setProgress(currHp / maxHp);
 
         if (monster != null && resourceService != null) {
+            monsterEffectRight.getChildren().clear();
+            monsterEffectLeft.getChildren().clear();
+            List<MonsterStatus> statusList = monster.status();
+            for (int i = 0; i < statusList.size(); i++) {
+                MonsterStatus status = statusList.get(i);
+                MonsterStatusController statusController = new MonsterStatusController(status);
+                Node node = statusController.render();
+                statusController.shrink();
+                if (i % 2 == 0) {
+                    monsterEffectRight.getChildren().add(node);
+                } else {
+                    monsterEffectLeft.getChildren().add(node);
+                }
+            }
+
             subscribe(resourceService.getMonsterImage(String.valueOf(monster.type())), imageUrl -> {
                 // Scale and set the image for the Clipboard
                 Image image = ImageUtils.scaledImageFX(imageUrl, 0.5);
@@ -87,5 +102,9 @@ public class MonItemController extends Controller {
         return parent;
     }
 
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
+    }
 
 }

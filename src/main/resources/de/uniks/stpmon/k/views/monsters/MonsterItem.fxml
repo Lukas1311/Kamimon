@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<StackPane fx:id="backgroundStackPane" maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0"
+           prefHeight="70.0" prefWidth="70.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="de.uniks.stpmon.k.controller.monsters.MonsterItemController">
+    <ImageView fx:id="monsterImageView" fitHeight="56.0" fitWidth="56.0" layoutX="-65.0" layoutY="-65.0"
+               AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" StackPane.alignment="TOP_CENTER">
+        <StackPane.margin>
+            <Insets top="2.0"/>
+        </StackPane.margin>
+    </ImageView>
+    <VBox fx:id="monsterEffectRight" maxWidth="16.0" StackPane.alignment="TOP_RIGHT" spacing="3" mouseTransparent="true"
+          alignment="TOP_RIGHT">
+        <StackPane.margin>
+            <Insets right="4.0" top="5.0" bottom="10"/>
+        </StackPane.margin>
+    </VBox>
+    <VBox fx:id="monsterEffectLeft" maxWidth="16.0" StackPane.alignment="TOP_LEFT" spacing="3" mouseTransparent="true"
+          alignment="TOP_RIGHT">
+        <StackPane.margin>
+            <Insets left="4.0" top="5.0" bottom="10"/>
+        </StackPane.margin>
+    </VBox>
+    <ProgressBar fx:id="healthBar" maxHeight="6.0" maxWidth="60.0" minHeight="6.0" minWidth="60.0" prefHeight="6.0"
+                 prefWidth="60.0" progress="0.72" StackPane.alignment="BOTTOM_CENTER">
+        <StackPane.margin>
+            <Insets bottom="2.0"/>
+        </StackPane.margin>
+    </ProgressBar>
+</StackPane>
