@@ -34,7 +34,6 @@ public class TestModule {
                 .setSkipLoadImages(true)
                 .setSkipAnimations(true)
                 .setWalkingSpeed(1)
-                .setWalkingTickPeriod(1)
                 .setTextureScale(1.0d)
                 .setDialogAnimationSpeed(1)
                 .setEncounterAnimationSpeed(1);

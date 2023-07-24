@@ -49,7 +49,7 @@ public class MovementDispatcherTest {
     protected Provider<TrainerAreaCache> areaCacheProvider;
     @Spy
     @SuppressWarnings("unused")
-    protected EffectContext effectContext = new EffectContext().setWalkingTickPeriod(0);
+    protected EffectContext effectContext = new EffectContext();
     @InjectMocks
     protected TrainerCache trainerCache;
     @Spy

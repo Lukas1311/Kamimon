@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.EventListener;
-import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
@@ -21,8 +20,6 @@ public class MovementHandler {
     protected TrainerAreaCache trainerCache;
     @Inject
     protected CacheManager cacheManager;
-    @Inject
-    protected EffectContext effectContext;
     // not injected, provider by parent user
     protected TrainerProvider trainerProvider;
     protected String trainerId;
