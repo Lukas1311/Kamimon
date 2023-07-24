@@ -41,8 +41,6 @@ public class BattleLogService {
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
     private final Map<EncounterSlot, Monster> monsAfterLevelUp = new HashMap<>();
-    private final Map<EncounterSlot, Item> coinsBeforeWin = new HashMap<>();
-    private final Map<EncounterSlot, Item> coinsAfterWin = new HashMap<>();
 
     @Inject
     public BattleLogService() {
@@ -220,8 +218,7 @@ public class BattleLogService {
                         monsterName = targetType.name();
                     }
                 }
-                addTranslatedSection("target-defeated", monsterName, "" + opp.coins() + "");
-                earnCoins(slot);
+                addTranslatedSection("target-defeated", monsterName, opp.coins().toString());
             }
             case "monster-changed" -> {
             }
@@ -239,12 +236,6 @@ public class BattleLogService {
             case "target-dead" -> addTranslatedSection("target-dead");
             default -> System.out.println("unknown result type");
         }
-    }
-
-    private void earnCoins(EncounterSlot slot) {
-        Item newCoins = coinsAfterWin.get(slot);
-        //TODO: add the coins to the user items!
-        coinsBeforeWin.put(slot, newCoins);
     }
 
     private void makeLevelUp(MonsterTypeDto monster, EncounterSlot slot) {
