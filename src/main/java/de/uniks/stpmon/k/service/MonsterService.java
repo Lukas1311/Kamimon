@@ -65,6 +65,7 @@ public class MonsterService extends DestructibleElement {
         return getMonsterCache().getValues();
     }
 
+
     public ICache<Monster, String> getTeamCache() {
         return getMonsterCache().getTeam();
     }

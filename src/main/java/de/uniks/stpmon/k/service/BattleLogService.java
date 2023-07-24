@@ -187,14 +187,14 @@ public class BattleLogService {
         }
 
         for (Result result : opp.results()) {
-            handleResult(monster, result, target, slot);
+            handleResult(monster, result, target, slot, opp);
         }
 
         lastOpponents.put(up.slot(), up.opponent());
 
     }
 
-    private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot) {
+    private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot, Opponent opp) {
 
         final Integer ability = result.ability();
         switch (result.type()) {
@@ -218,7 +218,7 @@ public class BattleLogService {
                         monsterName = targetType.name();
                     }
                 }
-                addTranslatedSection("target-defeated", monsterName);
+                addTranslatedSection("target-defeated", monsterName, opp.coins().toString());
             }
             case "monster-changed" -> {
             }

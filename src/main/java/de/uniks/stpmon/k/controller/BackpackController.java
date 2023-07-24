@@ -61,7 +61,7 @@ public class BackpackController extends Controller {
     public void closeBackPackMenu() {
         ingameControllerProvider.get().removeChildren(0);
         backpackMenu = null;
-        backpackMenuControllerProvider.get().setMonBoxNull();
+        backpackMenuControllerProvider.get().setAllControllerNull();
     }
 
 
