@@ -107,7 +107,7 @@ public class BackpackMenuController extends Controller {
         Provider<? extends Controller> provider;
         if (option == MONSTER) {
             provider = monBoxControllerProvider;
-        } else if (MONDEX){
+        } else if (option == MONDEX){
             provider = monDexControllerProvider;
         } else {
             provider = inventoryControllerProvider;
