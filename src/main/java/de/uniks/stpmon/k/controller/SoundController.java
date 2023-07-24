@@ -5,14 +5,11 @@ import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.awt.*;
 
 public class SoundController extends Controller{
 

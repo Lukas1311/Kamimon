@@ -3,28 +3,26 @@
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
 <VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SoundController">
     <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0">
-    <Button fx:id="backToSettingButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
-        <VBox.margin>
-            <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
-        </VBox.margin>
-        <graphic>
-            <FontIcon iconLiteral="fa-mail-forward" />
-        </graphic>
-        <tooltip>
-            <Tooltip text="%back" />
-        </tooltip>
-        <styleClass>
-            <String fx:value="chat-back-button" />
-            <String fx:value="kgm-general-button-white" />
-        </styleClass>
-    </Button>
+        <Button fx:id="backToSettingButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
+            <VBox.margin>
+                <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
+            </VBox.margin>
+            <graphic>
+                <FontIcon iconLiteral="fa-mail-forward" />
+            </graphic>
+             <tooltip>
+                <Tooltip text="%back" />
+            </tooltip>
+            <styleClass>
+                <String fx:value="chat-back-button" />
+                <String fx:value="kgm-general-button-white" />
+            </styleClass>
+        </Button>
     </HBox>
     <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
         <CheckBox fx:id="musicOnOff" maxWidth="330.0" minWidth="330.0" mnemonicParsing="false" prefWidth="330.0"
