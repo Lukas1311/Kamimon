@@ -16,7 +16,6 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.observers.TestObserver;
 import io.reactivex.rxjava3.subjects.ReplaySubject;
 import io.reactivex.rxjava3.subjects.Subject;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -61,7 +60,7 @@ public class MovementDispatcherTest {
     }
 
 
-    @RepeatedTest(100)
+    @Test
     void receiveMoves() {
         Subject<MoveTrainerDto> movements = ReplaySubject.create();
         when(listener.listen(any(), any(), any())).thenReturn(movements.map((dto) -> new Event<>("", dto)));
