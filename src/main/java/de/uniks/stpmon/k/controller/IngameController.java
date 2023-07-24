@@ -4,11 +4,13 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.monDex.MonDexDetailController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
@@ -88,6 +90,8 @@ public class IngameController extends PortalController {
     NightOverlayController nightOverlayController;
     @Inject
     MonsterInformationController monsterInformationController;
+    @Inject
+    MonDexDetailController monDexDetailController;
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
@@ -366,6 +370,18 @@ public class IngameController extends PortalController {
         Parent monsterInfo = controller.render();
         controller.loadMonsterTypeDto(String.valueOf(monster.type()));
         controller.loadMonster(monster);
+        children.add(0, monsterInfo);
+    }
+
+    public void openMonDexDetail(MonsterTypeDto mon) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        MonDexDetailController controller = monDexDetailController;
+        controller.init();
+        tabStack.push(controller);
+
+        Parent monsterInfo = controller.render();
+        controller.loadMon(mon);
         children.add(0, monsterInfo);
     }
 
