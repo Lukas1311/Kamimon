@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.utils;
 
 import com.sun.javafx.scene.NodeHelper;
+import com.sun.javafx.scene.SceneHelper;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
@@ -27,7 +28,9 @@ public class MeshUtils {
             phongMaterial.setDiffuseMap(null);
         }
         mesh.setMaterial(null);
+        SceneHelper.setAllowPGAccess(true);
         NodeHelper.updatePeer(mesh);
+        SceneHelper.setAllowPGAccess(false);
     }
 
     public static MeshView createPlane(int l, int b) {

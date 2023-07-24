@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.monsters;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.InputHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -129,6 +130,11 @@ public class MonsterBarController extends Controller {
     public void destroy() {
         super.destroy();
         monsterSlotsHBox.getChildren().clear();
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 
 }
