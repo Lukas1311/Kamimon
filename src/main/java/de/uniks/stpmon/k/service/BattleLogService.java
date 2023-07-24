@@ -242,7 +242,6 @@ public class BattleLogService {
     }
 
     private void earnCoins(EncounterSlot slot) {
-        Item oldCoins = coinsBeforeWin.get(slot);
         Item newCoins = coinsAfterWin.get(slot);
         //TODO: add the coins to the user items!
         coinsBeforeWin.put(slot, newCoins);
