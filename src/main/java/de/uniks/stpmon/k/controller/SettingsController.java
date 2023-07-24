@@ -103,10 +103,15 @@ public class SettingsController extends ToastedController {
         usernameValue.textProperty().bind(usernameProperty);
 
         backButton.setOnAction(click -> backToMainScreen());
+        mdmzSettings.setOnAction(click -> sound());
         editUserButton.setOnAction(click -> editUser());
         editTrainerButton.setOnAction(click -> editTrainer());
 
         return parent;
+    }
+
+    public void sound() {
+        hybridControllerProvider.get().pushTab(SidebarTab.SOUND);
     }
 
     public void backToMainScreen() {
