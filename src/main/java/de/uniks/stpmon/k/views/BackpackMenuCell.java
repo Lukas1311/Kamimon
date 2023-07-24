@@ -37,17 +37,10 @@ public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
                     entryController.removeArrow();
                 }
             });
-
             this.setOnMouseClicked(e -> backpackMenuController.openOption(entry));
-
         }
-
         if (isSelected()) {
             setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
         }
-
-
     }
-
-
 }
