@@ -437,7 +437,7 @@ public class PropInspector {
 
             props.add(new TileProp(img, prototype.x(), prototype.y(), propWidth, propHeight, sortLayer));
         }
-        props.sort(Comparator.comparingInt(TileProp::sortLayer).reversed());
+        props.sort(Comparator.comparingInt(TileProp::sortLayer));
         // take first layer to draw all decoration layers bottom up
         Graphics2D baseGraphics = graphicsList.get(0);
         for (int i = 1; i < graphicsList.size(); i++) {

@@ -12,16 +12,20 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.world.PropMap;
 import de.uniks.stpmon.k.world.TileMap;
 import io.reactivex.rxjava3.core.Completable;
 import retrofit2.HttpException;
 
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -161,8 +165,34 @@ public class PreparationService {
                     worldRepository.floorImage().setValue(floorImage);
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
+                    BufferedImage shadows = createShadows(props, floorImage);
+                    worldRepository.shadowImage().setValue(shadows);
+                    try {
+                        ImageIO.write(shadows, "png", new File("shadow.png"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return Completable.complete();
                 });
+    }
+
+    public BufferedImage createShadows(List<TileProp> props, BufferedImage originalImage) {
+        BufferedImage shadowImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = shadowImage.createGraphics();
+        for (TileProp prop : props) {
+            BufferedImage original = prop.image();
+            AffineTransform transform = new AffineTransform();
+            BufferedImage shadow = ImageUtils.blackOutImage(original, 0.25f);
+            transform.translate(prop.x() * 16 + prop.width() * 8, prop.y() * 16 + prop.height() * 16);
+            transform.shear(-1, 0);
+            transform.scale(1, 0.25f);
+            transform.translate(-prop.width() * 8, -prop.height() * 16);
+            g.setTransform(transform);
+            g.drawImage(shadow, 0, 0, null);
+        }
+        g.dispose();
+        return shadowImage;
     }
 
 }

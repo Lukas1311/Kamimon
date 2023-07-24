@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,12 +31,29 @@ public class PropView extends WorldViewable {
         }
         props = new Group();
         props.setId("props");
+        Group shadow = new Group();
+//        for (TileProp prop : propCache.asNullable()) {
+//            Node propNode = createRectangleScaled(ImageUtils.blackOutImage(prop.image(), 0.25f), -90);
+////            propNode.setTranslateX(prop.x() * 16);
+////            propNode.setTranslateZ(-((prop.y() + prop.height()) * 16) + 6);
+////            propNode.setTranslateY(-0.35);
+//            propNode.getTransforms().add(0, new Translate(prop.x() * 16, -0.35, -((prop.y() + prop.height()) * 16) + 6));
+//            propNode.getTransforms().add(new Translate(prop.width() * 8, 0, 0));
+//            propNode.getTransforms().add(new Shear(1, 0,   prop.width() * 16, 0));
+//            //propNode.getTransforms().add(new Translate(-prop.width() * 8, 0, 0));
+//            shadow.getChildren().add(propNode);
+//        }
+        //shadow.getTransforms().add(new Shear(0.25f, 0.25f));
+        props.getChildren().add(shadow);
         for (TileProp prop : propCache.asNullable()) {
             Node propNode = createRectangleScaled(prop.image(), WorldView.WORLD_ANGLE);
             propNode.setTranslateX(prop.x() * 16);
             propNode.setTranslateZ(-((prop.y() + prop.height()) * 16));
             props.getChildren().add(propNode);
         }
+        PointLight light = new PointLight();
+        light.setTranslateY(-1);
+        props.getChildren().add(light);
         return props;
     }
 
@@ -44,6 +62,11 @@ public class PropView extends WorldViewable {
         super.destroy();
         if (props != null) {
             for (Node node : props.getChildren()) {
+                if (node instanceof Group) {
+                    for (Node child : ((Group) node).getChildren()) {
+                        MeshUtils.disposeMesh(child);
+                    }
+                }
                 MeshUtils.disposeMesh(node);
             }
             props.getChildren().clear();

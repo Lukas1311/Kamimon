@@ -29,6 +29,8 @@ public class WorldView extends Viewable {
     @Inject
     protected FloorView floorView;
     @Inject
+    protected ShadowView shadowView;
+    @Inject
     protected PropView propView;
     @Inject
     protected NPCCollectiveView npcCollectiveView;
@@ -58,6 +60,7 @@ public class WorldView extends Viewable {
         }
         Node character = characterView.render();
         Node floor = floorView.render();
+        Node shadow = shadowView.render();
         Node props = propView.render();
         Node npc = npcCollectiveView.render();
 
@@ -65,7 +68,7 @@ public class WorldView extends Viewable {
         AmbientLight ambient = new AmbientLight();
         ambient.setLightOn(true);
 
-        return new Group(floor, ambient, props, character, npc);
+        return new Group(floor, shadow, ambient, props, character, npc);
     }
 
     public SubScene createScene() {
