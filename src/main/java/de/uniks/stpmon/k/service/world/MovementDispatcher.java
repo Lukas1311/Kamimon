@@ -44,6 +44,15 @@ public class MovementDispatcher extends MovementHandler {
         listener.send(Socket.UDP, eventName, dto);
     }
 
+    public void moveDirection(Direction direction, int times) {
+        if (times < 1) {
+            throw new IllegalArgumentException("Times cannot be less than 1");
+        }
+        for (int i = 0; i < times; i++) {
+            moveDirection(direction);
+        }
+    }
+
     public void moveDirection(Direction direction) {
         if (direction == null) {
             throw new IllegalArgumentException("Direction cannot be null");

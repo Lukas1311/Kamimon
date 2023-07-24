@@ -159,26 +159,22 @@ public class MovementDispatcherTest {
 
 
         // move one to bottom
-        movementDispatcher.moveDirection(Direction.BOTTOM);
-        movementDispatcher.moveDirection(Direction.BOTTOM);
+        movementDispatcher.moveDirection(Direction.BOTTOM, 2);
         // y should be 1 and direction should be 3
         assertEquals(new MoveTrainerDto("0", "area_0", 0, 1, 3), captor.getValue());
 
         // move one to left
-        movementDispatcher.moveDirection(Direction.LEFT);
-        movementDispatcher.moveDirection(Direction.LEFT);
+        movementDispatcher.moveDirection(Direction.LEFT, 2);
         // x should be -1 and direction should be 2
         assertEquals(new MoveTrainerDto("0", "area_0", -1, 0, 2), captor.getValue());
 
         // move one to top
-        movementDispatcher.moveDirection(Direction.TOP);
-        movementDispatcher.moveDirection(Direction.TOP);
+        movementDispatcher.moveDirection(Direction.TOP, 2);
         // y should be -1 and direction should be 1
         assertEquals(new MoveTrainerDto("0", "area_0", 0, -1, 1), captor.getValue());
 
         // move one to right
-        movementDispatcher.moveDirection(Direction.RIGHT);
-        movementDispatcher.moveDirection(Direction.RIGHT);
+        movementDispatcher.moveDirection(Direction.RIGHT, 2);
         // x should be 1 and direction should be 0
         assertEquals(new MoveTrainerDto("0", "area_0", 1, 0, 0), captor.getValue());
 

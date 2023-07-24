@@ -73,13 +73,14 @@ public class WorldViewTest extends ApplicationTest {
         assertEquals(-16, character.getTranslateZ());
 
         // test move up
-        type(KeyCode.W);
+        type(KeyCode.W, 2);
         waitForFxEvents();
 
         // check if char moved up by -16
         assertEquals(0, character.getTranslateZ());
 
         // test move down
+        type(KeyCode.S, 2);
         type(KeyCode.S);
         waitForFxEvents();
 
@@ -87,14 +88,14 @@ public class WorldViewTest extends ApplicationTest {
         assertEquals(-16, character.getTranslateZ());
 
         // test move left
-        type(KeyCode.A);
+        type(KeyCode.A, 2);
         waitForFxEvents();
 
         // check if char moved left by 16
         assertEquals(-16, character.getTranslateX());
 
         // test move right
-        type(KeyCode.D);
+        type(KeyCode.D, 2);
         waitForFxEvents();
 
         // check if char moved right by -16
