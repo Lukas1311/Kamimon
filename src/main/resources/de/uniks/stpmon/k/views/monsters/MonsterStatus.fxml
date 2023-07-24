@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<Pane fx:id="effectBackground" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="25.0" prefWidth="25.0" styleClass="monster-status-background" stylesheets="@../css/ingameStyle.css"
+      xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.monsters.MonsterStatusController">
+    <ImageView fx:id="effect" fitHeight="25.0" fitWidth="25.0" preserveRatio="true">
+        <Image url="@../../controller/status/burned_icon.png"/>
+    </ImageView>
+</Pane>

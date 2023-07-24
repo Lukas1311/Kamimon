@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.ICache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
+import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -27,6 +28,7 @@ public class TrainerService {
     CacheManager cacheManager;
     // Current area cache, will be updated when the related area changes
     private TrainerAreaCache areaCache;
+    private TrainerCache trainerCache;
 
     @Inject
     public TrainerService() {
@@ -81,6 +83,21 @@ public class TrainerService {
         }
         UpdateTrainerDto dto = new UpdateTrainerDto(null, null, team);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
+    }
+
+    /**
+     * Applies the change to the trainer cache only on the client side. This can be used to
+     * update the trainer cache before the server responds or before the request is sent.
+     *
+     * @param monTeamList The new team
+     */
+    public void temporaryApplyTeam(List<String> monTeamList) {
+        if (trainerCache == null) {
+            trainerCache = cacheManager.trainerCache();
+        }
+        Trainer trainer = trainerStorage.getTrainer();
+        Trainer newTrainer = TrainerBuilder.builder(trainer).addTeam(monTeamList).create();
+        trainerCache.updateValue(newTrainer);
     }
 
     /**
