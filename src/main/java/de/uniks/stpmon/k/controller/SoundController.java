@@ -18,11 +18,11 @@ public class SoundController extends Controller{
     @FXML
     public Button backToSettingButton;
     @FXML
-    public CheckBox musicOnOff;
+    public CheckBox music;
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
-    private Boolean music = false;
+    private Boolean musicOnOff = false;
 
     @Inject
     public SoundController() {
@@ -37,8 +37,8 @@ public class SoundController extends Controller{
         backToSettingButton.setOnAction(click -> backToSettings());
 
         //on off music
-        music = musicOnOff.isSelected();
-        musicOnOff.setOnAction(e -> music = musicOnOff.isSelected());
+        musicOnOff = music.isSelected();
+        music.setOnAction(e -> musicOnOff = music.isSelected());
         //TODO: here comes the music function
 
         return parent;
