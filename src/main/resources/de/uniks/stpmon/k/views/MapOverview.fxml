@@ -19,7 +19,7 @@
       <Button fx:id="closeButton" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="18.0" styleClass="map-overview-close-button" text="X" />
       <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="337.0" layoutY="19.0" text="Label" textFill="WHITE" styleClass="map-overview-header" />
 
-      <VBox fx:id="mapContainer" layoutX="10.0" layoutY="53.0" maxHeight="680.0" maxWidth="340.0" prefHeight="680.0" prefWidth="340.0">
+      <VBox fx:id="mapContainer" layoutX="10.0" layoutY="53.0" maxHeight="340.0" maxWidth="680.0" prefHeight="340.0" prefWidth="680.0">
          <StackPane fx:id="mapStackPane" VBox.vgrow="NEVER">
             <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true"/>
             <Pane fx:id="highlightPane"/>
