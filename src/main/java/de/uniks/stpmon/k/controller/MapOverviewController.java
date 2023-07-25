@@ -134,12 +134,18 @@ public class MapOverviewController extends ToastedController {
             // System.out.println("map stackpane: " + mapStackPane.heightProperty().get());
             // System.out.println("map image view: " + mapImageView.getFitHeight());
 
+            mapImageView.fitHeightProperty().bind(mapContainer.heightProperty());
             // mapStackPane.minHeightProperty().bind(mapContainer.heightProperty());
             // mapStackPane.maxHeightProperty().bind(mapContainer.heightProperty());
             // highlightPane.minHeightProperty().bind(mapImageView.fitHeightProperty());
             // highlightPane.maxHeightProperty().bind(mapImageView.fitHeightProperty());
+            highlightPane.prefHeightProperty().bind(mapImageView.fitHeightProperty());
+            highlightPane.prefWidthProperty().bind(mapImageView.fitWidthProperty());
+            NumberBinding binding = Bindings.min(
                 //mapOverviewHolder.widthProperty().multiply(0.6),
                 //mapOverviewHolder.heightProperty().multiply(MAP_OVERVIEW_SCALE)
+                mapOverviewHolder.widthProperty(),
+                mapOverviewHolder.heightProperty()
             );
             // mapStackPane.scaleXProperty().bind(binding.map(v -> v.doubleValue() / originalWidth));
             // mapStackPane.scaleYProperty().bind(binding.map(v -> v.doubleValue() / originalHeight));
