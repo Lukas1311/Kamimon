@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<?import java.lang.String?>
+<AnchorPane fx:id="monDexDetailBox" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml" stylesheets="@../css/ingameStyle.css"
+            fx:controller="de.uniks.stpmon.k.controller.monDex.MonDexDetailController"
+            prefHeight="400.0" prefWidth="210.0" minWidth="210.0" maxWidth="210.0">
+    <styleClass>
+        <String fx:value="ingame"/>
+    </styleClass>
+    <VBox prefHeight="370.0" prefWidth="180.0" AnchorPane.topAnchor="15.0" AnchorPane.leftAnchor="15.0"
+          alignment="TOP_CENTER" spacing="12">
+        <ImageView fx:id="monImg"/>
+        <Text fx:id="name" text="???"/>
+        <HBox fx:id="typeBox" prefWidth="180.0" alignment="CENTER" spacing="5">
+        </HBox>
+        <TextFlow prefWidth="180">
+            <Text fx:id="description"/>
+        </TextFlow>
+
+    </VBox>
+
+</AnchorPane>

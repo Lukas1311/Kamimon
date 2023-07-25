@@ -68,7 +68,7 @@ public abstract class Controller extends Viewable {
      *             E.g. 'userGotDeleted=User {0} got deleted!' You would pass it to the function like this: translateString(userGotDeleted, "Bob")
      * @return the value-string (translated key-string).
      */
-    protected String translateString(String word, String... args) {
+    public String translateString(String word, String... args) {
         String translation = resources.get().getString(word);
         for (int i = 0; i < args.length; i++) {
             translation = translation.replace("{" + i + "}", args[i]);

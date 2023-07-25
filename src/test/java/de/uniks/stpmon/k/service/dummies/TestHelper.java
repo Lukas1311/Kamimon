@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.NPCInfo;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
@@ -48,6 +47,7 @@ public class TestHelper {
         EncounterApiDummy encounterApi = component.encounterApi();
         RegionApiDummy regionApi = component.regionApi();
         Trainer trainer = storage.getTrainer();
+
         // suppresses observable result - is never disposed fo the test time
         eventDummy.listen(Socket.UDP,
                 "areas.%s.trainers.%s.talked".formatted(trainer.area(), trainer._id()),
@@ -76,6 +76,13 @@ public class TestHelper {
             regionApi.addMonster(currentTrainer._id(), "3", true);
         });
 
+    }
+
+    public static void addEncounteredMonsters(TrainerStorage storage, TestComponent component) {
+        RegionApiDummy regionApi = component.regionApi();
+        Trainer trainer = storage.getTrainer();
+        regionApi.addEncounteredMonsters(trainer._id(), 0);
+        regionApi.addEncounteredMonsters(trainer._id(), 2);
     }
 
     public static void addTestNpcs(TestComponent component) {

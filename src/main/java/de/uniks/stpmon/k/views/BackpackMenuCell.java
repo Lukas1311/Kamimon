@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.BackpackMenuController;
-import de.uniks.stpmon.k.controller.BackpackMenuEntryController;
-import de.uniks.stpmon.k.controller.BackpackMenuOption;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuEntryController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuOption;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -37,17 +37,10 @@ public class BackpackMenuCell extends ListCell<BackpackMenuOption> {
                     entryController.removeArrow();
                 }
             });
-
             this.setOnMouseClicked(e -> backpackMenuController.openOption(entry));
-
         }
-
         if (isSelected()) {
             setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
         }
-
-
     }
-
-
 }
