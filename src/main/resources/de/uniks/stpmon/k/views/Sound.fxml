@@ -12,38 +12,31 @@
 
 <VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SoundController">
     <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="370.0">
-      <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="185.0">
-         <children>
-              <Button fx:id="backToSettingButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
-                  <VBox.margin>
-                      <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
-                  </VBox.margin>
-                  <graphic>
-                      <FontIcon iconLiteral="fa-mail-forward" />
-                  </graphic>
-                   <tooltip>
-                      <Tooltip text="%back" />
-                  </tooltip>
-                  <styleClass>
-                      <String fx:value="chat-back-button" />
-                      <String fx:value="kgm-general-button-white" />
-                  </styleClass>
-              </Button>
-         </children>
-      </VBox>
+        <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="185.0">
+            <Button fx:id="backToSettingButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
+                <VBox.margin>
+                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
+                </VBox.margin>
+                <graphic>
+                    <FontIcon iconLiteral="fa-mail-forward"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%back"/>
+                </tooltip>
+                <styleClass>
+                    <String fx:value="chat-back-button"/>
+                    <String fx:value="kgm-general-button-white"/>
+                </styleClass>
+            </Button>
+        </VBox>
     </HBox>
-   <HBox prefHeight="100.0" prefWidth="200.0">
-      <children>
-         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
-            <children>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
-            </children>
-         </HBox>
-         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
-            <children>
-                 <CheckBox fx:id="musicOnOff" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="login-check-box" />
-            </children>
-         </HBox>
-      </children>
-   </HBox>
+    <HBox prefHeight="100.0" prefWidth="200.0">
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
+        </HBox>
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
+            <CheckBox fx:id="musicOnOff" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0"
+                      styleClass="login-check-box"/>
+        </HBox>
+    </HBox>
 </VBox>
