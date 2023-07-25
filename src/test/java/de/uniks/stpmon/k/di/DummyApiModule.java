@@ -27,4 +27,7 @@ public abstract class DummyApiModule {
     @Binds
     abstract EncounterApiService encounterApiService(EncounterApiDummy dummy);
 
+    @Binds
+    abstract TrainerItemApiService trainerItemApiService(TrainerItemApiDummy trainerItemApiDummy);
+
 }

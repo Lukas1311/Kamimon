@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,8 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         when(monsterBarControllerProvider.get()).thenReturn(monsterBarController);
         doNothing().when(monsterBarController).showMonsters();
 
-        Label label = lookup("#backpackMenuLabel_1").query();
+        //team
+        Label label = lookup("#backpackMenuLabel_0").query();
         clickOn(label);
         verify(monsterBarController).showMonsters();
 
@@ -78,12 +80,13 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         IngameController ingameController = Mockito.mock(IngameController.class);
         when(ingameControllerProvider.get()).thenReturn(ingameController);
 
-        Label label = lookup("#backpackMenuLabel_0").query();
+        //monsterList
+        Label label = lookup("#backpackMenuLabel_1").query();
         clickOn(label);
         waitForFxEvents();
         verify(ingameController).pushController(any());
 
-        Label label2 = lookup("#backpackMenuLabel_0").query();
+        Label label2 = lookup("#backpackMenuLabel_1").query();
         clickOn(label2);
         waitForFxEvents();
 
