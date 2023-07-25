@@ -20,7 +20,7 @@
 
       <VBox fx:id="mapContainer" layoutX="10.0" layoutY="53.0" maxHeight="340.0" maxWidth="680.0" prefHeight="340.0" prefWidth="680.0">
          <StackPane fx:id="mapStackPane" VBox.vgrow="NEVER">
-            <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true"/>
+            <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
             <Pane fx:id="highlightPane" />
          </StackPane>
       </VBox>
