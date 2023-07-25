@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
+import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
@@ -12,7 +13,6 @@ import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
-import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.ParallelTransition;
@@ -80,8 +80,6 @@ public class EncounterOverviewController extends Controller {
     @Inject
     RegionStorage regionStorage;
     @Inject
-    TextDeliveryService textDeliveryService;
-    @Inject
     WorldService worldService;
     @Inject
     ClockService clockService;
@@ -93,8 +91,11 @@ public class EncounterOverviewController extends Controller {
     ActionFieldController actionFieldController;
     @Inject
     Provider<MonsterInformationController> monInfoProvider;
+    @Inject
+    Provider<InventoryController> inventoryControllerProvider;
 
     private Parent monInfoPane;
+    public Parent inventoryPane;
 
     @Inject
     public EncounterOverviewController() {
@@ -127,7 +128,7 @@ public class EncounterOverviewController extends Controller {
         for (Property prop : properties) {
             if (prop.name().equals("Terrain")) {
                 return switch (prop.value()) {
-                    case "Lake" ->  TerrainType.LAKE;
+                    case "Lake" -> TerrainType.LAKE;
                     case "Forest" -> TerrainType.FOREST;
                     case "Plains" -> TerrainType.PLAINS;
                     case "City" -> TerrainType.CITY;
@@ -249,6 +250,22 @@ public class EncounterOverviewController extends Controller {
             monInfoPane = monInfoController.render();
             monInfoController.loadLevelUp(oldMon, newMon);
             actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+        }
+    }
+
+    public void openInventory() {
+        if (inventoryPane == null) {
+            InventoryController inventoryController = inventoryControllerProvider.get();
+            inventoryPane = inventoryController.render();
+            actionFieldWrapperBox.getChildren().add(0, inventoryPane);
+        }
+    }
+
+    public void removeInventory() {
+        if (inventoryPane != null) {
+            actionFieldWrapperBox.getChildren().remove(0);
+            inventoryControllerProvider.get().destroy();
+            inventoryPane = null;
         }
     }
 

@@ -81,7 +81,11 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     private void openInventory() {
-        getActionField().openInventory();
+        if (encounterOverviewProvider.get().inventoryPane == null) {
+            encounterOverviewProvider.get().openInventory();
+        } else {
+            encounterOverviewProvider.get().removeInventory();
+        }
     }
 
     public void openFlee() {
