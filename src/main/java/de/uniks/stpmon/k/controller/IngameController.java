@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.controller.backpack.BackpackController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;

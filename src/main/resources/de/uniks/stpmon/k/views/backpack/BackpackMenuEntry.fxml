@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import java.lang.String?>
 <HBox fx:id="backpackMenuEntryHBox" maxHeight="22.0" maxWidth="120.0" minHeight="22.0" minWidth="120.0"
-      prefHeight="22.0" prefWidth="120.0" styleClass="backpack-menu-entry" stylesheets="@css/ingameStyle.css"
+      prefHeight="22.0" prefWidth="120.0" styleClass="backpack-menu-entry" stylesheets="@../css/ingameStyle.css"
       xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="de.uniks.stpmon.k.controller.BackpackMenuEntryController">
+      fx:controller="de.uniks.stpmon.k.controller.backpack.BackpackMenuEntryController">
     <Label fx:id="backpackMenuSelectedLabel" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0"
            prefHeight="20.0" prefWidth="20.0" styleClass="ingame">
         <padding>

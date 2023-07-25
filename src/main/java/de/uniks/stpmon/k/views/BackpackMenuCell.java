@@ -1,8 +1,8 @@
 package de.uniks.stpmon.k.views;
 
-import de.uniks.stpmon.k.controller.BackpackMenuController;
-import de.uniks.stpmon.k.controller.BackpackMenuEntryController;
-import de.uniks.stpmon.k.controller.BackpackMenuOption;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuEntryController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuOption;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
