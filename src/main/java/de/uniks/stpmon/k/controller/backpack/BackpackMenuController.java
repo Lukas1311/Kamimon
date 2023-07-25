@@ -1,8 +1,11 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.backpack;
 
 import de.uniks.stpmon.k.controller.monDex.MonDexController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -19,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.uniks.stpmon.k.controller.BackpackMenuOption.*;
+import static de.uniks.stpmon.k.controller.backpack.BackpackMenuOption.*;
 
 @Singleton
 public class BackpackMenuController extends Controller {
@@ -46,6 +49,8 @@ public class BackpackMenuController extends Controller {
     Provider<MonDexController> monDexControllerProvider;
     @Inject
     Provider<MonsterInventoryController> monBoxControllerProvider;
+    @Inject
+    Provider<InventoryController> inventoryControllerProvider;
 
 
     @Inject
@@ -55,8 +60,9 @@ public class BackpackMenuController extends Controller {
 
     @Override
     public void init() {
-        options.add(MONSTER);
         options.add(TEAM);
+        options.add(MONSTER);
+        options.add(INVENTORY);
         options.add(MONDEX);
         options.add(MAP);
     }
@@ -66,7 +72,7 @@ public class BackpackMenuController extends Controller {
         final Parent parent = super.render();
         backpackMenuHBox.setPickOnBounds(false);
 
-        loadBgImage(backpackMenuListView, "BackPackMenu_v2.png");
+        loadBgImage(backpackMenuListView, "backpack/BackPackMenu_v2.png");
         loadImage(arrowImageView, "arrow_right.png");
 
 
@@ -101,8 +107,10 @@ public class BackpackMenuController extends Controller {
         Provider<? extends Controller> provider;
         if (option == MONSTER) {
             provider = monBoxControllerProvider;
-        } else {
+        } else if (option == MONDEX){
             provider = monDexControllerProvider;
+        } else {
+            provider = inventoryControllerProvider;
         }
         return provider;
     }
@@ -139,15 +147,17 @@ public class BackpackMenuController extends Controller {
         } else {
             closeController(option);
         }
-
-
     }
-
 
     public void setAllControllerNull() {
         for (BackpackMenuOption option : options) {
             controllers.put(option, null);
         }
         options.clear();
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "backpack/";
     }
 }
