@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SoundController">
@@ -31,10 +32,18 @@
          </children>
       </VBox>
     </HBox>
-    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="185.0" spacing="45.0">
-        <CheckBox fx:id="musicOnOff" maxWidth="330.0" minWidth="330.0" mnemonicParsing="false" prefWidth="330.0" styleClass="login-check-box" text="Music" />
-        <padding>
-            <Insets right="15.0" />
-        </padding>
-    </VBox>
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
+            </children>
+         </HBox>
+         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
+            <children>
+                 <CheckBox fx:id="musicOnOff" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="login-check-box" />
+            </children>
+         </HBox>
+      </children>
+   </HBox>
 </VBox>
