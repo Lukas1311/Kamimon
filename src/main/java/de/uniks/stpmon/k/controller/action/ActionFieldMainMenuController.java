@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
+import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -26,6 +27,8 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
     @Inject
     Provider<EncounterOverviewController> encounterOverviewProvider;
+    @Inject
+    Provider<InventoryController> inventoryControllerProvider;
 
     @Inject
     public ActionFieldMainMenuController() {
@@ -82,8 +85,10 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
     private void openInventory() {
         if (encounterOverviewProvider.get().inventoryPane == null) {
+            inventoryControllerProvider.get().isInEncounter = true;
             encounterOverviewProvider.get().openInventory();
         } else {
+            inventoryControllerProvider.get().isInEncounter = false;
             encounterOverviewProvider.get().removeInventory();
         }
     }
