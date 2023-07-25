@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
+import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.BattleLogService;
@@ -34,6 +35,8 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
+    @Inject
+    Provider<InventoryController> inventoryControllerProvider;
 
     @Inject
     Provider<EncounterService> encounterServiceProvider;
@@ -100,6 +103,10 @@ public class ActionFieldController extends Controller {
             return;
         }
         open(changeMonsterControllerProvider);
+    }
+
+    public void openInventory() {
+        open(inventoryControllerProvider);
     }
 
     public void openChooseAbility() {
@@ -195,4 +202,6 @@ public class ActionFieldController extends Controller {
         openBattleLog();
         battleLogService.showNextAction();
     }
+
+
 }

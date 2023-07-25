@@ -11,12 +11,18 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import static de.uniks.stpmon.k.controller.action.ActionFieldMainMenuController.OptionType.*;
+
 @Singleton
 public class ActionFieldMainMenuController extends BaseActionFieldController {
     @FXML
     public Text textContent;
     @FXML
-    public VBox mainMenuBox;
+    public HBox mainMenuBox;
+    @FXML
+    public VBox leftContainer;
+    @FXML
+    public VBox rightContainer;
 
     @Inject
     Provider<EncounterOverviewController> encounterOverviewProvider;
@@ -31,11 +37,12 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
         textContent.setText(translateString("wannaDo"));
 
-        addActionOption(OptionType.FIGHT);
-        addActionOption(OptionType.CHANGE_MON);
+        addActionOption(FIGHT);
+        addActionOption(CHANGE_MON);
+        addActionOption(ITEMS);
 
         if (encounterStorage.getEncounter().isWild()) {
-            addActionOption(OptionType.FLEE);
+            addActionOption(FLEE);
         }
 
         return parent;
@@ -46,6 +53,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         String optionText = switch (option) {
             case FIGHT -> "fight";
             case CHANGE_MON -> "changeMon";
+            case ITEMS -> "inventory";
             case FLEE -> "flee";
         };
 
@@ -56,20 +64,28 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
         optionContainer.setId("main_menu_" + optionText);
 
-        mainMenuBox.getChildren().add(optionContainer);
+        if (optionText.equals("fight") || optionText.equals("changeMon")) {
+            leftContainer.getChildren().add(optionContainer);
+        } else {
+            rightContainer.getChildren().add(optionContainer);
+        }
     }
 
     public void openAction(OptionType option) {
         switch (option) {
             case CHANGE_MON -> openChangeMon();
             case FIGHT -> openFight();
+            case ITEMS -> openInventory();
             case FLEE -> openFlee();
         }
     }
 
+    private void openInventory() {
+        getActionField().openInventory();
+    }
+
     public void openFlee() {
         subscribe(encounterService.fleeEncounter(), opp -> getActionField().setFleeEncounter());
-
     }
 
     public void openFight() {
@@ -85,9 +101,10 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         return "action/";
     }
 
-    private enum OptionType {
+    public enum OptionType {
         FIGHT,
         CHANGE_MON,
+        ITEMS,
         FLEE
     }
 
