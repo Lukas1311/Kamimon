@@ -298,7 +298,8 @@ public class MapOverviewController extends ToastedController {
 
 
         shape.setOnMouseClicked(event -> {
-            regionDescription.setText(routeData.routeText().name() + ":\n" + routeData.routeText().description());
+            areaNameLabel.setText(routeData.routeText().name());
+            regionDescription.setText(routeData.routeText().description());
             if (activeShape != null) {
                 activeShape.setOpacity(0);
             }
