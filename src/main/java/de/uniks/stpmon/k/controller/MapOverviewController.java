@@ -224,14 +224,27 @@ public class MapOverviewController extends ToastedController {
     // }
 
     private void renderMapDetails(List<RouteData> routeListData) {
+        double originalWidth = currentRegion.map().width() * TILE_SIZE;
+        double originalHeight = currentRegion.map().height() * TILE_SIZE;
+        double scaledWidth = mapImageView.getFitWidth();
+        double scaledHeight = mapImageView.getFitHeight();
+        double widthRatio = scaledWidth / originalWidth;
+        double heightRatio = scaledHeight / originalHeight;
+        double containerHeight = mapContainer.getHeight();
+        double containerWidth = mapContainer.getWidth();
+
+        double offsetX = (containerWidth - scaledWidth) / 2.0;
+        double offsetY = (containerHeight - scaledHeight) / 2.0;
         System.out.println("test");
     
         routeListData.forEach(routeData -> {
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
-                    polygon.getPoints().addAll(Double.valueOf(routeData.x() + point.x()),
-                            Double.valueOf(routeData.y() + point.y()));
+                    polygon.getPoints().addAll(
+                        Double.valueOf(routeData.x() * widthRatio + point.x() * widthRatio) + offsetX,
+                        Double.valueOf(routeData.y() * heightRatio + point.y() * heightRatio)
+                    );
                 }
                 addDetailShape(polygon, routeData);
                 return;
@@ -239,7 +252,12 @@ public class MapOverviewController extends ToastedController {
             if (routeData.width() == 0 || routeData.height() == 0) {
                 return;
             }
-            Rectangle rectangle = new Rectangle(routeData.x(), routeData.y(), routeData.width(), routeData.height());
+            Rectangle rectangle = new Rectangle(
+                routeData.x() * widthRatio + offsetX,
+                routeData.y() * heightRatio,
+                routeData.width() * widthRatio,
+                routeData.height() * heightRatio
+            );
             addDetailShape(rectangle, routeData);
         });
     }
