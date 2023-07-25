@@ -71,9 +71,16 @@ public class MapOverviewController extends ToastedController {
     Provider<IngameController> ingameController;
 
     private Shape activeShape;
+    private Region currentRegion;
 
     @Inject
     public MapOverviewController() {
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        currentRegion = regionStorage.getRegion();
     }
 
     @Override
