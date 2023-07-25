@@ -6,12 +6,8 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
@@ -32,7 +27,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Window;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,7 +36,6 @@ import java.util.List;
 
 @Singleton
 public class MapOverviewController extends ToastedController {
-    private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
     private final static int TILE_SIZE = 16;
 
 
@@ -102,9 +95,7 @@ public class MapOverviewController extends ToastedController {
         BorderStrokeStyle.SOLID, null, new BorderWidths(1));
         Border border = new Border(borderStroke);
 
-        // mapContainer.setBorder(border);
-        // mapStackPane.setBorder(border);
-        // highlightPane.setBorder(border);
+        mapContainer.setBorder(border);
 
         loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
 
@@ -119,52 +110,14 @@ public class MapOverviewController extends ToastedController {
                             return;
                         }
                         Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
-                        //loadBgImage(mapContainer, map);
                         mapImageView.setImage(map);
                         mapImageView.setFitHeight(originalHeight);
-                        mapImageView.setFitWidth(originalWidth);
                     }, this::handleError
             );
-            // System.out.println("map container: " + mapContainer.heightProperty().get());
-            // System.out.println("map stackpane: " + mapStackPane.heightProperty().get());
-            // System.out.println("map image view: " + mapImageView.getFitHeight());
-
             mapImageView.fitHeightProperty().bind(mapContainer.heightProperty());
-            // mapStackPane.minHeightProperty().bind(mapContainer.heightProperty());
-            // mapStackPane.maxHeightProperty().bind(mapContainer.heightProperty());
-            // highlightPane.minHeightProperty().bind(mapImageView.fitHeightProperty());
-            // highlightPane.maxHeightProperty().bind(mapImageView.fitHeightProperty());
             highlightPane.prefHeightProperty().bind(mapImageView.fitHeightProperty());
             highlightPane.prefWidthProperty().bind(mapImageView.fitWidthProperty());
-            NumberBinding binding = Bindings.min(
-                //mapOverviewHolder.widthProperty().multiply(0.6),
-                //mapOverviewHolder.heightProperty().multiply(MAP_OVERVIEW_SCALE)
-                mapOverviewHolder.widthProperty(),
-                mapOverviewHolder.heightProperty()
-            );
-            // mapStackPane.scaleXProperty().bind(binding.map(v -> v.doubleValue() / originalWidth));
-            // mapStackPane.scaleYProperty().bind(binding.map(v -> v.doubleValue() / originalHeight));
-            //textFlowRegionDescription.prefHeightProperty().bind(mapImageView.fitHeightProperty());
-            //textFlowRegionDescription.prefWidthProperty().bind(mapImageView.fitWidthProperty());
-            //textFlowRegionDescription.prefWidthProperty().bind(mapOverviewHolder.widthProperty());
-
-            // highlightPane.scaleXProperty().bind(Bindings.createDoubleBinding(
-            //     () -> mapImageView.getFitWidth() / originalWidth,
-            //     mapImageView.fitWidthProperty()
-            // ));
-            // highlightPane.scaleYProperty().bind(Bindings.createDoubleBinding(
-            //         () -> mapImageView.getFitHeight() / originalHeight,
-            //         mapImageView.fitHeightProperty()
-            // ));
         }
-
-        //Window parentWindow = app.getStage().getScene().getWindow();
-        // mapOverviewHolder.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
-        // mapOverviewHolder.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
-
-        // mapImageView.fitWidthProperty().addListener((observable, oldValue, newValue) -> updateShapePositions());
-        // mapImageView.fitHeightProperty().addListener((observable, oldValue, newValue) -> updateShapePositions());
-
 
         if (currentRegion.map() != null) {
             subscribe(
@@ -185,47 +138,8 @@ public class MapOverviewController extends ToastedController {
         }
     }
 
-    // private void updateShapePositions(Node shape) {
-    //     double originalWidth = currentRegion.map().width() * TILE_SIZE;
-    //     double originalHeight = currentRegion.map().height() * TILE_SIZE;
-    //     double scaledWidth = mapImageView.getFitWidth();
-    //     double scaledHeight = mapImageView.getFitHeight();
-    //     double widthRatio = scaledWidth / originalWidth;
-    //     double heightRatio = scaledHeight / originalHeight;
-
-    //     double offsetX = (scaledWidth - originalWidth * widthRatio) / 2;
-    //     double offsetY = (scaledHeight - originalHeight * heightRatio) / 2;
-
-    //     shape.setTranslateX(routeData.x() * widthRatio + offsetX);
-    //     shape.setTranslateY(routeData.y() * heightRatio + offsetY);
-
-    //     // for (Node shape : highlightPane.getChildren()) {
-    //         if (shape instanceof Rectangle) {
-    //             // Update position for Rectangle
-    //             Rectangle rectangle = (Rectangle) shape;
-    //             double originalX = rectangle.getX(); // Get the original X coordinate of the rectangle
-    //             double originalY = rectangle.getY(); // Get the original Y coordinate of the rectangle
-    //             double newX = originalX * widthRatio;
-    //             double newY = originalY * heightRatio;
-    //             rectangle.setX(newX);
-    //             rectangle.setY(newY);
-    //         } else if (shape instanceof Polygon) {
-    //             // Update position for Polygon
-    //             Polygon polygon = (Polygon) shape;
-    //             ObservableList<Double> points = polygon.getPoints();
-    //             for (int i = 0; i < points.size(); i += 2) {
-    //                 double originalX = points.get(i); // Get the original X coordinate of the point
-    //                 double originalY = points.get(i + 1); // Get the original Y coordinate of the point
-    //                 double newX = originalX * widthRatio;
-    //                 double newY = originalY * heightRatio;
-    //                 points.set(i, newX);
-    //                 points.set(i + 1, newY);
-    //             }
-    //         }
-    //     // }
-    // }
-
     private void renderMapDetails(List<RouteData> routeListData) {
+        System.out.println("test");
         double originalWidth = currentRegion.map().width() * TILE_SIZE;
         double originalHeight = currentRegion.map().height() * TILE_SIZE;
         double scaledWidth = mapImageView.getFitWidth();
@@ -235,8 +149,10 @@ public class MapOverviewController extends ToastedController {
         double containerHeight = mapContainer.getHeight();
         double containerWidth = mapContainer.getWidth();
 
+        double someOtherHeightRatio = containerHeight / scaledHeight;
+
         double offsetX = (containerWidth - scaledWidth) / 2.0;
-        double offsetY = (containerHeight - scaledHeight) / 2.0;
+        double offsetY = (containerHeight - originalHeight) / 2.0;
         System.out.println("test");
     
         routeListData.forEach(routeData -> {
@@ -245,7 +161,7 @@ public class MapOverviewController extends ToastedController {
                 for (PolygonPoint point : routeData.polygon()) {
                     polygon.getPoints().addAll(
                         Double.valueOf(routeData.x() * widthRatio + point.x() * widthRatio) + offsetX,
-                        Double.valueOf(routeData.y() * heightRatio + point.y() * heightRatio)
+                        Double.valueOf(routeData.y() + point.y()) + offsetY
                     );
                 }
                 addDetailShape(polygon, routeData);
@@ -256,9 +172,9 @@ public class MapOverviewController extends ToastedController {
             }
             Rectangle rectangle = new Rectangle(
                 routeData.x() * widthRatio + offsetX,
-                routeData.y() * heightRatio,
+                routeData.y() + offsetY,
                 routeData.width() * widthRatio,
-                routeData.height() * heightRatio
+                routeData.height() * someOtherHeightRatio
             );
             addDetailShape(rectangle, routeData);
         });
@@ -270,26 +186,8 @@ public class MapOverviewController extends ToastedController {
         shape.setOpacity(0);
         shape.setStroke(Color.WHITESMOKE);
         shape.setStrokeWidth(3);
-        // System.out.println("img view fit width: " + mapImageView.getFitWidth());
-        // System.out.println("img width: " + mapImageView.getImage().getWidth());
 
         highlightPane.getChildren().add(shape);
-        // updateShapePositions(shape);
-
-        // shape.scaleXProperty().bind(mapImageView.fitWidthProperty().divide(mapImageView.getImage().getWidth()));
-        // shape.scaleYProperty().bind(mapImageView.fitHeightProperty().divide(mapImageView.getImage().getWidth()));
-        // double originalWidth = 512;
-        // double originalHeight = 512;
-        // double scaledWidth = mapImageView.getFitWidth();
-        // double scaledHeight = mapImageView.getFitHeight();
-        // double widthRatio = scaledWidth / originalWidth;
-        // double heightRatio = scaledHeight / originalHeight;
-        // double offsetX = routeData.x() * widthRatio;
-        // double offsetY = routeData.y() * heightRatio;
-    
-        // // Translate the shape to the correct position on top of the map
-        // shape.setTranslateX(offsetX);
-        // shape.setTranslateY(offsetY);
 
 
         shape.setOnMouseClicked(event -> {
@@ -300,8 +198,7 @@ public class MapOverviewController extends ToastedController {
             }
             shape.setOpacity(1);
             activeShape = shape;
-            // System.out.println("map container: " + mapContainer.heightProperty().get());
-            // System.out.println("map stackpane: " + mapStackPane.heightProperty().get());
+
             System.out.println("map image view h: " + mapImageView.getFitHeight());
             System.out.println("map image view w: " + mapImageView.getFitWidth());
             System.out.println("map image h: " + mapImageView.getImage().getHeight());
