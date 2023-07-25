@@ -44,7 +44,7 @@
                     <Tooltip text="%settings" />
                 </tooltip>
                 <styleClass>
-                    <String fx:value="music-mdmz-settings" />
+                    <String fx:value="chat-back-button" />
                     <String fx:value="kgm-general-button-white" />
                 </styleClass>
             </Button>
