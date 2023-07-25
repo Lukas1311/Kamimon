@@ -115,8 +115,8 @@ public class MapOverviewController extends ToastedController {
 
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
-            int width = currentRegion.map().width() * TILE_SIZE;
-            int height = currentRegion.map().height() * TILE_SIZE;
+            int originalWidth = currentRegion.map().width() * TILE_SIZE;
+            int originalHeight = currentRegion.map().height() * TILE_SIZE;
             subscribe(
                     worldRepository.regionMap().onValue(),
                     renderedMap -> {
@@ -126,8 +126,8 @@ public class MapOverviewController extends ToastedController {
                         Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
                         //loadBgImage(mapContainer, map);
                         mapImageView.setImage(map);
-                        mapImageView.setFitHeight(height);
-                        mapImageView.setFitWidth(width);
+                        mapImageView.setFitHeight(originalHeight);
+                        mapImageView.setFitWidth(originalWidth);
                     }, this::handleError
             );
             // System.out.println("map container: " + mapContainer.heightProperty().get());
