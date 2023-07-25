@@ -21,12 +21,12 @@
       <VBox fx:id="mapContainer" layoutX="10.0" layoutY="53.0" maxHeight="340.0" maxWidth="680.0" prefHeight="340.0" prefWidth="680.0">
          <StackPane fx:id="mapStackPane" VBox.vgrow="NEVER">
             <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true"/>
-            <Pane fx:id="highlightPane"/>
+            <Pane fx:id="highlightPane" />
          </StackPane>
       </VBox>
 
       <Label fx:id="areaNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="400.0" prefHeight="19.0" prefWidth="195.0" text="Label" />
-      <TextFlow fx:id="textFlowRegionDescription" layoutX="10.0" layoutY="424.0" prefHeight="66.0" prefWidth="679.0" styleClass="map-overview-label" >
+      <TextFlow fx:id="textFlowRegionDescription" layoutX="10.0" layoutY="424.0" prefHeight="66.0" prefWidth="679.0" styleClass="map-overview-label">
          <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" />
       </TextFlow>
 
