@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.backpack;
 
 public enum BackpackMenuOption {
     MONSTER("monster"),

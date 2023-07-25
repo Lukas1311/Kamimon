@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.backpack;
 
+import de.uniks.stpmon.k.controller.Controller;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -55,4 +56,8 @@ public class BackpackMenuEntryController extends Controller {
         backpackMenuSelectedLabel.setText("");
     }
 
+    @Override
+    public String getResourcePath() {
+        return "backpack/";
+    }
 }
