@@ -86,7 +86,7 @@ class InventoryControllerTest extends ApplicationTest {
     @Test
     void testGUI() {
         ListView<Item> itemView = lookup("#itemListView").queryListView();
-        AnchorPane anchorPane = lookup("#fullPane").queryAs(AnchorPane.class);
+        AnchorPane anchorPane = lookup("#inventoryPane").queryAs(AnchorPane.class);
         ImageView coinView = lookup("#coinView").queryAs(ImageView.class);
 
         assertNotNull(itemView);
