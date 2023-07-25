@@ -167,8 +167,9 @@ public class MapOverviewController extends ToastedController {
 
         if (currentRegion.map() != null) {
             subscribe(
-                    textDeliveryService.getRouteData(currentRegion),
-                    this::renderMapDetails);
+                textDeliveryService.getRouteData(currentRegion),
+                this::renderMapDetails
+            );
         }
 
         return parent;
