@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import com.sun.javafx.scene.NodeHelper;
+import com.sun.javafx.scene.SceneHelper;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -94,7 +95,9 @@ public class MinimapController extends Controller {
         super.destroy();
         miniMap.getImage().cancel();
         miniMap.setImage(null);
+        SceneHelper.setAllowPGAccess(true);
         NodeHelper.updatePeer(miniMap);
+        SceneHelper.setAllowPGAccess(false);
         miniMap = null;
         miniMapBorder.setImage(null);
         miniMapBorder = null;
