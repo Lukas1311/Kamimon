@@ -79,7 +79,7 @@ public class InteractionService implements ILifecycleService {
         // if npc trades mons
         List<Integer> availableItems = info.sells();
         if (availableItems != null && !availableItems.isEmpty()) {
-            return getTradeDialogue(trainer, me);
+            return getTradeDialogue(trainer);
         }
 
         return null;
@@ -89,7 +89,8 @@ public class InteractionService implements ILifecycleService {
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("dialogue.intro"))
-                .addOption().setText(translateString("dialogue.select.no")).endOption()
+                .addOption()
+                .setText(translateString("dialogue.select.no")).endOption()
                 .addOption()
                 .setText(translateString("dialogue.select.yes"))
                 .addAction(() -> talkTo(trainer, me, null))
@@ -154,25 +155,17 @@ public class InteractionService implements ILifecycleService {
         return itemBuilder.create();
     }
 
-    private Dialogue getTradeDialogue(Trainer trainer, Trainer me) {
+    private Dialogue getTradeDialogue(Trainer trainer) {
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
-                .addItem().setText(translateString("heal.intro"))
+                .addItem().setText(translateString("shop.intro"))
                 .addOption()
-                .setText(translateString("yes"))
-                .addAction(this::applyOverlayEffect)
-                .setNext(Dialogue.builder()
-                        .addItem().setText("... ... ...")
-                        .addAction(() -> talkTo(trainer, me, null))
-                        .endItem()
-                        .addItem().setText(translateString("dialogue.healed"))
-                        .endItem()
-                        .create())
-                .endOption()
-                .addOption().setText(translateString("no"))
+                .setText(translateString("shop.selection.no")).endOption()
+                .addOption()
+                .setText(translateString("shop.selection.yes"))
+                .addAction(() -> openShop(trainer))
                 .endOption()
                 .endItem();
-
         return itemBuilder.create();
     }
 
@@ -218,5 +211,24 @@ public class InteractionService implements ILifecycleService {
 
     private void applyOverlayEffect() {
         ingameControllerProvider.get().applyHealEffect();
+    }
+
+
+
+    /**
+     * Open the shop controller to buy things
+     */
+    private void openShop(Trainer npc){
+        System.out.println("NPC sells following items:");
+        for (Integer item : npc.npc().sells()) {
+            System.out.println(presetService.getItem(item.toString()).blockingFirst().name());
+        }
+        System.out.println();
+
+        ingameControllerProvider.get().openShop(npc);
+
+
+
+
     }
 }

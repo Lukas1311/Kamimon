@@ -38,6 +38,10 @@ public class TrainerService {
         return trainerStorage.getTrainer();
     }
 
+    public Observable<Optional<Trainer>> onTrainer() {
+        return trainerStorage.onTrainer();
+    }
+
     public Observable<Trainer> deleteMe() {
         Trainer currentTrainer = trainerStorage.getTrainer();
         if (currentTrainer == null) {
