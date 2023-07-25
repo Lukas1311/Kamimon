@@ -98,11 +98,6 @@ public class MapOverviewController extends ToastedController {
         AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
         AnchorPane.setRightAnchor(regionNameLabel, 0.0);
 
-        // closeButton.setOnAction(click -> {
-        //     ingameController.get().closeMap();
-        //     System.out.println("close clicked");
-        // });
-
         BorderStroke borderStroke = new BorderStroke(Color.BLACK,
         BorderStrokeStyle.SOLID, null, new BorderWidths(1));
         Border border = new Border(borderStroke);
