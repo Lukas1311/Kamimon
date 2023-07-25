@@ -22,6 +22,8 @@ public class SoundController extends Controller{
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
+    private Boolean music = false;
+
     @Inject
     public SoundController() {
 
@@ -33,6 +35,12 @@ public class SoundController extends Controller{
 
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
+
+        //on off music
+        music = musicOnOff.isSelected();
+        musicOnOff.setOnAction(e -> music = musicOnOff.isSelected());
+        //TODO: here comes the music function
+
         return parent;
     }
 
