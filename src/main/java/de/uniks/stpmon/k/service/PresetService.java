@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import de.uniks.stpmon.k.service.storage.cache.AbilityCache;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
+import de.uniks.stpmon.k.service.storage.cache.ItemTypeCache;
 import de.uniks.stpmon.k.service.storage.cache.MonsterTypeCache;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
@@ -59,7 +60,6 @@ public class PresetService {
         );
     }
 
-
     public Observable<ResponseBody> getMonsterImage(String id) {
         return presetApiService.getMonsterImage(id);
     }
@@ -82,20 +82,28 @@ public class PresetService {
         );
     }
 
-    public Observable<List<ItemTypeDto>> getItems(){
-        return presetApiService.getItems();
+    public Observable<List<ItemTypeDto>> getItems() {
+        CacheManager manager = cacheManagerProvider.get();
+        ItemTypeCache typeCache = manager.itemTypeCache();
+        return typeCache.getValues();
     }
 
-    public Observable<ItemTypeDto> getItem(String itemId){
-        return presetApiService.getItem(itemId);
+
+    public Observable<ItemTypeDto> getItem(int id) {
+        return getItem(Integer.toString(id));
+    }
+
+    public Observable<ItemTypeDto> getItem(String itemId) {
+        CacheManager manager = cacheManagerProvider.get();
+        ItemTypeCache typeCache = manager.itemTypeCache();
+        return typeCache.getLazyValue(itemId).flatMap(op ->
+                op.map(Observable::just).orElse(Observable.empty())
+        );
     }
 
     public Observable<ResponseBody> getItemImage(String itemId) {
         return presetApiService.getItemImage(itemId);
     }
-
-
-
 
 
 }
