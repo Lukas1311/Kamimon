@@ -16,8 +16,7 @@
             xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
 
-      <Button fx:id="closeButton" layoutX="666.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="18.0" styleClass="map-overview-close-button" text="X" />
-      <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="337.0" layoutY="19.0" text="Label" textFill="WHITE" styleClass="map-overview-header" />
+      <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="350.0" layoutY="19.0" styleClass="map-overview-header" text="Label" />
 
       <VBox fx:id="mapContainer" layoutX="10.0" layoutY="53.0" maxHeight="340.0" maxWidth="680.0" prefHeight="340.0" prefWidth="680.0">
          <StackPane fx:id="mapStackPane" VBox.vgrow="NEVER">

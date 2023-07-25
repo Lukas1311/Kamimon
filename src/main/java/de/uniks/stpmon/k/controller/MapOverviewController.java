@@ -80,6 +80,10 @@ public class MapOverviewController extends ToastedController {
     public Parent render() {
         // System.out.println("test");
         final Parent parent = super.render();
+
+        // center the region name label horizontally
+        AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
+        AnchorPane.setRightAnchor(regionNameLabel, 0.0);
         loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
         closeButton.setOnAction(click -> ingameController.get().closeMap());
         Region currentRegion = regionStorage.getRegion();
