@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -85,6 +86,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
     private void openInventory() {
         if (encounterOverviewProvider.get().inventoryPane == null) {
+            encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
             inventoryControllerProvider.get().isInEncounter = true;
             encounterOverviewProvider.get().openInventory();
         } else {
