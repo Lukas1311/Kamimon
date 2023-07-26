@@ -161,7 +161,7 @@ public class InteractionServiceTest {
         when(resourceBundleProvider.get()).thenReturn(resources);
 
         // If any monster is not fully healed, a heal dialogue should be found
-        when(monsterService.checkIfMonstersHealed()).thenReturn(true);
+        when(monsterService.anyMonsterDamaged()).thenReturn(true);
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();

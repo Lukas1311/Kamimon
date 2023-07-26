@@ -38,6 +38,8 @@ public class InteractionService implements ILifecycleService {
     @Inject
     EventListener listener;
     @Inject
+    MonsterService monsterService;
+    @Inject
     Provider<IngameController> ingameControllerProvider;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
@@ -75,7 +77,7 @@ public class InteractionService implements ILifecycleService {
     }
 
     private Dialogue getEncounterDialogue(Trainer trainer, Trainer me) {
-        if (!monsterService.checkIfMonstersHealed()) {
+        if (!monsterService.anyMonsterAlive()) {
             return Dialogue.builder()
                     .setTrainerId(trainer._id())
                     .addItem(translateString("dialogue.encounter.reject"))
@@ -128,7 +130,7 @@ public class InteractionService implements ILifecycleService {
     }
 
     private Dialogue getHealDialogue(Trainer trainer, Trainer me) {
-        if (monsterService.checkIfMonstersHealed()) {
+        if (!monsterService.anyMonsterDamaged()) {
             return Dialogue.builder()
                     .setTrainerId(trainer._id())
                     .addItem(translateString("dialogue.heal.reject"))
