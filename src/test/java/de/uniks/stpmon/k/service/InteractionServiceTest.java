@@ -34,6 +34,8 @@ public class InteractionServiceTest {
     TrainerService trainerService;
     @Mock
     PresetService presetService;
+    @Mock
+    MonsterService monsterService;
     @Spy
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
@@ -157,6 +159,9 @@ public class InteractionServiceTest {
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(trainer));
         when(trainerService.getMe()).thenReturn(DummyConstants.TRAINER);
         when(resourceBundleProvider.get()).thenReturn(resources);
+
+        // If any monster is not fully healed, a heal dialogue should be found
+        when(monsterService.anyMonsterDamaged()).thenReturn(true);
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
