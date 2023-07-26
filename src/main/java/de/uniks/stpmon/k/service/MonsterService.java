@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MonsterService extends DestructibleElement {
@@ -39,6 +40,20 @@ public class MonsterService extends DestructibleElement {
                 )
         );
         isInitialized = true;
+    }
+
+    /**
+     * Determines if all monsters are fully healed.
+     *
+     * @return true if all monsters are fully healed, false otherwise
+     */
+    public boolean checkIfMonstersHealed() {
+        init();
+        if (monsterCache == null) {
+            return true;
+        }
+        return monsterCache.getCurrentValues().stream()
+                .allMatch(monster -> Objects.equals(monster.currentAttributes().health(), monster.attributes().health()));
     }
 
     public Observable<List<Monster>> getTeam() {

@@ -80,9 +80,15 @@ public class InteractionService implements ILifecycleService {
     }
 
     private Dialogue getEncounterDialogue(Trainer trainer, Trainer me) {
+        if (!monsterService.checkIfMonstersHealed()) {
+            return Dialogue.builder()
+                    .setTrainerId(trainer._id())
+                    .addItem(translateString("dialogue.encounter.reject"))
+                    .create();
+        }
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
-                .addItem().setText(translateString("dialogue.intro"))
+                .addItem().setText(translateString("dialogue.encounter.intro"))
                 .addOption().setText(translateString("dialogue.select.no")).endOption()
                 .addOption()
                 .setText(translateString("dialogue.select.yes"))
@@ -127,9 +133,15 @@ public class InteractionService implements ILifecycleService {
     }
 
     private Dialogue getHealDialogue(Trainer trainer, Trainer me) {
+        if (monsterService.checkIfMonstersHealed()) {
+            return Dialogue.builder()
+                    .setTrainerId(trainer._id())
+                    .addItem(translateString("dialogue.heal.reject"))
+                    .create();
+        }
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
-                .addItem().setText(translateString("heal.intro"))
+                .addItem().setText(translateString("dialogue.heal.intro"))
                 .addOption()
                 .setText(translateString("yes"))
                 .addAction(this::applyOverlayEffect)
