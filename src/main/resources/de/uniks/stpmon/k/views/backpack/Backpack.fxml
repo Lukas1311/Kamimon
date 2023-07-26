@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane maxHeight="70.0" maxWidth="70.0" minHeight="70.0" minWidth="70.0" prefHeight="70.0" prefWidth="70.0"
+            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.backpack.BackpackController">
+    <ImageView fx:id="backpackImage" fitHeight="50.0" fitWidth="50.0" layoutX="26.0"
+               onMouseClicked="#triggerBackPackMenu" pickOnBounds="true" preserveRatio="true" smooth="false"
+               AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+    </ImageView>
+    <padding>
+        <Insets top="80.0"/>
+    </padding>
+</AnchorPane>

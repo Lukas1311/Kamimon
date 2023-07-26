@@ -20,6 +20,18 @@ public class MonsterStatusController extends Controller {
         this.status = status;
     }
 
+    /**
+     * Shrinks the effect to a small icon. To be used when the effect is displayed in the inventory.
+     */
+    public void shrink() {
+        if (effect == null) {
+            return;
+        }
+        effect.setFitHeight(15);
+        effectBackground.setPrefHeight(15);
+        effectBackground.setPrefWidth(15);
+    }
+
     @Override
     public Parent render() {
         Parent render = super.render();
@@ -30,5 +42,10 @@ public class MonsterStatusController extends Controller {
         effect.setId("effect_" + status);
         loadImage(effect, status.getIconName());
         return render;
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 }

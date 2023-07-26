@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="monBoxMenuHolder" maxHeight="407.0" maxWidth="450.0" minHeight="407.0" minWidth="450.0"
+            prefHeight="407.0" prefWidth="450.0" translateY="-13.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.monsters.MonsterInventoryController">
+    <GridPane fx:id="monTeam" alignment="CENTER" gridLinesVisible="true" layoutY="41.0" prefHeight="55.0"
+              prefWidth="428.0" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="27.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="72.5" minHeight="72.5" prefHeight="72.5" valignment="CENTER" vgrow="ALWAYS"/>
+        </rowConstraints>
+    </GridPane>
+    <GridPane fx:id="monStorage" alignment="CENTER" gridLinesVisible="true" AnchorPane.leftAnchor="6.0"
+              AnchorPane.topAnchor="107.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="72.5" minWidth="72.5" prefWidth="72.5"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="72.5" minHeight="72.5" prefHeight="72.5" valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints maxHeight="72.5" minHeight="72.5" prefHeight="72.5" valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints maxHeight="72.5" minHeight="72.5" prefHeight="72.5" valignment="CENTER" vgrow="ALWAYS"/>
+            <RowConstraints maxHeight="72.5" minHeight="72.5" prefHeight="72.5" valignment="CENTER" vgrow="ALWAYS"/>
+        </rowConstraints>
+    </GridPane>
+</AnchorPane>

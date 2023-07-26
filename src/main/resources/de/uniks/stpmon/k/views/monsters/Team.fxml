@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0"
+      prefWidth="300.0" spacing="2.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.monsters.TeamController">
+    <VBox maxHeight="154.0" maxWidth="125.0" minHeight="154.0" minWidth="125.0" prefHeight="154.0" prefWidth="125.0"
+          spacing="2.0">
+        <ImageView fx:id="arrowImageView" fitHeight="19.0" fitWidth="27.0" translateX="10.0"/>
+        <VBox fx:id="monsterListVBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity"
+              minHeight="-Infinity" minWidth="-Infinity" prefHeight="133.0" prefWidth="125.0"
+              stylesheets="@../css/ingameStyle.css">
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <styleClass>
+                <String fx:value="team-monster-holder"/>
+                <String fx:value="ingame"/>
+                <String fx:value="backpack-menu-entry"/>
+            </styleClass>
+        </VBox>
+    </VBox>
+    <VBox fx:id="monsterInformation" prefHeight="200.0" prefWidth="200.0">
+        <HBox.margin>
+            <Insets top="18.0"/>
+        </HBox.margin>
+    </VBox>
+</HBox>
