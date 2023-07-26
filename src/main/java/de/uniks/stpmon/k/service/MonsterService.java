@@ -41,6 +41,34 @@ public class MonsterService extends DestructibleElement {
         isInitialized = true;
     }
 
+    /**
+     * Determines if any monster is still alive
+     *
+     * @return true if any monster is alive, false otherwise
+     */
+    public boolean anyMonsterAlive() {
+        init();
+        if (monsterCache == null) {
+            return true;
+        }
+        return monsterCache.getCurrentValues().stream()
+                .anyMatch(monster -> monster.currentAttributes().health() > 0);
+    }
+
+    /**
+     * Determines if any monster is damaged.
+     *
+     * @return true if any monster is damaged, false otherwise
+     */
+    public boolean anyMonsterDamaged() {
+        init();
+        if (monsterCache == null) {
+            return true;
+        }
+        return monsterCache.getCurrentValues().stream()
+                .anyMatch(monster -> monster.currentAttributes().health() < monster.attributes().health());
+    }
+
     public Observable<List<Monster>> getTeam() {
         init();
         if (monsterCache == null) {
