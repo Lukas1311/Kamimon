@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
@@ -21,11 +22,14 @@ import javax.inject.Singleton;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Singleton
 public class MonsterInventoryController extends Controller {
 
 
+    public static final int TEAM_SIZE = 6;
+    public static final int ROW_COUNT = 4;
     @FXML
     public GridPane monTeam;
     @FXML
@@ -56,8 +60,8 @@ public class MonsterInventoryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        targetGrid(monStorage);
-        targetGrid(monTeam);
+        handleDrag(monStorage, this::dragIntoStorageGrid);
+        handleDrag(monTeam, this::dragIntoTeamGrid);
         subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
         subscribe(monsterService.getTeam(), monsters -> {
             showTeamMonster(monsters);
@@ -74,11 +78,10 @@ public class MonsterInventoryController extends Controller {
         super.destroy();
         // Update team if leave monbox
         // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
-        ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        // ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
     }
 
     private void showTeamMonster(List<Monster> monsters) {
-        int monsterIndexTeam = 0;
         monTeamList = new ArrayList<>();
         monTeam.getChildren().clear();
 
@@ -87,23 +90,20 @@ public class MonsterInventoryController extends Controller {
             Monster monster = monsters.get(i);
             Parent parent = createMonsterItem(monster);
             parent.setId("team_" + i);
-            monTeam.add(parent, monsterIndexTeam, 0);
+            monTeam.add(parent, i, 0);
             monTeamList.add(monster._id());
-            monsterIndexTeam++;
         }
     }
 
     private void showMonsterList(List<Monster> monsters) {
         List<Monster> currentMonsters = new ArrayList<>(monsters);
         List<Monster> teamMonsters = monsterService.getTeam().blockingFirst();
-        int columnCount = 6;
-        int rowCount = 4;
         currentMonsters.removeAll(teamMonsters);
         monStorage.getChildren().clear();
         monsterIndexStorage = 0;
 
-        for (int row = 0; row < rowCount; row++) {
-            for (int column = 0; column < columnCount; column++) {
+        for (int row = 0; row < ROW_COUNT; row++) {
+            for (int column = 0; column < TEAM_SIZE; column++) {
                 if (monsterIndexStorage < currentMonsters.size()) {
                     Monster monster = currentMonsters.get(monsterIndexStorage);
                     Node node = createMonsterItem(monster);
@@ -173,42 +173,68 @@ public class MonsterInventoryController extends Controller {
             }
             event.consume();
         });
+        targetTeam(parent);
     }
 
-    private void targetGrid(GridPane gridPane) {
-        gridPane.setOnDragOver(event -> {
-            if (event.getGestureSource() != gridPane && event.getDragboard().hasImage()) {
+    private void shiftToStorage() {
+        monTeamList.remove(selectedMonster);
+
+        monStorage.add(monParent, monsterIndexStorage % TEAM_SIZE, monsterIndexStorage / TEAM_SIZE);
+        monsterIndexStorage++;
+
+        trainerService.temporaryApplyTeam(monTeamList);
+    }
+
+    private boolean isInvalidDrag(DragEvent event) {
+        Dragboard dragboard = event.getDragboard();
+        // string is used for testing, dragging images does not work in headless mode
+        return !dragboard.hasImage() && !dragboard.hasString();
+    }
+
+    private void handleDrag(Parent parent, Consumer<? super DragEvent> callback) {
+        parent.setOnDragOver(event -> {
+            if (event.getGestureSource() != parent && event.getDragboard().hasImage()) {
                 event.acceptTransferModes(TransferMode.MOVE);
             }
             event.consume();
         });
-
-        gridPane.setOnDragDropped(event -> {
-            Dragboard dragboard = event.getDragboard();
-            // string is used for testing, dragging images does not work in headless mode
-            if (dragboard.hasImage() || dragboard.hasString()) {
-                Parent parent = monParent;
-
-                if (gridPane.equals(monStorage) && !monStorage.getChildren().contains(parent)) {
-                    monTeamList.remove(selectedMonster);
-
-                    monStorage.add(parent, monsterIndexStorage % 6, monsterIndexStorage / 6);
-                    monsterIndexStorage++;
-
-                    trainerService.temporaryApplyTeam(monTeamList);
-                }
-                if (gridPane.equals(monTeam)
-                        && !monTeam.getChildren().contains(parent)
-                        && monTeamList.size() < 6) {
-                    monStorage.getChildren().remove(parent);
-
-                    monTeamList.add(selectedMonster);
-                    monsterIndexStorage--;
-                    trainerService.temporaryApplyTeam(monTeamList);
-                }
-                event.setDropCompleted(true);
-            }
+        parent.setOnDragDropped(event -> {
             event.consume();
+            if (isInvalidDrag(event)) {
+                return;
+            }
+            callback.accept(event);
+        });
+    }
+
+    private void targetTeam(Parent monsterItem) {
+        handleDrag(monsterItem, (event) -> {
+            // Move to storage, if monster under the cursor is in the storage
+            if (monsterItem.getId().startsWith("storage_")) {
+                shiftToStorage();
+            }
+            if (monsterItem.getId().startsWith("team_")
+                    && (!monTeam.getChildren().contains(monParent)
+                    || monTeamList.size() < TEAM_SIZE)) {
+                boolean alreadyInTeam = monTeam.getChildren().contains(monParent);
+                boolean teamIsFull = monTeamList.size() >= TEAM_SIZE;
+                if (alreadyInTeam && teamIsFull) {
+                    event.setDropCompleted(true);
+                    return;
+                }
+                // Remove first to avoid duplicates
+                if (alreadyInTeam) {
+                    monTeamList.remove(selectedMonster);
+                }
+                int monsterIndex = monTeam.getChildren().indexOf(monsterItem);
+                monStorage.getChildren().remove(monParent);
+                if (!alreadyInTeam) {
+                    monsterIndexStorage--;
+                }
+                monTeamList.add(monsterIndex, selectedMonster);
+                trainerService.temporaryApplyTeam(monTeamList);
+            }
+            event.setDropCompleted(true);
         });
     }
 
@@ -217,4 +243,22 @@ public class MonsterInventoryController extends Controller {
         return "monsters/";
     }
 
+    private void dragIntoTeamGrid(DragEvent event) {
+        if (!monTeam.getChildren().contains(monParent)
+                && monTeamList.size() < TEAM_SIZE) {
+            monStorage.getChildren().remove(monParent);
+
+            monTeamList.add(selectedMonster);
+            monsterIndexStorage--;
+            trainerService.temporaryApplyTeam(monTeamList);
+        }
+        event.setDropCompleted(true);
+    }
+
+    private void dragIntoStorageGrid(DragEvent event) {
+        if (!monStorage.getChildren().contains(monParent)) {
+            shiftToStorage();
+        }
+        event.setDropCompleted(true);
+    }
 }
