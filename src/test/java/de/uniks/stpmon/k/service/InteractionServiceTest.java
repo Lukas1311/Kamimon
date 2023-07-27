@@ -60,12 +60,30 @@ public class InteractionServiceTest {
         // Empty at first
         assertNull(interactionStorage.getDialogue());
 
-        when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(DummyConstants.TRAINER));
+        when(trainerService.getFacingTrainer(1)).thenReturn(
+                Optional.of(TrainerBuilder.builder()
+                        .setNpc(NPCInfoBuilder.builder().create()).create()));
 
         // Search for dialogue in facing trainer
         interactionService.tryUpdateDialogue();
         // Not found dialogue, still empty
         assertNull(interactionStorage.getDialogue());
+    }
+
+
+    @Test
+    void playerDialogue() {
+        // Empty at first
+        assertNull(interactionStorage.getDialogue());
+
+        // Setup mocked values
+        when(resourceBundleProvider.get()).thenReturn(resources);
+        when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(DummyConstants.TRAINER));
+
+        // Search for dialogue in facing trainer
+        interactionService.tryUpdateDialogue();
+        // Dialogue found, trainer is another player
+        assertNotNull(interactionStorage.getDialogue());
     }
 
     @Test

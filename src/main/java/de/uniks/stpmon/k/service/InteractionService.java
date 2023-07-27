@@ -57,8 +57,9 @@ public class InteractionService implements ILifecycleService {
         NPCInfo info = trainer.npc();
         Trainer me = trainerService.getMe();
 
+        // if the trainer is not an NPC, we will start a battle
         if (info == null) {
-            return null;
+            return getEncounterDialogue(trainer, me, "player");
         }
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
@@ -70,22 +71,22 @@ public class InteractionService implements ILifecycleService {
             return getStarterDialogue(starters, me, trainer);
         }
         if (info.encounterOnTalk()) {
-            return getEncounterDialogue(trainer, me);
+            return getEncounterDialogue(trainer, me, "npc");
         }
 
         return null;
     }
 
-    private Dialogue getEncounterDialogue(Trainer trainer, Trainer me) {
+    private Dialogue getEncounterDialogue(Trainer trainer, Trainer me, String infix) {
         if (!monsterService.anyMonsterAlive()) {
             return Dialogue.builder()
                     .setTrainerId(trainer._id())
-                    .addItem(translateString("dialogue.encounter.reject"))
+                    .addItem(translateString("dialogue.encounter." + infix + ".reject"))
                     .create();
         }
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
-                .addItem().setText(translateString("dialogue.encounter.intro"))
+                .addItem().setText(translateString("dialogue.encounter." + infix + ".intro"))
                 .addOption().setText(translateString("dialogue.select.no")).endOption()
                 .addOption()
                 .setText(translateString("dialogue.select.yes"))
