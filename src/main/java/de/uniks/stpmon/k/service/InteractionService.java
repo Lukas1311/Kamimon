@@ -11,7 +11,10 @@ import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -40,6 +43,8 @@ public class InteractionService implements ILifecycleService {
     @Inject
     MonsterService monsterService;
     @Inject
+    UserService userService;
+    @Inject
     Provider<IngameController> ingameControllerProvider;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
@@ -57,9 +62,8 @@ public class InteractionService implements ILifecycleService {
         NPCInfo info = trainer.npc();
         Trainer me = trainerService.getMe();
 
-        // if the trainer is not an NPC, we will start a battle
         if (info == null) {
-            return getEncounterDialogue(trainer, me, "player");
+            return null;
         }
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
@@ -77,12 +81,16 @@ public class InteractionService implements ILifecycleService {
         return null;
     }
 
+    private Dialogue getRejectionDialogue(Trainer trainer, String infix, String... params) {
+        return Dialogue.builder()
+                .setTrainerId(trainer._id())
+                .addItem(translateString("dialogue.encounter." + infix + ".reject", params))
+                .create();
+    }
+
     private Dialogue getEncounterDialogue(Trainer trainer, Trainer me, String infix) {
         if (!monsterService.anyMonsterAlive()) {
-            return Dialogue.builder()
-                    .setTrainerId(trainer._id())
-                    .addItem(translateString("dialogue.encounter." + infix + ".reject"))
-                    .create();
+            return getRejectionDialogue(trainer, infix);
         }
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerId(trainer._id())
@@ -176,7 +184,7 @@ public class InteractionService implements ILifecycleService {
      *
      * @return The current dialogue, or null if there is none.
      */
-    public Dialogue getPossibleDialogue() {
+    public Observable<Dialogue> getPossibleDialogue() {
         for (int i = 1; i <= DISTANCE_CHECKED_FOR_TRAINERS; i++) {
             Optional<Trainer> optionalTrainer = trainerService.getFacingTrainer(i);
             if (optionalTrainer.isEmpty()) {
@@ -185,17 +193,67 @@ public class InteractionService implements ILifecycleService {
             Trainer trainer = optionalTrainer.get();
             Dialogue dialogue = getDialogue(trainer);
             if (dialogue != null) {
-                return dialogue;
+                return Observable.just(dialogue);
             }
         }
-        return null;
+
+        return getEncounterDialogue();
+    }
+
+
+    /**
+     * Retrieves the dialogue of a trainer in front of the player.
+     * If the trainer is not online, or no monster of the other trainer is alive, the dialogue will not
+     * start a battle.
+     *
+     * @return Observable of the dialogue, or empty if there is none.
+     */
+    public Observable<Dialogue> getEncounterDialogue() {
+        Optional<Trainer> frontTrainer = trainerService.getFacingTrainer(1);
+        if (frontTrainer.isEmpty()) {
+            return Observable.empty();
+        }
+        Trainer me = trainerService.getMe();
+        Trainer trainer = frontTrainer.get();
+
+        // Only create a dialogue if the trainer is not an NPC
+        if (trainer.npc() != null) {
+            return Observable.empty();
+        }
+
+        return userService.isOnline(trainer.user()).flatMap((isOnline) -> {
+            if (!isOnline) {
+                return Observable.just(
+                        getRejectionDialogue(trainer, "player.offline", trainer.name())
+                );
+            }
+            return monsterService.anyMonsterAlive(trainer._id()).map((anyAlive) -> {
+                if (!anyAlive) {
+                    return getRejectionDialogue(trainer, "player.dead");
+                }
+                return getEncounterDialogue(trainer, me, "player");
+            });
+        }).onErrorResumeNext((error) -> {
+            if (error instanceof HttpException http && http.code() == 429) {
+                return Observable.just(getRejectionDialogue(trainer, "player.rateLimit"));
+            }
+            return Observable.error(error);
+        });
     }
 
     /**
      * Tries to update the current dialogue to the one of the facing trainer.
      */
-    public void tryUpdateDialogue() {
-        interactionStorage.setDialogue(getPossibleDialogue());
+    public Completable tryUpdateDialogue() {
+        return getPossibleDialogue().defaultIfEmpty(Dialogue.EMPTY).doOnNext((dialogue) -> {
+                    if (dialogue == null || dialogue.isEmpty()) {
+                        interactionStorage.setDialogue(null);
+                        return;
+
+                    }
+                    interactionStorage.setDialogue(dialogue);
+                })
+                .ignoreElements();
     }
 
     private void applyOverlayEffect() {
