@@ -61,8 +61,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
             case FLEE -> "flee";
         };
 
-        HBox optionContainer = getActionField()
-                .getOptionContainer(translateString(optionText));
+        HBox optionContainer = ActionFieldController.getOptionContainer(translateString(optionText));
 
         optionContainer.setOnMouseClicked(event -> openAction(option));
 
@@ -84,7 +83,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         }
     }
 
-    private void openInventory() {
+    public void openInventory() {
         if (encounterOverviewProvider.get().inventoryPane == null) {
             encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
             inventoryControllerProvider.get().isInEncounter = true;

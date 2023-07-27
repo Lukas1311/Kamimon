@@ -138,7 +138,7 @@ public class ActionFieldController extends Controller {
         ownMonsterDead = false;
     }
 
-    public HBox getOptionContainer(String option) {
+    public static HBox getOptionContainer(String option) {
         Text arrowText = new Text(" >");
 
         Text optionText = new Text(option);

@@ -437,6 +437,12 @@ public class EncounterOverviewController extends Controller {
         if (opponentFullTransition2 != null) {
             parallel2.getChildren().add(opponentFullTransition2);
         }
+        SequentialTransition fullSequence = getSequentialTransition(parallel1, parallel2);
+
+        fullSequence.play();
+    }
+
+    private SequentialTransition getSequentialTransition(ParallelTransition parallel1, ParallelTransition parallel2) {
         SequentialTransition sequence = new SequentialTransition(parallel1, parallel2);
         sequence.setOnFinished(e -> actionFieldWrapperBox.setOpacity(1));
 
@@ -444,9 +450,7 @@ public class EncounterOverviewController extends Controller {
                 Duration.millis(effectContext.getEncounterAnimationSpeed()), actionFieldWrapperBox);
         actionFieldTransition.setFromX(600);
         actionFieldTransition.setToX(0);
-        SequentialTransition fullSequence = new SequentialTransition(sequence, actionFieldTransition);
-
-        fullSequence.play();
+        return new SequentialTransition(sequence, actionFieldTransition);
     }
 
     private ParallelTransition createMonsterTransition(Node image, Node status, boolean attacker) {
