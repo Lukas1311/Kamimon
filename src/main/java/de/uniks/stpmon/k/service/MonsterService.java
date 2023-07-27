@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.ICache;
@@ -18,6 +19,10 @@ public class MonsterService extends DestructibleElement {
     CacheManager cacheManager;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    RegionService regionService;
+    @Inject
+    RegionStorage regionStorage;
 
     private MonsterCache monsterCache;
 
@@ -44,6 +49,18 @@ public class MonsterService extends DestructibleElement {
     /**
      * Determines if any monster is still alive
      *
+     * @param trainerId the id of the trainer
+     * @return observable that emits true if any monster is alive, false otherwise
+     */
+    public Observable<Boolean> anyMonsterAlive(String trainerId) {
+        String regionId = regionStorage.getRegion()._id();
+        return regionService.getMonsters(regionId, trainerId)
+                .map(this::anyMonsterAlive);
+    }
+
+    /**
+     * Determines if any monster is still alive
+     *
      * @return true if any monster is alive, false otherwise
      */
     public boolean anyMonsterAlive() {
@@ -51,7 +68,11 @@ public class MonsterService extends DestructibleElement {
         if (monsterCache == null) {
             return true;
         }
-        return monsterCache.getCurrentValues().stream()
+        return anyMonsterAlive(monsterCache.getCurrentValues());
+    }
+
+    private boolean anyMonsterAlive(List<Monster> monsters) {
+        return monsters.stream()
                 .anyMatch(monster -> monster.currentAttributes().health() > 0);
     }
 
