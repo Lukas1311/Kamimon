@@ -213,4 +213,16 @@ public class UserService implements ILifecycleService {
         return userApiService.deleteUser(currentUser._id());
     }
 
+
+    /**
+     * Checks if the user is online
+     *
+     * @param id id of the user
+     * @return observable which emits true if the user is online
+     */
+    public Observable<Boolean> isOnline(String id) {
+        return userApiService.getUser(id)
+                .map(e -> e.status().equals(OnlineStatus.ONLINE.toString()));
+    }
+
 }
