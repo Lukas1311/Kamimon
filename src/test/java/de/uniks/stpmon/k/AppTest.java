@@ -524,6 +524,11 @@ class AppTest extends ApplicationTest {
         clickOn("#type2Label");
         clickOn("#backpackImage");
 
+        //test inventory
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_2");
+        waitForFxEvents();
+        verifyThat("#inventoryPane", Node::isVisible);
 
     }
 
