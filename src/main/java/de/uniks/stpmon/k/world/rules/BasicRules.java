@@ -9,6 +9,7 @@ public class BasicRules {
 
     public static final String TILESET_ROOM_BUILDER = TILESET_BASE + "Room_Builder_16x16.json";
     public static final String TILESET_PIXEL_WOODS = TILESET_BASE + "Pixel_Woods_16x16.json";
+    public static final String TILESET_CAVES = TILESET_BASE + "Caves_And_Mountains_16x16.json";
 
     public static RuleRegistry registerRules() {
         RuleRegistry registry = new RuleRegistry();
@@ -47,9 +48,12 @@ public class BasicRules {
 
         // small houses
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(66, 4, 7, 176),
-                new IdSource.Rectangle(70, 4, 7, 176),
-                new IdSource.Rectangle(1298, 4, 7, 176),
+                new IdSource.Rectangle(66, 4, 7, 176));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(70, 4, 7, 176));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1298, 4, 7, 176));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(1302, 4, 7, 176));
 
         // pool
@@ -62,6 +66,34 @@ public class BasicRules {
                 new IdSource.Rectangle(33229, 12, 3, 176));
         registry.markBottom(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(33047, 24, 1, 176));
+
+        // snow field
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 208, 6, 3, 16));
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 154, 6, 3, 16));
+
+        // snow trees
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 152, 2, 2, 16));
+
+        // mines
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 260, 6, 3, 16));
+
+        // mountain
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 202, 6, 12, 16));
+
+        // metal bridge
+        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 214, 3, 3, 16));
+
+        // cave and mountain
+        registry.markDecoration(TILESET_CAVES,
+                new IdSource.Rectangle(1, 22, 23, 24));
+        registry.markDecoration(TILESET_CAVES,
+                new IdSource.Rectangle(380, 5, 8, 24));
 
         // modular fence exclusion
         registry.markDecoration(TILESET_MODERN_EXTERIORS, 32999, 33002, 33175, 33178);
@@ -145,10 +177,15 @@ public class BasicRules {
         // Farm fence entangled
         registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
                 new IdSource.Rectangle(41713 + 310, 4, 4, 16),
-                new IdSource.Rectangle(41713 + 256, 1, 4, 16));
+                new IdSource.Rectangle(41713 + 288, 1, 4, 16));
         registry.markEntangled(TILESET_MODERN_EXTERIORS_EXTENDED,
                 new IdSource.Rectangle(41713 + 256, 4, 6, 16),
                 new IdSource.Rectangle(41713 + 308, 4, 4, 16));
+        registry.markBottom(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713 + 336, 4, 1, 16),
+                new IdSource.Rectangle(41713 + 356, 2, 1, 16),
+                new IdSource.Rectangle(41713 + 304, 4, 1, 16),
+                new IdSource.Rectangle(41713 + 324, 2, 1, 16));
 
         // Lantern entangled
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
