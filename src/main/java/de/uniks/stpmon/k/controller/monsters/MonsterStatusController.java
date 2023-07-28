@@ -45,6 +45,12 @@ public class MonsterStatusController extends Controller {
     }
 
     @Override
+    public void destroy() {
+        super.destroy();
+        effect = null;
+    }
+
+    @Override
     public String getResourcePath() {
         return "monsters/";
     }

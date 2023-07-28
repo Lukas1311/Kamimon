@@ -243,6 +243,12 @@ public class MonsterInformationController extends Controller {
         return parent;
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        monsterImage = null;
+    }
+
     public void loadLevelUp(Monster oldMon, Monster newMon) {
         loadMonsterTypeDto(String.valueOf(newMon.type()));
         loadMonster(newMon);

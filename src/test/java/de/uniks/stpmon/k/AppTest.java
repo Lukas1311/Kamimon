@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.dummies.TestHelper;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -58,7 +59,8 @@ class AppTest extends ApplicationTest {
     void criticalPathV1() {
         TestHelper.addMovementDummy(component.eventListener());
 
-        app.show(component.loginController());
+        Platform.runLater(() -> app.show(component.loginController()));
+        waitForFxEvents();
 
         //put in username and password
         clickOn("#usernameInput");
@@ -182,7 +184,8 @@ class AppTest extends ApplicationTest {
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
 
-        app.show(component.hybridController());
+        Platform.runLater(() -> app.show(component.hybridController()));
+        waitForFxEvents();
 
         //set User
         User user = new User(
@@ -277,7 +280,8 @@ class AppTest extends ApplicationTest {
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
         app.addInputHandler(component);
-        app.show(component.hybridController());
+        Platform.runLater(() -> app.show(component.hybridController()));
+        waitForFxEvents();
 
         //set User
         User user = new User(
@@ -485,7 +489,8 @@ class AppTest extends ApplicationTest {
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
         app.addInputHandler(component);
-        app.show(component.hybridController());
+        Platform.runLater(() -> app.show(component.hybridController()));
+        waitForFxEvents();
 
         //set User
         User user = new User(
