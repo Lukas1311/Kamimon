@@ -78,7 +78,7 @@ public class MonsterInventoryController extends Controller {
         super.destroy();
         // Update team if leave monbox
         // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
-        // ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
     }
 
     private void showTeamMonster(List<Monster> monsters) {
