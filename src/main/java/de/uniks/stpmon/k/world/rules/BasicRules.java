@@ -14,6 +14,55 @@ public class BasicRules {
         RuleRegistry registry = new RuleRegistry();
         // City Fence exclusion
         registry.markDecoration(TILESET_MODERN_EXTERIORS, 2141, 2143, 3194, 3193);
+
+        // City decoration exclusion
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(2642, 2, 3, 176),
+                new IdSource.Rectangle(3171, 2, 3, 176));
+
+        // City trees
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1077, 4, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1079, 4, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1959, 6, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(2126, 2, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1244, 2, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1596, 2, 1, 176));
+
+        // Swing
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(3708, 5, 3, 176),
+                new IdSource.Rectangle(4237, 3, 2, 176));
+
+        // boxwood
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(38223, 1, 2, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(38399, 4, 1, 176));
+
+        // small houses
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(66, 4, 7, 176),
+                new IdSource.Rectangle(70, 4, 7, 176),
+                new IdSource.Rectangle(1298, 4, 7, 176),
+                new IdSource.Rectangle(1302, 4, 7, 176));
+
+        // pool
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(34862, 15, 8, 176),
+                new IdSource.Rectangle(36270, 14, 4, 176));
+
+        // building stairs
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(33229, 12, 3, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(33047, 24, 1, 176));
+
         // modular fence exclusion
         registry.markDecoration(TILESET_MODERN_EXTERIORS, 32999, 33002, 33175, 33178);
         // forest fence entangle
@@ -211,12 +260,44 @@ public class BasicRules {
                 new IdSource.Rectangle(39081, 4, 1, 176),
                 new IdSource.Single(38025),
                 new IdSource.Single(38906),
-                new IdSource.Single(38908));
+                new IdSource.Single(38908),
+                new IdSource.Single(37674),
+                new IdSource.Single(37676));
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(37138, 13, 14, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(37322, 3, 1, 176),
+                new IdSource.Rectangle(37675, 1, 1, 176),
+                new IdSource.Rectangle(38201, 4, 1, 176),
+                new IdSource.Rectangle(38554, 3, 1, 176),
+                new IdSource.Rectangle(39433, 4, 1, 176));
         // hedge arch exclusion
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(38559, 15, 4, 176));
+
+        // cypresses
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1594, 2, 4, 176),
+                new IdSource.Rectangle(1068, 2, 2, 176),
+                new IdSource.Rectangle(1064, 2, 4, 176),
+                new IdSource.Rectangle(1068, 2, 2, 176),
+                new IdSource.Rectangle(1070, 3, 4, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1592, 2, 1, 176),
+                new IdSource.Rectangle(2122, 2, 1, 176),
+                new IdSource.Rectangle(1244, 2, 1, 176));
+
+        // fir bottoms
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(2275, 6, 3, 176),
+                new IdSource.Rectangle(3331, 6, 3, 176),
+                new IdSource.Rectangle(7027, 6, 3, 176),
+                new IdSource.Rectangle(8083, 6, 3, 176),
+                new IdSource.Rectangle(11603, 6, 3, 176),
+                new IdSource.Rectangle(12659, 6, 3, 176),
+                new IdSource.Rectangle(16179, 6, 3, 176),
+                new IdSource.Rectangle(17235, 6, 3, 176));
+
 
         // Victory road tree
         registry.markEntangled(TILESET_PIXEL_WOODS,
@@ -277,6 +358,14 @@ public class BasicRules {
                 41713 + 178, 41713 + 176));
         registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS_EXTENDED,
                 41713 + 162, 41713 + 160));
+
+        // connect firs
+        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1925, 2, 1, 176),
+                new IdSource.Rectangle(2103, 2, 1, 176)), false);
+        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1927, 2, 1, 176),
+                new IdSource.Rectangle(2101, 2, 1, 176)), false);
         return registry;
     }
 }
