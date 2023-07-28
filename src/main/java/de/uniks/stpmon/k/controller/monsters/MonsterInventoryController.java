@@ -27,7 +27,6 @@ import java.util.function.Consumer;
 @Singleton
 public class MonsterInventoryController extends Controller {
 
-
     public static final int TEAM_SIZE = 6;
     public static final int ROW_COUNT = 4;
     @FXML
@@ -79,6 +78,10 @@ public class MonsterInventoryController extends Controller {
         // Update team if leave monbox
         // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
         ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        monParent = null;
+        monTeam = null;
+        monStorage = null;
+        monBoxMenuHolder = null;
     }
 
     private void showTeamMonster(List<Monster> monsters) {
