@@ -8,7 +8,6 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import io.reactivex.rxjava3.core.Observable;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -65,6 +64,11 @@ public class ShopOptionController extends Controller {
 
     private int coins = 0;
 
+
+    private boolean canTrade = false;
+    private boolean hasEnoughCoins = false;
+    private boolean hasAmount = false;
+
     @Inject
     public ShopOptionController() {
 
@@ -100,12 +104,12 @@ public class ShopOptionController extends Controller {
             if(!list.isEmpty()) {
                 int amount = list.get(0).amount();
                 amountLabel.setText("Amount: " + amount);
-                if (amount >= 1) {
-                    sellButton.setVisible(true);
-                    return;
-                }
-                sellButton.setVisible(false);
+                hasAmount = amount >= 1;
+                return;
+            } else {
+                hasAmount = false;
             }
+            updateTradeButtons();
         });
 
         subscribe(resourceService.getItemImage((String.valueOf(item.type()))), imagerUrl -> {
@@ -116,10 +120,15 @@ public class ShopOptionController extends Controller {
                 itemNameLabel.setText(item1.name());
                 buyPriceLabel.setText("Buy Price: " + item1.price().toString());
                 sellPriceLabel.setText("Sell Price: " + item1.price()/2);
-
-                buyButton.setVisible(item1.price() < coins);
-
                 itemDescriptionLabel.setText(item1.description());
+
+                //buttons
+                canTrade = item1.price() > 0;
+                hasEnoughCoins = item1.price() <= coins;
+                updateTradeButtons();
+
+
+
             });
         });
 
@@ -137,6 +146,11 @@ public class ShopOptionController extends Controller {
     @Override
     public String getResourcePath() {
         return "shop/";
+    }
+
+    private void updateTradeButtons(){
+        buyButton.setVisible(canTrade && hasEnoughCoins);
+        sellButton.setVisible(canTrade && hasAmount);
     }
 
 }

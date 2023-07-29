@@ -182,10 +182,19 @@ public class InteractionService implements ILifecycleService {
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("shop.intro"))
                 .addOption()
-                .setText(translateString("shop.selection.no")).endOption()
-                .addOption()
                 .setText(translateString("shop.selection.yes"))
                 .addAction(() -> openShop(trainer))
+                .setNext(Dialogue.builder()
+                        .addItem().setText(translateString("shop.shopping"))
+                        .addOption()
+                        .setText(translateString("shop.done"))
+                        .addAction(this::closeShop)
+                        .endOption()
+                        .endItem()
+                        .create())
+                .endOption()
+                .addOption()
+                .setText(translateString("shop.selection.no"))
                 .endOption()
                 .endItem();
         return itemBuilder.create();
@@ -295,6 +304,9 @@ public class InteractionService implements ILifecycleService {
         System.out.println();
 
         ingameControllerProvider.get().openShop(npc);
+    }
 
+    private void closeShop() {
+        ingameControllerProvider.get().closeShop();
     }
 }

@@ -45,6 +45,7 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
                     .applyWithoutMove(value)
                     .create();
         }
+        System.out.println("Updated Coins: " + value.coins());
         updateValue(value);
     }
 
