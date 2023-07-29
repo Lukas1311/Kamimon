@@ -76,6 +76,17 @@ public class InventoryController extends ToastedController {
         return parent;
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        itemListView.setItems(null);
+        coinView = null;
+        inventoryPane = null;
+        itemListView = null;
+        coinBox = null;
+        coinAmount = null;
+    }
+
     private void setCoins() {
         subscribe(trainerStorage.onTrainer(), trainer ->
                 trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
