@@ -92,9 +92,7 @@ public class InventoryController extends ToastedController {
     private void setCoins() {
         if (trainerService != null) {
             subscribe(trainerService.onTrainer(), trainer ->
-                    trainer.ifPresent(value -> {
-                        coinAmount.setText(value.coins().toString());
-                    }));
+                    trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
         }
     }
 
