@@ -93,7 +93,6 @@ public class MonsterItemController extends Controller {
         return parent;
     }
 
-
     public Image getMonImage() {
         return monsterImageView.getImage();
     }

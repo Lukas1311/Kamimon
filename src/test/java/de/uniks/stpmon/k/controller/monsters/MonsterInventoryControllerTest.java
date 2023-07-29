@@ -118,11 +118,7 @@ public class MonsterInventoryControllerTest extends ApplicationTest {
     public void test() {
         doAnswer((invocation) -> {
             List<String> teamArg = invocation.getArgument(0);
-            if (teamArg.size() == 0) {
-                team.onNext(List.of());
-            } else {
-                team.onNext(List.of(DummyConstants.MONSTER));
-            }
+            team.onNext(teamArg.isEmpty() ? List.of() : List.of(DummyConstants.MONSTER));
 
             monsters.onNext(List.of(DummyConstants.MONSTER, MonsterBuilder.builder().setId("second").create()));
             return null;
