@@ -127,8 +127,6 @@ public class ShopOptionController extends Controller {
                 hasEnoughCoins = item1.price() <= coins;
                 updateTradeButtons();
 
-
-
             });
         });
 
@@ -149,8 +147,8 @@ public class ShopOptionController extends Controller {
     }
 
     private void updateTradeButtons(){
-        buyButton.setVisible(canTrade && hasEnoughCoins);
-        sellButton.setVisible(canTrade && hasAmount);
+        buyButton.setDisable(!(canTrade && hasEnoughCoins));
+        sellButton.setDisable(!(canTrade && hasAmount));
     }
 
 }

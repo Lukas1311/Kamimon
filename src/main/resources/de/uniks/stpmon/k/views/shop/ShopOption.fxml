@@ -18,8 +18,8 @@
         <Label fx:id="buyPriceLabel" maxHeight="18.0" maxWidth="135.0" minHeight="18.0" minWidth="135.0" prefHeight="18.0" prefWidth="135.0" text="Buy Price: 20" />
         <Label fx:id="sellPriceLabel" maxHeight="18.0" maxWidth="135.0" minHeight="18.0" minWidth="135.0" prefHeight="18.0" prefWidth="135.0" text="Sell Price: 10" />
         <HBox alignment="CENTER" fillHeight="false" maxHeight="35.0" maxWidth="154.0" minHeight="35.0" minWidth="154.0" prefHeight="35.0" prefWidth="154.0" spacing="10.0" VBox.vgrow="NEVER">
-            <Button fx:id="buyButton" mnemonicParsing="false" text="kaufen" />
-            <Button fx:id="sellButton" mnemonicParsing="false" text="verkaufen" />
+            <Button fx:id="buyButton" mnemonicParsing="false" text="+" />
+            <Button fx:id="sellButton" mnemonicParsing="false" text="-" />
         </HBox>
     </VBox>
     <HBox alignment="CENTER_LEFT" layoutX="-13.0" layoutY="209.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="254.0">
