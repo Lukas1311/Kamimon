@@ -128,13 +128,14 @@ public class PreparationService {
                 });
     }
 
-    private PropMap createPropMap(TileMap tileMap) {
+    private PropMap createPropMap(TileMap tileMap, Area area) {
         List<DecorationLayer> decorationLayers = tileMap.renderDecorations();
         if (decorationLayers.isEmpty()) {
             return new PropMap(List.of(), new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
         }
         TileMapData data = tileMap.getData();
         PropInspector inspector = new PropInspector(tileMap.getWidth(), tileMap.getHeight(), decorationLayers.size());
+        inspector.setup(area);
         return inspector.work(decorationLayers, data);
     }
 
@@ -155,7 +156,7 @@ public class PreparationService {
         return textureSetService.createMap(area).flatMapCompletable(
                 (tileMap) -> {
                     BufferedImage allLayersImage = tileMap.renderMap();
-                    PropMap propMap = createPropMap(tileMap);
+                    PropMap propMap = createPropMap(tileMap, area);
                     List<TileProp> props = propMap.props();
                     BufferedImage floorImage = mergeFloor(allLayersImage, tileMap, propMap);
                     worldRepository.floorImage().setValue(floorImage);
