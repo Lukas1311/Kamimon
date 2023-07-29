@@ -118,21 +118,13 @@ public class MapOverviewController extends ToastedController {
     }
 
     private void renderMapDetails(List<RouteData> routeListData) {
-        System.out.println("test");
-        double originalWidth = currentRegion.map().width() * TILE_SIZE;
-        double originalHeight = currentRegion.map().height() * TILE_SIZE;
-        double scaledWidth = mapImageView.getFitWidth();
+        double originalHeight = mapImageView.getImage().getHeight();
         double scaledHeight = mapImageView.getFitHeight();
-        double widthRatio = scaledWidth / originalWidth;
-        double heightRatio = scaledHeight / originalHeight;
-        double containerHeight = mapContainer.getHeight();
-        double containerWidth = mapContainer.getWidth();
+        double scaledWidth = mapImageView.getLayoutBounds().getWidth();
+        double scaleRatio = scaledHeight / originalHeight;
 
-        double someOtherHeightRatio = containerHeight / scaledHeight;
+        double offsetX = (mapStackPane.getWidth() - scaledWidth) / 2.0;
 
-        double offsetX = (containerWidth - scaledWidth) / 2.0;
-        double offsetY = (containerHeight - originalHeight) / 2.0;
-        System.out.println("test");
     
         routeListData.forEach(routeData -> {
             if (!routeData.polygon().isEmpty()) {
