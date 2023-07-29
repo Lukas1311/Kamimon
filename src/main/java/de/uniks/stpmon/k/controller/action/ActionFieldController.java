@@ -7,6 +7,8 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterSession;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -38,6 +40,8 @@ public class ActionFieldController extends Controller {
     Provider<EncounterService> encounterServiceProvider;
     @Inject
     SessionService sessionService;
+    @Inject
+    EncounterStorage encounterStorage;
     @Inject
     BattleLogService battleLogService;
 
@@ -160,10 +164,11 @@ public class ActionFieldController extends Controller {
         this.enemyTrainerId = trainerId;
     }
 
-    public void executeAbilityMove() {
+    public void executeAbilityMove(Monster attacker) {
         //TODO: cache old Monster
+        EncounterSession session = encounterStorage.getSession();
         subscribe(encounterServiceProvider.get()
-                .makeAbilityMove(abilityId, enemyTrainerId));
+                .makeAbilityMove(session.getSlotForTrainer(attacker.trainer()), abilityId, enemyTrainerId));
     }
 
     public void checkDeadMonster() {
@@ -175,9 +180,10 @@ public class ActionFieldController extends Controller {
     }
 
     public void executeMonsterChange(Monster selectedMonster) {
+        EncounterSession session = encounterStorage.getSession();
         EncounterService encounterService = encounterServiceProvider.get();
-        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(selectedMonster) :
-                encounterService.makeChangeMonsterMove(selectedMonster));
+        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(session.getSlotForTrainer(selectedMonster.trainer()), selectedMonster) :
+                encounterService.makeChangeMonsterMove(session.getSlotForTrainer(selectedMonster.trainer()), selectedMonster));
         setOwnMonsterDead(false);
     }
 

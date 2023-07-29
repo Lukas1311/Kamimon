@@ -54,9 +54,10 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             addActionOption(back, true);
         }
 
+        //TODO
         Monster primaryMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
         Monster secondaryMonster = null;
-        if (sessionService.getEncounterType().equals("2v1") || sessionService.getEncounterType().equals("2v2")) {
+        if (sessionService.checkTrainer()) {
             secondaryMonster = sessionService.getMonster(EncounterSlot.PARTY_SECOND);
         }
         List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();

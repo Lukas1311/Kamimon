@@ -19,7 +19,8 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     @FXML
     public GridPane abilityGridPane;
 
-    public Monster monster;
+    public Monster attacker;
+    private int nextMonster = 0;
     private int count = 0;
 
     @Inject
@@ -30,10 +31,21 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     public Parent render() {
         Parent parent = super.render();
 
-        monster = sessionService.getMonster(new EncounterSlot(0, false));
+        if (sessionService.checkTrainer()) {
+            if (nextMonster == 0) {
+                attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+                nextMonster++;
+            } else {
+                attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+                nextMonster--;
+            }
+        } else {
+            attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+        }
+
         addBackOption(translateString("back"));
-        for (String id : monster.abilities().keySet()) {
-            addAbility(id, monster.abilities().get(id));
+        for (String id : attacker.abilities().keySet()) {
+            addAbility(id, attacker.abilities().get(id));
         }
         count = 0;
         return parent;
@@ -62,7 +74,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
                 Opponent opponent = sessionService.getOpponent(EncounterSlot.ENEMY_FIRST);
                 actionFieldController.setEnemyTrainerId(opponent.trainer());
                 actionFieldController.openBattleLog();
-                actionFieldController.executeAbilityMove();
+                actionFieldController.executeAbilityMove(attacker);
             } else {
                 actionFieldController.openChooseOpponent();
             }

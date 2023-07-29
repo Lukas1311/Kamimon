@@ -164,6 +164,13 @@ public class SessionService extends DestructibleElement {
         return true;
     }
 
+    public boolean checkTrainer() {
+        if (!hasSlot(EncounterSlot.PARTY_SECOND)) {
+            return false;
+        }
+        return getTrainer(EncounterSlot.PARTY_FIRST).equals(getTrainer(EncounterSlot.PARTY_SECOND));
+    }
+
     //---------------- Session Getters -------------------------
     public EncounterSlot getTarget(String targetId) {
         EncounterSession session = encounterStorage.getSession();
@@ -254,29 +261,5 @@ public class SessionService extends DestructibleElement {
     public void clearEncounter() {
         encounterStorage.setEncounter(null);
         encounterStorage.setSession(null);
-    }
-
-
-    /**
-     * Returns the type (1v1, 1v2, 2v1, 2v2) of the encounter depending on the EncounterSlots
-     *
-     * @return A String which represents the EncounterType
-     */
-    public String getEncounterType() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        //check for two trainer in party
-        if (!hasSlot(EncounterSlot.PARTY_SECOND)) {
-            stringBuilder.append("1");
-        } else {
-            stringBuilder.append("2");
-        }
-        stringBuilder.append("v");
-        if (!hasSlot(EncounterSlot.ENEMY_SECOND)) {
-            stringBuilder.append("1");
-        } else {
-            stringBuilder.append("2");
-        }
-        return stringBuilder.toString();
     }
 }
