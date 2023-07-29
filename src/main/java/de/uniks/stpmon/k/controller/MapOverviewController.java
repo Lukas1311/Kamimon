@@ -131,8 +131,8 @@ public class MapOverviewController extends ToastedController {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
                     polygon.getPoints().addAll(
-                        Double.valueOf(routeData.x() * widthRatio + point.x() * widthRatio) + offsetX,
-                        Double.valueOf(routeData.y() + point.y()) + offsetY
+                        Double.valueOf(routeData.x() + point.x()) * scaleRatio + offsetX,
+                        Double.valueOf(routeData.y() + point.y()) * scaleRatio
                     );
                 }
                 addDetailShape(polygon, routeData);
