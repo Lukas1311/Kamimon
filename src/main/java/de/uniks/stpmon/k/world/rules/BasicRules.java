@@ -75,6 +75,11 @@ public class BasicRules {
         registry.markBottom(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(38399, 4, 1, 176));
 
+        // water
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(1362, 9, 4, 176),
+                new IdSource.Rectangle(306, 17, 6, 176));
+
         // small houses
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(66, 4, 7, 176));
@@ -84,6 +89,14 @@ public class BasicRules {
                 new IdSource.Rectangle(1298, 4, 7, 176));
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(1302, 4, 7, 176));
+
+        //sandbox
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(2704, 12, 4, 176));
+
+        // garden fence
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(41265, 3, 1, 176));
 
         // pool
         registry.markDecoration(TILESET_MODERN_EXTERIORS,

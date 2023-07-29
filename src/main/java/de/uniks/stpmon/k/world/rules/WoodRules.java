@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.world.rules;
 
-import static de.uniks.stpmon.k.world.rules.BasicRules.TILESET_MODERN_EXTERIORS;
-import static de.uniks.stpmon.k.world.rules.BasicRules.TILESET_MODERN_EXTERIORS_EXTENDED;
+import static de.uniks.stpmon.k.world.rules.BasicRules.*;
 
 public class WoodRules {
     public static RuleRegistry registerRules() {
@@ -17,6 +16,10 @@ public class WoodRules {
         // tree house
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(577 + 1500, 4, 4, 176));
+
+        // tree fence
+        registry.markEntangled(TILESET_CAVES,
+                new IdSource.Rectangle(328, 3, 2, 24));
 
         // Entangle (store)
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
