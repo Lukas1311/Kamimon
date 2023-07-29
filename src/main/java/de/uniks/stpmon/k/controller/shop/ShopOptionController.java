@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -62,12 +63,10 @@ public class ShopOptionController extends Controller {
 
     private Trainer npc;
 
-    private int coins = 0;
+    private int availableCoins = 0;
+    private int neededCoins = 1;
+    private int itemAmount = 0;
 
-
-    private boolean canTrade = false;
-    private boolean hasEnoughCoins = false;
-    private boolean hasAmount = false;
 
     @Inject
     public ShopOptionController() {
@@ -83,8 +82,8 @@ public class ShopOptionController extends Controller {
         if (trainerService != null) {
             subscribe(trainerService.onTrainer(), trainer ->
                     trainer.ifPresent(value -> {
-                        coins = value.coins();
-                        coinsLabel.setText(coins + " Coins");
+                        availableCoins = value.coins();
+                        coinsLabel.setText(availableCoins + " Coins");
                         updateTradeButtons();
                     }));
         }
@@ -100,14 +99,12 @@ public class ShopOptionController extends Controller {
     public void setItem(Item item) {
         subscribe(itemService.getItems(), items -> {
             List<Item> list = items.stream().filter(useritem -> Objects.equals(item.type(), useritem.type())).toList();
-            int amount = 0;
             if (!list.isEmpty()) {
-                amount = list.get(0).amount();
-                hasAmount = amount >= 1;
+                itemAmount = list.get(0).amount();
             } else {
-                hasAmount = false;
+                itemAmount = 0;
             }
-            amountLabel.setText("Amount: " + amount);
+            amountLabel.setText("Amount: " + itemAmount);
             updateTradeButtons();
         });
 
@@ -121,9 +118,11 @@ public class ShopOptionController extends Controller {
                 sellPriceLabel.setText("Sell Price: " + item1.price() / 2);
                 itemDescriptionLabel.setText(item1.description());
 
+                buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
+                sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
+
                 //buttons
-                canTrade = item1.price() > 0;
-                hasEnoughCoins = item1.price() <= coins;
+                neededCoins = item1.price();
                 updateTradeButtons();
 
             });
@@ -146,8 +145,9 @@ public class ShopOptionController extends Controller {
     }
 
     private void updateTradeButtons() {
-        buyButton.setDisable(!(canTrade && hasEnoughCoins));
-        sellButton.setDisable(!(canTrade && hasAmount));
+        // neededCoins > 0 is used to distinguish between tradeable items and non tradeable items
+        buyButton.setDisable(!(neededCoins > 0 && availableCoins >= neededCoins));
+        sellButton.setDisable(!(neededCoins > 0 && itemAmount > 0));
     }
 
     @Override

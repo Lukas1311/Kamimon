@@ -373,3 +373,28 @@
 .hp-progressbar-green .bar {
     -fx-background-color: green;
 }
+
+/* -------------------- Shop  -------------------- */
+
+.trade-buttons {
+    -fx-pref-width: 35;
+    -fx-pref-height: 35;
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
+}
+
+.trade-buttons .ikonli-font-icon {
+    -fx-icon-color: white;
+    -fx-icon-size: 30px;
+}
+
+.trade-buttons:disabled .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
+}
+
+
+
+
