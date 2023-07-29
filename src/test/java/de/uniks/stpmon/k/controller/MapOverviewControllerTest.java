@@ -15,11 +15,13 @@ import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -87,11 +89,11 @@ public class MapOverviewControllerTest extends ApplicationTest {
         app.start(stage);
 
         when(regionStorage.getRegion()).thenReturn(dummyRegion);
-        RouteData dummyData = new RouteData(1, new RouteText("Route 66", "HiWay1", "Route"), 0, 0, 0, 0,
+        RouteData dummyData1 = new RouteData(1, new RouteText("Route 66", "HiWay1", "Route"), 0, 0, 0, 0,
                 List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(20, 20), new PolygonPoint(0, 20)));
         RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 10, 10, 20, 34, List.of());
         RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"), 10, 10, 0, 34, List.of());
-        when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData, dummyData2, dummyData3)));
+        when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData1, dummyData2, dummyData3)));
         worldRepository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
         app.show(mapOverviewController);
         stage.requestFocus();
@@ -122,32 +124,35 @@ public class MapOverviewControllerTest extends ApplicationTest {
         verifyNoMoreInteractions(mapImageViewMock);
         verify(regionStorage).getRegion();
         verify(textDeliveryService).getRouteData(dummyRegion);
+        Polygon detail1 = lookup("#detail_1").query();
+        Rectangle detail2 = lookup("#detail_2").query();
         // No detail should be visible
-        verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0.0);
+        verifyThat(detail1, polygon -> polygon.getFill().equals(Color.TRANSPARENT));
 
         // move to first route
-        moveTo("#detail_1");
+        moveTo(detail1);
         // Detail should be half highlighted
-        verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.75);
+        verifyThat(detail1, polygon -> polygon.getOpacity() >= 0.75);
         // Click on first route
         clickOn(MouseButton.PRIMARY);
         // Detail should be fully highlighted
-        verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
+        verifyThat(detail1, polygon -> polygon.getOpacity() >= 0.95);
         // Route description should be visible
-        assertEquals(areaNameLabel, hasText("Route 66"));
+        assertEquals("Route 66", areaNameLabel.getText());
         verifyThat("#textFlowRegionDescription", hasText("HiWay1"));
         // Move to second route
-        moveTo("#detail_2");
+        moveTo(detail2);
+        waitForFxEvents();
         // First route should still be fully highlighted
-        verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
+        verifyThat(detail1, polygon -> polygon.getOpacity() >= 0.95);
         // Second route should be half highlighted
-        verifyThat("#detail_2", (Node t) -> t.getOpacity() >= 0.75);
+        verifyThat(detail2, rect -> rect.getOpacity() >= 0.75);
         // Click on second route
         clickOn(MouseButton.PRIMARY);
         // First route should not be highlighted anymore
-        verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0);
+        verifyThat(detail1, polygon -> polygon.getOpacity() == 0);
         // Second route should be fully highlighted
-        verifyThat("#detail_2", (Node t) -> t.getOpacity() >= 0.95);
+        verifyThat(detail2, rect -> rect.getOpacity() >= 0.95);
     }
 
 }
