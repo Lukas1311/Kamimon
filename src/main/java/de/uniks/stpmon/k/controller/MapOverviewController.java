@@ -31,7 +31,7 @@ import java.util.List;
 
 @Singleton
 public class MapOverviewController extends ToastedController {
-    
+
     @FXML
     StackPane mapStackPane;
     @FXML
