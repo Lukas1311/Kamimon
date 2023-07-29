@@ -97,10 +97,9 @@ public class ShopOptionController extends Controller {
     }
 
     public void setItem(Item item) {
-        subscribe(itemService.getItems(), items -> {
-            List<Item> list = items.stream().filter(useritem -> Objects.equals(item.type(), useritem.type())).toList();
-            if (!list.isEmpty()) {
-                itemAmount = list.get(0).amount();
+        subscribe(itemService.getItem(item.type().toString()), newItem -> {
+            if(newItem.isPresent()) {
+                itemAmount = newItem.get().amount();
             } else {
                 itemAmount = 0;
             }

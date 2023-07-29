@@ -58,8 +58,6 @@ class InventoryControllerTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         app.start(stage);
 
-        //when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(dummytrainer)));
-
         Item item1 = new Item("1", dummytrainer._id(), 1, 1);
         Item item2 = new Item("2", dummytrainer._id(), 2, 2);
         items.add(item1);
