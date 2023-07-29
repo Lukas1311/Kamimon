@@ -38,6 +38,7 @@ public abstract class EntityView extends WorldViewable {
     protected CharacterSet characterSet;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
+    private Direction moveDirection;
     private Transition idleAnimation;
 
     protected TrainerProvider getProvider() {
@@ -125,17 +126,30 @@ public abstract class EntityView extends WorldViewable {
             return;
         }
         nextTrainer = null;
-        boolean newDirection = !Objects.equals(currentTrainer.direction(), trainer.direction());
-        applyMove(trainer, newDirection);
+        int diffX = trainer.x() - currentTrainer.x();
+        int diffY = trainer.y() - currentTrainer.y();
+        Direction dir = Direction.from(trainer);
+        if (diffX > 0) {
+            dir = Direction.RIGHT;
+        } else if (diffX < 0) {
+            dir = Direction.LEFT;
+        } else if (diffY > 0) {
+            dir = Direction.BOTTOM;
+        } else if (diffY < 0) {
+            dir = Direction.TOP;
+        }
+        boolean newDirection = !Objects.equals(moveDirection, dir);
+        applyMove(trainer, newDirection, dir);
     }
 
-    protected void applyMove(Trainer trainer, boolean newDirection) {
+    protected void applyMove(Trainer trainer, boolean newDirection, Direction direction) {
         trainerProvider.setTrainer(trainer);
 
         // Stop if the entity was destroyed
         if (entityNode == null) {
             return;
         }
+        moveDirection = direction;
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityNode);
         moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()));
@@ -150,13 +164,14 @@ public abstract class EntityView extends WorldViewable {
             }
             if (nextTrainer == null) {
                 startIdleAnimation(trainer);
+                moveDirection = null;
                 return;
             }
             onMoveReceived(nextTrainer);
         });
         if (moveAnimation == null
                 || newDirection) {
-            moveAnimation = new SpriteAnimation(characterSet, trainer.direction(), true);
+            moveAnimation = new SpriteAnimation(characterSet, direction.ordinal(), true);
             moveAnimation.setCycleCount(Animation.INDEFINITE);
         }
         moveAnimation.play();
