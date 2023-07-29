@@ -255,4 +255,28 @@ public class SessionService extends DestructibleElement {
         encounterStorage.setEncounter(null);
         encounterStorage.setSession(null);
     }
+
+
+    /**
+     * Returns the type (1v1, 1v2, 2v1, 2v2) of the encounter depending on the EncounterSlots
+     *
+     * @return A String which represents the EncounterType
+     */
+    public String getEncounterType() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        //check for two trainer in party
+        if (!hasSlot(EncounterSlot.PARTY_SECOND)) {
+            stringBuilder.append("1");
+        } else {
+            stringBuilder.append("2");
+        }
+        stringBuilder.append("v");
+        if (!hasSlot(EncounterSlot.ENEMY_SECOND)) {
+            stringBuilder.append("1");
+        } else {
+            stringBuilder.append("2");
+        }
+        return stringBuilder.toString();
+    }
 }
