@@ -80,10 +80,15 @@ public class RuleRegistry {
     }
 
     public void addCandidate(CandidateRule rule) {
+        addCandidate(rule, true);
+    }
+
+    public void addCandidate(CandidateRule rule, boolean prioritised) {
         if (rule instanceof BaseTilesetRule baseTile) {
             TilesetProperties group = properties.computeIfAbsent(baseTile.getTileSet(), (k) -> new TilesetProperties());
+            RuleMap<CandidateRule> candidates = prioritised ? group.prioritisedCandidates : group.candidates;
             for (Integer tileId : baseTile.getTileIds()) {
-                group.candidateRules.addRule(tileId, rule);
+                candidates.addRule(tileId, rule);
             }
             return;
         }
@@ -117,11 +122,15 @@ public class RuleRegistry {
             return candidates.get(0);
         }
         TileInfo bestCandidate;
-        Set<CandidateRule> rules = new LinkedHashSet<>(getCandidateRules(info));
+        Set<CandidateRule> rules = new LinkedHashSet<>(getPrioritisedCandidateRules(info));
+        for (TileInfo candidateInfo : candidates) {
+            rules.addAll(getPrioritisedCandidateRules(candidateInfo));
+        }
+        rules.addAll(candidateRules);
+        rules.addAll(getCandidateRules(info));
         for (TileInfo candidateInfo : candidates) {
             rules.addAll(getCandidateRules(candidateInfo));
         }
-        rules.addAll(candidateRules);
         for (CandidateRule rule : rules) {
             bestCandidate = rule.apply(info, candidates, decorationLayers);
             if (bestCandidate != null) {
@@ -131,17 +140,26 @@ public class RuleRegistry {
         return null;
     }
 
+    private Collection<CandidateRule> getPrioritisedCandidateRules(TileInfo info) {
+        TilesetProperties group = properties.get(info.tileSet());
+        if (group == null) {
+            return Collections.emptyList();
+        }
+        return group.prioritisedCandidates.getRules(info.tileId());
+    }
+
     private Collection<CandidateRule> getCandidateRules(TileInfo info) {
         TilesetProperties group = properties.get(info.tileSet());
         if (group == null) {
             return Collections.emptyList();
         }
-        return group.candidateRules.getRules(info.tileId());
+        return group.candidates.getRules(info.tileId());
     }
 
     private static class TilesetProperties {
         private final Map<Integer, Integer> properties = new HashMap<>();
-        private final RuleMap<CandidateRule> candidateRules = new RuleMap<>();
+        private final RuleMap<CandidateRule> prioritisedCandidates = new RuleMap<>();
+        private final RuleMap<CandidateRule> candidates = new RuleMap<>();
         private int groupId = 1;
 
         public void markEntangled(Collection<Integer> c) {
