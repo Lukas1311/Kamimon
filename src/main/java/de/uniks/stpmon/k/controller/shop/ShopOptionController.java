@@ -76,8 +76,8 @@ public class ShopOptionController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadBgImage(backgroundPane, "shop/inv_coins.png");
-        loadImage(coinsImage, "shop/coin.png");
+        loadBgImage(backgroundPane, "inventory/inv_coins.png");
+        loadImage(coinsImage, "inventory/coin.png");
 
         if (trainerService != null) {
             subscribe(trainerService.onTrainer(), trainer ->
