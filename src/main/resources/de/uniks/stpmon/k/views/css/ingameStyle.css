@@ -377,12 +377,12 @@
 /* -------------------- Shop  -------------------- */
 
 .trade-buttons {
-    -fx-pref-width: 35;
-    -fx-pref-height: 35;
-    -fx-min-width: 35;
-    -fx-min-height: 35;
-    -fx-max-width: 35;
-    -fx-max-height: 35;
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-min-width: 30;
+    -fx-min-height: 30;
+    -fx-max-width: 30;
+    -fx-max-height: 30;
 }
 
 .trade-buttons .ikonli-font-icon {
@@ -395,6 +395,33 @@
     -fx-icon-size: 30px;
 }
 
+.trade-item-name {
+    -fx-font-size: 25px;
+}
+
+.trade-list {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+.trade-list .list-view {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+.trade-list .list-cell {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-alignment: center-left;
+}
 
 
 
