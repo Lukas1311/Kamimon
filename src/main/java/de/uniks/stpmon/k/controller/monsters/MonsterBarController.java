@@ -11,6 +11,7 @@ import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 
 @Singleton
 public class MonsterBarController extends Controller {
@@ -130,6 +131,8 @@ public class MonsterBarController extends Controller {
     public void destroy() {
         super.destroy();
         monsterSlotsHBox.getChildren().clear();
+        arrow = null;
+        Arrays.fill(monsterSlots, null);
     }
 
     @Override

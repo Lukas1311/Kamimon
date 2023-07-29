@@ -58,8 +58,9 @@ public class EncounterSession extends DestructibleElement {
             EncounterMember monsterCache = cacheProvider.get();
             monsterCache.setup(op.trainer(), op.monster(), allMonsterCache);
             EncounterSlot member;
-            // self trainer is always in the first position
-            if (op.trainer().equals(selfTrainer)) {
+            boolean isOwnTrainer = op.trainer().equals(selfTrainer);
+            // self trainer is always in the first position, only relevant if the trainer has only one opponent
+            if (isOwnTrainer && ownTeam.get(0).isEmpty()) {
                 member = new EncounterSlot(0, false);
                 ownTeam.set(0, op._id());
             } else if (op.isAttacker() == attackingTeam) {
@@ -173,8 +174,6 @@ public class EncounterSession extends DestructibleElement {
         return null;
     }
 
-    // Suppressed because it will be used in the future R4
-    @SuppressWarnings("unused")
     public EncounterSlot getSlotForOpponent(String opponentId) {
         for (EncounterSlot slot : slots) {
             if (Objects.equals(getOpponentId(slot), opponentId)) {
