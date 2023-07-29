@@ -16,12 +16,10 @@ import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -35,9 +33,11 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextFlowMatchers.hasText;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -108,38 +108,37 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // check values:
         Label regionNameLabel = lookup("#regionNameLabel").queryAs(Label.class);
         assertEquals("reg", regionNameLabel.getText());
-        BorderPane mapOverviewContent = lookup("#mapOverviewContent").queryAs(BorderPane.class);
-        Button closeButton = lookup("#closeButton").queryButton();
-        VBox mapContainer = lookup("#mapContainer").queryAs(VBox.class);
+        AnchorPane mapOverviewHolder = lookup("#mapOverviewHolder").queryAs(AnchorPane.class);
+        Label areaNameLabel = lookup("#areaNameLabel").queryAs(Label.class);
         Text regionDescription = lookup("#regionDescription").queryText();
 
-        assertNotNull(mapOverviewContent);
-        assertNotNull(closeButton);
+        assertNotNull(mapOverviewHolder);
         assertNotNull(mapImageView);
-        assertNotNull(mapContainer);
+        assertNotNull(areaNameLabel);
         assertNotNull(regionDescription);
-        assertTrue(mapOverviewController.mapOverviewContent.isVisible());
+        assertTrue(mapOverviewController.mapOverviewHolder.isVisible());
 
         // check mocks:
         verifyNoMoreInteractions(mapImageViewMock);
-        verify(app).getStage();
         verify(regionStorage).getRegion();
         verify(textDeliveryService).getRouteData(dummyRegion);
         // No detail should be visible
-        verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0);
+        verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0.0);
+
         // move to first route
         moveTo("#detail_1");
         // Detail should be half highlighted
         verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.75);
         // Click on first route
         clickOn(MouseButton.PRIMARY);
-        // Detail should be full highlighted
+        // Detail should be fully highlighted
         verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
         // Route description should be visible
-        verifyThat("#textFlowRegionDescription", hasText("Route 66:\nHiWay1"));
+        assertEquals(areaNameLabel, hasText("Route 66"));
+        verifyThat("#textFlowRegionDescription", hasText("HiWay1"));
         // Move to second route
         moveTo("#detail_2");
-        // First route should still be full highlighted
+        // First route should still be fully highlighted
         verifyThat("#detail_1", (Node t) -> t.getOpacity() >= 0.95);
         // Second route should be half highlighted
         verifyThat("#detail_2", (Node t) -> t.getOpacity() >= 0.75);
@@ -147,7 +146,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         clickOn(MouseButton.PRIMARY);
         // First route should not be highlighted anymore
         verifyThat("#detail_1", (Node t) -> t.getOpacity() == 0);
-        // Second route should be full highlighted
+        // Second route should be fully highlighted
         verifyThat("#detail_2", (Node t) -> t.getOpacity() >= 0.95);
     }
 
