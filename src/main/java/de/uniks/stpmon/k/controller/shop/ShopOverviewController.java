@@ -68,7 +68,6 @@ public class ShopOverviewController extends Controller {
         listen(itemListView.getSelectionModel().selectedItemProperty(), ((observable, oldValue, newValue) ->
         {
             if(newValue != null) {
-                shopOptionController.destroy();
                 shopOptionController.setItem(availableItems.stream().filter(item ->
                                 item.type().equals(newValue.type()))
                         .toList().get(0));
@@ -101,6 +100,7 @@ public class ShopOverviewController extends Controller {
     @Override
     public void destroy() {
         super.destroy();
+        availableItems.clear();
     }
 
 }

@@ -100,15 +100,14 @@ public class ShopOptionController extends Controller {
     public void setItem(Item item) {
         subscribe(itemService.getItems(), items -> {
             List<Item> list = items.stream().filter(useritem -> Objects.equals(item.type(), useritem.type())).toList();
-
+            int amount = 0;
             if(!list.isEmpty()) {
-                int amount = list.get(0).amount();
-                amountLabel.setText("Amount: " + amount);
+                amount = list.get(0).amount();
                 hasAmount = amount >= 1;
-                return;
             } else {
                 hasAmount = false;
             }
+            amountLabel.setText("Amount: " + amount);
             updateTradeButtons();
         });
 
@@ -149,6 +148,14 @@ public class ShopOptionController extends Controller {
     private void updateTradeButtons(){
         buyButton.setDisable(!(canTrade && hasEnoughCoins));
         sellButton.setDisable(!(canTrade && hasAmount));
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        itemImage = null;
+        coinsImage = null;
+        backgroundPane = null;
     }
 
 }

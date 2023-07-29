@@ -267,8 +267,6 @@ public class IngameController extends PortalController {
         shopHBox.setPickOnBounds(false);
         shopBorderPane.setPickOnBounds(false);
 
-        shopHBox.setVisible(false);
-
         Parent world = this.worldController.render();
         // Null if unit testing world view
         if (world != null) {
@@ -321,15 +319,7 @@ public class IngameController extends PortalController {
             starter.setVisible(false);
         }
 
-        Parent shopList = this.shopOverviewController.render();
-        if (shopList != null) {
-            shopHBox.getChildren().add(shopList);
-        }
 
-        Parent shopDetail = this.shopOptionController.render();
-        if(shopDetail != null) {
-            shopHBox.getChildren().add(shopDetail);
-        }
 
         return parent;
     }
@@ -439,22 +429,32 @@ public class IngameController extends PortalController {
      * @param npc
      */
     public void openShop(Trainer npc) {
-        shopHBox.setVisible(true);
-        shopBorderPane.setPickOnBounds(true);
+        shopOverviewController.init();
+        Parent shopList = this.shopOverviewController.render();
+        if (shopList != null) {
+            shopHBox.getChildren().add(shopList);
+        }
 
+        shopOptionController.init();
+        Parent shopDetail = this.shopOptionController.render();
+        if(shopDetail != null) {
+            shopHBox.getChildren().add(shopDetail);
+        }
+
+        shopBorderPane.setPickOnBounds(true);
         shopOptionController.setTrainer(npc);
         shopOverviewController.setTrainer(npc);
-
         shopOverviewController.initSelection();
 
     }
-
 
     /**
      * close the shop
      */
     public void closeShop() {
-        shopHBox.setVisible(false);
+        shopHBox.getChildren().clear();
+        shopOptionController.destroy();
+        shopOverviewController.destroy();
         shopBorderPane.setPickOnBounds(false);
     }
 
