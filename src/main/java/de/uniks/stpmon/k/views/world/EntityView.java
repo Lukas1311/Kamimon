@@ -7,17 +7,21 @@ import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.transform.Shear;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -35,6 +39,7 @@ public abstract class EntityView extends WorldViewable {
     // Not injected by dagger, provided by upper class
     private TrainerProvider trainerProvider;
     protected MeshView entityNode;
+    protected Group entityGroup;
     protected CharacterSet characterSet;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
@@ -56,6 +61,14 @@ public abstract class EntityView extends WorldViewable {
         characterSet = worldService.getCharacter(trainer.image());
     }
 
+    private Node renderShadow() {
+        Node propNode = createRectangleScaled(ImageUtils.blackOutImage(characterSet.getPreview(Direction.RIGHT), 0.25f), -90);
+
+        propNode.getTransforms().add(2, new Shear(-1, 0, 0, 0));
+        propNode.getTransforms().add(3, new Translate(2 * WorldView.WORLD_UNIT, 0, -0.1 - 0.4 * Math.random()));
+        return propNode;
+    }
+
     @Override
     public Node render() {
         MeshView character = createRectangleScaled(
@@ -64,13 +77,15 @@ public abstract class EntityView extends WorldViewable {
                 WorldView.WORLD_ANGLE);
         character.setId("entity");
         entityNode = character;
+        Node shadow = renderShadow();
+        entityGroup = new Group(entityNode, shadow);
         Trainer trainer = trainerProvider.getTrainer();
-        entityNode.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
-        entityNode.setTranslateZ(-trainer.y() * WorldView.WORLD_UNIT -
+        entityGroup.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
+        entityGroup.setTranslateZ(-trainer.y() * WorldView.WORLD_UNIT -
                 WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
-        entityNode.setTranslateY(-0.35);
+        entityGroup.setTranslateY(-0.35);
         startIdleAnimation(trainer);
-        return character;
+        return entityGroup;
     }
 
     protected void applySprite(float[] data) {
@@ -152,7 +167,7 @@ public abstract class EntityView extends WorldViewable {
         }
         moveDirection = direction;
         moveTranslation = new TranslateTransition();
-        moveTranslation.setNode(entityNode);
+        moveTranslation.setNode(entityGroup);
         moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()));
         moveTranslation.setToX(trainer.x() * WorldView.WORLD_UNIT);
         moveTranslation.setToZ(-trainer.y() * WorldView.WORLD_UNIT
@@ -213,6 +228,7 @@ public abstract class EntityView extends WorldViewable {
             MeshUtils.disposeMesh(entityNode);
             entityNode = null;
         }
+        entityGroup = null;
     }
 
 

@@ -28,7 +28,7 @@ public class WorldView extends Viewable {
 
     public static final int WORLD_UNIT = 16;
     public static final int ENTITY_OFFSET_Y = 1;
-    public static final int WORLD_ANGLE = -59;
+    public static final int WORLD_ANGLE = -49;
 
     @Inject
     protected RegionStorage regionStorage;

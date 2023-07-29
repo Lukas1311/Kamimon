@@ -70,7 +70,7 @@ public class ImageUtils {
         int width = image.getWidth();
         int height = image.getHeight();
         int type = image.getType();
-        BufferedImage img = new BufferedImage(width, height, type);
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
         // Loop through all pixels and make non-transparent pixels black
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

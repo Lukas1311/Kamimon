@@ -37,8 +37,8 @@ public class PropView extends WorldViewable {
 ////            propNode.setTranslateZ(-((prop.y() + prop.height()) * 16) + 6);
 ////            propNode.setTranslateY(-0.35);
 //            propNode.getTransforms().add(0, new Translate(prop.x() * 16, -0.35, -((prop.y() + prop.height()) * 16)));
-//            propNode.getTransforms().add(2, new Shear(1, 0,   0, 0));
-//            propNode.getTransforms().add(3, new Translate(0, 1, 0));
+//            propNode.getTransforms().add(2, new Shear(-1, 0,   0, 0));
+//            propNode.getTransforms().add(3, new Translate(0, -2, -Math.random() * 0.5));
 //            //propNode.getTransforms().add(new Translate(-prop.width() * 8, -(prop.height() * 16) + 6, 0));
 //            //propNode.getTransforms().add(new Translate(-prop.width() * 8, 0, 0));
 //            shadow.getChildren().add(propNode);
