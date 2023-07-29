@@ -24,6 +24,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -91,7 +92,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         when(regionStorage.getRegion()).thenReturn(dummyRegion);
         RouteData dummyData1 = new RouteData(1, new RouteText("Route 66", "HiWay1", "Route"), 0, 0, 0, 0,
                 List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(20, 20), new PolygonPoint(0, 20)));
-        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 10, 10, 20, 34, List.of());
+        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 1, 1, 0, 0, List.of());
         RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"), 10, 10, 0, 34, List.of());
         when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData1, dummyData2, dummyData3)));
         worldRepository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
@@ -125,7 +126,10 @@ public class MapOverviewControllerTest extends ApplicationTest {
         verify(regionStorage).getRegion();
         verify(textDeliveryService).getRouteData(dummyRegion);
         Polygon detail1 = lookup("#detail_1").query();
+        assertNotNull(detail1);
         Rectangle detail2 = lookup("#detail_2").query();
+        assertNotNull(detail2);
+
         // No detail should be visible
         verifyThat(detail1, polygon -> polygon.getFill().equals(Color.TRANSPARENT));
 
