@@ -142,10 +142,10 @@ public class MapOverviewController extends ToastedController {
                 return;
             }
             Rectangle rectangle = new Rectangle(
-                routeData.x() * widthRatio + offsetX,
-                routeData.y() + offsetY,
-                routeData.width() * widthRatio,
-                routeData.height() * someOtherHeightRatio
+                routeData.x() * scaleRatio + offsetX,
+                routeData.y() * scaleRatio,
+                routeData.width() * scaleRatio,
+                routeData.height() * scaleRatio
             );
             addDetailShape(rectangle, routeData);
         });
