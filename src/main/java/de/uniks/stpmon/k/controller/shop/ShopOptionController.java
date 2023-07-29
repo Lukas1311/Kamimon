@@ -97,9 +97,17 @@ public class ShopOptionController extends Controller {
     }
 
     public void setItem(Item item) {
-        subscribe(itemService.getItem(item.type().toString()), newItem -> {
-            if(newItem.isPresent()) {
-                itemAmount = newItem.get().amount();
+
+        coinsDifferenceLabel.setText("");
+
+        subscribe(itemService.getItems(), items -> {
+            List<Item> list = items
+                    .stream()
+                    .filter(useritem -> Objects.equals(useritem.type(), item.type()))
+                    .toList();
+
+            if(!list.isEmpty()) {
+                itemAmount = list.get(0).amount();
             } else {
                 itemAmount = 0;
             }
@@ -129,10 +137,16 @@ public class ShopOptionController extends Controller {
 
         buyButton.setOnAction(ac -> {
             subscribe(itemService.tradeItem(item.type(), 1, npc._id(), false));
+            coinsDifferenceLabel.setText("-" + neededCoins);
+            coinsDifferenceLabel.getStyleClass().clear();
+            coinsDifferenceLabel.getStyleClass().add("trade-text-red");
         });
 
         sellButton.setOnAction(ac -> {
             subscribe(itemService.tradeItem(item.type(), 1, npc._id(), true));
+            coinsDifferenceLabel.setText("+" + neededCoins/2);
+            coinsDifferenceLabel.getStyleClass().clear();
+            coinsDifferenceLabel.getStyleClass().add("trade-text-black");
         });
 
 

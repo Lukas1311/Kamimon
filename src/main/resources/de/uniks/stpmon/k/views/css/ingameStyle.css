@@ -398,6 +398,12 @@
 .trade-item-name {
     -fx-font-size: 25px;
 }
+.trade-text-red {
+    -fx-text-fill: red;
+}
+.trade-text-black {
+    -fx-text-fill: black;
+}
 
 .trade-list {
     -fx-focus-color: transparent;
