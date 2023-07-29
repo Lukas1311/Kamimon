@@ -63,6 +63,8 @@ public class ShopOptionController extends Controller {
 
     private Trainer npc;
 
+    private int coins = 0;
+
     @Inject
     public ShopOptionController() {
 
@@ -93,21 +95,26 @@ public class ShopOptionController extends Controller {
             List<Item> list = items.stream().filter(useritem -> Objects.equals(item.type(), useritem.type())).toList();
             if(!list.isEmpty()) {
                 amountLabel.setText("Amount: " + list.get(0).amount());
+                coins = list.get(0).amount();
                 sellButton.setVisible(true);
             } else {
                 amountLabel.setText("Amount: " + 0);
+                coins = 0;
                 sellButton.setVisible(false);
             }
         });
 
         subscribe(resourceService.getItemImage((String.valueOf(item.type()))), imagerUrl -> {
             subscribe(presetService.getItem(item.type()), item1 -> {
-               Image itemImage = ImageUtils.scaledImageFX(imagerUrl, 2.0);
-               this.itemImage.setImage(itemImage);
-               //text
+                Image itemImage = ImageUtils.scaledImageFX(imagerUrl, 2.0);
+                this.itemImage.setImage(itemImage);
+                //text
                 itemNameLabel.setText(item1.name());
                 buyPriceLabel.setText("Buy Price: " + item1.price().toString());
                 sellPriceLabel.setText("Sell Price: " + item1.price()/2);
+
+                buyButton.setVisible(item1.price() < coins);
+
                 itemDescriptionLabel.setText(item1.description());
             });
         });

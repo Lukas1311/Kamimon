@@ -12,10 +12,10 @@ public interface TrainerItemApiService {
 
 
     @POST("regions/{regionId}/trainers/{trainerId}/items")
-    Observable<Item> updateItem(@Body UpdateItemDto dto,
+    Observable<Item> updateItem(@Path("regionId") String regionId,
+                                @Path("trainerId") String trainerId,
                                 @Query("action") String action,
-                                @Path("regionId") String regionId,
-                                @Path("trainerId") String trainerId);
+                                @Body UpdateItemDto dto);
 
     @GET("regions/{regionId}/trainers/{trainerId}/items")
     Observable<List<Item>> getItems(@Path("regionId") String regionId,

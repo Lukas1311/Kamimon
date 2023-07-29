@@ -48,7 +48,7 @@ public class ItemService {
 
     public Observable<Item> tradeItem(int itemType, int tradeAmount, String targetId, boolean sellItem) {
         UpdateItemDto update = new UpdateItemDto((sellItem? -1 : 1) * tradeAmount, itemType, targetId);
-        return trainerItemApiService.updateItem(update, "trade", trainerService.getMe().region(), trainerService.getMe()._id());
+        return trainerItemApiService.updateItem(trainerService.getMe().region(), trainerService.getMe()._id(), "trade", update);
     }
 
 }
