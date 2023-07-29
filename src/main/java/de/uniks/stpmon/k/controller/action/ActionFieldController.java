@@ -161,7 +161,7 @@ public class ActionFieldController extends Controller {
     }
 
     public void executeAbilityMove() {
-        //TODO: chache old Monster
+        //TODO: cache old Monster
         subscribe(encounterServiceProvider.get()
                 .makeAbilityMove(abilityId, enemyTrainerId));
     }

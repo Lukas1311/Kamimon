@@ -76,7 +76,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     }
 
     public void addBackOption(String option) {
-        HBox optionContainer = getActionField().getOptionContainer(option);
+        HBox optionContainer = ActionFieldController.getOptionContainer(option);
 
         optionContainer.setOnMouseClicked(event -> getActionField().openMainMenu());
 

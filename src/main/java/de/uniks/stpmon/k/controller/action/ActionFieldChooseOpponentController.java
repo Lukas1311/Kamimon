@@ -54,7 +54,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
 
     public void addMonsterOption(Opponent opponent, String monsterName, boolean isBackOption) {
         ActionFieldController actionField = getActionField();
-        HBox optionContainer = actionField
+        HBox optionContainer = ActionFieldController
                 .getOptionContainer(isBackOption ? translateString("back") : monsterName);
 
         optionContainer.setOnMouseClicked(event -> {
