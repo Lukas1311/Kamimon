@@ -80,12 +80,12 @@ public class ShopOptionController extends Controller {
         loadBgImage(backgroundPane, "shop/inv_coins.png");
         loadImage(coinsImage, "shop/coin.png");
 
-
         if (trainerService != null) {
             subscribe(trainerService.onTrainer(), trainer ->
                     trainer.ifPresent(value -> {
-                        coins = trainerService.getMe().coins();
+                        coins = value.coins();
                         coinsLabel.setText(coins + " Coins");
+                        updateTradeButtons();
                     }));
         }
 
@@ -101,7 +101,7 @@ public class ShopOptionController extends Controller {
         subscribe(itemService.getItems(), items -> {
             List<Item> list = items.stream().filter(useritem -> Objects.equals(item.type(), useritem.type())).toList();
             int amount = 0;
-            if(!list.isEmpty()) {
+            if (!list.isEmpty()) {
                 amount = list.get(0).amount();
                 hasAmount = amount >= 1;
             } else {
@@ -118,7 +118,7 @@ public class ShopOptionController extends Controller {
                 //text
                 itemNameLabel.setText(item1.name());
                 buyPriceLabel.setText("Buy Price: " + item1.price().toString());
-                sellPriceLabel.setText("Sell Price: " + item1.price()/2);
+                sellPriceLabel.setText("Sell Price: " + item1.price() / 2);
                 itemDescriptionLabel.setText(item1.description());
 
                 //buttons
@@ -145,7 +145,7 @@ public class ShopOptionController extends Controller {
         return "shop/";
     }
 
-    private void updateTradeButtons(){
+    private void updateTradeButtons() {
         buyButton.setDisable(!(canTrade && hasEnoughCoins));
         sellButton.setDisable(!(canTrade && hasAmount));
     }
