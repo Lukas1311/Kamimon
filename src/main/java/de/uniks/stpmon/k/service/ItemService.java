@@ -1,7 +1,9 @@
 package de.uniks.stpmon.k.service;
 
+import de.uniks.stpmon.k.dto.UpdateItemDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
+import de.uniks.stpmon.k.rest.TrainerItemApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheProxy;
 import de.uniks.stpmon.k.service.storage.cache.ItemCache;
@@ -18,6 +20,10 @@ public class ItemService {
     Provider<ItemCache> itemCacheProvider;
     @Inject
     TrainerStorage trainerStorage;
+    @Inject
+    TrainerItemApiService trainerItemApiService;
+    @Inject
+    TrainerService trainerService;
 
     @Inject
     public ItemService() {
@@ -33,11 +39,16 @@ public class ItemService {
     });
 
     public Observable<List<Item>> getItems() {
-      return itemCache.getValues();
+        return itemCache.getValues();
     }
 
     public Observable<Optional<Item>> getItem(String id) {
         return itemCache.listenValue(id);
+    }
+
+    public Observable<Item> tradeItem(int itemType, int tradeAmount, String targetId, boolean sellItem) {
+        UpdateItemDto update = new UpdateItemDto((sellItem? -1 : 1) * tradeAmount, itemType, targetId);
+        return trainerItemApiService.updateItem(update, "trade", trainerService.getMe().region(), trainerService.getMe()._id());
     }
 
 }

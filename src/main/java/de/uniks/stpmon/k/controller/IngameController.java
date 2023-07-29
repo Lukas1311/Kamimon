@@ -441,10 +441,12 @@ public class IngameController extends PortalController {
     public void openShop(Trainer npc) {
         shopHBox.setVisible(true);
         shopBorderPane.setPickOnBounds(true);
-        shopBorderPane.setOnMouseClicked(click -> closeShop());
+        //shopBorderPane.setOnMouseClicked(click -> closeShop());
 
         shopOptionController.setTrainer(npc);
         shopOverviewController.setTrainer(npc);
+
+        shopOverviewController.initSelection();
 
     }
 

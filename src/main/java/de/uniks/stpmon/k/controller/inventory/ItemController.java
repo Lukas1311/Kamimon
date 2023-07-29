@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.inventory;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
@@ -48,10 +49,8 @@ public class ItemController extends Controller {
                         itemAmount.setText(" x " + item.amount());
                     }
                 }));
-
         return parent;
     }
-
     @Override
     public String getResourcePath() {
         return "inventory/";
