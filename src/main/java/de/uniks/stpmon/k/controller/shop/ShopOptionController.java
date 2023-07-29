@@ -79,7 +79,10 @@ public class ShopOptionController extends Controller {
 
         if (trainerService != null) {
             subscribe(trainerService.onTrainer(), trainer ->
-                    trainer.ifPresent(value -> coinsLabel.setText("Coins: " + trainerService.getMe().coins())));
+                    trainer.ifPresent(value -> {
+                        coins = trainerService.getMe().coins();
+                        coinsLabel.setText(coins + " Coins");
+                    }));
         }
 
         return parent;
@@ -93,13 +96,14 @@ public class ShopOptionController extends Controller {
     public void setItem(Item item) {
         subscribe(itemService.getItems(), items -> {
             List<Item> list = items.stream().filter(useritem -> Objects.equals(item.type(), useritem.type())).toList();
+
             if(!list.isEmpty()) {
-                amountLabel.setText("Amount: " + list.get(0).amount());
-                coins = list.get(0).amount();
-                sellButton.setVisible(true);
-            } else {
-                amountLabel.setText("Amount: " + 0);
-                coins = 0;
+                int amount = list.get(0).amount();
+                amountLabel.setText("Amount: " + amount);
+                if (amount >= 1) {
+                    sellButton.setVisible(true);
+                    return;
+                }
                 sellButton.setVisible(false);
             }
         });
@@ -124,7 +128,7 @@ public class ShopOptionController extends Controller {
         });
 
         sellButton.setOnAction(ac -> {
-            subscribe(itemService.tradeItem(item.type(), 1, npc._id(), false));
+            subscribe(itemService.tradeItem(item.type(), 1, npc._id(), true));
         });
 
 
