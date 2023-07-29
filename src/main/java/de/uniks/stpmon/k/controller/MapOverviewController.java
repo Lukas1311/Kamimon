@@ -14,13 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -36,9 +31,7 @@ import java.util.List;
 
 @Singleton
 public class MapOverviewController extends ToastedController {
-    private final static int TILE_SIZE = 16;
-
-
+    
     @FXML
     StackPane mapStackPane;
     @FXML
@@ -53,8 +46,6 @@ public class MapOverviewController extends ToastedController {
     Button closeButton;
     @FXML
     ImageView mapImageView;
-    @FXML
-    VBox mapContainer;
     @FXML
     Pane highlightPane;
     @FXML
@@ -84,25 +75,16 @@ public class MapOverviewController extends ToastedController {
 
     @Override
     public Parent render() {
-        // System.out.println("test");
         final Parent parent = super.render();
 
         // center the region name label horizontally
         AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
         AnchorPane.setRightAnchor(regionNameLabel, 0.0);
 
-        BorderStroke borderStroke = new BorderStroke(Color.BLACK,
-        BorderStrokeStyle.SOLID, null, new BorderWidths(1));
-        Border border = new Border(borderStroke);
-
-        mapContainer.setBorder(border);
-
         loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
 
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
-            int originalWidth = currentRegion.map().width() * TILE_SIZE;
-            int originalHeight = currentRegion.map().height() * TILE_SIZE;
             subscribe(
                     worldRepository.regionMap().onValue(),
                     renderedMap -> {
@@ -111,12 +93,9 @@ public class MapOverviewController extends ToastedController {
                         }
                         Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
                         mapImageView.setImage(map);
-                        mapImageView.setFitHeight(originalHeight);
                     }, this::handleError
             );
-            mapImageView.fitHeightProperty().bind(mapContainer.heightProperty());
-            highlightPane.prefHeightProperty().bind(mapImageView.fitHeightProperty());
-            highlightPane.prefWidthProperty().bind(mapImageView.fitWidthProperty());
+            mapImageView.fitHeightProperty().bind(mapStackPane.heightProperty());
         }
 
         if (currentRegion.map() != null) {
@@ -198,11 +177,6 @@ public class MapOverviewController extends ToastedController {
             }
             shape.setOpacity(1);
             activeShape = shape;
-
-            System.out.println("map image view h: " + mapImageView.getFitHeight());
-            System.out.println("map image view w: " + mapImageView.getFitWidth());
-            System.out.println("map image h: " + mapImageView.getImage().getHeight());
-            System.out.println("map image w: " + mapImageView.getImage().getWidth());
         });
 
         shape.setOnMouseEntered(event -> {
