@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.service.dummies;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -35,7 +34,7 @@ public class PresetApiDummy implements PresetApiService {
      * is called but no characters are in the list
      */
     private void initDummyCharacters() {
-        if (characters.size() > 0) {
+        if (!characters.isEmpty()) {
             throw new IllegalStateException("Characters already initialized");
         }
         String[] c = {"trainer_0.png", "trainer_1.png", "trainer_2.png", "trainer_3.png", "Premade_Character_01.png"};
@@ -50,7 +49,7 @@ public class PresetApiDummy implements PresetApiService {
      * TestMonster2 of type grass
      */
     private void initDummyMonsters() {
-        if (monsters.size() > 0) {
+        if (!monsters.isEmpty()) {
             throw new IllegalStateException("Monsters already initialized");
         }
         int amount = 5;
@@ -86,18 +85,17 @@ public class PresetApiDummy implements PresetApiService {
     }
 
     private void initDummyItems() {
-        if (items.size() > 0) {
+        if (!items.isEmpty()) {
             throw new IllegalStateException("Monsters already initialized");
         }
 
         int amount = 8;
-        for (int i = 0; i < amount; i++ ) {
-            int id = 100 + i;
+        for (int i = 0; i < amount; i++) {
             String image = "ItemImage_" + i;
             String name = "Item_" + i;
             int price = 5 + i;
             String description = "ItemDescription_" + i;
-            ItemUse use = switch(i%4) {
+            ItemUse use = switch (i % 4) {
                 case 0 -> ItemUse.BALL;
                 case 1 -> ItemUse.EFFECT;
                 case 2 -> ItemUse.ITEM_BOX;
@@ -105,7 +103,7 @@ public class PresetApiDummy implements PresetApiService {
                 default -> throw new IllegalStateException("Unexpected value: " + i % 4);
             };
 
-            items.add(new ItemTypeDto(id, image, name, price, description, use));
+            items.add(new ItemTypeDto(i, image, name, price, description, use));
         }
 
 
@@ -119,7 +117,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<List<String>> getCharacters() {
-        if (characters.size() == 0) {
+        if (characters.isEmpty()) {
             initDummyCharacters();
         }
         return Observable.just(characters);
@@ -133,7 +131,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<List<ItemTypeDto>> getItems() {
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             initDummyItems();
         }
 
@@ -142,7 +140,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<ItemTypeDto> getItem(String id) {
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             initDummyItems();
         }
 
@@ -162,7 +160,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<List<MonsterTypeDto>> getMonsters() {
-        if (monsters.size() == 0) {
+        if (monsters.isEmpty()) {
             initDummyMonsters();
         }
         return Observable.just(monsters);
@@ -170,7 +168,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<MonsterTypeDto> getMonster(String id) {
-        if (monsters.size() == 0) {
+        if (monsters.isEmpty()) {
             initDummyMonsters();
         }
         Optional<MonsterTypeDto> returnMonster = monsters.stream()
@@ -189,7 +187,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<List<AbilityDto>> getAbilities() {
-        if (abilities.size() == 0) {
+        if (abilities.isEmpty()) {
             initDummyAbilities();
         }
         return Observable.just(abilities);
@@ -197,7 +195,7 @@ public class PresetApiDummy implements PresetApiService {
 
     @Override
     public Observable<AbilityDto> getAbility(String id) {
-        if (abilities.size() == 0) {
+        if (abilities.isEmpty()) {
             initDummyAbilities();
         }
 
