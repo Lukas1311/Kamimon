@@ -256,27 +256,13 @@
 /* -------------------- Map Overview -------------------- */
 
 .map-overview-content {
-    -fx-background-color: black;
-    -fx-border-insets: 10;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
     -fx-font-family: "Pokémon DS Font";
     -fx-font-size: 23px;
-}
-
-.map-overview-label {
     -fx-text-alignment: center;
 }
 
-.map-overview-label-bg {
-    -fx-border-insets: 10;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-background-color: lightgray;
-}
-
 .map-overview-header {
-    -fx-font-size: 34px;
+    -fx-font-size: 50px;
     -fx-text-fill: black;
 }
 
