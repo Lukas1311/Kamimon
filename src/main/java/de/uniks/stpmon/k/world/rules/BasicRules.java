@@ -425,6 +425,20 @@ public class BasicRules {
         registry.markDecoration(TILESET_PIXEL_WOODS,
                 new IdSource.Rectangle(870, 2, 2, 43));
 
+        // Victory road grass
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(962, 1, 1, 43));
+        registry.markDecoration(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(963, 2, 2, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(1048, 1, 1, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(1049, 1, 1, 43));
+        registry.markEntangled(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(1092, 1, 1, 43));
+        registry.markDecoration(TILESET_PIXEL_WOODS,
+                new IdSource.Rectangle(1050, 1, 2, 43));
+
         // Prioritized candidate rules
         registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(16537, 4, 1, 176),
