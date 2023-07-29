@@ -297,12 +297,6 @@ public class InteractionService implements ILifecycleService {
      * Open the shop controller to buy things
      */
     private void openShop(Trainer npc) {
-        System.out.println("NPC sells following items:");
-        for (Integer item : npc.npc().sells()) {
-            System.out.println(presetService.getItem(item.toString()).blockingFirst().name());
-        }
-        System.out.println();
-
         ingameControllerProvider.get().openShop(npc);
     }
 

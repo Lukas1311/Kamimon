@@ -441,7 +441,6 @@ public class IngameController extends PortalController {
             shopHBox.getChildren().add(shopDetail);
         }
 
-        shopBorderPane.setPickOnBounds(true);
         shopOptionController.setTrainer(npc);
         shopOverviewController.setTrainer(npc);
         shopOverviewController.initSelection();
@@ -455,7 +454,6 @@ public class IngameController extends PortalController {
         shopHBox.getChildren().clear();
         shopOptionController.destroy();
         shopOverviewController.destroy();
-        shopBorderPane.setPickOnBounds(false);
     }
 
 }

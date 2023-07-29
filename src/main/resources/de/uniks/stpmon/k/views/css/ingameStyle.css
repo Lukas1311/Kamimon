@@ -418,7 +418,6 @@
 .trade-list .list-cell {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
     -fx-border-style: hidden;
     -fx-alignment: center-left;
 }
