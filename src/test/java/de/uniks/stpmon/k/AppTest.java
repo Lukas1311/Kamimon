@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
 import de.uniks.stpmon.k.service.dummies.TestHelper;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -58,7 +59,8 @@ class AppTest extends ApplicationTest {
     void criticalPathV1() {
         TestHelper.addMovementDummy(component.eventListener());
 
-        app.show(component.loginController());
+        Platform.runLater(() -> app.show(component.loginController()));
+        waitForFxEvents();
 
         //put in username and password
         clickOn("#usernameInput");
@@ -182,7 +184,8 @@ class AppTest extends ApplicationTest {
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
 
-        app.show(component.hybridController());
+        Platform.runLater(() -> app.show(component.hybridController()));
+        waitForFxEvents();
 
         //set User
         User user = new User(
@@ -277,7 +280,8 @@ class AppTest extends ApplicationTest {
         EventDummy eventDummy = component.eventDummy();
         eventDummy.ensureMock();
         app.addInputHandler(component);
-        app.show(component.hybridController());
+        Platform.runLater(() -> app.show(component.hybridController()));
+        waitForFxEvents();
 
         //set User
         User user = new User(
@@ -362,7 +366,7 @@ class AppTest extends ApplicationTest {
 
         //open MonBox
         component.regionApi().addMonster("0", "1", false);
-        clickOn("#backpackMenuLabel_0");
+        clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#monBoxMenuHolder", Node::isVisible);
 
@@ -476,7 +480,61 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
 
         // Check if left encounter
-        verifyThat("#monsterBar", Node::isVisible);
+        verifyThat("#backpackImage", Node::isVisible);
+    }
+
+    @Test
+    void criticalPathV4() {
+        TestHelper.addMovementDummy(component.eventListener());
+        EventDummy eventDummy = component.eventDummy();
+        eventDummy.ensureMock();
+        app.addInputHandler(component);
+        Platform.runLater(() -> app.show(component.hybridController()));
+        waitForFxEvents();
+
+        //set User
+        User user = new User(
+                "01",
+                "T",
+                "online",
+                null,
+                null
+        );
+        component.userStorage().setUser(user);
+        waitForFxEvents();
+        //join region
+        clickOn("#regionVBox");
+        waitForFxEvents();
+
+        // create a new trainer
+        clickOn("#createTrainerInput");
+        write("T");
+        clickOn("#createTrainerButton");
+        // popup pops up
+        clickOn("#approveButton");
+        waitForFxEvents();
+
+        TestHelper.listenStarterMonster(component.trainerStorage(), component);
+        TestHelper.addEncounteredMonsters(component.trainerStorage(), component);
+        TestHelper.addTestNpcs(component);
+
+        //test monDex
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_3");
+        waitForFxEvents();
+        verifyThat("#monDexPane", Node::isVisible);
+
+        clickOn("#type0Label");
+        verifyThat("#monDexDetailBox", Node::isVisible);
+        clickOn("#type2Label");
+        clickOn("#backpackImage");
+
+        //test inventory
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_2");
+        waitForFxEvents();
+        verifyThat("#inventoryPane", Node::isVisible);
+
     }
 
 }

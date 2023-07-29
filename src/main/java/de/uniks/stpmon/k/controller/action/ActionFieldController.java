@@ -34,7 +34,6 @@ public class ActionFieldController extends Controller {
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
-
     @Inject
     Provider<EncounterService> encounterServiceProvider;
     @Inject
@@ -102,6 +101,7 @@ public class ActionFieldController extends Controller {
         open(changeMonsterControllerProvider);
     }
 
+
     public void openChooseAbility() {
         open(chooseAbilityControllerProvider);
     }
@@ -138,7 +138,7 @@ public class ActionFieldController extends Controller {
         ownMonsterDead = false;
     }
 
-    public HBox getOptionContainer(String option) {
+    public static HBox getOptionContainer(String option) {
         Text arrowText = new Text(" >");
 
         Text optionText = new Text(option);
@@ -195,4 +195,6 @@ public class ActionFieldController extends Controller {
         openBattleLog();
         battleLogService.showNextAction();
     }
+
+
 }

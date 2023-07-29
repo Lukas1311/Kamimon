@@ -8,10 +8,7 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Cache which stores all monsters of a trainer.
@@ -81,7 +78,7 @@ public class MonsterCache extends ListenerCache<Monster, String> {
     private static class TeamCache extends SimpleCache<Monster, String> {
 
         private final MonsterCache parent;
-        private Set<String> currentTeam = null;
+        private List<String> currentTeam = null;
 
         public TeamCache(MonsterCache parent) {
             this.parent = parent;
@@ -97,22 +94,23 @@ public class MonsterCache extends ListenerCache<Monster, String> {
         }
 
         private void updateTeam(List<String> team) {
-            Set<String> teamIds = new HashSet<>(team);
+            List<String> teamIds = team;
             if (currentTeam == null) {
-                currentTeam = teamIds;
+                currentTeam = new LinkedList<>(teamIds);
                 addValues(parent.valuesById.values());
                 return;
             }
             if (currentTeam.equals(teamIds)) {
                 return;
             }
-            Set<String> oldTeam = currentTeam;
+            teamIds = new LinkedList<>(teamIds);
+            List<String> oldTeam = currentTeam;
 
             Set<String> removedMonsters = new HashSet<>(oldTeam);
-            removedMonsters.removeAll(teamIds);
+            teamIds.forEach(removedMonsters::remove);
 
             Set<String> addedMonsters = new HashSet<>(teamIds);
-            addedMonsters.removeAll(oldTeam);
+            oldTeam.forEach(addedMonsters::remove);
 
             // Disable subject to prevent unneeded events
             disableEvents();
@@ -130,8 +128,17 @@ public class MonsterCache extends ListenerCache<Monster, String> {
             // Re-enable subject
             enableEvents();
 
+            List<Monster> monsters = new LinkedList<>();
+            for (String id : currentTeam) {
+                Optional<Monster> monster = getValue(id);
+                if (monster.isEmpty()) {
+                    continue;
+                }
+                monsters.add(monster.get());
+            }
+
             // Emit new values
-            subject.onNext(new ArrayList<>(valuesById.values()));
+            subject.onNext(new ArrayList<>(monsters));
         }
 
         @Override

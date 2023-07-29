@@ -14,6 +14,7 @@ import java.util.Map;
 @Singleton
 public class ResourceService implements IResourceService {
     private final Map<String, BufferedImage> monsterImages = new HashMap<>();
+    private final Map<String, BufferedImage> itemImages = new HashMap<>();
     @Inject
     protected PresetService presetService;
     @Inject
@@ -47,8 +48,13 @@ public class ResourceService implements IResourceService {
     }
 
     public Observable<BufferedImage> getItemImage(String itemId) {
-        return ResponseUtils.readImage(presetService.getItemImage(itemId));
-
+        if (!itemImages.containsKey(itemId)) {
+            return ResponseUtils.readImage(presetService.getItemImage(itemId)).map(image -> {
+                itemImages.put(itemId, image);
+                return image;
+            });
+        }
+        return Observable.just(itemImages.get(itemId));
     }
 
 }

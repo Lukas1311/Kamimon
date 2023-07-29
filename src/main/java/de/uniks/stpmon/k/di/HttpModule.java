@@ -87,4 +87,8 @@ public class HttpModule {
         return retrofit.create(EncounterApiService.class);
     }
 
+    @Provides
+    @Singleton
+    TrainerItemApiService trainerItemApi(Retrofit retrofit){return retrofit.create(TrainerItemApiService.class);}
+
 }
