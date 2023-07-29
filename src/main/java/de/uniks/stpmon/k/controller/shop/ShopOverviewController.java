@@ -1,18 +1,15 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.shop;
 
-import de.uniks.stpmon.k.dto.ItemTypeDto;
+import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.shop.ShopOptionController;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.views.ItemCell;
-import de.uniks.stpmon.k.views.ShopItemCell;
-import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -21,10 +18,7 @@ import javafx.scene.layout.AnchorPane;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 @Singleton
 public class ShopOverviewController extends Controller {

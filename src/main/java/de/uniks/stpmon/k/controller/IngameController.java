@@ -10,6 +10,8 @@ import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
+import de.uniks.stpmon.k.controller.shop.ShopOptionController;
+import de.uniks.stpmon.k.controller.shop.ShopOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;

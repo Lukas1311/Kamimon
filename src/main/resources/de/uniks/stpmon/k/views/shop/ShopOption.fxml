@@ -5,8 +5,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane fx:id="backgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="280.0" prefWidth="174.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.ShopOptionController">
+            prefHeight="367.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.shop.ShopOptionController">
     <VBox alignment="CENTER" layoutX="37.0" layoutY="14.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="10.0"
           AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <ImageView fx:id="itemImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true"/>

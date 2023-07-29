@@ -1,5 +1,6 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.shop;
 
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.TrainerService;
