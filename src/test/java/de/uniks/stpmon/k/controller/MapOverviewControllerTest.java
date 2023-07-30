@@ -30,6 +30,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.inject.Provider;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,6 +59,13 @@ public class MapOverviewControllerTest extends ApplicationTest {
     TrainerStorage trainerStorage;
     @Mock
     TextDeliveryService textDeliveryService;
+    @Mock
+    Provider<IngameController> ingameControllerProvider;
+
+    @Spy
+    final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
+    @Mock
+    Provider<ResourceBundle> resourceBundleProvider;
 
     @Spy
     @InjectMocks
@@ -67,6 +78,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
     @Override
     public void start(Stage stage) {
         app.start(stage);
+        when(resourceBundleProvider.get()).thenReturn(resources);
 
         when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
         when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER_W_VISITED_AREAS);
@@ -88,7 +100,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // prep:
         ImageView mapImageViewMock = mock(ImageView.class);
         ImageView mapImageView = lookup("#mapImageView").queryAs(ImageView.class);
-
         // action: render() already done automatically by this time
 
         // check values:
