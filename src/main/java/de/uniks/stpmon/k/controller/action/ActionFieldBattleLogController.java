@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.controller.action;
 
-import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
@@ -8,7 +7,6 @@ import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -32,8 +30,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
-    @Inject
-    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @Inject
     SessionService sessionService;
@@ -76,16 +72,11 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
-            subscribe(sessionService.listenOpponent(slot), opp -> {
-                if (!opp.isAttacker()) {
-                    Platform.runLater(() -> battleLogService.queueUpdate(new OpponentUpdate(slot, opp)));
-
-                } else {
-                    battleLogService.queueUpdate(new OpponentUpdate(slot, opp));
-                }
-            });
+            subscribe(sessionService.listenOpponent(slot),
+                    opp -> battleLogService.queueUpdate(new OpponentUpdate(slot, opp)));
             if (!slot.enemy()) {
-                subscribe(sessionService.listenMonster(slot), mon -> battleLogService.setMonster(slot, mon));
+                subscribe(sessionService.listenMonster(slot),
+                        mon -> battleLogService.setMonster(slot, mon));
             }
         }
         onDestroy(battleLogService::clearService);

@@ -35,6 +35,17 @@ public class BattleLogService {
     private final List<OpponentUpdate> opponentUpdates = new ArrayList<>();
 
     private boolean encounterIsOver = false;
+    /**
+     * True if the user did his last move and is now waiting for the opponent to finish his move.
+     */
+    private boolean isWaiting = false;
+    /**
+     * True if the user is currently on the "waiting" screen.
+     * This differs from {@link #encounterIsOver} because this is only true if the user can read the "waiting" text
+     * in the battle log. {@link #encounterIsOver} can be true if the user still reads the last action of the opponent
+     * for example.
+     */
+    private boolean currentlyWaiting = false;
     private CloseEncounterTrigger closeEncounterTrigger = null;
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
@@ -59,7 +70,6 @@ public class BattleLogService {
         }
 
         queueOpponent(update);
-
     }
 
     /**
@@ -90,12 +100,18 @@ public class BattleLogService {
             if (nextUpdate != null) {
                 handleOpponentUpdate(nextUpdate);
                 opponentUpdates.remove(nextUpdate);
+                if (nextUpdate.opponent().results() != null) {
+                    isWaiting = false;
+                }
             }
-
-
         } else {
             //check if round or encounter is over
             if (closeEncounterTrigger == null) {
+                if (isWaiting) {
+                    currentlyWaiting = true;
+                    addTranslatedSection("waiting.enemy");
+                    return;
+                }
                 //round is over
                 battleLogControllerProvider.get().endRound(false);
             } else {
@@ -126,6 +142,9 @@ public class BattleLogService {
         battleLogControllerProvider.get().endRound(true);
     }
 
+    public void startWaiting() {
+        isWaiting = true;
+    }
 
     public void showNextAction() {
         showActions();

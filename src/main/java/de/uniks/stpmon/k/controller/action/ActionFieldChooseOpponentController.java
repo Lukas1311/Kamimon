@@ -55,9 +55,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
             if (isBackOption) {
                 actionField.openChooseAbility();
             } else {
-                actionField.setEnemyTrainerId(opponent.trainer());
-                actionField.openBattleLog();
-                actionField.executeAbilityMove();
+                actionField.selectEnemy(opponent);
             }
         });
 
