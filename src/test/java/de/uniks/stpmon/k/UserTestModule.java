@@ -109,30 +109,34 @@ public class UserTestModule {
                         .findFirst();
                 if (oldUserOptional.isPresent()) {
                     User oldUser = oldUserOptional.get();
-                    String name = oldUser.name();
-                    String status = oldUser.status();
-                    String avatar = oldUser.avatar();
-                    ArrayList<String> friends = oldUser.friends();
-                    if (dto.name() != null) {
-                        name = dto.name();
-                    }
-                    if (dto.status() != null) {
-                        status = dto.status();
-                    }
-                    if (dto.avatar() != null) {
-                        avatar = dto.avatar();
-                    }
-                    if (dto.friends() != null) {
-                        friends = dto.friends();
-                    }
-                    User newUser = new User(
-                            oldUser._id(), name, status, avatar, friends
-                    );
+                    User newUser = applyUpdate(dto, oldUser);
                     users.remove(oldUser);
                     users.add(newUser);
                     return Observable.just(newUser);
                 }
                 return Observable.error(new Throwable("404 Not found"));
+            }
+
+            private static User applyUpdate(UpdateUserDto dto, User oldUser) {
+                String name = oldUser.name();
+                String status = oldUser.status();
+                String avatar = oldUser.avatar();
+                ArrayList<String> friends = oldUser.friends();
+                if (dto.name() != null) {
+                    name = dto.name();
+                }
+                if (dto.status() != null) {
+                    status = dto.status();
+                }
+                if (dto.avatar() != null) {
+                    avatar = dto.avatar();
+                }
+                if (dto.friends() != null) {
+                    friends = dto.friends();
+                }
+                return new User(
+                        oldUser._id(), name, status, avatar, friends
+                );
             }
 
             @Override

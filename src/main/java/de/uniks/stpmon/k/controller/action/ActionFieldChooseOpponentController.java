@@ -3,8 +3,6 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -20,11 +18,6 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
     public Text chooseOpponentText;
     @FXML
     public HBox chooseOpponentBox;
-
-    @Inject
-    RegionService regionService;
-    @Inject
-    RegionStorage regionStorage;
 
     private int optionIndex = 0;
 

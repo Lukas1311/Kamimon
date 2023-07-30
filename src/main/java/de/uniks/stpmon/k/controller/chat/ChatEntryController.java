@@ -7,8 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import javax.inject.Inject;
-
 import static de.uniks.stpmon.k.utils.StringUtils.filterChatName;
 
 public class ChatEntryController extends Controller {
@@ -22,7 +20,6 @@ public class ChatEntryController extends Controller {
     private final Group group;
     private final String name;
 
-    @Inject
     public ChatEntryController(Group group, ChatListController chatListController) {
         this.group = group;
         this.name = group.name();

@@ -72,8 +72,7 @@ public class ToastController extends Controller {
             fadeIn.setOnFinished((ae) -> new Thread(() -> {
                 try {
                     Thread.sleep(3500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ignored) {
                 }
                 Timeline fadeOut = new Timeline();
                 fadeOut.getKeyFrames().add(new KeyFrame(Duration.millis(500),

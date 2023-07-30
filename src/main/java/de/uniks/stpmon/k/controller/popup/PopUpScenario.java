@@ -15,7 +15,6 @@ public enum PopUpScenario {
     DELETE_CONFIRMATION_TRAINER("trainerGotDeleted"),
     CREATE_TRAINER("doYouWantToCreateTrainer");
 
-
     private final String mainText;
     private List<String> parameters = new ArrayList<>();
 
