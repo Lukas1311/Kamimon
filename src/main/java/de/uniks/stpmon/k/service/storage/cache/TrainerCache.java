@@ -62,7 +62,7 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
                 String areaId = event.area()._id();
                 // Recreate the trainer cache
                 areaCache(areaId);
-                if (trainerStorage == null) {
+                if (trainerStorage == null || regionStorage == null) {
                     return;
                 }
                 Trainer current = trainerStorage.getTrainer();
