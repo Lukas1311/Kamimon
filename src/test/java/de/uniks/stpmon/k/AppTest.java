@@ -543,6 +543,7 @@ class AppTest extends ApplicationTest {
         clickOn("#mdmzSettings");
         final Slider musicSlider = lookup("#music").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
+        clickOn("#settings");
     }
 
 }
