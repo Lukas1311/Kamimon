@@ -282,7 +282,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .makeAbilityMove(attacker.abilities().get("Tackle"), target._id())
+                .makeAbilityMove(null, attacker.abilities().get("Tackle"), target._id())
                 .blockingFirst();
 
         //check value
@@ -320,7 +320,7 @@ class EncounterServiceTest {
 
         //action
         final Opponent returnOpponent = encounterService
-                .makeChangeMonsterMove(nextMonster)
+                .makeChangeMonsterMove(null, nextMonster)
                 .blockingFirst();
 
         //check value
