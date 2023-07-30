@@ -64,27 +64,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
 
-    // private TileMapData createDummyMap() {
-    //     ObjectData object = new ObjectData(0, "Route 101", List.of(), List.of(
-    //             new Property("Route 101", "Route", "text")
-    //     ), "Route", false, 0, 0, 0, 0, 0);
-    //     TileLayerData layer = new TileLayerData(1, "Ground", List.of(), List.of(), List.of(object),
-    //             0, 0,
-    //             2, 2,
-    //             0, 0, "objectgroup", true, List.of());
-    //     return new TileMapData(
-    //             2, 2,
-    //             false, List.of(layer),
-    //             List.of(),
-    //             1, 1,
-    //             List.of(),
-    //             "map");
-    // }
-
-    // final TileMapData dummyMap = createDummyMap();
-    // final Region dummyRegion = new Region("1", "reg", null, dummyMap);
-
-
     @Override
     public void start(Stage stage) {
         app.start(stage);
