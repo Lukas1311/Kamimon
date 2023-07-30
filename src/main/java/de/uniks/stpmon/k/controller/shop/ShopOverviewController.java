@@ -4,9 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.views.ItemCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,7 +38,6 @@ public class ShopOverviewController extends Controller {
 
     @Inject
     public ShopOverviewController() {
-
     }
 
     @Override
@@ -69,9 +66,9 @@ public class ShopOverviewController extends Controller {
     }
 
     public void initSelection() {
-       if (availableItems.size() > 0) {
-          shopOptionController.setItem(availableItems.get(0));
-       }
+        if (!availableItems.isEmpty()) {
+            shopOptionController.setItem(availableItems.get(0));
+        }
     }
 
     @Override
