@@ -2,14 +2,11 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
-import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.map.Property;
-import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
-import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
@@ -35,6 +32,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextFlowMatchers.hasText;
@@ -49,8 +47,12 @@ public class MapOverviewControllerTest extends ApplicationTest {
 
     @Spy
     WorldRepository worldRepository;
-    @Spy
+    @Mock
+    RegionService regionService;
+    @Mock
     RegionStorage regionStorage;
+    @Mock
+    TrainerStorage trainerStorage;
     @Mock
     TextDeliveryService textDeliveryService;
 
@@ -62,36 +64,39 @@ public class MapOverviewControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
 
 
-    private TileMapData createDummyMap() {
-        ObjectData object = new ObjectData(0, "Route 101", List.of(), List.of(
-                new Property("Route 101", "Route", "text")
-        ), "Route", false, 0, 0, 0, 0, 0);
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(), List.of(), List.of(object),
-                0, 0,
-                2, 2,
-                0, 0, "objectgroup", true, List.of());
-        return new TileMapData(
-                2, 2,
-                false, List.of(layer),
-                List.of(),
-                1, 1,
-                List.of(),
-                "map");
-    }
+    // private TileMapData createDummyMap() {
+    //     ObjectData object = new ObjectData(0, "Route 101", List.of(), List.of(
+    //             new Property("Route 101", "Route", "text")
+    //     ), "Route", false, 0, 0, 0, 0, 0);
+    //     TileLayerData layer = new TileLayerData(1, "Ground", List.of(), List.of(), List.of(object),
+    //             0, 0,
+    //             2, 2,
+    //             0, 0, "objectgroup", true, List.of());
+    //     return new TileMapData(
+    //             2, 2,
+    //             false, List.of(layer),
+    //             List.of(),
+    //             1, 1,
+    //             List.of(),
+    //             "map");
+    // }
 
-    final TileMapData dummyMap = createDummyMap();
-    final Region dummyRegion = new Region("1", "reg", null, dummyMap);
+    // final TileMapData dummyMap = createDummyMap();
+    // final Region dummyRegion = new Region("1", "reg", null, dummyMap);
 
 
     @Override
     public void start(Stage stage) {
         app.start(stage);
 
-        when(regionStorage.getRegion()).thenReturn(dummyRegion);
+        when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
+        when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER);
+
         RouteData dummyData1 = new RouteData(1, new RouteText("Route 66", "HiWay1", "Route"), 0, 0, 0, 0,
                 List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(20, 20), new PolygonPoint(0, 20)));
         RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 1, 1, 0, 0, List.of());
         RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"), 10, 10, 0, 34, List.of());
+        
         when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData1, dummyData2, dummyData3)));
         worldRepository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
         app.show(mapOverviewController);
@@ -108,7 +113,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
 
         // check values:
         Label regionNameLabel = lookup("#regionNameLabel").queryAs(Label.class);
-        assertEquals("reg", regionNameLabel.getText());
+        assertEquals("Test Region", regionNameLabel.getText());
         AnchorPane mapOverviewHolder = lookup("#mapOverviewHolder").queryAs(AnchorPane.class);
         Label areaNameLabel = lookup("#areaNameLabel").queryAs(Label.class);
         Text regionDescription = lookup("#regionDescription").queryText();
@@ -122,7 +127,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // check mocks:
         verifyNoMoreInteractions(mapImageViewMock);
         verify(regionStorage).getRegion();
-        verify(textDeliveryService).getRouteData(dummyRegion);
+        verify(textDeliveryService).getRouteData(DummyConstants.REGION);
         Polygon detail1 = lookup("#detail_1").query();
         assertNotNull(detail1);
         Rectangle detail2 = lookup("#detail_2").query();
