@@ -112,7 +112,7 @@ public class DummyConstants {
             0,
             0,
             null,
-            List.of(), Set.of(), Set.of("1","2","3")
+            List.of(), Set.of(), Set.of("area_0","area_1","area_2")
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,
