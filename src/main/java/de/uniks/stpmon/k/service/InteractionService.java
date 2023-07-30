@@ -62,20 +62,31 @@ public class InteractionService implements ILifecycleService {
         NPCInfo info = trainer.npc();
         Trainer me = trainerService.getMe();
 
+        // no npc
         if (info == null) {
             return null;
         }
+
+        // if npc is healer
         if (info.canHeal()) {
             return getHealDialogue(trainer, me);
         }
 
+        // if npc distributes starter mons
         List<String> starters = info.starters();
-
         if (starters != null && !starters.isEmpty() && !info.encountered().contains(me._id())) {
             return getStarterDialogue(starters, me, trainer);
         }
+
+        // if encounter starts with interaction
         if (info.encounterOnTalk()) {
             return getEncounterDialogue(trainer, me, "npc");
+        }
+
+        // if npc trades mons
+        List<Integer> availableItems = info.sells();
+        if (availableItems != null && !availableItems.isEmpty()) {
+            return getTradeDialogue(trainer);
         }
 
         return null;
@@ -166,6 +177,29 @@ public class InteractionService implements ILifecycleService {
         return itemBuilder.create();
     }
 
+    private Dialogue getTradeDialogue(Trainer trainer) {
+        DialogueBuilder itemBuilder = Dialogue.builder()
+                .setTrainerId(trainer._id())
+                .addItem().setText(translateString("shop.intro"))
+                .addOption()
+                .setText(translateString("shop.selection.yes"))
+                .addAction(() -> openShop(trainer))
+                .setNext(Dialogue.builder()
+                        .addItem().setText(translateString("shop.shopping"))
+                        .addOption()
+                        .setText(translateString("shop.done"))
+                        .addAction(this::closeShop)
+                        .endOption()
+                        .endItem()
+                        .create())
+                .endOption()
+                .addOption()
+                .setText(translateString("shop.selection.no"))
+                .endOption()
+                .endItem();
+        return itemBuilder.create();
+    }
+
     private void talkTo(Trainer trainer, Trainer me, Integer selection) {
         listener.sendTalk(Socket.UDP, "areas.%s.trainers.%s.talked".formatted(trainer.area(), me._id()),
                 new TalkTrainerDto(me._id(), trainer._id(), selection));
@@ -200,10 +234,10 @@ public class InteractionService implements ILifecycleService {
         return getEncounterDialogue();
     }
 
-
     /**
      * Retrieves the dialogue of a trainer in front of the player.
-     * If the trainer is not online, or no monster of the other trainer is alive, the dialogue will not
+     * If the trainer is not online, or no monster of the other trainer is alive,
+     * the dialogue will not
      * start a battle.
      *
      * @return Observable of the dialogue, or empty if there is none.
@@ -224,8 +258,7 @@ public class InteractionService implements ILifecycleService {
         return userService.isOnline(trainer.user()).flatMap((isOnline) -> {
             if (!isOnline) {
                 return Observable.just(
-                        getRejectionDialogue(trainer, "player.offline", trainer.name())
-                );
+                        getRejectionDialogue(trainer, "player.offline", trainer.name()));
             }
             return monsterService.anyMonsterAlive(trainer._id()).map((anyAlive) -> {
                 if (!anyAlive) {
@@ -246,17 +279,28 @@ public class InteractionService implements ILifecycleService {
      */
     public Completable tryUpdateDialogue() {
         return getPossibleDialogue().defaultIfEmpty(Dialogue.EMPTY).doOnNext((dialogue) -> {
-                    if (dialogue == null || dialogue.isEmpty()) {
-                        interactionStorage.setDialogue(null);
-                        return;
+            if (dialogue == null || dialogue.isEmpty()) {
+                interactionStorage.setDialogue(null);
+                return;
 
-                    }
-                    interactionStorage.setDialogue(dialogue);
-                })
+            }
+            interactionStorage.setDialogue(dialogue);
+        })
                 .ignoreElements();
     }
 
     private void applyOverlayEffect() {
         ingameControllerProvider.get().applyHealEffect();
+    }
+
+    /**
+     * Open the shop controller to buy things
+     */
+    private void openShop(Trainer npc) {
+        ingameControllerProvider.get().openShop(npc);
+    }
+
+    private void closeShop() {
+        ingameControllerProvider.get().closeShop();
     }
 }
