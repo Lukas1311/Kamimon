@@ -242,8 +242,9 @@ class AppTest extends ApplicationTest {
 
         //check minimap
         clickOn("#miniMap");
-        verifyThat("#mapOverviewContent", Node::isVisible);
-        clickOn("#closeButton");
+        verifyThat("#mapOverviewHolder", Node::isVisible);
+        // close minimap
+        clickOn("#miniMap");
 
         //check backpack
         clickOn("#backpackImage");
@@ -322,7 +323,7 @@ class AppTest extends ApplicationTest {
 
         type(KeyCode.M);
         waitForFxEvents();
-        verifyThat("#mapOverviewContent", Node::isVisible);
+        verifyThat("#mapOverviewHolder", Node::isVisible);
         type(KeyCode.M);
 
         type(KeyCode.N);
