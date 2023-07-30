@@ -51,7 +51,6 @@ public class ShopOptionController extends Controller {
     @FXML
     public AnchorPane backgroundPane;
 
-
     @Inject
     TrainerService trainerService;
     @Inject
@@ -106,34 +105,35 @@ public class ShopOptionController extends Controller {
                     .filter(useritem -> Objects.equals(useritem.type(), item.type()))
                     .toList();
 
-            if(!list.isEmpty()) {
+            if (!list.isEmpty()) {
                 itemAmount = list.get(0).amount();
             } else {
                 itemAmount = 0;
             }
-            amountLabel.setText("Amount: " + itemAmount);
+            amountLabel.setText(translateString("shop.amount", String.valueOf(itemAmount)));
             updateTradeButtons();
         });
-
         subscribe(resourceService.getItemImage((String.valueOf(item.type()))), imagerUrl -> {
-            subscribe(presetService.getItem(item.type()), item1 -> {
-                Image itemImage = ImageUtils.scaledImageFX(imagerUrl, 2.0);
-                this.itemImage.setImage(itemImage);
-                //text
-                itemNameLabel.setText(item1.name());
-                buyPriceLabel.setText("Buy Price: " + item1.price().toString());
-                sellPriceLabel.setText("Sell Price: " + item1.price() / 2);
-                itemDescriptionLabel.setText(item1.description());
-
-                buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
-                sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
-
-                //buttons
-                neededCoins = item1.price();
-                updateTradeButtons();
-
-            });
+            Image itemImage = ImageUtils.scaledImageFX(imagerUrl, 2.0);
+            this.itemImage.setImage(itemImage);
         });
+
+        subscribe(presetService.getItem(item.type()), item1 -> {
+            //text
+            itemNameLabel.setText(item1.name());
+            buyPriceLabel.setText(translateString("shop.buy.price", item1.price().toString()));
+            sellPriceLabel.setText(translateString("shop.sell.price", String.valueOf(item1.price() / 2)));
+            itemDescriptionLabel.setText(item1.description());
+
+            buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
+            sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
+
+            //buttons
+            neededCoins = item1.price();
+            updateTradeButtons();
+
+        });
+
 
         buyButton.setOnAction(ac -> {
             subscribe(itemService.tradeItem(item.type(), 1, npc._id(), false));
@@ -144,7 +144,7 @@ public class ShopOptionController extends Controller {
 
         sellButton.setOnAction(ac -> {
             subscribe(itemService.tradeItem(item.type(), 1, npc._id(), true));
-            coinsDifferenceLabel.setText("+" + neededCoins/2);
+            coinsDifferenceLabel.setText("+" + neededCoins / 2);
             coinsDifferenceLabel.getStyleClass().clear();
             coinsDifferenceLabel.getStyleClass().add("trade-text-black");
         });
