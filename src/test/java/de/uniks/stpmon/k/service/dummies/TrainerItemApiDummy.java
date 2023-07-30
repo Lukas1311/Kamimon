@@ -31,7 +31,7 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
     }
 
     @Override
-    public Observable<Item> updateItem(UpdateItemDto dto, String action, String regionId, String trainerId) {
+    public Observable<Item> updateItem(String regionId, String trainerId, String action, UpdateItemDto dto) {
         if (regionId.isEmpty() || trainerId.isEmpty()) {
             return Observable.error(new Throwable(regionId + " or " + trainerId + " is empty"));
         }
