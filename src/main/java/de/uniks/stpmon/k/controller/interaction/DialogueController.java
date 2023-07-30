@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.InteractionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
+import io.reactivex.rxjava3.core.Completable;
 import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -98,15 +99,14 @@ public class DialogueController extends ToastController {
             }
 
             if (dialogue == null) {
-                if (interactionService != null) {
-                    interactionService.tryUpdateDialogue();
-                }
-
-                Dialogue currentDialogue = interactionStorage.getDialogue();
-                if (currentDialogue == null || currentDialogue.isEmpty()) {
-                    return;
-                }
-                openDialogue(interactionStorage.getDialogue());
+                subscribe(interactionService != null ? interactionService.tryUpdateDialogue() : Completable.complete(),
+                        () -> {
+                            Dialogue currentDialogue = interactionStorage.getDialogue();
+                            if (currentDialogue == null || currentDialogue.isEmpty()) {
+                                return;
+                            }
+                            openDialogue(interactionStorage.getDialogue());
+                        });
                 event.consume();
                 return;
             }
@@ -263,7 +263,7 @@ public class DialogueController extends ToastController {
         int spacings = options.length + 1;
         for (int i = 0; i < options.length; i++) {
             Parent parent = createOption(children, options, i);
-            optionWidth += parent.getLayoutBounds().getWidth();
+            optionWidth += (int) parent.getLayoutBounds().getWidth();
         }
         // Size needed per spacing
         int spacing = ((int) optionContainer.getWidth() - optionWidth) / spacings;

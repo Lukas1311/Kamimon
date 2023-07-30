@@ -122,6 +122,7 @@ public class TeamController extends Controller {
         if (monsterListVBox != null) {
             monsterListVBox.getChildren().clear();
         }
+        arrowImageView = null;
     }
 
     @Override

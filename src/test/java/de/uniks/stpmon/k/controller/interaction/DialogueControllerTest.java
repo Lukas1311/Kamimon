@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.InteractionService;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
+import io.reactivex.rxjava3.core.Completable;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
@@ -48,6 +49,8 @@ class DialogueControllerTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
+        lenient().when(interactionService.tryUpdateDialogue()).thenReturn(Completable.complete());
+
         app.start(stage);
         app.show(controller);
         app.addInputHandler(inputHandler);

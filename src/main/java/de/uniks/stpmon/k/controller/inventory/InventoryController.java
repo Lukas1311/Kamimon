@@ -42,6 +42,8 @@ public class InventoryController extends ToastedController {
     public Text coinAmount;
     private final ObservableList<Item> userItems = FXCollections.observableArrayList();
 
+    public boolean isInEncounter = false;
+
     @Inject
     public InventoryController() {
     }
@@ -50,7 +52,15 @@ public class InventoryController extends ToastedController {
     public Parent render() {
         final Parent parent = super.render();
 
-        loadBgImage(inventoryPane, "inventory/inv_coins.png");
+        if (isInEncounter) {
+            loadBgImage(inventoryPane, "inventory/InventoryBox.png");
+            inventoryPane.getChildren().remove(coinBox);
+            AnchorPane.setBottomAnchor(itemListView, 3.5);
+        } else {
+            loadBgImage(inventoryPane, "inventory/inv_coins.png");
+            AnchorPane.setBottomAnchor(itemListView, 32.0);
+        }
+
         loadImage(coinView, "inventory/coin.png");
 
         setCoins();
@@ -64,6 +74,17 @@ public class InventoryController extends ToastedController {
         });
 
         return parent;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        itemListView.setItems(null);
+        coinView = null;
+        inventoryPane = null;
+        itemListView = null;
+        coinBox = null;
+        coinAmount = null;
     }
 
     private void setCoins() {

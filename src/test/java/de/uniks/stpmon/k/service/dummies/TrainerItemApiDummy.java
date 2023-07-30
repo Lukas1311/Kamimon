@@ -20,14 +20,13 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
     }
 
     private void initDummyItems() {
-        if (items.size() > 0) {
+        if (!items.isEmpty()) {
             throw new IllegalStateException("Monsters already initialized");
         }
 
         int amount = 8;
-        for (int i = 0; i < amount; i++ ) {
-            int id = 100 + i;
-            items.add(new Item(String.valueOf(id), null, 1, 1));
+        for (int i = 0; i < amount; i++) {
+            items.add(new Item(String.valueOf(i), null, 1, 1));
         }
     }
 
@@ -44,7 +43,7 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
         if (regionId.isEmpty()) {
             return Observable.error(new Throwable(regionId + "does not exist"));
         }
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             initDummyItems();
         }
 
@@ -64,7 +63,7 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
         if (regionId.isEmpty()) {
             return Observable.error(new Throwable(regionId + "does not exist"));
         }
-        if (items.size() == 0) {
+        if (items.isEmpty()) {
             initDummyItems();
         }
 
