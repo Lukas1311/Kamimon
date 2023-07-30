@@ -25,7 +25,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
