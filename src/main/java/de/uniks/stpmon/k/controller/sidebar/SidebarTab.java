@@ -10,4 +10,5 @@ public enum SidebarTab {
     USER_MANAGEMENT,
     TRAINER_MANAGEMENT,
     CHOOSE_SPRITE,
+    SOUND,
 }
