@@ -36,7 +36,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
-            <Slider fx:id="music" value="50.0" />
+            <Slider fx:id="music" />
         </HBox>
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
