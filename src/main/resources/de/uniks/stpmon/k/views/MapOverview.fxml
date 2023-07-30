@@ -5,22 +5,27 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-
-<AnchorPane fx:id="mapOverviewHolder" maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0"
-            xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1" styleClass="map-overview-content"
+<AnchorPane fx:id="mapOverviewHolder" maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0"
+            prefHeight="500.0" prefWidth="700.0"
+            xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
+            styleClass="map-overview-content"
             fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
 
-      <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="350.0" layoutY="8.0" styleClass="map-overview-header" />
-      <StackPane fx:id="mapStackPane" layoutX="10.0" layoutY="50.0" maxHeight="340.0" maxWidth="680.0" minHeight="340.0" minWidth="680.0" prefHeight="340.0" prefWidth="680.0">
-         <ImageView fx:id="mapImageView" fitHeight="340.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER" />
-         <Pane fx:id="highlightPane" />
-      </StackPane>
+    <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="350.0" layoutY="8.0"
+           styleClass="map-overview-header"/>
+    <StackPane fx:id="mapStackPane" layoutX="10.0" layoutY="50.0" maxHeight="340.0" maxWidth="680.0" minHeight="340.0"
+               minWidth="680.0" prefHeight="340.0" prefWidth="680.0">
+        <ImageView fx:id="mapImageView" fitHeight="340.0" pickOnBounds="true" preserveRatio="true"
+                   StackPane.alignment="CENTER"/>
+        <Pane fx:id="highlightPane"/>
+    </StackPane>
 
-      <Label fx:id="areaNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="398.0" prefHeight="19.0" prefWidth="195.0" />
-      <TextFlow fx:id="textFlowRegionDescription" layoutX="15.0" layoutY="424.0" prefHeight="66.0" prefWidth="673.0" styleClass="map-overview-textflow">
+      <Label fx:id="areaNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="398.0"
+             prefHeight="19.0" prefWidth="195.0" />
+      <TextFlow fx:id="textFlowRegionDescription" layoutX="15.0" layoutY="424.0" prefHeight="66.0" prefWidth="673.0"
+                styleClass="map-overview-textflow">
          <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
       </TextFlow>
 

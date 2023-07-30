@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
@@ -27,14 +26,18 @@ public class ClockService {
         return clockObservable;
     }
 
+    protected Observable<LocalTime> createTimer(LocalTime startTime, int period, TimeUnit unit) {
+        int offsetSecond = 60 - startTime.getSecond();
+        return Observable.merge(
+                Observable.just(startTime),
+                Observable.interval(offsetSecond, period, unit)
+                        .map(ticks -> startTime.plusMinutes(ticks + 1))
+        ).doOnDispose(() -> clockObservable = null).replay(1).refCount();
+    }
+
     protected Observable<LocalTime> createObservable() {
         LocalTime currentTime = getCurrentTime();
-        int offsetSecond = 60 - currentTime.getSecond();
-        return Observable.merge(
-                Observable.just(currentTime),
-                Observable.interval(offsetSecond, 60, TimeUnit.SECONDS)
-                        .map(ticks -> currentTime.plus(ticks + 1, ChronoUnit.MINUTES))
-        ).doOnDispose(() -> clockObservable = null).replay(1).refCount();
+        return createTimer(currentTime, 60, TimeUnit.SECONDS);
     }
 
     private LocalTime getCurrentTime() {

@@ -20,6 +20,7 @@ import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
+import io.reactivex.rxjava3.annotations.Nullable;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -39,6 +40,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Stack;
+import java.util.function.BiConsumer;
 
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
@@ -92,7 +94,6 @@ public class IngameController extends PortalController {
     Provider<LoadingWildEncounterController> encounterWildProvider;
     @Inject
     AnimationService animationService;
-
     @Inject
     WorldTimerController worldTimerController;
     @Inject
@@ -105,15 +106,12 @@ public class IngameController extends PortalController {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     WorldController worldController;
-
     @Inject
     ShopOverviewController shopOverviewController;
     @Inject
     ShopOptionController shopOptionController;
-
     @Inject
     InputHandler inputHandler;
-
     @Inject
     SessionService encounterService;
     @Inject
@@ -267,78 +265,61 @@ public class IngameController extends PortalController {
         shopHBox.setPickOnBounds(false);
         shopBorderPane.setPickOnBounds(false);
 
-        Parent world = this.worldController.render();
-        // Null if unit testing world view
-        if (world != null) {
-            ingameStack.getChildren().add(0, world);
-        }
-        Parent monsterBar = this.monsterBarController.render();
-        // Null if unit testing world view
-        if (monsterBar != null) {
-            pane.getChildren().add(monsterBar);
-        }
+        renderAndInsert(ingameStack, 0, worldController);
+        renderAndInsert(pane, 0, monsterBarController);
+        renderAndInsert(miniMapVBox, 0, minimapController,
+                (_parent, child) -> child.setOnMouseClicked(this::openOrCloseMap));
+        renderAndInsert(miniMapVBox, 0, worldTimerController);
+        renderAndInsert(ingameStack, 1, nightOverlayController);
 
-        Parent miniMap = this.minimapController.render();
-        // Null if unit testing world view
-        if (miniMap != null) {
-            miniMapVBox.getChildren().add(0, miniMap);
-        }
+        renderAndInsert(ingameWrappingHBox, 0, backpackController,
+                (_parent, _child) -> ingameStack.setAlignment(Pos.TOP_RIGHT));
 
-        Parent worldTimer = this.worldTimerController.render();
-        if (worldTimer != null) {
-            miniMapVBox.getChildren().add(0, worldTimer);
-        }
+        dialogueBox.getChildren().clear();
+        renderAndInsert(dialogueBox, 0, dialogueController,
+                (_parent, child) -> child.setVisible(false));
 
-        Parent nightOverlay = this.nightOverlayController.render();
-        if (nightOverlay != null) {
-            ingameStack.getChildren().add(1, nightOverlay);
-        }
-
-        Parent backPack = this.backpackController.render();
-        // Null if unit testing world view
-        if (backPack != null) {
-            ingameWrappingHBox.getChildren().add(backPack);
-            ingameStack.setAlignment(Pos.TOP_RIGHT);
-        }
-
-        Parent dialogue = this.dialogueController.render();
-        if (dialogue != null) {
-            dialogueBox.getChildren().clear();
-            dialogueBox.getChildren().add(dialogue);
-            dialogue.setVisible(false);
-        }
-
-        if (miniMap != null) {
-            miniMap.setOnMouseClicked(this::openOrCloseMap);
-        }
-
-        Parent starter = this.starterController.render();
-        if (starter != null) {
-            starterBox.getChildren().clear();
-            starterBox.getChildren().add(starter);
-            starter.setVisible(false);
-        }
-
-
+        starterBox.getChildren().clear();
+        renderAndInsert(starterBox, 0, starterController,
+                (_parent, child) -> child.setVisible(false));
 
         return parent;
     }
 
-    public void openOrCloseMap(InputEvent event) {
-        if (mapOverview == null) {
-            triggerMap();
-        } else {
-            closeMap();
+    private void renderAndInsert(Pane parent, int index, Controller controller) {
+        renderAndInsert(parent, index, controller, null);
+    }
+
+    private void renderAndInsert(Pane parent, int index, Controller controller,
+                                 @Nullable BiConsumer<Parent, Parent> setup) {
+        if (controller == null) {
+            return;
         }
+        Parent child = controller.render();
+        if (child == null || parent == null) {
+            return;
+        }
+        parent.getChildren().add(index, child);
+        if (setup != null) {
+            setup.accept(parent, child);
+        }
+    }
+
+    private void openOrCloseMap(InputEvent event) {
+        openOrCloseMap();
         event.consume();
     }
 
-    public void triggerMap() {
-        if (mapOverviewController == null) {
-            return;
-        }
-        if (mapOverview != null && mapOverview.isVisible()) {
+    public void openOrCloseMap() {
+        if (mapOverview == null) {
+            openMap();
+        } else {
             closeMap();
+        }
+    }
+
+    public void openMap() {
+        if (mapOverviewController == null) {
             return;
         }
         mapOverviewController.init();
@@ -430,9 +411,9 @@ public class IngameController extends PortalController {
     }
 
     /**
-     * open the shop
+     * Opens the shop user interface.
      *
-     * @param npc
+     * @param npc the trainer that is the shop owner
      */
     public void openShop(Trainer npc) {
         shopOverviewController.init();
@@ -443,7 +424,7 @@ public class IngameController extends PortalController {
 
         shopOptionController.init();
         Parent shopDetail = this.shopOptionController.render();
-        if(shopDetail != null) {
+        if (shopDetail != null) {
             shopHBox.getChildren().add(shopDetail);
         }
 
@@ -454,7 +435,7 @@ public class IngameController extends PortalController {
     }
 
     /**
-     * close the shop
+     * Closes the shop user interface.
      */
     public void closeShop() {
         shopHBox.getChildren().clear();

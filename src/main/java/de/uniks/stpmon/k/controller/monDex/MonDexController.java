@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller.monDex;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
@@ -33,10 +32,6 @@ public class MonDexController extends Controller {
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
-    private MonsterTypeDto activeDetail;
-
-    @Inject
-    MonsterService monService;
     @Inject
     PresetService presetService;
     @Inject
@@ -46,6 +41,7 @@ public class MonDexController extends Controller {
 
     private final ObservableList<MonsterTypeDto> allMonsters = FXCollections.observableArrayList();
 
+    private MonsterTypeDto activeDetail;
 
     @Inject
     public MonDexController() {

@@ -74,8 +74,7 @@ public class UDPReceiver implements SocketReceiver {
                 } catch (SocketException e) {
                     // Close thread if socket is closed
                     active = false;
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ignored) {
                 }
             }
         });
