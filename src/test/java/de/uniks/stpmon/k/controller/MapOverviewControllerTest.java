@@ -90,7 +90,8 @@ public class MapOverviewControllerTest extends ApplicationTest {
         app.start(stage);
 
         when(regionStorage.getRegion()).thenReturn(DummyConstants.REGION);
-        when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER);
+        when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER_W_VISITED_AREAS);
+        when(regionService.getAreas(any())).thenReturn(Observable.just(List.of(DummyConstants.AREA_NO_MAP)));
 
         RouteData dummyData1 = new RouteData(1, new RouteText("Route 66", "HiWay1", "Route"), 0, 0, 0, 0,
                 List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(20, 20), new PolygonPoint(0, 20)));
@@ -134,7 +135,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         assertNotNull(detail2);
 
         // No detail should be visible
-        verifyThat(detail1, polygon -> polygon.getFill().equals(Color.TRANSPARENT));
+        verifyThat(detail1, polygon -> polygon.getFill().equals(Color.SILVER));
 
         // move to first route
         moveTo(detail1);
@@ -145,8 +146,8 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // Detail should be fully highlighted
         verifyThat(detail1, polygon -> polygon.getOpacity() >= 0.95);
         // Route description should be visible
-        assertEquals("Route 66", areaNameLabel.getText());
-        verifyThat("#textFlowRegionDescription", hasText("HiWay1"));
+        assertEquals("???", areaNameLabel.getText());
+        verifyThat("#textFlowRegionDescription", hasText("???"));
         // Move to second route
         moveTo(detail2);
         waitForFxEvents();
@@ -157,7 +158,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // Click on second route
         clickOn(MouseButton.PRIMARY);
         // First route should not be highlighted anymore
-        verifyThat(detail1, polygon -> polygon.getOpacity() == 0);
+        verifyThat(detail1, polygon -> polygon.getFill().equals(Color.SILVER));
         // Second route should be fully highlighted
         verifyThat(detail2, rect -> rect.getOpacity() >= 0.95);
     }
