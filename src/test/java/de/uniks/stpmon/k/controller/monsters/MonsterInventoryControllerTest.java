@@ -50,8 +50,8 @@ public class MonsterInventoryControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
     @InjectMocks
     MonsterInventoryController inventoryController;
-    BehaviorSubject<List<Monster>> team = BehaviorSubject.createDefault(List.of());
-    BehaviorSubject<List<Monster>> monsters = BehaviorSubject.createDefault(List.of());
+    final BehaviorSubject<List<Monster>> team = BehaviorSubject.createDefault(List.of());
+    final BehaviorSubject<List<Monster>> monsters = BehaviorSubject.createDefault(List.of());
 
     @Override
     public void start(Stage stage) {
