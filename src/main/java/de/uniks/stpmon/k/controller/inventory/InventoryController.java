@@ -69,6 +69,7 @@ public class InventoryController extends ToastedController {
 
         subscribe(itemService.getItems(), items -> {
             if (!items.isEmpty()) {
+                items.removeIf(item -> item.amount() == 0);
                 userItems.setAll(items);
                 itemListView.setCellFactory(param -> new ItemCell(resourceService, presetService));
                 itemListView.setItems(userItems);

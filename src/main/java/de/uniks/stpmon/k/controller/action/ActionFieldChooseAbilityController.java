@@ -19,7 +19,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     @FXML
     public GridPane abilityGridPane;
 
-    public Monster monster;
+    public Monster activeMonster;
     private int count = 0;
 
     @Inject
@@ -30,10 +30,11 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     public Parent render() {
         Parent parent = super.render();
 
-        monster = sessionService.getMonster(new EncounterSlot(0, false));
+        activeMonster = sessionService.getMonster(actionFieldControllerProvider.get().getActiveSlot());
+
         addBackOption(translateString("back"));
-        for (String id : monster.abilities().keySet()) {
-            addAbility(id, monster.abilities().get(id));
+        for (String id : activeMonster.abilities().keySet()) {
+            addAbility(id, activeMonster.abilities().get(id));
         }
         count = 0;
         return parent;
@@ -76,7 +77,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     }
 
     public void addBackOption(String option) {
-        HBox optionContainer = getActionField().getOptionContainer(option);
+        HBox optionContainer = ActionFieldController.getOptionContainer(option);
 
         optionContainer.setOnMouseClicked(event -> getActionField().openMainMenu());
 

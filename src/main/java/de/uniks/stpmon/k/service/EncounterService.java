@@ -105,7 +105,7 @@ public class EncounterService {
         );
     }
 
-    public Observable<Opponent> makeAbilityMove(int abilityId, String targetId) {
+    public Observable<Opponent> makeAbilityMove(EncounterSlot slot, int abilityId, String targetId) {
         UpdateOpponentDto dto = new UpdateOpponentDto(null, new AbilityMove(
                 Moves.ABILITY.toString(),
                 abilityId,
@@ -119,12 +119,12 @@ public class EncounterService {
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
                 dto
         );
     }
 
-    public Observable<Opponent> makeChangeMonsterMove(Monster nextMonster) {
+    public Observable<Opponent> makeChangeMonsterMove(EncounterSlot slot, Monster nextMonster) {
         UpdateOpponentDto dto = new UpdateOpponentDto(null, new ChangeMonsterMove(
                 Moves.CHANGE_MONSTER.toString(),
                 nextMonster._id())
@@ -132,18 +132,18 @@ public class EncounterService {
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
                 dto
         );
     }
 
-    public Observable<Opponent> changeDeadMonster(Monster nextMonster) {
+    public Observable<Opponent> changeDeadMonster(EncounterSlot slot, Monster nextMonster) {
         UpdateOpponentDto dto = new UpdateOpponentDto(nextMonster._id(), null);
 
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
                 dto
         );
     }
