@@ -117,16 +117,11 @@ public class MapOverviewController extends ToastedController {
         if (currentRegion.map() != null) {
             subscribe(
                 textDeliveryService.getRouteData(currentRegion),
-                data -> {
-                    subscribe(
-                            regionService.getAreas(currentRegion._id()),
-                            areas -> {
-                                renderMapDetails(data, filterVisitedAreas(areas));
-                            },
-                            this::handleError
-                    );
-                    
-                }
+                data -> subscribe(
+                        regionService.getAreas(currentRegion._id()),
+                        areas -> renderMapDetails(data, filterVisitedAreas(areas)),
+                        this::handleError
+                )
             );
         }
 
@@ -229,7 +224,7 @@ public class MapOverviewController extends ToastedController {
 
             if (isVisited) {
                 areaNameLabel.setText(routeData.routeText().name());
-                if (routeData.routeText().description() != "") {
+                if (!routeData.routeText().description().isEmpty()) {
                     regionDescription.setText(routeData.routeText().description());
                 } else {
                     regionDescription.setText("Here could be your advertisement.");
