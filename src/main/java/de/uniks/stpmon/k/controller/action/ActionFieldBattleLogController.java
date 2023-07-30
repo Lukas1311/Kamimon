@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
@@ -73,7 +72,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot),
-                    opp -> battleLogService.queueUpdate(new OpponentUpdate(slot, opp)));
+                    opp -> battleLogService.queueUpdate(slot, opp));
             if (!slot.enemy()) {
                 subscribe(sessionService.listenMonster(slot),
                         mon -> battleLogService.setMonster(slot, mon));
