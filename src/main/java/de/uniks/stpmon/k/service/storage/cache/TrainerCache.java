@@ -62,6 +62,9 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
                 String areaId = event.area()._id();
                 // Recreate the trainer cache
                 areaCache(areaId);
+                if (trainerStorage == null) {
+                    return;
+                }
                 Trainer current = trainerStorage.getTrainer();
                 disposables.add(regionService.getTrainer(current.region(), current._id()).subscribe(trainer -> {
                     if (trainer == null) {
