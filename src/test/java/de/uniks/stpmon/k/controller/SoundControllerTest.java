@@ -7,6 +7,7 @@ import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -35,6 +37,8 @@ public class SoundControllerTest extends ApplicationTest {
     Provider<HybridController> hybridControllerProvider;
     @InjectMocks
     SoundController soundController;
+    @Mock
+    Preferences preferences;
 
 
 
@@ -59,18 +63,20 @@ public class SoundControllerTest extends ApplicationTest {
     @Test
     public void onMusic() {
         final HybridController mock = Mockito.mock(HybridController.class);
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         when(hybridControllerProvider.get()).thenReturn(mock);
 
         final Slider musicSlider = lookup("#music").query();
         //check first if value is 0
         assertThat(musicSlider.getValue()).isEqualTo(0);
 
-        //change value to 52.152317880794705 and go back to Settings
+        //change value to 100 and go back to Settings
         clickOn(musicSlider);
         assertThat(musicSlider.getValue()).isEqualTo(52.152317880794705);
         sleep(3000);
         clickOn("#backToSettingButton");
         verify(mock).pushTab(SidebarTab.SETTINGS);
+
 
     }
 }
