@@ -23,8 +23,6 @@ public class BattleLogService {
     @Inject
     PresetService presetService;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
@@ -75,7 +73,7 @@ public class BattleLogService {
         }
         opponentUpdates.add(update);
         //check if this battleLog needs to start
-        if (textBox.getChildren().size() == 0) {
+        if (textBox.getChildren().isEmpty()) {
             //shows next actions
             showActions();
         }

@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
-import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -39,8 +38,6 @@ public class ActionFieldController extends Controller {
     Provider<EncounterService> encounterServiceProvider;
     @Inject
     SessionService sessionService;
-    @Inject
-    EncounterStorage encounterStorage;
     @Inject
     BattleLogService battleLogService;
 

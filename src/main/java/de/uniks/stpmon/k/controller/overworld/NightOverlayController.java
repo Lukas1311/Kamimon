@@ -22,7 +22,6 @@ public class NightOverlayController extends Controller {
     @Inject
     public ClockService clockService;
 
-
     @Inject
     public NightOverlayController() {
     }

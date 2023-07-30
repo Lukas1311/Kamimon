@@ -2,8 +2,6 @@ package de.uniks.stpmon.k.controller.monDex;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -33,14 +31,9 @@ public class MonDexDetailController extends Controller {
     public HBox typeBox;
 
     @Inject
-    ResourceService resourceService;
-    @Inject
-    MonsterService monsterService;
-    @Inject
     TrainerService trainerService;
     @Inject
     MonDexController monDexController;
-
 
     @Inject
     public MonDexDetailController() {
@@ -70,8 +63,6 @@ public class MonDexDetailController extends Controller {
             addTypeLabel("unknown");
             description.setText(translateString("not.seen.yet"));
         }
-
-
     }
 
     private void addTypeLabel(String monsterType) {

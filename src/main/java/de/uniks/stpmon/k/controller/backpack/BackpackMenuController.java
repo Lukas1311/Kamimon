@@ -1,11 +1,11 @@
 package de.uniks.stpmon.k.controller.backpack;
 
-import de.uniks.stpmon.k.controller.monDex.MonDexController;
-import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
-import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
+import de.uniks.stpmon.k.controller.monDex.MonDexController;
+import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -32,15 +32,11 @@ public class BackpackMenuController extends Controller {
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
 
-
     @FXML
     public HBox backpackMenuHBox;
     @FXML
     public ImageView arrowImageView;
 
-
-    @Inject
-    BackpackController backpackController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
     @Inject
@@ -100,7 +96,7 @@ public class BackpackMenuController extends Controller {
     }
 
     private void openMinimap() {
-        ingameControllerProvider.get().openMap();
+        ingameControllerProvider.get().openOrCloseMap();
     }
 
     private Provider<? extends Controller> getProvider(BackpackMenuOption option) {

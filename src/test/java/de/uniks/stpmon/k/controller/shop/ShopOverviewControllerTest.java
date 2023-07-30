@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.ListViewMatchers.hasItems;
@@ -58,7 +57,7 @@ public class ShopOverviewControllerTest extends ApplicationTest {
     final List<Item> items = new ArrayList<>();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
 
         NPCInfo info = NPCInfoBuilder.builder().addSells(1).addSells(2).create();
