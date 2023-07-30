@@ -40,7 +40,7 @@ import java.util.Set;
 @Singleton
 public class MapOverviewController extends ToastedController {
 
-    public static final double OPACITY_BLUR = 0.95
+    public static final double OPACITY_BLUR = 0.95;
     public static final double OPACITY_HOVERED = 0.75;
     public static final int OPACITY_SELECTED = 1;
     public static final int OPACITY_DESELECTED = 0;
