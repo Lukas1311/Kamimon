@@ -24,7 +24,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
     MonsterService monsterService;
 
     private Monster selectedUserMonster;
-
     private int count = 0;
     private String back;
 
@@ -54,12 +53,19 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             addActionOption(back, true);
         }
 
-        Monster activeMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
+        Monster primaryMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
+        Monster secondaryMonster = null;
+        if (sessionService.checkTrainer()) {
+            secondaryMonster = sessionService.getMonster(EncounterSlot.PARTY_SECOND);
+        }
+
         List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
 
         for (Monster monster : userMonstersList) {
-            if (!sessionService.isMonsterDead(monster) &&
-                    (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
+            if (!sessionService.isMonsterDead(monster) && !primaryMonster._id().equals(monster._id())) {
+                if (secondaryMonster != null && secondaryMonster._id().equals(monster._id())) {
+                    continue;
+                }
                 subscribe(presetService.getMonster(monster.type()), type -> {
                     selectedUserMonster = monster;
                     addActionOption(monster._id() + " " + type.name(), false);
@@ -74,10 +80,10 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
 
         HBox optionContainer;
         if (option.equals(back)) {
-            optionContainer = getActionField().getOptionContainer(option);
+            optionContainer = ActionFieldController.getOptionContainer(option);
             optionContainer.setOnMouseClicked(event -> openAction(option));
         } else {
-            optionContainer = getActionField().getOptionContainer(idAndName[1]);
+            optionContainer = ActionFieldController.getOptionContainer(idAndName[1]);
             optionContainer.setOnMouseClicked(event -> openAction(idAndName[0]));
         }
 

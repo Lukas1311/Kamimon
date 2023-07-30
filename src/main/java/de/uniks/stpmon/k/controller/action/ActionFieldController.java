@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -39,12 +40,15 @@ public class ActionFieldController extends Controller {
     @Inject
     SessionService sessionService;
     @Inject
+    EncounterStorage encounterStorage;
+    @Inject
     BattleLogService battleLogService;
 
     private String enemyTrainerId;
     private int abilityId;
     private boolean ownMonsterDead;
-
+    private EncounterSlot activeSlot;
+    private int nextMonster = 0;
     private Controller openController;
     private CloseEncounterTrigger closeTrigger;
 
@@ -73,11 +77,6 @@ public class ActionFieldController extends Controller {
         return parent;
     }
 
-    @Override
-    public String getResourcePath() {
-        return "action/";
-    }
-
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {
         openBattleLog();
 
@@ -98,11 +97,13 @@ public class ActionFieldController extends Controller {
         if (openController instanceof ActionFieldBattleLogController) {
             return;
         }
+        setActiveSlot();
         open(changeMonsterControllerProvider);
     }
 
 
     public void openChooseAbility() {
+        setActiveSlot();
         open(chooseAbilityControllerProvider);
     }
 
@@ -161,9 +162,8 @@ public class ActionFieldController extends Controller {
     }
 
     public void executeAbilityMove() {
-        //TODO: chache old Monster
         subscribe(encounterServiceProvider.get()
-                .makeAbilityMove(abilityId, enemyTrainerId));
+                .makeAbilityMove(getActiveSlot(), abilityId, enemyTrainerId));
     }
 
     public void checkDeadMonster() {
@@ -176,8 +176,8 @@ public class ActionFieldController extends Controller {
 
     public void executeMonsterChange(Monster selectedMonster) {
         EncounterService encounterService = encounterServiceProvider.get();
-        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(selectedMonster) :
-                encounterService.makeChangeMonsterMove(selectedMonster));
+        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(getActiveSlot(), selectedMonster) :
+                encounterService.makeChangeMonsterMove(getActiveSlot(), selectedMonster));
         setOwnMonsterDead(false);
     }
 
@@ -196,5 +196,26 @@ public class ActionFieldController extends Controller {
         battleLogService.showNextAction();
     }
 
+    public void setActiveSlot() {
+        if (sessionService.checkTrainer()) {
+            if (nextMonster == 0) {
+                this.activeSlot = EncounterSlot.PARTY_FIRST;
+                nextMonster++;
+            } else {
+                this.activeSlot = EncounterSlot.PARTY_SECOND;
+                nextMonster--;
+            }
+        } else {
+            this.activeSlot = EncounterSlot.PARTY_FIRST;
+        }
+    }
 
+    public EncounterSlot getActiveSlot() {
+        return activeSlot;
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "action/";
+    }
 }
