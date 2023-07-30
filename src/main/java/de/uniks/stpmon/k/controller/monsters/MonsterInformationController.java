@@ -172,21 +172,7 @@ public class MonsterInformationController extends Controller {
     private void fillAbilityRow(AbilityDto ability, int currentUses, int rowIndex) {
         Label typeLabel = typeLabel(null, ability.type());
         typeLabel.setId("typeLabel_" + rowIndex);
-        Label nameLabel = new Label(ability.name());
-        nameLabel.setId("nameLabel_" + rowIndex);
-
-        nameLabel.setOnMouseClicked(event -> {
-            if (!descriptionLabel.isVisible()
-                    || !descriptionLabel.getText().contains(ability.name() + ":\n" + ability.description())) {
-                descriptionLabel.setVisible(true);
-                descriptionLabel.setText(ability.name() + ":\n" + ability.description());
-                infoGrid.setVisible(false);
-            } else {
-                descriptionLabel.setVisible(false);
-                descriptionLabel.setText("");
-                infoGrid.setVisible(true);
-            }
-        });
+        Label nameLabel = createAbilityLabel(ability, rowIndex);
 
         Label powLabel = new Label(ability.power().toString());
         powLabel.setId("powLabel_" + rowIndex);
@@ -206,6 +192,25 @@ public class MonsterInformationController extends Controller {
         attackGrid.add(powLabel, 2, rowIndex);
         attackGrid.add(accLabel, 3, rowIndex);
         attackGrid.add(useLabel, 4, rowIndex);
+    }
+
+    private Label createAbilityLabel(AbilityDto ability, int rowIndex) {
+        Label nameLabel = new Label(ability.name());
+        nameLabel.setId("nameLabel_" + rowIndex);
+
+        nameLabel.setOnMouseClicked(event -> {
+            if (!descriptionLabel.isVisible()
+                    || !descriptionLabel.getText().contains(ability.name() + ":\n" + ability.description())) {
+                descriptionLabel.setVisible(true);
+                descriptionLabel.setText(ability.name() + ":\n" + ability.description());
+                infoGrid.setVisible(false);
+            } else {
+                descriptionLabel.setVisible(false);
+                descriptionLabel.setText("");
+                infoGrid.setVisible(true);
+            }
+        });
+        return nameLabel;
     }
 
     private void cleanupAttackGrid() {

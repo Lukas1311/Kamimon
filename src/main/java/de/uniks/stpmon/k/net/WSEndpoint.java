@@ -47,6 +47,9 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
         if (isOpen()) {
             return;
         }
+
+        // Needed because intellij does not recognize its own errors
+        //noinspection RedundantSuppression
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             //noinspection resource
