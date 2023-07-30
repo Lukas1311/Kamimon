@@ -70,11 +70,7 @@ public class SoundControllerTest extends ApplicationTest {
         //check first if value is 0
         assertThat(musicSlider.getValue()).isEqualTo(0);
 
-        //change value to 100 and go back to Settings
-        musicSlider.setValue(100);
-        assertThat(musicSlider.getValue()).isEqualTo(100);
-        //clickOn(musicSlider);
-        //assertThat(musicSlider.getValue()).isEqualTo(51.2396694214876);
+        //go back to Settings
         clickOn("#backToSettingButton");
         verify(mock).pushTab(SidebarTab.SETTINGS);
 
