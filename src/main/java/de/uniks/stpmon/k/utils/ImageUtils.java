@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.utils;
 
+import de.uniks.stpmon.k.constants.TileConstants;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
@@ -10,6 +11,14 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
 public class ImageUtils {
+
+    public static BufferedImage createImage(int width, int height) {
+        return new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+    }
+
+    public static BufferedImage createTileImage(int width, int height) {
+        return createImage(width * TileConstants.TILE_SIZE, height * TileConstants.TILE_SIZE);
+    }
 
     public static BufferedImage scaledImage(BufferedImage image, double scale) {
         int w = (int) (image.getWidth() * scale);
