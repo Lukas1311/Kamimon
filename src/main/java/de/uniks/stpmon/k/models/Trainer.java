@@ -16,6 +16,6 @@ public record Trainer(
         Integer direction,
         NPCInfo npc,
         List<String> team, // up to 6 ids
-        Set<Integer> encounteredMonsterTypes) {
-
+        Set<Integer> encounteredMonsterTypes,
+        Set<String> visitedAreas) {
 }
