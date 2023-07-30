@@ -20,7 +20,6 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     public GridPane abilityGridPane;
 
     public Monster activeMonster;
-    private int nextMonster = 0;
     private int count = 0;
 
     @Inject
@@ -31,17 +30,6 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     public Parent render() {
         Parent parent = super.render();
 
-        if (sessionService.checkTrainer()) {
-            if (nextMonster == 0) {
-                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
-                nextMonster++;
-            } else {
-                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_SECOND);
-                nextMonster--;
-            }
-        } else {
-            actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
-        }
         activeMonster = sessionService.getMonster(actionFieldControllerProvider.get().getActiveSlot());
 
         addBackOption(translateString("back"));
@@ -75,7 +63,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
                 Opponent opponent = sessionService.getOpponent(EncounterSlot.ENEMY_FIRST);
                 actionFieldController.setEnemyTrainerId(opponent.trainer());
                 actionFieldController.openBattleLog();
-                actionFieldController.executeAbilityMove(actionFieldControllerProvider.get().getActiveSlot());
+                actionFieldController.executeAbilityMove();
             } else {
                 actionFieldController.openChooseOpponent();
             }

@@ -48,6 +48,7 @@ public class ActionFieldController extends Controller {
     private int abilityId;
     private boolean ownMonsterDead;
     private EncounterSlot activeSlot;
+    private int nextMonster = 0;
     private Controller openController;
     private CloseEncounterTrigger closeTrigger;
 
@@ -96,11 +97,13 @@ public class ActionFieldController extends Controller {
         if (openController instanceof ActionFieldBattleLogController) {
             return;
         }
+        setActiveSlot();
         open(changeMonsterControllerProvider);
     }
 
 
     public void openChooseAbility() {
+        setActiveSlot();
         open(chooseAbilityControllerProvider);
     }
 
@@ -158,9 +161,9 @@ public class ActionFieldController extends Controller {
         this.enemyTrainerId = trainerId;
     }
 
-    public void executeAbilityMove(EncounterSlot slot) {
+    public void executeAbilityMove() {
         subscribe(encounterServiceProvider.get()
-                .makeAbilityMove(slot, abilityId, enemyTrainerId));
+                .makeAbilityMove(getActiveSlot(), abilityId, enemyTrainerId));
     }
 
     public void checkDeadMonster() {
@@ -171,10 +174,10 @@ public class ActionFieldController extends Controller {
         });
     }
 
-    public void executeMonsterChange(EncounterSlot slot, Monster selectedMonster) {
+    public void executeMonsterChange(Monster selectedMonster) {
         EncounterService encounterService = encounterServiceProvider.get();
-        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(slot, selectedMonster) :
-                encounterService.makeChangeMonsterMove(slot, selectedMonster));
+        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(getActiveSlot(), selectedMonster) :
+                encounterService.makeChangeMonsterMove(getActiveSlot(), selectedMonster));
         setOwnMonsterDead(false);
     }
 
@@ -193,8 +196,18 @@ public class ActionFieldController extends Controller {
         battleLogService.showNextAction();
     }
 
-    public void setActiveSlot(EncounterSlot activeSlot) {
-        this.activeSlot = activeSlot;
+    public void setActiveSlot() {
+        if (sessionService.checkTrainer()) {
+            if (nextMonster == 0) {
+                this.activeSlot = EncounterSlot.PARTY_FIRST;
+                nextMonster++;
+            } else {
+                this.activeSlot = EncounterSlot.PARTY_SECOND;
+                nextMonster--;
+            }
+        } else {
+            this.activeSlot = EncounterSlot.PARTY_FIRST;
+        }
     }
 
     public EncounterSlot getActiveSlot() {

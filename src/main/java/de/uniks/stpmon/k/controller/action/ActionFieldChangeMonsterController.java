@@ -53,7 +53,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             addActionOption(back, true);
         }
 
-        //TODO
         Monster primaryMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
         Monster secondaryMonster = null;
         if (sessionService.checkTrainer()) {
@@ -115,7 +114,7 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             getActionField().openMainMenu();
         } else {
             getActionField().openBattleLog();
-            getActionField().executeMonsterChange(actionFieldControllerProvider.get().getActiveSlot(), selectedUserMonster);
+            getActionField().executeMonsterChange(selectedUserMonster);
         }
     }
 

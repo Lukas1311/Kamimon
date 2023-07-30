@@ -26,8 +26,6 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
     @Inject
     RegionStorage regionStorage;
 
-    private int nextMonster = 0;
-
     private int optionIndex = 0;
 
     @Inject
@@ -37,18 +35,6 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
     @Override
     public Parent render() {
         Parent parent = super.render();
-
-        if (sessionService.checkTrainer()) {
-            if (nextMonster == 0) {
-                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
-                nextMonster++;
-            } else {
-                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_SECOND);
-                nextMonster--;
-            }
-        } else {
-            actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
-        }
 
         optionIndex = 0;
         addMonsterOption(null, null, true);
@@ -78,7 +64,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
             } else {
                 actionField.setEnemyTrainerId(opponent.trainer());
                 actionField.openBattleLog();
-                actionField.executeAbilityMove(actionFieldControllerProvider.get().getActiveSlot());
+                actionField.executeAbilityMove();
             }
         });
 
