@@ -296,11 +296,12 @@ public class IngameController extends PortalController {
             return;
         }
         Parent child = controller.render();
-        if (parent != null) {
-            parent.getChildren().add(index, child);
-            if (setup != null) {
-                setup.accept(parent, child);
-            }
+        if (child == null || parent == null) {
+            return;
+        }
+        parent.getChildren().add(index, child);
+        if (setup != null) {
+            setup.accept(parent, child);
         }
     }
 
