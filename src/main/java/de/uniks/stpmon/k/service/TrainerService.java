@@ -89,7 +89,12 @@ public class TrainerService {
         if (trainer == null) {
             return Observable.empty();
         }
-        UpdateTrainerDto dto = new UpdateTrainerDto(null, null, team);
+    public Observable<Trainer> fastTravel(String area) {
+        Trainer trainer = trainerStorage.getTrainer();
+        if (trainer == null) {
+            return Observable.empty();
+        }
+        UpdateTrainerDto dto = new UpdateTrainerDto(null, null, null, area);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 
