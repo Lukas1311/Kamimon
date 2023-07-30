@@ -8,6 +8,7 @@ import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.utils.ImageUtils;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -75,8 +76,10 @@ public class ShopOptionController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadBgImage(backgroundPane, "inventory/inv_coins.png");
-        loadImage(coinsImage, "inventory/coin.png");
+        Platform.runLater(() -> {
+            loadBgImage(backgroundPane, "inventory/inv_coins.png");
+            loadImage(coinsImage, "inventory/coin.png");
+        });
 
         if (trainerService != null) {
             subscribe(trainerService.onTrainer(), trainer ->
@@ -97,7 +100,7 @@ public class ShopOptionController extends Controller {
 
     public void setItem(Item item) {
 
-        coinsDifferenceLabel.setText("");
+        Platform.runLater(() -> coinsDifferenceLabel.setText(""));
 
         subscribe(itemService.getItems(), items -> {
             List<Item> list = items
@@ -110,46 +113,48 @@ public class ShopOptionController extends Controller {
             } else {
                 itemAmount = 0;
             }
-            amountLabel.setText(translateString("shop.amount", String.valueOf(itemAmount)));
+            Platform.runLater(() -> amountLabel.setText(translateString("shop.amount", String.valueOf(itemAmount))));
             updateTradeButtons();
         });
         subscribe(resourceService.getItemImage((String.valueOf(item.type()))), imagerUrl -> {
             Image itemImage = ImageUtils.scaledImageFX(imagerUrl, 2.0);
-            this.itemImage.setImage(itemImage);
+            Platform.runLater(() -> this.itemImage.setImage(itemImage));
         });
 
         subscribe(presetService.getItem(item.type()), item1 -> {
             //text
-            itemNameLabel.setText(item1.name());
-            buyPriceLabel.setText(translateString("shop.buy.price", item1.price().toString()));
-            sellPriceLabel.setText(translateString("shop.sell.price", String.valueOf(item1.price() / 2)));
-            itemDescriptionLabel.setText(item1.description());
+            Platform.runLater(() -> {
+                itemNameLabel.setText(item1.name());
+                buyPriceLabel.setText(translateString("shop.buy.price", item1.price().toString()));
+                sellPriceLabel.setText(translateString("shop.sell.price", String.valueOf(item1.price() / 2)));
+                itemDescriptionLabel.setText(item1.description());
 
-            buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
-            sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
+                buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
+                sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
 
-            //buttons
-            neededCoins = item1.price();
-            updateTradeButtons();
-
+                //buttons
+                neededCoins = item1.price();
+                updateTradeButtons();
+            });
         });
-
 
         buyButton.setOnAction(ac -> {
             subscribe(itemService.tradeItem(item.type(), 1, npc._id(), false));
-            coinsDifferenceLabel.setText("-" + neededCoins);
-            coinsDifferenceLabel.getStyleClass().clear();
-            coinsDifferenceLabel.getStyleClass().add("trade-text-red");
+            Platform.runLater(() -> {
+                coinsDifferenceLabel.setText("-" + neededCoins);
+                coinsDifferenceLabel.getStyleClass().clear();
+                coinsDifferenceLabel.getStyleClass().add("trade-text-red");
+            });
         });
 
         sellButton.setOnAction(ac -> {
             subscribe(itemService.tradeItem(item.type(), 1, npc._id(), true));
-            coinsDifferenceLabel.setText("+" + neededCoins / 2);
-            coinsDifferenceLabel.getStyleClass().clear();
-            coinsDifferenceLabel.getStyleClass().add("trade-text-black");
+            Platform.runLater(() -> {
+                coinsDifferenceLabel.setText("+" + neededCoins / 2);
+                coinsDifferenceLabel.getStyleClass().clear();
+                coinsDifferenceLabel.getStyleClass().add("trade-text-black");
+            });
         });
-
-
     }
 
     @Override
@@ -159,8 +164,10 @@ public class ShopOptionController extends Controller {
 
     private void updateTradeButtons() {
         // neededCoins > 0 is used to distinguish between tradeable items and non tradeable items
-        buyButton.setDisable(!(neededCoins > 0 && availableCoins >= neededCoins));
-        sellButton.setDisable(!(neededCoins > 0 && itemAmount > 0));
+        Platform.runLater(() -> {
+            buyButton.setDisable(!(neededCoins > 0 && availableCoins >= neededCoins));
+            sellButton.setDisable(!(neededCoins > 0 && itemAmount > 0));
+        });
     }
 
     @Override

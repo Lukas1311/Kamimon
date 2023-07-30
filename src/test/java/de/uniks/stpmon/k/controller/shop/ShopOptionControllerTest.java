@@ -25,7 +25,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -51,11 +50,8 @@ public class ShopOptionControllerTest extends ApplicationTest {
     ResourceService resourceService;
     @Mock
     TrainerService trainerService;
-
-    @SuppressWarnings("unused")
     @Mock
     ItemService itemService;
-
     @InjectMocks
     ShopOptionController shopOptionController;
 
@@ -119,7 +115,6 @@ public class ShopOptionControllerTest extends ApplicationTest {
         items.add(item3);
         items.add(item4);
 
-
         when(trainerService.onTrainer()).thenReturn(Observable.just(Optional.of(dummytrainer)));
 
         when(itemService.tradeItem(anyInt(), anyInt(), anyString(), anyBoolean())).thenReturn(Observable.just(item1));
@@ -168,7 +163,6 @@ public class ShopOptionControllerTest extends ApplicationTest {
 
         sleep(1000);
 
-
         //set second item
         //only buy option
         shopOptionController.setItem(items.get(1));
@@ -182,11 +176,9 @@ public class ShopOptionControllerTest extends ApplicationTest {
         verifyThat("#buyPriceLabel", hasText("Buy price: 10"));
         verifyThat("#sellPriceLabel", hasText("Sell price: 5"));
 
-        //check weather buttons are enabled
+        // check buttons
         assertFalse(buyButton.isDisabled());
         assertTrue(sellButton.isDisabled());
-
-        sleep(1000);
 
         //set third item
         //only buy option
@@ -196,11 +188,9 @@ public class ShopOptionControllerTest extends ApplicationTest {
         verifyThat("#itemNameLabel", hasText("item3"));
         verifyThat("#amountLabel", hasText("Amount: 1"));
 
-        //check weather buttons are enabled
+        // check buttons
         assertTrue(buyButton.isDisabled());
         assertFalse(sellButton.isDisabled());
-
-        sleep(1000);
 
         //set fourth item
         //not trade options
@@ -212,28 +202,12 @@ public class ShopOptionControllerTest extends ApplicationTest {
         verifyThat("#buyPriceLabel", hasText("Buy price: 0"));
         verifyThat("#sellPriceLabel", hasText("Sell price: 0"));
 
-        //check weather buttons are enabled
+        //check buttons are disabled
         assertTrue(buyButton.isDisabled());
         assertTrue(sellButton.isDisabled());
 
         sleep(5000);
 
-
-
-
     }
-
-    @Test
-    void TestDifferentItems() {
-        shopOptionController.setItem(items.get(0));
-        sleep(1000);
-        shopOptionController.setItem(items.get(1));
-        sleep(1000);
-        shopOptionController.setItem(items.get(2));
-        sleep(1000);
-        shopOptionController.setItem(items.get(3));
-        sleep(1000);
-    }
-
 
 }
