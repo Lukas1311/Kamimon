@@ -82,6 +82,12 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         onDestroy(battleLogService::clearService);
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        battleLogService.setVBox(null);
+    }
+
     public void nextWindow() {
         battleLogService.showNextAction();
     }

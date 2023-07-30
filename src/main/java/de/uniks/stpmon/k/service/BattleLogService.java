@@ -82,8 +82,15 @@ public class BattleLogService {
             return;
         }
         opponentUpdates.add(update);
+        List<Result> results = update.opponent().results();
+        boolean wasWaiting = currentlyWaiting;
+        // Stop waiting if there are results
+        if (!results.isEmpty()) {
+            isWaiting = false;
+            currentlyWaiting = false;
+        }
         //check if this battleLog needs to start
-        if (textBox.getChildren().isEmpty()) {
+        if (wasWaiting || textBox.getChildren().isEmpty()) {
             //shows next actions
             showActions();
         }
@@ -100,9 +107,9 @@ public class BattleLogService {
             if (nextUpdate != null) {
                 handleOpponentUpdate(nextUpdate);
                 opponentUpdates.remove(nextUpdate);
-                if (nextUpdate.opponent().results() != null) {
-                    isWaiting = false;
-                }
+            }
+            if (opponentUpdates.isEmpty() && isWaiting) {
+                showInitialText();
             }
         } else {
             //check if round or encounter is over
@@ -119,7 +126,8 @@ public class BattleLogService {
                 if (encounterIsOver) {
                     closeTimer.cancel();
                     shutDownEncounter();
-                } else { //user sees result of encounter
+                } else {
+                    //user sees result of encounter
                     //show encounter result
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
@@ -134,6 +142,14 @@ public class BattleLogService {
 
             }
         }
+    }
+
+    public void showInitialText() {
+        if (!isWaiting) {
+            return;
+        }
+        currentlyWaiting = true;
+        addTranslatedSection("waiting.enemy");
     }
 
     private void shutDownEncounter() {
@@ -155,6 +171,7 @@ public class BattleLogService {
         Opponent opp = up.opponent();
         Opponent lastOpponent = lastOpponents.get(slot);
 
+        List<Result> results = opp.results();
         //check which move was made
         //check if monster was changed because of 0 hp
         if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
@@ -191,7 +208,7 @@ public class BattleLogService {
         String target = null;
         // Use last opponent to get the ability, this way we print the ability together with the result
         if (lastOpponent.move() instanceof AbilityMove move) {
-            if (opp.results().stream().anyMatch(result -> result.type().equals("ability-success"))) {
+            if (results.stream().anyMatch(result -> result.type().equals("ability-success"))) {
                 // Blocking can be used here because values are already loaded in the cache
                 AbilityDto ability = getAbility(move.ability());
                 MonsterTypeDto eneMon = attackedMonsters.get(slot);
@@ -203,7 +220,7 @@ public class BattleLogService {
 
         }
 
-        for (Result result : opp.results()) {
+        for (Result result : results) {
             handleResult(monster, result, target, slot, opp);
         }
 
@@ -306,5 +323,7 @@ public class BattleLogService {
     public void clearService() {
         lastOpponents.clear();
         attackedMonsters.clear();
+        monsBeforeLevelUp.clear();
+        monsAfterLevelUp.clear();
     }
 }

@@ -244,6 +244,13 @@ public class SessionService extends DestructibleElement {
         return session.getSlots();
     }
 
+    public Collection<EncounterSlot> getOwnSlots() {
+        if (hasTwoActiveMonster()) {
+            return List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND);
+        }
+        return List.of(EncounterSlot.PARTY_FIRST);
+    }
+
     public List<String> getEnemyTeam() {
         EncounterSession session = encounterStorage.getSession();
         if (session == null) {
