@@ -153,10 +153,22 @@ public class MapOverviewController extends ToastedController {
 
     private void addDetailShape(Shape shape, RouteData routeData) {
         shape.setId("detail_" + routeData.id());
-        shape.setFill(Color.TRANSPARENT);
-        shape.setOpacity(0);
-        shape.setStroke(Color.WHITESMOKE);
-        shape.setStrokeWidth(3);
+        
+        if (isVisited) {
+            shape.setFill(Color.TRANSPARENT);
+            shape.setOpacity(0);
+        } else {
+            shape.setFill(Color.SILVER);
+            shape.setOpacity(0.95);
+
+            BoxBlur blur = new BoxBlur();
+            blur.setWidth(5);
+            blur.setHeight(5);
+            blur.setIterations(3);
+            shape.setEffect(blur);
+        }
+
+
 
         highlightPane.getChildren().add(shape);
 
