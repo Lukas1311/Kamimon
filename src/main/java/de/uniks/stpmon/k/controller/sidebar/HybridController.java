@@ -75,6 +75,8 @@ public class HybridController extends Controller {
     @Inject
     Provider<TrainerManagementController> trainerManagementControllerProvider;
     @Inject
+    Provider<SoundController> soundControllerProvider;
+    @Inject
     CreateTrainerController createTrainerController;
     @Inject
     InputHandler inputHandler;
@@ -211,6 +213,7 @@ public class HybridController extends Controller {
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
             case CHOOSE_SPRITE -> pushController(createTrainerController, setup);
+            case SOUND -> pushController(soundControllerProvider.get(), setup);
             case NONE -> {
             }
         }
