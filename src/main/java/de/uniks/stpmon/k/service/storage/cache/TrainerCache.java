@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -18,6 +19,8 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
     RegionStorage regionStorage;
     @Inject
     Provider<TrainerAreaCache> trainerCacheProvider;
+    @Inject
+    TrainerStorage trainerStorage;
 
     private TrainerAreaCache areaCache;
 
@@ -59,6 +62,14 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
                 String areaId = event.area()._id();
                 // Recreate the trainer cache
                 areaCache(areaId);
+                Trainer current = trainerStorage.getTrainer();
+                disposables.add(regionService.getTrainer(current.region(), current._id()).subscribe(trainer -> {
+                    if (trainer == null) {
+                        return;
+                    }
+                    trainerStorage.setTrainer(trainer);
+                    updateValueFromSocket(trainer);
+                }));
             }
         }));
         return this;
