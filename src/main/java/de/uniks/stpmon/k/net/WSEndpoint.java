@@ -83,6 +83,7 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
     @OnError
     @SuppressWarnings("unused")
     public void onError(Throwable error) {
+        //noinspection CallToPrintStackTrace
         error.printStackTrace();
     }
 
@@ -103,8 +104,7 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
 
         try {
             this.userSession.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
 

@@ -187,7 +187,6 @@ public class LoginController extends Controller {
         } catch (HttpException httpException) {
             return handleHttpException(httpException);
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
             return "undefined error";
         }
     }

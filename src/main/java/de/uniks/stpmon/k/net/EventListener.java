@@ -87,6 +87,7 @@ public class EventListener {
                 final T data = mapper.treeToValue(node.get("data"), type);
                 emitter.onNext(new Event<>(event, data));
             } catch (JsonProcessingException e) {
+                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
             }
         };
@@ -106,6 +107,7 @@ public class EventListener {
             final String msg = mapper.writeValueAsString(message);
             return adapter.sendMessage(msg, openEndpoint);
         } catch (JsonProcessingException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             return null;
         }
