@@ -24,6 +24,7 @@ public class TrainerService {
     RegionApiService regionApiService;
     @Inject
     TrainerStorage trainerStorage;
+
     @Inject
     CacheManager cacheManager;
     // Current area cache, will be updated when the related area changes
@@ -36,6 +37,13 @@ public class TrainerService {
 
     public Trainer getMe() {
         return trainerStorage.getTrainer();
+    }
+
+    public Observable<Optional<Trainer>> onTrainer() {
+        if (trainerCache == null) {
+            trainerCache = cacheManager.trainerCache();
+        }
+        return trainerCache.listenValue(trainerStorage.getTrainer()._id());
     }
 
     public Observable<Trainer> deleteMe() {
