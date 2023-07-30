@@ -82,7 +82,7 @@ public class FriendCache extends ListenerCache<User, String> implements IFriendC
         List<String> newUserIds = user.friends().stream()
                 .filter(key -> !hasValue(key))
                 .toList();
-        if (newUserIds.size() > 0) {
+        if (!newUserIds.isEmpty()) {
             return userApiService.getUsers(newUserIds).flatMap(users -> {
                 addValues(users);
                 notifyUpdateFriends(user);

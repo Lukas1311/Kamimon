@@ -25,13 +25,13 @@ public class InventoryController extends ToastedController {
 
     @Inject
     TrainerService trainerService;
-
     @Inject
     PresetService presetService;
     @Inject
     IResourceService resourceService;
     @Inject
     ItemService itemService;
+
     @FXML
     public AnchorPane inventoryPane;
     @FXML

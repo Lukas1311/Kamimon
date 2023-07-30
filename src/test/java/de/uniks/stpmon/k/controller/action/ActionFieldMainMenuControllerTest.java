@@ -22,7 +22,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +53,7 @@ class ActionFieldMainMenuControllerTest extends ApplicationTest {
     private final VBox actionFieldWrapperBox = new VBox();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
 
         when(resourceBundleProvider.get()).thenReturn(resources);
