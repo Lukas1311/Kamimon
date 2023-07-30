@@ -201,6 +201,9 @@ public class ActionFieldController extends Controller {
         if (madeMoves.isEmpty()) {
             return;
         }
+        if (sessionService.hasTwoActiveMonster() && madeMoves.size() == 1) {
+            return;
+        }
         battleLogService.startWaiting();
     }
 
