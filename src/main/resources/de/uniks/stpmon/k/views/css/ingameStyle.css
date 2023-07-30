@@ -266,6 +266,10 @@
     -fx-text-fill: black;
 }
 
+.map-overview-textflow {
+    -fx-text-alignment: center;
+}
+
 /* -------------------- Encounter -------------------- */
 .encounter-background {
     -fx-background-size: cover;

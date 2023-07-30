@@ -53,29 +53,11 @@ class RegionServiceTest {
     }
 
     private Trainer getDummyTrainer() {
-        return new Trainer(
-                "0",
-                "regionId",
-                "userId",
-                "TestTrainer",
-                "trainerImage",
-                0,
-                "areaId",
-                0,
-                0,
-                0,
-                DummyConstants.NPC_INFO,
-                List.of(), Set.of()
-        );
+        return DummyConstants.TRAINER;
     }
 
     private Area getDummyArea() {
-        return new Area(
-                "areaId",
-                "regionId",
-                "areaTest",
-                null
-        );
+        return DummyConstants.AREA_NO_MAP;
     }
 
     private Monster makeMonster() {
@@ -96,12 +78,12 @@ class RegionServiceTest {
                 .thenReturn(Observable.just(getDummyTrainer()));
         //action
         final Trainer trainer = regionService
-                .createTrainer("regionId", "TestTrainer", "trainerImage")
+                .createTrainer("region_0", "Test Trainer", "trainerImage")
                 .blockingFirst();
 
         //check values
         assertEquals("0", trainer._id());
-        assertEquals("TestTrainer", trainer.name());
+        assertEquals("Test Trainer", trainer.name());
 
         //check mocks
         verify(regionApiService).createTrainer(any(), captor.capture());
@@ -119,13 +101,13 @@ class RegionServiceTest {
 
         //action
         final List<Trainer> returnTrainers = regionService
-                .getTrainers("regionId", "areaId")
+                .getTrainers("region_0", "area_0")
                 .blockingFirst();
 
         //check values
         assertEquals(1, returnTrainers.size());
         assertEquals("0", returnTrainers.get(0)._id());
-        assertEquals("TestTrainer", returnTrainers.get(0).name());
+        assertEquals("Test Trainer", returnTrainers.get(0).name());
 
         //check mocks
         verify(regionApiService).getTrainers(any(), any());
@@ -142,13 +124,13 @@ class RegionServiceTest {
 
         //action
         final List<Trainer> returnTrainers = regionService
-                .getTrainers("regionId")
+                .getTrainers("region_0")
                 .blockingFirst();
 
         //check values
         assertEquals(1, returnTrainers.size());
         assertEquals("0", returnTrainers.get(0)._id());
-        assertEquals("TestTrainer", returnTrainers.get(0).name());
+        assertEquals("Test Trainer", returnTrainers.get(0).name());
 
         //check mocks
         verify(regionApiService).getTrainers(any());
@@ -165,12 +147,12 @@ class RegionServiceTest {
 
         //action
         final Trainer returnTrainer = regionService
-                .getTrainer("regionId", "trainerId")
+                .getTrainer("region_0", "trainerId")
                 .blockingFirst();
 
         //check values
         assertEquals("0", returnTrainer._id());
-        assertEquals("TestTrainer", returnTrainer.name());
+        assertEquals("Test Trainer", returnTrainer.name());
 
         //check mocks
         verify(regionApiService).getTrainer(captor.capture(), captor.capture());
@@ -180,9 +162,9 @@ class RegionServiceTest {
     void deleteTrainer() {
         initUser();
         regionStorage.setRegion(new Region(
-                "regionId",
+                "region_0",
                 "Test",
-                new Spawn("regionId", 0, 0),
+                new Spawn("region_0", 0, 0),
                 null
         ));
         Trainer trainer = getDummyTrainer();
@@ -193,12 +175,12 @@ class RegionServiceTest {
 
         //action
         final Trainer returnTrainer = regionService
-                .deleteTrainer("regionId", "trainerId")
+                .deleteTrainer("region_0", "trainerId")
                 .blockingFirst();
 
         //check values
         assertEquals("0", returnTrainer._id());
-        assertEquals("TestTrainer", returnTrainer.name());
+        assertEquals("Test Trainer", returnTrainer.name());
 
         //check mocks
         verify(regionApiService).deleteTrainer(captor.capture(), captor.capture());
@@ -265,12 +247,12 @@ class RegionServiceTest {
 
         //action
         final Area returnArea = regionService
-                .getArea("regionId", "areaId")
+                .getArea("region_0", "area_0")
                 .blockingFirst();
 
         //check values
-        assertEquals("areaId", returnArea._id());
-        assertEquals("areaTest", returnArea.name());
+        assertEquals("area_0", returnArea._id());
+        assertEquals("Test Area", returnArea.name());
 
         //check mocks
         verify(regionApiService).getArea(any(), captor.capture());
@@ -288,13 +270,13 @@ class RegionServiceTest {
 
         //action
         final List<Area> returnAreas = regionService
-                .getAreas("regionId")
+                .getAreas("region_0")
                 .blockingFirst();
 
         //check values
         assertEquals(1, returnAreas.size());
-        assertEquals("areaId", returnAreas.get(0)._id());
-        assertEquals("areaTest", returnAreas.get(0).name());
+        assertEquals("area_0", returnAreas.get(0)._id());
+        assertEquals("Test Area", returnAreas.get(0).name());
 
         //check mocks
         verify(regionApiService).getAreas(captor.capture());
@@ -312,7 +294,7 @@ class RegionServiceTest {
 
         //action
         final List<Monster> returnMonsters = regionService
-                .getMonsters("regionId", "trainerId")
+                .getMonsters("region_0", "trainerId")
                 .blockingFirst();
 
         //check values
@@ -332,7 +314,7 @@ class RegionServiceTest {
                 .thenReturn(Observable.just(monster));
 
         //action
-        final Monster returnMonster = regionService.getMonster("regionId", "trainerId", "monsterId")
+        final Monster returnMonster = regionService.getMonster("region_0", "trainerId", "monsterId")
                 .blockingFirst();
 
         //check values
