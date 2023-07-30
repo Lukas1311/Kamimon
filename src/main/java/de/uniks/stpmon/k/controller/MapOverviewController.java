@@ -62,6 +62,8 @@ public class MapOverviewController extends ToastedController {
     Pane highlightPane;
     @FXML
     Text regionDescription;
+    @FXML
+    Button fastTravelButton;
 
     @Inject
     RegionStorage regionStorage;
@@ -93,6 +95,9 @@ public class MapOverviewController extends ToastedController {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+
+        fastTravelButton.setText(translateString("fastTravel"));
+        fastTravelButton.setVisible(false);
 
         // center the region name label horizontally
         AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
@@ -221,6 +226,7 @@ public class MapOverviewController extends ToastedController {
         shape.setOnMouseClicked(event -> {
             if (activeShape != null && !activeShape.equals(shape)) {
                 activeShape.setStroke(null);
+                fastTravelButton.setVisible(false);
                 shape.setOpacity(OPACITY_SELECTED);
             }
 
@@ -231,6 +237,8 @@ public class MapOverviewController extends ToastedController {
                 } else {
                     regionDescription.setText("Here could be your advertisement.");
                 }
+                fastTravelButton.setVisible(hasSpawn);
+                fastTravelButton.setOnAction(click -> fastTravel((String) shape.getUserData()));
                 
             } else {
                 areaNameLabel.setText("???");
