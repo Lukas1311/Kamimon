@@ -690,12 +690,6 @@ Load fonts
     -fx-rotate: 180;
 }
 
-.music-mdmz-settings.ikonli-font-icon {
-    -fx-icon-color: black;
-    -fx-icon-size: 30px;
-    -fx-rotate: 180;
-}
-
 .chat-settings-button {
     -fx-pref-width: 35;
     -fx-pref-height: 35;
@@ -880,6 +874,11 @@ Load fonts
     -fx-border-width: 3px;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+
+.music-mdmz-settings.ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
 }
 
 
