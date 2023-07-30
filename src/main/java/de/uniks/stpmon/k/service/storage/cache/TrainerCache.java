@@ -66,15 +66,16 @@ public class TrainerCache extends ListenerCache<Trainer, String> {
                     return;
                 }
                 Trainer current = trainerStorage.getTrainer();
-                if (regionService.getTrainer(current.region(), current._id()) == null) {
+                Observable<Trainer> trainer = regionService.getTrainer(current.region(), current._id());
+                if (trainer == null) {
                     return;
                 }
-                disposables.add(regionService.getTrainer(current.region(), current._id()).subscribe(trainer -> {
-                    if (trainer == null) {
+                disposables.add(trainer.subscribe(trainer1 -> {
+                    if (trainer1 == null) {
                         return;
                     }
-                    trainerStorage.setTrainer(trainer);
-                    updateValueFromSocket(trainer);
+                    trainerStorage.setTrainer(trainer1);
+                    updateValueFromSocket(trainer1);
                 }));
             }
         }));
