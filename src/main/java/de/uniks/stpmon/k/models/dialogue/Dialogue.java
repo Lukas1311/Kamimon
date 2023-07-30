@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.models.dialogue;
 
 public final class Dialogue {
+    public static final Dialogue EMPTY = new Dialogue("", new DialogueItem[0]);
 
     private final DialogueItem[] items;
     private final String trainerId;

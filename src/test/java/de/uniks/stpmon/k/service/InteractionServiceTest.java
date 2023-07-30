@@ -36,6 +36,8 @@ public class InteractionServiceTest {
     PresetService presetService;
     @Mock
     MonsterService monsterService;
+    @Mock
+    UserService userService;
     @Spy
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
@@ -50,7 +52,7 @@ public class InteractionServiceTest {
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.empty());
 
         // Search for dialogue in facing trainer
-        interactionService.tryUpdateDialogue();
+        interactionService.tryUpdateDialogue().blockingAwait();
         // No dialogue found, still empty
         assertNull(interactionStorage.getDialogue());
     }
@@ -60,12 +62,32 @@ public class InteractionServiceTest {
         // Empty at first
         assertNull(interactionStorage.getDialogue());
 
-        when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(DummyConstants.TRAINER));
+        when(trainerService.getFacingTrainer(1)).thenReturn(
+                Optional.of(TrainerBuilder.builder()
+                        .setNpc(NPCInfoBuilder.builder().create()).create()));
 
         // Search for dialogue in facing trainer
-        interactionService.tryUpdateDialogue();
+        interactionService.tryUpdateDialogue().blockingAwait();
         // Not found dialogue, still empty
         assertNull(interactionStorage.getDialogue());
+    }
+
+
+    @Test
+    void playerDialogue() {
+        // Empty at first
+        assertNull(interactionStorage.getDialogue());
+
+        // Setup mocked values
+        when(resourceBundleProvider.get()).thenReturn(resources);
+        when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(DummyConstants.TRAINER));
+        when(userService.isOnline(anyString())).thenReturn(Observable.just(true));
+        when(monsterService.anyMonsterAlive(anyString())).thenReturn(Observable.just(true));
+
+        // Search for dialogue in facing trainer
+        interactionService.tryUpdateDialogue().blockingAwait();
+        // Dialogue found, trainer is another player
+        assertNotNull(interactionStorage.getDialogue());
     }
 
     @Test
@@ -83,7 +105,7 @@ public class InteractionServiceTest {
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(DummyConstants.MONSTER_TYPE));
 
         // Search for dialogue in facing trainer
-        interactionService.tryUpdateDialogue();
+        interactionService.tryUpdateDialogue().blockingAwait();
         // Found dialogue
         Dialogue dialogue = interactionStorage.getDialogue();
         assertNotNull(dialogue);
@@ -113,14 +135,13 @@ public class InteractionServiceTest {
         when(trainerService.getFacingTrainer(2)).thenReturn(Optional.empty());
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.empty());
 
-        Dialogue firstDialogue = interactionService.getPossibleDialogue();
         // No dialogue should be found
-        assertNull(firstDialogue);
+        interactionService.getPossibleDialogue().test().assertNoValues();
 
         // Now second trainer should be found
         when(trainerService.getFacingTrainer(2)).thenReturn(Optional.of(secondTrainer));
 
-        Dialogue secondDialogue = interactionService.getPossibleDialogue();
+        Dialogue secondDialogue = interactionService.getPossibleDialogue().blockingFirst();
         // Trainer should now be found
         assertNotNull(secondDialogue);
         assertEquals("second", secondDialogue.getTrainerId());
@@ -128,7 +149,7 @@ public class InteractionServiceTest {
         // Add dummy trainer should not be found
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(dummyTrainer));
 
-        Dialogue thirdDialogue = interactionService.getPossibleDialogue();
+        Dialogue thirdDialogue = interactionService.getPossibleDialogue().blockingFirst();
         // Should still use second trainer, dummy should have no dialogue
         assertNotNull(thirdDialogue);
         assertEquals("second", thirdDialogue.getTrainerId());
@@ -136,7 +157,7 @@ public class InteractionServiceTest {
         // Now first trainer should be found
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(firstTrainer));
 
-        Dialogue fourthDialogue = interactionService.getPossibleDialogue();
+        Dialogue fourthDialogue = interactionService.getPossibleDialogue().blockingFirst();
         // Should now use dialogue from first trainer
         assertNotNull(fourthDialogue);
         assertEquals("first", fourthDialogue.getTrainerId());
@@ -164,7 +185,7 @@ public class InteractionServiceTest {
         when(monsterService.anyMonsterDamaged()).thenReturn(true);
 
         // Search for dialogue in facing trainer
-        interactionService.tryUpdateDialogue();
+        interactionService.tryUpdateDialogue().blockingAwait();
         // Found dialogue
         Dialogue dialogue = interactionStorage.getDialogue();
         assertNotNull(dialogue);
