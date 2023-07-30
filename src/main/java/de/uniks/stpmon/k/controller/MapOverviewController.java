@@ -6,8 +6,6 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -15,17 +13,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Window;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -35,25 +31,23 @@ import java.util.List;
 
 @Singleton
 public class MapOverviewController extends ToastedController {
-    private final static double MAP_OVERVIEW_SCALE = 0.8; // scale the map container to 80% of screen
-    private final static int TILE_SIZE = 16;
 
     @FXML
-    public Pane highlightPane;
+    StackPane mapStackPane;
     @FXML
-    public StackPane mapStackPane;
+    TextFlow textFlowRegionDescription;
     @FXML
-    public TextFlow textFlowRegionDescription;
-    @FXML
-    BorderPane mapOverviewContent;
+    AnchorPane mapOverviewHolder;
     @FXML
     Label regionNameLabel;
     @FXML
-    public Button closeButton;
+    Label areaNameLabel;
+    @FXML
+    Button closeButton;
     @FXML
     ImageView mapImageView;
     @FXML
-    VBox mapContainer;
+    Pane highlightPane;
     @FXML
     Text regionDescription;
 
@@ -67,20 +61,30 @@ public class MapOverviewController extends ToastedController {
     Provider<IngameController> ingameController;
 
     private Shape activeShape;
+    private Region currentRegion;
 
     @Inject
     public MapOverviewController() {
     }
 
     @Override
+    public void init() {
+        super.init();
+        currentRegion = regionStorage.getRegion();
+    }
+
+    @Override
     public Parent render() {
         final Parent parent = super.render();
-        closeButton.setOnAction(click -> ingameController.get().closeMap());
-        Region currentRegion = regionStorage.getRegion();
+
+        // center the region name label horizontally
+        AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
+        AnchorPane.setRightAnchor(regionNameLabel, 0.0);
+
+        loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
+
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
-            int width = currentRegion.map().width() * TILE_SIZE;
-            int height = currentRegion.map().height() * TILE_SIZE;
             subscribe(
                     worldRepository.regionMap().onValue(),
                     renderedMap -> {
@@ -89,25 +93,16 @@ public class MapOverviewController extends ToastedController {
                         }
                         Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
                         mapImageView.setImage(map);
-                        mapImageView.setFitHeight(height);
-                        mapImageView.setFitWidth(width);
                     }, this::handleError
             );
-            NumberBinding binding = Bindings.min(mapOverviewContent.widthProperty().multiply(0.6),
-                    mapOverviewContent.heightProperty().multiply(MAP_OVERVIEW_SCALE));
-            mapStackPane.scaleXProperty().bind(binding.map(v -> v.doubleValue() / width));
-            mapStackPane.scaleYProperty().bind(binding.map(v -> v.doubleValue() / height));
-            textFlowRegionDescription.prefWidthProperty().bind(mapOverviewContent.widthProperty());
+            mapImageView.fitHeightProperty().bind(mapStackPane.heightProperty());
         }
-
-        Window parentWindow = app.getStage().getScene().getWindow();
-        mapOverviewContent.prefWidthProperty().bind(parentWindow.widthProperty().multiply(MAP_OVERVIEW_SCALE));
-        mapOverviewContent.prefHeightProperty().bind(parentWindow.heightProperty().multiply(MAP_OVERVIEW_SCALE));
 
         if (currentRegion.map() != null) {
             subscribe(
-                    textDeliveryService.getRouteData(currentRegion),
-                    this::renderMapDetails);
+                textDeliveryService.getRouteData(currentRegion),
+                this::renderMapDetails
+            );
         }
 
         return parent;
@@ -123,12 +118,22 @@ public class MapOverviewController extends ToastedController {
     }
 
     private void renderMapDetails(List<RouteData> routeListData) {
+        double originalHeight = mapImageView.getImage().getHeight();
+        double scaledHeight = mapImageView.getFitHeight();
+        double scaledWidth = mapImageView.getLayoutBounds().getWidth();
+        double scaleRatio = scaledHeight / originalHeight;
+
+        double offsetX = (mapStackPane.getWidth() - scaledWidth) / 2.0;
+
+    
         routeListData.forEach(routeData -> {
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
-                    polygon.getPoints().addAll(Double.valueOf(routeData.x() + point.x()),
-                            Double.valueOf(routeData.y() + point.y()));
+                    polygon.getPoints().addAll(
+                        Double.valueOf(routeData.x() + point.x()) * scaleRatio + offsetX,
+                        Double.valueOf(routeData.y() + point.y()) * scaleRatio
+                    );
                 }
                 addDetailShape(polygon, routeData);
                 return;
@@ -136,7 +141,12 @@ public class MapOverviewController extends ToastedController {
             if (routeData.width() == 0 || routeData.height() == 0) {
                 return;
             }
-            Rectangle rectangle = new Rectangle(routeData.x(), routeData.y(), routeData.width(), routeData.height());
+            Rectangle rectangle = new Rectangle(
+                routeData.x() * scaleRatio + offsetX,
+                routeData.y() * scaleRatio,
+                routeData.width() * scaleRatio,
+                routeData.height() * scaleRatio
+            );
             addDetailShape(rectangle, routeData);
         });
     }
@@ -147,10 +157,13 @@ public class MapOverviewController extends ToastedController {
         shape.setOpacity(0);
         shape.setStroke(Color.WHITESMOKE);
         shape.setStrokeWidth(3);
+
         highlightPane.getChildren().add(shape);
 
+
         shape.setOnMouseClicked(event -> {
-            regionDescription.setText(routeData.routeText().name() + ":\n" + routeData.routeText().description());
+            areaNameLabel.setText(routeData.routeText().name());
+            regionDescription.setText(routeData.routeText().description());
             if (activeShape != null) {
                 activeShape.setOpacity(0);
             }
