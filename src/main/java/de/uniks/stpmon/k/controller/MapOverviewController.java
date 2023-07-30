@@ -24,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -32,6 +31,9 @@ import java.util.List;
 @Singleton
 public class MapOverviewController extends ToastedController {
 
+    public static final double OPACITY_HOVERED = 0.75;
+    public static final int OPACITY_SELECTED = 1;
+    public static final int OPACITY_DESELECTED = 0;
     @FXML
     StackPane mapStackPane;
     @FXML
@@ -57,8 +59,6 @@ public class MapOverviewController extends ToastedController {
     TextDeliveryService textDeliveryService;
     @Inject
     WorldRepository worldRepository;
-    @Inject
-    Provider<IngameController> ingameController;
 
     private Shape activeShape;
     private Region currentRegion;
@@ -100,8 +100,8 @@ public class MapOverviewController extends ToastedController {
 
         if (currentRegion.map() != null) {
             subscribe(
-                textDeliveryService.getRouteData(currentRegion),
-                this::renderMapDetails
+                    textDeliveryService.getRouteData(currentRegion),
+                    this::renderMapDetails
             );
         }
 
@@ -115,6 +115,9 @@ public class MapOverviewController extends ToastedController {
             mapImageView.setImage(null);
             mapImageView = null;
         }
+        mapStackPane = null;
+        textFlowRegionDescription = null;
+        mapOverviewHolder = null;
     }
 
     private void renderMapDetails(List<RouteData> routeListData) {
@@ -125,27 +128,27 @@ public class MapOverviewController extends ToastedController {
 
         double offsetX = (mapStackPane.getWidth() - scaledWidth) / 2.0;
 
-    
+
         routeListData.forEach(routeData -> {
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
                     polygon.getPoints().addAll(
-                        Double.valueOf(routeData.x() + point.x()) * scaleRatio + offsetX,
-                        Double.valueOf(routeData.y() + point.y()) * scaleRatio
+                            (double) (routeData.x() + point.x()) * scaleRatio + offsetX,
+                            (double) (routeData.y() + point.y()) * scaleRatio
                     );
                 }
                 addDetailShape(polygon, routeData);
                 return;
             }
-            if (routeData.width() == 0 || routeData.height() == 0) {
+            if (routeData.width() == OPACITY_DESELECTED || routeData.height() == OPACITY_DESELECTED) {
                 return;
             }
             Rectangle rectangle = new Rectangle(
-                routeData.x() * scaleRatio + offsetX,
-                routeData.y() * scaleRatio,
-                routeData.width() * scaleRatio,
-                routeData.height() * scaleRatio
+                    routeData.x() * scaleRatio + offsetX,
+                    routeData.y() * scaleRatio,
+                    routeData.width() * scaleRatio,
+                    routeData.height() * scaleRatio
             );
             addDetailShape(rectangle, routeData);
         });
@@ -154,7 +157,7 @@ public class MapOverviewController extends ToastedController {
     private void addDetailShape(Shape shape, RouteData routeData) {
         shape.setId("detail_" + routeData.id());
         shape.setFill(Color.TRANSPARENT);
-        shape.setOpacity(0);
+        shape.setOpacity(OPACITY_DESELECTED);
         shape.setStroke(Color.WHITESMOKE);
         shape.setStrokeWidth(3);
 
@@ -165,9 +168,9 @@ public class MapOverviewController extends ToastedController {
             areaNameLabel.setText(routeData.routeText().name());
             regionDescription.setText(routeData.routeText().description());
             if (activeShape != null) {
-                activeShape.setOpacity(0);
+                activeShape.setOpacity(OPACITY_DESELECTED);
             }
-            shape.setOpacity(1);
+            shape.setOpacity(OPACITY_SELECTED);
             activeShape = shape;
         });
 
@@ -175,13 +178,13 @@ public class MapOverviewController extends ToastedController {
             if (activeShape == shape) {
                 return;
             }
-            shape.setOpacity(0.75);
+            shape.setOpacity(OPACITY_HOVERED);
         });
         shape.setOnMouseExited(event -> {
             if (activeShape == shape) {
                 return;
             }
-            shape.setOpacity(0);
+            shape.setOpacity(OPACITY_DESELECTED);
         });
     }
 }

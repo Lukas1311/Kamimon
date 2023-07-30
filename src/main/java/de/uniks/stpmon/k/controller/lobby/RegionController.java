@@ -12,7 +12,6 @@ import javafx.scene.text.Text;
 
 public class RegionController extends Controller {
 
-    private final Region region;
     @FXML
     public Text regionNameText;
     @FXML
@@ -22,6 +21,7 @@ public class RegionController extends Controller {
     @FXML
     public VBox regionVBox;
 
+    private final Region region;
     private final RegionListController listController;
     private final Image image;
 

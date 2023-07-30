@@ -70,8 +70,6 @@ public class EncounterOverviewController extends Controller {
     public ImageView opponentMonster1;
     @FXML
     public VBox actionFieldWrapperBox;
-
-    private final Pane blackPane = new Pane();
     @FXML
     public VBox wrappingVBox;
 
@@ -93,6 +91,8 @@ public class EncounterOverviewController extends Controller {
     Provider<MonsterInformationController> monInfoProvider;
     @Inject
     Provider<InventoryController> inventoryControllerProvider;
+
+    private final Pane blackPane = new Pane();
 
     private Parent monInfoPane;
     public Parent inventoryPane;

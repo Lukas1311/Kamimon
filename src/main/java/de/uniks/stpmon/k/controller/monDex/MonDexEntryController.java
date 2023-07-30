@@ -2,14 +2,12 @@ package de.uniks.stpmon.k.controller.monDex;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.TrainerService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
-import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class MonDexEntryController extends Controller {
@@ -21,16 +19,10 @@ public class MonDexEntryController extends Controller {
     @FXML
     public Label typeLabel;
 
-    @Inject
-    MonsterService monService;
-
     private final MonDexController monDexController;
     private final MonsterTypeDto monster;
-
     private final boolean isEncountered;
 
-
-    @Inject
     public MonDexEntryController(MonDexController monDexController, MonsterTypeDto entry,
                                  Provider<TrainerService> trainerServiceProvider) {
         this.monDexController = monDexController;

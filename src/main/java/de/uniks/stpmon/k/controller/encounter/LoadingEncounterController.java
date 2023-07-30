@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.controller.encounter;
 
 import de.uniks.stpmon.k.controller.Controller;
-import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -20,9 +19,6 @@ public class LoadingEncounterController extends Controller {
     StackPane fullBox;
     @Inject
     Provider<EncounterOverviewController> encounterProvider;
-    @Inject
-    Provider<HybridController> hybridControllerProvider;
-
 
     @Inject
     public LoadingEncounterController() {
@@ -36,9 +32,7 @@ public class LoadingEncounterController extends Controller {
         return parent;
     }
 
-
-
-    private void playVSAnimation(){
+    private void playVSAnimation() {
         ImageView vsBackground0 = new ImageView();
         ImageView vsBackground1 = new ImageView();
 
@@ -80,7 +74,7 @@ public class LoadingEncounterController extends Controller {
         sequentialTransition1.play();
     }
 
-    private FadeTransition createFadeTransition(ImageView imageView, double from, double to, int millis){
+    private FadeTransition createFadeTransition(ImageView imageView, double from, double to, int millis) {
         FadeTransition f = new FadeTransition(Duration.millis(millis), imageView);
         f.setFromValue(from);
         f.setToValue(to);

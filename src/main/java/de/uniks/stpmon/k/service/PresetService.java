@@ -3,21 +3,18 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.rest.PresetApiService;
 import de.uniks.stpmon.k.service.storage.cache.AbilityCache;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.ItemTypeCache;
 import de.uniks.stpmon.k.service.storage.cache.MonsterTypeCache;
 import io.reactivex.rxjava3.core.Observable;
-import javafx.collections.ObservableList;
 import okhttp3.ResponseBody;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class PresetService {
 

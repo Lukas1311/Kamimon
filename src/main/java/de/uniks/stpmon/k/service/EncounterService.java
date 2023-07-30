@@ -7,13 +7,9 @@ import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
-import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -41,23 +37,12 @@ public class EncounterService {
 
     @Inject
     EncounterApiService encounterApiService;
-
     @Inject
     RegionStorage regionStorage;
-
     @Inject
     Provider<SessionService> sessionServiceProvider;
-
     @Inject
     EncounterStorage encounterStorage;
-    @Inject
-    EventListener eventListener;
-    @Inject
-    TrainerStorage trainerStorage;
-    @Inject
-    Provider<EncounterMember> monsterCacheProvider;
-    @Inject
-    Provider<OpponentCache> opponentCacheProvider;
 
     @Inject
     public EncounterService() {
