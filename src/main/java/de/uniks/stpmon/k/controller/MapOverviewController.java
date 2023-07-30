@@ -2,9 +2,11 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
@@ -72,6 +74,8 @@ public class MapOverviewController extends ToastedController {
     @Inject
     TrainerStorage trainerStorage;
     @Inject
+    TrainerService trainerService;
+    @Inject
     RegionService regionService;
     @Inject
     TextDeliveryService textDeliveryService;
@@ -82,6 +86,7 @@ public class MapOverviewController extends ToastedController {
 
     private Shape activeShape;
     private Region currentRegion;
+    private Trainer currentTrainer;
     private Set<String> visitedAreaIds = new HashSet<>();
 
 
@@ -93,7 +98,8 @@ public class MapOverviewController extends ToastedController {
     public void init() {
         super.init();
         currentRegion = regionStorage.getRegion();
-        visitedAreaIds = trainerStorage.getTrainer().visitedAreas();
+        currentTrainer = trainerStorage.getTrainer();
+        visitedAreaIds = currentTrainer.visitedAreas();
     }
 
     @Override
