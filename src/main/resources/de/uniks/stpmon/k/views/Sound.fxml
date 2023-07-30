@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
@@ -35,7 +36,15 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
-            <Slider/>
+            <Slider fx:id="music" />
+        </HBox>
+    </HBox>
+    <HBox prefHeight="42.0" prefWidth="364.0">
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus" />
+        </HBox>
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="228.0" HBox.hgrow="ALWAYS">
+            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" selected="true" styleClass="login-check-box" />
         </HBox>
     </HBox>
 </VBox>

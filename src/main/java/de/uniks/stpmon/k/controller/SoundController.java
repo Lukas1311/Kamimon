@@ -4,9 +4,10 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.CheckBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -18,11 +19,11 @@ public class SoundController extends Controller{
     @FXML
     public Button backToSettingButton;
     @FXML
-    public CheckBox music;
+    public Slider music;
+    @FXML
+    public CheckBox nightMode;
     @Inject
     Provider<HybridController> hybridControllerProvider;
-
-    private Boolean musicOnOff;
 
     @Inject
     public SoundController() {
@@ -36,13 +37,8 @@ public class SoundController extends Controller{
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
 
-        //on off music
-        musicOnOff = music.isSelected();
-        music.setOnAction(e -> musicOnOff = music.isSelected());
-        if(!musicOnOff) {
-            music.setOnAction(event -> musicOnOff = !music.isSelected());
-        }
         //TODO: here comes the music function
+
 
         return parent;
     }
