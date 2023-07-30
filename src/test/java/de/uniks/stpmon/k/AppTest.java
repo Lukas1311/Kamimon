@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
@@ -22,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -532,6 +534,12 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
 
+        //test sound
+        clickOn("#settings");
+        clickOn("#mdmzSettings");
+        final Slider musicSlider = lookup("#music").query();
+        assertThat(musicSlider.getValue()).isEqualTo(0);
+        clickOn("#settings");
     }
 
 }

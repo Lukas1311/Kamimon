@@ -683,6 +683,7 @@ Load fonts
     -fx-max-height: 35;
 }
 
+
 .chat-back-button .ikonli-font-icon {
     -fx-icon-color: black;
     -fx-icon-size: 30px;
@@ -873,6 +874,11 @@ Load fonts
     -fx-border-width: 3px;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+
+.music-mdmz-settings.ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
 }
 
 
