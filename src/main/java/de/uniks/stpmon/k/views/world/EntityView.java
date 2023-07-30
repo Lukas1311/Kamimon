@@ -39,8 +39,10 @@ public abstract class EntityView extends WorldViewable {
     // Not injected by dagger, provided by upper class
     private TrainerProvider trainerProvider;
     protected MeshView entityNode;
+    protected MeshView shadowNode;
     protected Group entityGroup;
     protected CharacterSet characterSet;
+    protected Shear shadowShear;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
     private Direction moveDirection;
@@ -62,11 +64,28 @@ public abstract class EntityView extends WorldViewable {
     }
 
     private Node renderShadow() {
-        Node propNode = createRectangleScaled(ImageUtils.blackOutImage(characterSet.getPreview(Direction.RIGHT), 0.25f), -90);
+        shadowNode = createRectangleScaled(ImageUtils.blackOutImage(characterSet.getPreview(Direction.from(trainerProvider.getTrainer())), 0.25f), -90);
 
-        propNode.getTransforms().add(2, new Shear(-1, 0, 0, 0));
-        propNode.getTransforms().add(3, new Translate(2 * WorldView.WORLD_UNIT, 0, -0.1 - 0.4 * Math.random()));
-        return propNode;
+        shadowShear = new Shear(-1, 0, 0, 0);
+        shadowNode.getTransforms().add(2, shadowShear);
+        shadowNode.getTransforms().add(3, new Translate(2 * WorldView.WORLD_UNIT, 0, -0.1 - 0.4 * Math.random()));
+        return shadowNode;
+    }
+
+    private void applyShadowDirection(Direction direction) {
+        if (shadowNode == null) {
+            return;
+        }
+        shadowNode.setMaterial(
+                createMaterial(scaledImageFX(
+                        ImageUtils.blackOutImage(characterSet.getPreview(direction), 0.25f), effectContext.getTextureScale())));
+    }
+
+    private void updateShadowAngel() {
+        if (shadowNode == null) {
+            return;
+        }
+        shadowShear.setX(-Math.sin(WorldView.WORLD_ANGLE));
     }
 
     @Override
@@ -187,8 +206,12 @@ public abstract class EntityView extends WorldViewable {
         });
         if (moveAnimation == null
                 || newDirection) {
+            if (moveAnimation != null) {
+                moveAnimation.pause();
+            }
             moveAnimation = new SpriteAnimation(characterSet, direction.ordinal(), true);
             moveAnimation.setCycleCount(Animation.INDEFINITE);
+            applyShadowDirection(direction);
         }
         moveAnimation.play();
     }
@@ -196,6 +219,9 @@ public abstract class EntityView extends WorldViewable {
     private void startIdleAnimation(Trainer trainer) {
         if (moveAnimation != null) {
             moveAnimation.pause();
+        }
+        if (idleAnimation != null) {
+            idleAnimation.stop();
         }
         idleAnimation = new SpriteAnimation(characterSet, trainer.direction(), false);
         idleAnimation.setCycleCount(Animation.INDEFINITE);
@@ -238,6 +264,7 @@ public abstract class EntityView extends WorldViewable {
         private final CharacterSet characterSet;
         private final int direction;
         private final boolean isMoving;
+        private int index = -10;
 
         public SpriteAnimation(CharacterSet characterSet, int direction, boolean isMoving) {
             this.characterSet = characterSet;
@@ -254,8 +281,13 @@ public abstract class EntityView extends WorldViewable {
                 stop();
                 return;
             }
+            int currentIndex = Math.min((int) (frac * CharacterSet.SPRITES_PER_COLUMN), CharacterSet.SPRITES_PER_COLUMN - 1);
+            if (currentIndex == index) {
+                return;
+            }
+            index = currentIndex;
             characterSet.fillSpriteData(data,
-                    Math.min((int) (frac * CharacterSet.SPRITES_PER_COLUMN), CharacterSet.SPRITES_PER_COLUMN - 1),
+                    index,
                     Direction.VALUES[Math.min(Math.max(direction, 0), 3)],
                     isMoving);
             applySprite(data);

@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 
+import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
+
 @Singleton
 public class ShadowView extends WorldViewable {
 
@@ -26,6 +28,12 @@ public class ShadowView extends WorldViewable {
     @Override
     public Node render() {
         SingleCache<BufferedImage> imageCache = repository.shadowImage();
+        subscribe(repository.shadowImage().onValue(), (shadowImage) -> {
+            if (shadowImage.isEmpty()) {
+                return;
+            }
+            shadow.setMaterial(createMaterial(scaledImageFX(shadowImage.get(), effectContext.getTextureScale())));
+        });
         if (imageCache.isEmpty()) {
             return new Group();
         }
