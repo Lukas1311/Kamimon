@@ -146,16 +146,18 @@ public class MapOverviewController extends ToastedController {
         for (Area area : areas) {
             boolean hasSpawn = false;
             if (visitedAreaIds.contains(area._id())) {
-                List<Property> properties = area.map().properties();
-                if (!(properties == null)) {
-                    for (Property prop : properties) {
-                        if (prop.name().equals("Spawn")) {
-                            hasSpawn = true;
-                            break;
+                if (area.map() != null) {
+                    List<Property> properties = area.map().properties();
+                    if (!(properties == null)) {
+                        for (Property prop : properties) {
+                            if (prop.name().equals("Spawn")) {
+                                hasSpawn = true;
+                                break;
+                            }
                         }
                     }
+                    visitedAreas.put(area.name(), hasSpawn);
                 }
-                visitedAreas.put(area.name(), hasSpawn);
             }
         }
         return visitedAreas;
