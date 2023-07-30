@@ -158,14 +158,10 @@ public class CreateTrainerController extends PortalController {
     public void createTrainer() {
         showPopUp(PopUpScenario.CREATE_TRAINER, result -> {
             if (!result) return;
-            disposables.add(regionService
-                    .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite)
-                    .observeOn(FX_SCHEDULER)
-                    .subscribe(trainer -> enterRegion(chosenRegion), err -> {
-                                err.printStackTrace();
-                                handleError(err);
-                            }
-                    )
+            subscribe(regionService
+                            .createTrainer(chosenRegion._id(), trainerName.get(), chosenSprite),
+                    trainer -> enterRegion(chosenRegion), this::handleError
+
             );
         });
     }

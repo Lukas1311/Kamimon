@@ -47,6 +47,9 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
         if (isOpen()) {
             return;
         }
+
+        // Needed because intellij does not recognize its own errors
+        //noinspection RedundantSuppression
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             //noinspection resource
@@ -83,6 +86,7 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
     @OnError
     @SuppressWarnings("unused")
     public void onError(Throwable error) {
+        //noinspection CallToPrintStackTrace
         error.printStackTrace();
     }
 
@@ -103,8 +107,7 @@ public class WSEndpoint implements SocketReceiver, SocketSender {
 
         try {
             this.userSession.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
 

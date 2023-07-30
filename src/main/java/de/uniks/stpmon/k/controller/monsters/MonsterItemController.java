@@ -35,7 +35,6 @@ public class MonsterItemController extends Controller {
     private float currHp = 0.0f;
     private float maxHp = 1.0f;
 
-
     public MonsterItemController(Monster monster, IResourceService resourceService) {
         this.monster = monster;
         this.resourceService = resourceService;

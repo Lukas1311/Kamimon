@@ -121,9 +121,8 @@ public class HybridController extends Controller {
         PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pane);
         transition.setToX(-75);
-        SequentialTransition sequentialTransition = new SequentialTransition(pause, transition);
 
-        return sequentialTransition;
+        return new SequentialTransition(pause, transition);
     }
 
     @Override

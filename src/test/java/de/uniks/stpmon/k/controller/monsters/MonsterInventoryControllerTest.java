@@ -25,7 +25,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
@@ -50,8 +49,8 @@ public class MonsterInventoryControllerTest extends ApplicationTest {
     EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
     @InjectMocks
     MonsterInventoryController inventoryController;
-    BehaviorSubject<List<Monster>> team = BehaviorSubject.createDefault(List.of());
-    BehaviorSubject<List<Monster>> monsters = BehaviorSubject.createDefault(List.of());
+    final BehaviorSubject<List<Monster>> team = BehaviorSubject.createDefault(List.of());
+    final BehaviorSubject<List<Monster>> monsters = BehaviorSubject.createDefault(List.of());
 
     @Override
     public void start(Stage stage) {

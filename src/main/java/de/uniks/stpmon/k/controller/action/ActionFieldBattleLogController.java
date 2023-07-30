@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
-import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.SessionService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -38,8 +37,6 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @Inject
     SessionService sessionService;
-    @Inject
-    MonsterService monsterService;
     @Inject
     InputHandler inputHandler;
 
