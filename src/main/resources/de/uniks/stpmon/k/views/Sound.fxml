@@ -44,7 +44,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="228.0" HBox.hgrow="ALWAYS">
-            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" selected="true" styleClass="login-check-box" />
+            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="login-check-box" />
         </HBox>
     </HBox>
 </VBox>
