@@ -82,12 +82,15 @@ public class ShopOptionController extends Controller {
         });
 
         if (trainerService != null) {
-            subscribe(trainerService.onTrainer(), trainer ->
-                    trainer.ifPresent(value -> {
-                        availableCoins = value.coins();
-                        coinsLabel.setText(availableCoins + " Coins");
-                        updateTradeButtons();
-                    }));
+            subscribe(trainerService.onTrainer(), trainer -> {
+                if (trainer.isEmpty()) {
+                    return;
+                }
+                Trainer value = trainer.get();
+                availableCoins = value.coins();
+                coinsLabel.setText(availableCoins + " Coins");
+                updateTradeButtons();
+            });
         }
 
         return parent;
@@ -113,29 +116,27 @@ public class ShopOptionController extends Controller {
             } else {
                 itemAmount = 0;
             }
-            Platform.runLater(() -> amountLabel.setText(translateString("shop.amount", String.valueOf(itemAmount))));
+            amountLabel.setText(translateString("shop.amount", String.valueOf(itemAmount)));
             updateTradeButtons();
         });
         subscribe(resourceService.getItemImage((String.valueOf(item.type()))), imagerUrl -> {
             Image itemImage = ImageUtils.scaledImageFX(imagerUrl, 2.0);
-            Platform.runLater(() -> this.itemImage.setImage(itemImage));
+            this.itemImage.setImage(itemImage);
         });
 
         subscribe(presetService.getItem(item.type()), item1 -> {
             //text
-            Platform.runLater(() -> {
-                itemNameLabel.setText(item1.name());
-                buyPriceLabel.setText(translateString("shop.buy.price", item1.price().toString()));
-                sellPriceLabel.setText(translateString("shop.sell.price", String.valueOf(item1.price() / 2)));
-                itemDescriptionLabel.setText(item1.description());
+            itemNameLabel.setText(item1.name());
+            buyPriceLabel.setText(translateString("shop.buy.price", item1.price().toString()));
+            sellPriceLabel.setText(translateString("shop.sell.price", String.valueOf(item1.price() / 2)));
+            itemDescriptionLabel.setText(item1.description());
 
-                buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
-                sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
+            buyButton.setTooltip(new Tooltip(translateString("shop.buyItem", item1.name())));
+            sellButton.setTooltip(new Tooltip(translateString("shop.sellItem", item1.name())));
 
-                //buttons
-                neededCoins = item1.price();
-                updateTradeButtons();
-            });
+            //buttons
+            neededCoins = item1.price();
+            updateTradeButtons();
         });
 
         buyButton.setOnAction(ac -> {
