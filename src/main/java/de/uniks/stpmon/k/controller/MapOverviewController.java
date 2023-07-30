@@ -75,6 +75,8 @@ public class MapOverviewController extends ToastedController {
     TextDeliveryService textDeliveryService;
     @Inject
     WorldRepository worldRepository;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
 
     private Shape activeShape;
     private Region currentRegion;
@@ -132,6 +134,14 @@ public class MapOverviewController extends ToastedController {
         }
 
         return parent;
+    }
+
+    private void fastTravel(String area) {
+        subscribe(trainerService.fastTravel(area),
+            // close the map here because its somehow still open after travel
+            trainer -> ingameControllerProvider.get().closeMap(),
+            this::handleError
+        );
     }
 
     @Override
