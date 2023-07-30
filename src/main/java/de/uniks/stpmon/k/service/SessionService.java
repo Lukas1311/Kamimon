@@ -164,6 +164,13 @@ public class SessionService extends DestructibleElement {
         return true;
     }
 
+    public boolean checkTrainer() {
+        if (!hasSlot(EncounterSlot.PARTY_SECOND)) {
+            return false;
+        }
+        return getTrainer(EncounterSlot.PARTY_FIRST).equals(getTrainer(EncounterSlot.PARTY_SECOND));
+    }
+
     //---------------- Session Getters -------------------------
     public EncounterSlot getTarget(String targetId) {
         EncounterSession session = encounterStorage.getSession();

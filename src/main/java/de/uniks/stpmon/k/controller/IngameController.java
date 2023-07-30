@@ -10,9 +10,12 @@ import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
+import de.uniks.stpmon.k.controller.shop.ShopOptionController;
+import de.uniks.stpmon.k.controller.shop.ShopOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
@@ -41,6 +44,7 @@ import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
 public class IngameController extends PortalController {
+
     private final Stack<Controller> tabStack = new Stack<>();
 
     @FXML
@@ -63,6 +67,10 @@ public class IngameController extends PortalController {
     public BorderPane rightMenuBorderPane;
     @FXML
     public VBox miniMapVBox;
+    @FXML
+    public BorderPane shopBorderPane;
+    @FXML
+    public HBox shopHBox;
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -97,6 +105,11 @@ public class IngameController extends PortalController {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     WorldController worldController;
+
+    @Inject
+    ShopOverviewController shopOverviewController;
+    @Inject
+    ShopOptionController shopOptionController;
 
     @Inject
     InputHandler inputHandler;
@@ -222,6 +235,8 @@ public class IngameController extends PortalController {
         starterController.destroy();
         worldTimerController.destroy();
         nightOverlayController.destroy();
+        shopOptionController.destroy();
+        shopOverviewController.destroy();
         ingameStack.getChildren().clear();
         ingame.getChildren().clear();
         ingameWrappingHBox.getChildren().clear();
@@ -249,6 +264,8 @@ public class IngameController extends PortalController {
 
         rightMenuBorderPane.setPickOnBounds(false);
         ingameWrappingHBox.setPickOnBounds(false);
+        shopHBox.setPickOnBounds(false);
+        shopBorderPane.setPickOnBounds(false);
 
         Parent world = this.worldController.render();
         // Null if unit testing world view
@@ -301,6 +318,8 @@ public class IngameController extends PortalController {
             starterBox.getChildren().add(starter);
             starter.setVisible(false);
         }
+
+
 
         return parent;
     }
@@ -405,4 +424,38 @@ public class IngameController extends PortalController {
 
         timeline.setOnFinished(event -> ingameStack.getChildren().remove(overlayPane));
     }
+
+    /**
+     * open the shop
+     *
+     * @param npc
+     */
+    public void openShop(Trainer npc) {
+        shopOverviewController.init();
+        Parent shopList = this.shopOverviewController.render();
+        if (shopList != null) {
+            shopHBox.getChildren().add(shopList);
+        }
+
+        shopOptionController.init();
+        Parent shopDetail = this.shopOptionController.render();
+        if(shopDetail != null) {
+            shopHBox.getChildren().add(shopDetail);
+        }
+
+        shopOptionController.setTrainer(npc);
+        shopOverviewController.setTrainer(npc);
+        shopOverviewController.initSelection();
+
+    }
+
+    /**
+     * close the shop
+     */
+    public void closeShop() {
+        shopHBox.getChildren().clear();
+        shopOptionController.destroy();
+        shopOverviewController.destroy();
+    }
+
 }
