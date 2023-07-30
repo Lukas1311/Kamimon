@@ -56,7 +56,7 @@ public class DummyConstants {
             0,
             0,
             null,
-            List.of(), Set.of()
+            List.of(), Set.of(), Set.of()
     );
     public static final Trainer TRAINER_OTHER = new Trainer(
             "attacker",
@@ -70,7 +70,7 @@ public class DummyConstants {
             0,
             0,
             null,
-            List.of(), Set.of()
+            List.of(), Set.of(), Set.of()
     );
     public static final Trainer TRAINER_OTHER_AREA = new Trainer(
             "1",
@@ -84,7 +84,7 @@ public class DummyConstants {
             0,
             0,
             DummyConstants.NPC_INFO,
-            List.of(), Set.of()
+            List.of(), Set.of(), Set.of()
     );
 
     public static final Trainer TRAINER_OTHER_REGION = new Trainer(
@@ -99,7 +99,7 @@ public class DummyConstants {
             0,
             0,
             DummyConstants.NPC_INFO,
-            List.of(), Set.of()
+            List.of(), Set.of(), Set.of()
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,
