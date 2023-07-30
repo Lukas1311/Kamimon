@@ -22,10 +22,11 @@
         <Pane fx:id="highlightPane"/>
     </StackPane>
 
-    <Label fx:id="areaNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="398.0"
-           prefHeight="19.0" prefWidth="195.0"/>
-    <TextFlow fx:id="textFlowRegionDescription" layoutX="15.0" layoutY="424.0" prefHeight="66.0" prefWidth="673.0">
-        <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER"/>
-    </TextFlow>
+      <Label fx:id="areaNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="398.0"
+             prefHeight="19.0" prefWidth="195.0" />
+      <TextFlow fx:id="textFlowRegionDescription" layoutX="15.0" layoutY="424.0" prefHeight="66.0" prefWidth="673.0"
+                styleClass="map-overview-textflow">
+         <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
+      </TextFlow>
 
 </AnchorPane>
