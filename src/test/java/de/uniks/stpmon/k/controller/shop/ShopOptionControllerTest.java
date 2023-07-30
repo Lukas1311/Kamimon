@@ -160,9 +160,7 @@ public class ShopOptionControllerTest extends ApplicationTest {
         waitForFxEvents();
         verifyThat("#coinsDifferenceLabel", hasText("+5"));
         waitForFxEvents();
-
-        sleep(1000);
-
+        
         //set second item
         //only buy option
         shopOptionController.setItem(items.get(1));
@@ -205,8 +203,6 @@ public class ShopOptionControllerTest extends ApplicationTest {
         //check buttons are disabled
         assertTrue(buyButton.isDisabled());
         assertTrue(sellButton.isDisabled());
-
-        sleep(5000);
 
     }
 
