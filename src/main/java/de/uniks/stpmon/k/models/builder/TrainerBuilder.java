@@ -23,6 +23,7 @@ public class TrainerBuilder {
 
     private final List<String> team = new LinkedList<>();
     private final Set<Integer> encounteredMonsterTypes = new HashSet<>();
+    private final Set<String> visitedAreas = new HashSet<>();
     private NPCInfo npc = NPCInfoBuilder.builder().create();
     private String _id = "";
     private String region = "";
@@ -77,6 +78,16 @@ public class TrainerBuilder {
 
     public TrainerBuilder addEncountered(Integer type) {
         this.encounteredMonsterTypes.add(type);
+        return this;
+    }
+
+    public TrainerBuilder addVisited(Collection<String> areas) {
+        this.visitedAreas.addAll(areas);
+        return this;
+    }
+
+    public TrainerBuilder addVisited(String area) {
+        this.visitedAreas.add(area);
         return this;
     }
 
@@ -161,6 +172,7 @@ public class TrainerBuilder {
                 .setRegion(trainer.region())
                 .setCoins(trainer.coins())
                 .addEncountered(trainer.encounteredMonsterTypes())
+                .addVisited(trainer.visitedAreas())
                 .setId(trainer._id())
                 .setImage(trainer.image())
                 .setName(trainer.name())
@@ -171,7 +183,7 @@ public class TrainerBuilder {
 
     public Trainer create() {
         return new Trainer(_id, region, user, name, image, coins, area,
-                x, y, direction, npc, team, encounteredMonsterTypes);
+                x, y, direction, npc, team, encounteredMonsterTypes, visitedAreas);
     }
 
 }
