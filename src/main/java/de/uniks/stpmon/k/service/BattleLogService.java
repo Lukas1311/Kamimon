@@ -217,7 +217,7 @@ public class BattleLogService {
                     }
                 }
                 addTranslatedSection("target-defeated", monsterName);
-                if(!slot.enemy()) {
+                if(!slot.enemy() && opp.coins() != 0) {
                     addTranslatedSection("earn-coins", opp.coins().toString());
                 }
             }
