@@ -318,6 +318,7 @@ public class IngameController extends PortalController {
         if (mapOverviewController == null) {
             return;
         }
+        mapOverviewController.init();
         mapOverview = this.mapOverviewController.render();
         ingameStack.getChildren().add(mapOverview);
         mainPain.setOnMouseClicked(click -> {
@@ -331,6 +332,7 @@ public class IngameController extends PortalController {
         if (mapOverview == null) {
             return;
         }
+        mapOverviewController.destroy();
         ingameStack.getChildren().remove(mapOverview);
         mainPain.setOnMouseClicked(null);
         mapOverview = null;
