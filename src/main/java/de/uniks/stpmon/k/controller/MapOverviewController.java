@@ -127,6 +127,7 @@ public class MapOverviewController extends ToastedController {
 
     
         routeListData.forEach(routeData -> {
+            boolean visited = visitedAreas.containsKey(routeData.routeText().name());
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
@@ -135,7 +136,7 @@ public class MapOverviewController extends ToastedController {
                         Double.valueOf(routeData.y() + point.y()) * scaleRatio
                     );
                 }
-                addDetailShape(polygon, routeData);
+                addDetailShape(polygon, routeData, visited);
                 return;
             }
             if (routeData.width() == 0 || routeData.height() == 0) {
@@ -147,11 +148,11 @@ public class MapOverviewController extends ToastedController {
                 routeData.width() * scaleRatio,
                 routeData.height() * scaleRatio
             );
-            addDetailShape(rectangle, routeData);
+            addDetailShape(rectangle, routeData, visited);
         });
     }
 
-    private void addDetailShape(Shape shape, RouteData routeData) {
+    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited) {
         shape.setId("detail_" + routeData.id());
         
         if (isVisited) {
