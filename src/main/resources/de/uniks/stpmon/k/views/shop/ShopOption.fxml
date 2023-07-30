@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.*?>
+
+<AnchorPane fx:id="backgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="367.0" prefWidth="228.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.shop.ShopOptionController">
+    <VBox alignment="TOP_CENTER" layoutX="37.0" layoutY="14.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+        <ImageView fx:id="itemImage" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin></ImageView>
+        <Label fx:id="itemNameLabel" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="190.0" styleClass="trade-item-name" text="MonBall" textAlignment="CENTER" wrapText="true">
+            <VBox.margin>
+                <Insets top="-2.0" />
+            </VBox.margin>
+        </Label>
+        <Label fx:id="itemDescriptionLabel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="190.0" text="Description Description Description Description Description Description Description Description " wrapText="true" VBox.vgrow="NEVER">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin></Label>
+        <Label fx:id="amountLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="190.0" text="Amount: 10">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin></Label>
+        <Label fx:id="buyPriceLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="190.0" text="Buy Price: 20" />
+        <Label fx:id="sellPriceLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="190.0" text="Sell Price: 10" />
+        <HBox alignment="CENTER" fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="190.0" spacing="60.0" VBox.vgrow="NEVER">
+            <Button fx:id="buyButton" mnemonicParsing="false">
+                <graphic>
+                    <FontIcon iconLiteral="mdral-add" />
+                </graphic>
+                <styleClass>
+                    <String fx:value="trade-buttons" />
+                    <String fx:value="kgm-general-button-blue" />
+                </styleClass>
+            </Button>
+            <Button fx:id="sellButton" mnemonicParsing="false">
+                <graphic>
+                    <FontIcon iconLiteral="mdral-horizontal_rule" />
+                </graphic>
+                <styleClass>
+                    <String fx:value="trade-buttons" />
+                    <String fx:value="kgm-general-button-red" />
+                </styleClass>
+            </Button>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+        </HBox>
+    </VBox>
+    <HBox alignment="CENTER_LEFT" layoutX="-13.0" layoutY="209.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="333.0">
+        <ImageView fx:id="coinsImage" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+        <Label fx:id="coinsLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="100.0" text="Coins: 123456">
+            <HBox.margin>
+                <Insets left="10.0" />
+            </HBox.margin>
+        </Label>
+        <Label fx:id="coinsDifferenceLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="50.0">
+            <HBox.margin>
+                <Insets left="5.0" />
+            </HBox.margin>
+        </Label>
+    </HBox>
+   <stylesheets>
+      <URL value="@../css/generalStyle.css" />
+      <URL value="@../css/ingameStyle.css" />
+   </stylesheets>
+</AnchorPane>
