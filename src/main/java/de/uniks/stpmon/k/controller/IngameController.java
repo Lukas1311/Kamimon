@@ -324,17 +324,21 @@ public class IngameController extends PortalController {
         return parent;
     }
 
-    private void openOrCloseMap(InputEvent event) {
+    public void openOrCloseMap(InputEvent event) {
         if (mapOverview == null) {
-            openMap();
+            triggerMap();
         } else {
             closeMap();
         }
         event.consume();
     }
 
-    public void openMap() {
+    public void triggerMap() {
         if (mapOverviewController == null) {
+            return;
+        }
+        if (mapOverview != null && mapOverview.isVisible()) {
+            closeMap();
             return;
         }
         mapOverviewController.init();

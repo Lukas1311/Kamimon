@@ -72,7 +72,7 @@ public class BackpackMenuController extends Controller {
         final Parent parent = super.render();
         backpackMenuHBox.setPickOnBounds(false);
 
-        loadBgImage(backpackMenuListView, "backpack/BackPackMenu_v2.png");
+        loadBgImage(backpackMenuListView, getResourcePath() + "BackPackMenu_v2.png");
         loadImage(arrowImageView, "arrow_right.png");
 
 
@@ -87,27 +87,21 @@ public class BackpackMenuController extends Controller {
 
     public void openOption(BackpackMenuOption option) {
         switch (option) {
-            // delete dummy method after functionality is implemented
             case TEAM -> monsterBarControllerProvider.get().showMonsters();
-            case MAP -> openMinimap();
+            case MAP -> ingameControllerProvider.get().triggerMap();
             default -> triggerOption(option);
         }
-
     }
 
     public int getId(BackpackMenuOption option) {
         return options.indexOf(option);
     }
 
-    private void openMinimap() {
-        ingameControllerProvider.get().openMap();
-    }
-
     private Provider<? extends Controller> getProvider(BackpackMenuOption option) {
         Provider<? extends Controller> provider;
         if (option == MONSTER) {
             provider = monBoxControllerProvider;
-        } else if (option == MONDEX){
+        } else if (option == MONDEX) {
             provider = monDexControllerProvider;
         } else {
             provider = inventoryControllerProvider;
