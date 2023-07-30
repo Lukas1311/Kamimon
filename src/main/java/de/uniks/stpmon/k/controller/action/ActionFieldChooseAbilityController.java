@@ -19,7 +19,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     @FXML
     public GridPane abilityGridPane;
 
-    public Monster attacker;
+    public Monster activeMonster;
     private int nextMonster = 0;
     private int count = 0;
 
@@ -33,19 +33,20 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
 
         if (sessionService.checkTrainer()) {
             if (nextMonster == 0) {
-                attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
                 nextMonster++;
             } else {
-                attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_SECOND);
                 nextMonster--;
             }
         } else {
-            attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+            actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
         }
+        activeMonster = sessionService.getMonster(actionFieldControllerProvider.get().getActiveSlot());
 
         addBackOption(translateString("back"));
-        for (String id : attacker.abilities().keySet()) {
-            addAbility(id, attacker.abilities().get(id));
+        for (String id : activeMonster.abilities().keySet()) {
+            addAbility(id, activeMonster.abilities().get(id));
         }
         count = 0;
         return parent;
@@ -74,7 +75,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
                 Opponent opponent = sessionService.getOpponent(EncounterSlot.ENEMY_FIRST);
                 actionFieldController.setEnemyTrainerId(opponent.trainer());
                 actionFieldController.openBattleLog();
-                actionFieldController.executeAbilityMove(attacker);
+                actionFieldController.executeAbilityMove(actionFieldControllerProvider.get().getActiveSlot());
             } else {
                 actionFieldController.openChooseOpponent();
             }

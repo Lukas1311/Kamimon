@@ -24,7 +24,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
     MonsterService monsterService;
 
     private Monster selectedUserMonster;
-
     private int count = 0;
     private String back;
 
@@ -60,11 +59,11 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
         if (sessionService.checkTrainer()) {
             secondaryMonster = sessionService.getMonster(EncounterSlot.PARTY_SECOND);
         }
+
         List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
 
         for (Monster monster : userMonstersList) {
-            if (!sessionService.isMonsterDead(monster) &&
-                    (primaryMonster == null || !primaryMonster._id().equals(monster._id()))) {
+            if (!sessionService.isMonsterDead(monster) && !primaryMonster._id().equals(monster._id())) {
                 if (secondaryMonster != null && secondaryMonster._id().equals(monster._id())) {
                     continue;
                 }
@@ -116,7 +115,7 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             getActionField().openMainMenu();
         } else {
             getActionField().openBattleLog();
-            getActionField().executeMonsterChange(selectedUserMonster);
+            getActionField().executeMonsterChange(actionFieldControllerProvider.get().getActiveSlot(), selectedUserMonster);
         }
     }
 

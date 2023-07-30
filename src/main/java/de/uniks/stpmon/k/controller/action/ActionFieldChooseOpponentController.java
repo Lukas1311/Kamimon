@@ -26,7 +26,6 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
     @Inject
     RegionStorage regionStorage;
 
-    public Monster attacker;
     private int nextMonster = 0;
 
     private int optionIndex = 0;
@@ -41,14 +40,14 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
 
         if (sessionService.checkTrainer()) {
             if (nextMonster == 0) {
-                attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
                 nextMonster++;
             } else {
-                attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+                actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_SECOND);
                 nextMonster--;
             }
         } else {
-            attacker = sessionService.getMonster(new EncounterSlot(nextMonster, false));
+            actionFieldControllerProvider.get().setActiveSlot(EncounterSlot.PARTY_FIRST);
         }
 
         optionIndex = 0;
@@ -60,6 +59,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
             }
             Opponent opponent = sessionService.getOpponent(slot);
             Monster oppMonster = sessionService.getMonster(slot);
+
             subscribe(presetService.getMonster(oppMonster.type()),
                     monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
         }
@@ -78,7 +78,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
             } else {
                 actionField.setEnemyTrainerId(opponent.trainer());
                 actionField.openBattleLog();
-                actionField.executeAbilityMove(attacker);
+                actionField.executeAbilityMove(actionFieldControllerProvider.get().getActiveSlot());
             }
         });
 
