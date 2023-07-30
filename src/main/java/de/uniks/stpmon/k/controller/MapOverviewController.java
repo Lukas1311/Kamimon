@@ -162,12 +162,26 @@ public class MapOverviewController extends ToastedController {
 
 
         shape.setOnMouseClicked(event -> {
-            areaNameLabel.setText(routeData.routeText().name());
-            regionDescription.setText(routeData.routeText().description());
-            if (activeShape != null) {
-                activeShape.setOpacity(0);
+
+            if (activeShape != null && !activeShape.equals(shape)) {
+                activeShape.setStroke(null);
+                shape.setOpacity(1);
             }
-            shape.setOpacity(1);
+
+            if (isVisited) {
+                areaNameLabel.setText(routeData.routeText().name());
+                if (routeData.routeText().description() != "") {
+                    regionDescription.setText(routeData.routeText().description());
+                } else {
+                    regionDescription.setText("Here could be your advertisement.");
+                }
+                
+            } else {
+                areaNameLabel.setText("???");
+                regionDescription.setText("???");
+            }
+
+            // set the newly clicked shape as the active shape
             activeShape = shape;
         });
 
@@ -175,13 +189,22 @@ public class MapOverviewController extends ToastedController {
             if (activeShape == shape) {
                 return;
             }
-            shape.setOpacity(0.75);
+            if (isVisited) {
+                shape.setOpacity(0.75);
+            }
+            shape.setStroke(Color.WHITESMOKE);
+            shape.setStrokeWidth(3);
         });
+
         shape.setOnMouseExited(event -> {
             if (activeShape == shape) {
                 return;
             }
-            shape.setOpacity(0);
+            if (isVisited) {
+                // "hidden" areas will stay hidden
+                shape.setOpacity(0);
+            }
+            shape.setStroke(null);
         });
     }
 }
