@@ -23,8 +23,6 @@ public class BattleLogService {
     @Inject
     PresetService presetService;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;

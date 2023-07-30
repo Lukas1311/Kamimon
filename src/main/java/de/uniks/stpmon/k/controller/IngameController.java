@@ -94,7 +94,6 @@ public class IngameController extends PortalController {
     Provider<LoadingWildEncounterController> encounterWildProvider;
     @Inject
     AnimationService animationService;
-
     @Inject
     WorldTimerController worldTimerController;
     @Inject
@@ -107,15 +106,12 @@ public class IngameController extends PortalController {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     WorldController worldController;
-
     @Inject
     ShopOverviewController shopOverviewController;
     @Inject
     ShopOptionController shopOptionController;
-
     @Inject
     InputHandler inputHandler;
-
     @Inject
     SessionService encounterService;
     @Inject

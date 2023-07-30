@@ -24,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
 
@@ -60,8 +59,6 @@ public class MapOverviewController extends ToastedController {
     TextDeliveryService textDeliveryService;
     @Inject
     WorldRepository worldRepository;
-    @Inject
-    Provider<IngameController> ingameController;
 
     private Shape activeShape;
     private Region currentRegion;

@@ -62,7 +62,6 @@ public class ShopOptionController extends Controller {
     ItemService itemService;
 
     private Trainer npc;
-
     private int availableCoins = 0;
     private int neededCoins = 1;
     private int itemAmount = 0;

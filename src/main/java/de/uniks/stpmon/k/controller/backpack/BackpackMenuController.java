@@ -32,15 +32,11 @@ public class BackpackMenuController extends Controller {
     @FXML
     public ListView<BackpackMenuOption> backpackMenuListView;
 
-
     @FXML
     public HBox backpackMenuHBox;
     @FXML
     public ImageView arrowImageView;
 
-
-    @Inject
-    BackpackController backpackController;
     @Inject
     Provider<MonsterBarController> monsterBarControllerProvider;
     @Inject

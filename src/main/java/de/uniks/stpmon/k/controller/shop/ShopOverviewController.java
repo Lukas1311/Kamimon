@@ -24,13 +24,11 @@ public class ShopOverviewController extends Controller {
     PresetService presetService;
     @Inject
     IResourceService resourceService;
-
     @Inject
     ShopOptionController shopOptionController;
 
     @FXML
     public AnchorPane itemListPane;
-
     @FXML
     public ListView<Item> itemListView;
 

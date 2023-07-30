@@ -5,9 +5,9 @@ import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-import javafx.scene.image.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -20,7 +20,6 @@ public class LoadingWildEncounterController extends Controller {
 
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
-
 
     @Inject
     public LoadingWildEncounterController() {

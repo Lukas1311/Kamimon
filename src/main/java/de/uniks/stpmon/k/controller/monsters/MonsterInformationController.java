@@ -100,7 +100,7 @@ public class MonsterInformationController extends Controller {
             // start second row, because name is on first row
             removeNodeByRowColumnIndex(i + 1, 1, overviewGrid);
             if (i < types.size()) {
-                overviewGrid.add(typeLabel(null, types.get(i)), 1, i + 1);
+                overviewGrid.add(typeLabel(types.get(i)), 1, i + 1);
             }
         }
     }
@@ -149,12 +149,9 @@ public class MonsterInformationController extends Controller {
         });
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private Label typeLabel(Label label, String monsterType) {
-        if (label == null) {
-            label = new Label();
-            label.setId(monsterType.toUpperCase() + "_label");
-        }
+    private Label typeLabel(String monsterType) {
+        Label label = new Label();
+        label.setId(monsterType.toUpperCase() + "_label");
         label.setText(monsterType.toUpperCase());
         label.getStyleClass().clear();
         label.getStyleClass().addAll("monster-type-general", "monster-type-" + monsterType);
@@ -170,7 +167,7 @@ public class MonsterInformationController extends Controller {
     }
 
     private void fillAbilityRow(AbilityDto ability, int currentUses, int rowIndex) {
-        Label typeLabel = typeLabel(null, ability.type());
+        Label typeLabel = typeLabel(ability.type());
         typeLabel.setId("typeLabel_" + rowIndex);
         Label nameLabel = createAbilityLabel(ability, rowIndex);
 
@@ -221,7 +218,6 @@ public class MonsterInformationController extends Controller {
                 removeNodeByRowColumnIndex(i, j, attackGrid);
                 Label label = new Label("-");
                 attackGrid.add(label, j, i);
-                // TODO Add style classes
             }
         }
     }
