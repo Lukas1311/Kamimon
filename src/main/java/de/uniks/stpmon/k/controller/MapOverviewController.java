@@ -1,8 +1,12 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
+import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
@@ -11,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +31,11 @@ import javafx.scene.text.TextFlow;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Singleton
@@ -54,6 +63,10 @@ public class MapOverviewController extends ToastedController {
     @Inject
     RegionStorage regionStorage;
     @Inject
+    TrainerStorage trainerStorage;
+    @Inject
+    RegionService regionService;
+    @Inject
     TextDeliveryService textDeliveryService;
     @Inject
     WorldRepository worldRepository;
@@ -62,6 +75,8 @@ public class MapOverviewController extends ToastedController {
 
     private Shape activeShape;
     private Region currentRegion;
+    private Set<String> visitedAreaIds = new HashSet<>();
+
 
     @Inject
     public MapOverviewController() {
@@ -71,6 +86,7 @@ public class MapOverviewController extends ToastedController {
     public void init() {
         super.init();
         currentRegion = regionStorage.getRegion();
+        visitedAreaIds = trainerStorage.getTrainer().visitedAreas();
     }
 
     @Override
@@ -101,7 +117,16 @@ public class MapOverviewController extends ToastedController {
         if (currentRegion.map() != null) {
             subscribe(
                 textDeliveryService.getRouteData(currentRegion),
-                this::renderMapDetails
+                data -> {
+                    subscribe(
+                            regionService.getAreas(currentRegion._id()),
+                            areas -> {
+                                renderMapDetails(data, filterVisitedAreas(areas));
+                            },
+                            this::handleError
+                    );
+                    
+                }
             );
         }
 
@@ -117,7 +142,28 @@ public class MapOverviewController extends ToastedController {
         }
     }
 
-    private void renderMapDetails(List<RouteData> routeListData) {
+    private HashMap<String, Boolean> filterVisitedAreas(List<Area> areas) {
+        HashMap<String, Boolean> visitedAreas = new HashMap<>();
+        for (Area area : areas) {
+            boolean hasSpawn = false;
+            if (visitedAreaIds.contains(area._id())) {
+                List<Property> properties = area.map().properties();
+                if (!(properties == null)) {
+                    for (Property prop : properties) {
+                        if (prop.name().equals("Spawn")) {
+                            hasSpawn = true;
+                            break;
+                        }
+                    }
+                }
+                visitedAreas.put(area.name(), hasSpawn);
+            }
+        }
+        return visitedAreas;
+    }
+
+    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Boolean> visitedAreas) {
+
         double originalHeight = mapImageView.getImage().getHeight();
         double scaledHeight = mapImageView.getFitHeight();
         double scaledWidth = mapImageView.getLayoutBounds().getWidth();
