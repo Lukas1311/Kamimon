@@ -27,8 +27,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Pair;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import java.util.HashMap;
@@ -156,8 +158,8 @@ public class MapOverviewController extends ToastedController {
         mapOverviewHolder = null;
     }
 
-    private HashMap<String, Boolean> filterVisitedAreas(List<Area> areas) {
-        HashMap<String, Boolean> visitedAreas = new HashMap<>();
+    private HashMap<String, Pair<String, Boolean>> filterVisitedAreas(List<Area> areas) {
+        HashMap<String, Pair<String, Boolean>> visitedAreas = new HashMap<>();
         for (Area area : areas) {
             boolean hasSpawn = false;
             if (visitedAreaIds.contains(area._id())) {
@@ -171,14 +173,14 @@ public class MapOverviewController extends ToastedController {
                             }
                         }
                     }
-                    visitedAreas.put(area.name(), hasSpawn);
+                    visitedAreas.put(area.name(), new Pair<String,Boolean>(area._id(), hasSpawn));
                 }
             }
         }
         return visitedAreas;
     }
 
-    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Boolean> visitedAreas) {
+    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Pair<String, Boolean>> visitedAreas) {
 
         double originalHeight = mapImageView.getImage().getHeight();
         double scaledHeight = mapImageView.getFitHeight();
@@ -190,6 +192,15 @@ public class MapOverviewController extends ToastedController {
 
         routeListData.forEach(routeData -> {
             boolean visited = visitedAreas.containsKey(routeData.routeText().name());
+            boolean hasSpawn = false;
+            String areaId = "";
+            if (visited) {
+                // getValue returns the "right value" in this case the bool
+                hasSpawn = visitedAreas.get(routeData.routeText().name()).getValue();
+                if (hasSpawn) {
+                    areaId = visitedAreas.get(routeData.routeText().name()).getKey();
+                }
+            }
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
@@ -198,7 +209,7 @@ public class MapOverviewController extends ToastedController {
                             (double) (routeData.y() + point.y()) * scaleRatio
                     );
                 }
-                addDetailShape(polygon, routeData, visited);
+                addDetailShape(polygon, routeData, visited, hasSpawn, areaId);
                 return;
             }
             if (routeData.width() == OPACITY_DESELECTED || routeData.height() == OPACITY_DESELECTED) {
@@ -210,12 +221,14 @@ public class MapOverviewController extends ToastedController {
                     routeData.width() * scaleRatio,
                     routeData.height() * scaleRatio
             );
-            addDetailShape(rectangle, routeData, visited);
+            addDetailShape(rectangle, routeData, visited, hasSpawn, areaId);
         });
     }
 
-    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited) {
+    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited, boolean hasSpawn, String areaId) {
         shape.setId("detail_" + routeData.id());
+        // set the area id as hidden user data
+        shape.setUserData(areaId);
         
         if (isVisited) {
             shape.setFill(Color.TRANSPARENT);
