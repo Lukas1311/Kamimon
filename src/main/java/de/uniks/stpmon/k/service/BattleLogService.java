@@ -252,7 +252,10 @@ public class BattleLogService {
                         monsterName = targetType.name();
                     }
                 }
-                addTranslatedSection("target-defeated", monsterName, opp.coins().toString());
+                addTranslatedSection("target-defeated", monsterName);
+                if(!slot.enemy() && opp.coins() != 0) {
+                    addTranslatedSection("earn-coins", opp.coins().toString());
+                }
             }
             case "monster-changed" -> {
             }
