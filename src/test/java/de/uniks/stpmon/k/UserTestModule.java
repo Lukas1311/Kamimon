@@ -134,10 +134,9 @@ public class UserTestModule {
                 if (dto.friends() != null) {
                     friends = dto.friends();
                 }
-                User newUser = new User(
+                return new User(
                         oldUser._id(), name, status, avatar, friends
                 );
-                return newUser;
             }
 
             @Override
