@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service.world;
 
+import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.world.CharacterSet;
 import javafx.animation.Interpolator;
 
@@ -19,13 +20,17 @@ public class WorldService {
     private CharacterSet characterPlaceholder;
     @Inject
     protected TextureSetService textureSetService;
-
+    @Inject
+    protected SettingsService settingsService;
 
     @Inject
     public WorldService() {
     }
 
     public float getNightFactor(LocalTime time) {
+        if (!settingsService.getNightEnabled()) {
+            return 0;
+        }
         int hour = time.getHour();
         int minute = time.getMinute();
         if (hour > 7 && hour < 20) {
