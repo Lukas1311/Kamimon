@@ -1,5 +1,7 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.map;
 
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Trainer;
@@ -299,5 +301,10 @@ public class MapOverviewController extends ToastedController {
             }
             shape.setStroke(null);
         });
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "map/";
     }
 }
