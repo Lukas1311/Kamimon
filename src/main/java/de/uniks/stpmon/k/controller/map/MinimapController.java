@@ -48,7 +48,7 @@ public class MinimapController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        loadImage(miniMapBorder, "emptyMinimap.png");
+        loadImage(miniMapBorder, getResourcePath() + "emptyMinimap.png");
 
         Area currentArea = regionStorage.getArea();
         miniMap.setPreserveRatio(false);

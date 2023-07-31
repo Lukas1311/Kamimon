@@ -13,7 +13,7 @@
             prefHeight="500.0" prefWidth="700.0"
             xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
             styleClass="map-overview-content"
-            fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
+            fx:controller="de.uniks.stpmon.k.controller.map.MapOverviewController">
 
     <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="350.0" layoutY="8.0"
            styleClass="map-overview-header"/>
