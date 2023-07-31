@@ -49,6 +49,7 @@ public class SoundControllerTest extends ApplicationTest {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(settingsService.getNightEnabled()).thenReturn(true);
+        when(settingsService.getSoundValue()).thenReturn(100f);
 
         app.show(soundController);
         stage.requestFocus();
@@ -67,13 +68,13 @@ public class SoundControllerTest extends ApplicationTest {
     public void onMusic() {
         final Slider musicSlider = lookup("#music").query();
         //check first if value is 100
-        assertThat(musicSlider.getValue()).isEqualTo(0);
+        assertThat(musicSlider.getValue()).isEqualTo(100);
 
         // set a new value on the slider
         clickOn(musicSlider);
 
         // Check if value is changed
-        assertThat(musicSlider.getValue()).isNotEqualTo(0);
+        assertThat(musicSlider.getValue()).isNotEqualTo(100);
         // Check if value is saved
         verify(settingsService).setSoundValue(anyFloat());
     }
