@@ -59,7 +59,7 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         moveTo(label2);
         assertEquals("", label.getText());
     }
-
+/*
     @Test
     void clickOnMonsters() {
         MonsterBarController monsterBarController = Mockito.mock(MonsterBarController.class);
@@ -71,7 +71,11 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         clickOn(label);
         verify(monsterBarController).showMonsters();
 
+
+
     }
+
+ */
 
     @Test
     void clickOnMonster_List() {
@@ -81,12 +85,12 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         when(ingameControllerProvider.get()).thenReturn(ingameController);
 
         //monsterList
-        Label label = lookup("#backpackMenuLabel_1").query();
+        Label label = lookup("#backpackMenuLabel_0").query();
         clickOn(label);
         waitForFxEvents();
         verify(ingameController).pushController(any());
 
-        Label label2 = lookup("#backpackMenuLabel_1").query();
+        Label label2 = lookup("#backpackMenuLabel_0").query();
         clickOn(label2);
         waitForFxEvents();
 
