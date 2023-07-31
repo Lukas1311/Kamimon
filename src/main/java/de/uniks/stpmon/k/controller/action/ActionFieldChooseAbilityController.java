@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Opponent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
@@ -58,15 +56,7 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
         optionContainer.setOnMouseExited(event -> arrowText.setVisible(false));
         optionContainer.setOnMouseClicked(event -> {
             ActionFieldController actionFieldController = getActionField();
-            actionFieldController.setAbilityId(ability.id());
-            if (sessionService.getEnemyTeam().size() == 1) {
-                Opponent opponent = sessionService.getOpponent(EncounterSlot.ENEMY_FIRST);
-                actionFieldController.setEnemyTrainerId(opponent.trainer());
-                actionFieldController.openBattleLog();
-                actionFieldController.executeAbilityMove();
-            } else {
-                actionFieldController.openChooseOpponent();
-            }
+            actionFieldController.selectAbility(ability.id());
         });
 
         // set IDs for the options

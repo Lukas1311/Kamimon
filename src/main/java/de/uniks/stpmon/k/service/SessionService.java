@@ -164,11 +164,17 @@ public class SessionService extends DestructibleElement {
         return true;
     }
 
-    public boolean checkTrainer() {
+    /**
+     * Checks if the user has two active monsters / opponents in the encounter.
+     *
+     * @return True if the user has two active monsters / opponents in the encounter.
+     */
+    public boolean hasTwoActiveMonster() {
         if (!hasSlot(EncounterSlot.PARTY_SECOND)) {
             return false;
         }
-        return getTrainer(EncounterSlot.PARTY_FIRST).equals(getTrainer(EncounterSlot.PARTY_SECOND));
+        return getTrainer(EncounterSlot.PARTY_FIRST)
+                .equals(getTrainer(EncounterSlot.PARTY_SECOND));
     }
 
     //---------------- Session Getters -------------------------
@@ -236,6 +242,13 @@ public class SessionService extends DestructibleElement {
             return Collections.emptyList();
         }
         return session.getSlots();
+    }
+
+    public Collection<EncounterSlot> getOwnSlots() {
+        if (hasTwoActiveMonster()) {
+            return List.of(EncounterSlot.PARTY_FIRST, EncounterSlot.PARTY_SECOND);
+        }
+        return List.of(EncounterSlot.PARTY_FIRST);
     }
 
     public List<String> getEnemyTeam() {
