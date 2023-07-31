@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static de.uniks.stpmon.k.controller.backpack.BackpackMenuOption.*;
 
@@ -81,9 +82,10 @@ public class BackpackMenuController extends Controller {
 
 
     public void openOption(BackpackMenuOption option) {
-        switch (option) {
-            case MAP -> ingameControllerProvider.get().openOrCloseMap();
-            default -> triggerOption(option);
+        if (Objects.requireNonNull(option) == MAP) {
+            ingameControllerProvider.get().openOrCloseMap();
+        } else {
+            triggerOption(option);
         }
     }
 
