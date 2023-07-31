@@ -1,8 +1,7 @@
 package de.uniks.stpmon.k.controller.backpack;
 
 public enum BackpackMenuOption {
-    MONSTER("monster"),
-    TEAM("team"),
+    MONS("mons"),
     INVENTORY("inventory"),
     MONDEX("monDex"),
     MAP("map");
