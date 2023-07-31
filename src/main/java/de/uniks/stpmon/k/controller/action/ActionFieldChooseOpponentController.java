@@ -18,7 +18,6 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
     public Text chooseOpponentText;
     @FXML
     public HBox chooseOpponentBox;
-
     private int optionIndex = 0;
 
     @Inject
@@ -36,14 +35,28 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
             if (!slot.enemy()) {
                 continue;
             }
-            Opponent opponent = sessionService.getOpponent(slot);
-            Monster oppMonster = sessionService.getMonster(slot);
-
-            subscribe(presetService.getMonster(oppMonster.type()),
-                    monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
+            // Skip if the monster is dead
+            if (sessionService.isMonsterDead(slot)) {
+                // But add it if it is revived or switched
+                subscribe(sessionService.listenMonster(slot).skip(1), (monster) -> {
+                    if (!sessionService.isMonsterDead(slot)) {
+                        addMonsterForSlot(slot);
+                    }
+                });
+                continue;
+            }
+            addMonsterForSlot(slot);
         }
 
         return parent;
+    }
+
+    private void addMonsterForSlot(EncounterSlot slot) {
+        Opponent opponent = sessionService.getOpponent(slot);
+        Monster oppMonster = sessionService.getMonster(slot);
+
+        subscribe(presetService.getMonster(oppMonster.type()),
+                monsterDto -> addMonsterOption(opponent, monsterDto.name(), false));
     }
 
     public void addMonsterOption(Opponent opponent, String monsterName, boolean isBackOption) {
@@ -55,9 +68,7 @@ public class ActionFieldChooseOpponentController extends BaseActionFieldControll
             if (isBackOption) {
                 actionField.openChooseAbility();
             } else {
-                actionField.setEnemyTrainerId(opponent.trainer());
-                actionField.openBattleLog();
-                actionField.executeAbilityMove();
+                actionField.selectEnemy(opponent);
             }
         });
 
