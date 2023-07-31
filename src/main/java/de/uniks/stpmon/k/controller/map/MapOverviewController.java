@@ -85,10 +85,11 @@ public class MapOverviewController extends ToastedController {
     WorldRepository worldRepository;
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    TeleportAnimation teleportAnimation;
 
     private Shape activeShape;
     private Region currentRegion;
-    private Trainer currentTrainer;
     private Set<String> visitedAreaIds = new HashSet<>();
 
 
@@ -100,8 +101,7 @@ public class MapOverviewController extends ToastedController {
     public void init() {
         super.init();
         currentRegion = regionStorage.getRegion();
-        currentTrainer = trainerStorage.getTrainer();
-        visitedAreaIds = currentTrainer.visitedAreas();
+        visitedAreaIds = trainerStorage.getTrainer().visitedAreas();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class MapOverviewController extends ToastedController {
         AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
         AnchorPane.setRightAnchor(regionNameLabel, 0.0);
 
-        loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
+        loadBgImage(mapOverviewHolder, getResourcePath() + "mapOverview_v2.png");
 
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
@@ -147,11 +147,12 @@ public class MapOverviewController extends ToastedController {
     }
 
     private void fastTravel(String area) {
-        subscribe(trainerService.fastTravel(area),
-            // close the map here because its somehow still open after travel
-            trainer -> ingameControllerProvider.get().closeMap(),
-            this::handleError
-        );
+        // close the map before because it would be somehow still open after travel
+        ingameControllerProvider.get().closeMap();
+        // teleportAnimation.playFastTravelAnimation();
+        // teleportAnimation.finishFastTravelAnimation();
+        // return;
+        subscribe(trainerService.fastTravel(area));
     }
 
     @Override
