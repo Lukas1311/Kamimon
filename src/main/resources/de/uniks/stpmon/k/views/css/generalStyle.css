@@ -881,6 +881,22 @@ Load fonts
     -fx-icon-size: 30px;
 }
 
+/*--------------------- Sound -----------------------------*/
+.slider {
+    -fx-pref-width: 175px;
+}
+
+.slider .track {
+    -fx-background-color: black;
+    -fx-pref-height: 5px;
+}
+
+.slider .thumb {
+    -fx-pref-height: 30px;
+    -fx-pref-width: 7px;
+    -fx-background-color: black;
+}
+
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
