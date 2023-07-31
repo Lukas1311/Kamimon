@@ -284,11 +284,9 @@ public class BattleLogService {
                 addTranslatedSection("item-failed", getItem(result.item()).name());
                 addTranslatedSection("item-success", getItem(result.item()).name());
             }
-            case "status-added", "status-removed", "status-damage" -> {
-                addTranslatedSection("status."
-                        + result.status().toString()
-                        + result.type().replace("status-", "."), monster.name());
-            }
+            case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
+                    + result.status().toString()
+                    + result.type().replace("status-", "."), monster.name());
             case "monster-caught" -> addTranslatedSection("monster-caught", monster.name());
             default -> System.out.println("unknown result type");
         }
@@ -314,10 +312,6 @@ public class BattleLogService {
 
     private void addTranslatedSection(String word, String... args) {
         battleLogControllerProvider.get().addTranslatedSection(word, args);
-    }
-
-    private String translateString(String word, String... args) {
-        return battleLogControllerProvider.get().translateString(word, args);
     }
 
     private MonsterTypeDto getMonsterType(int id) {
