@@ -36,7 +36,11 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
-            <Slider fx:id="music" />
+            <Slider fx:id="music">
+                <styleClass>
+                    <String fx:value="slider" />
+                </styleClass>
+            </Slider>
         </HBox>
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
