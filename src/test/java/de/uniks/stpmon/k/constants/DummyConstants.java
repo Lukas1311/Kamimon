@@ -144,7 +144,7 @@ public class DummyConstants {
                             0, "Ground",
                             List.of(
                                     new ChunkData(
-                                            LongStream.range(0, 256).map(i -> 482)
+                                            LongStream.range(0, 256).map(i -> 1)
                                                     .boxed().toList(),
                                             16, 16,
                                             0, 0
@@ -171,11 +171,11 @@ public class DummyConstants {
     public static final TilesetData TILESET_DATA = new TilesetData(
             176,
             "Modern_Exteriors_16x16.png",
-            3792,
-            2816,
+            16,
+            16,
             0,
             "Modern_Exteriors_16x16", 0,
-            41712,
+            1,
             16, 16,
             List.of(),
             "tileset"
