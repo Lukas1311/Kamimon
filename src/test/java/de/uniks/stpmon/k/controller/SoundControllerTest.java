@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -75,7 +75,7 @@ public class SoundControllerTest extends ApplicationTest {
         // Check if value is changed
         assertThat(musicSlider.getValue()).isNotEqualTo(0);
         // Check if value is saved
-        verify(settingsService).setSoundValue(any());
+        verify(settingsService).setSoundValue(anyFloat());
     }
 
     @Test
