@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static de.uniks.stpmon.k.controller.backpack.BackpackMenuOption.*;
 
@@ -56,8 +57,7 @@ public class BackpackMenuController extends Controller {
 
     @Override
     public void init() {
-        options.add(TEAM);
-        options.add(MONSTER);
+        options.add(MONS);
         options.add(INVENTORY);
         options.add(MONDEX);
         options.add(MAP);
@@ -82,10 +82,10 @@ public class BackpackMenuController extends Controller {
 
 
     public void openOption(BackpackMenuOption option) {
-        switch (option) {
-            case TEAM -> monsterBarControllerProvider.get().showMonsters();
-            case MAP -> ingameControllerProvider.get().openOrCloseMap();
-            default -> triggerOption(option);
+        if (Objects.requireNonNull(option) == MAP) {
+            ingameControllerProvider.get().openOrCloseMap();
+        } else {
+            triggerOption(option);
         }
     }
 
@@ -95,7 +95,7 @@ public class BackpackMenuController extends Controller {
 
     private Provider<? extends Controller> getProvider(BackpackMenuOption option) {
         Provider<? extends Controller> provider;
-        if (option == MONSTER) {
+        if (option == MONS) {
             provider = monBoxControllerProvider;
         } else if (option == MONDEX) {
             provider = monDexControllerProvider;
