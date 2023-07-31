@@ -32,15 +32,22 @@ public class TeleportAnimation extends Controller {
         }
         int initialDirection = initialTrainerState.direction();
 
-        int initialPauseDelayMs = 1000;
+        AtomicInteger initialPauseDelayMs = new AtomicInteger(2000);
+        AtomicInteger delayReduction = new AtomicInteger(1);
         // use atomic so we can have it and modify in lambda call below
         AtomicInteger iteration = new AtomicInteger(1);
         int iterationEnd = 20;
 
-        PauseTransition pause = new PauseTransition(Duration.millis(initialPauseDelayMs));
+        PauseTransition pause = new PauseTransition(Duration.millis(initialPauseDelayMs.get()));
 
         pause.setOnFinished(event -> {
+            // new direction will be one of 0,1,2,3
             int newDirection = (initialDirection + iteration.get()) % 4;
+            if (newDirection % 2 == 0) {
+                int newDelay = delayReduction.accumulateAndGet(2, (oldValue, x) -> oldValue * x);
+                // this will take about 10 times until the delay will be on zero
+                initialPauseDelayMs.set(Math.max(initialPauseDelayMs.get() - newDelay, 0));
+            }
             Trainer updatedDirectionTrainer = TrainerBuilder.builder(trainerStorage.getTrainer())
                 .setDirection(newDirection)
                 .create();
