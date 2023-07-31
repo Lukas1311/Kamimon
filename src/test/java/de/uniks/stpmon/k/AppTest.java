@@ -523,7 +523,7 @@ class AppTest extends ApplicationTest {
 
         //test monDex
         clickOn("#backpackImage");
-        clickOn("#backpackMenuLabel_3");
+        clickOn("#backpackMenuLabel_2");
         waitForFxEvents();
         verifyThat("#monDexPane", Node::isVisible);
 
@@ -534,7 +534,7 @@ class AppTest extends ApplicationTest {
 
         //test inventory
         clickOn("#backpackImage");
-        clickOn("#backpackMenuLabel_2");
+        clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
 
