@@ -369,7 +369,7 @@ class AppTest extends ApplicationTest {
 
         //open MonBox
         component.regionApi().addMonster("0", "1", false);
-        clickOn("#backpackMenuLabel_1");
+        clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
         verifyThat("#monBoxMenuHolder", Node::isVisible);
 
