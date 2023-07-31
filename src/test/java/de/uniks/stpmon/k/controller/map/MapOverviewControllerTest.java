@@ -1,7 +1,8 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.map;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.RegionService;

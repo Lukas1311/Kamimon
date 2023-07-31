@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.map.MapOverviewController;
+import de.uniks.stpmon.k.controller.map.MinimapController;
 import de.uniks.stpmon.k.controller.monDex.MonDexDetailController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
