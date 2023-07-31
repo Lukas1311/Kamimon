@@ -71,7 +71,9 @@ public class SoundControllerTest extends ApplicationTest {
 
         //set value to 100
         clickOn(musicSlider);
-        press(MouseButton.PRIMARY).moveBy(100, 0).release(MouseButton.PRIMARY);
+        press(MouseButton.PRIMARY);
+        moveBy(70, 0);
+        release(MouseButton.PRIMARY);
 
         // Check if value is 100
         assertThat(musicSlider.getValue()).isEqualTo(100);
@@ -79,7 +81,9 @@ public class SoundControllerTest extends ApplicationTest {
         verify(settingsService).setSoundValue(100f);
 
         clickOn(musicSlider);
-        press(MouseButton.PRIMARY).moveBy(-100, 0).release(MouseButton.PRIMARY);
+        press(MouseButton.PRIMARY);
+        moveBy(-70, 0);
+        release(MouseButton.PRIMARY, MouseButton.MIDDLE, MouseButton.SECONDARY);
 
         // Check if value is 0
         assertThat(musicSlider.getValue()).isEqualTo(0);
