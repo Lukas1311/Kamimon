@@ -407,7 +407,12 @@ public class IngameController extends PortalController {
         timeline.setAutoReverse(true);
         timeline.play();
 
-        timeline.setOnFinished(event -> ingameStack.getChildren().remove(overlayPane));
+        timeline.setOnFinished(event -> {
+            if (ingameStack == null) {
+                return;
+            }
+            ingameStack.getChildren().remove(overlayPane);
+        });
     }
 
     /**
