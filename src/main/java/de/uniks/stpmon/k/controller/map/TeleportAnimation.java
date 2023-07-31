@@ -45,7 +45,7 @@ public class TeleportAnimation extends Controller {
             int newDirection = (initialDirection + iteration.get()) % 4;
             if (newDirection % 2 == 0) {
                 int newDelay = delayReductionMs.accumulateAndGet(2, (oldValue, x) -> oldValue * x);
-                // this will take about 10 times until the delay will be on zero
+                // with mod 2 this should take about 22 times until the delay will be on zero
                 initialPauseDelayMs.set(Math.max(initialPauseDelayMs.get() - newDelay, 0));
             }
             Trainer updatedDirectionTrainer = TrainerBuilder.builder(trainerStorage.getTrainer())
