@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.SessionService;
@@ -17,6 +18,8 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
 
 @Singleton
 public class ActionFieldController extends Controller {
@@ -41,11 +44,11 @@ public class ActionFieldController extends Controller {
     @Inject
     BattleLogService battleLogService;
 
+    private final Set<EncounterSlot> madeMoves = new HashSet<>();
     private String enemyTrainerId;
     private int abilityId;
     private boolean ownMonsterDead;
     private EncounterSlot activeSlot;
-    private int nextMonster = 0;
     private Controller openController;
     private CloseEncounterTrigger closeTrigger;
 
@@ -57,7 +60,21 @@ public class ActionFieldController extends Controller {
     public Parent render() {
         Parent parent = super.render();
         loadBgImage(actionFieldPane, "action_menu_background.png");
-        openMainMenu();
+        boolean canMakeMove = false;
+        for (EncounterSlot slot : sessionService.getOwnSlots()) {
+            Opponent opponent = sessionService.getOpponent(slot);
+            if (opponent != null && opponent.move() == null) {
+                canMakeMove = true;
+            } else {
+                madeMoves.add(slot);
+            }
+        }
+        if (canMakeMove) {
+            openMainMenu();
+        } else {
+            updateWaiting();
+            openBattleLog();
+        }
 
         checkDeadMonster();
 
@@ -70,6 +87,16 @@ public class ActionFieldController extends Controller {
             closeEncounter(closeTrigger);
             closeTrigger = null;
         });
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            subscribe(sessionService.listenOpponent(slot), opponent -> {
+                if (opponent == null) {
+                    return;
+                }
+                if (opponent.results() != null && !opponent.results().isEmpty()) {
+                    madeMoves.clear();
+                }
+            });
+        }
 
         return parent;
     }
@@ -98,7 +125,6 @@ public class ActionFieldController extends Controller {
         open(changeMonsterControllerProvider);
     }
 
-
     public void openChooseAbility() {
         setActiveSlot();
         open(chooseAbilityControllerProvider);
@@ -114,6 +140,7 @@ public class ActionFieldController extends Controller {
             return;
         }
         open(battleLogControllerProvider);
+        battleLogService.showInitialText();
     }
 
     private <T extends Controller> void open(Provider<T> provider) {
@@ -150,17 +177,58 @@ public class ActionFieldController extends Controller {
         return optionContainer;
     }
 
-    public void setAbilityId(int abilityId) {
+    public void selectAbility(int abilityId) {
         this.abilityId = abilityId;
+        if (sessionService.getEnemyTeam().size() == 1) {
+            Opponent opponent = sessionService.getOpponent(EncounterSlot.ENEMY_FIRST);
+            setEnemyTrainerId(opponent.trainer());
+            executeAbilityMove();
+        } else {
+            openChooseOpponent();
+        }
+    }
+
+    public void selectEnemy(Opponent opponent) {
+        setEnemyTrainerId(opponent.trainer());
+        executeAbilityMove();
     }
 
     public void setEnemyTrainerId(String trainerId) {
         this.enemyTrainerId = trainerId;
     }
 
+    public void updateWaiting() {
+        if (madeMoves.isEmpty()) {
+            return;
+        }
+        if (sessionService.hasTwoActiveMonster() && madeMoves.size() == 1) {
+            return;
+        }
+        battleLogService.startWaiting();
+    }
+
     public void executeAbilityMove() {
+        madeMoves.add(getActiveSlot());
+        // Check if all moves are made, or we have to wait for enemy
+        updateWaiting();
+        // Show battle log if it's not already open
+        openBattleLog();
         subscribe(encounterServiceProvider.get()
                 .makeAbilityMove(getActiveSlot(), abilityId, enemyTrainerId));
+    }
+
+    public void executeMonsterChange(Monster selectedMonster) {
+        if (!ownMonsterDead) {
+            madeMoves.add(getActiveSlot());
+        }
+        // Check if all moves are made, or we have to wait for enemy
+        updateWaiting();
+        // Show battle log if it's not already open
+        openBattleLog();
+        EncounterService encounterService = encounterServiceProvider.get();
+        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(getActiveSlot(), selectedMonster) :
+                encounterService.makeChangeMonsterMove(getActiveSlot(), selectedMonster));
+        setOwnMonsterDead(false);
     }
 
     public void checkDeadMonster() {
@@ -169,13 +237,6 @@ public class ActionFieldController extends Controller {
                 openChangeMonster(true);
             }
         });
-    }
-
-    public void executeMonsterChange(Monster selectedMonster) {
-        EncounterService encounterService = encounterServiceProvider.get();
-        subscribe(ownMonsterDead ? encounterService.changeDeadMonster(getActiveSlot(), selectedMonster) :
-                encounterService.makeChangeMonsterMove(getActiveSlot(), selectedMonster));
-        setOwnMonsterDead(false);
     }
 
     public void setOwnMonsterDead(boolean ownMonsterDead) {
@@ -193,15 +254,23 @@ public class ActionFieldController extends Controller {
         battleLogService.showNextAction();
     }
 
-    public void setActiveSlot() {
-        if (sessionService.checkTrainer()) {
-            if (nextMonster == 0) {
-                this.activeSlot = EncounterSlot.PARTY_FIRST;
-                nextMonster++;
-            } else {
-                this.activeSlot = EncounterSlot.PARTY_SECOND;
-                nextMonster--;
+
+    private void updateActiveSlot() {
+        for (EncounterSlot slot : sessionService.getSlots()) {
+            if (slot.enemy()) {
+                continue;
             }
+            Opponent opponent = sessionService.getOpponent(slot);
+            if (opponent != null && opponent.move() == null) {
+                this.activeSlot = slot;
+                break;
+            }
+        }
+    }
+
+    public void setActiveSlot() {
+        if (sessionService.hasTwoActiveMonster()) {
+            updateActiveSlot();
         } else {
             this.activeSlot = EncounterSlot.PARTY_FIRST;
         }

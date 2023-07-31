@@ -11,7 +11,9 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Singleton
 public class ActionFieldChangeMonsterController extends BaseActionFieldController {
@@ -53,17 +55,19 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             addActionOption(back, true);
         }
 
-        Monster primaryMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
-        Monster secondaryMonster = null;
-        if (sessionService.checkTrainer()) {
-            secondaryMonster = sessionService.getMonster(EncounterSlot.PARTY_SECOND);
+        Set<String> activeMonsters = new HashSet<>();
+        for (EncounterSlot slot : sessionService.getOwnSlots()) {
+            Monster monster = sessionService.getMonster(slot);
+            if (monster != null) {
+                activeMonsters.add(monster._id());
+            }
         }
 
         List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
 
         for (Monster monster : userMonstersList) {
-            if (!sessionService.isMonsterDead(monster) && !primaryMonster._id().equals(monster._id())) {
-                if (secondaryMonster != null && secondaryMonster._id().equals(monster._id())) {
+            if (!sessionService.isMonsterDead(monster)) {
+                if (activeMonsters.contains(monster._id())) {
                     continue;
                 }
                 subscribe(presetService.getMonster(monster.type()), type -> {
@@ -113,7 +117,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
         if (option.equals(back)) {
             getActionField().openMainMenu();
         } else {
-            getActionField().openBattleLog();
             getActionField().executeMonsterChange(selectedUserMonster);
         }
     }

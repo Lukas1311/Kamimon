@@ -343,7 +343,6 @@ class AppTest extends ApplicationTest {
         verifyThat("#settingsScreen", Node::isVisible);
         type(KeyCode.O);
 
-
         clickOn("#monsterBar");
         waitForFxEvents();
 
@@ -398,7 +397,7 @@ class AppTest extends ApplicationTest {
         // attack
         clickOn("#ability_1");
         waitForFxEvents();
-        clickOn("#scrollPane");
+        clickOn("#battleLog");
 
         // Check if won and left encounter
         verifyThat("#monsterBar", Node::isVisible);
@@ -422,9 +421,7 @@ class AppTest extends ApplicationTest {
 
         verifyThat("#battleLog", Node::isVisible);
         clickOn("#battleLog");
-        clickOn("#scrollPane");
-        clickOn("#scrollPane");
-        clickOn("#scrollPane");
+        clickOn("#battleLog");
 
         verifyThat("#changeMonBox", Node::isVisible);
         // no back button, monster is option 0
@@ -444,7 +441,6 @@ class AppTest extends ApplicationTest {
         // attack opponent 0
         clickOn("#user_monster_1");
         waitForFxEvents();
-        clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
