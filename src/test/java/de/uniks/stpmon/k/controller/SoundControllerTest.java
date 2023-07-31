@@ -73,7 +73,7 @@ public class SoundControllerTest extends ApplicationTest {
         clickOn(musicSlider);
 
         // Check if value is changed
-        assertThat(musicSlider.getValue()).isEqualTo(any());
+        assertThat(musicSlider.getValue()).isNotEqualTo(0);
         // Check if value is saved
         verify(settingsService).setSoundValue(any());
     }
