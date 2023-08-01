@@ -7,7 +7,7 @@
 <?import java.lang.String?>
 <AnchorPane fx:id="monDexDetailBox" xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml" stylesheets="@../css/ingameStyle.css"
-            fx:controller="de.uniks.stpmon.k.controller.monDex.MonDexDetailController"
+            fx:controller="de.uniks.stpmon.k.controller.mondex.MonDexDetailController"
             prefHeight="400.0" prefWidth="210.0" minWidth="210.0" maxWidth="210.0">
     <styleClass>
         <String fx:value="ingame"/>

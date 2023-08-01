@@ -55,15 +55,15 @@ public class InventoryController extends ToastedController {
         final Parent parent = super.render();
 
         if (isInEncounter) {
-            loadBgImage(inventoryPane, "inventory/InventoryBox.png");
+            loadBgImage(inventoryPane, getResourcePath() + "InventoryBox_v1.1.png");
             inventoryPane.getChildren().remove(coinBox);
             AnchorPane.setBottomAnchor(itemListView, 3.5);
         } else {
-            loadBgImage(inventoryPane, "inventory/inv_coins.png");
+            loadBgImage(inventoryPane, getResourcePath() + "InventoryBox_w_coins");
             AnchorPane.setBottomAnchor(itemListView, 32.0);
         }
 
-        loadImage(coinView, "inventory/coin.png");
+        loadImage(coinView, getResourcePath() + "coin.png");
 
         setCoins();
 

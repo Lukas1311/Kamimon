@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller.monDex;
+package de.uniks.stpmon.k.controller.mondex;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
@@ -51,7 +51,7 @@ public class MonDexController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadBgImage(monDexPane, "monDexBox.png");
+        loadBgImage(monDexPane, getResourcePath() + "monDexBox.png");
 
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {
@@ -103,6 +103,6 @@ public class MonDexController extends Controller {
 
     @Override
     public String getResourcePath() {
-        return "monDex/";
+        return "mondex/";
     }
 }
