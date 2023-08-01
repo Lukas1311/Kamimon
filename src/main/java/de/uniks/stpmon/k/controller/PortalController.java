@@ -29,7 +29,7 @@ public class PortalController extends ToastedController implements IPortalContro
     @Override
     public void init() {
         super.init();
-        if (portalSource != null) {
+        if (portalSource != null && portalSource.getPortalController() == null) {
             portalSource.setPortalController(this);
             mainPortal = true;
         }
