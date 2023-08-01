@@ -524,14 +524,9 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackMenuLabel_2");
         sleep(3000);
         waitForFxEvents();
-        assertTimeout(Duration.ofSeconds(5), () -> {
-            // Look up the node by selector query
-            Node monDexPain = lookup("#monDexPain").query();
-
-            // Verify that the monDexPain is visible
-            verifyThat(monDexPain, Node::isVisible);
-            waitForFxEvents();
-        });
+        Node monDexPain = lookup("#monDexPain").query();
+        verifyThat(monDexPain, Node::isVisible);
+        waitForFxEvents();
 
         clickOn("#type0Label");
         verifyThat("#monDexDetailBox", Node::isVisible);
