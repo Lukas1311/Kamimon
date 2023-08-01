@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
-import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.RegionService;
