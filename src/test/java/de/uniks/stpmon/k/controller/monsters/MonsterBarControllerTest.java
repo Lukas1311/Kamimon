@@ -13,11 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
-
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,6 +43,8 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @InjectMocks
     MonsterBarController monsterBarController;
 
+    final Image imageMock = Mockito.mock(Image.class);
+
     @Override
     public void start(Stage stage) {
         // show app
@@ -61,53 +62,35 @@ public class MonsterBarControllerTest extends ApplicationTest {
 
     @Test
     public void testSetMonsterStatus_ZeroHP() throws InterruptedException {
-        // Load the image for zero HP
-        Image zeroHP = new Image(Objects.requireNonNull(
-            getClass().getResource("/de/uniks/stpmon/k/controller/monsters/monsterbar/healthPointsZero.png")
-        ).toString());
-        
         // Set the mock
-        when(monsterSlot.getImage()).thenReturn(zeroHP);
+        when(monsterSlot.getImage()).thenReturn(imageMock);
 
         monsterBarController.setMonsterStatus(0, 0, 100, false);
-        Thread.sleep(1000);
 
         // Check if the image is the same when HP is 0%
-        assertEquals(zeroHP, monsterSlot.getImage());
+        assertEquals(imageMock, monsterSlot.getImage());
     }
 
     @Test
     public void testSetMonsterStatus_NormalHP() throws InterruptedException {
-        // Load the image for normal HP
-        Image normalHP = new Image(Objects.requireNonNull(
-            getClass().getResource("/de/uniks/stpmon/k/controller/monsters/monsterbar/healthPointsNormal.png")
-        ).toString());
-
         // Set the mock
-        when(monsterSlot.getImage()).thenReturn(normalHP);
+        when(monsterSlot.getImage()).thenReturn(imageMock);
 
         monsterBarController.setMonsterStatus(1, 50, 100, false);
-        Thread.sleep(1000);
 
         // Check if the image is the same when HP is higher than 20%
-        assertEquals(normalHP, monsterSlot.getImage());
+        assertEquals(imageMock, monsterSlot.getImage());
     }
 
     @Test
     public void testSetMonsterStatus_LowHP() throws InterruptedException {
-        // Load the image for low HP
-        Image lowHP = new Image(Objects.requireNonNull(
-            getClass().getResource("/de/uniks/stpmon/k/controller/monsters/monsterbar/healthPointsLow.png")
-        ).toString());
-
         // Set the mock
-        when(monsterSlot.getImage()).thenReturn(lowHP);
+        when(monsterSlot.getImage()).thenReturn(imageMock);
 
         monsterBarController.setMonsterStatus(2, 10, 100, false);
-        Thread.sleep(1000);
 
         // Check if the image is the same when HP is lower than 20%
-        assertEquals(lowHP, monsterSlot.getImage());
+        assertEquals(imageMock, monsterSlot.getImage());
     }
 
     @Test
