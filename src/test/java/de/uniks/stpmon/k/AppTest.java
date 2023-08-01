@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
@@ -22,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -242,8 +244,9 @@ class AppTest extends ApplicationTest {
 
         //check minimap
         clickOn("#miniMap");
-        verifyThat("#mapOverviewContent", Node::isVisible);
-        clickOn("#closeButton");
+        verifyThat("#mapOverviewHolder", Node::isVisible);
+        // close minimap
+        clickOn("#miniMap");
 
         //check backpack
         clickOn("#backpackImage");
@@ -322,7 +325,7 @@ class AppTest extends ApplicationTest {
 
         type(KeyCode.M);
         waitForFxEvents();
-        verifyThat("#mapOverviewContent", Node::isVisible);
+        verifyThat("#mapOverviewHolder", Node::isVisible);
         type(KeyCode.M);
 
         type(KeyCode.N);
@@ -339,7 +342,6 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
         verifyThat("#settingsScreen", Node::isVisible);
         type(KeyCode.O);
-
 
         clickOn("#monsterBar");
         waitForFxEvents();
@@ -366,7 +368,7 @@ class AppTest extends ApplicationTest {
 
         //open MonBox
         component.regionApi().addMonster("0", "1", false);
-        clickOn("#backpackMenuLabel_1");
+        clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
         verifyThat("#monBoxMenuHolder", Node::isVisible);
 
@@ -395,7 +397,7 @@ class AppTest extends ApplicationTest {
         // attack
         clickOn("#ability_1");
         waitForFxEvents();
-        clickOn("#scrollPane");
+        clickOn("#battleLog");
 
         // Check if won and left encounter
         verifyThat("#monsterBar", Node::isVisible);
@@ -419,9 +421,7 @@ class AppTest extends ApplicationTest {
 
         verifyThat("#battleLog", Node::isVisible);
         clickOn("#battleLog");
-        clickOn("#scrollPane");
-        clickOn("#scrollPane");
-        clickOn("#scrollPane");
+        clickOn("#battleLog");
 
         verifyThat("#changeMonBox", Node::isVisible);
         // no back button, monster is option 0
@@ -441,7 +441,6 @@ class AppTest extends ApplicationTest {
         // attack opponent 0
         clickOn("#user_monster_1");
         waitForFxEvents();
-        clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
@@ -520,7 +519,7 @@ class AppTest extends ApplicationTest {
 
         //test monDex
         clickOn("#backpackImage");
-        clickOn("#backpackMenuLabel_3");
+        clickOn("#backpackMenuLabel_2");
         waitForFxEvents();
         verifyThat("#monDexPane", Node::isVisible);
 
@@ -531,10 +530,16 @@ class AppTest extends ApplicationTest {
 
         //test inventory
         clickOn("#backpackImage");
-        clickOn("#backpackMenuLabel_2");
+        clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
 
+        //test sound
+        clickOn("#settings");
+        clickOn("#mdmzSettings");
+        final Slider musicSlider = lookup("#music").query();
+        assertThat(musicSlider.getValue()).isEqualTo(0);
+        clickOn("#settings");
     }
 
 }

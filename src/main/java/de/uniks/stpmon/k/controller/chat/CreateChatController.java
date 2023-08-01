@@ -74,7 +74,7 @@ public class CreateChatController extends TabController {
             }
             // Remove the user itself from the list
             userMap.remove(userService.getMe()._id());
-            notEnoughGroupMembers.setValue(groupMembers.size() < 1);
+            notEnoughGroupMembers.setValue(groupMembers.isEmpty());
 
             members.setAll(userMap.values());
         };

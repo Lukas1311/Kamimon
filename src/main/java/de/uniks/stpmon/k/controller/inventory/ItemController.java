@@ -44,9 +44,11 @@ public class ItemController extends Controller {
 
                     //text
                     itemName.setText(item1.name());
-                    itemAmount.setText(" x " + item.amount());
+                    parent.setId("item_" + item1.name());
+                    if (item.amount() != -1) {
+                        itemAmount.setText(" x " + item.amount());
+                    }
                 }));
-
         return parent;
     }
 

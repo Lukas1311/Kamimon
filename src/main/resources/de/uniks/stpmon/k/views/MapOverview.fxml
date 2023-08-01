@@ -1,46 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
-<BorderPane fx:id="mapOverviewContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity" styleClass="map-overview-content" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
-    <top>
-        <StackPane prefHeight="25.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <HBox prefHeight="100.0" prefWidth="200.0"/>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                <Label fx:id="regionNameLabel" text="Label" textFill="WHITE" styleClass="map-overview-header"/>
-            </HBox>
-            <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                <Button fx:id="closeButton" mnemonicParsing="false" styleClass="map-overview-close-button" text="X"/>
-            </HBox>
-        </StackPane>
-    </top>
-    <center>
-        <VBox fx:id="mapContainer" alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity"
-              minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
-            <StackPane fx:id="mapStackPane" VBox.vgrow="NEVER">
-                <ImageView fx:id="mapImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true"
-                           preserveRatio="true"/>
-                <Pane fx:id="highlightPane"/>
-            </StackPane>
-        </VBox>
-    </center>
-    <bottom>
-        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" styleClass="map-overview-label-bg"
-              BorderPane.alignment="CENTER">
-            <TextFlow fx:id="textFlowRegionDescription" prefWidth="200" styleClass="map-overview-label">
-                <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0"/>
-            </TextFlow>
+<AnchorPane fx:id="mapOverviewHolder" maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0"
+            prefHeight="500.0" prefWidth="700.0"
+            xmlns="http://javafx.com/javafx/20.0.0" xmlns:fx="http://javafx.com/fxml/1"
+            styleClass="map-overview-content"
+            fx:controller="de.uniks.stpmon.k.controller.MapOverviewController">
 
-            <BorderPane.margin>
-                <Insets bottom="10.0" left="50.0" right="50.0"/>
-            </BorderPane.margin>
-        </HBox>
-    </bottom>
-</BorderPane>
+    <Label fx:id="regionNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="350.0" layoutY="8.0"
+           styleClass="map-overview-header"/>
+    <StackPane fx:id="mapStackPane" layoutX="10.0" layoutY="50.0" maxHeight="340.0" maxWidth="680.0" minHeight="340.0"
+               minWidth="680.0" prefHeight="340.0" prefWidth="680.0">
+        <ImageView fx:id="mapImageView" fitHeight="340.0" pickOnBounds="true" preserveRatio="true"
+                   StackPane.alignment="CENTER"/>
+        <Pane fx:id="highlightPane"/>
+    </StackPane>
+
+      <Label fx:id="areaNameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="250.0" layoutY="398.0"
+             prefHeight="19.0" prefWidth="195.0" />
+      <TextFlow fx:id="textFlowRegionDescription" layoutX="15.0" layoutY="424.0" prefHeight="66.0" prefWidth="673.0"
+                styleClass="map-overview-textflow">
+         <Text fx:id="regionDescription" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
+      </TextFlow>
+
+</AnchorPane>

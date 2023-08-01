@@ -6,26 +6,18 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.util.ResourceBundle;
-
 public class BackpackMenuEntryController extends Controller {
 
     @FXML
     public Label backpackMenuSelectedLabel;
     @FXML
     public HBox backpackMenuEntryHBox;
-    final BackpackMenuOption entry;
-    final BackpackMenuController backpackMenuController;
     @FXML
     public Label backpackMenuLabel;
 
-    @Inject
-    protected Provider<ResourceBundle> resources;
+    private final BackpackMenuOption entry;
+    private final BackpackMenuController backpackMenuController;
 
-
-    @Inject
     public BackpackMenuEntryController(BackpackMenuController isc, BackpackMenuOption entry) {
         this.entry = entry;
         this.backpackMenuController = isc;

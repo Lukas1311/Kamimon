@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.sidebar;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.LoginController;
-import de.uniks.stpmon.k.controller.chat.ChatController;
 import de.uniks.stpmon.k.service.AuthenticationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -44,8 +43,6 @@ public class SidebarController extends Controller {
     AuthenticationService authService;
     @Inject
     Provider<LoginController> loginControllerProvider;
-    @Inject
-    Provider<ChatController> chatControlleProvider;
     @Inject
     TrainerStorage trainerStorage;
     @Inject

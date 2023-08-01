@@ -23,8 +23,6 @@ public class BattleLogService {
     @Inject
     PresetService presetService;
     @Inject
-    MonsterService monsterService;
-    @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
@@ -37,6 +35,17 @@ public class BattleLogService {
     private final List<OpponentUpdate> opponentUpdates = new ArrayList<>();
 
     private boolean encounterIsOver = false;
+    /**
+     * True if the user did his last move and is now waiting for the opponent to finish his move.
+     */
+    private boolean isWaiting = false;
+    /**
+     * True if the user is currently on the "waiting" screen.
+     * This differs from {@link #encounterIsOver} because this is only true if the user can read the "waiting" text
+     * in the battle log. {@link #encounterIsOver} can be true if the user still reads the last action of the opponent
+     * for example.
+     */
+    private boolean currentlyWaiting = false;
     private CloseEncounterTrigger closeEncounterTrigger = null;
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
@@ -50,18 +59,20 @@ public class BattleLogService {
     /**
      * This method is called by the listener in BattleLogController every time an update comes in
      *
-     * @param update OpponentUpdate
+     * @param slot     Slot of the updated opponent
+     * @param opponent Updated opponent
      */
-    public void queueUpdate(OpponentUpdate update) {
+    public void queueUpdate(EncounterSlot slot, Opponent opponent) {
         // Skip first value because it is always the existing value
-        if (!lastOpponents.containsKey(update.slot())) {
+        if (!lastOpponents.containsKey(slot)) {
             // Cache the first value
-            lastOpponents.put(update.slot(), update.opponent());
+            lastOpponents.put(slot, opponent);
             return;
         }
 
-        queueOpponent(update);
-
+        queueOpponent(new OpponentUpdate(slot, opponent, lastOpponents.get(slot)));
+        // Update the cached value
+        lastOpponents.put(slot, opponent);
     }
 
     /**
@@ -74,8 +85,16 @@ public class BattleLogService {
             return;
         }
         opponentUpdates.add(update);
+        List<Result> results = update.opponent().results();
+        boolean wasWaiting = false;
+        // Stop waiting if there are results
+        if (!results.isEmpty()) {
+            isWaiting = false;
+            wasWaiting = currentlyWaiting;
+            currentlyWaiting = false;
+        }
         //check if this battleLog needs to start
-        if (textBox.getChildren().size() == 0) {
+        if (wasWaiting || textBox.getChildren().isEmpty()) {
             //shows next actions
             showActions();
         }
@@ -93,11 +112,21 @@ public class BattleLogService {
                 handleOpponentUpdate(nextUpdate);
                 opponentUpdates.remove(nextUpdate);
             }
-
-
+            if (opponentUpdates.isEmpty() && isWaiting) {
+                showInitialText();
+            }
+            // Run until there are no more updates or the user has to wait
+            if (textBox.getChildren().isEmpty()) {
+                showActions();
+            }
         } else {
             //check if round or encounter is over
             if (closeEncounterTrigger == null) {
+                if (isWaiting) {
+                    currentlyWaiting = true;
+                    addTranslatedSection("waiting.enemy");
+                    return;
+                }
                 //round is over
                 battleLogControllerProvider.get().endRound(false);
             } else {
@@ -105,7 +134,8 @@ public class BattleLogService {
                 if (encounterIsOver) {
                     closeTimer.cancel();
                     shutDownEncounter();
-                } else { //user sees result of encounter
+                } else {
+                    //user sees result of encounter
                     //show encounter result
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
@@ -122,12 +152,23 @@ public class BattleLogService {
         }
     }
 
+    public void showInitialText() {
+        if (!isWaiting) {
+            return;
+        }
+        currentlyWaiting = true;
+        addTranslatedSection("waiting.enemy");
+    }
+
     private void shutDownEncounter() {
         encounterIsOver = false;
         closeEncounterTrigger = null;
         battleLogControllerProvider.get().endRound(true);
     }
 
+    public void startWaiting() {
+        isWaiting = true;
+    }
 
     public void showNextAction() {
         showActions();
@@ -136,14 +177,14 @@ public class BattleLogService {
     private void handleOpponentUpdate(OpponentUpdate up) {
         EncounterSlot slot = up.slot();
         Opponent opp = up.opponent();
-        Opponent lastOpponent = lastOpponents.get(slot);
+        Opponent lastOpponent = up.lastOpponent();
 
+        List<Result> results = opp.results();
         //check which move was made
         //check if monster was changed because of 0 hp
         if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
             Monster newMonster = sessionService.getMonsterById(opp.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
-            lastOpponents.put(up.slot(), up.opponent());
             return;
         }
 
@@ -151,7 +192,6 @@ public class BattleLogService {
         if (opp.move() instanceof ChangeMonsterMove move) {
             Monster newMonster = sessionService.getMonsterById(move.monster());
             addTranslatedSection("monster-changed", getMonsterType(newMonster.type()).name());
-            lastOpponents.put(up.slot(), up.opponent());
             return;
         }
 
@@ -174,7 +214,7 @@ public class BattleLogService {
         String target = null;
         // Use last opponent to get the ability, this way we print the ability together with the result
         if (lastOpponent.move() instanceof AbilityMove move) {
-            if (opp.results().stream().anyMatch(result -> result.type().equals("ability-success"))) {
+            if (results.stream().anyMatch(result -> result.type().equals("ability-success"))) {
                 // Blocking can be used here because values are already loaded in the cache
                 AbilityDto ability = getAbility(move.ability());
                 MonsterTypeDto eneMon = attackedMonsters.get(slot);
@@ -186,11 +226,9 @@ public class BattleLogService {
 
         }
 
-        for (Result result : opp.results()) {
+        for (Result result : results) {
             handleResult(monster, result, target, slot, opp);
         }
-
-        lastOpponents.put(up.slot(), up.opponent());
 
     }
 
@@ -218,7 +256,10 @@ public class BattleLogService {
                         monsterName = targetType.name();
                     }
                 }
-                addTranslatedSection("target-defeated", monsterName, opp.coins().toString());
+                addTranslatedSection("target-defeated", monsterName);
+                if (!slot.enemy() && opp.coins() != 0) {
+                    addTranslatedSection("earn-coins", opp.coins().toString());
+                }
             }
             case "monster-changed" -> {
             }
@@ -289,5 +330,7 @@ public class BattleLogService {
     public void clearService() {
         lastOpponents.clear();
         attackedMonsters.clear();
+        monsBeforeLevelUp.clear();
+        monsAfterLevelUp.clear();
     }
 }

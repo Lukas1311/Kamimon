@@ -254,37 +254,20 @@
 
 
 /* -------------------- Map Overview -------------------- */
-.map-overview-close-button {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-    -fx-background-color: transparent;
-    -fx-border-style: hidden;
-    -fx-font-size: 20px;
-    -fx-text-fill: white;
-}
 
 .map-overview-content {
-    -fx-background-color: black;
-    -fx-border-insets: 10;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
     -fx-font-family: "Pokémon DS Font";
     -fx-font-size: 23px;
-}
-
-.map-overview-label {
     -fx-text-alignment: center;
 }
 
-.map-overview-label-bg {
-    -fx-border-insets: 10;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-background-color: lightgray;
+.map-overview-header {
+    -fx-font-size: 50px;
+    -fx-text-fill: black;
 }
 
-.map-overview-header {
-    -fx-font-size: 34px;
+.map-overview-textflow {
+    -fx-text-alignment: center;
 }
 
 /* -------------------- Encounter -------------------- */
@@ -372,4 +355,58 @@
 
 .hp-progressbar-green .bar {
     -fx-background-color: green;
+}
+
+/* -------------------- Shop  -------------------- */
+
+.trade-buttons {
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-min-width: 30;
+    -fx-min-height: 30;
+    -fx-max-width: 30;
+    -fx-max-height: 30;
+}
+
+.trade-buttons .ikonli-font-icon {
+    -fx-icon-color: white;
+    -fx-icon-size: 30px;
+}
+
+.trade-buttons:disabled .ikonli-font-icon {
+    -fx-icon-color: black;
+    -fx-icon-size: 30px;
+}
+
+.trade-item-name {
+    -fx-font-size: 25px;
+}
+.trade-text-red {
+    -fx-text-fill: red;
+}
+.trade-text-black {
+    -fx-text-fill: black;
+}
+
+.trade-list {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+.trade-list .list-view {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-style: hidden;
+    -fx-hbar-policy: never;
+}
+
+.trade-list .list-cell {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-style: hidden;
+    -fx-alignment: center-left;
 }

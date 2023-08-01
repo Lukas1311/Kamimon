@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.overworld;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.fxml.FXML;
@@ -21,13 +22,17 @@ public class NightOverlayController extends Controller {
     public WorldService worldService;
     @Inject
     public ClockService clockService;
-
+    @Inject
+    public SettingsService settingsService;
 
     @Inject
     public NightOverlayController() {
     }
 
     private void applyTime(LocalTime now) {
+        if (!settingsService.getNightEnabled()) {
+            return;
+        }
         float factor = worldService.getNightFactor(now);
         if (factor > 0) {
             nightOverlay.setOpacity(factor);
@@ -41,6 +46,13 @@ public class NightOverlayController extends Controller {
     public Parent render() {
         Parent render = super.render();
         subscribe(clockService.onTime(), this::applyTime);
+        subscribe(settingsService.onNightModusEnabled(), (enabled) -> {
+            if (!enabled) {
+                nightOverlay.setVisible(false);
+                return;
+            }
+            applyTime(clockService.onTime().blockingFirst());
+        });
         return render;
     }
 

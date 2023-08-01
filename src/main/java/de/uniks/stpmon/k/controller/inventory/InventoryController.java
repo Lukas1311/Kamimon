@@ -5,7 +5,7 @@ import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.views.ItemCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,14 +22,16 @@ import javax.inject.Singleton;
 
 @Singleton
 public class InventoryController extends ToastedController {
+
     @Inject
-    TrainerStorage trainerStorage;
+    TrainerService trainerService;
     @Inject
     PresetService presetService;
     @Inject
     IResourceService resourceService;
     @Inject
     ItemService itemService;
+
     @FXML
     public AnchorPane inventoryPane;
     @FXML
@@ -67,6 +69,7 @@ public class InventoryController extends ToastedController {
 
         subscribe(itemService.getItems(), items -> {
             if (!items.isEmpty()) {
+                items.removeIf(item -> item.amount() == 0);
                 userItems.setAll(items);
                 itemListView.setCellFactory(param -> new ItemCell(resourceService, presetService));
                 itemListView.setItems(userItems);
@@ -88,12 +91,15 @@ public class InventoryController extends ToastedController {
     }
 
     private void setCoins() {
-        subscribe(trainerStorage.onTrainer(), trainer ->
-                trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
+        if (trainerService != null) {
+            subscribe(trainerService.onTrainer(), trainer ->
+                    trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
+        }
     }
 
     @Override
     public String getResourcePath() {
         return "inventory/";
     }
+
 }

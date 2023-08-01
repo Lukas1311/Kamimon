@@ -112,7 +112,8 @@ public class TrainerServiceTest {
                 .thenReturn(Observable.just(
                         new Trainer("1", "0", "0", "0", "101", 0, "0",
                                 0, 0, 0, DummyConstants.NPC_INFO,
-                                List.of(), Set.of())
+                                List.of(), Set.of(), Set.of()
+                        )
                 ));
 
         //action

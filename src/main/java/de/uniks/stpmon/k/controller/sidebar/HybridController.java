@@ -75,6 +75,8 @@ public class HybridController extends Controller {
     @Inject
     Provider<TrainerManagementController> trainerManagementControllerProvider;
     @Inject
+    Provider<SoundController> soundControllerProvider;
+    @Inject
     CreateTrainerController createTrainerController;
     @Inject
     InputHandler inputHandler;
@@ -121,9 +123,8 @@ public class HybridController extends Controller {
         PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pane);
         transition.setToX(-75);
-        SequentialTransition sequentialTransition = new SequentialTransition(pause, transition);
 
-        return sequentialTransition;
+        return new SequentialTransition(pause, transition);
     }
 
     @Override
@@ -212,6 +213,7 @@ public class HybridController extends Controller {
             case USER_MANAGEMENT -> pushController(userManagementControllerProvider.get(), setup);
             case TRAINER_MANAGEMENT -> pushController(trainerManagementControllerProvider.get(), setup);
             case CHOOSE_SPRITE -> pushController(createTrainerController, setup);
+            case SOUND -> pushController(soundControllerProvider.get(), setup);
             case NONE -> {
             }
         }

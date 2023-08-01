@@ -10,7 +10,6 @@ import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
@@ -26,10 +25,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,8 +36,6 @@ class InventoryControllerTest extends ApplicationTest {
     @Spy
     final App app = new App(null);
 
-    @Mock
-    TrainerStorage trainerStorage;
     @Mock
     PresetService presetService;
     @Mock
@@ -57,10 +54,8 @@ class InventoryControllerTest extends ApplicationTest {
     final List<Item> items = new ArrayList<>();
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
-
-        when(trainerStorage.onTrainer()).thenReturn(Observable.just(Optional.of(dummytrainer)));
 
         Item item1 = new Item("1", dummytrainer._id(), 1, 1);
         Item item2 = new Item("2", dummytrainer._id(), 2, 2);

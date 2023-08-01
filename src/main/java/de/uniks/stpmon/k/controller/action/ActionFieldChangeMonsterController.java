@@ -11,7 +11,9 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Singleton
 public class ActionFieldChangeMonsterController extends BaseActionFieldController {
@@ -24,7 +26,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
     MonsterService monsterService;
 
     private Monster selectedUserMonster;
-
     private int count = 0;
     private String back;
 
@@ -54,12 +55,21 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             addActionOption(back, true);
         }
 
-        Monster activeMonster = sessionService.getMonster(EncounterSlot.PARTY_FIRST);
+        Set<String> activeMonsters = new HashSet<>();
+        for (EncounterSlot slot : sessionService.getOwnSlots()) {
+            Monster monster = sessionService.getMonster(slot);
+            if (monster != null) {
+                activeMonsters.add(monster._id());
+            }
+        }
+
         List<Monster> userMonstersList = monsterService.getTeam().blockingFirst();
 
         for (Monster monster : userMonstersList) {
-            if (!sessionService.isMonsterDead(monster) &&
-                    (activeMonster == null || !activeMonster._id().equals(monster._id()))) {
+            if (!sessionService.isMonsterDead(monster)) {
+                if (activeMonsters.contains(monster._id())) {
+                    continue;
+                }
                 subscribe(presetService.getMonster(monster.type()), type -> {
                     selectedUserMonster = monster;
                     addActionOption(monster._id() + " " + type.name(), false);
@@ -74,10 +84,10 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
 
         HBox optionContainer;
         if (option.equals(back)) {
-            optionContainer = getActionField().getOptionContainer(option);
+            optionContainer = ActionFieldController.getOptionContainer(option);
             optionContainer.setOnMouseClicked(event -> openAction(option));
         } else {
-            optionContainer = getActionField().getOptionContainer(idAndName[1]);
+            optionContainer = ActionFieldController.getOptionContainer(idAndName[1]);
             optionContainer.setOnMouseClicked(event -> openAction(idAndName[0]));
         }
 
@@ -107,7 +117,6 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
         if (option.equals(back)) {
             getActionField().openMainMenu();
         } else {
-            getActionField().openBattleLog();
             getActionField().executeMonsterChange(selectedUserMonster);
         }
     }

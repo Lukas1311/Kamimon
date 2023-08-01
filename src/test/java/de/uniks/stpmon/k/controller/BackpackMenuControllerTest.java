@@ -1,9 +1,8 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
-import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
-import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -33,8 +32,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     @Spy
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Spy
-    Provider<MonsterBarController> monsterBarControllerProvider;
-    @Spy
     Provider<MonsterInventoryController> monBoxControllerProvider;
     @Mock
     Provider<IngameController> ingameControllerProvider;
@@ -61,19 +58,6 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     }
 
     @Test
-    void clickOnMonsters() {
-        MonsterBarController monsterBarController = Mockito.mock(MonsterBarController.class);
-        when(monsterBarControllerProvider.get()).thenReturn(monsterBarController);
-        doNothing().when(monsterBarController).showMonsters();
-
-        //team
-        Label label = lookup("#backpackMenuLabel_0").query();
-        clickOn(label);
-        verify(monsterBarController).showMonsters();
-
-    }
-
-    @Test
     void clickOnMonster_List() {
         MonsterInventoryController monsterInventoryController = Mockito.mock(MonsterInventoryController.class);
         when(monBoxControllerProvider.get()).thenReturn(monsterInventoryController);
@@ -81,12 +65,12 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         when(ingameControllerProvider.get()).thenReturn(ingameController);
 
         //monsterList
-        Label label = lookup("#backpackMenuLabel_1").query();
+        Label label = lookup("#backpackMenuLabel_0").query();
         clickOn(label);
         waitForFxEvents();
         verify(ingameController).pushController(any());
 
-        Label label2 = lookup("#backpackMenuLabel_1").query();
+        Label label2 = lookup("#backpackMenuLabel_0").query();
         clickOn(label2);
         waitForFxEvents();
 

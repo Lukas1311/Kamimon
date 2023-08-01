@@ -7,13 +7,9 @@ import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
-import de.uniks.stpmon.k.service.storage.TrainerStorage;
-import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
-import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -41,23 +37,12 @@ public class EncounterService {
 
     @Inject
     EncounterApiService encounterApiService;
-
     @Inject
     RegionStorage regionStorage;
-
     @Inject
     Provider<SessionService> sessionServiceProvider;
-
     @Inject
     EncounterStorage encounterStorage;
-    @Inject
-    EventListener eventListener;
-    @Inject
-    TrainerStorage trainerStorage;
-    @Inject
-    Provider<EncounterMember> monsterCacheProvider;
-    @Inject
-    Provider<OpponentCache> opponentCacheProvider;
 
     @Inject
     public EncounterService() {
@@ -105,7 +90,7 @@ public class EncounterService {
         );
     }
 
-    public Observable<Opponent> makeAbilityMove(int abilityId, String targetId) {
+    public Observable<Opponent> makeAbilityMove(EncounterSlot slot, int abilityId, String targetId) {
         UpdateOpponentDto dto = new UpdateOpponentDto(null, new AbilityMove(
                 Moves.ABILITY.toString(),
                 abilityId,
@@ -119,12 +104,12 @@ public class EncounterService {
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
                 dto
         );
     }
 
-    public Observable<Opponent> makeChangeMonsterMove(Monster nextMonster) {
+    public Observable<Opponent> makeChangeMonsterMove(EncounterSlot slot, Monster nextMonster) {
         UpdateOpponentDto dto = new UpdateOpponentDto(null, new ChangeMonsterMove(
                 Moves.CHANGE_MONSTER.toString(),
                 nextMonster._id())
@@ -132,18 +117,18 @@ public class EncounterService {
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
                 dto
         );
     }
 
-    public Observable<Opponent> changeDeadMonster(Monster nextMonster) {
+    public Observable<Opponent> changeDeadMonster(EncounterSlot slot, Monster nextMonster) {
         UpdateOpponentDto dto = new UpdateOpponentDto(nextMonster._id(), null);
 
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),
-                sessionServiceProvider.get().getOpponent(EncounterSlot.PARTY_FIRST)._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
                 dto
         );
     }

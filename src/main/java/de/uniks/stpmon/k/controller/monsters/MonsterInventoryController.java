@@ -35,7 +35,6 @@ public class MonsterInventoryController extends Controller {
     public GridPane monStorage;
     @FXML
     public AnchorPane monBoxMenuHolder;
-
     @Inject
     IResourceService resourceService;
     @Inject
