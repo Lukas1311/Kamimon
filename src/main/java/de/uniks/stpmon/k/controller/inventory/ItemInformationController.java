@@ -50,6 +50,14 @@ public class ItemInformationController extends Controller {
         loadBgImage(fullBox, "inventory/InventoryBox.png");
 
         subscribe(presetService.getItem(item.type()), item -> {
+            if (item.use() != null) {
+                useButton.setVisible(true);
+                useButton.setText(translateString("useItemButton"));
+                useButton.setOnAction(e -> useItem());
+            } else {
+                useButton.setVisible(false);
+            }
+
             nameLabel.setText(item.name());
             itemInformation.setText(item.description());
         });
@@ -59,9 +67,6 @@ public class ItemInformationController extends Controller {
         });
 
         amountText.setText("Amount: " + item.amount().toString());
-
-        useButton.setText(translateString("useItemButton"));
-        useButton.setOnAction(e -> useItem());
 
         return parent;
     }
