@@ -7,6 +7,8 @@ import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -26,6 +28,10 @@ public class ItemInformationController extends Controller {
     public Text itemInformation;
     @FXML
     public Text amountText;
+    @FXML
+    public Label nameLabel;
+    @FXML
+    public Button useButton;
 
     @Inject
     Provider<ResourceService> resourceServiceProvider;
@@ -43,12 +49,26 @@ public class ItemInformationController extends Controller {
         final Parent parent = super.render();
         loadBgImage(fullBox, "inventory/InventoryBox.png");
 
-        subscribe(resourceServiceProvider.get().getItemImage(String.valueOf(item._id())), bufferedImage -> {
-            Image image = ImageUtils.scaledImageFX(bufferedImage, 1.0);
-            itemView.setImage(image);
+        subscribe(presetService.getItem(item.type()), item -> {
+            nameLabel.setText(item.name());
+            itemInformation.setText(item.description());
+        });
+        subscribe(resourceServiceProvider.get().getItemImage(item.type().toString()), imageUrl -> {
+            Image itemImage = ImageUtils.scaledImageFX(imageUrl, 4.0);
+            itemView.setImage(itemImage);
         });
 
+        amountText.setText("Amount: " + item.amount().toString());
+
+        useButton.setText(translateString("useItemButton"));
+        useButton.setOnAction(e -> useItem());
+
         return parent;
+    }
+
+    private void useItem() {
+        //TODO
+        System.out.println("TODO");
     }
 
     public void setItem(Item item) {

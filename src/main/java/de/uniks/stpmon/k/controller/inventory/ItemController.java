@@ -39,7 +39,7 @@ public class ItemController extends Controller {
         subscribe(resourceService.getItemImage(String.valueOf(item.type())), imageUrl ->
                 subscribe(presetService.getItem(item.type()), item1 -> {
                     //image
-                    Image itemImage = ImageUtils.scaledImageFX(imageUrl, 2.0);
+                    Image itemImage = ImageUtils.scaledImageFX(imageUrl, 3.0);
                     itemView.setImage(itemImage);
 
                     //text
