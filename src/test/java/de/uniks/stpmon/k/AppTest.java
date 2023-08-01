@@ -525,13 +525,9 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackMenuLabel_2");
         sleep(3000);
         waitForFxEvents();
-        AtomicBoolean isMonDexPaneVisible = new AtomicBoolean(false);
-        Platform.runLater(() -> {
-            Node monDexPain = lookup("#monDexPain").query();
-            isMonDexPaneVisible.set(monDexPain.isVisible());
-        });
+        Node monDexPain = lookup("#monDexPain").query();
         //verifyThat(monDexPain, Node::isVisible);
-        assertTrue(isMonDexPaneVisible.get());
+        assertTrue(monDexPain.isVisible());
         waitForFxEvents();
 
         clickOn("#type0Label");
