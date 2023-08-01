@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
+import de.uniks.stpmon.k.service.world.PreparationService;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
@@ -19,6 +20,8 @@ public class ShadowView extends WorldViewable {
 
     @Inject
     protected WorldRepository repository;
+    @Inject
+    protected PreparationService preparationService;
     private MeshView shadow;
 
     @Inject
@@ -32,7 +35,8 @@ public class ShadowView extends WorldViewable {
             if (shadowImage.isEmpty()) {
                 return;
             }
-            shadow.setMaterial(createMaterial(scaledImageFX(shadowImage.get(), effectContext.getTextureScale())));
+            shadow.setMaterial(createMaterial(scaledImageFX(shadowImage.get(),
+                    effectContext.getTextureScale())));
         });
         if (imageCache.isEmpty()) {
             return new Group();
@@ -45,6 +49,12 @@ public class ShadowView extends WorldViewable {
         shadow.setTranslateZ(-bounds.getDepth() / 2 + 6);
         shadow.setTranslateY(-0.35);
         return shadow;
+    }
+
+    @Override
+    public void updateShadow(float factor) {
+        repository.shadowImage().setValue(
+                preparationService.createShadows(factor));
     }
 
     @Override

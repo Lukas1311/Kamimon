@@ -18,13 +18,11 @@ import de.uniks.stpmon.k.world.TileMap;
 import io.reactivex.rxjava3.core.Completable;
 import retrofit2.HttpException;
 
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -165,22 +163,14 @@ public class PreparationService {
                     worldRepository.floorImage().setValue(floorImage);
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
-                    BufferedImage shadows = createShadows(props, floorImage);
-                    worldRepository.shadowImage().setValue(shadows);
-                    try {
-                        ImageIO.write(shadows, "png", new File("shadow.png"));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    worldRepository.shadowImage().setValue(createShadows(0.5f));
                     return Completable.complete();
                 });
     }
 
-    public BufferedImage createShadows() {
-        return createShadows(worldRepository.props().asNullable(), worldRepository.floorImage().asNullable());
-    }
-
-    public BufferedImage createShadows(List<TileProp> props, BufferedImage originalImage) {
+    public BufferedImage createShadows(float factor) {
+        List<TileProp> props = worldRepository.props().asOptional().orElse(List.of());
+        BufferedImage originalImage = worldRepository.floorImage().asNullable();
         BufferedImage shadowImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = shadowImage.createGraphics();

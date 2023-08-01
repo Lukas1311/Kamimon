@@ -86,6 +86,16 @@ public class NPCCollectiveView extends WorldViewable {
         return npcGroup;
     }
 
+    @Override
+    public void updateShadow(float factor) {
+        for (Node view : npcViews.values()) {
+            if (!(view.getUserData() instanceof NPCView npcView)) {
+                continue;
+            }
+            npcView.updateShadow(factor);
+        }
+    }
+
     private void addNpcView(Trainer trainer) {
         if (Objects.equals(trainer._id(), trainerService.getMe()._id())
                 || trainer == NoneConstants.NONE_TRAINER) {

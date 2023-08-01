@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
+import de.uniks.stpmon.k.service.world.ClockService;
+import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -44,9 +46,12 @@ public class WorldView extends Viewable {
     protected PropView propView;
     @Inject
     protected NPCCollectiveView npcCollectiveView;
-
     @Inject
     protected CameraStorage cameraStorage;
+    @Inject
+    protected ClockService clockService;
+    @Inject
+    protected WorldService worldService;
 
     @Inject
     public WorldView() {
@@ -109,6 +114,12 @@ public class WorldView extends Viewable {
         floorView.init();
         propView.init();
         npcCollectiveView.init();
+        subscribe(clockService.onTime(), (time) -> {
+            float dayFactor = worldService.getDayFactor(time);
+            characterView.updateShadow(dayFactor);
+            shadowView.updateShadow(dayFactor);
+            npcCollectiveView.updateShadow(dayFactor);
+        });
     }
 
     @Override

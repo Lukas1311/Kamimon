@@ -45,6 +45,13 @@ public class WorldService {
         return 1;
     }
 
+    public float getDayFactor(LocalTime time) {
+        if (!settingsService.getNightEnabled()) {
+            return 0;
+        }
+        return 1;
+    }
+
     public CharacterSet getCharacter(String name) {
         if (name == null) {
             return getCharacterPlaceholder();
@@ -65,5 +72,4 @@ public class WorldService {
         }
         return characterPlaceholder;
     }
-
 }

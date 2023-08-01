@@ -88,8 +88,8 @@ public abstract class EntityView extends WorldViewable {
         return ImageUtils.blackOutImage(characterSet.getPreview(direction), 0.25f);
     }
 
-    private void updateShadowAngel() {
-        if (shadowNode == null) {
+    public void updateShadow(float factor) {
+        if (shadowNode == null || factor == 0) {
             return;
         }
         shadowShear.setX(-Math.sin(WorldView.WORLD_ANGLE));

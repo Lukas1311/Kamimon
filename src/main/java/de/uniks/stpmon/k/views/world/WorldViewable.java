@@ -26,6 +26,9 @@ public abstract class WorldViewable extends Viewable {
     @SuppressWarnings("unused")
     public abstract Node render();
 
+    public void updateShadow(float factor) {
+    }
+
     protected Material createMaterial(Image image) {
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseMap(image);
