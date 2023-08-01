@@ -25,6 +25,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
+import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
@@ -64,11 +65,13 @@ public abstract class EntityView extends WorldViewable {
     }
 
     private Node renderShadow() {
-        shadowNode = createRectangleScaled(ImageUtils.blackOutImage(characterSet.getPreview(Direction.from(trainerProvider.getTrainer())), 0.25f), -90);
+        shadowNode = createRectangleScaled(createShadowImage(Direction.from(trainerProvider.getTrainer())),
+                -90);
 
         shadowShear = new Shear(-1, 0, 0, 0);
         shadowNode.getTransforms().add(2, shadowShear);
-        shadowNode.getTransforms().add(3, new Translate(2 * WorldView.WORLD_UNIT, 0, -0.1 - 0.4 * Math.random()));
+        shadowNode.getTransforms().add(3,
+                new Translate(2 * WorldView.WORLD_UNIT, 0, -0.1 - 0.5 * Math.random()));
         return shadowNode;
     }
 
@@ -76,9 +79,13 @@ public abstract class EntityView extends WorldViewable {
         if (shadowNode == null) {
             return;
         }
-        shadowNode.setMaterial(
-                createMaterial(scaledImageFX(
-                        ImageUtils.blackOutImage(characterSet.getPreview(direction), 0.25f), effectContext.getTextureScale())));
+        shadowNode.setMaterial(createMaterial(
+                scaledImageFX(createShadowImage(direction),
+                        effectContext.getTextureScale())));
+    }
+
+    private BufferedImage createShadowImage(Direction direction) {
+        return ImageUtils.blackOutImage(characterSet.getPreview(direction), 0.25f);
     }
 
     private void updateShadowAngel() {
@@ -100,8 +107,7 @@ public abstract class EntityView extends WorldViewable {
         entityGroup = new Group(entityNode, shadow);
         Trainer trainer = trainerProvider.getTrainer();
         entityGroup.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
-        entityGroup.setTranslateZ(-trainer.y() * WorldView.WORLD_UNIT -
-                WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
+        entityGroup.setTranslateZ((-trainer.y() - WorldView.ENTITY_OFFSET_Y) * WorldView.WORLD_UNIT);
         entityGroup.setTranslateY(-0.35);
         startIdleAnimation(trainer);
         return entityGroup;
@@ -204,6 +210,9 @@ public abstract class EntityView extends WorldViewable {
             }
             onMoveReceived(nextTrainer);
         });
+        if (idleAnimation != null) {
+            idleAnimation.stop();
+        }
         if (moveAnimation == null
                 || newDirection) {
             if (moveAnimation != null) {
