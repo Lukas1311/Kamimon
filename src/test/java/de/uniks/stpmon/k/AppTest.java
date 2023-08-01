@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.time.Duration;
 
 import static java.util.function.Predicate.not;
@@ -524,9 +525,13 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackMenuLabel_2");
         sleep(3000);
         waitForFxEvents();
-        Node monDexPain = lookup("#monDexPain").query();
+        AtomicBoolean isMonDexPaneVisible = new AtomicBoolean(false);
+        Platform.runLater(() -> {
+            Node monDexPain = lookup("#monDexPain").query();
+            isMonDexPaneVisible.set(monDexPain.isVisible());
+        });
         //verifyThat(monDexPain, Node::isVisible);
-        assertTrue(monDexPain.isVisible());
+        assertTrue(isMonDexPaneVisible.get());
         waitForFxEvents();
 
         clickOn("#type0Label");
