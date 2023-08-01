@@ -46,6 +46,17 @@ public class RuleRegistry {
         }
     }
 
+    public void markBlend(String tileSet, IdSource... sources) {
+        markBlend(tileSet, Arrays.stream(sources).flatMap(s -> s.get().stream()).toList());
+    }
+
+    public void markBlend(String tileSet, Collection<Integer> c) {
+        TilesetProperties tileset = properties.computeIfAbsent(tileSet, (k) -> new TilesetProperties());
+        for (Integer tileId : c) {
+            tileset.setProperty(tileId, TileProperties.BLEND);
+        }
+    }
+
     public boolean isDecoration(TileInfo info) {
         TilesetProperties tileset = properties.get(info.tileSet());
         if (tileset == null) {
@@ -54,13 +65,20 @@ public class RuleRegistry {
         return tileset.getProperty(info.tileId(), TileProperties.DECORATION);
     }
 
-    @SuppressWarnings("unused")
     public boolean isBottom(TileInfo info) {
         TilesetProperties tileset = properties.get(info.tileSet());
         if (tileset == null) {
             return false;
         }
         return tileset.getProperty(info.tileId(), TileProperties.BOTTOM);
+    }
+
+    public boolean isBlending(TileInfo info) {
+        TilesetProperties tileset = properties.get(info.tileSet());
+        if (tileset == null) {
+            return false;
+        }
+        return tileset.getProperty(info.tileId(), TileProperties.BLEND);
     }
 
     public int getEntangledGroup(String tileSet, int id) {
@@ -117,7 +135,7 @@ public class RuleRegistry {
         return RuleResult.NO_MATCH;
     }
 
-    public TileInfo getPropInfo(TileInfo info, List<TileInfo> candidates, List<DecorationLayer> decorationLayers) {
+    public TileInfo getPropInfo(TileInfo info, List<TileInfo> candidates, List<DecorationLayer> decorationLayers, Direction dir) {
         if (candidates.size() <= 1) {
             return candidates.get(0);
         }
@@ -132,9 +150,13 @@ public class RuleRegistry {
             rules.addAll(getCandidateRules(candidateInfo));
         }
         for (CandidateRule rule : rules) {
-            bestCandidate = rule.apply(info, candidates, decorationLayers);
+            bestCandidate = rule.apply(info, candidates, decorationLayers, dir);
             if (bestCandidate != null) {
                 return bestCandidate;
+            }
+            // Break if no candidates are left
+            if (candidates.isEmpty()) {
+                return null;
             }
         }
         return null;
@@ -178,11 +200,6 @@ public class RuleRegistry {
             return (properties.getOrDefault(tileId, 0) & (1 << property.ordinal())) != 0;
         }
 
-        @SuppressWarnings("unused")
-        public void setBottom(int tileId) {
-            setProperty(tileId, TileProperties.BOTTOM);
-        }
-
         public void setEntangled(int tileId, int groupId) {
             int prop = properties.getOrDefault(tileId, 0);
             properties.put(tileId, prop | groupId << 16);
@@ -195,7 +212,8 @@ public class RuleRegistry {
 
     public enum TileProperties {
         DECORATION,
-        BOTTOM
+        BOTTOM,
+        BLEND
     }
 
     private static class RuleMap<R> {

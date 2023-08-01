@@ -14,6 +14,12 @@ public class BasicRules {
     public static RuleRegistry registerRules() {
         RuleRegistry registry = new RuleRegistry();
         BasicExteriors.registerRules(registry);
+        // blend signs
+        registry.markBlend(TILESET_MODERN_EXTERIORS_EXTENDED,
+                new IdSource.Rectangle(41713, 6, 2, 16),
+                new IdSource.Rectangle(41713 + 32, 4, 2, 16),
+                new IdSource.Rectangle(41713 + 368, 7, 4, 16));
+
         // snow field
         registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
                 new IdSource.Rectangle(41713 + 208, 6, 3, 16));
@@ -74,6 +80,16 @@ public class BasicRules {
         // house exit
         registry.markDecoration(TILESET_ROOM_BUILDER,
                 new IdSource.Rectangle(210, 3, 2, 76));
+        registry.markEntangled(TILESET_MODERN_INTERIORS,
+                new IdSource.Rectangle(8285 + 136, 1, 2, 16));
+        registry.markEntangled(TILESET_MODERN_INTERIORS,
+                new IdSource.Rectangle(8285 + 137, 1, 2, 16));
+
+        // house couches
+        registry.markDecoration(TILESET_MODERN_INTERIORS,
+                new IdSource.Rectangle(8285 + 5524, 12, 4, 16));
+        registry.markDecoration(TILESET_MODERN_INTERIORS,
+                new IdSource.Rectangle(8285 + 5588, 4, 4, 16));
 
         // house counter
         registry.markDecoration(TILESET_MODERN_INTERIORS,

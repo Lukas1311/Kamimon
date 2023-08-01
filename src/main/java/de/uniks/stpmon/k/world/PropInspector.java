@@ -93,6 +93,10 @@ public class PropInspector {
                 if (registry.isDecoration(current)) {
                     continue;
                 }
+                if (registry.isBlending(current)) {
+                    blendInto(context, x, y);
+                    continue;
+                }
 
                 if (connectTo(context, grid, x, y, current)) {
                     continue;
@@ -105,6 +109,30 @@ public class PropInspector {
                     createIfAbsent(grid, x, y, null, context.layerIndex);
                 }
             }
+        }
+    }
+
+    /**
+     * Tries to blend the current tile into the other layers.
+     *
+     * @param context The current context
+     * @param x       The x coordinate
+     * @param y       The y coordinate
+     */
+    private void blendInto(PropContext context, int x, int y) {
+        for (int otherLayer = 0; otherLayer < context.layerIndex; otherLayer++) {
+            PropGrid otherGrid = grids[otherLayer];
+            ChunkBuffer otherBuffer = context.buffers[otherLayer];
+            // Check visited
+            if (notInBounds(otherGrid, x, y)) {
+                continue;
+            }
+            int id = otherBuffer.getId(x, y);
+            if (id <= 0) {
+                continue;
+            }
+            tryMergeGroups(x, y, context.layerIndex, x, y, otherLayer);
+            return;
         }
     }
 
@@ -268,7 +296,7 @@ public class PropInspector {
         if (candidates.isEmpty()) {
             return new ConnectionResult(marked, null);
         }
-        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers);
+        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers, dir);
         return new ConnectionResult(marked, bestCandidate);
     }
 
