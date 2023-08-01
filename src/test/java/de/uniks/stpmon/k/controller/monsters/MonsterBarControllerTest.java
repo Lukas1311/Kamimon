@@ -62,7 +62,10 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Test
     public void testSetMonsterStatus_ZeroHP() throws InterruptedException {
         // Load the image for zero HP
-        Image zeroHP = new Image(Objects.requireNonNull(getClass().getResource("/de/uniks/stpmon/k/controller/healthPointsZero.png")).toString());
+        Image zeroHP = new Image(Objects.requireNonNull(
+            getClass().getResource("/de/uniks/stpmon/k/controller/monsters/monsterbar/healthPointsZero.png")
+        ).toString());
+        
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(zeroHP);
 
@@ -76,7 +79,10 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Test
     public void testSetMonsterStatus_NormalHP() throws InterruptedException {
         // Load the image for normal HP
-        Image normalHP = new Image(Objects.requireNonNull(getClass().getResource("/de/uniks/stpmon/k/controller/healthPointsNormal.png")).toString());
+        Image normalHP = new Image(Objects.requireNonNull(
+            getClass().getResource("/de/uniks/stpmon/k/controller/monsters/monsterbar/healthPointsNormal.png")
+        ).toString());
+
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(normalHP);
 
@@ -90,7 +96,10 @@ public class MonsterBarControllerTest extends ApplicationTest {
     @Test
     public void testSetMonsterStatus_LowHP() throws InterruptedException {
         // Load the image for low HP
-        Image lowHP = new Image(Objects.requireNonNull(getClass().getResource("/de/uniks/stpmon/k/controller/healthPointsLow.png")).toString());
+        Image lowHP = new Image(Objects.requireNonNull(
+            getClass().getResource("/de/uniks/stpmon/k/controller/monsters/monsterbar/healthPointsLow.png")
+        ).toString());
+
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(lowHP);
 
