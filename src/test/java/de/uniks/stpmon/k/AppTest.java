@@ -525,7 +525,8 @@ class AppTest extends ApplicationTest {
         sleep(3000);
         waitForFxEvents();
         Node monDexPain = lookup("#monDexPain").query();
-        verifyThat(monDexPain, Node::isVisible);
+        //verifyThat(monDexPain, Node::isVisible);
+        assertTrue(monDexPain.isVisible());
         waitForFxEvents();
 
         clickOn("#type0Label");
