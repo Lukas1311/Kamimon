@@ -3,10 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
-import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.dto.AbilityMove;
-import de.uniks.stpmon.k.dto.ChangeMonsterMove;
-import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
 import javafx.application.Platform;
 import javafx.scene.layout.VBox;
@@ -214,14 +211,21 @@ public class BattleLogService {
         String target = null;
         // Use last opponent to get the ability, this way we print the ability together with the result
         if (lastOpponent.move() instanceof AbilityMove move) {
-            if (results.stream().anyMatch(result -> result.type().equals("ability-success"))) {
-                // Blocking can be used here because values are already loaded in the cache
+            Optional<Result> abilityResult = results.stream()
+                    .filter(result -> result.type().equals("ability-success"))
+                    .findFirst();
+            if (abilityResult.isPresent()) {
+                Result result = abilityResult.get();
                 AbilityDto ability = getAbility(move.ability());
-                MonsterTypeDto eneMon = attackedMonsters.get(slot);
-                if (eneMon != null && monster != null) {
-                    addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+                if (result.status() != null && monster != null) {
+                    addTranslatedSection("monsterAttacks.self", monster.name(), ability.name());
+                } else {
+                    MonsterTypeDto eneMon = attackedMonsters.get(slot);
+                    if (eneMon != null && monster != null) {
+                        addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+                    }
+                    target = move.target();
                 }
-                target = move.target();
             }
 
         }
@@ -269,12 +273,21 @@ public class BattleLogService {
             case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
             case "monster-learned" ->
                     addTranslatedSection("monster-learned", monster.name(), getAbility(ability).name());
+            case "monster-forgot" -> addTranslatedSection("monster-forgot", monster.name(), getAbility(ability).name());
             case "monster-dead" -> addTranslatedSection("monster-dead", monster.name());
             case "ability-unknown" ->
                     addTranslatedSection("ability-unknown", getAbility(ability).name(), monster.name());
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
+            case "item-failed", "item-success" -> {
+                addTranslatedSection("item-failed", getItem(result.item()).name());
+                addTranslatedSection("item-success", getItem(result.item()).name());
+            }
+            case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
+                    + result.status().toString()
+                    + result.type().replace("status-", "."), monster.name());
+            case "monster-caught" -> addTranslatedSection("monster-caught", monster.name());
             default -> System.out.println("unknown result type");
         }
     }
@@ -317,6 +330,10 @@ public class BattleLogService {
 
     private AbilityDto getAbility(int id) {
         return presetService.getAbility(id).blockingFirst();
+    }
+
+    private ItemTypeDto getItem(int id) {
+        return presetService.getItem(id).blockingFirst();
     }
 
     public void setVBox(VBox vBox) {

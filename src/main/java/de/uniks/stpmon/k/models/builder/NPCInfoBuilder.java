@@ -2,7 +2,9 @@ package de.uniks.stpmon.k.models.builder;
 
 import de.uniks.stpmon.k.models.NPCInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class NPCInfoBuilder {
@@ -21,6 +23,8 @@ public class NPCInfoBuilder {
     private final List<String> starters = new ArrayList<>();
     private final List<String> encountered = new ArrayList<>();
 
+    private NPCInfoBuilder() {
+    }
 
     public NPCInfoBuilder setWalkRandomly(boolean walkRandomly) {
         this.walkRandomly = walkRandomly;

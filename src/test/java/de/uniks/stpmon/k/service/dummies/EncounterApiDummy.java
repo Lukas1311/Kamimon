@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.OpponentBuilder;
+import de.uniks.stpmon.k.models.builder.ResultBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.util.Pair;
@@ -223,11 +224,10 @@ public class EncounterApiDummy implements EncounterApiService {
                 .create();
         regionApi.updateMonster(updatedTarget);
 
-        Result result = new Result(
-                "ability-success",
-                0,
-                "normal"
-        );
+        Result result = ResultBuilder.builder("ability-success")
+                .setAbility(0)
+                .setEffectiveness("effective")
+                .create();
         Opponent moveOp = OpponentBuilder.builder(target)
                 .setMove(opponentDto.move())
                 .create();
