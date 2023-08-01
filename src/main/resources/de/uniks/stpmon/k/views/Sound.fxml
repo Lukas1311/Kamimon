@@ -12,6 +12,8 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SoundController">
     <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="370.0">
         <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="185.0">
@@ -62,5 +64,25 @@
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="228.0" HBox.hgrow="ALWAYS">
             <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="login-check-box" />
         </HBox>
+    </HBox>
+    <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
+        <VBox.margin>
+            <Insets left="20.0" right="20.0" top="20"/>
+        </VBox.margin>
+        <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setDe"
+                     styleClass="login-radio-button" text="%german">
+            <toggleGroup>
+                <ToggleGroup fx:id="lang"/>
+            </toggleGroup>
+            <padding>
+                <Insets right="5.0"/>
+            </padding>
+        </RadioButton>
+        <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setEn"
+                     styleClass="login-radio-button" text="%english" toggleGroup="$lang">
+            <padding>
+                <Insets left="5.0"/>
+            </padding>
+        </RadioButton>
     </HBox>
 </VBox>

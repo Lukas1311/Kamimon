@@ -3,12 +3,15 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -26,6 +29,13 @@ public class SoundController extends Controller{
     public CheckBox nightMode;
     @FXML
     public Label value;
+    @FXML
+    public RadioButton germanButton;
+    @FXML
+    public RadioButton englishButton;
+    @FXML
+    public ToggleGroup lang;
+
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
@@ -65,5 +75,13 @@ public class SoundController extends Controller{
 
     public void backToSettings() {
         hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
+    }
+
+    public void setDe(ActionEvent event) {
+
+    }
+
+    public void setEn(ActionEvent event) {
+
     }
 }
