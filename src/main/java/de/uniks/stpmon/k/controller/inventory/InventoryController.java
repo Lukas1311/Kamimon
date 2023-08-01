@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller.inventory;
 
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -18,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
@@ -31,6 +33,10 @@ public class InventoryController extends ToastedController {
     IResourceService resourceService;
     @Inject
     ItemService itemService;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<ItemInformationController> itemInformationControllerProvider;
 
     @FXML
     public AnchorPane inventoryPane;
@@ -45,6 +51,8 @@ public class InventoryController extends ToastedController {
     private final ObservableList<Item> userItems = FXCollections.observableArrayList();
 
     public boolean isInEncounter = false;
+
+    public Item currentItem;
 
     @Inject
     public InventoryController() {
@@ -71,7 +79,7 @@ public class InventoryController extends ToastedController {
             if (!items.isEmpty()) {
                 items.removeIf(item -> item.amount() == 0);
                 userItems.setAll(items);
-                itemListView.setCellFactory(param -> new ItemCell(resourceService, presetService));
+                itemListView.setCellFactory(param -> new ItemCell(this, resourceService, presetService));
                 itemListView.setItems(userItems);
             }
         });
@@ -95,6 +103,30 @@ public class InventoryController extends ToastedController {
             subscribe(trainerService.onTrainer(), trainer ->
                     trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
         }
+    }
+
+    public void triggerDetail(Item item) {
+        if (currentItem == null) {
+            openDetail(item);
+        } else {
+            if (currentItem == item) {
+                closeDetail();
+            } else {
+                closeDetail();
+                openDetail(item);
+            }
+        }
+    }
+
+    private void openDetail(Item item) {
+        currentItem = item;
+        itemInformationControllerProvider.get().setItem(item);
+        ingameControllerProvider.get().openItemInformation(item);
+    }
+
+    private void closeDetail() {
+        ingameControllerProvider.get().removeChildren(2);
+        currentItem = null;
     }
 
     @Override
