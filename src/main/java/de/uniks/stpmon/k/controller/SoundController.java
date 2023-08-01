@@ -37,6 +37,7 @@ public class SoundController extends Controller{
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        soundScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
