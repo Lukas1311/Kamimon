@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.encounter;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
+import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
@@ -27,6 +28,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -72,6 +74,8 @@ public class EncounterOverviewController extends Controller {
     public VBox actionFieldWrapperBox;
     @FXML
     public VBox wrappingVBox;
+    @FXML
+    public HBox contentBox;
 
     @Inject
     IResourceService resourceService;
@@ -91,11 +95,11 @@ public class EncounterOverviewController extends Controller {
     Provider<MonsterInformationController> monInfoProvider;
     @Inject
     Provider<InventoryController> inventoryControllerProvider;
+    @Inject
+    Provider<ItemInformationController> itemInformationControllerProvider;
 
     private final Pane blackPane = new Pane();
-
-    private Parent monInfoPane;
-    public Parent inventoryPane;
+    public Parent controller;
 
     @Inject
     public EncounterOverviewController() {
@@ -245,35 +249,45 @@ public class EncounterOverviewController extends Controller {
     }
 
     public void showLevelUp(Monster oldMon, Monster newMon) {
-        if (monInfoPane == null) {
+        if (controller == null) {
             MonsterInformationController monInfoController = monInfoProvider.get();
-            monInfoPane = monInfoController.render();
+            controller = monInfoController.render();
             monInfoController.loadLevelUp(oldMon, newMon);
-            actionFieldWrapperBox.getChildren().add(0, monInfoPane);
+            contentBox.getChildren().add(0, controller);
         }
     }
 
-    public void openInventory() {
-        if (inventoryPane == null) {
-            InventoryController inventoryController = inventoryControllerProvider.get();
-            inventoryPane = inventoryController.render();
-            actionFieldWrapperBox.getChildren().add(0, inventoryPane);
+    public void openController(String child) {
+        if (controller == null) {
+            switch (child) {
+                case "inventory" -> {
+                    InventoryController inventoryController = inventoryControllerProvider.get();
+                    controller = inventoryController.render();
+                }
+                case "itemInfo" -> {
+                    ItemInformationController itemInformationController = itemInformationControllerProvider.get();
+                    controller = itemInformationController.render();
+                }
+                default -> {
+                    return;
+                }
+            }
+            contentBox.getChildren().add(0, controller);
         }
     }
 
-    public void removeInventory() {
-        if (inventoryPane != null) {
-            actionFieldWrapperBox.getChildren().remove(0);
-            inventoryControllerProvider.get().destroy();
-            inventoryPane = null;
-        }
-    }
-
-    public void removeMonInfoIfShown() {
-        if (monInfoPane != null) {
-            actionFieldWrapperBox.getChildren().remove(0);
-            monInfoProvider.get().destroy();
-            monInfoPane = null;
+    public void removeController(String child) {
+        if (controller != null) {
+            contentBox.getChildren().remove(0);
+            switch (child) {
+                case "inventory" -> inventoryControllerProvider.get().destroy();
+                case "itemInfo" -> itemInformationControllerProvider.get().destroy();
+                case "monInfo" -> monInfoProvider.get().destroy();
+                default -> {
+                    return;
+                }
+            }
+            controller = null;
         }
     }
 

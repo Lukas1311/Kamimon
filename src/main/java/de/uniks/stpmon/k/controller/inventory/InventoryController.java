@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.ToastedController;
+import de.uniks.stpmon.k.controller.action.ActionFieldMainMenuController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
@@ -37,6 +39,8 @@ public class InventoryController extends ToastedController {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<ItemInformationController> itemInformationControllerProvider;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @FXML
     public AnchorPane inventoryPane;
@@ -121,7 +125,12 @@ public class InventoryController extends ToastedController {
     private void openDetail(Item item) {
         currentItem = item;
         itemInformationControllerProvider.get().setItem(item);
-        ingameControllerProvider.get().openItemInformation(item);
+        if (isInEncounter) {
+            encounterOverviewControllerProvider.get().controller = null;
+            encounterOverviewControllerProvider.get().openController("itemInfo");
+        } else {
+            ingameControllerProvider.get().openItemInformation(item);
+        }
     }
 
     private void closeDetail() {

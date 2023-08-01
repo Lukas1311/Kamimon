@@ -101,7 +101,7 @@ public class BattleLogService {
     }
 
     private void showActions() {
-        encounterOverviewControllerProvider.get().removeMonInfoIfShown();
+        encounterOverviewControllerProvider.get().removeController("monInfo");
         textBox.getChildren().clear();
         //check if more actions need to be handled
         if (!opponentUpdates.isEmpty()) {
