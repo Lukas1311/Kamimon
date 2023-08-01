@@ -28,14 +28,16 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
+import java.time.Duration;
 
 import static java.util.function.Predicate.not;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+
 
 class AppTest extends ApplicationTest {
 
@@ -520,8 +522,13 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackImage");
         waitForFxEvents();
         clickOn("#backpackMenuLabel_2");
-        waitForFxEvents();
-        verifyThat("#monDexPane", Node::isVisible);
+        assertTimeout(Duration.ofSeconds(5), () -> {
+            // Look up the node by selector query
+            Node monDexPane = lookup("#monDexPane").query();
+
+            // Verify that the monDexPane is visible
+            verifyThat(monDexPane, Node::isVisible);
+        });
 
         clickOn("#type0Label");
         verifyThat("#monDexDetailBox", Node::isVisible);
