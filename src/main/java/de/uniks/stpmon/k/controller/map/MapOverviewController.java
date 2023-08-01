@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -14,6 +15,7 @@ import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -86,6 +88,9 @@ public class MapOverviewController extends ToastedController {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     TeleportAnimation teleportAnimation;
+    @Inject
+    InputHandler inputHandler;
+
 
     private Shape activeShape;
     private Region currentRegion;
@@ -148,10 +153,11 @@ public class MapOverviewController extends ToastedController {
     private void fastTravel(String area) {
         // close the map before because it would be somehow still open after travel
         ingameControllerProvider.get().closeMap();
-        // teleportAnimation.playFastTravelAnimation();
-        // teleportAnimation.finishFastTravelAnimation();
-        // return;
-        subscribe(trainerService.fastTravel(area));
+        onDestroy(inputHandler.addReleasedKeyFilter(Event::consume));
+        onDestroy(inputHandler.addPressedKeyFilter(Event::consume));
+        teleportAnimation.playFastTravelAnimation(
+            () -> subscribe(trainerService.fastTravel(area))
+        );
     }
 
     @Override
