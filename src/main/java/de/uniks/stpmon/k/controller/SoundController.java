@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
@@ -23,6 +24,8 @@ public class SoundController extends Controller{
     public Slider music;
     @FXML
     public CheckBox nightMode;
+    @FXML
+    public Label value;
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
@@ -43,9 +46,14 @@ public class SoundController extends Controller{
         backToSettingButton.setOnAction(click -> backToSettings());
 
         music.setValue(settingsService.getSoundValue());
+        value.setText(String.valueOf((int) music.getValue()));
         //save the value with preferences
         listen(music.valueProperty(),
-                (observable, oldValue, newValue) -> settingsService.setSoundValue(newValue.floatValue()));
+                (observable, oldValue, newValue) -> {
+                    settingsService.setSoundValue(newValue.floatValue());
+
+                    value.setText(String.valueOf((int) music.getValue()));
+                });
 
         //night mode
         nightMode.setSelected(settingsService.getNightEnabled());
