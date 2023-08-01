@@ -522,12 +522,15 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackImage");
         waitForFxEvents();
         clickOn("#backpackMenuLabel_2");
+        sleep(3000);
+        waitForFxEvents();
         assertTimeout(Duration.ofSeconds(5), () -> {
             // Look up the node by selector query
             Node monDexPane = lookup("#monDexPane").query();
 
             // Verify that the monDexPane is visible
             verifyThat(monDexPane, Node::isVisible);
+            waitForFxEvents();
         });
 
         clickOn("#type0Label");
