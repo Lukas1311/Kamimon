@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:id="monDexPane" xmlns="http://javafx.com/javafx/javafx/20"
+<AnchorPane fx:id="monDexPain" xmlns="http://javafx.com/javafx/javafx/20"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="de.uniks.stpmon.k.controller.mondex.MonDexController"
             prefHeight="400.0" prefWidth="210.0" minWidth="210.0" maxWidth="210.0">

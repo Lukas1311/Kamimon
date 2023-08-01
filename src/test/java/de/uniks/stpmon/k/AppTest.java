@@ -526,10 +526,10 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
         assertTimeout(Duration.ofSeconds(5), () -> {
             // Look up the node by selector query
-            Node monDexPane = lookup("#monDexPane").query();
+            Node monDexPain = lookup("#monDexPain").query();
 
-            // Verify that the monDexPane is visible
-            verifyThat(monDexPane, Node::isVisible);
+            // Verify that the monDexPain is visible
+            verifyThat(monDexPain, Node::isVisible);
             waitForFxEvents();
         });
 

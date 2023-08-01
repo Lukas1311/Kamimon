@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
 public class MonDexController extends Controller {
 
     @FXML
-    public AnchorPane monDexPane;
+    public AnchorPane monDexPain;
     @FXML
     public ListView<MonsterTypeDto> dexList;
 
@@ -51,7 +51,7 @@ public class MonDexController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadBgImage(monDexPane, getResourcePath() + "monDexBox.png");
+        loadBgImage(monDexPain, getResourcePath() + "monDexBox.png");
 
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {
