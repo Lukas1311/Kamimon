@@ -91,6 +91,9 @@ public class MonDexController extends Controller {
     }
 
     public void setMonDexImage(MonsterTypeDto monster, boolean isEncountered, ImageView monImage) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
         subscribe(resourceServiceProvider.get().getMonsterImage(String.valueOf(monster.id())), bufferedImage -> {
             BufferedImage bufImg = bufferedImage;
             if (!isEncountered) {
