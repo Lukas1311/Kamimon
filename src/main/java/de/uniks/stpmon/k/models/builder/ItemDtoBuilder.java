@@ -21,6 +21,9 @@ public class ItemDtoBuilder {
     private String description = "";
     private ItemUse itemUse = null;
 
+    private ItemDtoBuilder() {
+    }
+
     public ItemDtoBuilder setId(int id) {
         this.id = id;
         return this;

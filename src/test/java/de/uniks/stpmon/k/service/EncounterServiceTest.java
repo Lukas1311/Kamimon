@@ -2,8 +2,12 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.Encounter;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
+import de.uniks.stpmon.k.models.builder.ResultBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -73,11 +77,10 @@ class EncounterServiceTest {
                         0,
                         "targetId"
                 ),
-                List.of(new Result(
-                        "ability-success",
-                        0,
-                        "effective"
-                )),
+                List.of(ResultBuilder.builder("ability-success")
+                        .setAbility(0)
+                        .setEffectiveness("effective")
+                        .create()),
                 0);
         Opponent opponent2 = new Opponent(
                 "1",
@@ -90,11 +93,7 @@ class EncounterServiceTest {
                         "change-monster",
                         "monster3Id"
                 ),
-                List.of(new Result(
-                        "monster-changed",
-                        null,
-                        null
-                )),
+                List.of(ResultBuilder.builder("monster-changed").create()),
                 1);
         return List.of(opponent1, opponent2);
     }
@@ -177,7 +176,10 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponents.get(0).isNPC());
         assertEquals("monster1Id", returnOpponents.get(0).monster());
         assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponents.get(0).move());
-        assertEquals(new Result("ability-success", 0, "effective"), returnOpponents.get(0).results().get(0));
+        assertEquals(ResultBuilder.builder("ability-success")
+                .setAbility(0)
+                .setEffectiveness("effective")
+                .create(), returnOpponents.get(0).results().get(0));
         assertEquals(0, returnOpponents.get(0).coins());
 
         //check mock
@@ -211,7 +213,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponents.get(0).isNPC());
         assertEquals("monster2Id", returnOpponents.get(0).monster());
         assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponents.get(0).move());
-        assertEquals(new Result("monster-changed", null, null), returnOpponents.get(0).results().get(0));
+        assertEquals(ResultBuilder.builder("monster-changed").create(), returnOpponents.get(0).results().get(0));
         assertEquals(1, returnOpponents.get(0).coins());
 
         //check mock
@@ -244,7 +246,10 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponent.isNPC());
         assertEquals("monster1Id", returnOpponent.monster());
         assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.move());
-        assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.results().get(0));
+        assertEquals(ResultBuilder.builder("ability-success")
+                .setAbility(0)
+                .setEffectiveness("effective")
+                .create(), returnOpponent.results().get(0));
         assertEquals(0, returnOpponent.coins());
 
         // check mock
@@ -293,7 +298,10 @@ class EncounterServiceTest {
         assertEquals(false, returnOpponent.isNPC());
         assertEquals("monster1Id", returnOpponent.monster());
         assertEquals(new AbilityMove("ability", 0, "targetId"), returnOpponent.move());
-        assertEquals(new Result("ability-success", 0, "effective"), returnOpponent.results().get(0));
+        assertEquals(ResultBuilder.builder("ability-success")
+                .setAbility(0)
+                .setEffectiveness("effective")
+                .create(), returnOpponent.results().get(0));
         assertEquals(0, returnOpponent.coins());
 
         //check mock
@@ -331,7 +339,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponent.isNPC());
         assertEquals("monster2Id", returnOpponent.monster());
         assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.move());
-        assertEquals(new Result("monster-changed", null, null), returnOpponent.results().get(0));
+        assertEquals(ResultBuilder.builder("monster-changed").create(), returnOpponent.results().get(0));
         assertEquals(1, returnOpponent.coins());
 
         //check mock
@@ -365,7 +373,7 @@ class EncounterServiceTest {
         assertEquals(true, returnOpponent.isNPC());
         assertEquals("monster2Id", returnOpponent.monster());
         assertEquals(new ChangeMonsterMove("change-monster", "monster3Id"), returnOpponent.move());
-        assertEquals(new Result("monster-changed", null, null), returnOpponent.results().get(0));
+        assertEquals(ResultBuilder.builder("monster-changed").create(), returnOpponent.results().get(0));
         assertEquals(1, returnOpponent.coins());
 
         //check mock

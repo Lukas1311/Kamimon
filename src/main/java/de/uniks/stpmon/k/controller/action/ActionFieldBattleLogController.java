@@ -73,10 +73,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot),
                     opp -> battleLogService.queueUpdate(slot, opp));
-            if (!slot.enemy()) {
-                subscribe(sessionService.listenMonster(slot),
-                        mon -> battleLogService.setMonster(slot, mon));
-            }
+            subscribe(sessionService.listenMonster(slot),
+                    mon -> battleLogService.setMonster(slot, mon));
         }
         onDestroy(battleLogService::clearService);
     }
