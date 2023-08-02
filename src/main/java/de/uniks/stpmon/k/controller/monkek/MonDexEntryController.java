@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller.mondex;
+package de.uniks.stpmon.k.controller.monkek;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
