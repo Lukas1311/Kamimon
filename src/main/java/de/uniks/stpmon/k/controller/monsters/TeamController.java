@@ -37,15 +37,6 @@ public class TeamController extends Controller {
     }
 
     @Override
-    public void init() {
-        super.init();
-
-        subscribe(monsterService.getTeam(), this::updateListContent);
-
-        updateStatus();
-    }
-
-    @Override
     public Parent render() {
         Parent render = super.render();
         loadImage(arrowImageView, "arrow_up.png");
@@ -53,8 +44,7 @@ public class TeamController extends Controller {
 
 
         monsterInformation.setVisible(false);
-        // Does not block, because the cache is already initialized
-        updateListContent(monsterService.getTeam().blockingFirst());
+        subscribe(monsterService.getTeam(), this::updateListContent);
         return render;
     }
 
