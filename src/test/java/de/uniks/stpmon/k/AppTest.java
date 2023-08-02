@@ -526,7 +526,7 @@ class AppTest extends ApplicationTest {
 
         interact(() -> {
             clickOn("#backpackMenuLabel_2");
-            sleep(3000);
+            waitForFxEvents();
             
             AnchorPane monDexPain = lookup("#monDexPain").query();
             assertTrue(monDexPain != null);
@@ -535,7 +535,6 @@ class AppTest extends ApplicationTest {
         
         //assertTrue(monDexPain.isVisible());
         // Wait for the UI thread to finish executing Platform.runLater()
-        waitForFxEvents();
         waitForFxEvents();
         //Node monDexPain = lookup("#monDexPain").query();
         //verifyThat(monDexPain, Node::isVisible);
