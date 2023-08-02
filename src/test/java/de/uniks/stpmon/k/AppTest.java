@@ -524,6 +524,8 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
         clickOn("#backpackMenuLabel_2");
         sleep(3000);
+        Stage stage = app.getStage();
+        stage.requestFocus();
         waitForFxEvents();
         Node monDexPain = lookup("#monDexPain").query();
         //verifyThat(monDexPain, Node::isVisible);
