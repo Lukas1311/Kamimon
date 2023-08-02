@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
@@ -257,30 +258,35 @@ public class EncounterOverviewController extends Controller {
         }
     }
 
-    public void openController(String child) {
+    public void openController(String child, Item item) {
         if (controller == null) {
-            switch (child) {
-                case "inventory" -> {
-                    InventoryController inventoryController = inventoryControllerProvider.get();
-                    controller = inventoryController.render();
-                }
-                case "itemInfo" -> {
-                    ItemInformationController itemInformationController = itemInformationControllerProvider.get();
-                    controller = itemInformationController.render();
-                }
-                default -> {
-                    return;
-                }
+            if (child.equals("inventory")) {
+                InventoryController inventoryController = inventoryControllerProvider.get();
+                controller = inventoryController.render();
+            } else {
+                return;
             }
-            contentBox.getChildren().add(0, controller);
+        } else {
+            if (child.equals("itemInfo")) {
+                if (contentBox.getChildren().size() > 1) {
+                    contentBox.getChildren().remove(0);
+                }
+                ItemInformationController itemInformationController = itemInformationControllerProvider.get();
+                itemInformationController.setItem(item);
+                controller = itemInformationController.render();
+            }
         }
+        contentBox.getChildren().add(0, controller);
     }
 
     public void removeController(String child) {
         if (controller != null) {
-            contentBox.getChildren().remove(0);
+            contentBox.getChildren().clear();
             switch (child) {
-                case "inventory" -> inventoryControllerProvider.get().destroy();
+                case "inventory" -> {
+                    inventoryControllerProvider.get().destroy();
+                    itemInformationControllerProvider.get().destroy();
+                }
                 case "itemInfo" -> itemInformationControllerProvider.get().destroy();
                 case "monInfo" -> monInfoProvider.get().destroy();
                 default -> {

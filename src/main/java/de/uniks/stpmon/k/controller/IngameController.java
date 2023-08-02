@@ -403,6 +403,8 @@ public class IngameController extends PortalController {
         controller.init();
         tabStack.push(controller);
 
+        controller.setItem(item);
+
         Parent itemInfo = controller.render();
         children.add(0, itemInfo);
     }

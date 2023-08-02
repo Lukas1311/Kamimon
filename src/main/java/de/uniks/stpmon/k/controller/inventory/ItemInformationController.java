@@ -16,9 +16,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 
-@Singleton
 public class ItemInformationController extends Controller {
     @FXML
     public AnchorPane fullBox;
@@ -83,5 +81,17 @@ public class ItemInformationController extends Controller {
     @Override
     public String getResourcePath() {
         return "inventory/";
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        item = null;
+        fullBox = null;
+        itemView = null;
+        itemInformation = null;
+        amountText = null;
+        nameLabel = null;
+        useButton = null;
     }
 }

@@ -87,7 +87,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         if (encounterOverviewProvider.get().controller == null) {
             encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
             inventoryControllerProvider.get().isInEncounter = true;
-            encounterOverviewProvider.get().openController("inventory");
+            encounterOverviewProvider.get().openController("inventory", null);
         } else {
             inventoryControllerProvider.get().isInEncounter = false;
             encounterOverviewProvider.get().removeController("inventory");
