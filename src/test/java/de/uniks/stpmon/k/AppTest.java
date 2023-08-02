@@ -528,7 +528,7 @@ class AppTest extends ApplicationTest {
             clickOn("#backpackMenuLabel_2");
             sleep(3000);
             
-            AnchorPane monDexPain = lookup("#monDexPane").query();
+            AnchorPane monDexPain = lookup("#monDexPain").query();
             assertTrue(monDexPain != null);
             verifyThat(monDexPain, Node::isVisible);
         });
