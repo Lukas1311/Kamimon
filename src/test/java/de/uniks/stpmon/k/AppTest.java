@@ -523,9 +523,11 @@ class AppTest extends ApplicationTest {
         //test monDex
         clickOn("#backpackImage");
         waitForFxEvents();
-        clickOn("#backpackMenuLabel_2");
-        sleep(3000);
+
         interact(() -> {
+            clickOn("#backpackMenuLabel_2");
+            sleep(3000);
+            
             AnchorPane monDexPain = lookup("#monDexPane").query();
             assertTrue(monDexPain != null);
             verifyThat(monDexPain, Node::isVisible);
