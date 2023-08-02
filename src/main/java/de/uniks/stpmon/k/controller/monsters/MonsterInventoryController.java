@@ -63,7 +63,7 @@ public class MonsterInventoryController extends Controller {
         subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
         subscribe(monsterService.getTeam(), monsters -> {
             showTeamMonster(monsters);
-            showMonsterList(monsterService.getMonsters().blockingFirst());
+            showMonsterList(monsterService.getMonsterList());
         });
         subscribe(monsterService.getMonsters(), this::showMonsterList);
         loadBgImage(monBoxMenuHolder, "MonBox_v6.png");
@@ -99,7 +99,7 @@ public class MonsterInventoryController extends Controller {
 
     private void showMonsterList(List<Monster> monsters) {
         List<Monster> currentMonsters = new ArrayList<>(monsters);
-        List<Monster> teamMonsters = monsterService.getTeam().blockingFirst();
+        List<Monster> teamMonsters = monsterService.getTeamList();
         currentMonsters.removeAll(teamMonsters);
         monStorage.getChildren().clear();
         monsterIndexStorage = 0;

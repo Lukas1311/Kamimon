@@ -146,7 +146,7 @@ public class CacheManager implements ILifecycleService {
      * @return A cache for abilities
      */
     public AbilityCache abilityCache() {
-        if (abilityCache.getStatus() == ICache.Status.UNINITIALIZED) {
+        if (abilityCache.isUninitialized()) {
             abilityCache.init();
         }
         return abilityCache;
@@ -159,7 +159,7 @@ public class CacheManager implements ILifecycleService {
      * @return A cache for monster types
      */
     public MonsterTypeCache monsterTypeCache() {
-        if (monsterTypeCache.getStatus() == ICache.Status.UNINITIALIZED) {
+        if (monsterTypeCache.isUninitialized()) {
             monsterTypeCache.init();
         }
         return monsterTypeCache;
@@ -172,7 +172,7 @@ public class CacheManager implements ILifecycleService {
      * @return A cache for item types
      */
     public ItemTypeCache itemTypeCache() {
-        if (itemTypeCache.getStatus() == ICache.Status.UNINITIALIZED) {
+        if (itemTypeCache.isUninitialized()) {
             itemTypeCache.init();
         }
         return itemTypeCache;
@@ -186,7 +186,7 @@ public class CacheManager implements ILifecycleService {
      * @return A cache for character sets
      */
     public CharacterSetCache characterSetCache() {
-        if (characterSetCache.getStatus() == ICache.Status.UNINITIALIZED) {
+        if (characterSetCache.isUninitialized()) {
             characterSetCache.init();
         }
         return characterSetCache;

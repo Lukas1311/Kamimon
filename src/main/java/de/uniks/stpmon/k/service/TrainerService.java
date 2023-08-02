@@ -6,7 +6,6 @@ import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.rest.RegionApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
-import de.uniks.stpmon.k.service.storage.cache.ICache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
 import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
@@ -116,7 +115,7 @@ public class TrainerService {
         if (distance == 0) {
             return Optional.empty();
         }
-        if (areaCache == null || areaCache.getStatus() == ICache.Status.DESTROYED) {
+        if (areaCache == null || areaCache.isDestroyed()) {
             areaCache = cacheManager.trainerAreaCache();
         }
         Trainer trainer = trainerStorage.getTrainer();

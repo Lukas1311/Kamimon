@@ -37,14 +37,19 @@ public class TeamController extends Controller {
     }
 
     @Override
+    public void init() {
+        super.init();
+        subscribe(monsterService.getTeam(), this::updateListContent);
+    }
+
+    @Override
     public Parent render() {
         Parent render = super.render();
         loadImage(arrowImageView, "arrow_up.png");
         loadBgImage(monsterListVBox, "TeamBox.png");
 
-
         monsterInformation.setVisible(false);
-        subscribe(monsterService.getTeam(), this::updateListContent);
+        updateListContent(monsterService.getTeamList());
         return render;
     }
 
