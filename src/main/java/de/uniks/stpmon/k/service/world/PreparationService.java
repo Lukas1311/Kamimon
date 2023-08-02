@@ -178,8 +178,9 @@ public class PreparationService {
             AffineTransform transform = new AffineTransform();
             transform.translate(prop.x() * 16 - prop.width() * 8, prop.y() * 16 + prop.height() * 16);
             transform.shear(-1f, 0);
-            //transform.scale(1, 1f);
-            transform.translate(prop.width() * 8, -prop.height() * 16);
+            transform.translate(prop.width() * 16, 0);
+            transform.scale(1, 1);
+            transform.translate(-prop.width() * 8, -prop.height() * 16);
             g.setTransform(transform);
             g.drawImage(prop.image(), 0, 0, null);
         }
