@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.controller.Viewable;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.utils.MeshUtils;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Material;
@@ -26,7 +27,11 @@ public abstract class WorldViewable extends Viewable {
     @SuppressWarnings("unused")
     public abstract Node render();
 
-    public void updateShadow(float factor) {
+    public void updateShadow(ShadowTransform transform) {
+    }
+
+    protected void setScaledMaterial(MeshView mesh, BufferedImage image) {
+        mesh.setMaterial(createMaterial(scaledImageFX(image, effectContext.getTextureScale())));
     }
 
     protected Material createMaterial(Image image) {

@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import de.uniks.stpmon.k.service.world.PreparationService;
 import de.uniks.stpmon.k.utils.MeshUtils;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -12,8 +13,6 @@ import javafx.scene.shape.MeshView;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
-
-import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
 
 @Singleton
 public class ShadowView extends WorldViewable {
@@ -35,8 +34,7 @@ public class ShadowView extends WorldViewable {
             if (shadowImage.isEmpty()) {
                 return;
             }
-            shadow.setMaterial(createMaterial(scaledImageFX(shadowImage.get(),
-                    effectContext.getTextureScale())));
+            setScaledMaterial(shadow, shadowImage.get());
         });
         if (imageCache.isEmpty()) {
             return new Group();
@@ -47,14 +45,14 @@ public class ShadowView extends WorldViewable {
         Bounds bounds = shadow.getBoundsInLocal();
         shadow.setTranslateX(bounds.getWidth() / 2);
         shadow.setTranslateZ(-bounds.getDepth() / 2 + 6);
-        shadow.setTranslateY(-0.35);
+        shadow.setTranslateY(-0.45);
         return shadow;
     }
 
     @Override
-    public void updateShadow(float factor) {
-        repository.shadowImage().setValue(
-                preparationService.createShadows(factor));
+    public void updateShadow(ShadowTransform transform) {
+        BufferedImage shadows = preparationService.createShadows(transform);
+        repository.shadowImage().setValue(shadows);
     }
 
     @Override

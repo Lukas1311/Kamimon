@@ -14,6 +14,7 @@ import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
 import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.world.PropMap;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import de.uniks.stpmon.k.world.TileMap;
 import io.reactivex.rxjava3.core.Completable;
 import retrofit2.HttpException;
@@ -163,25 +164,25 @@ public class PreparationService {
                     worldRepository.floorImage().setValue(floorImage);
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
-                    worldRepository.shadowImage().setValue(createShadows(0.5f));
+                    worldRepository.shadowImage().setValue(createShadows(ShadowTransform.EMPTY));
                     return Completable.complete();
                 });
     }
 
-    public BufferedImage createShadows(float factor) {
+    public BufferedImage createShadows(ShadowTransform transform) {
         List<TileProp> props = worldRepository.props().asOptional().orElse(List.of());
         BufferedImage originalImage = worldRepository.floorImage().asNullable();
         BufferedImage shadowImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = shadowImage.createGraphics();
         for (TileProp prop : props) {
-            AffineTransform transform = new AffineTransform();
-            transform.translate(prop.x() * 16 - prop.width() * 8, prop.y() * 16 + prop.height() * 16);
-            transform.shear(-1f, 0);
-            transform.translate(prop.width() * 16, 0);
-            transform.scale(1, 1);
-            transform.translate(-prop.width() * 8, -prop.height() * 16);
-            g.setTransform(transform);
+            AffineTransform affTrans = new AffineTransform();
+            affTrans.translate(prop.x() * 16 - prop.width() * 8, prop.y() * 16 + prop.height() * 16);
+            affTrans.shear(transform.shearX(), transform.shearY());
+            affTrans.translate(prop.width() * 16, 0);
+            affTrans.scale(transform.scaleX(), transform.scaleY());
+            affTrans.translate(-prop.width() * 8, -prop.height() * 16);
+            g.setTransform(affTrans);
             g.drawImage(prop.image(), 0, 0, null);
         }
         g.setTransform(new AffineTransform());

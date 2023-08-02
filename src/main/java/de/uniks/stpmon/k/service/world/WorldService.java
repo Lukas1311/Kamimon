@@ -2,7 +2,10 @@ package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.world.CharacterSet;
+import de.uniks.stpmon.k.world.ShadowTransform;
+import io.reactivex.rxjava3.core.Observable;
 import javafx.animation.Interpolator;
+import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -60,6 +63,15 @@ public class WorldService {
         return character.orElseGet(this::getCharacterPlaceholder);
     }
 
+    public boolean isCharacterLoaded(String name) {
+        return textureSetService.getCharacter(name)
+                .isPresent();
+    }
+
+    public Observable<Optional<CharacterSet>> getCharacterLazy(String id) {
+        return textureSetService.getCharacterLazy(id);
+    }
+
     public CharacterSet getCharacterPlaceholder() {
         if (characterPlaceholder == null) {
             BufferedImage image;
@@ -71,5 +83,14 @@ public class WorldService {
             characterPlaceholder = new CharacterSet("placeholder", image);
         }
         return characterPlaceholder;
+    }
+
+    public ShadowTransform getShadowTransform(LocalTime time) {
+        float factor = getDayFactor(time);
+        return ShadowTransform.EMPTY;
+    }
+
+    public Color getWorldColor(LocalTime time) {
+        return Color.WHITE;
     }
 }

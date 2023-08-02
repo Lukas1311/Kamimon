@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -87,12 +88,12 @@ public class NPCCollectiveView extends WorldViewable {
     }
 
     @Override
-    public void updateShadow(float factor) {
+    public void updateShadow(ShadowTransform transform) {
         for (Node view : npcViews.values()) {
             if (!(view.getUserData() instanceof NPCView npcView)) {
                 continue;
             }
-            npcView.updateShadow(factor);
+            npcView.updateShadow(transform);
         }
     }
 

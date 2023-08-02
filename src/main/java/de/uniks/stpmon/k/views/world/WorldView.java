@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -115,10 +116,10 @@ public class WorldView extends Viewable {
         propView.init();
         npcCollectiveView.init();
         subscribe(clockService.onTime(), (time) -> {
-            float dayFactor = worldService.getDayFactor(time);
-            characterView.updateShadow(dayFactor);
-            shadowView.updateShadow(dayFactor);
-            npcCollectiveView.updateShadow(dayFactor);
+            ShadowTransform transform = worldService.getShadowTransform(time);
+            characterView.updateShadow(transform);
+            shadowView.updateShadow(transform);
+            npcCollectiveView.updateShadow(transform);
         });
     }
 
