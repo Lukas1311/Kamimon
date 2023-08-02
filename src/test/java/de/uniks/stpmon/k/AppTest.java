@@ -18,6 +18,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -524,12 +525,19 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
         clickOn("#backpackMenuLabel_2");
         sleep(3000);
-        Stage stage = app.getStage();
-        stage.requestFocus();
+        interact(() -> {
+            AnchorPane monDexPain = lookup("#monDexPane").query();
+            assertTrue(monDexPain != null);
+            verifyThat(monDexPain, Node::isVisible);
+        });
+        
+        //assertTrue(monDexPain.isVisible());
+        // Wait for the UI thread to finish executing Platform.runLater()
         waitForFxEvents();
-        Node monDexPain = lookup("#monDexPain").query();
+        waitForFxEvents();
+        //Node monDexPain = lookup("#monDexPain").query();
         //verifyThat(monDexPain, Node::isVisible);
-        assertTrue(monDexPain.isVisible());
+        
         waitForFxEvents();
 
         clickOn("#type0Label");
