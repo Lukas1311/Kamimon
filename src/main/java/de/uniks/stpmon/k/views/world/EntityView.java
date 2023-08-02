@@ -108,7 +108,7 @@ public abstract class EntityView extends WorldViewable {
         Trainer trainer = trainerProvider.getTrainer();
         entityGroup.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
         entityGroup.setTranslateZ((-trainer.y() - WorldView.ENTITY_OFFSET_Y) * WorldView.WORLD_UNIT);
-        entityGroup.setTranslateY(-0.35);
+        entityGroup.setTranslateY(-0.7);
         startIdleAnimation(trainer);
         return entityGroup;
     }
