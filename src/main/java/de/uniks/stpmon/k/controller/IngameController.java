@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.map.MapOverviewController;
 import de.uniks.stpmon.k.controller.map.MinimapController;
-import de.uniks.stpmon.k.controller.monkek.MonDexDetailController;
+import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;

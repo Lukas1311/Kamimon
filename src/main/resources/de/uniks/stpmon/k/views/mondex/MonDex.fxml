@@ -3,8 +3,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane fx:id="monDexPain" xmlns="http://javafx.com/javafx/javafx/20"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="de.uniks.stpmon.k.controller.monkek.MonDexController"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="de.uniks.stpmon.k.controller.mondex.MonDexController"
             prefHeight="400.0" prefWidth="210.0" minWidth="210.0" maxWidth="210.0">
     <ListView fx:id="dexList" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0"
               prefHeight="386.0" prefWidth="196.0">

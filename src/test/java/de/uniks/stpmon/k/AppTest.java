@@ -29,8 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.time.Duration;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -523,22 +521,19 @@ class AppTest extends ApplicationTest {
         //test monDex
         clickOn("#backpackImage");
         waitForFxEvents();
-
-        interact(() -> {
-            clickOn("#backpackMenuLabel_2");
-            waitForFxEvents();
-            
-            AnchorPane monDexPain = lookup("#monDexPain").query();
-            assertTrue(monDexPain != null);
-            verifyThat(monDexPain, Node::isVisible);
-        });
-        
-        //assertTrue(monDexPain.isVisible());
-        // Wait for the UI thread to finish executing Platform.runLater()
+        verifyThat("#backpackMenuListView", Node::isVisible);
         waitForFxEvents();
-        //Node monDexPain = lookup("#monDexPain").query();
-        //verifyThat(monDexPain, Node::isVisible);
-        
+        clickOn("#backpackMenuLabel_2");
+        waitForFxEvents();
+
+        AnchorPane monDexPain = lookup("#monDexPain").query();
+        assertNotNull(monDexPain);
+        waitForFxEvents();
+        assertTrue(monDexPain.isVisible());
+        waitForFxEvents();
+        verifyThat(monDexPain, Node::isVisible);
+        waitForFxEvents();
+
         waitForFxEvents();
 
         clickOn("#type0Label");
