@@ -65,7 +65,7 @@ public class InventoryController extends ToastedController {
     public Parent render() {
         final Parent parent = super.render();
 
-        if (isInEncounter) {
+        if (isInEncounter()) {
             loadBgImage(inventoryPane, "inventory/InventoryBox.png");
             inventoryPane.getChildren().remove(coinBox);
             AnchorPane.setBottomAnchor(itemListView, 8.0);
@@ -95,11 +95,12 @@ public class InventoryController extends ToastedController {
         super.destroy();
         itemInformationControllerProvider.get().setItem(null);
         itemListView.setItems(null);
-        coinView = null;
         inventoryPane = null;
         itemListView = null;
-        coinBox = null;
+        currentItem = null;
         coinAmount = null;
+        coinView = null;
+        coinBox = null;
     }
 
     private void setCoins() {
@@ -125,7 +126,7 @@ public class InventoryController extends ToastedController {
     private void openDetail(Item item) {
         currentItem = item;
         itemInformationControllerProvider.get().setItem(item);
-        if (isInEncounter) {
+        if (isInEncounter()) {
             encounterOverviewControllerProvider.get().openController("itemInfo", item);
         } else {
             ingameControllerProvider.get().openItemInformation(item);
@@ -141,5 +142,15 @@ public class InventoryController extends ToastedController {
     public String getResourcePath() {
         return "inventory/";
     }
+
+
+    public boolean isInEncounter() {
+        return isInEncounter;
+    }
+
+    public void setInEncounter(boolean inEncounter) {
+        isInEncounter = inEncounter;
+    }
+
 
 }

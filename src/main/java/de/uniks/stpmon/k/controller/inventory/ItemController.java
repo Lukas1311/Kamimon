@@ -21,8 +21,8 @@ public class ItemController extends Controller {
     @FXML
     public Text itemAmount;
 
-    private IResourceService resourceService;
-    private PresetService presetService;
+    private final IResourceService resourceService;
+    private final PresetService presetService;
 
     private Item item;
 
@@ -55,12 +55,10 @@ public class ItemController extends Controller {
     @Override
     public void destroy() {
         super.destroy();
-        item = null;
-        itemView = null;
-        itemName = null;
         itemAmount = null;
-        presetService = null;
-        resourceService = null;
+        itemName = null;
+        itemView = null;
+        item = null;
     }
 
     @Override

@@ -120,6 +120,7 @@ public class EncounterOverviewController extends Controller {
         if (actionFieldController != null) {
             actionFieldController.destroy();
         }
+        inventoryControllerProvider.get().setInEncounter(false);
         slotMonsters.clear();
     }
 
