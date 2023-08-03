@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
+import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
@@ -112,7 +113,9 @@ public class DummyConstants {
             0,
             0,
             null,
-            List.of(), Set.of(), Set.of("area_0","area_1","area_2")
+            List.of(),
+            Set.of(),
+            Set.of("area_0","area_1","area_2")
     );
     public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
             1, 1,
@@ -161,7 +164,9 @@ public class DummyConstants {
                             List.of()
                     )
             ),
-            List.of(),
+            List.of(
+                new Property("Spawn","","")
+            ),
             16, 16,
             List.of(
                     new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")
