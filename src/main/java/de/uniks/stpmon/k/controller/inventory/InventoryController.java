@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 public class InventoryController extends ToastedController {
 
     @Inject
-    TrainerService trainerService;
+    Provider<TrainerService> trainerServiceProvider;
     @Inject
     PresetService presetService;
     @Inject
@@ -103,8 +103,8 @@ public class InventoryController extends ToastedController {
     }
 
     private void setCoins() {
-        if (trainerService != null) {
-            subscribe(trainerService.onTrainer(), trainer ->
+        if (trainerServiceProvider != null) {
+            subscribe(trainerServiceProvider.get().onTrainer(), trainer ->
                     trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
         }
     }
