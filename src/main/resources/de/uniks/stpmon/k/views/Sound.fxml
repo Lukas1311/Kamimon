@@ -36,7 +36,7 @@
     </HBox>
     <HBox prefHeight="100.0" prefWidth="200.0">
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%music" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
             <Slider fx:id="music">
@@ -58,8 +58,11 @@
         </HBox>
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus" />
+        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%nightmode" />
+            <padding>
+                <Insets left="15.0" />
+            </padding>
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="228.0" HBox.hgrow="ALWAYS">
             <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="login-check-box" />

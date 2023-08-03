@@ -12,10 +12,14 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class SoundController extends Controller{
 
@@ -40,6 +44,10 @@ public class SoundController extends Controller{
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SettingsService settingsService;
+    @Inject
+    Preferences preferences;
+    @Inject
+    LoginController loginControllerProvider;
 
 
     @Inject
@@ -70,6 +78,21 @@ public class SoundController extends Controller{
         listen(nightMode.selectedProperty(),
                 (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue));
 
+        //GE & EN
+        boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
+        germanButton.setSelected(germanSelected);
+        englishButton.setSelected(!germanSelected);
+        germanButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setDe();
+            }
+        });
+        englishButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setEn();
+            }
+        });
+
         return parent;
     }
 
@@ -77,11 +100,19 @@ public class SoundController extends Controller{
         hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
     }
 
-    public void setDe(ActionEvent event) {
-
+    @FXML
+    public void setDe() {
+        setLanguage(Locale.GERMAN);
     }
 
-    public void setEn(ActionEvent event) {
-
+    @FXML
+    public void setEn() {
+        setLanguage(Locale.ENGLISH);
     }
+
+    private void setLanguage(Locale locale) {
+        preferences.put("locale", locale.toLanguageTag());
+        hybridControllerProvider.get().pushTab(SidebarTab.SOUND); //reloaded
+    }
+
 }
