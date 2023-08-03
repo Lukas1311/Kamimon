@@ -181,6 +181,8 @@ public class MapOverviewControllerTest extends ApplicationTest {
         clickOn("#fastTravelButton");
         verify(ingameMock).closeMap();
         verify(mapOverviewController.teleportAnimation).playFastTravelAnimation(any());
+
+        app.removeInputHandler(inputHandler);
     }
 
 }
