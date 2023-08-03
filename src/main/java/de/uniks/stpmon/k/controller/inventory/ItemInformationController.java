@@ -44,7 +44,7 @@ public class ItemInformationController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        loadBgImage(fullBox, "inventory/InventoryBox.png");
+        loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
 
         subscribe(presetService.getItem(item.type()), item -> {
             if (item.use() != null) {
