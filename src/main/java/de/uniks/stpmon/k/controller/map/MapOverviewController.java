@@ -179,7 +179,7 @@ public class MapOverviewController extends ToastedController {
             if (visitedAreaIds.contains(area._id())) {
                 if (area.map() != null) {
                     List<Property> properties = area.map().properties();
-                    if (!(properties == null)) {
+                    if (properties != null) {
                         for (Property prop : properties) {
                             if (prop.name().equals("Spawn")) {
                                 hasSpawn = true;
@@ -187,7 +187,7 @@ public class MapOverviewController extends ToastedController {
                             }
                         }
                     }
-                    visitedAreas.put(area.name(), new Pair<String,Boolean>(area._id(), hasSpawn));
+                    visitedAreas.put(area.name(), new Pair<String, Boolean>(area._id(), hasSpawn));
                 }
             }
         }
@@ -209,9 +209,10 @@ public class MapOverviewController extends ToastedController {
             boolean hasSpawn = false;
             String areaId = "";
             if (visited) {
-                // getValue returns the "right value" in this case the bool
+                // getValue() returns the "right" value of the pair (in this case the bool)
                 hasSpawn = visitedAreas.get(routeData.routeText().name()).getValue();
                 if (hasSpawn) {
+                    // getKey() returns the "left" value of the pair (in this case the string)
                     areaId = visitedAreas.get(routeData.routeText().name()).getKey();
                 }
             }
