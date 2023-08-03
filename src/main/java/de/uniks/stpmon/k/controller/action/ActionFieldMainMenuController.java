@@ -84,13 +84,13 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openInventory() {
-        if (encounterOverviewProvider.get().inventoryPane == null) {
+        if (encounterOverviewProvider.get().controller == null) {
             encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
-            inventoryControllerProvider.get().isInEncounter = true;
-            encounterOverviewProvider.get().openInventory();
+            inventoryControllerProvider.get().setInEncounter(true);
+            encounterOverviewProvider.get().openController("inventory", null);
         } else {
-            inventoryControllerProvider.get().isInEncounter = false;
-            encounterOverviewProvider.get().removeInventory();
+            inventoryControllerProvider.get().setInEncounter(false);
+            encounterOverviewProvider.get().removeController("inventory");
         }
     }
 

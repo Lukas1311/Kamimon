@@ -1,6 +1,8 @@
 package de.uniks.stpmon.k.controller.inventory;
 
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.ToastedController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
@@ -18,19 +20,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
 public class InventoryController extends ToastedController {
 
     @Inject
-    TrainerService trainerService;
+    Provider<TrainerService> trainerServiceProvider;
     @Inject
     PresetService presetService;
     @Inject
     IResourceService resourceService;
     @Inject
     ItemService itemService;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<ItemInformationController> itemInformationControllerProvider;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
     @FXML
     public AnchorPane inventoryPane;
@@ -46,6 +55,8 @@ public class InventoryController extends ToastedController {
 
     public boolean isInEncounter = false;
 
+    public Item currentItem;
+
     @Inject
     public InventoryController() {
     }
@@ -54,13 +65,13 @@ public class InventoryController extends ToastedController {
     public Parent render() {
         final Parent parent = super.render();
 
-        if (isInEncounter) {
+        if (isInEncounter()) {
             loadBgImage(inventoryPane, "inventory/InventoryBox.png");
             inventoryPane.getChildren().remove(coinBox);
-            AnchorPane.setBottomAnchor(itemListView, 3.5);
+            AnchorPane.setBottomAnchor(itemListView, 8.0);
         } else {
             loadBgImage(inventoryPane, "inventory/inv_coins.png");
-            AnchorPane.setBottomAnchor(itemListView, 32.0);
+            AnchorPane.setBottomAnchor(itemListView, 39.0);
         }
 
         loadImage(coinView, "inventory/coin.png");
@@ -71,7 +82,7 @@ public class InventoryController extends ToastedController {
             if (!items.isEmpty()) {
                 items.removeIf(item -> item.amount() == 0);
                 userItems.setAll(items);
-                itemListView.setCellFactory(param -> new ItemCell(resourceService, presetService));
+                itemListView.setCellFactory(param -> new ItemCell(this, resourceService, presetService));
                 itemListView.setItems(userItems);
             }
         });
@@ -82,24 +93,64 @@ public class InventoryController extends ToastedController {
     @Override
     public void destroy() {
         super.destroy();
+        itemInformationControllerProvider.get().setItem(null);
         itemListView.setItems(null);
-        coinView = null;
         inventoryPane = null;
         itemListView = null;
-        coinBox = null;
+        currentItem = null;
         coinAmount = null;
+        coinView = null;
+        coinBox = null;
     }
 
     private void setCoins() {
-        if (trainerService != null) {
-            subscribe(trainerService.onTrainer(), trainer ->
+        if (trainerServiceProvider != null) {
+            subscribe(trainerServiceProvider.get().onTrainer(), trainer ->
                     trainer.ifPresent(value -> coinAmount.setText(value.coins().toString())));
         }
+    }
+
+    public void triggerDetail(Item item) {
+        if (currentItem == null) {
+            openDetail(item);
+        } else {
+            if (currentItem == item) {
+                closeDetail();
+            } else {
+                closeDetail();
+                openDetail(item);
+            }
+        }
+    }
+
+    private void openDetail(Item item) {
+        currentItem = item;
+        itemInformationControllerProvider.get().setItem(item);
+        if (isInEncounter()) {
+            encounterOverviewControllerProvider.get().openController("itemInfo", item);
+        } else {
+            ingameControllerProvider.get().openItemInformation(item);
+        }
+    }
+
+    private void closeDetail() {
+        ingameControllerProvider.get().removeChildren(2);
+        currentItem = null;
     }
 
     @Override
     public String getResourcePath() {
         return "inventory/";
     }
+
+
+    public boolean isInEncounter() {
+        return isInEncounter;
+    }
+
+    public void setInEncounter(boolean inEncounter) {
+        isInEncounter = inEncounter;
+    }
+
 
 }
