@@ -24,7 +24,7 @@ public class ItemController extends Controller {
     private final IResourceService resourceService;
     private final PresetService presetService;
 
-    private final Item item;
+    private Item item;
 
     public ItemController(Item item, IResourceService resourceService, PresetService presetService) {
         this.item = item;
@@ -39,7 +39,7 @@ public class ItemController extends Controller {
         subscribe(resourceService.getItemImage(String.valueOf(item.type())), imageUrl ->
                 subscribe(presetService.getItem(item.type()), item1 -> {
                     //image
-                    Image itemImage = ImageUtils.scaledImageFX(imageUrl, 2.0);
+                    Image itemImage = ImageUtils.scaledImageFX(imageUrl, 3.0);
                     itemView.setImage(itemImage);
 
                     //text
@@ -50,6 +50,15 @@ public class ItemController extends Controller {
                     }
                 }));
         return parent;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        itemAmount = null;
+        itemName = null;
+        itemView = null;
+        item = null;
     }
 
     @Override

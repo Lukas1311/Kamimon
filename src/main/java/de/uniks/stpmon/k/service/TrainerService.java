@@ -40,10 +40,7 @@ public class TrainerService {
     }
 
     public Observable<Optional<Trainer>> onTrainer() {
-        if (trainerCache == null) {
-            trainerCache = cacheManager.trainerCache();
-        }
-        return trainerCache.listenValue(trainerStorage.getTrainer()._id());
+        return cacheManager.trainerCache().listenValue(trainerStorage.getTrainer()._id());
     }
 
     public Observable<Trainer> deleteMe() {
