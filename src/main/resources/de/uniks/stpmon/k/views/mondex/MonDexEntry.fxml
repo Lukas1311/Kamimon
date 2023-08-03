@@ -4,9 +4,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml" stylesheets="@../css/ingameStyle.css"
-            fx:controller="de.uniks.stpmon.k.controller.monDex.MonDexEntryController"
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/ingameStyle.css"
+            fx:controller="de.uniks.stpmon.k.controller.mondex.MonDexEntryController"
             prefHeight="32.0" prefWidth="100.0">
     <styleClass>
         <String fx:value="ingame"/>

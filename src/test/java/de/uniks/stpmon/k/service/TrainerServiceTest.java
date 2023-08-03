@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,13 +36,12 @@ public class TrainerServiceTest {
     @InjectMocks
     TrainerService trainerService;
 
+    Trainer trainer = DummyConstants.TRAINER;
+
     @Test
     public void getMe() {
-        Trainer trainer = DummyConstants.TRAINER;
         when(trainerStorage.getTrainer()).thenReturn(trainer);
-
         Trainer test = trainerService.getMe();
-
         assertEquals(trainer, test);
     }
 
@@ -53,10 +53,8 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //test when oldTrainer is not null
-        Trainer trainer = TrainerBuilder.builder().setId("1").setRegion("0").create();
         when(trainerStorage.getTrainer()).thenReturn(trainer);
-
-        when(regionApiService.deleteTrainer("0", "1")).thenReturn(Observable.just(trainer));
+        when(regionApiService.deleteTrainer(anyString(), anyString())).thenReturn(Observable.just(trainer));
 
         //action
         Observable<Trainer> deletedTrainer = trainerService.deleteMe();
@@ -65,7 +63,7 @@ public class TrainerServiceTest {
         assertEquals(trainer, deletedTrainer.blockingFirst());
 
         //check mocks
-        verify(regionApiService).deleteTrainer("0", "1");
+        verify(regionApiService).deleteTrainer("region_0", "0");
     }
 
     @Test
@@ -76,14 +74,17 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up trainer which will be updated
-        Trainer trainer = TrainerBuilder.builder().setId("1").setRegion("0").create();
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         //define mock
         final ArgumentCaptor<UpdateTrainerDto> captor = ArgumentCaptor.forClass(UpdateTrainerDto.class);
-        when(regionApiService.updateTrainer(ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), captor.capture()))
-                .thenReturn(Observable.just(TrainerBuilder.builder().setId("1").setName("Bob").create()
-                ));
+        when(regionApiService.updateTrainer(
+            ArgumentMatchers.anyString(),
+            ArgumentMatchers.anyString(),
+            captor.capture()
+        )).thenReturn(
+            Observable.just(TrainerBuilder.builder().setId("1").setName("Bob").create()
+        ));
 
         //action
         final Trainer newTrainer = trainerService.setTrainerName("Bob").blockingFirst();
@@ -92,7 +93,7 @@ public class TrainerServiceTest {
         assertEquals("Bob", newTrainer.name());
 
         //check mocks
-        verify(regionApiService).updateTrainer("0", "1", captor.getValue());
+        verify(regionApiService).updateTrainer("region_0", "0", captor.getValue());
     }
 
     @Test
@@ -103,7 +104,6 @@ public class TrainerServiceTest {
         assertTrue(nullUser.isEmpty().blockingGet());
 
         //setting up trainer which will be updated
-        Trainer trainer = TrainerBuilder.builder().setId("1").setRegion("0").create();
         when(trainerStorage.getTrainer()).thenReturn(trainer);
 
         //define mock
@@ -123,7 +123,7 @@ public class TrainerServiceTest {
         assertEquals("101", newTrainer.image());
 
         //check mocks
-        verify(regionApiService).updateTrainer("0", "1", captor.getValue());
+        verify(regionApiService).updateTrainer("region_0", "0", captor.getValue());
     }
 
     @Test
@@ -156,6 +156,34 @@ public class TrainerServiceTest {
         assertTrue(secondNpc.isPresent());
         assertEquals(secondTrainer, secondNpc.get());
 
+    }
+
+    @Test
+    void testFastTravel() {
+        // test when oldTrainer is null
+        final Observable<Trainer> nullUser = trainerService.fastTravel("1");
+        // check value
+        assertTrue(nullUser.isEmpty().blockingGet());
+
+        when(trainerStorage.getTrainer()).thenReturn(trainer);
+
+        // define mock
+        final ArgumentCaptor<UpdateTrainerDto> captor = ArgumentCaptor.forClass(UpdateTrainerDto.class);
+        when(regionApiService.updateTrainer(
+            ArgumentMatchers.anyString(),
+            ArgumentMatchers.anyString(),
+            captor.capture()
+        )).thenReturn(
+            Observable.just(TrainerBuilder.builder().setId("1").setArea(DummyConstants.AREA).create()
+        ));
+
+        // action
+        final Trainer newTrainer = trainerService.fastTravel(DummyConstants.AREA._id()).blockingFirst();
+
+        // check values
+        assertEquals("area_0", newTrainer.area());
+
+        verify(regionApiService).updateTrainer("region_0", "0", captor.getValue());
     }
 
 }

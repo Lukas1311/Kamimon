@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller.monDex;
+package de.uniks.stpmon.k.controller.mondex;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
@@ -43,7 +43,7 @@ public class MonDexDetailController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadBgImage(monDexDetailBox, "monDexBox.png");
+        loadBgImage(monDexDetailBox, getResourcePath() + "monDexBox.png");
         return parent;
     }
 
@@ -83,6 +83,6 @@ public class MonDexDetailController extends Controller {
 
     @Override
     public String getResourcePath() {
-        return "monDex/";
+        return "mondex/";
     }
 }

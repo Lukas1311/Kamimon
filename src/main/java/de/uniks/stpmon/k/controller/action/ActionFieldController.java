@@ -59,7 +59,7 @@ public class ActionFieldController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadBgImage(actionFieldPane, "action_menu_background.png");
+        loadBgImage(actionFieldPane, getResourcePath() + "ActionMenu.png");
         boolean canMakeMove = false;
         for (EncounterSlot slot : sessionService.getOwnSlots()) {
             Opponent opponent = sessionService.getOpponent(slot);

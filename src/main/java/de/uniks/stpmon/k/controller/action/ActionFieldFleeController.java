@@ -39,7 +39,7 @@ public class ActionFieldFleeController extends BaseActionFieldController {
 
     private void fleeFromWildEncounter() {
         subscribe(encounterService.fleeEncounter(), e -> {
-            loadImage(blackScreen, "action/blackScreen.png");
+            loadImage(blackScreen, getResourcePath() + "blackScreen.png");
             vbox.setAlignment(Pos.CENTER);
             PauseTransition pauseTransition = new PauseTransition(Duration.seconds(1));
             pauseTransition.setOnFinished(f -> {
