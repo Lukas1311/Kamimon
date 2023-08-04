@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.world.CharacterSet;
+import de.uniks.stpmon.k.world.DayCycle;
 import de.uniks.stpmon.k.world.ShadowTransform;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.animation.Interpolator;
@@ -19,6 +20,17 @@ import java.util.Optional;
 
 @Singleton
 public class WorldService {
+    public static final DayCycle DAY_CYCLE = new DayCycle(8, 20, 3);
+
+    private static final Color[] DAY_COLORS = {
+            Color.MIDNIGHTBLUE.brighter().brighter(),
+            Color.LIGHTSLATEGREY,
+            Color.LIGHTYELLOW,
+            Color.WHITE,
+            Color.LIGHTGOLDENRODYELLOW,
+            Color.LIGHTSLATEGREY,
+            Color.MIDNIGHTBLUE.brighter().brighter()
+    };
 
     private CharacterSet characterPlaceholder;
     @Inject
@@ -34,16 +46,23 @@ public class WorldService {
         if (!settingsService.getNightEnabled()) {
             return 0;
         }
-        int hour = time.getHour();
-        int minute = time.getMinute();
-        if (hour > 7 && hour < 20) {
+        float factor = 1.0f;
+        int seconds = (int) (time.toSecondOfDay() * factor);
+        LocalTime scaledTime = LocalTime.ofSecondOfDay(seconds);
+        int hour = scaledTime.getHour();
+        if (hour >= (DAY_CYCLE.dayStart())
+                && hour < (DAY_CYCLE.nightStart() - DAY_CYCLE.transition())) {
             return 0;
         }
-        if (hour == 20) {
-            return (int) (Interpolator.EASE_IN.interpolate(0f, 1f, minute / 60f) * 100) / 100.0f;
+        if (hour < DAY_CYCLE.nightStart() && hour >= DAY_CYCLE.nightStart() - DAY_CYCLE.transition()) {
+            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.nightStart() - DAY_CYCLE.transition());
+            float transitionFactor = dayStart.toSecondOfDay() / (60f * 60f * DAY_CYCLE.transition());
+            return (int) (Interpolator.EASE_OUT.interpolate(0f, 1f, transitionFactor) * 100) / 100.0f;
         }
-        if (hour == 7) {
-            return (int) (Interpolator.EASE_OUT.interpolate(1f, 0f, minute / 60f) * 100) / 100.0f;
+        if (hour >= DAY_CYCLE.dayStart() - DAY_CYCLE.transition() && hour < DAY_CYCLE.dayStart()) {
+            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.dayStart() - DAY_CYCLE.transition());
+            float transitionFactor = dayStart.toSecondOfDay() / (60f * 60f * DAY_CYCLE.transition());
+            return (int) (Interpolator.EASE_IN.interpolate(1f, 0f, transitionFactor) * 100) / 100.0f;
         }
         return 1;
     }
@@ -53,6 +72,15 @@ public class WorldService {
             return 0;
         }
         return 1;
+    }
+
+    public ShadowTransform getShadowTransform(LocalTime time) {
+        float factor = getDayFactor(time);
+        return ShadowTransform.EMPTY;
+    }
+
+    public Color getWorldColor(LocalTime time) {
+        return DAY_COLORS[3];
     }
 
     public CharacterSet getCharacter(String name) {
@@ -83,14 +111,5 @@ public class WorldService {
             characterPlaceholder = new CharacterSet("placeholder", image);
         }
         return characterPlaceholder;
-    }
-
-    public ShadowTransform getShadowTransform(LocalTime time) {
-        float factor = getDayFactor(time);
-        return ShadowTransform.EMPTY;
-    }
-
-    public Color getWorldColor(LocalTime time) {
-        return Color.WHITE;
     }
 }

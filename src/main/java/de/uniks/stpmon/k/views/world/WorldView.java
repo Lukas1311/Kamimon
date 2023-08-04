@@ -53,6 +53,7 @@ public class WorldView extends Viewable {
     protected ClockService clockService;
     @Inject
     protected WorldService worldService;
+    private ShadowTransform lastShadowTransform = ShadowTransform.EMPTY;
 
     @Inject
     public WorldView() {
@@ -117,6 +118,10 @@ public class WorldView extends Viewable {
         npcCollectiveView.init();
         subscribe(clockService.onTime(), (time) -> {
             ShadowTransform transform = worldService.getShadowTransform(time);
+            if (transform == lastShadowTransform) {
+                return;
+            }
+            lastShadowTransform = transform;
             characterView.updateShadow(transform);
             shadowView.updateShadow(transform);
             npcCollectiveView.updateShadow(transform);

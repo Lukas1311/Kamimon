@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.service.world;
 
 import io.reactivex.rxjava3.core.Observable;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -11,11 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class ClockService {
-
-    @Inject
-    public ClockService() {
-    }
-
     protected Observable<LocalTime> clockObservable;
 
     public Observable<LocalTime> onTime() {

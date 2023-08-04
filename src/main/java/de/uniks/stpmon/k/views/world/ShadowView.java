@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import de.uniks.stpmon.k.service.world.PreparationService;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.ShadowTransform;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -51,8 +53,11 @@ public class ShadowView extends WorldViewable {
 
     @Override
     public void updateShadow(ShadowTransform transform) {
-        BufferedImage shadows = preparationService.createShadows(transform);
-        repository.shadowImage().setValue(shadows);
+        subscribe(Completable.create(emitter -> {
+            BufferedImage shadows = preparationService.createShadows(transform);
+            repository.shadowImage().setValue(shadows);
+            emitter.onComplete();
+        }).subscribeOn(Schedulers.io()));
     }
 
     @Override

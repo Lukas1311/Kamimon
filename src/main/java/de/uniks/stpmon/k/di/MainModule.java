@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.world.ClockService;
+import de.uniks.stpmon.k.service.world.FastClock;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -42,6 +44,12 @@ public class MainModule {
     @Singleton
     EffectContext effectContext() {
         return new EffectContext();
+    }
+
+    @Provides
+    @Singleton
+    ClockService clockService() {
+        return new FastClock();
     }
 
 }
