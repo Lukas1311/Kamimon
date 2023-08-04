@@ -74,10 +74,11 @@ public class WorldViewTest extends ApplicationTest {
 
         // test move up
         type(KeyCode.W, 2);
-        waitForFxEvents();
+        waitForFxEvents(10);
 
         // check if char moved up by -16
         assertEquals(0, character.getTranslateZ());
+        waitForFxEvents(10);
 
         // test move down
         type(KeyCode.S, 2);

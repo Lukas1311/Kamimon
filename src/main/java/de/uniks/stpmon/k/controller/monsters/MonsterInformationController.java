@@ -225,7 +225,7 @@ public class MonsterInformationController extends Controller {
     @Override
     public Parent render() {
         Parent parent = super.render();
-        loadBgImage(mainPane, "MonInfoView_v2.3-final.png");
+        loadBgImage(mainPane, getResourcePath() + "MonInfo_v2.3.png");
         descriptionLabel.setVisible(false);
         descriptionLabel.setWrapText(true);
 
@@ -280,5 +280,4 @@ public class MonsterInformationController extends Controller {
     public String getResourcePath() {
         return "monsters/";
     }
-
 }

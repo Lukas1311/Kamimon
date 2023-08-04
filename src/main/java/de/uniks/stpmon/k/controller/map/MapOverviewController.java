@@ -1,16 +1,21 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.map;
 
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
+import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.RegionService;
+import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.world.RouteData;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -27,8 +32,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Pair;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import java.util.HashMap;
@@ -62,17 +69,28 @@ public class MapOverviewController extends ToastedController {
     Pane highlightPane;
     @FXML
     Text regionDescription;
+    @FXML
+    Button fastTravelButton;
 
     @Inject
     RegionStorage regionStorage;
     @Inject
     TrainerStorage trainerStorage;
     @Inject
+    TrainerService trainerService;
+    @Inject
     RegionService regionService;
     @Inject
     TextDeliveryService textDeliveryService;
     @Inject
     WorldRepository worldRepository;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+    @Inject
+    TeleportAnimation teleportAnimation;
+    @Inject
+    InputHandler inputHandler;
+
 
     private Shape activeShape;
     private Region currentRegion;
@@ -94,11 +112,14 @@ public class MapOverviewController extends ToastedController {
     public Parent render() {
         final Parent parent = super.render();
 
+        fastTravelButton.setText(translateString("fastTravel"));
+        fastTravelButton.setVisible(false);
+
         // center the region name label horizontally
         AnchorPane.setLeftAnchor(regionNameLabel, 0.0);
         AnchorPane.setRightAnchor(regionNameLabel, 0.0);
 
-        loadBgImage(mapOverviewHolder, "mapOverview_v2.png");
+        loadBgImage(mapOverviewHolder, getResourcePath() + "mapOverview_v2.png");
 
         regionNameLabel.setText(currentRegion.name());
         if (currentRegion.map() != null) {
@@ -129,6 +150,16 @@ public class MapOverviewController extends ToastedController {
         return parent;
     }
 
+    private void fastTravel(String area) {
+        // close the map before because it would be somehow still open after travel
+        ingameControllerProvider.get().closeMap();
+        onDestroy(inputHandler.addReleasedKeyFilter(Event::consume));
+        onDestroy(inputHandler.addPressedKeyFilter(Event::consume));
+        teleportAnimation.playFastTravelAnimation(
+            () -> subscribe(trainerService.fastTravel(area))
+        );
+    }
+
     @Override
     public void destroy() {
         super.destroy();
@@ -141,14 +172,14 @@ public class MapOverviewController extends ToastedController {
         mapOverviewHolder = null;
     }
 
-    private HashMap<String, Boolean> filterVisitedAreas(List<Area> areas) {
-        HashMap<String, Boolean> visitedAreas = new HashMap<>();
+    private HashMap<String, Pair<String, Boolean>> filterVisitedAreas(List<Area> areas) {
+        HashMap<String, Pair<String, Boolean>> visitedAreas = new HashMap<>();
         for (Area area : areas) {
             boolean hasSpawn = false;
             if (visitedAreaIds.contains(area._id())) {
                 if (area.map() != null) {
                     List<Property> properties = area.map().properties();
-                    if (!(properties == null)) {
+                    if (properties != null) {
                         for (Property prop : properties) {
                             if (prop.name().equals("Spawn")) {
                                 hasSpawn = true;
@@ -156,14 +187,14 @@ public class MapOverviewController extends ToastedController {
                             }
                         }
                     }
-                    visitedAreas.put(area.name(), hasSpawn);
+                    visitedAreas.put(area.name(), new Pair<String, Boolean>(area._id(), hasSpawn));
                 }
             }
         }
         return visitedAreas;
     }
 
-    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Boolean> visitedAreas) {
+    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Pair<String, Boolean>> visitedAreas) {
 
         double originalHeight = mapImageView.getImage().getHeight();
         double scaledHeight = mapImageView.getFitHeight();
@@ -175,6 +206,16 @@ public class MapOverviewController extends ToastedController {
 
         routeListData.forEach(routeData -> {
             boolean visited = visitedAreas.containsKey(routeData.routeText().name());
+            boolean hasSpawn = false;
+            String areaId = "";
+            if (visited) {
+                // getValue() returns the "right" value of the pair (in this case the bool)
+                hasSpawn = visitedAreas.get(routeData.routeText().name()).getValue();
+                if (hasSpawn) {
+                    // getKey() returns the "left" value of the pair (in this case the string)
+                    areaId = visitedAreas.get(routeData.routeText().name()).getKey();
+                }
+            }
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
@@ -183,7 +224,7 @@ public class MapOverviewController extends ToastedController {
                             (double) (routeData.y() + point.y()) * scaleRatio
                     );
                 }
-                addDetailShape(polygon, routeData, visited);
+                addDetailShape(polygon, routeData, visited, hasSpawn, areaId);
                 return;
             }
             if (routeData.width() == OPACITY_DESELECTED || routeData.height() == OPACITY_DESELECTED) {
@@ -195,12 +236,14 @@ public class MapOverviewController extends ToastedController {
                     routeData.width() * scaleRatio,
                     routeData.height() * scaleRatio
             );
-            addDetailShape(rectangle, routeData, visited);
+            addDetailShape(rectangle, routeData, visited, hasSpawn, areaId);
         });
     }
 
-    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited) {
+    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited, boolean hasSpawn, String areaId) {
         shape.setId("detail_" + routeData.id());
+        // set the area id as hidden user data
+        shape.setUserData(areaId);
         
         if (isVisited) {
             shape.setFill(Color.TRANSPARENT);
@@ -221,6 +264,7 @@ public class MapOverviewController extends ToastedController {
         shape.setOnMouseClicked(event -> {
             if (activeShape != null && !activeShape.equals(shape)) {
                 activeShape.setStroke(null);
+                fastTravelButton.setVisible(false);
                 shape.setOpacity(OPACITY_SELECTED);
             }
 
@@ -231,6 +275,8 @@ public class MapOverviewController extends ToastedController {
                 } else {
                     regionDescription.setText("Here could be your advertisement.");
                 }
+                fastTravelButton.setVisible(hasSpawn);
+                fastTravelButton.setOnAction(click -> fastTravel((String) shape.getUserData()));
                 
             } else {
                 areaNameLabel.setText("???");
@@ -262,5 +308,10 @@ public class MapOverviewController extends ToastedController {
             }
             shape.setStroke(null);
         });
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "map/";
     }
 }

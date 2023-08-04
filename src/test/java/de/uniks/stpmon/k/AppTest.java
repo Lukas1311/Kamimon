@@ -15,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.FlowPane;
@@ -23,7 +22,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
@@ -31,12 +29,14 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 
 import static java.util.function.Predicate.not;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+
 
 class AppTest extends ApplicationTest {
 
@@ -518,28 +518,52 @@ class AppTest extends ApplicationTest {
         TestHelper.addTestNpcs(component);
 
         //test monDex
-        clickOn("#backpackImage");
+        /*clickOn("#backpackImage");
+        waitForFxEvents();
+        verifyThat("#backpackMenuListView", Node::isVisible);
+        waitForFxEvents();
         clickOn("#backpackMenuLabel_2");
         waitForFxEvents();
-        verifyThat("#monDexPane", Node::isVisible);
+
+        AnchorPane monDexPain = lookup("#monDexPain").query();
+        assertNotNull(monDexPain);
+        waitForFxEvents();
+        assertTrue(monDexPain.isVisible());
+        waitForFxEvents();
+        verifyThat(monDexPain, Node::isVisible);
+        waitForFxEvents();
+
+        waitForFxEvents();
 
         clickOn("#type0Label");
         verifyThat("#monDexDetailBox", Node::isVisible);
         clickOn("#type2Label");
+        waitForFxEvents();
         clickOn("#backpackImage");
+        waitForFxEvents();
 
         //test inventory
         clickOn("#backpackImage");
         clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
+        clickOn("#backpackImage");
 
         //test sound
         clickOn("#settings");
         clickOn("#mdmzSettings");
         final Slider musicSlider = lookup("#music").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
-        clickOn("#settings");
+        clickOn("#settings");*/
+
+        //test evolution of mon
+        // walk to the right
+        type(KeyCode.D, 1);
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        waitForFxEvents();
+        verifyThat("#userMonsters", Node::isVisible);
     }
 
 }

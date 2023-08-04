@@ -24,18 +24,21 @@ public class PortalController extends ToastedController implements IPortalContro
     @Inject
     Provider<HybridController> hybridControllerProvider;
 
+    private boolean mainPortal = false;
+
     @Override
     public void init() {
         super.init();
-        if (portalSource != null) {
+        if (portalSource != null && portalSource.getPortalController() == null) {
             portalSource.setPortalController(this);
+            mainPortal = true;
         }
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        if (portalSource != null) {
+        if (portalSource != null && mainPortal) {
             portalSource.setPortalController(null);
         }
     }

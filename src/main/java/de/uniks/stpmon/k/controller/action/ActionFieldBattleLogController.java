@@ -73,10 +73,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot),
                     opp -> battleLogService.queueUpdate(slot, opp));
-            if (!slot.enemy()) {
-                subscribe(sessionService.listenMonster(slot),
-                        mon -> battleLogService.setMonster(slot, mon));
-            }
+            subscribe(sessionService.listenMonster(slot),
+                    mon -> battleLogService.setMonster(slot, mon));
         }
         onDestroy(battleLogService::clearService);
     }
@@ -111,7 +109,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         addTextSection(translateString(word, args));
     }
 
-    private void addTextSection(String text) {
+    public void addTextSection(String text) {
         Label text1 = new Label(text + "\n");
         text1.setWrapText(true);
         text1.setMaxWidth(290);

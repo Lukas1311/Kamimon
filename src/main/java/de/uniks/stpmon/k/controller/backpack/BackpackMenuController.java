@@ -3,7 +3,7 @@ package de.uniks.stpmon.k.controller.backpack;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
-import de.uniks.stpmon.k.controller.monDex.MonDexController;
+import de.uniks.stpmon.k.controller.mondex.MonDexController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.views.BackpackMenuCell;

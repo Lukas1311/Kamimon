@@ -49,7 +49,7 @@ public class TeamController extends Controller {
     public Parent render() {
         Parent render = super.render();
         loadImage(arrowImageView, "arrow_up.png");
-        loadBgImage(monsterListVBox, "TeamBox.png");
+        loadBgImage(monsterListVBox, getResourcePath() + "TeamBox.png");
 
 
         monsterInformation.setVisible(false);

@@ -102,8 +102,7 @@ public class TestHelper {
 
         Trainer attacker = TrainerBuilder.builder()
                 .setId("attacker")
-                .setX(3)
-                .setY(3)
+                .setX(2)
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.TOP)
