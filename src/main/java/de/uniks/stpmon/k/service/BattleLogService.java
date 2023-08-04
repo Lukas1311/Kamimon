@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
+import de.uniks.stpmon.k.controller.encounter.LevelUp;
 import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
 import javafx.application.Platform;
@@ -30,6 +31,8 @@ public class BattleLogService {
     private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
     private final List<OpponentUpdate> opponentUpdates = new ArrayList<>();
+    private final List<String> levelUpActions = new ArrayList<String>();
+    private List<Result> currentResults = new ArrayList<>();
 
     private boolean encounterIsOver = false;
     /**
@@ -47,6 +50,8 @@ public class BattleLogService {
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
     private final Map<EncounterSlot, Monster> monsAfterLevelUp = new HashMap<>();
+
+    private final Map<EncounterSlot, LevelUp> levelUps = new HashMap<>();
 
     @Inject
     public BattleLogService() {
@@ -97,14 +102,46 @@ public class BattleLogService {
         }
     }
 
-    private void showActions() {
-        encounterOverviewControllerProvider.get().removeMonInfoIfShown();
+    /**
+     * This method is called to show what is going on in the Encounter via the BattleLog
+     */
+    public void showNextAction() {
+
         textBox.getChildren().clear();
-        //check if more actions need to be handled
+        showActions();
+    }
+
+    /**
+     * This method handles the queued updates and results
+     */
+    private void showActions() {
+        //check if more results need to be shown
+        Optional<EncounterSlot> slot = levelUps.keySet().stream().findFirst();
+        if (slot.isPresent()) {
+            LevelUp levelUp = levelUps.get(slot.get());
+            String nextText = levelUp.getNextString();
+            if (nextText != null) {
+                battleLogControllerProvider.get().addTextSection(nextText);
+                if (levelUp.showMonsterInformation()) {
+                    encounterOverviewControllerProvider.get().showLevelUp(levelUp.getOldMon(), levelUp.getNewMon());
+                }
+                if (levelUp.getPlayEvolutionAnimation()) {
+                    //TODO: play animation
+                    levelUp.setPlayEvolutionAnimation(false);
+                }
+                return;
+            } else {
+                //no more actions
+                monsBeforeLevelUp.put(slot.get(), levelUp.getNewMon());
+                levelUps.remove(slot.get());
+            }
+        }
+
+        encounterOverviewControllerProvider.get().removeMonInfoIfShown();
+        //check if more opponentUpdates need to be shown
         if (!opponentUpdates.isEmpty()) {
             //there are more updates to be handled
             OpponentUpdate nextUpdate = opponentUpdates.get(0);
-            //OpponentUpdate nextUpdate = getNextUpdate();
             if (nextUpdate != null) {
                 handleOpponentUpdate(nextUpdate);
                 opponentUpdates.remove(nextUpdate);
@@ -147,6 +184,8 @@ public class BattleLogService {
 
             }
         }
+
+
     }
 
     public void showInitialText() {
@@ -167,16 +206,12 @@ public class BattleLogService {
         isWaiting = true;
     }
 
-    public void showNextAction() {
-        showActions();
-    }
-
     private void handleOpponentUpdate(OpponentUpdate up) {
         EncounterSlot slot = up.slot();
         Opponent opp = up.opponent();
         Opponent lastOpponent = up.lastOpponent();
 
-        List<Result> results = opp.results();
+        currentResults = opp.results().stream().toList();
         //check which move was made
         //check if monster was changed because of 0 hp
         if (lastOpponent != null && lastOpponent.monster() == null && opp.monster() != null) {
@@ -211,7 +246,7 @@ public class BattleLogService {
         String target = null;
         // Use last opponent to get the ability, this way we print the ability together with the result
         if (lastOpponent.move() instanceof AbilityMove move) {
-            Optional<Result> abilityResult = results.stream()
+            Optional<Result> abilityResult = currentResults.stream()
                     .filter(result -> result.type().equals("ability-success"))
                     .findFirst();
             if (abilityResult.isPresent()) {
@@ -230,7 +265,7 @@ public class BattleLogService {
 
         }
 
-        for (Result result : results) {
+        for (Result result : currentResults) {
             handleResult(monster, result, target, slot, opp);
         }
 
@@ -249,6 +284,7 @@ public class BattleLogService {
                     case "no-effect" -> "no-effect-atk";
                     default -> "";
                 };
+                //this is added because it should always be shown after the used attack
                 addTranslatedSection(translationVar);
             }
             //when last monster is dead
@@ -262,6 +298,7 @@ public class BattleLogService {
                 }
                 addTranslatedSection("target-defeated", monsterName);
                 if (!slot.enemy() && opp.coins() != 0) {
+                    //resultPages.add(translate("earn-coins", opp.coins().toString()));
                     addTranslatedSection("earn-coins", opp.coins().toString());
                 }
             }
@@ -269,11 +306,10 @@ public class BattleLogService {
             }
             //called when not dying, e.g. another monster is available
             case "monster-defeated" -> addTranslatedSection("monster-defeated", monster.name());
-            case "monster-levelup" -> makeLevelUp(monster, slot);
-            case "monster-evolved" -> addTranslatedSection("monster-evolved", monster.name());
-            case "monster-learned" ->
-                    addTranslatedSection("monster-learned", monster.name(), getAbility(ability).name());
-            case "monster-forgot" -> addTranslatedSection("monster-forgot", monster.name(), getAbility(ability).name());
+            case "monster-levelup" -> createLevelUp(monster, slot);
+            case "monster-evolved" -> levelUps.get(slot).setEvolved(result);
+            case "monster-learned" -> levelUps.get(slot).setAttackLearned(result);
+            case "monster-forgot" -> levelUps.get(slot).setAttackForgot(result);
             case "monster-dead" -> addTranslatedSection("monster-dead", monster.name());
             case "ability-unknown" ->
                     addTranslatedSection("ability-unknown", getAbility(ability).name(), monster.name());
@@ -288,16 +324,18 @@ public class BattleLogService {
                     + result.status().toString()
                     + result.type().replace("status-", "."), monster.name());
             case "monster-caught" -> addTranslatedSection("monster-caught", monster.name());
+
             default -> System.out.println("unknown result type");
         }
     }
 
-    private void makeLevelUp(MonsterTypeDto monster, EncounterSlot slot) {
+    private void createLevelUp(MonsterTypeDto newMonType, EncounterSlot slot) {
         Monster oldMon = monsBeforeLevelUp.get(slot);
         Monster newMon = monsAfterLevelUp.get(slot);
-        addTranslatedSection("monster-levelup", monster.name(), String.valueOf(newMon.level()));
-        encounterOverviewControllerProvider.get().showLevelUp(oldMon, newMon);
-        monsBeforeLevelUp.put(slot, newMon);
+        MonsterTypeDto oldMonType = getMonsterType(oldMon.type());
+
+        LevelUp levelUp = new LevelUp(this, oldMon, newMon, oldMonType.name(), newMonType.name());
+        levelUps.put(slot, levelUp);
     }
 
     public void setMonster(EncounterSlot slot, Monster mon) {
@@ -308,6 +346,10 @@ public class BattleLogService {
             //level up
             monsAfterLevelUp.put(slot, mon);
         }
+    }
+
+    public String translate(String word, String... args) {
+        return battleLogControllerProvider.get().translateString(word, args);
     }
 
     private void addTranslatedSection(String word, String... args) {
@@ -328,7 +370,7 @@ public class BattleLogService {
         return getMonsterType(monster.type());
     }
 
-    private AbilityDto getAbility(int id) {
+    public AbilityDto getAbility(int id) {
         return presetService.getAbility(id).blockingFirst();
     }
 
