@@ -135,7 +135,7 @@ public class BattleLogService {
             }
         }
 
-        encounterOverviewControllerProvider.get().removeMonInfoIfShown();
+        encounterOverviewControllerProvider.get().removeController("monInfo");
         //check if more opponentUpdates need to be shown
         if (!opponentUpdates.isEmpty()) {
             //there are more updates to be handled
@@ -182,8 +182,6 @@ public class BattleLogService {
 
             }
         }
-
-
     }
 
     public void showInitialText() {
@@ -296,7 +294,6 @@ public class BattleLogService {
                 }
                 addTranslatedSection("target-defeated", monsterName);
                 if (!slot.enemy() && opp.coins() != 0) {
-                    //resultPages.add(translate("earn-coins", opp.coins().toString()));
                     addTranslatedSection("earn-coins", opp.coins().toString());
                 }
             }
@@ -338,7 +335,6 @@ public class BattleLogService {
                     + result.status().toString()
                     + result.type().replace("status-", "."), monster.name());
             case "monster-caught" -> addTranslatedSection("monster-caught", monster.name());
-
             default -> System.out.println("unknown result type");
         }
     }

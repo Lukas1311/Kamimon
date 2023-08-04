@@ -40,10 +40,7 @@ public class TrainerService {
     }
 
     public Observable<Optional<Trainer>> onTrainer() {
-        if (trainerCache == null) {
-            trainerCache = cacheManager.trainerCache();
-        }
-        return trainerCache.listenValue(trainerStorage.getTrainer()._id());
+        return cacheManager.trainerCache().listenValue(trainerStorage.getTrainer()._id());
     }
 
     public Observable<Trainer> deleteMe() {
@@ -67,7 +64,7 @@ public class TrainerService {
                 .setName(trainername)
                 .create();
         trainerStorage.setTrainer(newTrainer);
-        UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null, List.of());
+        UpdateTrainerDto dto = new UpdateTrainerDto(trainername, null, null, null);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 
@@ -80,7 +77,7 @@ public class TrainerService {
                 .setImage(image)
                 .create();
         trainerStorage.setTrainer(newTrainer);
-        UpdateTrainerDto dto = new UpdateTrainerDto(null, image, List.of());
+        UpdateTrainerDto dto = new UpdateTrainerDto(null, image, null, null);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 
@@ -89,7 +86,16 @@ public class TrainerService {
         if (trainer == null) {
             return Observable.empty();
         }
-        UpdateTrainerDto dto = new UpdateTrainerDto(null, null, team);
+        UpdateTrainerDto dto = new UpdateTrainerDto(null, null, team, null);
+        return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
+    }
+
+    public Observable<Trainer> fastTravel(String area) {
+        Trainer trainer = trainerStorage.getTrainer();
+        if (trainer == null) {
+            return Observable.empty();
+        }
+        UpdateTrainerDto dto = new UpdateTrainerDto(null, null, null, area);
         return regionApiService.updateTrainer(trainer.region(), trainer._id(), dto);
     }
 

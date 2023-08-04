@@ -1,4 +1,4 @@
-package de.uniks.stpmon.k.controller.monDex;
+package de.uniks.stpmon.k.controller.mondex;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
 public class MonDexController extends Controller {
 
     @FXML
-    public AnchorPane monDexPane;
+    public AnchorPane monDexPain;
     @FXML
     public ListView<MonsterTypeDto> dexList;
 
@@ -50,8 +50,8 @@ public class MonDexController extends Controller {
 
     @Override
     public Parent render() {
-        Parent parent = super.render();
-        loadBgImage(monDexPane, "monDexBox.png");
+        final Parent parent = super.render();
+        loadBgImage(monDexPain, getResourcePath() + "monDexBox.png");
 
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {
@@ -91,6 +91,9 @@ public class MonDexController extends Controller {
     }
 
     public void setMonDexImage(MonsterTypeDto monster, boolean isEncountered, ImageView monImage) {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
         subscribe(resourceServiceProvider.get().getMonsterImage(String.valueOf(monster.id())), bufferedImage -> {
             BufferedImage bufImg = bufferedImage;
             if (!isEncountered) {
@@ -103,6 +106,6 @@ public class MonDexController extends Controller {
 
     @Override
     public String getResourcePath() {
-        return "monDex/";
+        return "mondex/";
     }
 }

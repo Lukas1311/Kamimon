@@ -66,7 +66,7 @@ public class MonsterInventoryController extends Controller {
             showMonsterList(monsterService.getMonsters().blockingFirst());
         });
         subscribe(monsterService.getMonsters(), this::showMonsterList);
-        loadBgImage(monBoxMenuHolder, "MonBox_v6.png");
+        loadBgImage(monBoxMenuHolder, getResourcePath() + "MonBox_v6.1.png");
 
         return parent;
     }
@@ -240,11 +240,6 @@ public class MonsterInventoryController extends Controller {
         });
     }
 
-    @Override
-    public String getResourcePath() {
-        return "monsters/";
-    }
-
     private void dragIntoTeamGrid(DragEvent event) {
         if (!monTeam.getChildren().contains(monParent)
                 && monTeamList.size() < TEAM_SIZE) {
@@ -262,5 +257,10 @@ public class MonsterInventoryController extends Controller {
             shiftToStorage();
         }
         event.setDropCompleted(true);
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "monsters/";
     }
 }
