@@ -47,6 +47,7 @@ public abstract class EntityView extends WorldViewable {
     private TranslateTransition moveTranslation;
     private Direction moveDirection;
     private Transition idleAnimation;
+    private float shadowOpacity = 0.0f;
 
     protected TrainerProvider getProvider() {
         return trainerProvider;
@@ -99,6 +100,7 @@ public abstract class EntityView extends WorldViewable {
             return;
         }
         setScaledMaterial(shadowNode, createShadowImage(direction));
+        updateOpacity(shadowNode, shadowOpacity);
     }
 
     private BufferedImage createShadowImage(Direction direction) {
@@ -109,6 +111,13 @@ public abstract class EntityView extends WorldViewable {
         if (shadowNode == null || transform == null) {
             return;
         }
+        if (transform.isDisabled()) {
+            shadowNode.setVisible(false);
+            return;
+        }
+        shadowNode.setVisible(true);
+        shadowOpacity = 1 - transform.timeFactor();
+        updateOpacity(shadowNode, shadowOpacity);
         shadowScale.setX(transform.scaleX());
         shadowScale.setY(transform.scaleY());
         shadowShear.setX(transform.shearX());

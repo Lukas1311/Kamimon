@@ -16,4 +16,8 @@ public record ShadowTransform(
     public static final ShadowTransform DEFAULT_ENABLED = new ShadowTransform(1.0f, 1.0f, 0.0f, 0.0f, 0.0f);
     public static final ShadowTransform DEFAULT_DISABLED = new ShadowTransform(0.0f, 0.0f, 0.0f, 0.0f, -2f);
     public static final int DISABLED_FACTOR = -2;
+
+    public boolean isDisabled() {
+        return timeFactor() > 1.0f || timeFactor() < -1.0f;
+    }
 }

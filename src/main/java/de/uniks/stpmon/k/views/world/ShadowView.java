@@ -24,6 +24,7 @@ public class ShadowView extends WorldViewable {
     @Inject
     protected PreparationService preparationService;
     private MeshView shadow;
+    private float opacity = 0.0f;
 
     @Inject
     public ShadowView() {
@@ -36,7 +37,8 @@ public class ShadowView extends WorldViewable {
             if (shadowImage.isEmpty()) {
                 return;
             }
-            setScaledMaterial(shadow, shadowImage.get());
+            updateImage(shadow, shadowImage.get());
+            updateOpacity(shadow, opacity);
         });
         if (imageCache.isEmpty()) {
             return new Group();
@@ -53,7 +55,13 @@ public class ShadowView extends WorldViewable {
 
     @Override
     public void updateShadow(ShadowTransform transform) {
+        if (transform.isDisabled()) {
+            shadow.setVisible(false);
+            return;
+        }
+        shadow.setVisible(true);
         subscribe(Completable.create(emitter -> {
+            opacity = 1 - transform.timeFactor();
             BufferedImage shadows = preparationService.createShadows(transform);
             repository.shadowImage().setValue(shadows);
             emitter.onComplete();

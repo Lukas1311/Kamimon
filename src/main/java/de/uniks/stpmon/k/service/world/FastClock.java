@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class FastClock extends ClockService {
 
     protected Observable<LocalTime> createObservable() {
-        LocalTime currentTime = LocalTime.of(18, 0);
+        LocalTime currentTime = LocalTime.of(4, 0);
         return createTimer(currentTime, 100, TimeUnit.MILLISECONDS);
     }
 }

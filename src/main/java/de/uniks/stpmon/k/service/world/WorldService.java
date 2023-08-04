@@ -43,6 +43,12 @@ public class WorldService {
     public WorldService() {
     }
 
+    public LocalTime scale(LocalTime time) {
+        float factor = 1.0f;
+        int seconds = (int) (time.toSecondOfDay() * factor);
+        return LocalTime.ofSecondOfDay(seconds);
+    }
+
     /**
      * Returns a factor that represents the progress of the night. From 0 to 1 and to 0 again.
      *
@@ -53,20 +59,17 @@ public class WorldService {
         if (!settingsService.getNightEnabled()) {
             return 0;
         }
-        float factor = 1.0f;
-        int seconds = (int) (time.toSecondOfDay() * factor);
-        LocalTime scaledTime = LocalTime.ofSecondOfDay(seconds);
-        if (DAY_CYCLE.isDay(scaledTime)) {
+        if (DAY_CYCLE.isDay(time)) {
             return 0;
         }
-        if (DAY_CYCLE.isSunset(scaledTime)) {
-            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.sunset());
-            float transitionFactor = dayStart.toSecondOfDay() / (SECONDS_TO_HOURS * DAY_CYCLE.transition());
+        if (DAY_CYCLE.isSunset(time)) {
+            LocalTime timeSinceStart = time.minusHours(DAY_CYCLE.sunset());
+            float transitionFactor = timeSinceStart.toSecondOfDay() / (SECONDS_TO_HOURS * DAY_CYCLE.transition());
             return (int) (Interpolator.EASE_OUT.interpolate(0f, 1f, transitionFactor) * 100) / 100.0f;
         }
-        if (DAY_CYCLE.isSunrise(scaledTime)) {
-            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.sunrise());
-            float transitionFactor = dayStart.toSecondOfDay() / (SECONDS_TO_HOURS * DAY_CYCLE.transition());
+        if (DAY_CYCLE.isSunrise(time)) {
+            LocalTime timeSinceStart = time.minusHours(DAY_CYCLE.sunrise());
+            float transitionFactor = timeSinceStart.toSecondOfDay() / (SECONDS_TO_HOURS * DAY_CYCLE.transition());
             return (int) (Interpolator.EASE_IN.interpolate(1f, 0f, transitionFactor) * 100) / 100.0f;
         }
         return 1;
@@ -80,11 +83,16 @@ public class WorldService {
      */
     public float getDayFactor(LocalTime time) {
         if (!settingsService.getNightEnabled()) {
+            return ShadowTransform.DISABLED_FACTOR;
+        }
+        if (time.getHour() < DAY_CYCLE.dayStart()) {
+            return -1;
+        }
+        if (time.getHour() > DAY_CYCLE.nightStart()) {
             return 1;
         }
         float factor = 1.0f;
-        int seconds = (int) (time.toSecondOfDay() * factor);
-        LocalTime scaledTime = LocalTime.ofSecondOfDay(seconds)
+        LocalTime scaledTime = time
                 .minusHours(DAY_CYCLE.dayStart());
         // Hours between day start and sunset
         int span = DAY_CYCLE.sunset() - DAY_CYCLE.dayStart();
@@ -100,11 +108,28 @@ public class WorldService {
      */
     public ShadowTransform getShadowTransform(LocalTime time) {
         float factor = getDayFactor(time);
-        return ShadowTransform.DEFAULT_ENABLED;
+        float nightFactor = getNightFactor(time);
+        if (nightFactor == 1) {
+            return ShadowTransform.DEFAULT_DISABLED;
+        }
+//        (int) (nightFactor * 10) / 10f
+        return new ShadowTransform(1.0f, 1 - Math.abs(factor) / 4f,
+                factor * 2, 0.0f,
+                roundDown(nightFactor, 0.05f));
+    }
+
+    private float roundDown(float x, float a) {
+        return (float) (Math.floor(x / a) * a);
     }
 
     public Color getWorldColor(LocalTime time) {
-        return DAY_COLORS[3];
+        int seconds = time.toSecondOfDay();
+        int index = (int) (seconds / (SECONDS_TO_HOURS * 24)) * DAY_COLORS.length;
+        index = Math.min(Math.max(index, 0), DAY_COLORS.length - 1);
+
+        Color color = DAY_COLORS[index];
+        Color nextColor = DAY_COLORS[(index + 1) % DAY_COLORS.length];
+        return DAY_COLORS[index];
     }
 
     public CharacterSet getCharacter(String name) {

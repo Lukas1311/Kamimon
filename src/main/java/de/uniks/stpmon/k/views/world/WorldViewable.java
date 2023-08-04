@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
@@ -33,6 +34,18 @@ public abstract class WorldViewable extends Viewable {
 
     protected void setScaledMaterial(MeshView mesh, BufferedImage image) {
         mesh.setMaterial(createMaterial(SwingFXUtils.toFXImage(image, null)));
+    }
+
+    protected void updateImage(MeshView mesh, BufferedImage image) {
+        if (mesh.getMaterial() instanceof PhongMaterial phongMaterial) {
+            phongMaterial.setDiffuseMap(SwingFXUtils.toFXImage(image, null));
+        }
+    }
+
+    protected void updateOpacity(MeshView mesh, float opacity) {
+        if (mesh.getMaterial() instanceof PhongMaterial phongMaterial) {
+            phongMaterial.setDiffuseColor(Color.TRANSPARENT.interpolate(Color.WHITE, opacity));
+        }
     }
 
     protected Material createMaterial(Image image) {

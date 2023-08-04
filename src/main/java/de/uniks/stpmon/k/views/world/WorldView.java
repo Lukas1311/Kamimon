@@ -118,7 +118,7 @@ public class WorldView extends Viewable {
         npcCollectiveView.init();
         subscribe(clockService.onTime(), (time) -> {
             ShadowTransform transform = worldService.getShadowTransform(time);
-            if (transform == lastShadowTransform) {
+            if (transform.equals(lastShadowTransform)) {
                 return;
             }
             lastShadowTransform = transform;
