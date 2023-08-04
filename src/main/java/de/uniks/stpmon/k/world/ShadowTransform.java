@@ -13,5 +13,7 @@ public record ShadowTransform(
         float shearX,
         float shearY,
         float timeFactor) {
-    public static final ShadowTransform EMPTY = new ShadowTransform(1.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+    public static final ShadowTransform DEFAULT_ENABLED = new ShadowTransform(1.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+    public static final ShadowTransform DEFAULT_DISABLED = new ShadowTransform(0.0f, 0.0f, 0.0f, 0.0f, -2f);
+    public static final int DISABLED_FACTOR = -2;
 }

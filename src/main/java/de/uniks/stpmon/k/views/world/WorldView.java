@@ -53,7 +53,7 @@ public class WorldView extends Viewable {
     protected ClockService clockService;
     @Inject
     protected WorldService worldService;
-    private ShadowTransform lastShadowTransform = ShadowTransform.EMPTY;
+    private ShadowTransform lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
 
     @Inject
     public WorldView() {

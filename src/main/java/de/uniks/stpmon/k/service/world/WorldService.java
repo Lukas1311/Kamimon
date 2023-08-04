@@ -31,6 +31,7 @@ public class WorldService {
             Color.LIGHTSLATEGREY,
             Color.MIDNIGHTBLUE.brighter().brighter()
     };
+    public static final float SECONDS_TO_HOURS = 60f * 60f;
 
     private CharacterSet characterPlaceholder;
     @Inject
@@ -42,6 +43,12 @@ public class WorldService {
     public WorldService() {
     }
 
+    /**
+     * Returns a factor that represents the progress of the night. From 0 to 1 and to 0 again.
+     *
+     * @param time The time of the day.
+     * @return 0 at day, 1 at night, 0 at day again. An interpolated value in between.
+     */
     public float getNightFactor(LocalTime time) {
         if (!settingsService.getNightEnabled()) {
             return 0;
@@ -49,34 +56,51 @@ public class WorldService {
         float factor = 1.0f;
         int seconds = (int) (time.toSecondOfDay() * factor);
         LocalTime scaledTime = LocalTime.ofSecondOfDay(seconds);
-        int hour = scaledTime.getHour();
-        if (hour >= (DAY_CYCLE.dayStart())
-                && hour < (DAY_CYCLE.nightStart() - DAY_CYCLE.transition())) {
+        if (DAY_CYCLE.isDay(scaledTime)) {
             return 0;
         }
-        if (hour < DAY_CYCLE.nightStart() && hour >= DAY_CYCLE.nightStart() - DAY_CYCLE.transition()) {
-            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.nightStart() - DAY_CYCLE.transition());
-            float transitionFactor = dayStart.toSecondOfDay() / (60f * 60f * DAY_CYCLE.transition());
+        if (DAY_CYCLE.isSunset(scaledTime)) {
+            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.sunset());
+            float transitionFactor = dayStart.toSecondOfDay() / (SECONDS_TO_HOURS * DAY_CYCLE.transition());
             return (int) (Interpolator.EASE_OUT.interpolate(0f, 1f, transitionFactor) * 100) / 100.0f;
         }
-        if (hour >= DAY_CYCLE.dayStart() - DAY_CYCLE.transition() && hour < DAY_CYCLE.dayStart()) {
-            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.dayStart() - DAY_CYCLE.transition());
-            float transitionFactor = dayStart.toSecondOfDay() / (60f * 60f * DAY_CYCLE.transition());
+        if (DAY_CYCLE.isSunrise(scaledTime)) {
+            LocalTime dayStart = scaledTime.minusHours(DAY_CYCLE.sunrise());
+            float transitionFactor = dayStart.toSecondOfDay() / (SECONDS_TO_HOURS * DAY_CYCLE.transition());
             return (int) (Interpolator.EASE_IN.interpolate(1f, 0f, transitionFactor) * 100) / 100.0f;
         }
         return 1;
     }
 
+    /**
+     * Returns a factor that represents the progress of the day. From -1 to 1.
+     *
+     * @param time The time of the day.
+     * @return -1 is in the morning, 0 is at noon, 1 is in the evening.
+     */
     public float getDayFactor(LocalTime time) {
         if (!settingsService.getNightEnabled()) {
-            return 0;
+            return 1;
         }
-        return 1;
+        float factor = 1.0f;
+        int seconds = (int) (time.toSecondOfDay() * factor);
+        LocalTime scaledTime = LocalTime.ofSecondOfDay(seconds)
+                .minusHours(DAY_CYCLE.dayStart());
+        // Hours between day start and sunset
+        int span = DAY_CYCLE.sunset() - DAY_CYCLE.dayStart();
+        float halfSpan = span / 2f;
+        return ((scaledTime.toSecondOfDay() / SECONDS_TO_HOURS) - halfSpan) / halfSpan;
     }
 
+    /**
+     * Returns a transform that should be applied to shadows to represent the time of the day.
+     *
+     * @param time The time of the day.
+     * @return A transformation with scale and shear.
+     */
     public ShadowTransform getShadowTransform(LocalTime time) {
         float factor = getDayFactor(time);
-        return ShadowTransform.EMPTY;
+        return ShadowTransform.DEFAULT_ENABLED;
     }
 
     public Color getWorldColor(LocalTime time) {
