@@ -97,7 +97,7 @@ public class LevelUp {
         this.playEvolutionAnimation = playEvolutionAnimation;
     }
 
-    public boolean getPlayEvolutionAnimation() {
+    public boolean playEvolutionAnimation() {
         return this.playEvolutionAnimation;
     }
 
