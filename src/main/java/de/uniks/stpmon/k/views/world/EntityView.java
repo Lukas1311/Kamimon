@@ -71,7 +71,7 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         if (shadowNode == null) {
             return;
         }
-        setScaledMaterial(shadowNode, createShadowImage(direction));
+        updateImage(shadowNode, createShadowImage(direction));
         updateMaterialOpacity(shadowNode, shadowOpacity);
     }
 

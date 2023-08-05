@@ -116,7 +116,8 @@ public class WorldService {
                 roundDown(nightFactor, 0.05f));
     }
 
-    private float roundDown(float x, float a) {
+    @SuppressWarnings("SameParameterValue")
+    private static float roundDown(float x, float a) {
         return (float) (Math.floor(x / a) * a);
     }
 

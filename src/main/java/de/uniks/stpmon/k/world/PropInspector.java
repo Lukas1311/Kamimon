@@ -349,6 +349,10 @@ public class PropInspector {
         return grids[0].getWidth();
     }
 
+    public int getHeight() {
+        return grids[0].getHeight();
+    }
+
     /**
      * The offset to the tile id that a different layer has.
      *

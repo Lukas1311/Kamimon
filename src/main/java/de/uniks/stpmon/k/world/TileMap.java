@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.*;
 
 public class TileMap {
-
     private final Map<TilesetSource, Tileset> tilesetBySource;
     private final TileMapData data;
     private final IMapProvider provider;
@@ -27,7 +26,8 @@ public class TileMap {
     private final int tileHeight;
     private final int width;
     private final int height;
-    private final Map<TileLayerData, BufferedImage> layers = new HashMap<>();
+    private final Map<TileLayerData, BufferedImage> layerImages = new HashMap<>();
+    private final boolean isInterior;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.provider = provider;
@@ -57,6 +57,11 @@ public class TileMap {
         }
         this.width = width;
         this.height = height;
+        this.isInterior = data.isInterior();
+    }
+
+    public boolean isInterior() {
+        return isInterior;
     }
 
     public IMapProvider getProvider() {
@@ -76,17 +81,17 @@ public class TileMap {
     }
 
     public BufferedImage renderFloor() {
-        if (layers.isEmpty()) {
+        if (layerImages.isEmpty()) {
             renderMap();
         }
         BufferedImage floorImage = createImage(
                 width, height);
         Graphics2D floor = floorImage.createGraphics();
         for (TileLayerData layer : floorLayers) {
-            if (!layers.containsKey(layer)) {
+            if (!layerImages.containsKey(layer)) {
                 continue;
             }
-            BufferedImage layerImage = layers.get(layer);
+            BufferedImage layerImage = layerImages.get(layer);
             floor.drawImage(layerImage, layer.startx(), layer.starty(), null);
         }
         floor.dispose();
@@ -94,7 +99,7 @@ public class TileMap {
     }
 
     public List<DecorationLayer> renderDecorations() {
-        if (layers.isEmpty()) {
+        if (layerImages.isEmpty()) {
             renderMap();
         }
         return decorations;
@@ -118,15 +123,19 @@ public class TileMap {
         BufferedImage mergedImage = createImage(
                 width, height);
         Graphics2D graphics = mergedImage.createGraphics();
-        List<TileLayerData> layersed = data.layers();
-        for (int i = 0; i < layersed.size(); i++) {
-            TileLayerData layer = layersed.get(i);
+        List<TileLayerData> tileLayers = data.layers();
+        for (int i = 0; i < tileLayers.size(); i++) {
+            TileLayerData layer = tileLayers.get(i);
             if (layer.chunks() == null && layer.data() == null) {
                 continue;
             }
-            BufferedImage layerImage = renderLayer(layer, width, height);
+            FallbackTiles fallback = null;
+            if (i == 0 && !isInterior) {
+                fallback = new FallbackTiles(new ChunkBuffer(layer), layer);
+            }
+            BufferedImage layerImage = renderLayer(layer, width, height, fallback);
             graphics.drawImage(layerImage, 0, 0, null);
-            layers.put(layer, layerImage);
+            layerImages.put(layer, layerImage);
 
             if (decorationLayers.contains(layer)) {
                 decorations.add(new DecorationLayer(layer, i, layerImage));
@@ -136,15 +145,15 @@ public class TileMap {
         return mergedImage;
     }
 
-    public BufferedImage renderLayer(TileLayerData layer, int width, int height) {
+    public BufferedImage renderLayer(TileLayerData layer, int width, int height, FallbackTiles fallback) {
         if (layer.data() != null && !layer.data().isEmpty()) {
-            return renderData(layer);
+            return renderData(layer, fallback);
         }
         BufferedImage layerImage = createImage(width, height);
         for (ChunkData chunk : layer.chunks()) {
             int startX = chunk.x();
             int startY = chunk.y();
-            BufferedImage chunkImage1 = renderData(chunk);
+            BufferedImage chunkImage1 = renderData(chunk, fallback);
             ImageUtils.copyData(layerImage.getRaster(),
                     chunkImage1,
                     startX * tileWidth, startY * tileHeight,
@@ -154,17 +163,22 @@ public class TileMap {
         return layerImage;
     }
 
-    public BufferedImage renderData(ITileDataProvider provider) {
+    public BufferedImage renderData(ITileDataProvider provider, FallbackTiles fallback) {
         BufferedImage chunkImage = createImage(provider.width(), provider.height());
         Graphics2D graphics = chunkImage.createGraphics();
-
         for (int x = 0; x < provider.width(); x++) {
             for (int y = 0; y < provider.height(); y++) {
 
                 long globalId = provider.getGlobalIdFromLocal(x, y);
                 int data = (int) (globalId & TileConstants.TILE_ID_MASK);
                 if (data == 0) {
-                    continue;
+                    if (fallback == null) {
+                        continue;
+                    }
+                    data = fallback.getTile(x + provider.startx(), y + provider.starty());
+                    if (data <= 0) {
+                        continue;
+                    }
                 }
                 TilesetSource source = getSource(data);
                 Tileset tileset = tilesetBySource.get(source);

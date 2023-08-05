@@ -56,4 +56,10 @@ public class ChunkBuffer {
         return layerData.chunks().get(reference - BUFFER_OFFSET);
     }
 
+    public boolean isInvalid(int x, int y) {
+        if (layerData.data() != null) {
+            return x < 0 || y < 0 || x >= layerData.width() || y >= layerData.height();
+        }
+        return getChunk(x, y) == null;
+    }
 }

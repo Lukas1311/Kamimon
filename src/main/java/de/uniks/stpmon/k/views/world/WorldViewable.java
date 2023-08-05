@@ -88,6 +88,7 @@ public abstract class WorldViewable extends Viewable {
                 height, angle);
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected MeshView createRectangle(BufferedImage image, int angle) {
         return createRectangle(toFXImage(image),
                 image.getWidth(), image.getHeight(), angle);

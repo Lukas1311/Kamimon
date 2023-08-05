@@ -42,11 +42,13 @@ public class MeshUtils {
                 -l / 2f, 0, b / 2f,
                 l / 2f, 0, b / 2f
         };
+        float uPadding = (1 / (64f));
+        float vPadding = (1 / (64f));
         float[] texCoords = {
-                0f, 1f,
-                1f, 1f,
-                0f, 0f,
-                1f, 0f
+                0f + uPadding, 1f - vPadding,
+                1f - uPadding, 1f - vPadding,
+                0f + uPadding, 0f + vPadding,
+                1f - uPadding, 0f + vPadding
         };
         int[] faces = {
                 0, 0, 1, 1, 2, 2,
