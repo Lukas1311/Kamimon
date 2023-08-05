@@ -560,7 +560,7 @@ class AppTest extends ApplicationTest {
 
         //test evolution of mon
         // walk to the right and start Encounter
-        type(KeyCode.D, 1);
+        type(KeyCode.D);
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
