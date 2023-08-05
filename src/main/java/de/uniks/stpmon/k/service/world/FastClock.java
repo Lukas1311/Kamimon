@@ -11,6 +11,6 @@ public class FastClock extends ClockService {
 
     protected Observable<LocalTime> createObservable() {
         LocalTime currentTime = LocalTime.of(4, 0);
-        return createTimer(currentTime, 100, TimeUnit.MILLISECONDS);
+        return createTimer(currentTime, 300, TimeUnit.MILLISECONDS);
     }
 }
