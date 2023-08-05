@@ -37,7 +37,7 @@ public class CharacterView extends EntityView {
     @Override
     public Node render() {
         Node character = super.render();
-        entityNode.setId("character");
+        character.setId("character");
         PerspectiveCamera camera = cameraStorage.getCamera();
         camera.setTranslateX(character.getTranslateX());
         camera.setTranslateZ(character.getTranslateZ());
