@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.constants.DummyConstants;
+import de.uniks.stpmon.k.models.builder.TileLayerBuilder;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
@@ -55,12 +56,11 @@ public class PropInspectionTest {
         assertEquals(32, sourceImage.getWidth());
         assertEquals(48, sourceImage.getHeight());
 
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(),
-                List.of(1L, 1L, 1L, 1L), List.of(),
-                0, 0,
-                2, 2,
-                0, 0,
-                "tilelayer", true, List.of());
+        TileLayerData layer = TileLayerBuilder.builderTiles()
+                .setName(TileLayerData.GROUND_TYPE)
+                .setData(List.of(1L, 1L, 1L, 1L))
+                .setWidth(2).setHeight(2)
+                .create();
         List<TileProp> props = propInspector.work(new DecorationLayer(layer, 0, sourceImage), DummyConstants.AREA_MAP_DATA).props();
         assertEquals(1, props.size());
         TileProp prop = props.get(0);
