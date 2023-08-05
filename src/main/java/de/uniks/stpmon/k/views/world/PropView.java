@@ -3,17 +3,24 @@ package de.uniks.stpmon.k.views.world;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.storage.cache.SingleCache;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 
-@Singleton
-public class PropView extends WorldViewable {
+import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 
+@Singleton
+public class PropView extends OpaqueView<Group> {
+
+    public static final int SHADOW_BACK_OFFSET = 4;
     @Inject
     protected WorldRepository repository;
     private Group props;
@@ -31,27 +38,38 @@ public class PropView extends WorldViewable {
         props = new Group();
         props.setId("props");
         Group shadow = new Group();
-//        for (TileProp prop : propCache.asNullable()) {
-//            Node propNode = createRectangleScaled(ImageUtils.blackOutImage(prop.image(), 0.25f),  -90);
-////            propNode.setTranslateX(prop.x() * 16);
-////            propNode.setTranslateZ(-((prop.y() + prop.height()) * 16) + 6);
-////            propNode.setTranslateY(-0.35);
-//            propNode.getTransforms().add(0, new Translate(prop.x() * 16, -0.35, -((prop.y() + prop.height()) * 16)));
-//            propNode.getTransforms().add(2, new Shear(-1, 0,   0, 0));
-//            propNode.getTransforms().add(3, new Translate(0, -2, -Math.random() * 0.5));
-//            //propNode.getTransforms().add(new Translate(-prop.width() * 8, -(prop.height() * 16) + 6, 0));
-//            //propNode.getTransforms().add(new Translate(-prop.width() * 8, 0, 0));
-//            shadow.getChildren().add(propNode);
-//        }
-        //shadow.getTransforms().add(new Shear(0.25f, 0.25f));
+        for (TileProp prop : propCache.asNullable()) {
+            Node propNode = createRectangle(ImageUtils.blackOutImage(prop.image(), SHADOW_OPACITY), -90);
+            propNode.getTransforms().addAll(getTransforms(prop.height() * TILE_SIZE));
+            propNode.setTranslateX(prop.x() * TILE_SIZE);
+            propNode.setTranslateZ(-((prop.y() + prop.height()) * TILE_SIZE) + SHADOW_BACK_OFFSET);
+            propNode.setTranslateY(-0.2 - 1.5 * Math.random());
+            //propNode.setBlendMode(BlendMode.RED);
+            propNode.setEffect(new Blend(BlendMode.DARKEN));
+            shadow.getChildren().add(propNode);
+        }
+        shadowNode = shadow;
         props.getChildren().add(shadow);
         for (TileProp prop : propCache.asNullable()) {
             Node propNode = createRectangleScaled(prop.image(), WorldView.WORLD_ANGLE);
-            propNode.setTranslateX(prop.x() * 16);
-            propNode.setTranslateZ(-((prop.y() + prop.height()) * 16));
+            propNode.setTranslateX(prop.x() * TILE_SIZE);
+            propNode.setTranslateZ(-((prop.y() + prop.height()) * TILE_SIZE));
             props.getChildren().add(propNode);
         }
         return props;
+    }
+
+    @Override
+    protected void updateOpacity(Group node, float opacity) {
+        if (node == null) {
+            return;
+        }
+        for (Node child : node.getChildren()) {
+            if (!(child instanceof MeshView mesh)) {
+                continue;
+            }
+            updateMaterialOpacity(mesh, opacity);
+        }
     }
 
     @Override

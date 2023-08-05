@@ -91,7 +91,6 @@ public class WorldService {
         if (time.getHour() > DAY_CYCLE.nightStart()) {
             return 1;
         }
-        float factor = 1.0f;
         LocalTime scaledTime = time
                 .minusHours(DAY_CYCLE.dayStart());
         // Hours between day start and sunset
@@ -112,7 +111,6 @@ public class WorldService {
         if (nightFactor == 1) {
             return ShadowTransform.DEFAULT_DISABLED;
         }
-//        (int) (nightFactor * 10) / 10f
         return new ShadowTransform(1.0f, 1 - Math.abs(factor) / 4f,
                 factor * 2, 0.0f,
                 roundDown(nightFactor, 0.05f));

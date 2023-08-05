@@ -6,7 +6,7 @@ import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
-import javafx.embed.swing.SwingFXUtils;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -58,7 +58,7 @@ public class MinimapController extends Controller {
                         if (renderedMap.isEmpty()) {
                             return;
                         }
-                        miniMap.setImage(SwingFXUtils.toFXImage(renderedMap.get(), null));
+                        miniMap.setImage(ImageUtils.toFXImage(renderedMap.get()));
                     }
             );
         }

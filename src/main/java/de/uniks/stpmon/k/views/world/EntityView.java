@@ -9,7 +9,6 @@ import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
-import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -18,19 +17,15 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Shear;
 import javafx.scene.transform.Transform;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class EntityView extends WorldViewable {
+public abstract class EntityView extends OpaqueView<MeshView> {
 
     @Inject
     protected WorldService worldService;
@@ -38,16 +33,12 @@ public abstract class EntityView extends WorldViewable {
     // Not injected by dagger, provided by upper class
     private TrainerProvider trainerProvider;
     protected MeshView entityNode;
-    protected MeshView shadowNode;
     protected Group entityGroup;
     protected CharacterSet characterSet;
-    protected Shear shadowShear;
-    protected Scale shadowScale;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
     private Direction moveDirection;
     private Transition idleAnimation;
-    private float shadowOpacity = 0.0f;
 
     protected TrainerProvider getProvider() {
         return trainerProvider;
@@ -76,52 +67,33 @@ public abstract class EntityView extends WorldViewable {
         });
     }
 
-    private Node renderShadow() {
-        List<Transform> transforms = new LinkedList<>();
-        // Translate to bottom of the entity
-        transforms.add(new Translate(0, WorldView.WORLD_UNIT * 2, 0));
-        shadowShear = new Shear(0, 0, 0, 0);
-        transforms.add(shadowShear);
-        // Scale at the pivot point
-        shadowScale = new Scale(1.0f, 1.0f, 1.0f);
-        transforms.add(shadowScale);
-        // Translate back to of the entity
-        transforms.add(new Translate(0, -2 * WorldView.WORLD_UNIT, 0));
-        transforms.add(new Translate(0, 0, -0.1 - 0.5 * Math.random()));
-
-        shadowNode = createRectangleScaled(createShadowImage(Direction.from(trainerProvider.getTrainer())),
-                -90);
-        shadowNode.getTransforms().addAll(transforms);
-        return shadowNode;
-    }
-
     private void applyShadowDirection(Direction direction) {
         if (shadowNode == null) {
             return;
         }
         setScaledMaterial(shadowNode, createShadowImage(direction));
-        updateOpacity(shadowNode, shadowOpacity);
+        updateMaterialOpacity(shadowNode, shadowOpacity);
+    }
+
+    protected Node renderShadow() {
+        List<Transform> transforms = getTransforms(CharacterSet.TRAINER_HEIGHT);
+
+        shadowNode = createRectangleScaled(createShadowImage(), -90);
+        shadowNode.getTransforms().addAll(transforms);
+        return shadowNode;
+    }
+
+    @Override
+    protected void updateOpacity(MeshView node, float opacity) {
+        updateMaterialOpacity(node, opacity);
+    }
+
+    protected BufferedImage createShadowImage() {
+        return createShadowImage(Direction.from(trainerProvider.getTrainer()));
     }
 
     private BufferedImage createShadowImage(Direction direction) {
-        return ImageUtils.blackOutImage(characterSet.getPreview(direction), 0.25f);
-    }
-
-    public void updateShadow(ShadowTransform transform) {
-        if (shadowNode == null || transform == null) {
-            return;
-        }
-        if (transform.isDisabled()) {
-            shadowNode.setVisible(false);
-            return;
-        }
-        shadowNode.setVisible(true);
-        shadowOpacity = 1 - transform.timeFactor();
-        updateOpacity(shadowNode, shadowOpacity);
-        shadowScale.setX(transform.scaleX());
-        shadowScale.setY(transform.scaleY());
-        shadowShear.setX(transform.shearX());
-        shadowShear.setY(transform.shearY());
+        return ImageUtils.blackOutImage(characterSet.getPreview(direction), SHADOW_OPACITY);
     }
 
     @Override

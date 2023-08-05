@@ -122,8 +122,8 @@ public class WorldView extends Viewable {
                 return;
             }
             lastShadowTransform = transform;
+            propView.updateShadow(transform);
             characterView.updateShadow(transform);
-            shadowView.updateShadow(transform);
             npcCollectiveView.updateShadow(transform);
         });
     }

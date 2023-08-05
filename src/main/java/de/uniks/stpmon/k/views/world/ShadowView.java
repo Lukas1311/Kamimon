@@ -5,8 +5,8 @@ import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import de.uniks.stpmon.k.service.world.PreparationService;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.ShadowTransform;
-import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -23,6 +23,7 @@ public class ShadowView extends WorldViewable {
     protected WorldRepository repository;
     @Inject
     protected PreparationService preparationService;
+    protected PublishSubject<ShadowTransform> shadowUpdate = PublishSubject.create();
     private MeshView shadow;
     private float opacity = 0.0f;
 
@@ -33,12 +34,19 @@ public class ShadowView extends WorldViewable {
     @Override
     public Node render() {
         SingleCache<BufferedImage> imageCache = repository.shadowImage();
-        subscribe(repository.shadowImage().onValue(), (shadowImage) -> {
-            if (shadowImage.isEmpty()) {
-                return;
-            }
-            updateImage(shadow, shadowImage.get());
-            updateOpacity(shadow, opacity);
+//        subscribe(repository.shadowImage().onValue(), (shadowImage) -> {
+//            if (shadowImage.isEmpty()) {
+//                return;
+//            }
+//            updateImage(shadow, shadowImage.get());
+//            updateOpacity(shadow, opacity);
+//        });
+        subscribe(shadowUpdate.observeOn(Schedulers.io()).map((transform) -> {
+            opacity = 1 - transform.timeFactor();
+            return preparationService.createShadows(transform);
+        }).observeOn(FX_SCHEDULER), (image) -> {
+            updateImage(shadow, image);
+            updateMaterialOpacity(shadow, opacity);
         });
         if (imageCache.isEmpty()) {
             return new Group();
@@ -50,7 +58,7 @@ public class ShadowView extends WorldViewable {
         shadow.setTranslateX(bounds.getWidth() / 2);
         shadow.setTranslateZ(-bounds.getDepth() / 2 + 6);
         shadow.setTranslateY(-0.45);
-        return shadow;
+        return new Group();
     }
 
     @Override
@@ -60,12 +68,7 @@ public class ShadowView extends WorldViewable {
             return;
         }
         shadow.setVisible(true);
-        subscribe(Completable.create(emitter -> {
-            opacity = 1 - transform.timeFactor();
-            BufferedImage shadows = preparationService.createShadows(transform);
-            repository.shadowImage().setValue(shadows);
-            emitter.onComplete();
-        }).subscribeOn(Schedulers.io()));
+        shadowUpdate.onNext(transform);
     }
 
     @Override

@@ -9,8 +9,8 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.world.RouteData;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -30,7 +30,6 @@ import javafx.scene.text.TextFlow;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -108,7 +107,7 @@ public class MapOverviewController extends ToastedController {
                         if (renderedMap.isEmpty()) {
                             return;
                         }
-                        Image map = SwingFXUtils.toFXImage(renderedMap.get(), null);
+                        Image map = ImageUtils.toFXImage(renderedMap.get());
                         mapImageView.setImage(map);
                     }, this::handleError
             );
@@ -117,12 +116,12 @@ public class MapOverviewController extends ToastedController {
 
         if (currentRegion.map() != null) {
             subscribe(
-                textDeliveryService.getRouteData(currentRegion),
-                data -> subscribe(
-                        regionService.getAreas(currentRegion._id()),
-                        areas -> renderMapDetails(data, filterVisitedAreas(areas)),
-                        this::handleError
-                )
+                    textDeliveryService.getRouteData(currentRegion),
+                    data -> subscribe(
+                            regionService.getAreas(currentRegion._id()),
+                            areas -> renderMapDetails(data, filterVisitedAreas(areas)),
+                            this::handleError
+                    )
             );
         }
 
@@ -201,7 +200,7 @@ public class MapOverviewController extends ToastedController {
 
     private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited) {
         shape.setId("detail_" + routeData.id());
-        
+
         if (isVisited) {
             shape.setFill(Color.TRANSPARENT);
             shape.setOpacity(OPACITY_DESELECTED);
@@ -231,7 +230,7 @@ public class MapOverviewController extends ToastedController {
                 } else {
                     regionDescription.setText("Here could be your advertisement.");
                 }
-                
+
             } else {
                 areaNameLabel.setText("???");
                 regionDescription.setText("???");

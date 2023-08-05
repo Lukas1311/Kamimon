@@ -33,7 +33,11 @@ public class ImageUtils {
     }
 
     public static Image scaledImageFX(BufferedImage image, double scale) {
-        return SwingFXUtils.toFXImage(scaledImage(image, scale), null);
+        return toFXImage(scaledImage(image, scale));
+    }
+
+    public static Image toFXImage(BufferedImage image) {
+        return SwingFXUtils.toFXImage(image, null);
     }
 
     public static void copyData(WritableRaster target, BufferedImage source,
