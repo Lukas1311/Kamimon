@@ -37,8 +37,13 @@ public record TileMapData(
                 .orElse(null);
     }
 
-    public boolean isInterior() {
-        return properties() == null ||
-                properties().stream().noneMatch(property -> property.name().equals("Terrain"));
+    public boolean isOutdoor() {
+        return properties() != null &&
+                properties().stream().anyMatch(property ->
+                        property.name().equals("Terrain") || property.name().equals("Spawn"));
+    }
+
+    public boolean isIndoor() {
+        return !isOutdoor();
     }
 }

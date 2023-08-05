@@ -30,7 +30,7 @@ public class TileMap {
     private final int width;
     private final int height;
     private final Map<TileLayerData, BufferedImage> layerImages = new HashMap<>();
-    private final boolean isInterior;
+    private final boolean isIndoor;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
         this.provider = provider;
@@ -68,7 +68,11 @@ public class TileMap {
             this.width = width - width % TILE_SIZE + (width % TILE_SIZE > 0 ? TILE_SIZE : 0);
             this.height = height - height % TILE_SIZE + (height % TILE_SIZE > 0 ? TILE_SIZE : 0);
         }
-        this.isInterior = data.isInterior();
+        this.isIndoor = data.isIndoor();
+    }
+
+    public boolean isIndoor() {
+        return isIndoor;
     }
 
     public IMapProvider getProvider() {
@@ -137,7 +141,7 @@ public class TileMap {
                 continue;
             }
             FallbackTiles fallback = null;
-            if (i == 0 && !isInterior) {
+            if (i == 0 && !isIndoor) {
                 fallback = new FallbackTiles(new ChunkBuffer(layer), layer);
             }
             BufferedImage layerImage = renderLayer(layer, width, height, fallback);

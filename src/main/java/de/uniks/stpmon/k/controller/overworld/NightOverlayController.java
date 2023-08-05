@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.overworld;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.service.SettingsService;
+import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
 import javafx.fxml.FXML;
@@ -24,6 +25,8 @@ public class NightOverlayController extends Controller {
     public ClockService clockService;
     @Inject
     public SettingsService settingsService;
+    @Inject
+    public WorldRepository world;
 
     @Inject
     public NightOverlayController() {
@@ -45,14 +48,18 @@ public class NightOverlayController extends Controller {
     @Override
     public Parent render() {
         Parent render = super.render();
-        subscribe(clockService.onTime(), this::applyTime);
-        subscribe(settingsService.onNightModusEnabled(), (enabled) -> {
-            if (!enabled) {
-                nightOverlay.setVisible(false);
-                return;
-            }
-            applyTime(clockService.onTime().blockingFirst());
-        });
+        if (!world.isIndoor()) {
+            subscribe(clockService.onTime(), this::applyTime);
+            subscribe(settingsService.onNightModusEnabled(), (enabled) -> {
+                if (!enabled) {
+                    nightOverlay.setVisible(false);
+                    return;
+                }
+                applyTime(clockService.onTime().blockingFirst());
+            });
+        } else {
+            nightOverlay.setVisible(false);
+        }
         return render;
     }
 

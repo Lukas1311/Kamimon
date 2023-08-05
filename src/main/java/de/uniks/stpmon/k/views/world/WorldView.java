@@ -20,16 +20,6 @@ import javax.inject.Singleton;
 @Singleton
 public class WorldView extends Viewable {
 
-    public static final Color[] DAY_COLORS = {
-            Color.MIDNIGHTBLUE.brighter().brighter(),
-            Color.LIGHTSLATEGREY,
-            Color.LIGHTYELLOW,
-            Color.WHITE,
-            Color.LIGHTGOLDENRODYELLOW,
-            Color.LIGHTSLATEGREY,
-            Color.MIDNIGHTBLUE.brighter().brighter()
-    };
-
     public static final int WORLD_UNIT = 16;
     public static final int ENTITY_OFFSET_Y = 1;
     public static final int WORLD_ANGLE = -49;
@@ -79,6 +69,13 @@ public class WorldView extends Viewable {
         Node props = propView.render();
         Node npc = npcCollectiveView.render();
 
+        // Disable shadows for indoor worlds
+        if (storage.isIndoor()) {
+            propView.updateShadow(ShadowTransform.DEFAULT_DISABLED);
+            characterView.updateShadow(ShadowTransform.DEFAULT_DISABLED);
+            npcCollectiveView.updateShadow(ShadowTransform.DEFAULT_DISABLED);
+        }
+
         // Lights all objects from all sides
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(Color.WHITE);
@@ -114,6 +111,9 @@ public class WorldView extends Viewable {
         floorView.init();
         propView.init();
         npcCollectiveView.init();
+        if (storage.isIndoor()) {
+            return;
+        }
         subscribe(clockService.onTime(), (time) -> {
             ShadowTransform transform = worldService.getShadowTransform(time);
             if (transform.equals(lastShadowTransform)) {

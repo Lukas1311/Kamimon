@@ -161,15 +161,15 @@ public class PreparationService {
                     PropMap propMap = createPropMap(tileMap, area);
                     List<TileProp> props = propMap.props();
                     BufferedImage floorImage = mergeFloor(allLayersImage, tileMap, propMap);
-                    worldRepository.setChunks(finishFloor(floorImage));
-                    worldRepository.floorImage().setValue(floorImage);
+                    worldRepository.setChunks(splitFloorIntoChunks(floorImage));
+                    worldRepository.setIndoor(tileMap.isIndoor());
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
                     return Completable.complete();
                 });
     }
 
-    private BufferedImage[][] finishFloor(BufferedImage image) {
+    private BufferedImage[][] splitFloorIntoChunks(BufferedImage image) {
         int widthChunks = (int) Math.ceil((double) image.getWidth() / CHUNK_SIZE);
         int heightChunks = (int) Math.ceil((double) image.getHeight() / CHUNK_SIZE);
         BufferedImage[][] chunks = new BufferedImage[widthChunks][heightChunks];
