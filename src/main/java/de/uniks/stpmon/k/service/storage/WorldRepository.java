@@ -12,7 +12,6 @@ import java.util.List;
 public class WorldRepository {
 
     private final SingleCache<BufferedImage> floorImage = new SingleCache<>();
-    private final SingleCache<BufferedImage> shadowImage = new SingleCache<>();
     private final SingleCache<BufferedImage> minimapImage = new SingleCache<>();
     private final SingleCache<BufferedImage> regionMap = new SingleCache<>();
     private final SingleCache<List<TileProp>> props = new SingleCache<>();
@@ -23,10 +22,6 @@ public class WorldRepository {
 
     public SingleCache<BufferedImage> floorImage() {
         return floorImage;
-    }
-
-    public SingleCache<BufferedImage> shadowImage() {
-        return shadowImage;
     }
 
     public SingleCache<BufferedImage> minimapImage() {
@@ -48,7 +43,6 @@ public class WorldRepository {
 
         flushIfNotNull(floorImage);
         flushIfNotNull(minimapImage);
-        flushIfNotNull(shadowImage);
         for (TileProp prop : props.asOptional().orElse(List.of())) {
             BufferedImage image = prop.image();
             if (image != null) {

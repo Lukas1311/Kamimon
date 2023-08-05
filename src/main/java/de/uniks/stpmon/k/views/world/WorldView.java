@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
+import de.uniks.stpmon.k.utils.NodeUtils;
 import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
@@ -42,8 +43,6 @@ public class WorldView extends Viewable {
     @Inject
     protected FloorView floorView;
     @Inject
-    protected ShadowView shadowView;
-    @Inject
     protected PropView propView;
     @Inject
     protected NPCCollectiveView npcCollectiveView;
@@ -77,7 +76,6 @@ public class WorldView extends Viewable {
         }
         Node character = characterView.render();
         Node floor = floorView.render();
-        Node shadow = shadowView.render();
         Node props = propView.render();
         Node npc = npcCollectiveView.render();
 
@@ -85,7 +83,7 @@ public class WorldView extends Viewable {
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(Color.WHITE);
 
-        return new Group(floor, shadow, ambient, props, character, npc);
+        return new Group(floor, ambient, props, character, npc);
     }
 
     public SubScene createScene() {
@@ -132,12 +130,8 @@ public class WorldView extends Viewable {
     public void destroy() {
         super.destroy();
 
-        characterView.destroy();
-        floorView.destroy();
-        propView.destroy();
-        npcCollectiveView.destroy();
+        NodeUtils.removeNodes(this);
         cameraStorage.setCamera(null);
-        shadowView.destroy();
         Disposer.cleanUp();
         System.gc();
     }

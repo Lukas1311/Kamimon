@@ -14,7 +14,6 @@ import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
 import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.world.PropMap;
-import de.uniks.stpmon.k.world.ShadowTransform;
 import de.uniks.stpmon.k.world.TileMap;
 import io.reactivex.rxjava3.core.Completable;
 import retrofit2.HttpException;
@@ -22,7 +21,6 @@ import retrofit2.HttpException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -164,59 +162,9 @@ public class PreparationService {
                     worldRepository.floorImage().setValue(floorImage);
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
-                    worldRepository.shadowImage().setValue(createShadows(ShadowTransform.DEFAULT_ENABLED));
                     return Completable.complete();
                 });
     }
 
-    /**
-     * Create the shadow image for the current area.
-     * <p/>
-     * This will create a new image with the shadows of the props. Every prop is rendered onto the image
-     * after each other. The prop image is then sheared and scaled to create the shadow effect. The black color
-     * is created by applying a {@link AlphaComposite#SRC_IN} composite to the image and draw the black color
-     * over it.
-     *
-     * @param transform Transform to apply to the shadows, it represents the progress of the day.
-     * @return Image with the shadows of the props.
-     */
-    public BufferedImage createShadows(ShadowTransform transform) {
-        List<TileProp> props = worldRepository.props().asOptional().orElse(List.of());
-        BufferedImage originalImage = worldRepository.floorImage().asNullable();
-        BufferedImage shadowImage = new BufferedImage(originalImage.getWidth(), originalImage.getHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = shadowImage.createGraphics();
-        for (TileProp prop : props) {
-            g.setTransform(createTransform(transform, prop));
-            g.drawImage(prop.image(), 0, 0, null);
-        }
-        g.setTransform(new AffineTransform());
-        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN));
-        g.setColor(new Color(0, 0, 0, 0.25f));
-        g.fillRect(0, 0, shadowImage.getWidth(), shadowImage.getHeight());
-        g.dispose();
-
-        return shadowImage;
-    }
-
-    /**
-     * Creates the transform for the given prop and shadow transform.
-     *
-     * @param transform Transform to apply to the prop
-     * @param prop      Prop to create the transform for, used to get the size of the prop and the position
-     * @return Transform for the given prop and shadow transform
-     */
-    private static AffineTransform createTransform(ShadowTransform transform, TileProp prop) {
-        AffineTransform affTrans = new AffineTransform();
-        // Set pivot point to the left bottom center of the prop
-        affTrans.translate(prop.x() * 16 - prop.width() * 8, prop.y() * 16 + prop.height() * 16);
-        affTrans.shear(transform.shearX(), transform.shearY());
-        // Set pivot point to the bottom center of the prop
-        affTrans.translate(prop.width() * 16, 0);
-        affTrans.scale(transform.scaleX(), transform.scaleY());
-        // Set pivot point to the top left corner of the prop
-        affTrans.translate(-prop.width() * 8, -prop.height() * 16);
-        return affTrans;
-    }
 
 }
