@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 public class MinimapController extends Controller {
 
-    public static final int VISIBLE_AREA = 450;
+    public static final int VISIBLE_AREA = 550;
     @FXML
     public ImageView miniMap;
     @FXML
