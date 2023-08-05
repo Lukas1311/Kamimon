@@ -326,6 +326,11 @@
  -fx-border-width: 1;
 }
 
+
+.monster-status-stunned {
+ -fx-background-color: lightblue;
+}
+
 .monster-status-burned {
  -fx-background-color: darkred;
 }
