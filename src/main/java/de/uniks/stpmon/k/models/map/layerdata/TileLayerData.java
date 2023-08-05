@@ -39,6 +39,7 @@ public record TileLayerData(
 
     public static final String GROUND_TYPE = "Ground";
     public static final String WALLS_TYPE = "Walls";
+    public static final String UNDERGROUND_TYPE = "Underground";
 
 
     public boolean checkBounds(int x, int y) {

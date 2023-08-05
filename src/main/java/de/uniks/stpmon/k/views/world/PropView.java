@@ -7,8 +7,6 @@ import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.shape.MeshView;
 
 import javax.inject.Inject;
@@ -20,7 +18,7 @@ import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 @Singleton
 public class PropView extends OpaqueView<Group> {
 
-    public static final int SHADOW_BACK_OFFSET = 4;
+    public static final int SHADOW_BACK_OFFSET = 8;
     @Inject
     protected WorldRepository repository;
     private Group props;
@@ -44,8 +42,6 @@ public class PropView extends OpaqueView<Group> {
             propNode.setTranslateX(prop.x() * TILE_SIZE);
             propNode.setTranslateZ(-((prop.y() + prop.height()) * TILE_SIZE) + SHADOW_BACK_OFFSET);
             propNode.setTranslateY(-0.2 - 1.5 * Math.random());
-            //propNode.setBlendMode(BlendMode.RED);
-            propNode.setEffect(new Blend(BlendMode.DARKEN));
             shadow.getChildren().add(propNode);
         }
         shadowNode = shadow;

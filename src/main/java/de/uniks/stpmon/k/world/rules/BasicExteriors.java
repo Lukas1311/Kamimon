@@ -144,6 +144,14 @@ public class BasicExteriors {
         registry.markBottom(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(33047, 24, 1, 176));
 
+        // building giolaxen
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(8097, 6, 13, 176));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(8103, 6, 13, 176));
+        registry.markEntangled(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(10385, 6, 13, 176));
+
         // modular fence exclusion
         registry.markDecoration(TILESET_MODERN_EXTERIORS, 32999, 33002, 33175, 33178);
         // forest fence entangle

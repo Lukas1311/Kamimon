@@ -27,7 +27,7 @@ public class BasicRules {
                 new IdSource.Rectangle(41713 + 154, 6, 3, 16));
 
         // snow trees
-        registry.markDecoration(TILESET_MODERN_EXTERIORS_EXTENDED,
+        registry.markBottom(TILESET_MODERN_EXTERIORS_EXTENDED,
                 new IdSource.Rectangle(41713 + 152, 2, 2, 16));
 
         // mines
