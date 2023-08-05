@@ -42,8 +42,8 @@ public class MeshUtils {
                 -l / 2f, 0, b / 2f,
                 l / 2f, 0, b / 2f
         };
-        float uPadding = (1 / (64f));
-        float vPadding = (1 / (64f));
+        float uPadding = (1 / (1024f));
+        float vPadding = (1 / (1024f));
         float[] texCoords = {
                 0f + uPadding, 1f - vPadding,
                 1f - uPadding, 1f - vPadding,

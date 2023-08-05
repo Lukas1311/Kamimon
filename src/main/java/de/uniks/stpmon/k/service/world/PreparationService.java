@@ -27,6 +27,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static de.uniks.stpmon.k.constants.TileConstants.CHUNK_SIZE;
+import static de.uniks.stpmon.k.constants.TileConstants.OUTER_CHUNKS;
+
 @Singleton
 public class PreparationService {
 
@@ -159,11 +162,24 @@ public class PreparationService {
                     PropMap propMap = createPropMap(tileMap, area);
                     List<TileProp> props = propMap.props();
                     BufferedImage floorImage = mergeFloor(allLayersImage, tileMap, propMap);
+                    worldRepository.setChunks(finishFloor(floorImage));
                     worldRepository.floorImage().setValue(floorImage);
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
                     return Completable.complete();
                 });
+    }
+
+    private BufferedImage[][] finishFloor(BufferedImage image) {
+        BufferedImage[][] chunks = new BufferedImage
+                [image.getWidth() / CHUNK_SIZE + OUTER_CHUNKS * 2]
+                [image.getHeight() / CHUNK_SIZE + OUTER_CHUNKS * 2];
+        for (int x = 0; x < image.getWidth() / CHUNK_SIZE; x++) {
+            for (int y = 0; y < image.getHeight() / CHUNK_SIZE; y++) {
+                chunks[x][y] = image.getSubimage(x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+            }
+        }
+        return chunks;
     }
 
 

@@ -60,10 +60,6 @@ public class TileMap {
         this.isInterior = data.isInterior();
     }
 
-    public boolean isInterior() {
-        return isInterior;
-    }
-
     public IMapProvider getProvider() {
         return provider;
     }

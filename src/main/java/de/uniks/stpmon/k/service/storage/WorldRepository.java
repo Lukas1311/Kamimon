@@ -15,9 +15,19 @@ public class WorldRepository {
     private final SingleCache<BufferedImage> minimapImage = new SingleCache<>();
     private final SingleCache<BufferedImage> regionMap = new SingleCache<>();
     private final SingleCache<List<TileProp>> props = new SingleCache<>();
+    private BufferedImage[][] chunks = new BufferedImage[0][];
 
     @Inject
     public WorldRepository() {
+    }
+
+
+    public BufferedImage[][] getChunks() {
+        return chunks;
+    }
+
+    public void setChunks(BufferedImage[][] chunks) {
+        this.chunks = chunks;
     }
 
     public SingleCache<BufferedImage> floorImage() {
