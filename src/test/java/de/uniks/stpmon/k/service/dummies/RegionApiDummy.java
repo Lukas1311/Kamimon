@@ -65,7 +65,7 @@ public class RegionApiDummy implements RegionApiService {
     }
 
     /**
-     * The same monster is added to all trainers
+     * Initilizes the monstes
      */
     private void initDummyMonsters() {
         SortedMap<String, Integer> abilities = new TreeMap<>();
@@ -78,15 +78,16 @@ public class RegionApiDummy implements RegionApiService {
         MonsterAttributes currentAttributes = new MonsterAttributes(0f, 0f, 0f, 0f);
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
-                .setId(monsterIdCount++)
+                .setId(monsterIdCount++) //id=0
                 .setAbilities(abilities)
                 .setAttributes(new MonsterAttributes(20f, 0f, 0f, 0f))
                 .setCurrentAttributes(new MonsterAttributes(1f, 0f, 0f, 0f))
                 .setLevel(1)
+                .setExperience(5)
                 .create());
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
-                .setId(monsterIdCount++)
+                .setId(monsterIdCount++) //id=1
                 .setAbilities(abilities)
                 .setType(2)
                 .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
@@ -95,7 +96,7 @@ public class RegionApiDummy implements RegionApiService {
                 .create());
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
-                .setId(monsterIdCount++)
+                .setId(monsterIdCount++) //id=2
                 .setAbilities(abilities)
                 .setType(0)
                 .setAttributes(new MonsterAttributes(100f, 0f, 0f, 0f))
@@ -104,7 +105,7 @@ public class RegionApiDummy implements RegionApiService {
                 .create());
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
-                .setId(monsterIdCount++)
+                .setId(monsterIdCount++) //id=3
                 .setAbilities(abilities)
                 .setType(3)
                 .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
@@ -113,11 +114,21 @@ public class RegionApiDummy implements RegionApiService {
                 .create());
 
         monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
-                .setId(monsterIdCount++)
+                .setId(monsterIdCount++) //id=4
                 .setAbilities(abilities)
                 .setType(2)
                 .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
                 .setCurrentAttributes(new MonsterAttributes(0f, 0f, 0f, 0f))
+                .setLevel(2)
+                .create());
+
+        monstersById.put(Integer.toString(monsterIdCount), MonsterBuilder.builder()
+                .setId(monsterIdCount++) //id=5
+                .setAbilities(abilities)
+                .setType(2)
+                .setAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setCurrentAttributes(new MonsterAttributes(12f, 0f, 0f, 0f))
+                .setExperience(10)
                 .setLevel(2)
                 .create());
     }
