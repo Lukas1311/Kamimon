@@ -576,6 +576,7 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
+        clickOn("#battleLog");
 
 
     }

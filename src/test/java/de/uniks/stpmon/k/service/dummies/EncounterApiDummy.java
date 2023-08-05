@@ -239,6 +239,14 @@ public class EncounterApiDummy implements EncounterApiService {
             lvlUpResults.add(lvlUpResult);
             Result evoResult = ResultBuilder.builder("monster-evolved").create();
             lvlUpResults.add(evoResult);
+            Result attackLearnedResult = ResultBuilder.builder("monster-learned")
+                    .setAbility(0)
+                    .create();
+            lvlUpResults.add(attackLearnedResult);
+            Result attackForgotResult = ResultBuilder.builder("monster-forgot")
+                    .setAbility(0)
+                    .create();
+            lvlUpResults.add(attackForgotResult);
 
             Opponent evo = encounterWrapper.getOpponent("0");
 
