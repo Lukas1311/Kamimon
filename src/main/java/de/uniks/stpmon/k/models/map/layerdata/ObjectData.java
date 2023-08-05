@@ -11,7 +11,6 @@ public record ObjectData(
         List<Property> properties,
         String type,
         boolean visible,
-        int rotation,
         int width,
         int height,
         int x,
