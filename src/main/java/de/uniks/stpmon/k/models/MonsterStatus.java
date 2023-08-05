@@ -26,7 +26,9 @@ public enum MonsterStatus {
     CONFUSED("confused"),
     //TODO: Remove, if server status is fixed
     @JsonProperty("confusion")
-    CONFUSION("confused");
+    CONFUSION("confused"),
+    @JsonProperty("stunned")
+    STUNNED("stunned");
 
     private final String status;
 
