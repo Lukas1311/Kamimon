@@ -56,10 +56,17 @@ public class FallbackTiles {
             int value = getInternal(tileX, tileY);
             visited.add(poll);
             if (value <= 0) {
-                addQueue(tileX, tileY + 1, queue, candidates);
-                addQueue(tileX, tileY - 1, queue, candidates);
-                addQueue(tileX + 1, tileY, queue, candidates);
-                addQueue(tileX - 1, tileY, queue, candidates);
+                if (walkRight) {
+                    addQueue(tileX + 1, tileY, queue, candidates);
+                    addQueue(tileX - 1, tileY, queue, candidates);
+                    addQueue(tileX, tileY + 1, queue, candidates);
+                    addQueue(tileX, tileY - 1, queue, candidates);
+                } else {
+                    addQueue(tileX, tileY + 1, queue, candidates);
+                    addQueue(tileX, tileY - 1, queue, candidates);
+                    addQueue(tileX + 1, tileY, queue, candidates);
+                    addQueue(tileX - 1, tileY, queue, candidates);
+                }
                 continue;
             }
             // Update visited tiles with the value

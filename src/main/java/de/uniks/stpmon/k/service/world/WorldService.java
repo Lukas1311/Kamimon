@@ -106,6 +106,9 @@ public class WorldService {
      * @return A transformation with scale and shear.
      */
     public ShadowTransform getShadowTransform(LocalTime time) {
+        if (!settingsService.getNightEnabled()) {
+            return ShadowTransform.DEFAULT_DISABLED;
+        }
         float factor = getDayFactor(time);
         float nightFactor = getNightFactor(time);
         if (nightFactor == 1) {
