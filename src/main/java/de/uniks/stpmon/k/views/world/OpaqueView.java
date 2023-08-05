@@ -39,7 +39,7 @@ public abstract class OpaqueView<N extends Node> extends WorldViewable {
     }
 
     public void updateShadow(ShadowTransform transform) {
-        if (shadowNode == null || transform == null) {
+        if (shadowNode == null || transform == null || shadowShear == null) {
             return;
         }
         if (transform.isDisabled()) {

@@ -59,6 +59,8 @@ public class MonsterInventoryControllerTest extends ApplicationTest {
         team.onNext(List.of(DummyConstants.MONSTER));
         monsters.onNext(List.of(DummyConstants.MONSTER, MonsterBuilder.builder().setId("second").create()));
         when(monsterService.getMonsters()).thenReturn(monsters);
+        when(monsterService.getMonsterList()).thenAnswer((i) -> monsters.getValue());
+        when(monsterService.getTeamList()).thenAnswer((i) -> team.getValue());
         when(monsterService.getTeam()).thenReturn(team);
         when(resourceService.getMonsterImage(any()))
                 .thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
@@ -108,7 +110,7 @@ public class MonsterInventoryControllerTest extends ApplicationTest {
         // Click on another monster should close info and open info for the new monster
         clickOn("#storage_0_0");
         waitForFxEvents();
-        // Booth methods should be called one time
+        // Close method should be called one time
         verify(ingameController, times(3)).openMonsterInfo(any());
         verify(ingameController, times(2)).closeMonsterInfo();
     }

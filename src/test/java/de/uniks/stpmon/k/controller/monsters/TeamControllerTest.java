@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.service.storage.cache.MonsterCache;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -46,9 +45,6 @@ public class TeamControllerTest extends ApplicationTest {
     @Mock
     MonsterService monsterService;
 
-    @Mock
-    MonsterCache monsterCache;
-
     @InjectMocks
     TeamController teamController;
 
@@ -61,12 +57,6 @@ public class TeamControllerTest extends ApplicationTest {
         when(monsterService.getTeam()).thenReturn(Observable.just(
                 List.of(MonsterBuilder.builder().setId("1").setType(1).create()
                 )));
-
-        when(monsterService.getTeamCache()).thenReturn(monsterCache);
-
-        when(monsterService.getTeamCache().getCurrentValues()).
-                thenReturn(List.of(MonsterBuilder.builder().setId("1").setType(1).create()));
-
 
         when(presetService.getMonster("1")).thenReturn(
                 Observable.just(new MonsterTypeDto(1, "Monster 1", "", List.of(), "")));
