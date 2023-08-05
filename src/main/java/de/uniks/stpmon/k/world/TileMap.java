@@ -51,7 +51,8 @@ public class TileMap {
             if (layer.chunks() == null && layer.data() == null) {
                 continue;
             }
-            if (layer.name().equals(TileLayerData.GROUND_TYPE)
+            if (layer.name() == null
+                    || layer.name().equals(TileLayerData.GROUND_TYPE)
                     || layer.name().equals(TileLayerData.WALLS_TYPE)
                     || layer.name().equals(TileLayerData.UNDERGROUND_TYPE)) {
                 floorLayers.add(layer);
