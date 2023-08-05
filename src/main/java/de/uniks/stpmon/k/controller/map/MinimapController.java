@@ -71,9 +71,7 @@ public class MinimapController extends Controller {
                         miniMap.setImage(SwingFXUtils.toFXImage(renderedMap.get(), null));
                     }
             );
-            subscribe(textDeliveryService.getNextMonCenter(currentArea), (monCenter) -> {
-                this.monCenter = monCenter;
-            });
+            subscribe(textDeliveryService.getNextMonCenter(currentArea), (monCenter) -> this.monCenter = monCenter);
         }
         double centerX = playerDart.getBoundsInLocal().getCenterX();
         double centerY = playerDart.getBoundsInLocal().getCenterY();
