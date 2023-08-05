@@ -47,7 +47,11 @@ public class FallbackTiles {
         }
         HashSet<Integer> candidates = new HashSet<>();
         HashSet<Integer> visited = new HashSet<>();
-        Queue<Integer> queue = new PriorityQueue<>();
+        float xDiff = (float) Math.min(x, layerData.width() - x) / layerData.height();
+        float yDiff = (float) Math.min(y, layerData.height() - y) / layerData.width();
+        boolean sortByX = xDiff >= yDiff;
+        Queue<Integer> queue = new PriorityQueue<>((a, b) -> sortByX ? a % layerData.width() - b % layerData.width()
+                : a / layerData.width() - b / layerData.width());
         queue.add(x + y * layerData.width());
         while (!queue.isEmpty()) {
             Integer poll = queue.poll();
@@ -56,17 +60,10 @@ public class FallbackTiles {
             int value = getInternal(tileX, tileY);
             visited.add(poll);
             if (value <= 0) {
-                if (walkRight) {
-                    addQueue(tileX + 1, tileY, queue, candidates);
-                    addQueue(tileX - 1, tileY, queue, candidates);
-                    addQueue(tileX, tileY + 1, queue, candidates);
-                    addQueue(tileX, tileY - 1, queue, candidates);
-                } else {
-                    addQueue(tileX, tileY + 1, queue, candidates);
-                    addQueue(tileX, tileY - 1, queue, candidates);
-                    addQueue(tileX + 1, tileY, queue, candidates);
-                    addQueue(tileX - 1, tileY, queue, candidates);
-                }
+                addQueue(tileX, tileY + 1, queue, candidates);
+                addQueue(tileX, tileY - 1, queue, candidates);
+                addQueue(tileX + 1, tileY, queue, candidates);
+                addQueue(tileX - 1, tileY, queue, candidates);
                 continue;
             }
             // Update visited tiles with the value
