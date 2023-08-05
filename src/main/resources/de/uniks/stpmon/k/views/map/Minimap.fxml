@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Polygon?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.MinimapController">
+            fx:controller="de.uniks.stpmon.k.controller.map.MinimapController">
     <center>
         <StackPane fx:id="miniMapStackPane" BorderPane.alignment="CENTER">
             <ImageView fx:id="miniMap" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">

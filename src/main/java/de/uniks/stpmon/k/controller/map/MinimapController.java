@@ -1,7 +1,9 @@
-package de.uniks.stpmon.k.controller;
+package de.uniks.stpmon.k.controller.map;
 
 import com.sun.javafx.scene.NodeHelper;
 import com.sun.javafx.scene.SceneHelper;
+
+import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
@@ -46,7 +48,7 @@ public class MinimapController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
-        loadImage(miniMapBorder, "emptyMinimap.png");
+        loadImage(miniMapBorder, getResourcePath() + "emptyMinimap.png");
 
         Area currentArea = regionStorage.getArea();
         miniMap.setPreserveRatio(false);
@@ -101,6 +103,11 @@ public class MinimapController extends Controller {
         miniMap = null;
         miniMapBorder.setImage(null);
         miniMapBorder = null;
+    }
+
+    @Override
+    public String getResourcePath() {
+        return "map/";
     }
 }
 

@@ -5,7 +5,10 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
-import de.uniks.stpmon.k.controller.monDex.MonDexDetailController;
+import de.uniks.stpmon.k.controller.map.MapOverviewController;
+import de.uniks.stpmon.k.controller.map.MinimapController;
+import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
+import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
@@ -14,6 +17,7 @@ import de.uniks.stpmon.k.controller.shop.ShopOptionController;
 import de.uniks.stpmon.k.controller.shop.ShopOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.AnimationService;
@@ -103,6 +107,8 @@ public class IngameController extends PortalController {
     MonsterInformationController monsterInformationController;
     @Inject
     MonDexDetailController monDexDetailController;
+    @Inject
+    ItemInformationController itemInformationController;
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
@@ -362,6 +368,19 @@ public class IngameController extends PortalController {
         Parent monsterInfo = controller.render();
         controller.loadMon(mon);
         children.add(0, monsterInfo);
+    }
+
+    public void openItemInformation(Item item) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        ItemInformationController controller = itemInformationController;
+        controller.init();
+        tabStack.push(controller);
+
+        controller.setItem(item);
+
+        Parent itemInfo = controller.render();
+        children.add(0, itemInfo);
     }
 
     public void applyHealEffect() {

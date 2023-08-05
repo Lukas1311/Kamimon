@@ -43,7 +43,7 @@ public class ShopOverviewController extends Controller {
         final Parent parent = super.render();
         loadBgImage(itemListPane, "inventory/InventoryBox.png");
 
-        itemListView.setCellFactory(param -> new ItemCell(resourceService, presetService));
+        itemListView.setCellFactory(param -> new ItemCell(null, resourceService, presetService));
         itemListView.setItems(availableItems);
 
         listen(itemListView.getSelectionModel().selectedItemProperty(), ((observable, oldValue, newValue) ->
