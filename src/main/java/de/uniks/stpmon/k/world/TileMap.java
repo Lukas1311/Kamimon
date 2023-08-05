@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.world;
 
 import de.uniks.stpmon.k.constants.TileConstants;
 import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
@@ -14,6 +15,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
+
+import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 
 public class TileMap {
     private final Map<TilesetSource, Tileset> tilesetBySource;
@@ -55,8 +58,13 @@ public class TileMap {
             }
 
         }
-        this.width = width;
-        this.height = height;
+        if (provider instanceof Region) {
+            this.width = width;
+            this.height = height;
+        } else {
+            this.width = width - width % TILE_SIZE + (width % TILE_SIZE > 0 ? TILE_SIZE : 0);
+            this.height = height - height % TILE_SIZE + (height % TILE_SIZE > 0 ? TILE_SIZE : 0);
+        }
         this.isInterior = data.isInterior();
     }
 

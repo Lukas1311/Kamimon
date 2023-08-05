@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static de.uniks.stpmon.k.constants.TileConstants.CHUNK_SIZE;
-import static de.uniks.stpmon.k.constants.TileConstants.OUTER_CHUNKS;
 
 @Singleton
 public class PreparationService {
@@ -171,11 +170,11 @@ public class PreparationService {
     }
 
     private BufferedImage[][] finishFloor(BufferedImage image) {
-        BufferedImage[][] chunks = new BufferedImage
-                [image.getWidth() / CHUNK_SIZE + OUTER_CHUNKS * 2]
-                [image.getHeight() / CHUNK_SIZE + OUTER_CHUNKS * 2];
-        for (int x = 0; x < image.getWidth() / CHUNK_SIZE; x++) {
-            for (int y = 0; y < image.getHeight() / CHUNK_SIZE; y++) {
+        int widthChunks = (int) Math.ceil((double) image.getWidth() / CHUNK_SIZE);
+        int heightChunks = (int) Math.ceil((double) image.getHeight() / CHUNK_SIZE);
+        BufferedImage[][] chunks = new BufferedImage[widthChunks][heightChunks];
+        for (int x = 0; x < widthChunks; x++) {
+            for (int y = 0; y < heightChunks; y++) {
                 chunks[x][y] = image.getSubimage(x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
             }
         }
