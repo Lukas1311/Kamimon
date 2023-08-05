@@ -252,6 +252,12 @@
     -fx-font-size: 25px;
 }
 
+.dialog-label {
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 26px;
+    -fx-text-fill: black;
+}
+
 
 /* -------------------- Map Overview -------------------- */
 
