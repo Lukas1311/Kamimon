@@ -1,11 +1,14 @@
 package de.uniks.stpmon.k.service.world;
 
+import de.uniks.stpmon.k.constants.TileMapConstants;
 import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.world.RouteData;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.geometry.Point2D;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,8 +28,8 @@ public class TextDeliveryService {
         if (mapProvider.map() != null) {
             TileMapData mapData = mapProvider.map();
             List<RouteData> routeDataList = new ArrayList<>();
-            for(TileLayerData routeLayerData : mapData.layers()) {
-                if(!routeLayerData.type().equals("objectgroup")){
+            for (TileLayerData routeLayerData : mapData.layers()) {
+                if (!routeLayerData.type().equals(TileMapConstants.OBJECT_LAYER)) {
                     continue;
                 }
                 for (ObjectData obj : routeLayerData.objects()) {
@@ -38,6 +41,34 @@ public class TextDeliveryService {
             return Observable.just(routeDataList);
         }
         return Observable.just(Collections.emptyList());
+    }
+
+    public Observable<Point2D> getNextMonCenter(IMapProvider mapProvider) {
+        if (mapProvider.map() == null) {
+            return Observable.just(Point2D.ZERO);
+        }
+        TileMapData mapData = mapProvider.map();
+        for (TileLayerData layerData : mapData.layers()) {
+            if (!layerData.type().equals(TileMapConstants.OBJECT_LAYER)) {
+                continue;
+            }
+            for (ObjectData obj : layerData.objects()) {
+                if (!obj.type().equals("Portal")) {
+                    continue;
+                }
+                if (obj.name().contains("Moncenter")) {
+                    return Observable.just(new Point2D(obj.x() + obj.width() / 2f
+                            , obj.y() + obj.height() / 2f));
+                }
+                for (Property prop : obj.properties()) {
+                    if (prop.name().equals("Map") && prop.value().contains("Moncenter")) {
+                        return Observable.just(new Point2D(obj.x() + obj.width() / 2f,
+                                obj.y() + obj.height() / 2f));
+                    }
+                }
+            }
+        }
+        return Observable.just(Point2D.ZERO);
     }
 
 
