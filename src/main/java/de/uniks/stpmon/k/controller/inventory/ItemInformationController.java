@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -36,6 +37,7 @@ public class ItemInformationController extends Controller {
     PresetService presetService;
 
     public Item item;
+    public ItemTypeDto itemTypeDto;
 
     @Inject
     public ItemInformationController() {
@@ -45,8 +47,10 @@ public class ItemInformationController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
+        useButton.setVisible(false);
 
         subscribe(presetService.getItem(item.type()), item -> {
+            itemTypeDto = item;
             if (item.use() != null) {
                 useButton.setVisible(true);
                 useButton.setText(translateString("useItemButton"));
@@ -69,8 +73,24 @@ public class ItemInformationController extends Controller {
     }
 
     private void useItem() {
-        //TODO
-        System.out.println("TODO");
+        if(itemTypeDto == null) {
+            return;
+        }
+        switch(itemTypeDto.use()) {
+            case ITEM_BOX -> {
+                //TODO
+            }
+            case MONSTER_BOX -> {
+                //TODO
+            }
+            case BALL -> {
+                //TODO
+            }
+            case EFFECT -> {
+                //TODO
+            }
+        }
+
     }
 
     public void setItem(Item item) {
