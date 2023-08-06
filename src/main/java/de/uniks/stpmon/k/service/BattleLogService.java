@@ -104,8 +104,6 @@ public class BattleLogService {
      * This method is called to show what is going on in the Encounter via the BattleLog
      */
     public void showNextAction() {
-
-        textBox.getChildren().clear();
         showActions();
     }
 
@@ -113,6 +111,7 @@ public class BattleLogService {
      * This method handles the queued updates and results
      */
     private void showActions() {
+        textBox.getChildren().clear();
         //check if more results need to be shown
         Optional<EncounterSlot> slot = levelUps.keySet().stream().findFirst();
         if (slot.isPresent()) {

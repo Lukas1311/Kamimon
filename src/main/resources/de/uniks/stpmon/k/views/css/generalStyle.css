@@ -958,9 +958,14 @@ Load fonts
 }
 
 .loading-label {
-    -fx-font-size: 45px;
+    -fx-font-size: 50px;
     -fx-font-family: "Pokémon DS Font";
     -fx-font-weight: bolder;
 }
 
+.loading-label-region {
+    -fx-font-size: 25px;
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-weight: bolder;
+}
 

@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.builder.OpponentBuilder;
 import de.uniks.stpmon.k.models.builder.ResultBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.util.Pair;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ public class EncounterApiDummy implements EncounterApiService {
     @Inject
     PresetApiDummy presetApiDummy;
     final Deque<Pair<String, UpdateOpponentDto>> moveQueue = new LinkedList<>();
+    private boolean evolves = false;
 
     @Inject
     public EncounterApiDummy() {
@@ -136,6 +138,7 @@ public class EncounterApiDummy implements EncounterApiService {
         }
     }
 
+    @SuppressWarnings("ReactiveStreamsUnusedPublisher")
     private void doServerMoves(String regionId, String encounterId) {
         for (Pair<String, UpdateOpponentDto> move : moveQueue) {
             makeMove(regionId, encounterId, move.getKey(), move.getValue());
@@ -212,8 +215,7 @@ public class EncounterApiDummy implements EncounterApiService {
 
     private void attack(Opponent target, AbilityMove move, UpdateOpponentDto opponentDto) {
         AbilityDto abilityDto = presetApiDummy.abilities.get(move.ability());
-        //manipulate the uses of the first ability by replacing it with the same ability but fewer uses -> don't know if this is the right way
-        // encounterWrapper.monsterList.get(abilityDto.id()).abilities().replace("Tackle", 19);
+
         Monster currentTarget =
                 regionApi.getMonster(RegionApiDummy.REGION_ID, target.trainer(), target.monster())
                         .blockingFirst();
@@ -224,10 +226,57 @@ public class EncounterApiDummy implements EncounterApiService {
                 .create();
         regionApi.updateMonster(updatedTarget);
 
+        List<Result> results = new ArrayList<>();
+
         Result result = ResultBuilder.builder("ability-success")
                 .setAbility(0)
                 .setEffectiveness("effective")
                 .create();
+        results.add(result);
+
+        if (evolves) {
+
+            List<Result> lvlUpResults = new ArrayList<>();
+            Result lvlUpResult = ResultBuilder.builder("monster-levelup").create();
+            lvlUpResults.add(lvlUpResult);
+            Result evoResult = ResultBuilder.builder("monster-evolved").create();
+            lvlUpResults.add(evoResult);
+            Result attackLearnedResult = ResultBuilder.builder("monster-learned")
+                    .setAbility(0)
+                    .create();
+            lvlUpResults.add(attackLearnedResult);
+            Result attackForgotResult = ResultBuilder.builder("monster-forgot")
+                    .setAbility(0)
+                    .create();
+            lvlUpResults.add(attackForgotResult);
+
+            Opponent evo = encounterWrapper.getOpponent("0");
+
+            //set monster before level up
+            Opponent monOpp = OpponentBuilder.builder(evo)
+                    .setMonster("0")
+                    .create();
+            sendOpponentEvent(monOpp, "updated");
+
+            Monster currentMon =
+                    regionApi.getMonster(RegionApiDummy.REGION_ID, evo.trainer(), evo.monster())
+                            .blockingFirst();
+            MonsterAttributes currentAtt = currentMon.currentAttributes();
+            Monster updatedMon = MonsterBuilder.builder(currentMon)
+                    .setLevel(currentMon.level() + 1)
+                    .create();
+            regionApi.updateMonster(updatedMon);
+
+            Opponent evoOpponent = OpponentBuilder.builder(evo)
+                    .setMonster("0")
+                    .setResults(lvlUpResults)
+                    .create();
+            Platform.runLater(() ->
+                    sendOpponentEvent(evoOpponent, "updated")
+            );
+
+        }
+
         Opponent moveOp = OpponentBuilder.builder(target)
                 .setMove(opponentDto.move())
                 .create();
@@ -235,9 +284,13 @@ public class EncounterApiDummy implements EncounterApiService {
 
         Opponent opponent = OpponentBuilder.builder(target)
                 .setMonster(updatedTarget.attributes().health() > 0 ? updatedTarget._id() : null)
-                .setResults(List.of(result))
+                .setResults(results)
                 .create();
         sendOpponentEvent(opponent, "updated");
+    }
+
+    public void setEvolves(boolean evolves) {
+        this.evolves = evolves;
     }
 
     private boolean checkState() {
@@ -286,7 +339,10 @@ public class EncounterApiDummy implements EncounterApiService {
     private void sendOpponentEvent(Opponent opponent, String event) {
         eventDummy.sendEvent(new Event<>("encounters.%s.trainers.%s.opponents.%s.%s"
                 .formatted(opponent.encounter(), opponent.trainer(), opponent._id(), event), opponent));
-        encounterWrapper.opponentByTrainer.put(opponent.trainer(), opponent);
+        if (encounterWrapper != null) {
+            encounterWrapper.opponentByTrainer.put(opponent.trainer(), opponent);
+        }
+
     }
 
     @Override

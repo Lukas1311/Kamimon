@@ -15,8 +15,10 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -30,8 +32,7 @@ import java.util.ArrayList;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
@@ -310,7 +311,7 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
         TestHelper.listenStarterMonster(component.trainerStorage(), component);
-        TestHelper.addTestNpcs(component);
+        TestHelper.addTestNpcsV3(component);
 
         //shortcut tests
         type(KeyCode.C);
@@ -515,10 +516,11 @@ class AppTest extends ApplicationTest {
 
         TestHelper.listenStarterMonster(component.trainerStorage(), component);
         TestHelper.addEncounteredMonsters(component.trainerStorage(), component);
-        TestHelper.addTestNpcs(component);
+        TestHelper.addTestNpcsV4(component);
+        TestHelper.addMonster(component.trainerStorage(), component);
 
         //test monDex
-        /*clickOn("#backpackImage");
+        clickOn("#backpackImage");
         waitForFxEvents();
         verifyThat("#backpackMenuListView", Node::isVisible);
         waitForFxEvents();
@@ -554,16 +556,30 @@ class AppTest extends ApplicationTest {
         clickOn("#mdmzSettings");
         final Slider musicSlider = lookup("#music").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
-        clickOn("#settings");*/
+        clickOn("#settings");
 
         //test evolution of mon
-        // walk to the right
-        type(KeyCode.D, 1);
+        // walk to the right and start Encounter
+        type(KeyCode.D);
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
         waitForFxEvents();
-        verifyThat("#userMonsters", Node::isVisible);
+
+        // open fight menu
+        clickOn("#main_menu_fight");
+        //set evolution
+        EncounterApiDummy encounterApi = component.encounterApi();
+        encounterApi.setEvolves(true);
+        // attack
+        clickOn("#ability_1");
+        waitForFxEvents();
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+
+
     }
 
 }

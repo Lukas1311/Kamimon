@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class UserManagementControllerTest extends ApplicationTest {
@@ -224,7 +225,7 @@ public class UserManagementControllerTest extends ApplicationTest {
             // action:
             write("\tBob");
             clickOn("#saveChangesButton");
-            sleep(2000);
+            waitForFxEvents();
 
             // check values:
             Label errorLabel = lookup("#usernameInfo").queryAs(Label.class);

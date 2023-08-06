@@ -85,7 +85,13 @@ public class TestHelper {
         regionApi.addEncounteredMonsters(trainer._id(), 2);
     }
 
-    public static void addTestNpcs(TestComponent component) {
+    public static void addMonster(TrainerStorage storage, TestComponent component) {
+        RegionApiDummy regionApi = component.regionApi();
+        Trainer trainer = storage.getTrainer();
+        regionApi.addMonster(trainer._id(), "0", true);
+    }
+
+    public static void addTestNpcsV3(TestComponent component) {
         CacheManager cacheManager = component.cacheManager();
         TrainerCache trainerCache = cacheManager.trainerCache();
 
@@ -102,7 +108,8 @@ public class TestHelper {
 
         Trainer attacker = TrainerBuilder.builder()
                 .setId("attacker")
-                .setX(2)
+                .setX(3)
+                .setY(3)
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.TOP)
@@ -135,5 +142,20 @@ public class TestHelper {
                 .create();
 
         component.regionApi().addTrainer(nurse);
+    }
+
+    public static void addTestNpcsV4(TestComponent component) {
+        Trainer attacker = TrainerBuilder.builder()
+                .setId("attacker")
+                .setX(2)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.TOP)
+                .setNpc(NPCInfoBuilder.builder().setEncounterOnTalk(true).create())
+                .create();
+
+
+        component.regionApi().addTrainer(attacker);
+        component.regionApi().addMonster("attacker", "1", true);
     }
 }
