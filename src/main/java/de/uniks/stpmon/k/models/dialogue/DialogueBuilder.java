@@ -8,12 +8,18 @@ public class DialogueBuilder {
 
     private final List<DialogueItem> items = new LinkedList<>();
     private String trainerId = "";
+    private String trainerName = "";
 
     DialogueBuilder() {
     }
 
     public DialogueBuilder setTrainerId(String trainerId) {
         this.trainerId = trainerId;
+        return this;
+    }
+
+    public DialogueBuilder setTrainerName(String trainerName) {
+        this.trainerName = trainerName;
         return this;
     }
 
@@ -30,7 +36,7 @@ public class DialogueBuilder {
     }
 
     public Dialogue create() {
-        return Dialogue.create(trainerId, items.toArray(new DialogueItem[0]));
+        return Dialogue.create(trainerId, trainerName, items.toArray(new DialogueItem[0]));
     }
 
     public static class ItemBuilder {

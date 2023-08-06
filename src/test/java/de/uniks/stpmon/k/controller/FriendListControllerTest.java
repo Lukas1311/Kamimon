@@ -94,8 +94,7 @@ class FriendListControllerTest extends ApplicationTest {
         verifyThat("#searchFriend", hasText("Al"));
 
         clickOn("#searchButton");
-
-        sleep(1000);
+        waitForFxEvents();
 
         //get friendList
         final VBox friendList = lookup("#friendListVbox").query();
@@ -131,10 +130,10 @@ class FriendListControllerTest extends ApplicationTest {
         friends.remove(0);
         clickOn("#removeFriendButton");
         friendsObs.onNext(friends);
-        sleep(200);
+        waitForFxEvents();
         verify(userService).removeFriend(any(User.class));
 
-        sleep(2000);
+        waitForFxEvents();
         //alice is no longer in friends
         assertNull(userList.lookup("#Alice"));
     }
@@ -159,7 +158,7 @@ class FriendListControllerTest extends ApplicationTest {
         clickOn("#Eve #removeFriendButton");
         friendsObs.onNext(List.of());
         usersObs.onNext(users);
-        sleep(200);
+        waitForFxEvents();
 
 
         //add "Alice" to friends
@@ -168,7 +167,7 @@ class FriendListControllerTest extends ApplicationTest {
         clickOn("#Alice #removeFriendButton");
         friendsObs.onNext(friends);
         usersObs.onNext(users);
-        sleep(200);
+        waitForFxEvents();
 
         verify(userService).addFriend(any(User.class));
 

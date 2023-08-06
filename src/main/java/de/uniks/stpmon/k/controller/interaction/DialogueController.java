@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.InputEvent;
@@ -28,7 +29,7 @@ import javax.inject.Inject;
 
 public class DialogueController extends ToastController {
 
-    public static final int DIALOGUE_HEIGHT = 120;
+    public static final int DIALOGUE_HEIGHT = 126;
     private final Image[] stageImages = new Image[3];
     @FXML
     public ImageView background;
@@ -40,6 +41,8 @@ public class DialogueController extends ToastController {
     public GridPane dialoguePane;
     @FXML
     public HBox optionContainer;
+    @FXML
+    public Label nameLabel;
     private final DialogueOptionController[] optionTexts = new DialogueOptionController[]{
             new DialogueOptionController(),
             new DialogueOptionController(),
@@ -143,6 +146,7 @@ public class DialogueController extends ToastController {
         if (dialogue == null) {
             return;
         }
+        this.nameLabel.setText(dialogue.getTrainerName());
         setItemIndex(0);
     }
 
