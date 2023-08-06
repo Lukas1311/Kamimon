@@ -6,8 +6,11 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
 import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -24,6 +27,9 @@ public class BattleLogService {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
+    @Inject
+    protected EffectContext effectContext;
+
 
     VBox textBox;
 
@@ -124,6 +130,13 @@ public class BattleLogService {
                 }
                 if (levelUp.playEvolutionAnimation()) {
                     //TODO: play animation
+                    Node node = encounterOverviewControllerProvider.get().userMonster0;
+                    TranslateTransition transition = new TranslateTransition(
+                            Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
+                    transition.setFromX(-600);
+                    transition.setToX(0);
+
+
                     levelUp.setPlayEvolutionAnimation(false);
                 }
                 return;
