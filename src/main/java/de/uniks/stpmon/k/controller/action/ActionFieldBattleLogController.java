@@ -109,7 +109,7 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
         addTextSection(translateString(word, args));
     }
 
-    private void addTextSection(String text) {
+    public void addTextSection(String text) {
         Label text1 = new Label(text + "\n");
         text1.setWrapText(true);
         text1.setMaxWidth(290);
