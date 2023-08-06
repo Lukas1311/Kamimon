@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.models.builder.OpponentBuilder;
 import de.uniks.stpmon.k.models.builder.ResultBuilder;
 import de.uniks.stpmon.k.rest.EncounterApiService;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.util.Pair;
 
 import javax.inject.Inject;
@@ -234,6 +235,7 @@ public class EncounterApiDummy implements EncounterApiService {
         results.add(result);
 
         if (evolves) {
+
             List<Result> lvlUpResults = new ArrayList<>();
             Result lvlUpResult = ResultBuilder.builder("monster-levelup").create();
             lvlUpResults.add(lvlUpResult);
@@ -269,7 +271,10 @@ public class EncounterApiDummy implements EncounterApiService {
                     .setMonster("0")
                     .setResults(lvlUpResults)
                     .create();
-            sendOpponentEvent(evoOpponent, "updated");
+            Platform.runLater(() ->
+                    sendOpponentEvent(evoOpponent, "updated")
+            );
+
         }
 
         Opponent moveOp = OpponentBuilder.builder(target)
@@ -334,7 +339,10 @@ public class EncounterApiDummy implements EncounterApiService {
     private void sendOpponentEvent(Opponent opponent, String event) {
         eventDummy.sendEvent(new Event<>("encounters.%s.trainers.%s.opponents.%s.%s"
                 .formatted(opponent.encounter(), opponent.trainer(), opponent._id(), event), opponent));
-        encounterWrapper.opponentByTrainer.put(opponent.trainer(), opponent);
+        if (encounterWrapper != null) {
+            encounterWrapper.opponentByTrainer.put(opponent.trainer(), opponent);
+        }
+
     }
 
     @Override
