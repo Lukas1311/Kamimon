@@ -91,7 +91,7 @@ class HybridControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void toIngame() {
+    public void toIngameAndPause() {
         // mock udp listener
         TestHelper.addMovementDummy(component.eventListener());
 
@@ -110,11 +110,7 @@ class HybridControllerTest extends ApplicationTest {
 
         BorderPane ingame = lookup("#ingame").query();
         assertNotNull(ingame);
-    }
 
-    @Test
-    public void pause() {
-        toIngame();
         waitForFxEvents();
         // pressing Pause button and check if pause is shown
         write("\t\t");
@@ -126,7 +122,7 @@ class HybridControllerTest extends ApplicationTest {
         // pressing Pause button again and check if ingame is shown
         press(KeyCode.ENTER).release(KeyCode.ENTER);
         waitForFxEvents();
-        BorderPane ingame = lookup("#ingame").query();
+        ingame = lookup("#ingame").query();
         assertNotNull(ingame);
     }
 

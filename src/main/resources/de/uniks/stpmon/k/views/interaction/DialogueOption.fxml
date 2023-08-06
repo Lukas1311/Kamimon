@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<HBox fx:id="container" alignment="BOTTOM_CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueOptionController">
-    <Text fx:id="indicator" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt; " />
-    <Text fx:id="text" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-   <styleClass>
-      <String fx:value="ingame" />
-      <String fx:value="dialog-font-size" />
-   </styleClass>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<?import java.lang.String?>
+<HBox fx:id="container" alignment="BOTTOM_CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      stylesheets="@../css/ingameStyle.css"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.interaction.DialogueOptionController">
+    <Text fx:id="indicator" strokeType="OUTSIDE" strokeWidth="0.0" text="&gt; "/>
+    <Text fx:id="text" strokeType="OUTSIDE" strokeWidth="0.0" text="Text"/>
+    <styleClass>
+        <String fx:value="ingame"/>
+        <String fx:value="dialog-font-size"/>
+    </styleClass>
 </HBox>
