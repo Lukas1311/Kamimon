@@ -24,8 +24,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -47,7 +46,9 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     EncounterOverviewController encounterOverviewController;
     @Spy
     @SuppressWarnings("unused")
-    EffectContext effectContext = new EffectContext().setSkipLoadImages(true);
+    EffectContext effectContext = new EffectContext()
+            .setSkipLoadImages(true)
+            .setSkipLoading(true);
     @Mock
     RegionStorage regionStorage;
 
@@ -64,7 +65,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
 
-        when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
+        lenient().when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
                 "o_1",
                 null,
                 null,
