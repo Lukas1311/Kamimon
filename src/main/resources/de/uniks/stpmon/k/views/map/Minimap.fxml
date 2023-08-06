@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Polygon?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="de.uniks.stpmon.k.controller.map.MinimapController">
     <center>
         <StackPane fx:id="miniMapStackPane" BorderPane.alignment="CENTER">
@@ -18,6 +18,8 @@
             </ImageView>
             <Polygon fx:id="playerDart" fill="#64048a" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" scaleX="0.15"
                      scaleY="0.15" stroke="BLACK" strokeType="INSIDE"/>
+            <Polygon fx:id="monCenterDart" fill="White" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" scaleX="0.12"
+                     scaleY="0.12" stroke="BLACK" strokeType="INSIDE"/>
             <ImageView fx:id="miniMapBorder" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true"
                        preserveRatio="true">
             </ImageView>
