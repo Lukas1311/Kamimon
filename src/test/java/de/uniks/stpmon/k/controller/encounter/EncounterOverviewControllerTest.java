@@ -93,12 +93,10 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
-
         VBox userMonstersBox = lookup("#userMonsters").queryAs(VBox.class);
         VBox opponentMonstersBox = lookup("#opponentMonsters").queryAs(VBox.class);
         assertNotNull(userMonstersBox);
         assertNotNull(opponentMonstersBox);
         assertNotNull(encounterOverviewController);
-        sleep(4000);
     }
 }
