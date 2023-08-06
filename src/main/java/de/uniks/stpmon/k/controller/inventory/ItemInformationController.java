@@ -1,9 +1,11 @@
 package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
@@ -16,7 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class ItemInformationController extends Controller {
     @FXML
     public AnchorPane fullBox;
@@ -35,6 +40,11 @@ public class ItemInformationController extends Controller {
     IResourceService resourceService;
     @Inject
     PresetService presetService;
+    @Inject
+    ItemService itemService;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+
 
     public Item item;
     public ItemTypeDto itemTypeDto;
@@ -87,7 +97,11 @@ public class ItemInformationController extends Controller {
                 //TODO
             }
             case EFFECT -> {
-                //TODO
+                if(itemService == null || ingameControllerProvider == null) {
+                    return;
+                }
+                itemService.setActiveItem(itemTypeDto.id());
+                ingameControllerProvider.get().openMonsterInventory();
             }
         }
 
@@ -101,6 +115,7 @@ public class ItemInformationController extends Controller {
     public String getResourcePath() {
         return "inventory/";
     }
+
 
     @Override
     public void destroy() {

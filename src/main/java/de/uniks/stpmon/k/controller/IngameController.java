@@ -11,6 +11,7 @@ import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
 import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.shop.ShopOptionController;
@@ -105,6 +106,8 @@ public class IngameController extends PortalController {
     @Inject
     MonsterInformationController monsterInformationController;
     @Inject
+    MonsterInventoryController monsterInventoryController;
+    @Inject
     MonDexDetailController monDexDetailController;
     @Inject
     ItemInformationController itemInformationController;
@@ -141,6 +144,7 @@ public class IngameController extends PortalController {
         dialogueController.init();
         worldTimerController.init();
         nightOverlayController.init();
+        monsterInventoryController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             // Block user input if he is in an encounter
@@ -250,6 +254,7 @@ public class IngameController extends PortalController {
         mainPain.getChildren().clear();
         rightMenuBorderPane.getChildren().clear();
         miniMapVBox.getChildren().clear();
+        monsterInventoryController.destroy();
         ingameStack = null;
         ingame = null;
         ingameWrappingHBox = null;
@@ -410,6 +415,19 @@ public class IngameController extends PortalController {
         Parent itemInfo = controller.render();
         children.add(0, itemInfo);
     }
+
+    public void openMonsterInventory() {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        MonsterInventoryController controller = monsterInventoryController;
+        controller.setSelectionMode(true);
+        controller.init();
+        tabStack.push(controller);
+
+        Parent monsterInventory = controller.render();
+        children.add(0, monsterInventory);
+    }
+
 
     public void applyHealEffect() {
         Pane overlayPane = new Pane();
