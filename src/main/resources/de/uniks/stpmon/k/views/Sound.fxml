@@ -1,54 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-
-<VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab" stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.SoundController">
-    <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="370.0">
+<?import java.lang.String?>
+<VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab"
+      stylesheets="@css/generalStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="de.uniks.stpmon.k.controller.SoundController">
+    <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+          prefHeight="50.0" prefWidth="370.0">
         <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="185.0">
             <Button fx:id="backToSettingButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
+                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
                 </VBox.margin>
                 <graphic>
-                    <FontIcon iconLiteral="fa-mail-forward" />
+                    <FontIcon iconLiteral="fa-mail-forward"/>
                 </graphic>
                 <tooltip>
-                    <Tooltip text="%back" />
+                    <Tooltip text="%back"/>
                 </tooltip>
                 <styleClass>
-                    <String fx:value="chat-back-button" />
-                    <String fx:value="kgm-general-button-white" />
+                    <String fx:value="chat-back-button"/>
+                    <String fx:value="kgm-general-button-white"/>
                 </styleClass>
             </Button>
         </VBox>
     </HBox>
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music" />
+        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
             <Slider fx:id="music">
                 <styleClass>
-                    <String fx:value="slider" />
+                    <String fx:value="slider"/>
                 </styleClass>
+                <HBox.margin>
+                    <Insets/>
+                </HBox.margin>
             </Slider>
         </HBox>
+        <VBox.margin>
+            <Insets left="15.0" right="15.0"/>
+        </VBox.margin>
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus" />
+        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus"/>
         </HBox>
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="228.0" HBox.hgrow="ALWAYS">
-            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="login-check-box" />
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" HBox.hgrow="ALWAYS">
+            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" styleClass="login-check-box"/>
         </HBox>
+        <VBox.margin>
+            <Insets left="15.0" right="15.0"/>
+        </VBox.margin>
     </HBox>
+    <VBox>
+        <VBox.margin>
+            <Insets left="15.0" right="15.0" top="20.0"/>
+        </VBox.margin>
+        <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefWidth="90.0">
+            <padding>
+                <Insets bottom="10.0" top="10.0"/>
+            </padding>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <Text fx:id="dayCycleLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="%day-cycle"/>
+        </HBox>
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="40.0" VBox.vgrow="NEVER">
+            <Slider fx:id="dayCycle" majorTickUnit="3.0" max="36.0" minWidth="335.0"
+                    minorTickCount="2" prefHeight="58.0" prefWidth="332.0" showTickLabels="true"
+                    showTickMarks="true" snapToTicks="true" styleClass="slider" HBox.hgrow="NEVER"/>
+        </HBox>
+    </VBox>
 </VBox>
