@@ -142,17 +142,17 @@ public class BattleLogService {
                     }else {
                         node = encounterOverviewControllerProvider.get().userMonster0;
                     }
-                    /*TranslateTransition transition = new TranslateTransition(
-                            Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
-                    transition.setFromX(600);
-                    transition.setToX(0);
-
-                     */
+                    TranslateTransition translation =
+                            new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
+                    translation.setByY(0);
+                    translation.setByX(-1000);
+                    translation.setAutoReverse(true);
+                    translation.setCycleCount(2);
+                    translation.play();
 
 
                     //change Image to new Monster
                     encounterOverviewControllerProvider.get().loadMonsterImage(levelUp.getNewMon().type().toString(), node, false);
-
 
                     levelUp.setPlayEvolutionAnimation(false);
                 }
