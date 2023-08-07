@@ -2,11 +2,11 @@ package de.uniks.stpmon.k.service.storage.cache;
 
 import io.reactivex.rxjava3.core.Observable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class LazyCache<T, K> extends SimpleCache<T, K> {
+
+    private final Set<K> awaitedValues = Collections.synchronizedSet(new LinkedHashSet<>());
 
     protected abstract Observable<T> requestValue(K id);
 
@@ -41,6 +41,11 @@ public abstract class LazyCache<T, K> extends SimpleCache<T, K> {
                 .andThen(listenValue(id).take(1).flatMap((t) -> {
                     if (t.isPresent()) {
                         return Observable.just(t);
+                    }
+                    if (!awaitedValues.add(id)) {
+                        return listenValue(id)
+                                .skip(1)
+                                .take(1);
                     }
                     return requestValue(id).map(
                             value -> {
