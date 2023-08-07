@@ -16,7 +16,6 @@ import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.world.RouteData;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -153,12 +152,12 @@ public class MapOverviewController extends ToastedController {
 
         if (currentRegion.map() != null) {
             subscribe(
-                textDeliveryService.getRouteData(currentRegion),
-                data -> subscribe(
-                        regionService.getAreas(currentRegion._id()),
-                        areas -> renderMapDetails(data, filterVisitedAreas(areas), currentPosition),
-                        this::handleError
-                )
+                    textDeliveryService.getRouteData(currentRegion),
+                    data -> subscribe(
+                            regionService.getAreas(currentRegion._id()),
+                            areas -> renderMapDetails(data, filterVisitedAreas(areas), currentPosition),
+                            this::handleError
+                    )
             );
         }
 
@@ -173,7 +172,7 @@ public class MapOverviewController extends ToastedController {
         onDestroy(inputHandler.addReleasedKeyFilter(Event::consume));
         onDestroy(inputHandler.addPressedKeyFilter(Event::consume));
         teleportAnimation.playFastTravelAnimation(
-            () -> subscribe(trainerService.fastTravel(area))
+                () -> subscribe(trainerService.fastTravel(area))
         );
     }
 
@@ -295,6 +294,7 @@ public class MapOverviewController extends ToastedController {
         int direction = currentTrainer.direction();
         int newRotation = PlayerDirection.values()[direction].getDegrees();
 
+
         if (newRotation != playerRotate.getAngle()) {
             playerRotate.setAngle(newRotation);
             playerDart.getTransforms().add(playerRotate);
@@ -306,14 +306,14 @@ public class MapOverviewController extends ToastedController {
         double dartHeight = playerDart.getBoundsInLocal().getHeight() * playerDart.getScaleY();
 
         playerDart.setTranslateX(posX - playerDart.getLayoutX());
-        playerDart.setTranslateY(posY - playerDart.getLayoutY() + dartHeight/2);
+        playerDart.setTranslateY(posY - playerDart.getLayoutY() + dartHeight / 2);
     }
 
     private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited, boolean hasSpawn, String areaId) {
         shape.setId("detail_" + routeData.id());
         // set the area id as hidden user data
         shape.setUserData(areaId);
-        
+
         if (isVisited) {
             shape.setFill(Color.TRANSPARENT);
             shape.setOpacity(OPACITY_DESELECTED);
@@ -346,7 +346,7 @@ public class MapOverviewController extends ToastedController {
                 }
                 fastTravelButton.setVisible(hasSpawn);
                 fastTravelButton.setOnAction(click -> fastTravel((String) shape.getUserData()));
-                
+
             } else {
                 areaNameLabel.setText("???");
                 regionDescription.setText("???");

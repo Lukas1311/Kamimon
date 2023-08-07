@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
+import de.uniks.stpmon.k.service.world.ScalableClockService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -14,14 +15,14 @@ import javafx.util.StringConverter;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
 public class SoundController extends Controller {
 
-    /**
-     * Min value is 20 minutes
-     */
-    public static final int START_OFFSET = 0;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
     @FXML
     public VBox soundScreen;
     @FXML
@@ -65,10 +66,7 @@ public class SoundController extends Controller {
         dayCycle.setValue(settingsService.getDayTimeCycle());
 
         Function<Double, String> converter =
-                (Double object) -> {
-                    int precision = (object.intValue() + START_OFFSET) % 3;
-                    return (object.intValue() + START_OFFSET) / 3 + ":" + (precision == 0 ? "00" : precision * 20) + "h";
-                };
+                (Double object) -> formatter.format(getPeriodFromUnit(object));
         dayCycleLabel.setText(translateString("day-cycle",
                 converter.apply(Double.valueOf(settingsService.getDayTimeCycle()))));
         listen(dayCycle.valueProperty(),
@@ -83,10 +81,15 @@ public class SoundController extends Controller {
                                 converter.apply((double) value)));
                     }
                 });
+        dayCycle.setMin(0);
+        dayCycle.setMax(ScalableClockService.STEPS.length - 1);
+        dayCycle.setMajorTickUnit(1);
+        dayCycle.setMinorTickCount(0);
         dayCycle.setLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Double object) {
-                return (object.intValue() + START_OFFSET) / 3 + "h";
+                LocalTime time = getPeriodFromUnit(object);
+                return time.getHour() < 1 ? time.getMinute() + "m" : time.getHour() + "h";
             }
 
             @Override
@@ -96,6 +99,12 @@ public class SoundController extends Controller {
         });
 
         return parent;
+    }
+
+    private static LocalTime getPeriodFromUnit(Double object) {
+        return LocalTime.ofSecondOfDay(ScalableClockService.STEPS[
+                Math.min(Math.max(object.intValue(), 0), ScalableClockService.STEPS.length - 1)]
+                * ScalableClockService.STEP_UNIT_IN_MINUTES * 60L);
     }
 
     public void backToSettings() {

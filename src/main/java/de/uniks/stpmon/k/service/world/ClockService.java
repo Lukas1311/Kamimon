@@ -2,13 +2,11 @@ package de.uniks.stpmon.k.service.world;
 
 import io.reactivex.rxjava3.core.Observable;
 
-import javax.inject.Singleton;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
-@Singleton
 public class ClockService {
     protected Observable<LocalTime> clockObservable;
 
@@ -34,7 +32,7 @@ public class ClockService {
         return createTimer(currentTime, 60, TimeUnit.SECONDS);
     }
 
-    private LocalTime getCurrentTime() {
+    protected LocalTime getCurrentTime() {
         return Instant.now().atZone(ZoneId.systemDefault()).toLocalTime();
     }
 }

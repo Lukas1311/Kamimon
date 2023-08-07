@@ -7,6 +7,8 @@ import de.uniks.stpmon.k.service.*;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.FriendCache;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
+import de.uniks.stpmon.k.service.world.ClockService;
+import de.uniks.stpmon.k.service.world.ScalableClockService;
 import de.uniks.stpmon.k.service.world.WorldLoader;
 
 import javax.inject.Singleton;
@@ -64,5 +66,11 @@ public abstract class BoundModule {
     @Singleton
     @SuppressWarnings("unused")
     public abstract ILifecycleService sessionService(SessionService handler);
+
+
+    @Binds
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ClockService clockService(ScalableClockService service);
 
 }
