@@ -4,8 +4,11 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.Slider;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testfx.assertions.api.Assertions;
 import org.testfx.framework.junit5.ApplicationTest;
 
 import javax.inject.Provider;
@@ -26,6 +30,7 @@ import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testfx.api.FxAssert.verifyThat;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 @ExtendWith(MockitoExtension.class)
 public class SoundControllerTest extends ApplicationTest {
@@ -99,5 +104,33 @@ public class SoundControllerTest extends ApplicationTest {
         verifyThat("#nightMode", CheckBox::isSelected);
         // check if value is saved
         verify(settingsService).setNightEnabled(true);
+    }
+
+    @Test
+    void testShowPassword() {
+        Button pwdToggleButton = lookup("#toggleButton").queryButton();
+        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
+        // tab into password field
+        // tab to the toggle button password field is empty
+        write("\t\t\t");
+        Assertions.assertThat(pwdToggleButton).isFocused();
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
+        assertThat(pwdField.getPromptText()).isEqualTo("Password");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
+        // tab back to password field
+        press(KeyCode.SHIFT).type(KeyCode.TAB).release(KeyCode.SHIFT);
+        write("stringst");
+        // click show password button and verify the show password
+        write("\t");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents(); // not really necessary I guess
+        // get password input field to verify the contents
+
+        // check if prompt text matches the password that was written into password field before
+        assertThat(pwdField.getPromptText()).isEqualTo("stringst");
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+        waitForFxEvents();
     }
 }
