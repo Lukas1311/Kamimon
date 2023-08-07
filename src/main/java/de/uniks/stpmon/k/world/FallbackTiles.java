@@ -217,19 +217,4 @@ public class FallbackTiles {
             return overrides[dir.ordinal()];
         }
     }
-
-    private static class FallbackTile implements IReplacement {
-        public final int id;
-        public final int override;
-
-        public FallbackTile(int id, int override) {
-            this.id = id;
-            this.override = override;
-        }
-
-        @Override
-        public int getOverride(Direction dir, Random random) {
-            return override;
-        }
-    }
 }

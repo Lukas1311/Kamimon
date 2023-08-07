@@ -146,7 +146,8 @@ public class TileMap {
                 continue;
             }
             FallbackTiles fallback = null;
-            if (layer.name().equals(TileLayerData.GROUND_TYPE) && !isIndoor) {
+            if (layer.name().equals(TileLayerData.GROUND_TYPE) && !isIndoor &&
+                    data.tileheight() == TILE_SIZE && data.tilewidth() == TILE_SIZE) {
                 fallback = new FallbackTiles(new ChunkBuffer(layer), layer);
             }
             BufferedImage layerImage = renderLayer(layer, width, height, fallback);
