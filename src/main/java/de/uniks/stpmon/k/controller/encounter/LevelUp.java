@@ -37,6 +37,10 @@ public class LevelUp {
         return newMon;
     }
 
+    public String getNewMonName() {
+        return newMonName;
+    }
+
     public void setEvolved(Result evolved) {
         this.evolved = evolved;
     }

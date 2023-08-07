@@ -50,6 +50,7 @@ public class BattleLogService {
 
 
     VBox textBox;
+    HashMap<EncounterSlot, String> monsterNames = new HashMap<>(4);
 
 
     private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
@@ -173,6 +174,7 @@ public class BattleLogService {
             } else {
                 //no more actions
                 monsBeforeLevelUp.put(slot.get(), levelUp.getNewMon());
+                monsterNames.put(slot.get(), levelUp.getNewMonName());
                 levelUps.remove(slot.get());
             }
         }
@@ -291,11 +293,11 @@ public class BattleLogService {
                 Result result = abilityResult.get();
                 AbilityDto ability = getAbility(move.ability());
                 if (result.status() != null && monster != null) {
-                    addTranslatedSection("monsterAttacks.self", monster.name(), ability.name());
+                    addTranslatedSection("monsterAttacks.self", monsterNames.get(slot), ability.name());
                 } else {
                     MonsterTypeDto eneMon = attackedMonsters.get(slot);
                     if (eneMon != null && monster != null) {
-                        addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+                        addTranslatedSection("monsterAttacks", monsterNames.get(slot), eneMon.name(), ability.name());
                     }
                     target = move.target();
                 }
@@ -375,7 +377,7 @@ public class BattleLogService {
             }
             case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
                     + result.status().toString()
-                    + result.type().replace("status-", "."), monster.name());
+                    + result.type().replace("status-", "."), monsterNames.get(slot));
             case "monster-caught" -> addTranslatedSection("monster-caught", monster.name());
             default -> System.out.println("unknown result type");
         }
@@ -394,6 +396,7 @@ public class BattleLogService {
         //monster at start of encounter gets safed
         if (!monsBeforeLevelUp.containsKey(slot)) {
             monsBeforeLevelUp.put(slot, mon);
+            monsterNames.put(slot, getMonsterType(mon.type()).name());
         } else {
             //level up
             monsAfterLevelUp.put(slot, mon);
