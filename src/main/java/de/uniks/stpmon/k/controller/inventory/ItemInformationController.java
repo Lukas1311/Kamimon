@@ -2,8 +2,11 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.StarterController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -44,10 +47,15 @@ public class ItemInformationController extends Controller {
     ItemService itemService;
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    StarterController starterController;
+    @Inject
+    EventListener eventListener;
 
 
     public Item item;
     public ItemTypeDto itemTypeDto;
+    private boolean isOpen = false;
 
     @Inject
     public ItemInformationController() {
@@ -83,21 +91,36 @@ public class ItemInformationController extends Controller {
     }
 
     private void useItem() {
-        if(itemTypeDto == null) {
+        if (itemTypeDto == null) {
             return;
         }
-        switch(itemTypeDto.use()) {
+        switch (itemTypeDto.use()) {
             case ITEM_BOX -> {
-                //TODO
+                if (itemService == null || ingameControllerProvider == null) {
+                    return;
+                }
+
+                subscribe(eventListener.listen(Socket.WS, "%s.%s.items.*.*".formatted("trainers", item.trainer()), Item.class), itemEvent -> {
+                    switch (itemEvent.suffix()) {
+                        case "deleted" -> {
+                        }
+                        case "created", "updated" ->
+                                subscribe(presetService.getItem(itemEvent.data().type()), itemTypeDto1 -> {
+                                    System.out.println("Item: " + itemTypeDto1.name());
+                                    if (!itemTypeDto1.name().contains("Mystery box") && !isOpenBox()) {
+                                        ingameControllerProvider.get().openItemBox(itemEvent.data());
+                                    }
+                                });
+                    }
+                });
+                subscribe(itemService.useItem(itemTypeDto.id(), 1, null));
             }
-            case MONSTER_BOX -> {
-                //TODO
-            }
+            case MONSTER_BOX -> System.out.println("MonsterBox");
             case BALL -> {
                 //TODO
             }
             case EFFECT -> {
-                if(itemService == null || ingameControllerProvider == null) {
+                if (itemService == null || ingameControllerProvider == null) {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
@@ -105,6 +128,14 @@ public class ItemInformationController extends Controller {
             }
         }
 
+    }
+
+    public boolean isOpenBox() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        this.isOpen = open;
     }
 
     public void setItem(Item item) {
@@ -127,5 +158,6 @@ public class ItemInformationController extends Controller {
         amountText = null;
         nameLabel = null;
         useButton = null;
+        setOpen(false);
     }
 }

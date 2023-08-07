@@ -5,10 +5,10 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.map.MapOverviewController;
 import de.uniks.stpmon.k.controller.map.MinimapController;
 import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
-import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
@@ -47,6 +47,7 @@ import javax.inject.Singleton;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 
+import static de.uniks.stpmon.k.controller.StarterController.StarterOption.ITEM;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
@@ -414,6 +415,20 @@ public class IngameController extends PortalController {
 
         Parent itemInfo = controller.render();
         children.add(0, itemInfo);
+    }
+
+    public void openItemBox(Item item) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        itemInformationController.setOpen(true);
+
+        StarterController controller = starterController;
+        controller.setStarter(item.type().toString(), ITEM);
+        controller.init();
+        tabStack.push(controller);
+
+        Parent starter = controller.render();
+        children.add(0, starter);
     }
 
     public void openMonsterInventory() {

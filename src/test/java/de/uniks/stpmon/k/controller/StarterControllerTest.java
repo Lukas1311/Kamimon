@@ -15,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import static de.uniks.stpmon.k.controller.StarterController.StarterOption.MON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -48,7 +49,7 @@ public class StarterControllerTest extends ApplicationTest {
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
         when(resourceService.getMonsterImage(anyString())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));
 
-        starterController.setStarter("1");
+        starterController.setStarter("1", MON);
         waitForFxEvents();
 
         assertEquals("monster", starterController.monsterNameLabel.getText());
