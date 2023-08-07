@@ -134,7 +134,7 @@ public class MonsterInventoryController extends Controller {
 
         parent.setOnMouseClicked(e -> {
             if(isSelectionMode && itemService != null) {
-                subscribe(itemService.UseActiveItemIfAvailable(monster._id()),  item -> {
+                subscribe(itemService.useActiveItemIfAvailable(monster._id()), item -> {
                     ingameControllerProvider.get().removeChildren(2);
                     setSelectionMode(false);
                 }, error -> {

@@ -69,7 +69,7 @@ public class ItemService {
         effectItemType = 0;
     }
 
-    public Observable<Item> UseActiveItemIfAvailable(String targetId) {
+    public Observable<Item> useActiveItemIfAvailable(String targetId) {
         if (effectItemType != 0) {
             return useItem(effectItemType, 1, targetId);
         }
