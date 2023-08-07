@@ -104,7 +104,7 @@ public class ShopOverviewControllerTest extends ApplicationTest {
     @Test
     void testList() {
         ListView<Item> itemView = lookup("#itemListView").queryListView();
-        AnchorPane anchorPane = lookup("#itemListPane").queryAs(AnchorPane.class);
+        AnchorPane anchorPane = lookup("#shopOverview").queryAs(AnchorPane.class);
 
         assertNotNull(itemView);
         assertNotNull(anchorPane);

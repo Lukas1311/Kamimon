@@ -41,7 +41,9 @@ public class ShopOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("shopOverview");
         loadBgImage(itemListPane, "inventory/InventoryBox_v1.1.png");
+
 
         itemListView.setCellFactory(param -> new ItemCell(null, resourceService, presetService));
         itemListView.setItems(availableItems);
