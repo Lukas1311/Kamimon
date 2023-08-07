@@ -1,7 +1,6 @@
 package de.uniks.stpmon.k.world.rules;
 
 import de.uniks.stpmon.k.models.map.DecorationLayer;
-import de.uniks.stpmon.k.utils.Direction;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class IncludedCandidateRule extends BaseTilesetRule implements CandidateR
     }
 
     @Override
-    public TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers, Direction dir) {
+    public TileInfo apply(TileInfo current, List<TileInfo> candidates, List<DecorationLayer> layers) {
         boolean first = tileIds.contains(current.tileId());
         for (TileInfo candidate : candidates) {
             if (!tileSet.equals(candidate.tileSet())) {

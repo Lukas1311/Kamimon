@@ -36,8 +36,9 @@ public class TextureSetServiceTest {
     TextureSetService msgService;
 
     private TileMapData createDummyMap() {
+        TileMapData emptyMap = TileMapBuilder.builder().create();
         ChunkData chunk = new ChunkData(List.of(4L, 2L, 1L, 3L), 2, 2, 0, 0);
-        return TileMapBuilder.builder()
+        return TileMapBuilder.builder(emptyMap)
                 .startTileLayer()
                 .setName(TileLayerData.GROUND_TYPE)
                 .setWidth(2).setHeight(2)

@@ -14,6 +14,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FallbackTilesTest {
 
     @Test
+    public void checkReplacement() {
+        List<Long> tiles = IntStream.range(0, 256).mapToLong((i) -> 308).boxed().toList();
+        TileLayerData layerData = TileLayerBuilder
+                .builderTiles()
+                .addChunk(new ChunkData(tiles, 16, 16, 0, 0))
+                .setWidth(16).setHeight(16)
+                .create();
+        FallbackTiles fallbackTiles = new FallbackTiles(new ChunkBuffer(layerData), layerData);
+        assertEquals(483, fallbackTiles.getTile(0, 0));
+    }
+
+    @Test
+    public void checkBuilder() {
+        TileLayerData oldData = TileLayerBuilder.builderTiles().setType(TileLayerData.GROUND_TYPE).create();
+        assertEquals(TileLayerData.GROUND_TYPE, oldData.type());
+
+        TileLayerData newData = TileLayerBuilder.builder(oldData).create();
+        assertEquals(TileLayerData.GROUND_TYPE, newData.type());
+    }
+
+    @Test
     public void innerChunk() {
         List<Long> tiles = IntStream.range(0, 256).mapToLong((i) -> i < 7 * 8 ? 0L : 1L).boxed().toList();
         TileLayerData layerData = TileLayerBuilder

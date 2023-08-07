@@ -150,7 +150,7 @@ public class RuleRegistry {
             rules.addAll(getCandidateRules(candidateInfo));
         }
         for (CandidateRule rule : rules) {
-            bestCandidate = rule.apply(info, candidates, decorationLayers, dir);
+            bestCandidate = rule.apply(info, candidates, decorationLayers);
             if (bestCandidate != null) {
                 return bestCandidate;
             }
