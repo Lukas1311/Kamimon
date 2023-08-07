@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.ToastedController;
 import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.InputHandler;
@@ -32,6 +33,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.scene.transform.Rotate;
 import javafx.util.Pair;
 
 import javax.inject.Inject;
@@ -51,6 +53,7 @@ public class MapOverviewController extends ToastedController {
     public static final double OPACITY_HOVERED = 0.75;
     public static final int OPACITY_SELECTED = 1;
     public static final int OPACITY_DESELECTED = 0;
+
     @FXML
     StackPane mapStackPane;
     @FXML
@@ -61,8 +64,6 @@ public class MapOverviewController extends ToastedController {
     Label regionNameLabel;
     @FXML
     Label areaNameLabel;
-    @FXML
-    Button closeButton;
     @FXML
     ImageView mapImageView;
     @FXML
@@ -94,7 +95,12 @@ public class MapOverviewController extends ToastedController {
 
     private Shape activeShape;
     private Region currentRegion;
+    private String currentAreaId;
+    private Trainer currentTrainer;
+    private String currentPosition;
     private Set<String> visitedAreaIds = new HashSet<>();
+    private Polygon playerDart;
+    private Rotate playerRotate;
 
 
     @Inject
@@ -105,7 +111,16 @@ public class MapOverviewController extends ToastedController {
     public void init() {
         super.init();
         currentRegion = regionStorage.getRegion();
-        visitedAreaIds = trainerStorage.getTrainer().visitedAreas();
+        currentTrainer = trainerStorage.getTrainer();
+        visitedAreaIds = currentTrainer.visitedAreas();
+        currentAreaId = currentTrainer.area();
+        playerDart = new Polygon();
+        playerDart.getPoints().addAll(
+                -50.0, 40.0,
+                50.0, 40.0,
+                0.0, -60.0
+        );
+        playerRotate = new Rotate(0, 0, 0);
     }
 
     @Override
@@ -141,11 +156,13 @@ public class MapOverviewController extends ToastedController {
                 textDeliveryService.getRouteData(currentRegion),
                 data -> subscribe(
                         regionService.getAreas(currentRegion._id()),
-                        areas -> renderMapDetails(data, filterVisitedAreas(areas)),
+                        areas -> renderMapDetails(data, filterVisitedAreas(areas), currentPosition),
                         this::handleError
                 )
             );
         }
+
+        setupPlayerDart();
 
         return parent;
     }
@@ -170,11 +187,15 @@ public class MapOverviewController extends ToastedController {
         mapStackPane = null;
         textFlowRegionDescription = null;
         mapOverviewHolder = null;
+        playerDart = null;
     }
 
     private HashMap<String, Pair<String, Boolean>> filterVisitedAreas(List<Area> areas) {
         HashMap<String, Pair<String, Boolean>> visitedAreas = new HashMap<>();
         for (Area area : areas) {
+            if (area._id().equals(currentAreaId)) {
+                currentPosition = area.name();
+            }
             boolean hasSpawn = false;
             if (visitedAreaIds.contains(area._id())) {
                 if (area.map() != null) {
@@ -187,14 +208,14 @@ public class MapOverviewController extends ToastedController {
                             }
                         }
                     }
-                    visitedAreas.put(area.name(), new Pair<String, Boolean>(area._id(), hasSpawn));
+                    visitedAreas.put(area.name(), new Pair<>(area._id(), hasSpawn));
                 }
             }
         }
         return visitedAreas;
     }
 
-    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Pair<String, Boolean>> visitedAreas) {
+    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Pair<String, Boolean>> visitedAreas, String currentPosition) {
 
         double originalHeight = mapImageView.getImage().getHeight();
         double scaledHeight = mapImageView.getFitHeight();
@@ -207,8 +228,14 @@ public class MapOverviewController extends ToastedController {
         routeListData.forEach(routeData -> {
             boolean visited = visitedAreas.containsKey(routeData.routeText().name());
             boolean hasSpawn = false;
+            boolean isCurrentPos = false;
             String areaId = "";
             if (visited) {
+
+                if (routeData.routeText().name().equals(currentPosition)) {
+                    isCurrentPos = true;
+                }
+
                 // getValue() returns the "right" value of the pair (in this case the bool)
                 hasSpawn = visitedAreas.get(routeData.routeText().name()).getValue();
                 if (hasSpawn) {
@@ -216,6 +243,7 @@ public class MapOverviewController extends ToastedController {
                     areaId = visitedAreas.get(routeData.routeText().name()).getKey();
                 }
             }
+
             if (!routeData.polygon().isEmpty()) {
                 Polygon polygon = new Polygon();
                 for (PolygonPoint point : routeData.polygon()) {
@@ -224,10 +252,17 @@ public class MapOverviewController extends ToastedController {
                             (double) (routeData.y() + point.y()) * scaleRatio
                     );
                 }
+                
+                if (isCurrentPos) {
+                    double posX = routeData.x() * scaleRatio + offsetX + (polygon.getBoundsInLocal().getWidth() * scaleRatio / 2.0);
+                    double posY = routeData.y() * scaleRatio + (polygon.getBoundsInLocal().getHeight() * scaleRatio / 2.0);
+                    setPlayerDartPosition(posX, posY);
+                }
+
                 addDetailShape(polygon, routeData, visited, hasSpawn, areaId);
                 return;
             }
-            if (routeData.width() == OPACITY_DESELECTED || routeData.height() == OPACITY_DESELECTED) {
+            if (routeData.width() == 0 || routeData.height() == 0) {
                 return;
             }
             Rectangle rectangle = new Rectangle(
@@ -236,8 +271,42 @@ public class MapOverviewController extends ToastedController {
                     routeData.width() * scaleRatio,
                     routeData.height() * scaleRatio
             );
+
+            if (isCurrentPos) {
+                double posX = routeData.x() * scaleRatio + offsetX + (routeData.width() / 2.0 * scaleRatio);
+                double posY = routeData.y() * scaleRatio + (routeData.height() / 2.0 * scaleRatio);
+                setPlayerDartPosition(posX, posY);
+            }
+
             addDetailShape(rectangle, routeData, visited, hasSpawn, areaId);
         });
+    }
+
+    private void setupPlayerDart() {
+        playerDart.setScaleX(0.2);
+        playerDart.setScaleY(0.2);
+        playerDart.setFill(Color.WHITE);
+        playerDart.setStroke(Color.web("#706880"));
+        playerDart.setStrokeWidth(10);
+        playerDart.setMouseTransparent(true);
+        mapStackPane.getChildren().add(playerDart);
+        playerDart.toFront();
+
+        int direction = currentTrainer.direction();
+        int newRotation = PlayerDirection.values()[direction].getDegrees();
+
+        if (newRotation != playerRotate.getAngle()) {
+            playerRotate.setAngle(newRotation);
+            playerDart.getTransforms().add(playerRotate);
+        }
+    }
+
+    private void setPlayerDartPosition(double posX, double posY) {
+        double dartWidth = playerDart.getBoundsInLocal().getWidth() * playerDart.getScaleX();
+        double dartHeight = playerDart.getBoundsInLocal().getHeight() * playerDart.getScaleY();
+
+        playerDart.setTranslateX(posX - playerDart.getLayoutX());
+        playerDart.setTranslateY(posY - playerDart.getLayoutY() + dartHeight/2);
     }
 
     private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited, boolean hasSpawn, String areaId) {
