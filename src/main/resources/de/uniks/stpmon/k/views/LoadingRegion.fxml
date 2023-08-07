@@ -1,47 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.image.ImageView?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import java.lang.String?>
-<?import java.net.URL?>
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="419.0" prefWidth="638.0" styleClass="loading-screen"
-            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="de.uniks.stpmon.k.controller.LoadingRegionController">
+<?import javafx.scene.text.*?>
+
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="419.0" prefWidth="638.0" styleClass="loading-screen" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.LoadingRegionController">
     <center>
         <VBox alignment="CENTER" prefHeight="537.0" prefWidth="638.0" BorderPane.alignment="BOTTOM_CENTER">
-            <ImageView fx:id="imageViewKamimonLettering" fitHeight="200.0" fitWidth="400.0" pickOnBounds="true"
-                       preserveRatio="true">
+            <ImageView fx:id="imageViewKamimonLettering" fitHeight="200.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
                 <VBox.margin>
-                    <Insets bottom="50.0"/>
+                    <Insets bottom="50.0" />
                 </VBox.margin>
             </ImageView>
-            <Label fx:id="areaLabel" alignment="CENTER" prefWidth="250.0" text="Region">
+            <Label fx:id="areaLabel" alignment="CENTER" prefHeight="73.0" prefWidth="629.0" text="Region">
                 <VBox.margin>
-                    <Insets/>
+                    <Insets />
                 </VBox.margin>
                 <styleClass>
-                    <String fx:value="loading-label"/>
+                    <String fx:value="loading-label" />
                 </styleClass>
             </Label>
-            <Label fx:id="regionLabel" alignment="CENTER" prefHeight="48.0" prefWidth="250.0"
-                   styleClass="loading-label-region" text="- Region -">
+            <Label fx:id="regionLabel" alignment="CENTER" prefHeight="48.0" prefWidth="250.0" styleClass="loading-label-region" text="- Region -">
                 <font>
-                    <Font size="10.0"/>
+                    <Font size="10.0" />
                 </font>
                 <VBox.margin>
-                    <Insets bottom="30.0"/>
+                    <Insets bottom="30.0" />
                 </VBox.margin>
             </Label>
-            <ProgressBar fx:id="progressBar" prefHeight="17.0" prefWidth="387.0" progress="0.0"
-                         styleClass="loading-progress-bar"/>
+            <ProgressBar fx:id="progressBar" prefHeight="17.0" prefWidth="387.0" progress="0.0" styleClass="loading-progress-bar" />
         </VBox>
     </center>
     <stylesheets>
-        <URL value="@css/generalStyle.css"/>
-        <URL value="@css/ingameStyle.css"/>
+        <URL value="@css/generalStyle.css" />
+        <URL value="@css/ingameStyle.css" />
     </stylesheets>
 </BorderPane>
