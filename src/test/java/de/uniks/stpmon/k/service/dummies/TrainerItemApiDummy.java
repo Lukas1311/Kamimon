@@ -38,14 +38,7 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
         if (regionId.isEmpty() || trainerId.isEmpty() || regionApiDummy == null) {
             return Observable.error(new Throwable(regionId + " or " + trainerId + " is empty"));
         }
-        if(action.equals("trade")) {
-
-        } else {
-            //use item
-            return Observable.just(new Item("","",  0, 0));
-
-        }
-        return Observable.empty();
+        return Observable.just(new Item("","",  0, 0));
     }
 
 
