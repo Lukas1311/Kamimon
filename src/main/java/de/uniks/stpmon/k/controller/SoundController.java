@@ -20,9 +20,10 @@ public class SoundController extends Controller{
     @FXML
     public Button backToSettingButton;
     @FXML
-    public Slider music;
+    public Slider musicSlider;
     @FXML
     public CheckBox nightMode;
+
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
