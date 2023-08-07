@@ -124,9 +124,7 @@ public class InventoryController extends ToastedController {
     }
 
     private void openDetail(Item item) {
-        //probably not needed:
         currentItem = item;
-        //itemInformationControllerProvider.get().setItem(item);
         if (isInEncounter()) {
             encounterOverviewControllerProvider.get().openController("itemInfo", item);
         } else {
