@@ -15,6 +15,9 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
     final List<Item> items = new ArrayList<>();
 
     @Inject
+    RegionApiDummy regionApiDummy;
+
+    @Inject
     public TrainerItemApiDummy() {
 
     }
@@ -32,11 +35,20 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
 
     @Override
     public Observable<Item> updateItem(String regionId, String trainerId, String action, UpdateItemDto dto) {
-        if (regionId.isEmpty() || trainerId.isEmpty()) {
+        if (regionId.isEmpty() || trainerId.isEmpty() || regionApiDummy == null) {
             return Observable.error(new Throwable(regionId + " or " + trainerId + " is empty"));
         }
-        return null;
+        if(action.equals("trade")) {
+
+        } else {
+            //use item
+            return Observable.just(new Item("","",  0, 0));
+
+        }
+        return Observable.empty();
     }
+
+
 
     @Override
     public Observable<List<Item>> getItems(String regionId, String trainerId) {

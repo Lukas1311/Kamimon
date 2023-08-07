@@ -81,7 +81,6 @@ public class PresetApiDummy implements PresetApiService {
             int power = 5 * i;
             abilities.add(new AbilityDto(i, name, description, type, maxUses, accuracy, power));
         }
-
     }
 
     private void initDummyItems() {

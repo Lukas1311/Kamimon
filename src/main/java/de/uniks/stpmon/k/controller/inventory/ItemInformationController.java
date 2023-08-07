@@ -56,6 +56,7 @@ public class ItemInformationController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("itemInformationNode");
         loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
         useButton.setVisible(false);
 
@@ -101,7 +102,9 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
+                ingameControllerProvider.get().removeChildren(2);
                 ingameControllerProvider.get().openMonsterInventory();
+
             }
         }
 

@@ -16,6 +16,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -63,6 +64,7 @@ public class MonsterInventoryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("monsterInventory");
         handleDrag(monStorage, this::dragIntoStorageGrid);
         handleDrag(monTeam, this::dragIntoTeamGrid);
         subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
@@ -135,6 +137,10 @@ public class MonsterInventoryController extends Controller {
                 subscribe(itemService.UseActiveItemIfAvailable(monster._id()),  item -> {
                     ingameControllerProvider.get().removeChildren(2);
                     setSelectionMode(false);
+                }, error -> {
+                    if (error instanceof HttpException) {
+                        System.out.println("cannot use the item on this monster");
+                    }
                 });
             } else {
                 triggerMonsterInformation(monster);

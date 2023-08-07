@@ -144,7 +144,6 @@ public class IngameController extends PortalController {
         dialogueController.init();
         worldTimerController.init();
         nightOverlayController.init();
-        monsterInventoryController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             // Block user input if he is in an encounter
