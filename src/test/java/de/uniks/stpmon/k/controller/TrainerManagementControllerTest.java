@@ -252,7 +252,6 @@ public class TrainerManagementControllerTest extends ApplicationTest {
         verify(popupMock, times(2)).showModal(any());
         verify(trainerService).setTrainerName(trainerNameCaptor.capture());
         assertEquals("Bob2", trainerNameCaptor.getValue());
-        //TODO: add method for sprite save here
     }
 
 }

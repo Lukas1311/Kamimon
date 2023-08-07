@@ -94,6 +94,7 @@ public class InteractionService implements ILifecycleService {
 
     private Dialogue getRejectionDialogue(Trainer trainer, String infix, String... params) {
         return Dialogue.builder()
+                .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
                 .addItem(translateString("dialogue.encounter." + infix + ".reject", params))
                 .create();
@@ -104,6 +105,7 @@ public class InteractionService implements ILifecycleService {
             return getRejectionDialogue(trainer, infix);
         }
         DialogueBuilder itemBuilder = Dialogue.builder()
+                .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("dialogue.encounter." + infix + ".intro"))
                 .addOption().setText(translateString("dialogue.select.no")).endOption()
@@ -117,6 +119,7 @@ public class InteractionService implements ILifecycleService {
 
     private Dialogue getStarterDialogue(List<String> starters, Trainer me, Trainer trainer) {
         DialogueBuilder.ItemBuilder itemBuilder = Dialogue.builder()
+                .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
                 .addItem(translateString("helloAreYouReady", me.name()))
                 .addItem(translateString("chooseOneType"))
@@ -152,11 +155,13 @@ public class InteractionService implements ILifecycleService {
     private Dialogue getHealDialogue(Trainer trainer, Trainer me) {
         if (!monsterService.anyMonsterDamaged()) {
             return Dialogue.builder()
+                    .setTrainerName(trainer.name())
                     .setTrainerId(trainer._id())
                     .addItem(translateString("dialogue.heal.reject"))
                     .create();
         }
         DialogueBuilder itemBuilder = Dialogue.builder()
+                .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("dialogue.heal.intro"))
                 .addOption()
@@ -179,6 +184,7 @@ public class InteractionService implements ILifecycleService {
 
     private Dialogue getTradeDialogue(Trainer trainer) {
         DialogueBuilder itemBuilder = Dialogue.builder()
+                .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
                 .addItem().setText(translateString("shop.intro"))
                 .addOption()

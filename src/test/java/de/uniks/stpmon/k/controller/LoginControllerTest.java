@@ -213,7 +213,6 @@ public class LoginControllerTest extends ApplicationTest {
         press(KeyCode.LEFT).release(KeyCode.LEFT);
         assertTrue(deButton.isSelected());
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-        sleep(3000);
 
         // verify mock:
         verify(preferences).put("locale", captor.getValue());
