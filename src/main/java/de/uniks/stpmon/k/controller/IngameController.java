@@ -253,7 +253,6 @@ public class IngameController extends PortalController {
         mainPain.getChildren().clear();
         rightMenuBorderPane.getChildren().clear();
         miniMapVBox.getChildren().clear();
-        monsterInventoryController.destroy();
         ingameStack = null;
         ingame = null;
         ingameWrappingHBox = null;
