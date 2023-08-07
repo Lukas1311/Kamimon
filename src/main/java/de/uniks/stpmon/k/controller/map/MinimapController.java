@@ -98,12 +98,7 @@ public class MinimapController extends Controller {
                     miniMap.setViewport(viewPortRect);
 
                     int direction = trainer.get().direction();
-                    int rotation = switch (direction) {
-                        case 0 -> 90;
-                        case 2 -> 270;
-                        case 3 -> 180;
-                        default -> 0;
-                    };
+                    int rotation = PlayerDirection.values()[direction].getDegrees();
                     playerRotate.setAngle(rotation);
                 });
 
