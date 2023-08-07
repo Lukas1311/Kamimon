@@ -409,7 +409,7 @@ public class EncounterOverviewController extends Controller {
         });
     }
 
-    private void animateMonsterEntrance() {
+    public void animateMonsterEntrance() {
         ObservableList<Node> teamMonsters = userMonsters.getChildren();
         if (teamMonsters.size() > 1) {
             teamMonsters.get(1).setOpacity(0);

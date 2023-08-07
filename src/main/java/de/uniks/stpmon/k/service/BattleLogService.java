@@ -4,11 +4,14 @@ import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
+import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -27,6 +30,9 @@ public class BattleLogService {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
+    @Inject
+    Provider<MonsterInformationController> monInfoProvider;
+
     @Inject
     protected EffectContext effectContext;
 
@@ -130,11 +136,17 @@ public class BattleLogService {
                 }
                 if (levelUp.playEvolutionAnimation()) {
                     //TODO: play animation
-                    Node node = encounterOverviewControllerProvider.get().userMonster0;
-                    TranslateTransition transition = new TranslateTransition(
+                    ImageView node = encounterOverviewControllerProvider.get().userMonster0;
+                    /*TranslateTransition transition = new TranslateTransition(
                             Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
-                    transition.setFromX(-600);
+                    transition.setFromX(600);
                     transition.setToX(0);
+
+                     */
+
+
+
+                    encounterOverviewControllerProvider.get().loadMonsterImage(levelUp.getNewMon().type().toString(), node, false);
 
 
                     levelUp.setPlayEvolutionAnimation(false);
