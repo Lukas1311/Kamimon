@@ -16,6 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -29,6 +30,8 @@ public class MonDexController extends Controller {
     public AnchorPane monDexPain;
     @FXML
     public ListView<MonsterTypeDto> dexList;
+    @FXML
+    public Text discoverdText;
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
@@ -53,9 +56,15 @@ public class MonDexController extends Controller {
         final Parent parent = super.render();
         loadBgImage(monDexPain, getResourcePath() + "monDexBox.png");
 
+        int encountered = trainerServiceProvider.get().getMe().encounteredMonsterTypes().size();
+
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {
-                //allMonsters.addAll(monList.subList(0, 10));
+                int all = monList.size();
+                int percentage = (encountered * 100) / all;
+                String discoverd = translateString("discovered")
+                        + " " + encountered + " / " + all + " (" + percentage + "%)";
+                discoverdText.setText(discoverd);
                 allMonsters.addAll(monList);
                 dexList.setCellFactory(param -> new DexCell(this, trainerServiceProvider));
 
