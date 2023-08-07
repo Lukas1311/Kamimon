@@ -252,6 +252,12 @@
     -fx-font-size: 25px;
 }
 
+.dialog-label {
+    -fx-font-family: "Pokémon DS Font";
+    -fx-font-size: 26px;
+    -fx-text-fill: black;
+}
+
 
 /* -------------------- Map Overview -------------------- */
 
@@ -324,6 +330,11 @@
  -fx-background-radius: 5;
  -fx-border-color: black;
  -fx-border-width: 1;
+}
+
+
+.monster-status-stunned {
+ -fx-background-color: lightblue;
 }
 
 .monster-status-burned {

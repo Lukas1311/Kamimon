@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.controller;
 
+import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import javafx.fxml.FXML;
@@ -16,6 +17,8 @@ public class LoadingRegionController extends Controller {
 
     @FXML
     public Label regionLabel;
+    @FXML
+    public Label areaLabel;
     @FXML
     public ProgressBar progressBar;
     @FXML
@@ -35,7 +38,9 @@ public class LoadingRegionController extends Controller {
     public Parent render() {
         Parent parent = super.render();
         Region currentRegion = regionStorage.getRegion();
-        regionLabel.setText(currentRegion.name());
+        regionLabel.setText("- " + currentRegion.name() + " -");
+        Area currentArea = regionStorage.getArea();
+        areaLabel.setText(currentArea.name());
         progressBar.setProgress(0);
         progressBar.getStyleClass().add("progress-bar");
         loadImage(imageViewKamimonLettering, "kamimonLettering_new.png");

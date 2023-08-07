@@ -311,7 +311,7 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
 
         TestHelper.listenStarterMonster(component.trainerStorage(), component);
-        TestHelper.addTestNpcs(component);
+        TestHelper.addTestNpcsV3(component);
 
         //shortcut tests
         type(KeyCode.C);
@@ -516,7 +516,8 @@ class AppTest extends ApplicationTest {
 
         TestHelper.listenStarterMonster(component.trainerStorage(), component);
         TestHelper.addEncounteredMonsters(component.trainerStorage(), component);
-        TestHelper.addTestNpcs(component);
+        TestHelper.addTestNpcsV4(component);
+        TestHelper.addMonster(component.trainerStorage(), component);
 
         //test monDex
         clickOn("#backpackImage");
@@ -548,6 +549,7 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
+        clickOn("#backpackImage");
 
         //test sound
         clickOn("#settings");
@@ -555,6 +557,29 @@ class AppTest extends ApplicationTest {
         final Slider musicSlider = lookup("#music").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
         clickOn("#settings");
+
+        //test evolution of mon
+        // walk to the right and start Encounter
+        type(KeyCode.D);
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        waitForFxEvents();
+
+        // open fight menu
+        clickOn("#main_menu_fight");
+        //set evolution
+        EncounterApiDummy encounterApi = component.encounterApi();
+        encounterApi.setEvolves(true);
+        // attack
+        clickOn("#ability_1");
+        waitForFxEvents();
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+        clickOn("#battleLog");
+
+
     }
 
 }
