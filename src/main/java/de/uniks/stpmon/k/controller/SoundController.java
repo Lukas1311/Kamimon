@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
+import de.uniks.stpmon.k.service.SoundService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -28,6 +29,8 @@ public class SoundController extends Controller{
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SettingsService settingsService;
+    @Inject
+    SoundService soundService;
 
 
     @Inject
@@ -42,10 +45,14 @@ public class SoundController extends Controller{
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
 
-        music.setValue(settingsService.getSoundValue());
+        musicSlider.setValue(settingsService.getSoundValue());
         //save the value with preferences
-        listen(music.valueProperty(),
-                (observable, oldValue, newValue) -> settingsService.setSoundValue(newValue.floatValue()));
+        listen(musicSlider.valueProperty(),
+                (observable, oldValue, newValue) -> {
+                    System.out.println("SoundController vol: " + newValue);
+                    settingsService.setSoundValue(newValue.floatValue() / 100);
+                    soundService.setVolume(newValue.doubleValue() / 100);
+                });
 
         //night mode
         nightMode.setSelected(settingsService.getNightEnabled());
@@ -56,6 +63,8 @@ public class SoundController extends Controller{
     }
 
     public void backToSettings() {
-        hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
+        soundService.setSound();
+        soundService.play();
+        //hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
     }
 }
