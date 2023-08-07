@@ -296,7 +296,7 @@ public class BattleLogService {
                     addTranslatedSection("monsterAttacks.self", monsterNames.get(slot), ability.name());
                 } else {
                     MonsterTypeDto eneMon = attackedMonsters.get(slot);
-                    if (eneMon != null && monster != null) {
+                    if (eneMon != null && monster != null && monsterNames.get(slot) != null) {
                         addTranslatedSection("monsterAttacks", monsterNames.get(slot), eneMon.name(), ability.name());
                     }
                     target = move.target();
