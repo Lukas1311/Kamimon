@@ -45,8 +45,8 @@ public class TileLayerBuilder {
     }
 
     private List<ChunkData> chunks = null;
-    private List<Long> data = new LinkedList<>();
-    private List<ObjectData> objects = new LinkedList<>();
+    private List<Long> data = null;
+    private List<ObjectData> objects = null;
     private final List<Property> properties = new LinkedList<>();
     private int id;
     private String name;

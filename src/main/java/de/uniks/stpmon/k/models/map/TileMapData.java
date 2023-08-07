@@ -40,7 +40,8 @@ public record TileMapData(
     public boolean isOutdoor() {
         return properties() != null &&
                 properties().stream().anyMatch(property ->
-                        property.name().equals("Terrain") || property.name().equals("Spawn"));
+                        property.name().equals("Terrain") || property.name().equals("Spawn"))
+                || layers().stream().anyMatch(layer -> layer.chunks() != null);
     }
 
     public boolean isIndoor() {

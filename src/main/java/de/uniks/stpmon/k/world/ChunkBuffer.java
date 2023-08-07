@@ -49,6 +49,9 @@ public class ChunkBuffer {
     public ChunkData getChunk(int x, int y) {
         int index = (int) Math.floor((x - layerData.startx()) / 16f) +
                 (int) Math.floor((y - layerData.starty()) / 16f) * (layerData.width() / 16);
+        if (index < 0 || index >= buffer.length) {
+            return null;
+        }
         int reference = buffer[index];
         if (reference == ID_DEFAULT) {
             return null;
