@@ -1,8 +1,11 @@
 package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
@@ -15,7 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
+@Singleton
 public class ItemInformationController extends Controller {
     @FXML
     public AnchorPane fullBox;
@@ -34,8 +40,14 @@ public class ItemInformationController extends Controller {
     IResourceService resourceService;
     @Inject
     PresetService presetService;
+    @Inject
+    ItemService itemService;
+    @Inject
+    Provider<IngameController> ingameControllerProvider;
+
 
     public Item item;
+    public ItemTypeDto itemTypeDto;
 
     @Inject
     public ItemInformationController() {
@@ -45,8 +57,10 @@ public class ItemInformationController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
+        useButton.setVisible(false);
 
         subscribe(presetService.getItem(item.type()), item -> {
+            itemTypeDto = item;
             if (item.use() != null) {
                 useButton.setVisible(true);
                 useButton.setText(translateString("useItemButton"));
@@ -69,8 +83,28 @@ public class ItemInformationController extends Controller {
     }
 
     private void useItem() {
-        //TODO
-        System.out.println("TODO");
+        if(itemTypeDto == null) {
+            return;
+        }
+        switch(itemTypeDto.use()) {
+            case ITEM_BOX -> {
+                //TODO
+            }
+            case MONSTER_BOX -> {
+                //TODO
+            }
+            case BALL -> {
+                //TODO
+            }
+            case EFFECT -> {
+                if(itemService == null || ingameControllerProvider == null) {
+                    return;
+                }
+                itemService.setActiveItem(itemTypeDto.id());
+                ingameControllerProvider.get().openMonsterInventory();
+            }
+        }
+
     }
 
     public void setItem(Item item) {
@@ -81,6 +115,7 @@ public class ItemInformationController extends Controller {
     public String getResourcePath() {
         return "inventory/";
     }
+
 
     @Override
     public void destroy() {

@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.TrainerService;
 import javafx.fxml.FXML;
@@ -43,6 +44,8 @@ public class MonsterInventoryController extends Controller {
     TrainerService trainerService;
     @Inject
     MonsterService monsterService;
+    @Inject
+    ItemService itemService;
 
     private Monster activeMonster;
     private List<String> monTeamList = new ArrayList<>();
@@ -50,6 +53,8 @@ public class MonsterInventoryController extends Controller {
     private String selectedMonster;
 
     private Parent monParent;
+
+    private boolean isSelectionMode = false;
 
     @Inject
     public MonsterInventoryController() {
@@ -81,6 +86,9 @@ public class MonsterInventoryController extends Controller {
         monTeam = null;
         monStorage = null;
         monBoxMenuHolder = null;
+    }
+    public void setSelectionMode(boolean isSelectionMode) {
+        this.isSelectionMode = isSelectionMode;
     }
 
     private void showTeamMonster(List<Monster> monsters) {
@@ -121,7 +129,18 @@ public class MonsterInventoryController extends Controller {
         MonsterItemController mon = new MonsterItemController(monster, resourceService);
         Parent parent = mon.render();
         draggableMonItem(mon, monster._id());
-        parent.setOnMouseClicked(e -> triggerMonsterInformation(monster));
+
+        parent.setOnMouseClicked(e -> {
+            if(isSelectionMode && itemService != null) {
+                subscribe(itemService.UseActiveItemIfAvailable(monster._id()),  item -> {
+                    ingameControllerProvider.get().removeChildren(2);
+                    setSelectionMode(false);
+                });
+            } else {
+                triggerMonsterInformation(monster);
+            }
+
+        });
         return parent;
     }
 
