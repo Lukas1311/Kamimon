@@ -418,12 +418,10 @@ public class IngameController extends PortalController {
     public void openMonsterInventory() {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();
 
-        MonsterInventoryController controller = monsterInventoryController;
-        controller.setSelectionMode(true);
-        controller.init();
-        tabStack.push(controller);
+        monsterInventoryController.setSelectionMode(true);
+        tabStack.push(monsterInventoryController);
 
-        Parent monsterInventory = controller.render();
+        Parent monsterInventory = monsterInventoryController.render();
         children.add(0, monsterInventory);
     }
 
