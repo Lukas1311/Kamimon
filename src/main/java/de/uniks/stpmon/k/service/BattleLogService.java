@@ -136,7 +136,12 @@ public class BattleLogService {
                 }
                 if (levelUp.playEvolutionAnimation()) {
                     //TODO: play animation
-                    ImageView node = encounterOverviewControllerProvider.get().userMonster0;
+                    ImageView node;
+                    if(slot.get().partyIndex() == 1) {
+                        node = encounterOverviewControllerProvider.get().userMonster1;
+                    }else {
+                        node = encounterOverviewControllerProvider.get().userMonster0;
+                    }
                     /*TranslateTransition transition = new TranslateTransition(
                             Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
                     transition.setFromX(600);
@@ -145,7 +150,7 @@ public class BattleLogService {
                      */
 
 
-
+                    //change Image to new Monster
                     encounterOverviewControllerProvider.get().loadMonsterImage(levelUp.getNewMon().type().toString(), node, false);
 
 
