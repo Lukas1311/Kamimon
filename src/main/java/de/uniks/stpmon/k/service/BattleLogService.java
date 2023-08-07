@@ -5,12 +5,18 @@ import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
-import de.uniks.stpmon.k.dto.*;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
+import de.uniks.stpmon.k.dto.ItemTypeDto;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.OpponentUpdate;
+import de.uniks.stpmon.k.models.Result;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -18,7 +24,13 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Singleton
 public class BattleLogService {
@@ -142,6 +154,7 @@ public class BattleLogService {
                     }else {
                         node = encounterOverviewControllerProvider.get().userMonster0;
                     }
+                    //transition for monster evolution
                     TranslateTransition translation =
                             new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
                     translation.setByY(0);
