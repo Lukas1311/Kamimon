@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -44,6 +45,8 @@ public class ItemInformationController extends Controller {
     ItemService itemService;
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
 
     public Item item;
@@ -104,9 +107,12 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
+                itemService.setInEncounter(true);
                 if(!isEncounter) {
                     ingameControllerProvider.get().removeChildren(2);
                     ingameControllerProvider.get().openMonsterInventory();
+                } else {
+                    encounterOverviewControllerProvider.get().openController("monsterSelection", item);
                 }
             }
         }

@@ -130,6 +130,10 @@ public class ActionFieldController extends Controller {
         open(chooseAbilityControllerProvider);
     }
 
+    public void openInventory() {
+        setActiveSlot();
+    }
+
     public void openChooseOpponent() {
         open(chooseOpponentControllerProvider);
     }

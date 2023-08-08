@@ -57,6 +57,7 @@ public class InventoryController extends ToastedController {
 
     public Item currentItem;
 
+
     @Inject
     public InventoryController() {
     }
