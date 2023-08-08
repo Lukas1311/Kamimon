@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
@@ -73,6 +74,10 @@ public class ItemInformationController extends Controller {
             if (item.use() != null) {
                 useButton.setVisible(true);
                 useButton.setText(translateString("useItemButton"));
+                if (item.use().equals(ItemUse.BALL) && !isEncounter || (
+                        item.use().equals(ItemUse.ITEM_BOX) || item.use().equals(ItemUse.MONSTER_BOX)) && isEncounter) {
+                    useButton.setDisable(true);
+                }
                 useButton.setOnAction(e -> useItem());
             } else {
                 useButton.setVisible(false);
@@ -143,7 +148,7 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
-                if(!isEncounter) {
+                if (!isEncounter) {
                     ingameControllerProvider.get().removeChildren(2);
                     ingameControllerProvider.get().openMonsterInventory();
                 }
@@ -164,7 +169,7 @@ public class ItemInformationController extends Controller {
         this.item = item;
     }
 
-    public void setInEncounter(boolean isEncounter){
+    public void setInEncounter(boolean isEncounter) {
         this.isEncounter = isEncounter;
     }
 
