@@ -7,11 +7,14 @@ import de.uniks.stpmon.k.service.SettingsService;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -23,12 +26,16 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
@@ -47,6 +54,9 @@ public class SoundControllerTest extends ApplicationTest {
     SoundController soundController;
     @Mock
     SettingsService settingsService;
+    @Mock
+    Preferences preferences;
+
 
     @Override
     public void start(Stage stage) {
@@ -107,30 +117,39 @@ public class SoundControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testShowPassword() {
-        Button pwdToggleButton = lookup("#toggleButton").queryButton();
-        PasswordField pwdField = lookup("#passwordInput").queryAs(PasswordField.class);
-        // tab into password field
-        // tab to the toggle button password field is empty
-        write("\t\t\t");
-        Assertions.assertThat(pwdToggleButton).isFocused();
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
-        waitForFxEvents();
-        assertThat(pwdField.getPromptText()).isEqualTo("Password");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
-        waitForFxEvents();
-        // tab back to password field
-        press(KeyCode.SHIFT).type(KeyCode.TAB).release(KeyCode.SHIFT);
-        write("stringst");
-        // click show password button and verify the show password
-        write("\t");
-        press(KeyCode.ENTER).release(KeyCode.ENTER);
-        waitForFxEvents(); // not really necessary I guess
-        // get password input field to verify the contents
+    void testChoseLanguage() {
+        // prep:
+        final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        RadioButton enButton = lookup("#englishButton").queryAs(RadioButton.class);
+        RadioButton deButton = lookup("#germanButton").queryAs(RadioButton.class);
+        assertTrue(enButton.isSelected());
+        // check that language is english first
+        assertThat(deButton.getText()).isEqualTo("German");
+        // define mocks:
+        doNothing().when(preferences).put(eq("locale"), captor.capture());
+        doNothing().when(app).show(soundController);
 
-        // check if prompt text matches the password that was written into password field before
-        assertThat(pwdField.getPromptText()).isEqualTo("stringst");
+        // action: chose the DE button
+        write("\t".repeat(5));
+        press(KeyCode.LEFT).release(KeyCode.LEFT);
+        //assertTrue(deButton.isSelected());
         press(KeyCode.ENTER).release(KeyCode.ENTER);
-        waitForFxEvents();
+
+        // verify mock:
+        verify(preferences).put("locale", captor.getValue());
+        assertEquals("de", captor.getValue());
+
+        // action: chose the EN button
+        press(KeyCode.RIGHT).release(KeyCode.RIGHT);
+        assertTrue(enButton.isSelected());
+
+        press(KeyCode.ENTER).release(KeyCode.ENTER);
+
+        // verify mock:
+        verify(preferences).put("locale", captor.getValue());
+        assertEquals("en", captor.getValue());
+
+        verify(soundController).setDe();
+        verify(soundController).setEn();
     }
 }

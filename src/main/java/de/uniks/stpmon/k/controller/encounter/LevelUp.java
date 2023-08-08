@@ -37,14 +37,17 @@ public class LevelUp {
         return newMon;
     }
 
-    public String getNewMonName() {
-        return newMonName;
-    }
-
     public void setEvolved(Result evolved) {
         this.evolved = evolved;
     }
 
+    public String getOldMonName() {
+        return oldMonName;
+    }
+
+    public String getNewMonName() {
+        return newMonName;
+    }
 
     public void setAttackLearned(Result attackLearned) {
         this.attackLearned = attackLearned;

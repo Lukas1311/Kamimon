@@ -167,6 +167,7 @@ public class BattleLogService {
 
                     //change Image to new Monster
                     encounterOverviewControllerProvider.get().loadMonsterImage(levelUp.getNewMon().type().toString(), node, false);
+                    battleLogControllerProvider.get().addTranslatedSection("monster-evolved", levelUp.getOldMonName(), levelUp.getNewMonName());
 
                     levelUp.setPlayEvolutionAnimation(false);
                 }
