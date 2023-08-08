@@ -259,6 +259,16 @@ public class EncounterOverviewController extends Controller {
         }
     }
 
+    public void showMonInfo(Monster mon) {
+        if (controller == null) {
+            MonsterInformationController monInfoController = monInfoProvider.get();
+            controller = monInfoController.render();
+            monInfoController.loadMonsterTypeDto(String.valueOf(mon.type()));
+            monInfoController.loadMonster(mon);
+            contentBox.getChildren().add(0, controller);
+        }
+    }
+
     public void openController(String child, Item item) {
         if (controller == null) {
             if (child.equals("inventory")) {

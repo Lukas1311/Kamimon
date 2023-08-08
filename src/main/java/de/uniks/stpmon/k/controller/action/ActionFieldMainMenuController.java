@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -38,6 +40,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     @Override
     public Parent render() {
         Parent parent = super.render();
+
 
         textContent.setText(translateString("wannaDo"));
 
@@ -98,7 +101,10 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openInfo() {
-
+        getActionField().setActiveSlot();
+        EncounterSlot activeSlot = getActionField().getActiveSlot();
+        Monster activeMon = sessionService.getMonster(activeSlot);
+        encounterOverviewProvider.get().showMonInfo(activeMon);
     }
 
     public void openFlee() {
