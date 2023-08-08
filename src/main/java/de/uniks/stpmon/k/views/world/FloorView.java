@@ -17,7 +17,6 @@ public class FloorView extends WorldViewable {
 
     @Inject
     protected WorldRepository repository;
-    private MeshView floor;
     private Group chunks;
 
     @Inject
@@ -45,10 +44,6 @@ public class FloorView extends WorldViewable {
     @Override
     public void destroy() {
         super.destroy();
-        if (floor != null) {
-            MeshUtils.disposeMesh(floor);
-            floor = null;
-        }
         if (chunks != null) {
             for (Node node : chunks.getChildren()) {
                 MeshUtils.disposeMesh(node);

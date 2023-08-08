@@ -5,14 +5,13 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
 import de.uniks.stpmon.k.controller.interaction.DialogueController;
+import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.map.MapOverviewController;
 import de.uniks.stpmon.k.controller.map.MinimapController;
 import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
-import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
-import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.shop.ShopOptionController;
 import de.uniks.stpmon.k.controller.shop.ShopOverviewController;
@@ -103,8 +102,6 @@ public class IngameController extends PortalController {
     @Inject
     WorldTimerController worldTimerController;
     @Inject
-    NightOverlayController nightOverlayController;
-    @Inject
     MonsterInformationController monsterInformationController;
     @Inject
     MonsterInventoryController monsterInventoryController;
@@ -144,7 +141,6 @@ public class IngameController extends PortalController {
         backpackController.init();
         dialogueController.init();
         worldTimerController.init();
-        nightOverlayController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             // Block user input if he is in an encounter
@@ -251,7 +247,6 @@ public class IngameController extends PortalController {
         renderAndInsert(miniMapVBox, 0, minimapController,
                 (_parent, child) -> child.setOnMouseClicked(this::openOrCloseMap));
         renderAndInsert(miniMapVBox, 0, worldTimerController);
-        renderAndInsert(ingameStack, 1, nightOverlayController);
 
         renderAndInsert(ingameWrappingHBox, 0, backpackController,
                 (_parent, _child) -> ingameStack.setAlignment(Pos.TOP_RIGHT));

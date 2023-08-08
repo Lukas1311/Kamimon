@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.dto.IMapProvider;
+import de.uniks.stpmon.k.models.builder.ObjectBuilder;
 import de.uniks.stpmon.k.models.builder.TileMapBuilder;
 import de.uniks.stpmon.k.models.map.TileMapData;
+import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
 import io.reactivex.rxjava3.observers.TestObserver;
@@ -57,29 +59,26 @@ public class TextDeliveryServiceTest {
 
     @Test
     public void testMonCenterPosition() {
+        ObjectData portalName = ObjectBuilder.builder()
+                .setType("Portal")
+                .setName("Moncenter")
+                .setX(2)
+                .setY(5)
+                .setHeight(1)
+                .setWidth(10).create();
+        ObjectData portalProperty = ObjectBuilder.builder(portalName)
+                .setName("")
+                .addProperty("Map", "", "Moncenter")
+                .setX(5)
+                .setY(2).create();
         when(mapProvider.map()).thenReturn(TileMapBuilder.builder()
                         .startObjectLayer()
-                        .startObject()
-                        .setType("Portal")
-                        .setName("Moncenter")
-                        .setX(2)
-                        .setY(5)
-                        .setHeight(1)
-                        .setWidth(10)
-                        .endObject()
+                        .addObject(portalName)
                         .endLayer()
                         .create(),
                 TileMapBuilder.builder()
                         .startObjectLayer()
-                        .startObject()
-                        .setType("Portal")
-                        .setName("Test")
-                        .addProperty("Map", "", "Moncenter")
-                        .setX(5)
-                        .setY(2)
-                        .setHeight(2)
-                        .setWidth(4)
-                        .endObject()
+                        .addObject(portalProperty)
                         .endLayer()
                         .create(),
                 TileMapBuilder.builder().create());
@@ -89,7 +88,7 @@ public class TextDeliveryServiceTest {
         monPos.assertValueAt(0, new Point2D(7, 5.5));
         // Find the moncenter with the property
         monPos = textDeliveryService.getNextMonCenter(mapProvider).test();
-        monPos.assertValueAt(0, new Point2D(7, 3));
+        monPos.assertValueAt(0, new Point2D(10, 2.5));
         // Check again if there is no moncenter
         monPos = textDeliveryService.getNextMonCenter(mapProvider).test();
         monPos.assertValueAt(0, Point2D.ZERO);

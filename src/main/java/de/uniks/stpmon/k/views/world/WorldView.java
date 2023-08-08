@@ -43,6 +43,7 @@ public class WorldView extends Viewable {
     @Inject
     protected WorldService worldService;
     private ShadowTransform lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
+    private AmbientLight ambient;
 
     @Inject
     public WorldView() {
@@ -77,7 +78,7 @@ public class WorldView extends Viewable {
         }
 
         // Lights all objects from all sides
-        AmbientLight ambient = new AmbientLight();
+        ambient = new AmbientLight();
         ambient.setColor(Color.WHITE);
 
         return new Group(floor, ambient, props, character, npc);
@@ -123,6 +124,7 @@ public class WorldView extends Viewable {
             propView.updateShadow(transform);
             characterView.updateShadow(transform);
             npcCollectiveView.updateShadow(transform);
+            ambient.setColor(worldService.getWorldColor(time));
         });
     }
 
@@ -130,6 +132,8 @@ public class WorldView extends Viewable {
     public void destroy() {
         super.destroy();
 
+        ambient = null;
+        lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
         NodeUtils.removeNodes(this);
         cameraStorage.setCamera(null);
         Disposer.cleanUp();

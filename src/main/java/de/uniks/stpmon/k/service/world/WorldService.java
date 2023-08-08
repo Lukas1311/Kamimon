@@ -23,13 +23,10 @@ public class WorldService {
     public static final DayCycle DAY_CYCLE = new DayCycle(8, 20, 3);
 
     private static final Color[] DAY_COLORS = {
-            Color.MIDNIGHTBLUE.brighter().brighter(),
-            Color.LIGHTSLATEGREY,
-            Color.LIGHTYELLOW,
             Color.WHITE,
-            Color.LIGHTGOLDENRODYELLOW,
+            Color.LIGHTGOLDENRODYELLOW.interpolate(Color.GOLDENROD, 0.5f),
             Color.LIGHTSLATEGREY,
-            Color.MIDNIGHTBLUE.brighter().brighter()
+            Color.LIGHTSLATEGREY.interpolate(Color.MIDNIGHTBLUE, 0.75f)
     };
     public static final float SECONDS_TO_HOURS = 60f * 60f;
 
@@ -125,13 +122,17 @@ public class WorldService {
     }
 
     public Color getWorldColor(LocalTime time) {
-        int seconds = time.toSecondOfDay();
-        int index = (int) (seconds / (SECONDS_TO_HOURS * 24)) * DAY_COLORS.length;
-        index = Math.min(Math.max(index, 0), DAY_COLORS.length - 1);
-
+        float factor = getNightFactor(time);
+        if (factor == 1) {
+            return DAY_COLORS[DAY_COLORS.length - 1];
+        } else if (factor == 0) {
+            return DAY_COLORS[0];
+        }
+        float night = factor * 3 % 3;
+        int index = (int) (factor * 3);
         Color color = DAY_COLORS[index];
         Color nextColor = DAY_COLORS[(index + 1) % DAY_COLORS.length];
-        return DAY_COLORS[index];
+        return color.interpolate(nextColor, night - index);
     }
 
     public CharacterSet getCharacter(String name) {

@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.map.MapOverviewController;
 import de.uniks.stpmon.k.controller.map.MinimapController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
-import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.InputHandler;
