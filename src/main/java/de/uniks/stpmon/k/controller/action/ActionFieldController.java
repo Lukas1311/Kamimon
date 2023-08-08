@@ -51,6 +51,8 @@ public class ActionFieldController extends Controller {
     private EncounterSlot activeSlot;
     private Controller openController;
     private CloseEncounterTrigger closeTrigger;
+    private boolean monInfoOpen = false;
+
 
     @Inject
     public ActionFieldController() {
@@ -99,6 +101,14 @@ public class ActionFieldController extends Controller {
         }
 
         return parent;
+    }
+
+    public boolean isMonInfoOpen() {
+        return monInfoOpen;
+    }
+
+    public void setMonInfoOpen(boolean monInfoOpen) {
+        this.monInfoOpen = monInfoOpen;
     }
 
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {

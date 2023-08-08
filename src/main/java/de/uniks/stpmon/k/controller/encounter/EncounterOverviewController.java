@@ -100,7 +100,7 @@ public class EncounterOverviewController extends Controller {
     Provider<ItemInformationController> itemInformationControllerProvider;
 
     private final Pane blackPane = new Pane();
-    public Parent controller;
+    public Parent monInfoParent;
 
     @Inject
     public EncounterOverviewController() {
@@ -251,29 +251,35 @@ public class EncounterOverviewController extends Controller {
     }
 
     public void showLevelUp(Monster oldMon, Monster newMon) {
-        if (controller == null) {
+        if (monInfoParent == null) {
             MonsterInformationController monInfoController = monInfoProvider.get();
-            controller = monInfoController.render();
+            this.monInfoParent = monInfoController.render();
             monInfoController.loadLevelUp(oldMon, newMon);
-            contentBox.getChildren().add(0, controller);
+            contentBox.getChildren().add(0, this.monInfoParent);
         }
     }
 
     public void showMonInfo(Monster mon) {
-        if (controller == null) {
+        if (monInfoParent == null) {
             MonsterInformationController monInfoController = monInfoProvider.get();
-            controller = monInfoController.render();
+            this.monInfoParent = monInfoController.render();
             monInfoController.loadMonsterTypeDto(String.valueOf(mon.type()));
             monInfoController.loadMonster(mon);
-            contentBox.getChildren().add(0, controller);
+            contentBox.getChildren().add(0, this.monInfoParent);
         }
     }
 
+    public void removeMonInfo() {
+        contentBox.getChildren().remove(0);
+        monInfoProvider.get().destroy();
+        this.monInfoParent = null;
+    }
+
     public void openController(String child, Item item) {
-        if (controller == null) {
+        if (monInfoParent == null) {
             if (child.equals("inventory")) {
                 InventoryController inventoryController = inventoryControllerProvider.get();
-                controller = inventoryController.render();
+                monInfoParent = inventoryController.render();
             } else {
                 return;
             }
@@ -284,14 +290,14 @@ public class EncounterOverviewController extends Controller {
                 }
                 ItemInformationController itemInformationController = itemInformationControllerProvider.get();
                 itemInformationController.setItem(item);
-                controller = itemInformationController.render();
+                monInfoParent = itemInformationController.render();
             }
         }
-        contentBox.getChildren().add(0, controller);
+        contentBox.getChildren().add(0, monInfoParent);
     }
 
     public void removeController(String child) {
-        if (controller != null) {
+        if (monInfoParent != null) {
             contentBox.getChildren().clear();
             switch (child) {
                 case "inventory" -> {
@@ -304,7 +310,7 @@ public class EncounterOverviewController extends Controller {
                     return;
                 }
             }
-            controller = null;
+            monInfoParent = null;
         }
     }
 

@@ -80,6 +80,10 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openAction(OptionType option) {
+        if (getActionField().isMonInfoOpen()) {
+            encounterOverviewProvider.get().removeMonInfo();
+            getActionField().setMonInfoOpen(false);
+        }
         switch (option) {
             case CHANGE_MON -> openChangeMon();
             case FIGHT -> openFight();
@@ -90,7 +94,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openInventory() {
-        if (encounterOverviewProvider.get().controller == null) {
+        if (encounterOverviewProvider.get().monInfoParent == null) {
             encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
             inventoryControllerProvider.get().setInEncounter(true);
             encounterOverviewProvider.get().openController("inventory", null);
@@ -105,6 +109,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         EncounterSlot activeSlot = getActionField().getActiveSlot();
         Monster activeMon = sessionService.getMonster(activeSlot);
         encounterOverviewProvider.get().showMonInfo(activeMon);
+        getActionField().setMonInfoOpen(true);
     }
 
     public void openFlee() {
