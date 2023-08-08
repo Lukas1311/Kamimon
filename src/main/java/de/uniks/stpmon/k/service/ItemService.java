@@ -30,8 +30,6 @@ public class ItemService {
 
     private int effectItemType = 0;
 
-    private boolean inEncounter = false;
-
     @Inject
     public ItemService() {
 
@@ -73,22 +71,10 @@ public class ItemService {
 
     public Observable<Item> useActiveItemIfAvailable(String targetId) {
         if (effectItemType != 0) {
-            if(inEncounter) {
-
-            } else {
-                return useItem(effectItemType, 1, targetId);
-            }
+            return useItem(effectItemType, 1, targetId);
         }
         return Observable.empty();
     }
 
-    public int getActiveItemType() {
-        return effectItemType;
-    }
-
-
-    public void setInEncounter(boolean inEncounter) {
-        this.inEncounter = inEncounter;
-    }
 
 }

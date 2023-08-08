@@ -107,7 +107,6 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
-                itemService.setInEncounter(true);
                 if(!isEncounter) {
                     ingameControllerProvider.get().removeChildren(2);
                     ingameControllerProvider.get().openMonsterInventory();
