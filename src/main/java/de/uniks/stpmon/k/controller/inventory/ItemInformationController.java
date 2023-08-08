@@ -55,6 +55,8 @@ public class ItemInformationController extends Controller {
     public ItemTypeDto itemTypeDto;
     private boolean isOpen = false;
 
+    private boolean isEncounter = false;
+
     @Inject
     public ItemInformationController() {
     }
@@ -62,6 +64,7 @@ public class ItemInformationController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("itemInformationNode");
         loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
         useButton.setVisible(false);
 
@@ -140,7 +143,10 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
-                ingameControllerProvider.get().openMonsterInventory();
+                if(!isEncounter) {
+                    ingameControllerProvider.get().removeChildren(2);
+                    ingameControllerProvider.get().openMonsterInventory();
+                }
             }
         }
 
@@ -156,6 +162,10 @@ public class ItemInformationController extends Controller {
 
     public void setItem(Item item) {
         this.item = item;
+    }
+
+    public void setInEncounter(boolean isEncounter){
+        this.isEncounter = isEncounter;
     }
 
     @Override

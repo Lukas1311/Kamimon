@@ -146,7 +146,6 @@ public class IngameController extends PortalController {
         dialogueController.init();
         worldTimerController.init();
         nightOverlayController.init();
-        monsterInventoryController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             // Block user input if he is in an encounter
@@ -256,7 +255,6 @@ public class IngameController extends PortalController {
         mainPain.getChildren().clear();
         rightMenuBorderPane.getChildren().clear();
         miniMapVBox.getChildren().clear();
-        monsterInventoryController.destroy();
         ingameStack = null;
         ingame = null;
         ingameWrappingHBox = null;
@@ -409,6 +407,7 @@ public class IngameController extends PortalController {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();
 
         ItemInformationController controller = itemInformationController;
+        controller.setInEncounter(false);
         controller.init();
         tabStack.push(controller);
 
@@ -439,12 +438,10 @@ public class IngameController extends PortalController {
     public void openMonsterInventory() {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();
 
-        MonsterInventoryController controller = monsterInventoryController;
-        controller.setSelectionMode(true);
-        controller.init();
-        tabStack.push(controller);
+        monsterInventoryController.setSelectionMode(true);
+        tabStack.push(monsterInventoryController);
 
-        Parent monsterInventory = controller.render();
+        Parent monsterInventory = monsterInventoryController.render();
         children.add(0, monsterInventory);
     }
 

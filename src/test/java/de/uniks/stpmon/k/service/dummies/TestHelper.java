@@ -18,6 +18,7 @@ import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -125,7 +126,6 @@ public class TestHelper {
                 .setNpc(NPCInfoBuilder.builder().setEncounterOnTalk(true).create())
                 .create();
 
-
         component.regionApi().addTrainer(attacker);
         component.regionApi().addMonster("attacker", "1", true);
         component.regionApi().addTrainer(attacker1);
@@ -150,12 +150,23 @@ public class TestHelper {
                 .setX(2)
                 .setRegion("id0")
                 .setArea("id0_0")
-                .setDirection(Direction.TOP)
+                .setDirection(Direction.BOTTOM)
                 .setNpc(NPCInfoBuilder.builder().setEncounterOnTalk(true).create())
+                .create();
+
+        Trainer clerk = TrainerBuilder.builder()
+                .setId("clerk")
+                .setX(3)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.BOTTOM)
+                .setNpc(NPCInfoBuilder.builder().addSells(0).addSells(1).addSells(2).create())
                 .create();
 
 
         component.regionApi().addTrainer(attacker);
+        component.regionApi().addTrainer(clerk);
         component.regionApi().addMonster("attacker", "1", true);
     }
+
 }

@@ -4,16 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.utils.ResponseUtils;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Singleton
 public class ResourceService implements IResourceService {
     private final Map<String, BufferedImage> monsterImages = new HashMap<>();
+    private final Set<String> awaitedMonsters = Collections.synchronizedSet(new LinkedHashSet<>());
+    private final PublishSubject<String> monsterLoaded = PublishSubject.create();
     private final Map<String, BufferedImage> itemImages = new HashMap<>();
     @Inject
     protected PresetService presetService;
@@ -38,13 +40,18 @@ public class ResourceService implements IResourceService {
     }
 
     public Observable<BufferedImage> getMonsterImage(String fileName) {
-        if (!monsterImages.containsKey(fileName)) {
-            return ResponseUtils.readImage(presetService.getMonsterImage(fileName)).map(image -> {
-                monsterImages.put(fileName, image);
-                return image;
-            });
+        if (monsterImages.containsKey(fileName)) {
+            return Observable.just(monsterImages.get(fileName));
         }
-        return Observable.just(monsterImages.get(fileName));
+        if (!awaitedMonsters.add(fileName)) {
+            return monsterLoaded.filter(fileName::equals)
+                    .map((g) -> monsterImages.get(fileName));
+        }
+        return ResponseUtils.readImage(presetService.getMonsterImage(fileName)).map(image -> {
+            monsterImages.put(fileName, image);
+            monsterLoaded.onNext(fileName);
+            return image;
+        });
     }
 
     public Observable<BufferedImage> getItemImage(String itemId) {
