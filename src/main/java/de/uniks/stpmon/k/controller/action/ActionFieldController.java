@@ -231,6 +231,17 @@ public class ActionFieldController extends Controller {
         setOwnMonsterDead(false);
     }
 
+    public void executeItemMove(int itemId, String myMonsterId) {
+        madeMoves.add(getActiveSlot());
+        // Check if all moves are made, or we have to wait for enemy
+        updateWaiting();
+        // Show battle log if it's not already open
+        openBattleLog();
+        subscribe(encounterServiceProvider.get()
+                .makeItemMove(getActiveSlot(), itemId, myMonsterId ));
+    }
+
+
     public void checkDeadMonster() {
         subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
             if (sessionService.isMonsterDead(EncounterSlot.PARTY_FIRST)) {
