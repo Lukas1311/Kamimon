@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.mondex;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.TrainerService;
@@ -16,11 +17,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
 @Singleton
 public class MonDexController extends Controller {
@@ -29,6 +32,8 @@ public class MonDexController extends Controller {
     public AnchorPane monDexPain;
     @FXML
     public ListView<MonsterTypeDto> dexList;
+    @FXML
+    public Text discoverdText;
 
     @Inject
     Provider<IngameController> ingameControllerProvider;
@@ -53,9 +58,20 @@ public class MonDexController extends Controller {
         final Parent parent = super.render();
         loadBgImage(monDexPain, getResourcePath() + "monDexBox.png");
 
+        int encountered;
+        Optional<Trainer> trainer = trainerServiceProvider.get().onTrainer().blockingFirst();
+        encountered = trainer.map(value -> value.encounteredMonsterTypes().size()).orElse(0);
+
         subscribe(presetService.getMonsters(), (monList) -> {
             if (!monList.isEmpty()) {
-                //allMonsters.addAll(monList.subList(0, 10));
+                int all = monList.size();
+                int percentage = (encountered * 100) / all;
+                if (percentage == 0 && encountered > 0) {
+                    percentage = 1;
+                }
+                String discoverd = translateString("discovered")
+                        + " " + encountered + " / " + all + " (" + percentage + "%)";
+                discoverdText.setText(discoverd);
                 allMonsters.addAll(monList);
                 dexList.setCellFactory(param -> new DexCell(this, trainerServiceProvider));
 
