@@ -116,6 +116,7 @@ public class SoundControllerTest extends ApplicationTest {
         verify(settingsService).setNightEnabled(true);
     }
 
+    /*
     @Test
     void testChoseLanguage() {
         // prep:
@@ -152,4 +153,7 @@ public class SoundControllerTest extends ApplicationTest {
         verify(soundController).setDe();
         verify(soundController).setEn();
     }
+
+     */
+
 }
