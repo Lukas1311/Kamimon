@@ -22,8 +22,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +40,8 @@ class ActionFieldMainMenuControllerTest extends ApplicationTest {
     Provider<InventoryController> inventoryControllerProvider;
     @Mock
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
+    @Mock
+    Provider<ActionFieldController> actionFieldControllerProvider;
     @Mock
     EncounterStorage encounterStorage;
     @InjectMocks
@@ -84,6 +85,9 @@ class ActionFieldMainMenuControllerTest extends ApplicationTest {
         EncounterOverviewController encounterOverviewController = mock(EncounterOverviewController.class);
         when(encounterOverviewControllerProvider.get()).thenReturn(encounterOverviewController);
         encounterOverviewController.actionFieldWrapperBox = actionFieldWrapperBox;
+
+        ActionFieldController actionFieldController = mock(ActionFieldController.class);
+        when(actionFieldControllerProvider.get()).thenReturn(actionFieldController);
 
         InventoryController inventoryController = new InventoryController();
         when(inventoryControllerProvider.get()).thenReturn(inventoryController);
