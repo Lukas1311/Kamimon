@@ -1,46 +1,13 @@
 package de.uniks.stpmon.k.service.world;
 
+import de.uniks.stpmon.k.service.DestructibleElement;
 import io.reactivex.rxjava3.core.Observable;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.time.Instant;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.concurrent.TimeUnit;
 
-@Singleton
-public class ClockService {
-
-    @Inject
-    public ClockService() {
-    }
-
-    protected Observable<LocalTime> clockObservable;
+public class ClockService extends DestructibleElement {
 
     public Observable<LocalTime> onTime() {
-        if (clockObservable != null) {
-            return clockObservable;
-        }
-        clockObservable = createObservable();
-        return clockObservable;
-    }
-
-    protected Observable<LocalTime> createTimer(LocalTime startTime, int period, TimeUnit unit) {
-        int offsetSecond = 60 - startTime.getSecond();
-        return Observable.merge(
-                Observable.just(startTime),
-                Observable.interval(offsetSecond, period, unit)
-                        .map(ticks -> startTime.plusMinutes(ticks + 1))
-        ).doOnDispose(() -> clockObservable = null).replay(1).refCount();
-    }
-
-    protected Observable<LocalTime> createObservable() {
-        LocalTime currentTime = getCurrentTime();
-        return createTimer(currentTime, 60, TimeUnit.SECONDS);
-    }
-
-    private LocalTime getCurrentTime() {
-        return Instant.now().atZone(ZoneId.systemDefault()).toLocalTime();
+        return Observable.just(LocalTime.of(12, 30));
     }
 }

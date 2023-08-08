@@ -29,7 +29,6 @@ public class TestHelper {
     public static void addWorldDummy(WorldRepository repository) {
         repository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
         repository.minimapImage().setValue(DummyConstants.EMPTY_IMAGE);
-        repository.floorImage().setValue(DummyConstants.EMPTY_IMAGE);
         repository.props().setValue(List.of());
     }
 

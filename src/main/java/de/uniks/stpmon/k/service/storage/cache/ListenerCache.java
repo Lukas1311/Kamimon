@@ -30,7 +30,7 @@ public abstract class ListenerCache<T, K> extends SimpleCache<T, K> {
         disposables.add(listener.listen(Socket.WS, getEventName(), getDataClass())
                 .subscribe(event -> {
                             final T value = event.data();
-                            if (!isCacheable(value)) {
+                    if (!isCacheable(value) || status == Status.DESTROYED) {
                                 return;
                             }
                             switch (event.suffix()) {

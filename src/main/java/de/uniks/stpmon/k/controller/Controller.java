@@ -8,7 +8,6 @@ import de.uniks.stpmon.k.utils.SVGUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Scheduler;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -238,7 +237,7 @@ public abstract class Controller extends Viewable {
             BufferedImage scaledImage = ImageUtils.scaledImage(image, TEXTURE_SCALE);
 
             // Convert the BufferedImage to JavaFX Image
-            Image fxImage = SwingFXUtils.toFXImage(scaledImage, null);
+            Image fxImage = ImageUtils.toFXImage(scaledImage);
 
             // Set the image
             sprite.setImage(fxImage);

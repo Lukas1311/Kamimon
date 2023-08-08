@@ -4,13 +4,11 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
-import de.uniks.stpmon.k.models.map.Property;
+import de.uniks.stpmon.k.models.builder.TileMapBuilder;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
-import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
-import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 
 import java.awt.image.BufferedImage;
@@ -115,63 +113,34 @@ public class DummyConstants {
             null,
             List.of(),
             Set.of(),
-            Set.of("area_0","area_1","area_2")
+            Set.of("area_0", "area_1", "area_2")
     );
-    public static final TileMapData EMPTY_MAP_DATA = new TileMapData(
-            1, 1,
-            false,
-            List.of(new TileLayerData(
-                    0, "Ground",
-                    List.of(),
-                    List.of(),
-                    List.of(),
-                    0, 0,
-                    1, 1,
-                    0, 0,
-                    "tilelayer",
-                    true,
-                    List.of()
-            )),
-            List.of(),
-            1, 1,
-            List.of(),
-            "map"
-    );
+    public static final TileMapData EMPTY_MAP_DATA = TileMapBuilder.builder()
+            .startTileLayer()
+            .setName(TileLayerData.GROUND_TYPE)
+            .setChunks(List.of())
+            .setWidth(1).setHeight(1)
+            .endLayer()
+            .create();
 
-    public static final TileMapData AREA_MAP_DATA = new TileMapData(
-            16, 16,
-            false,
-            List.of(
-                    new TileLayerData(
 
-                            0, "Ground",
-                            List.of(
-                                    new ChunkData(
-                                            LongStream.range(0, 256).map(i -> 1)
-                                                    .boxed().toList(),
-                                            16, 16,
-                                            0, 0
-
-                                    )
-                            ),
-                            List.of(),
-                            List.of(new ObjectData(0, null, List.of(), null, null, false, 0, 0, 0, 0, 0)),
-                            0, 0,
+    public static final TileMapData AREA_MAP_DATA = TileMapBuilder.builder()
+            .startTileLayer()
+            .setName(TileLayerData.GROUND_TYPE)
+            .setChunks(List.of(
+                    new ChunkData(
+                            LongStream.range(0, 256).map(i -> 1)
+                                    .boxed().toList(),
                             16, 16,
-                            0, 0,
-                            "tilelayer",
-                            true,
-                            List.of()
+                            0, 0
                     )
-            ),
-            List.of(
-                new Property("Spawn","","")
-            ),
-            16, 16,
-            List.of(
-                    new TilesetSource(1, "../tilesets/Modern_Exteriors_16x16.json")
-            ),
-            "map");
+            ))
+            .startObject().endObject()
+            .setWidth(16).setHeight(16)
+            .endLayer()
+            .addProperty("Spawn", "", "")
+            .addTileSet(1, "../tilesets/Modern_Exteriors_16x16.json")
+            .create();
 
     public static final TilesetData TILESET_DATA = new TilesetData(
             176,
