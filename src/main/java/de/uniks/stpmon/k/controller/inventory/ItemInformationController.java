@@ -112,7 +112,6 @@ public class ItemInformationController extends Controller {
                         }
                         case "created", "updated" ->
                                 subscribe(presetService.getItem(itemEvent.data().type()), itemTypeDto1 -> {
-                                    System.out.println("Item: " + itemTypeDto1.name());
                                     if (!itemTypeDto1.name().contains("Mystery box") && isOpenBox()) {
                                         ingameControllerProvider.get().openBox(itemEvent.data());
                                     }

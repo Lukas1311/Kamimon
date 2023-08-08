@@ -69,45 +69,39 @@ public class StarterController extends ToastedController {
         return parent;
     }
 
-    public void loadMonsterImage(String id) {
-        subscribe(resourceService.getMonsterImage(id), imageUrl -> {
-            Image image = ImageUtils.scaledImageFX(imageUrl, 4);
-            starterImage.setImage(image);
-        }, this::handleError);
-    }
-
-    public void loadMonsterName(String id) {
-        subscribe(presetService.getMonster(id), monsterTypeDto -> {
-            monsterNameLabel.setText(monsterTypeDto.name());
-            descriptionText.setText(monsterTypeDto.description());
-        }, this::handleError);
-    }
-
-    public void loadItemImage(String id) {
-        subscribe(resourceService.getItemImage(id), imageUrl -> {
-            starterPane.getChildren().remove(monsterNameLabel);
-            Image image = ImageUtils.scaledImageFX(imageUrl, 4);
-            starterImage.setImage(image);
-        }, this::handleError);
-    }
-
-    public void loadItemName(String id) {
-        subscribe(presetService.getItem(id), itemTypeDto -> {
-            monsterNameLabel.setVisible(false);
-            descriptionText.setText(translateString("get.item", itemTypeDto.name()));
-            textFlow.setTextAlignment(TextAlignment.CENTER);
-            textBox.setAlignment(Pos.BOTTOM_CENTER);
-        }, this::handleError);
-    }
-
-    public void setStarter(String id, StarterOption option) {
+    private void loadImage(String id, StarterOption option) {
         if (option.equals(MON)) {
-            loadMonsterName(id);
-            loadMonsterImage(id);
+            subscribe(resourceService.getMonsterImage(id), imageUrl -> {
+                Image image = ImageUtils.scaledImageFX(imageUrl, 4);
+                starterImage.setImage(image);
+            }, this::handleError);
         } else if (option.equals(ITEM)) {
-            loadItemImage(id);
-            loadItemName(id);
+            subscribe(resourceService.getItemImage(id), imageUrl -> {
+                starterPane.getChildren().remove(monsterNameLabel);
+                Image image = ImageUtils.scaledImageFX(imageUrl, 4);
+                starterImage.setImage(image);
+            }, this::handleError);
         }
     }
 
+    public void loadName(String id, StarterOption option) {
+        if (option.equals(MON)) {
+            subscribe(presetService.getMonster(id), monsterTypeDto -> {
+                monsterNameLabel.setText(monsterTypeDto.name());
+                descriptionText.setText(monsterTypeDto.description());
+            }, this::handleError);
+        } else if (option.equals(ITEM)) {
+            subscribe(presetService.getItem(id), itemTypeDto -> {
+                monsterNameLabel.setVisible(false);
+                descriptionText.setText(translateString("get.item", itemTypeDto.name()));
+                textFlow.setTextAlignment(TextAlignment.CENTER);
+                textBox.setAlignment(Pos.BOTTOM_CENTER);
+            }, this::handleError);
+        }
+    }
+
+    public void setStarter(String id, StarterOption option) {
+            loadName(id, option);
+            loadImage(id, option);
+    }
 }
