@@ -12,6 +12,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
@@ -35,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -77,6 +79,8 @@ public class EncounterOverviewController extends Controller {
     public VBox wrappingVBox;
     @FXML
     public HBox contentBox;
+    @FXML
+    public VBox menuHolderVBox;
 
     @Inject
     IResourceService resourceService;
@@ -98,6 +102,8 @@ public class EncounterOverviewController extends Controller {
     Provider<InventoryController> inventoryControllerProvider;
     @Inject
     Provider<ItemInformationController> itemInformationControllerProvider;
+    @Inject
+    ItemService itemService;
 
     private final Pane blackPane = new Pane();
     public Parent controller;
@@ -165,6 +171,9 @@ public class EncounterOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        contentBox.setPickOnBounds(false);
+        actionFieldWrapperBox.setPickOnBounds(false);
+        menuHolderVBox.setPickOnBounds(false);
 
         // relations between Encounter slots and image views
         monsterImages.put(EncounterSlot.PARTY_FIRST, userMonster0);
@@ -250,6 +259,29 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
+    private void useItem(EncounterSlot slot) {
+        System.out.println("Item use registered");
+
+        if (itemService == null) {
+            return;
+        }
+
+        String id = slotMonsters.get(slot);
+        if (id == null || id.isEmpty()) {
+            return;
+        }
+        System.out.println("Use Item");
+
+        subscribe(itemService.useActiveItemIfAvailable(id), item -> {
+            removeController("itemInfo");
+            removeController("inventory");
+        }, error -> {
+            if (error instanceof HttpException) {
+                System.out.println("cannot use the item on this monster");
+            }
+        });
+    }
+
     public void showLevelUp(Monster oldMon, Monster newMon) {
         if (controller == null) {
             MonsterInformationController monInfoController = monInfoProvider.get();
@@ -273,6 +305,7 @@ public class EncounterOverviewController extends Controller {
                     contentBox.getChildren().remove(0);
                 }
                 ItemInformationController itemInformationController = itemInformationControllerProvider.get();
+                itemInformationController.setInEncounter(true);
                 itemInformationController.setItem(item);
                 controller = itemInformationController.render();
             }
@@ -340,7 +373,6 @@ public class EncounterOverviewController extends Controller {
         changeAnimations.get(slot).play();
     }
 
-
     private void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
     }
@@ -360,6 +392,9 @@ public class EncounterOverviewController extends Controller {
                     renderMonsters(userMonsters, userMonster1, slot);
                 }
             }
+        }
+        for (EncounterSlot slot : sessionService.getOwnSlots()) {
+            monsterImages.get(slot).setOnMouseClicked(e -> useItem(slot));
         }
     }
 
@@ -491,4 +526,5 @@ public class EncounterOverviewController extends Controller {
     public String getResourcePath() {
         return "encounter/";
     }
+
 }

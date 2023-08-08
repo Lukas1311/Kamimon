@@ -405,6 +405,7 @@ public class IngameController extends PortalController {
         ObservableList<Node> children = ingameWrappingHBox.getChildren();
 
         ItemInformationController controller = itemInformationController;
+        controller.setInEncounter(false);
         controller.init();
         tabStack.push(controller);
 

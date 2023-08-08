@@ -49,6 +49,8 @@ public class ItemInformationController extends Controller {
     public Item item;
     public ItemTypeDto itemTypeDto;
 
+    private boolean isEncounter = false;
+
     @Inject
     public ItemInformationController() {
     }
@@ -102,9 +104,10 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
-                ingameControllerProvider.get().removeChildren(2);
-                ingameControllerProvider.get().openMonsterInventory();
-
+                if(!isEncounter) {
+                    ingameControllerProvider.get().removeChildren(2);
+                    ingameControllerProvider.get().openMonsterInventory();
+                }
             }
         }
 
@@ -112,6 +115,10 @@ public class ItemInformationController extends Controller {
 
     public void setItem(Item item) {
         this.item = item;
+    }
+
+    public void setInEncounter(boolean isEncounter){
+        this.isEncounter = isEncounter;
     }
 
     @Override
