@@ -124,7 +124,9 @@ public class WorldView extends Viewable {
             propView.updateShadow(transform);
             characterView.updateShadow(transform);
             npcCollectiveView.updateShadow(transform);
-            ambient.setColor(worldService.getWorldColor(time));
+            if (ambient != null) {
+                ambient.setColor(worldService.getWorldColor(time));
+            }
         });
     }
 
