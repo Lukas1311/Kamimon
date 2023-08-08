@@ -86,8 +86,8 @@ public class PropInspector {
                 if (registry.isDecoration(current)) {
                     continue;
                 }
-                if (registry.isBlending(current)) {
-                    blendInto(context, x, y);
+                if (registry.isBlending(current)
+                        && blendInto(context, x, y)) {
                     continue;
                 }
 
@@ -112,7 +112,7 @@ public class PropInspector {
      * @param x       The x coordinate
      * @param y       The y coordinate
      */
-    private void blendInto(PropContext context, int x, int y) {
+    private boolean blendInto(PropContext context, int x, int y) {
         for (int otherLayer = 0; otherLayer < context.layerIndex; otherLayer++) {
             PropGrid otherGrid = grids[otherLayer];
             ChunkBuffer otherBuffer = context.buffers[otherLayer];
@@ -125,8 +125,9 @@ public class PropInspector {
                 continue;
             }
             tryMergeGroups(x, y, context.layerIndex, x, y, otherLayer);
-            return;
+            return true;
         }
+        return false;
     }
 
     /**

@@ -44,19 +44,22 @@ public class BasicExteriors {
 
         // city cars
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(18358, 4, 4, 176));
+                new IdSource.Rectangle(18358, 4, 5, 176));
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(18367, 4, 4, 176));
+                new IdSource.Rectangle(18367, 4, 5, 176));
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(18376, 4, 4, 176));
+                new IdSource.Rectangle(18376, 4, 5, 176));
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(18385, 4, 4, 176));
+                new IdSource.Rectangle(18385, 4, 5, 176));
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(17311, 4, 4, 176));
+                new IdSource.Rectangle(17311, 4, 5, 176));
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(17320, 4, 4, 176));
+                new IdSource.Rectangle(17320, 4, 5, 176));
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
-                new IdSource.Rectangle(17329, 4, 4, 176));
+                new IdSource.Rectangle(17329, 4, 5, 176));
+        // parking spots
+        registry.markDecoration(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(177, 5, 14, 176));
 
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(19302, 4, 5, 176));
@@ -119,6 +122,7 @@ public class BasicExteriors {
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(1302, 4, 7, 176));
 
+
         //sandbox
         registry.markDecoration(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(2704, 12, 4, 176));
@@ -151,6 +155,10 @@ public class BasicExteriors {
                 new IdSource.Rectangle(8103, 6, 13, 176));
         registry.markEntangled(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(10385, 6, 13, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(9857, 12, 1, 176));
+        registry.markBottom(TILESET_MODERN_EXTERIORS,
+                new IdSource.Rectangle(12145, 6, 1, 176));
 
         // modular fence exclusion
         registry.markDecoration(TILESET_MODERN_EXTERIORS, 32999, 33002, 33175, 33178);
@@ -365,15 +373,6 @@ public class BasicExteriors {
         registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
                 new IdSource.Rectangle(16537, 4, 1, 176),
                 new IdSource.Rectangle(17417, 4, 1, 176)));
-//        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
-//                new IdSource.Rectangle(903, 2, 1, 176),
-//                new IdSource.Rectangle(1079, 2, 1, 176)));
-//        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
-//                new IdSource.Rectangle(903, 2, 1, 176),
-//                new IdSource.Rectangle(727, 2, 1, 176)));
-//        registry.addCandidate(new IncludedCandidateRule(TILESET_MODERN_EXTERIORS,
-//                new IdSource.Rectangle(551, 2, 1, 176),
-//                new IdSource.Rectangle(727, 2, 1, 176)));
 
         // Mark dead trees as entangled
         registry.markEntangled(TILESET_MODERN_EXTERIORS,

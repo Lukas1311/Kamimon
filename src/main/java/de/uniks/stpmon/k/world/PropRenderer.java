@@ -16,7 +16,7 @@ import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 public class PropRenderer {
 
     public static final float SCALE_HEIGHT_FACTOR = 0.5f;
-    public static final float TILE_MAX_SCALE_FACTOR = 0.5f;
+    public static final float TILE_MAX_SCALE_FACTOR = 0.6f;
     private final PropInspector inspector;
 
     public PropRenderer(PropInspector inspector) {
