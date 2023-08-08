@@ -125,7 +125,7 @@ public class InventoryController extends ToastedController {
 
     private void openDetail(Item item) {
         currentItem = item;
-        itemInformationControllerProvider.get().setItem(item);
+        itemService.resetActiveItem();
         if (isInEncounter()) {
             encounterOverviewControllerProvider.get().openController("itemInfo", item);
         } else {
@@ -136,6 +136,7 @@ public class InventoryController extends ToastedController {
     private void closeDetail() {
         ingameControllerProvider.get().removeChildren(2);
         currentItem = null;
+        itemService.resetActiveItem();
     }
 
     @Override

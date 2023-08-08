@@ -240,6 +240,8 @@ public class RegionApiDummy implements RegionApiService {
         checkUpdateTrainer(old, updatedTarget);
     }
 
+
+
     private void checkUpdateTrainer(Monster oldMonster, Monster newMonster) {
         String trainerId = oldMonster.trainer();
         String monsterId = oldMonster._id();
@@ -260,6 +262,17 @@ public class RegionApiDummy implements RegionApiService {
         }
         eventDummy.sendEvent(new Event<>("trainers.%s.monsters.%s.created"
                 .formatted(trainerId, monsterId), newMonster));
+    }
+
+    public void updateTrainerCoins(String trainerId, Integer newCoins, boolean isDifference) {
+        Trainer trainer = getTrainerById(trainerId);
+        Trainer updated = TrainerBuilder.builder(trainer)
+                .setCoins(isDifference ? trainer.coins() + newCoins : newCoins)
+                .create();
+        if (trainerId.equals(TRAINER_ID)) {
+            trainerStorage.setTrainer(updated);
+        }
+        eventDummy.sendEvent(new Event<>("regions.%s.trainers.%s.updated".formatted(REGION_ID, trainerId), updated));
     }
 
     public void addTrainer(Trainer trainer) {
