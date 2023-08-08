@@ -90,6 +90,9 @@ class ActionFieldMainMenuControllerTest extends ApplicationTest {
     void openAction() {
         EncounterOverviewController encounterOverviewController = mock(EncounterOverviewController.class);
         when(encounterOverviewControllerProvider.get()).thenReturn(encounterOverviewController);
+        ActionFieldController actionFieldController = mock(ActionFieldController.class);
+        when(actionFieldControllerProvider.get()).thenReturn(actionFieldController);
+        when(actionFieldController.isMonInfoOpen()).thenReturn(false);
         encounterOverviewController.actionFieldWrapperBox = actionFieldWrapperBox;
 
         InventoryController inventoryController = new InventoryController();
