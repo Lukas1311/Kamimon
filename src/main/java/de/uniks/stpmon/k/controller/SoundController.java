@@ -15,7 +15,7 @@ import javafx.util.StringConverter;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.time.LocalTime;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
@@ -66,20 +66,23 @@ public class SoundController extends Controller {
         dayCycle.setValue(settingsService.getDayTimeCycle());
 
         Function<Double, String> converter =
-                (Double object) -> formatter.format(getPeriodFromUnit(object));
+                (Double object) -> {
+                    Duration duration = getPeriodFromUnit(object);
+                    if (duration.toDaysPart() > 0) {
+                        return "24h";
+                    }
+                    return String.format("%02dh:%02dm", duration.toHoursPart(), duration.toMinutesPart());
+                };
         dayCycleLabel.setText(translateString("day-cycle",
                 converter.apply(Double.valueOf(settingsService.getDayTimeCycle()))));
         listen(dayCycle.valueProperty(),
                 (observable, oldValue, newValue) -> {
                     float value = newValue.floatValue();
-                    if (value < 1) {
-                        dayCycle.setValue(1);
+                    if (!settingsService.setDayTimeCycle(value)) {
                         return;
                     }
-                    if (settingsService.setDayTimeCycle(value)) {
-                        dayCycleLabel.setText(translateString("day-cycle",
-                                converter.apply((double) value)));
-                    }
+                    dayCycleLabel.setText(translateString("day-cycle",
+                            converter.apply((double) value)));
                 });
         dayCycle.setMin(0);
         dayCycle.setMax(ScalableClockService.STEPS.length - 1);
@@ -88,8 +91,11 @@ public class SoundController extends Controller {
         dayCycle.setLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Double object) {
-                LocalTime time = getPeriodFromUnit(object);
-                return time.getHour() < 1 ? time.getMinute() + "m" : time.getHour() + "h";
+                Duration time = getPeriodFromUnit(object);
+                if (time.toDaysPart() > 0) {
+                    return "24h";
+                }
+                return time.toHoursPart() < 1 ? time.toMinutesPart() + "m" : time.toHoursPart() + "h";
             }
 
             @Override
@@ -101,8 +107,8 @@ public class SoundController extends Controller {
         return parent;
     }
 
-    private static LocalTime getPeriodFromUnit(Double object) {
-        return LocalTime.ofSecondOfDay(ScalableClockService.STEPS[
+    private static Duration getPeriodFromUnit(Double object) {
+        return Duration.ofSeconds(ScalableClockService.STEPS[
                 Math.min(Math.max(object.intValue(), 0), ScalableClockService.STEPS.length - 1)]
                 * ScalableClockService.STEP_UNIT_IN_MINUTES * 60L);
     }

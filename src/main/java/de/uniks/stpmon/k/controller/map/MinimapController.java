@@ -88,6 +88,7 @@ public class MinimapController extends Controller {
                     if (trainer.isEmpty()) {
                         return;
                     }
+
                     Point2D playerPos = new Point2D((trainer.get().x() + 0.5f) * TILE_SIZE,
                             (trainer.get().y() + 1f) * TILE_SIZE);
                     updateMonCenterDart(playerPos, monCenterRotate, monCenterPos);

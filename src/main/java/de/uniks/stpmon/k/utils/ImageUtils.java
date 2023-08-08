@@ -54,28 +54,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage blackOutImage(BufferedImage image) {
-
-        // Get the image dimensions
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int type = image.getType();
-        BufferedImage img = new BufferedImage(width, height, type);
-        // Loop through all pixels and make non-transparent pixels black
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int pixel = image.getRGB(x, y);
-                int alpha = (pixel >> 24) & 0xFF;
-
-                // Check if the pixel is not fully transparent
-                if (alpha != 0) {
-                    // Set pixel color to black (RGB: 0, 0, 0)
-                    int black = 0xFF000000;
-                    img.setRGB(x, y, black);
-
-                }
-            }
-        }
-        return img;
+        return blackOutImage(image, 1.0f);
     }
 
     public static BufferedImage blackOutImage(BufferedImage image, float resultAlpha) {

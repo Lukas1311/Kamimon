@@ -8,7 +8,7 @@ import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.FriendCache;
 import de.uniks.stpmon.k.service.storage.cache.IFriendCache;
 import de.uniks.stpmon.k.service.world.ClockService;
-import de.uniks.stpmon.k.service.world.ScalableClockService;
+import de.uniks.stpmon.k.service.world.FastClock;
 import de.uniks.stpmon.k.service.world.WorldLoader;
 
 import javax.inject.Singleton;
@@ -71,6 +71,6 @@ public abstract class BoundModule {
     @Binds
     @Singleton
     @SuppressWarnings("unused")
-    public abstract ClockService clockService(ScalableClockService service);
+    public abstract ClockService clockService(FastClock service);
 
 }
