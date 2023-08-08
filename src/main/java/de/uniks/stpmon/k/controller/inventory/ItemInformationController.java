@@ -2,9 +2,9 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
-import de.uniks.stpmon.k.controller.StarterController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -47,8 +47,6 @@ public class ItemInformationController extends Controller {
     ItemService itemService;
     @Inject
     Provider<IngameController> ingameControllerProvider;
-    @Inject
-    StarterController starterController;
     @Inject
     EventListener eventListener;
 
@@ -107,15 +105,33 @@ public class ItemInformationController extends Controller {
                         case "created", "updated" ->
                                 subscribe(presetService.getItem(itemEvent.data().type()), itemTypeDto1 -> {
                                     System.out.println("Item: " + itemTypeDto1.name());
-                                    if (!itemTypeDto1.name().contains("Mystery box") && !isOpenBox()) {
-                                        ingameControllerProvider.get().openItemBox(itemEvent.data());
+                                    if (!itemTypeDto1.name().contains("Mystery box") && isOpenBox()) {
+                                        ingameControllerProvider.get().openBox(itemEvent.data());
                                     }
                                 });
                     }
                 });
                 subscribe(itemService.useItem(itemTypeDto.id(), 1, null));
             }
-            case MONSTER_BOX -> System.out.println("MonsterBox");
+            case MONSTER_BOX -> {
+                if (itemService == null || ingameControllerProvider == null) {
+                    return;
+                }
+
+                subscribe(eventListener.listen(Socket.WS, "%s.%s.monsters.*.*".formatted("trainers", item.trainer()), Monster.class), monsterEvent -> {
+                    switch (monsterEvent.suffix()) {
+                        case "deleted" -> {
+                        }
+                        case "created", "updated" ->
+                                subscribe(presetService.getMonster(monsterEvent.data().type()), monsterTypeDto -> {
+                                    if (!monsterTypeDto.name().contains("Monbox") && isOpenBox()) {
+                                        ingameControllerProvider.get().openBox(monsterEvent.data());
+                                    }
+                                });
+                    }
+                });
+                subscribe(itemService.useItem(itemTypeDto.id(), 1, null));
+            }
             case BALL -> {
                 //TODO
             }
@@ -131,7 +147,7 @@ public class ItemInformationController extends Controller {
     }
 
     public boolean isOpenBox() {
-        return isOpen;
+        return !isOpen;
     }
 
     public void setOpen(boolean open) {

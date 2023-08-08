@@ -16,7 +16,7 @@
                     <Insets bottom="50.0" />
                 </VBox.margin>
             </ImageView>
-            <Label fx:id="areaLabel" alignment="CENTER" prefHeight="73.0" prefWidth="629.0" text="Region">
+            <Label fx:id="areaLabel" alignment="CENTER" prefHeight="73.0" text="Region">
                 <VBox.margin>
                     <Insets />
                 </VBox.margin>
