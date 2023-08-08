@@ -49,7 +49,7 @@ public class MonsterInventoryController extends Controller {
     ItemService itemService;
 
     private Monster activeMonster;
-    private List<String> monTeamList = new ArrayList<>();
+    private List<String> monTeamList;
     private int monsterIndexStorage = 0;
     private String selectedMonster;
 
@@ -81,14 +81,17 @@ public class MonsterInventoryController extends Controller {
     @Override
     public void destroy() {
         super.destroy();
-        // Update team if leave monbox
-        // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
-        ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        if (monTeamList != null) {
+            // Update team if leave monbox
+            // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
+            ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        }
         monParent = null;
         monTeam = null;
         monStorage = null;
         monBoxMenuHolder = null;
     }
+
     public void setSelectionMode(boolean isSelectionMode) {
         this.isSelectionMode = isSelectionMode;
     }
@@ -133,7 +136,7 @@ public class MonsterInventoryController extends Controller {
         draggableMonItem(mon, monster._id());
 
         parent.setOnMouseClicked(e -> {
-            if(isSelectionMode && itemService != null) {
+            if (isSelectionMode && itemService != null) {
                 subscribe(itemService.useActiveItemIfAvailable(monster._id()), item -> {
                     ingameControllerProvider.get().removeChildren(2);
                     setSelectionMode(false);

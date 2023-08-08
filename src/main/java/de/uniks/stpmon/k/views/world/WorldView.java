@@ -8,7 +8,6 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
-import de.uniks.stpmon.k.utils.NodeUtils;
 import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
@@ -151,7 +150,10 @@ public class WorldView extends Viewable {
 
         ambient = null;
         lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
-        NodeUtils.removeNodes(this);
+        characterView.destroy();
+        floorView.destroy();
+        propView.destroy();
+        npcCollectiveView.destroy();
         cameraStorage.setCamera(null);
         Disposer.cleanUp();
         System.gc();

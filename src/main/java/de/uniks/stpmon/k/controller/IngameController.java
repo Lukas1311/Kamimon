@@ -24,7 +24,6 @@ import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
-import de.uniks.stpmon.k.utils.NodeUtils;
 import io.reactivex.rxjava3.annotations.Nullable;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -220,9 +219,7 @@ public class IngameController extends PortalController {
                 ingameStack.getChildren().remove(overlayPane);
                 app.show(loadingEncounterControllerProvider.get());
             });
-
         }
-
     }
 
     @Override
@@ -230,7 +227,35 @@ public class IngameController extends PortalController {
         super.destroy();
 
         removeChildren(0);
-        NodeUtils.removeNodes(this);
+        worldController.destroy();
+        monsterBarController.destroy();
+        minimapController.destroy();
+        mapOverviewController.destroy();
+        backpackController.destroy();
+        dialogueController.destroy();
+        starterController.destroy();
+        worldTimerController.destroy();
+        shopOptionController.destroy();
+        shopOverviewController.destroy();
+        ingameStack.getChildren().clear();
+        ingame.getChildren().clear();
+        ingameWrappingHBox.getChildren().clear();
+        rightVbox.getChildren().clear();
+        dialogueBox.getChildren().clear();
+        starterBox.getChildren().clear();
+        mainPain.getChildren().clear();
+        rightMenuBorderPane.getChildren().clear();
+        miniMapVBox.getChildren().clear();
+        ingameStack = null;
+        ingame = null;
+        ingameWrappingHBox = null;
+        rightVbox = null;
+        dialogueBox = null;
+        starterBox = null;
+        mainPain = null;
+        rightMenuBorderPane = null;
+        miniMapVBox = null;
+        pane = null;
     }
 
     @Override
