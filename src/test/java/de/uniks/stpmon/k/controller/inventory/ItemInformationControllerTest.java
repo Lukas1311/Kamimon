@@ -72,7 +72,7 @@ public class ItemInformationControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
-        AnchorPane fullBox = lookup("#fullBox").queryAs(AnchorPane.class);
+        AnchorPane fullBox = lookup("#itemInformationNode").queryAs(AnchorPane.class);
         ImageView itemView = lookup("#itemView").queryAs(ImageView.class);
         Text itemInformation = lookup("#itemInformation").queryAs(Text.class);
         Text amountText = lookup("#amountText").queryAs(Text.class);

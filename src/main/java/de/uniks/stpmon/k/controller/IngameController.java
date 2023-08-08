@@ -11,6 +11,7 @@ import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
 import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
+import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.shop.ShopOptionController;
@@ -104,6 +105,8 @@ public class IngameController extends PortalController {
     NightOverlayController nightOverlayController;
     @Inject
     MonsterInformationController monsterInformationController;
+    @Inject
+    MonsterInventoryController monsterInventoryController;
     @Inject
     MonDexDetailController monDexDetailController;
     @Inject
@@ -410,6 +413,17 @@ public class IngameController extends PortalController {
         Parent itemInfo = controller.render();
         children.add(0, itemInfo);
     }
+
+    public void openMonsterInventory() {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        monsterInventoryController.setSelectionMode(true);
+        tabStack.push(monsterInventoryController);
+
+        Parent monsterInventory = monsterInventoryController.render();
+        children.add(0, monsterInventory);
+    }
+
 
     public void applyHealEffect() {
         Pane overlayPane = new Pane();
