@@ -36,7 +36,10 @@ public class ScalableClockService extends ClockService {
                             return currentInterval(currentTime, delay, delay);
                         }
                 ).doOnNext((value) -> lastTime = value)
-                .replay(1).refCount().doOnDispose(() -> clockObservable = null);
+                .replay(1).refCount().doOnDispose(() -> {
+                    clockObservable = null;
+                    lastTime = null;
+                });
         return clockObservable;
     }
 

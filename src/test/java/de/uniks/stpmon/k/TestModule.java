@@ -6,10 +6,8 @@ import dagger.Provides;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.world.ClockService;
-import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Singleton;
-import java.time.LocalTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -44,13 +42,8 @@ public class TestModule {
 
     @Provides
     @Singleton
-    ClockService clockService() {
-        return new ClockService() {
-            @Override
-            protected Observable<LocalTime> createObservable() {
-                return Observable.just(LocalTime.of(12, 30));
-            }
-        };
+    static ClockService clockService() {
+        return new ClockService();
     }
 
     @Provides
