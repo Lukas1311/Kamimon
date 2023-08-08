@@ -4,8 +4,10 @@ import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
+import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
+import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
@@ -28,6 +30,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import java.security.Key;
 import java.util.ArrayList;
 
 import static java.util.function.Predicate.not;
@@ -371,7 +374,7 @@ class AppTest extends ApplicationTest {
         component.regionApi().addMonster("0", "1", false);
         clickOn("#backpackMenuLabel_0");
         waitForFxEvents();
-        verifyThat("#monBoxMenuHolder", Node::isVisible);
+        verifyThat("#monsterInventory", Node::isVisible);
 
         GridPane teamGrid = lookup("#monTeam").query();
         Node teamMon = teamGrid.getChildren().get(0);
@@ -500,7 +503,9 @@ class AppTest extends ApplicationTest {
                 null,
                 null
         );
+
         component.userStorage().setUser(user);
+
         waitForFxEvents();
         //join region
         clickOn("#regionVBox");
@@ -544,12 +549,22 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackImage");
         waitForFxEvents();
 
-        //test inventory
+        //test inventory and item usage
         clickOn("#backpackImage");
         clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
+        ListView<Item> inventoryList = lookup("#itemListView").query();
+        clickOn(inventoryList.getChildrenUnmodifiable().get(0));
+        waitForFxEvents();
+        verifyThat("#itemInformationNode", Node::isVisible);
+        clickOn("#useButton");
+        waitForFxEvents();
+        sleep(1000);
+        verifyThat("#monsterInventory", Node::isVisible);
+        clickOn("#team_0");
         clickOn("#backpackImage");
+
 
         //test sound
         clickOn("#settings");
@@ -558,9 +573,48 @@ class AppTest extends ApplicationTest {
         assertThat(musicSlider.getValue()).isEqualTo(0);
         clickOn("#settings");
 
+
+        //go to clerk
+        type(KeyCode.S);
+        type(KeyCode.S);
+        type(KeyCode.D);
+        type(KeyCode.D);
+        type(KeyCode.D);
+        type(KeyCode.D);
+        type(KeyCode.W);
+
+        //talk to clerk
+        type(KeyCode.E);
+        type(KeyCode.E);
+
+        verifyThat("#shopOverview", Node::isVisible);
+        verifyThat("#shopOption", Node::isVisible);
+        verifyThat("#itemNameLabel",hasText("Item_0"));
+        verifyThat("#buyButton", Node::isDisabled);
+        verifyThat("#sellButton", Node::isDisabled);
+
+        component.regionApi().updateTrainerCoins(component.trainerStorage().getTrainer()._id(), 100, false);
+        waitForFxEvents();
+        verifyThat("#coinsLabel", hasText("100 Coins"));
+        component.regionApi().updateTrainerCoins(component.trainerStorage().getTrainer()._id(), 95, false);
+        waitForFxEvents();
+        verifyThat("#coinsLabel", hasText("95 Coins"));
+        waitForFxEvents();
+        verifyThat("#buyButton", not(Node::isDisabled));
+        clickOn("#item_Item_1");
+        waitForFxEvents();
+        verifyThat("#itemNameLabel",hasText("Item_1"));
+        verifyThat("#sellButton", not(Node::isDisabled));
+
+        //close shop
+        type(KeyCode.E);
+        waitForFxEvents();
+
         //test evolution of mon
         // walk to the right and start Encounter
-        type(KeyCode.D);
+        type(KeyCode.A);
+        type(KeyCode.A);
+        type(KeyCode.W);
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
@@ -578,7 +632,6 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
-
 
     }
 

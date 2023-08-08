@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.MonsterService;
 import de.uniks.stpmon.k.service.TrainerService;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -43,6 +45,8 @@ public class MonsterInventoryController extends Controller {
     TrainerService trainerService;
     @Inject
     MonsterService monsterService;
+    @Inject
+    ItemService itemService;
 
     private Monster activeMonster;
     private List<String> monTeamList = new ArrayList<>();
@@ -51,6 +55,8 @@ public class MonsterInventoryController extends Controller {
 
     private Parent monParent;
 
+    private boolean isSelectionMode = false;
+
     @Inject
     public MonsterInventoryController() {
     }
@@ -58,6 +64,7 @@ public class MonsterInventoryController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("monsterInventory");
         handleDrag(monStorage, this::dragIntoStorageGrid);
         handleDrag(monTeam, this::dragIntoTeamGrid);
         subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
@@ -81,6 +88,9 @@ public class MonsterInventoryController extends Controller {
         monTeam = null;
         monStorage = null;
         monBoxMenuHolder = null;
+    }
+    public void setSelectionMode(boolean isSelectionMode) {
+        this.isSelectionMode = isSelectionMode;
     }
 
     private void showTeamMonster(List<Monster> monsters) {
@@ -121,7 +131,22 @@ public class MonsterInventoryController extends Controller {
         MonsterItemController mon = new MonsterItemController(monster, resourceService);
         Parent parent = mon.render();
         draggableMonItem(mon, monster._id());
-        parent.setOnMouseClicked(e -> triggerMonsterInformation(monster));
+
+        parent.setOnMouseClicked(e -> {
+            if(isSelectionMode && itemService != null) {
+                subscribe(itemService.useActiveItemIfAvailable(monster._id()), item -> {
+                    ingameControllerProvider.get().removeChildren(2);
+                    setSelectionMode(false);
+                }, error -> {
+                    if (error instanceof HttpException) {
+                        System.out.println("cannot use the item on this monster");
+                    }
+                });
+            } else {
+                triggerMonsterInformation(monster);
+            }
+
+        });
         return parent;
     }
 

@@ -75,6 +75,7 @@ public class ShopOptionController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        parent.setId("shopOption");
         Platform.runLater(() -> {
             loadBgImage(backgroundPane, "inventory/InventoryBox_w_coins.png");
             loadImage(coinsImage, "inventory/coin.png");
