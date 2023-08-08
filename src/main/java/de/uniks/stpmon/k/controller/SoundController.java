@@ -16,12 +16,11 @@ import javafx.util.StringConverter;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.time.Duration;
-import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
 public class SoundController extends Controller {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+    public static final int[] STEPS = ScalableClockService.STEPS;
 
     @FXML
     public VBox soundScreen;
@@ -85,7 +84,7 @@ public class SoundController extends Controller {
                             converter.apply((double) value)));
                 });
         dayCycle.setMin(0);
-        dayCycle.setMax(ScalableClockService.STEPS.length - 1);
+        dayCycle.setMax(STEPS.length - 1);
         dayCycle.setMajorTickUnit(1);
         dayCycle.setMinorTickCount(0);
         dayCycle.setLabelFormatter(new StringConverter<>() {
@@ -108,9 +107,7 @@ public class SoundController extends Controller {
     }
 
     private static Duration getPeriodFromUnit(Double object) {
-        return Duration.ofSeconds(ScalableClockService.STEPS[
-                Math.min(Math.max(object.intValue(), 0), ScalableClockService.STEPS.length - 1)]
-                * ScalableClockService.STEP_UNIT_IN_MINUTES * 60L);
+        return Duration.ofSeconds(ScalableClockService.minutesFromUnit(object.intValue()) * 60L);
     }
 
     public void backToSettings() {
