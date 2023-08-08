@@ -45,6 +45,7 @@ public class ActionFieldSelectMonController extends BaseActionFieldController {
         Parent parent = super.render();
         HBox optionContainer = ActionFieldController.getOptionContainer(translateString("back"));
         backBox.getChildren().add(optionContainer);
+        optionContainer.setId("backOption");
         optionContainer.setOnMouseClicked(event -> {
             if (getActionField().isMonInfoOpen()) {
                 encOverviewProvider.get().removeMonInfo();
