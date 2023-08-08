@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.models.builder.TileLayerBuilder;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
+import de.uniks.stpmon.k.world.rules.BasicRules;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ public class PropInspectionTest {
 
     @Test
     public void test() {
-        propInspector = new PropInspector(2, 3, 1);
+        propInspector = new PropInspector(2, 3, 1, BasicRules.registerRules());
         assertEquals(32, sourceImage.getWidth());
         assertEquals(48, sourceImage.getHeight());
 

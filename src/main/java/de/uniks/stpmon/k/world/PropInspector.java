@@ -1,10 +1,11 @@
 package de.uniks.stpmon.k.world;
 
-import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.utils.Direction;
-import de.uniks.stpmon.k.world.rules.*;
+import de.uniks.stpmon.k.world.rules.RuleRegistry;
+import de.uniks.stpmon.k.world.rules.RuleResult;
+import de.uniks.stpmon.k.world.rules.TileInfo;
 
 import java.util.*;
 
@@ -15,17 +16,14 @@ import java.util.*;
  * The container {@link RuleRegistry} defines the way the props are defined.
  */
 public class PropInspector {
-    private static final RuleRegistry defaultRegistry = BasicRules.registerRules();
-    private static final RuleRegistry woodRegistry = WoodRules.registerRules();
     public static final Direction[] WALK_DIRECTIONS = {Direction.RIGHT, Direction.TOP};
     public static final Direction[] WALK_DIRECTIONS_OPPOSITES = {Direction.LEFT, Direction.BOTTOM};
-    public static final String JULIAN_WOOD_ID = "64c41b63fcc75bfbe987c624";
     private final PropGrid[] grids;
     /**
      * The offset to the tile id that a different layer has.
      */
     private final int layerOffset;
-    private RuleRegistry registry = defaultRegistry;
+    private final RuleRegistry registry;
     /**
      * The current group id. This is used to group the tile together as one prop.
      */
@@ -36,19 +34,14 @@ public class PropInspector {
      */
     private final Map<Integer, HashSet<Integer>> groups;
 
-    public PropInspector(int width, int height, int layers) {
+    public PropInspector(int width, int height, int layers, RuleRegistry registry) {
         grids = new PropGrid[layers];
         for (int i = 0; i < layers; i++) {
             grids[i] = new PropGrid(width, height);
         }
         layerOffset = width * height;
         groups = new HashMap<>();
-    }
-
-    public void setup(Area area) {
-        if (area._id().equals(JULIAN_WOOD_ID)) {
-            registry = woodRegistry;
-        }
+        this.registry = registry;
     }
 
     public Set<HashSet<Integer>> uniqueGroups() {

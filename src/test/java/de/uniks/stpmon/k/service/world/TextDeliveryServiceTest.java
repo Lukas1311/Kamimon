@@ -5,6 +5,8 @@ import de.uniks.stpmon.k.models.builder.TileMapBuilder;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.world.RouteData;
 import de.uniks.stpmon.k.world.RouteText;
+import io.reactivex.rxjava3.observers.TestObserver;
+import javafx.geometry.Point2D;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +53,46 @@ public class TextDeliveryServiceTest {
         assertEquals("Route 101", routeText.name());
         assertEquals("Route", routeText.type());
         assertEquals("N/A", routeText.description());
+    }
+
+    @Test
+    public void testMonCenterPosition() {
+        when(mapProvider.map()).thenReturn(TileMapBuilder.builder()
+                        .startObjectLayer()
+                        .startObject()
+                        .setType("Portal")
+                        .setName("Moncenter")
+                        .setX(2)
+                        .setY(5)
+                        .setHeight(1)
+                        .setWidth(10)
+                        .endObject()
+                        .endLayer()
+                        .create(),
+                TileMapBuilder.builder()
+                        .startObjectLayer()
+                        .startObject()
+                        .setType("Portal")
+                        .setName("Test")
+                        .addProperty("Map", "", "Moncenter")
+                        .setX(5)
+                        .setY(2)
+                        .setHeight(2)
+                        .setWidth(4)
+                        .endObject()
+                        .endLayer()
+                        .create(),
+                TileMapBuilder.builder().create());
+
+        // Find moncenter without property by name
+        TestObserver<Point2D> monPos = textDeliveryService.getNextMonCenter(mapProvider).test();
+        monPos.assertValueAt(0, new Point2D(7, 5.5));
+        // Find the moncenter with the property
+        monPos = textDeliveryService.getNextMonCenter(mapProvider).test();
+        monPos.assertValueAt(0, new Point2D(7, 3));
+        // Check again if there is no moncenter
+        monPos = textDeliveryService.getNextMonCenter(mapProvider).test();
+        monPos.assertValueAt(0, Point2D.ZERO);
     }
 
     @Test
