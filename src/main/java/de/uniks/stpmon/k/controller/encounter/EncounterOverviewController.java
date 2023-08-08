@@ -263,26 +263,6 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
-    //private void useItem(EncounterSlot slot) {
-    //    System.out.println("Item use registered");
-    //    if (itemService == null) {
-    //        return;
-    //    }
-    //    String id = slotMonsters.get(slot);
-    //    if (id == null || id.isEmpty()) {
-    //        return;
-    //    }
-    //    System.out.println("Use Item");
-    //    subscribe(itemService.useActiveItemIfAvailable(id), item -> {
-    //        removeController("itemInfo");
-    //        removeController("inventory");
-    //    }, error -> {
-    //        if (error instanceof HttpException) {
-    //            System.out.println("cannot use the item on this monster");
-    //        }
-    //    });
-    //}
-
     public void showLevelUp(Monster oldMon, Monster newMon) {
         if (controller == null) {
             MonsterInformationController monInfoController = monInfoProvider.get();
@@ -412,9 +392,6 @@ public class EncounterOverviewController extends Controller {
                 }
             }
         }
-        //for (EncounterSlot slot : sessionService.getOwnSlots()) {
-        //    monsterImages.get(slot).setOnMouseClicked(e -> useItem(slot));
-        //}
     }
 
     private void renderMonsters(VBox monstersContainer, ImageView monsterImageView, EncounterSlot slot) {
