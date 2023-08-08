@@ -27,6 +27,7 @@ public class FallbackTiles {
         DirectionalTile waterEdgeCorner = new DirectionalTile(306, 482, 482, 482, 482);
         replacements.put(306, waterEdgeCorner);
     }
+
     private final ChunkBuffer buffer;
     private final TileLayerData layerData;
     private final Map<Integer, Integer> fallbacks = new HashMap<>();
@@ -188,14 +189,7 @@ public class FallbackTiles {
         int getOverride(Direction dir, Random random);
     }
 
-    private static class RandomTile implements IReplacement {
-        public final int id;
-        private final int[] overrides;
-
-        public RandomTile(int id, int... overrides) {
-            this.id = id;
-            this.overrides = overrides;
-        }
+    private record RandomTile(int id, int... overrides) implements IReplacement {
 
         @Override
         public int getOverride(Direction dir, Random random) {
@@ -203,14 +197,7 @@ public class FallbackTiles {
         }
     }
 
-    private static class DirectionalTile implements IReplacement {
-        public final int id;
-        private final int[] overrides;
-
-        public DirectionalTile(int id, int... overrides) {
-            this.id = id;
-            this.overrides = overrides;
-        }
+    private record DirectionalTile(int id, int... overrides) implements IReplacement {
 
         @Override
         public int getOverride(Direction dir, Random random) {

@@ -93,9 +93,4 @@ public class TextDeliveryServiceTest {
         monPos = textDeliveryService.getNextMonCenter(mapProvider).test();
         monPos.assertValueAt(0, Point2D.ZERO);
     }
-
-    @Test
-    public void getMonCenterPos() {
-
-    }
 }

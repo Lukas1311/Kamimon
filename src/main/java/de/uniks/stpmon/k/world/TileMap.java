@@ -11,14 +11,10 @@ import de.uniks.stpmon.k.models.map.layerdata.ITileDataProvider;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.utils.ImageUtils;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.*;
-import java.util.stream.LongStream;
 
 import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 
@@ -34,7 +30,6 @@ public class TileMap {
     private final int width;
     private final int height;
     private final Map<TileLayerData, BufferedImage> layerImages = new HashMap<>();
-    private BufferedImage outerChunks;
     private final boolean isIndoor;
 
     public TileMap(IMapProvider provider, Map<TilesetSource, Tileset> tilesetBySource) {
@@ -177,67 +172,7 @@ public class TileMap {
                     0, 0,
                     chunk.width() * tileWidth, chunk.height() * tileHeight);
         }
-        if (fallback != null) {
-            outerChunks = renderOuterChunks(layer, width, height, fallback);
-            try {
-                ImageIO.write(outerChunks, "png", new File("test.png"));
-            } catch (IOException e) {
-            }
-        }
         return layerImage;
-    }
-
-    public BufferedImage getOuterChunks() {
-        return outerChunks;
-    }
-
-    public BufferedImage renderOuterChunks(TileLayerData layer, int width, int height, FallbackTiles fallback) {
-        if (layer.data() != null && !layer.data().isEmpty()) {
-            return null;
-        }
-        int chunksWidth = (int) Math.ceil(width / 16.0);
-        int chunksHeight = (int) Math.ceil(height / 16.0);
-        BitSet chunkSet = new BitSet(chunksHeight * chunksWidth);
-        for (ChunkData chunk : layer.chunks()) {
-            int startX = (int) Math.ceil(chunk.x() / 16.0);
-            int startY = (int) Math.ceil(chunk.y() / 16.0);
-            chunkSet.set(startY * chunksWidth + startX, true);
-        }
-        BufferedImage layerImage = createImage(width + 2 * TILE_SIZE, height + 2 * TILE_SIZE);
-        DummyProvider dummyProvider = new DummyProvider();
-        for (int x = -1; x <= chunksWidth; x++) {
-            for (int y = -1; y <= chunksHeight; y++) {
-                if (chunkExists(x, y, chunksWidth, chunkSet)) {
-                    continue;
-                }
-                if (!chunkExists(x + 1, y, chunksWidth, chunkSet)
-                        && !chunkExists(x - 1, y, chunksWidth, chunkSet)
-                        && !chunkExists(x, y + 1, chunksWidth, chunkSet)
-                        && !chunkExists(x, y - 1, chunksWidth, chunkSet)
-                        && !chunkExists(x + 1, y - 1, chunksWidth, chunkSet)
-                        && !chunkExists(x - 1, y - 1, chunksWidth, chunkSet)
-                        && !chunkExists(x + 1, y + 1, chunksWidth, chunkSet)
-                        && !chunkExists(x - 1, y + 1, chunksWidth, chunkSet)) {
-                    continue;
-                }
-                dummyProvider.setStartX(x * 16);
-                dummyProvider.setStartY(y * 16);
-                BufferedImage chunkImage = renderData(dummyProvider, fallback);
-                ImageUtils.copyData(layerImage.getRaster(),
-                        chunkImage,
-                        (x + 1) * 16 * tileWidth, (y + 1) * 16 * tileHeight,
-                        0, 0,
-                        tileWidth * 16, tileHeight * 16);
-            }
-        }
-        return layerImage;
-    }
-
-    private boolean chunkExists(int x, int y, int width, BitSet set) {
-        if (x < 0 || y < 0 || x >= width || y >= set.size() / width) {
-            return false;
-        }
-        return set.get(y * width + x);
     }
 
     public BufferedImage renderData(ITileDataProvider provider, FallbackTiles fallback) {
@@ -279,47 +214,6 @@ public class TileMap {
                 .filter(tileset -> (gid - tileset.firstgid()) >= 0)
                 .findFirst()
                 .orElse(null);
-    }
-
-    private static class DummyProvider implements ITileDataProvider {
-
-        private final List<Long> emptyTiles = LongStream.range(0, 256).map(i -> 0)
-                .boxed().toList();
-        private int startX;
-        private int startY;
-
-        public void setStartX(int startX) {
-            this.startX = startX;
-        }
-
-        public void setStartY(int startY) {
-            this.startY = startY;
-        }
-
-        @Override
-        public List<Long> data() {
-            return emptyTiles;
-        }
-
-        @Override
-        public int width() {
-            return 16;
-        }
-
-        @Override
-        public int height() {
-            return 16;
-        }
-
-        @Override
-        public int startx() {
-            return startX;
-        }
-
-        @Override
-        public int starty() {
-            return startY;
-        }
     }
 
 }
