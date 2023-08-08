@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.views.world;
 
 import com.sun.prism.impl.Disposer;
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
@@ -16,6 +17,7 @@ import javafx.scene.transform.Translate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.LocalTime;
 
 @Singleton
 public class WorldView extends Viewable {
@@ -42,6 +44,8 @@ public class WorldView extends Viewable {
     protected ClockService clockService;
     @Inject
     protected WorldService worldService;
+    @Inject
+    protected SettingsService settingsService;
     private ShadowTransform lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
     private AmbientLight ambient;
 
@@ -127,6 +131,14 @@ public class WorldView extends Viewable {
             if (ambient != null) {
                 ambient.setColor(worldService.getWorldColor(time));
             }
+        });
+        subscribe(settingsService.onNightModusEnabled(), (enabled) -> {
+            if (!enabled) {
+                ambient.setColor(Color.WHITE);
+                return;
+            }
+            LocalTime time = clockService.onTime().blockingFirst();
+            ambient.setColor(worldService.getWorldColor(time));
         });
     }
 
