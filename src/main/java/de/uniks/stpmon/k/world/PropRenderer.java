@@ -112,11 +112,11 @@ public class PropRenderer {
         if (prototype.height() <= 4) {
             return 0;
         }
-        float offset = 0;
+        int offset = 0;
         for (int i = 0; i < y; i++) {
-            offset += (1 - getScaleFactor(prototype, i));
+            offset += Math.round((1 - getScaleFactor(prototype, i)) * TILE_SIZE);
         }
-        return Math.round(offset * TILE_SIZE);
+        return offset;
     }
 
     /**

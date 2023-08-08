@@ -69,6 +69,13 @@ public abstract class BoundModule {
 
 
     @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService scalableClock(ScalableClockService service);
+
+
+    @Binds
     @Singleton
     @SuppressWarnings("unused")
     public abstract ClockService clockService(ScalableClockService service);

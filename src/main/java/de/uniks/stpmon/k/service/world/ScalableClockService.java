@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.service.SettingsService;
+import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
@@ -19,15 +20,30 @@ public class ScalableClockService extends ClockService {
 
     @Inject
     SettingsService settingsService;
+    @Inject
+    RegionStorage regionStorage;
 
     @Inject
     public ScalableClockService() {
+    }
+
+    public void ensureInit() {
+        if (disposables.size() == 1) {
+            return;
+        }
+        disposables.add(regionStorage.onEvents().subscribe((event) -> {
+            if (event.region() != null) {
+                return;
+            }
+            lastTime = null;
+        }));
     }
 
     public Observable<LocalTime> onTime() {
         if (clockObservable != null) {
             return clockObservable;
         }
+        ensureInit();
         clockObservable = settingsService.onDayTimeCycle().switchMap(
                         (period) -> {
                             LocalTime currentTime = lastTime != null ? lastTime : getCurrentTime();
@@ -36,10 +52,7 @@ public class ScalableClockService extends ClockService {
                             return currentInterval(currentTime, delay, delay);
                         }
                 ).doOnNext((value) -> lastTime = value)
-                .replay(1).refCount().doOnDispose(() -> {
-                    clockObservable = null;
-                    lastTime = null;
-                });
+                .replay(1).refCount().doOnDispose(() -> clockObservable = null);
         return clockObservable;
     }
 

@@ -80,6 +80,7 @@ public abstract class EntityView extends OpaqueView<MeshView> {
 
         shadowNode = createRectangleScaled(createShadowImage(), -90);
         shadowNode.getTransforms().addAll(transforms);
+        shadowNode.setVisible(false);
         return shadowNode;
     }
 
