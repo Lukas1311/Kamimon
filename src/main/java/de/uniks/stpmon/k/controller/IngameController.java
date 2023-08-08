@@ -242,31 +242,31 @@ public class IngameController extends PortalController {
         shopHBox.setPickOnBounds(false);
         shopBorderPane.setPickOnBounds(false);
 
-        renderAndInsert(ingameStack, 0, worldController);
-        renderAndInsert(pane, 0, monsterBarController);
-        renderAndInsert(miniMapVBox, 0, minimapController,
+        renderAndInsert(ingameStack, worldController);
+        renderAndInsert(pane, monsterBarController);
+        renderAndInsert(miniMapVBox, minimapController,
                 (_parent, child) -> child.setOnMouseClicked(this::openOrCloseMap));
-        renderAndInsert(miniMapVBox, 0, worldTimerController);
+        renderAndInsert(miniMapVBox, worldTimerController);
 
-        renderAndInsert(ingameWrappingHBox, 0, backpackController,
+        renderAndInsert(ingameWrappingHBox, backpackController,
                 (_parent, _child) -> ingameStack.setAlignment(Pos.TOP_RIGHT));
 
         dialogueBox.getChildren().clear();
-        renderAndInsert(dialogueBox, 0, dialogueController,
+        renderAndInsert(dialogueBox, dialogueController,
                 (_parent, child) -> child.setVisible(false));
 
         starterBox.getChildren().clear();
-        renderAndInsert(starterBox, 0, starterController,
+        renderAndInsert(starterBox, starterController,
                 (_parent, child) -> child.setVisible(false));
 
         return parent;
     }
 
-    private void renderAndInsert(Pane parent, int index, Controller controller) {
-        renderAndInsert(parent, index, controller, null);
+    private void renderAndInsert(Pane parent, Controller controller) {
+        renderAndInsert(parent, controller, null);
     }
 
-    private void renderAndInsert(Pane parent, int index, Controller controller,
+    private void renderAndInsert(Pane parent, Controller controller,
                                  @Nullable BiConsumer<Parent, Parent> setup) {
         if (controller == null) {
             return;
@@ -275,7 +275,7 @@ public class IngameController extends PortalController {
         if (child == null || parent == null) {
             return;
         }
-        parent.getChildren().add(index, child);
+        parent.getChildren().add(0, child);
         if (setup != null) {
             setup.accept(parent, child);
         }

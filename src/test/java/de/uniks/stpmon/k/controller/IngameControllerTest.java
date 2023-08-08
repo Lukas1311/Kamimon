@@ -44,6 +44,7 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MinimapController minimapController;
     @Mock
+    @SuppressWarnings("unused")
     MapOverviewController mapOverviewController;
     @Spy
     @InjectMocks
@@ -64,9 +65,6 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     WorldTimerController worldTimerController;
-    @Mock
-    @SuppressWarnings("unused")
-    NightOverlayController nightOverlayController;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
