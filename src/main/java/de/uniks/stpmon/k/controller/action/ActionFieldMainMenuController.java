@@ -110,6 +110,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         Monster activeMon = sessionService.getMonster(activeSlot);
         encounterOverviewProvider.get().showMonInfo(activeMon);
         getActionField().setMonInfoOpen(true);
+        getActionField().openSelectMon();
     }
 
     public void openFlee() {

@@ -38,6 +38,8 @@ public class ActionFieldController extends Controller {
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
     @Inject
+    Provider<ActionFieldSelectMonController> selectMonControllerProvider;
+    @Inject
     Provider<EncounterService> encounterServiceProvider;
     @Inject
     SessionService sessionService;
@@ -151,6 +153,10 @@ public class ActionFieldController extends Controller {
         }
         open(battleLogControllerProvider);
         battleLogService.showInitialText();
+    }
+
+    public void openSelectMon() {
+        open(selectMonControllerProvider);
     }
 
     private <T extends Controller> void open(Provider<T> provider) {
