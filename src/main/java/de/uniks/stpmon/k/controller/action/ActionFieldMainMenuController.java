@@ -84,6 +84,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openInventory() {
+        getActionField().openInventory();
         if (encounterOverviewProvider.get().controller == null) {
             encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
             inventoryControllerProvider.get().setInEncounter(true);
@@ -95,14 +96,17 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openFlee() {
+        encounterOverviewProvider.get().removeController("all");
         subscribe(encounterService.fleeEncounter(), opp -> getActionField().setFleeEncounter());
     }
 
     public void openFight() {
+        encounterOverviewProvider.get().removeController("all");
         getActionField().openChooseAbility();
     }
 
     public void openChangeMon() {
+        encounterOverviewProvider.get().removeController("all");
         getActionField().openChangeMonster(false);
     }
 

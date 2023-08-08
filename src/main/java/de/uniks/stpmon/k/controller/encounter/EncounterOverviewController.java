@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
+import de.uniks.stpmon.k.controller.monsters.MonsterSelectionController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
@@ -12,6 +13,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
+import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
@@ -35,6 +37,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -77,6 +80,8 @@ public class EncounterOverviewController extends Controller {
     public VBox wrappingVBox;
     @FXML
     public HBox contentBox;
+    @FXML
+    public VBox menuHolderVBox;
 
     @Inject
     IResourceService resourceService;
@@ -98,6 +103,11 @@ public class EncounterOverviewController extends Controller {
     Provider<InventoryController> inventoryControllerProvider;
     @Inject
     Provider<ItemInformationController> itemInformationControllerProvider;
+
+    @Inject
+    Provider<MonsterSelectionController> monsterSelectionControllerProvider;
+    @Inject
+    ItemService itemService;
 
     private final Pane blackPane = new Pane();
     public Parent controller;
@@ -165,6 +175,9 @@ public class EncounterOverviewController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        contentBox.setPickOnBounds(false);
+        actionFieldWrapperBox.setPickOnBounds(false);
+        menuHolderVBox.setPickOnBounds(false);
 
         // relations between Encounter slots and image views
         monsterImages.put(EncounterSlot.PARTY_FIRST, userMonster0);
@@ -269,12 +282,20 @@ public class EncounterOverviewController extends Controller {
             }
         } else {
             if (child.equals("itemInfo")) {
-                if (contentBox.getChildren().size() > 1) {
+                while (contentBox.getChildren().size() > 1) {
                     contentBox.getChildren().remove(0);
                 }
                 ItemInformationController itemInformationController = itemInformationControllerProvider.get();
+                itemInformationController.setInEncounter(true);
                 itemInformationController.setItem(item);
                 controller = itemInformationController.render();
+            } else if (child.equals("monsterSelection")) {
+                while (contentBox.getChildren().size() > 2) {
+                    contentBox.getChildren().remove(0);
+                }
+                MonsterSelectionController monsterSelectionController = monsterSelectionControllerProvider.get();
+                monsterSelectionController.setItem(item.type());
+                controller = monsterSelectionController.render();
             }
         }
         contentBox.getChildren().add(0, controller);
@@ -287,9 +308,20 @@ public class EncounterOverviewController extends Controller {
                 case "inventory" -> {
                     inventoryControllerProvider.get().destroy();
                     itemInformationControllerProvider.get().destroy();
+                    monsterSelectionControllerProvider.get().destroy();
                 }
-                case "itemInfo" -> itemInformationControllerProvider.get().destroy();
+                case "itemInfo" -> {
+                    itemInformationControllerProvider.get().destroy();
+                    monsterSelectionControllerProvider.get().destroy();
+                }
+                case "monsterSelection" -> monsterSelectionControllerProvider.get().destroy();
                 case "monInfo" -> monInfoProvider.get().destroy();
+                case "all" -> {
+                    inventoryControllerProvider.get().destroy();
+                    itemInformationControllerProvider.get().destroy();
+                    monsterSelectionControllerProvider.get().destroy();
+                    monInfoProvider.get().destroy();
+                }
                 default -> {
                     return;
                 }
@@ -339,7 +371,6 @@ public class EncounterOverviewController extends Controller {
     private void renderChange(EncounterSlot slot) {
         changeAnimations.get(slot).play();
     }
-
 
     private void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
@@ -491,4 +522,5 @@ public class EncounterOverviewController extends Controller {
     public String getResourcePath() {
         return "encounter/";
     }
+
 }
