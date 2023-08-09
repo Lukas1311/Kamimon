@@ -235,14 +235,16 @@ public class ActionFieldController extends Controller {
         setOwnMonsterDead(false);
     }
 
-    public void executeItemMove(int itemId, String myMonsterId) {
-        madeMoves.add(getActiveSlot());
+    public void executeItemMove(int itemId, String monsterId) {
+        setActiveSlot();
+        EncounterSlot slot = getActiveSlot();
+        madeMoves.add(slot);
         // Check if all moves are made, or we have to wait for enemy
         updateWaiting();
         // Show battle log if it's not already open
         openBattleLog();
         subscribe(encounterServiceProvider.get()
-                .makeItemMove(getActiveSlot(), itemId, myMonsterId ));
+                .makeItemMove(getActiveSlot(), itemId, monsterId));
     }
 
 

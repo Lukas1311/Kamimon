@@ -2,12 +2,15 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -47,6 +50,10 @@ public class ItemInformationController extends Controller {
     Provider<IngameController> ingameControllerProvider;
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
+    @Inject
+    Provider<ActionFieldController> actionControllerProvider;
+    @Inject
+    SessionService sessionService;
 
 
     public Item item;
@@ -100,7 +107,12 @@ public class ItemInformationController extends Controller {
                 //TODO
             }
             case BALL -> {
-                //TODO
+                if (isEncounter) {
+                    //each wild encounter only contains 1 mon, so no selection is needed
+                    //make itemMove
+                    String id = sessionService.getMonster(EncounterSlot.ENEMY_FIRST)._id();
+                    actionControllerProvider.get().executeItemMove(itemTypeDto.id(), id);
+                }
             }
             case EFFECT -> {
                 if(itemService == null || ingameControllerProvider == null) {
