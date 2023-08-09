@@ -50,6 +50,7 @@ public class BattleLogService {
     private final Map<EncounterSlot, Monster> monsAfterLevelUp = new HashMap<>();
 
     private final Map<EncounterSlot, LevelUp> levelUps = new HashMap<>();
+    private boolean monsterCaught = false;
 
     @Inject
     public BattleLogService() {
@@ -168,6 +169,9 @@ public class BattleLogService {
                 } else {
                     //user sees result of encounter
                     //show encounter result
+                    if (monsterCaught) {
+                        closeEncounterTrigger = CloseEncounterTrigger.END;
+                    }
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
                     closeTimer = new Timer();
@@ -331,7 +335,12 @@ public class BattleLogService {
             case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
                     + result.status().toString()
                     + result.type().replace("status-", "."), monster.name());
-            case "monster-caught" -> addTranslatedSection("monster-caught", monster.name());
+            case "monster-caught" -> {
+                Monster mon = monsBeforeLevelUp.get(EncounterSlot.ENEMY_FIRST);
+                MonsterTypeDto typeDto = getMonsterType(mon.type());
+                monsterCaught = true;
+                addTranslatedSection("monster-caught", typeDto.name());
+            }
             default -> System.out.println("unknown result type");
         }
     }
