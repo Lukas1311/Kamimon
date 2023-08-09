@@ -554,16 +554,13 @@ class AppTest extends ApplicationTest {
         //test sound
         clickOn("#settings");
         clickOn("#mdmzSettings");
-        final Slider musicSlider = lookup("#music").query();
+        final Slider musicSlider = lookup("#musicSlider").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
         clickOn("#settings");
 
         //test evolution of mon
         // walk to the right and start Encounter
-        type(KeyCode.D);
-        type(KeyCode.E);
-        type(KeyCode.RIGHT);
-        type(KeyCode.E);
+        type(KeyCode.D).type(KeyCode.E).type(KeyCode.RIGHT).type(KeyCode.E);
         waitForFxEvents();
 
         // open fight menu
