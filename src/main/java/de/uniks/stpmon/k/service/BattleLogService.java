@@ -331,12 +331,10 @@ public class BattleLogService {
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
             case "item-failed" -> addTranslatedSection("item-failed", getItem(result.item()).name());
-            case "item-success" -> {
-                //item success is in result, if the call to use the item was successfull
+            case "item-success" -> //item success is in result, if the call to use the item was successfull
                 //there will also be item-success if the monBall was used, but the mon was NOT caught
                 //if the mon is caught, there is also a monster-caught result
-                addTranslatedSection("item-success", getItem(result.item()).name());
-            }
+                    addTranslatedSection("item-success", getItem(result.item()).name());
             case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
                     + result.status().toString()
                     + result.type().replace("status-", "."), monster.name());
