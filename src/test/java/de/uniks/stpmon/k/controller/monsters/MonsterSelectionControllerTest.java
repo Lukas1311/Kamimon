@@ -59,7 +59,9 @@ public class MonsterSelectionControllerTest extends ApplicationTest {
 
         int itemTypeId = 1234;
 
-        List<Monster> monsterList = List.of(MonsterBuilder.builder().setId(0).create(), MonsterBuilder.builder().setId(1).create(), MonsterBuilder.builder().setId(2).create());
+        List<Monster> monsterList = List.of(MonsterBuilder.builder().setId(0).create(),
+                MonsterBuilder.builder().setId(1).create(),
+                MonsterBuilder.builder().setId(2).create());
 
         when(monsterService.getTeam()).thenReturn(Observable.just(monsterList));
         doNothing().when(actionFieldController).executeItemMove(anyInt(), anyString());
