@@ -3,7 +3,6 @@ package de.uniks.stpmon.k.controller;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
-import javafx.event.ActionEvent;
 import de.uniks.stpmon.k.service.world.ScalableClockService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
