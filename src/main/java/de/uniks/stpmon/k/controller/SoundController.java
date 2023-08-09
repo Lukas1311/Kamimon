@@ -65,14 +65,18 @@ public class SoundController extends Controller {
         //save the value with preferences
         listen(musicSlider.valueProperty(),
                 (observable, oldValue, newValue) -> {
-                    System.out.println("SoundController vol: " + newValue);
                     settingsService.setSoundValue(newValue.floatValue());
                 });
+        muteSound.setSelected(settingsService.getSoundMuted());
+        listen(muteSound.selectedProperty(),
+                (observable, oldValue, newValue) -> settingsService.setSoundMuted(newValue)
+        );
 
         //night mode
         nightMode.setSelected(settingsService.getNightEnabled());
         listen(nightMode.selectedProperty(),
-                (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue));
+                (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue)
+        );
 
         // Day time cycle
         dayCycle.setValue(settingsService.getDayTimeCycle());

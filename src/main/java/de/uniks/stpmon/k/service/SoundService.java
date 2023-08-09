@@ -3,6 +3,8 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.utils.SoundUtils;
 import io.reactivex.rxjava3.disposables.Disposable;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -34,11 +36,13 @@ public class SoundService {
 
     public void init() {
         setSound();
+        mediaPlayer.volumeProperty().bind(volumeProperty);
+        mediaPlayer.muteProperty().bind(muteProperty);
+        
         soundValueSub = settingsService.onSoundValue().subscribe(
                 // updates whenever sound value changes
                 val -> volumeProperty.set(val / 100),
                 err -> System.err.println("Error in sound value subscription: " + err.getMessage())
-
         );
         soundMutedSub = settingsService.onSoundMuted().subscribe(
                 muteProperty::set,
@@ -47,7 +51,8 @@ public class SoundService {
     }
 
     private void setSound() {
-        Media banger = SoundUtils.loadAudioFile("whatabanger");
+        List<Media> mediaFiles = SoundUtils.loadAudioFiles();
+        Media banger = mediaFiles.get(0);
         mediaPlayer = new MediaPlayer(banger);
     }
 
@@ -77,14 +82,6 @@ public class SoundService {
         }
         mediaPlayer.stop();
     }
-
-    // public void setVolume(double volume) {
-    //     mediaPlayer.setVolume(volume);
-    // }
-
-    // public void mute(boolean flag) {
-    //     mediaPlayer.setMute(flag);
-    // }
 
     public void destroy() {
         // dispose the subscription
