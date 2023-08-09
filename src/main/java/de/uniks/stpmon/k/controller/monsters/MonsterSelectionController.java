@@ -63,6 +63,7 @@ public class MonsterSelectionController extends Controller {
     private Parent createMonsterItem(Monster monster) {
         MonsterItemController mon = new MonsterItemController(monster, resourceService);
         Parent parent = mon.render();
+        parent.setId("MonsterItem_" + monster._id());
 
         parent.setOnMouseClicked(e -> {
             useItem(monster._id());
