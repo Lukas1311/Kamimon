@@ -15,6 +15,9 @@ public class SoundService {
     SettingsService settingsService;
 
     private MediaPlayer mediaPlayer;
+    private Disposable soundMutedSub;
+    private BooleanProperty muteProperty = new SimpleBooleanProperty(false);
+
 
     @Inject
     public SoundService() {
@@ -23,6 +26,10 @@ public class SoundService {
 
     public void init() {
         setSound();
+        soundMutedSub = settingsService.onSoundMuted().subscribe(
+                muteProperty::set,
+                err -> System.err.println("Error in sound muted subscription: " + err.getMessage())
+        );
     }
 
     public void setSound() {

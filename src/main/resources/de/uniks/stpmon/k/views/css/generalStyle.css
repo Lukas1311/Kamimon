@@ -897,6 +897,24 @@ Load fonts
     -fx-background-color: black;
 }
 
+.sound-check-box {
+    -fx-alignment: center-left;
+    -fx-text-fill: black;
+}
+
+.sound-check-box .box {
+    -fx-border-color: black;
+    -fx-border-radius: 3;
+    -fx-border-width: 2;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.sound-mute-label {
+    -fx-padding: 0.0 10.0 0.0 0.0;
+}
+
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {
