@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.MonsterAttributes;
+import de.uniks.stpmon.k.models.MonsterStatus;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -93,6 +94,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
                 .setAbilities(abilities)
                 .setAttributes(attributes)
                 .setCurrentAttributes(currentAttributes)
+                .setStatus(List.of(MonsterStatus.BURN))
                 .create();
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
