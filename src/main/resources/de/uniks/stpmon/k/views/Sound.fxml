@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
-
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import java.lang.String?>
 <VBox fx:id="soundScreen" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
       minWidth="-Infinity" prefHeight="720.0" prefWidth="370.0" styleClass="settings-tab"
@@ -43,11 +31,6 @@
         </VBox>
     </HBox>
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
-        </HBox>
-        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%music" />
         </HBox>
@@ -65,7 +48,6 @@
                     <Insets bottom="3.0" right="15.0" />
                 </HBox.margin>
                 <styleClass>
-                    <String fx:value="slider"/>
                     <String fx:value="sound-label" />
                 </styleClass>
                 <HBox.margin>
@@ -79,7 +61,6 @@
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
         <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%nightmode" />
             <padding>
                 <Insets left="15.0" />
