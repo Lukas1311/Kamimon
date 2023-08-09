@@ -64,12 +64,12 @@ public class ItemInformationController extends Controller {
         parent.setId("itemInformationNode");
         loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
         useButton.setVisible(false);
+        useButton.setText(translateString("useItemButton"));
 
         subscribe(presetService.getItem(item.type()), item -> {
             itemTypeDto = item;
             if (item.use() != null) {
                 useButton.setVisible(true);
-                useButton.setText(translateString("useItemButton"));
                 useButton.setOnAction(e -> useItem());
             } else {
                 useButton.setVisible(false);
