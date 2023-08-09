@@ -2,39 +2,38 @@ package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.constants.NoneConstants;
 import de.uniks.stpmon.k.models.Trainer;
-import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.world.MovementHandler;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.Direction;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.MeshUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.transform.Transform;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
+import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Objects;
 
-import static de.uniks.stpmon.k.utils.ImageUtils.scaledImageFX;
-
-public abstract class EntityView extends WorldViewable {
+public abstract class EntityView extends OpaqueView<MeshView> {
 
     @Inject
     protected WorldService worldService;
-    @Inject
-    protected EffectContext effectContext;
 
     // Not injected by dagger, provided by upper class
     private TrainerProvider trainerProvider;
     protected MeshView entityNode;
+    protected Group entityGroup;
     protected CharacterSet characterSet;
     private SpriteAnimation moveAnimation;
     private TranslateTransition moveTranslation;
@@ -53,7 +52,49 @@ public abstract class EntityView extends WorldViewable {
         if (trainer == null) {
             throw new IllegalStateException("Trainer cannot be null");
         }
-        characterSet = worldService.getCharacter(trainer.image());
+        String trainerImage = trainer.image();
+        this.characterSet = worldService.getCharacter(trainerImage);
+        if (worldService.isCharacterLoaded(trainerImage)) {
+            return;
+        }
+        // Updates the texture of the entity
+        subscribe(worldService.getCharacterLazy(trainerImage), (characterSet) -> {
+            if (characterSet.isEmpty()) {
+                return;
+            }
+            this.characterSet = characterSet.get();
+            updateTexture(characterSet.get());
+        });
+    }
+
+    private void applyShadowDirection(Direction direction) {
+        if (shadowNode == null) {
+            return;
+        }
+        updateImage(shadowNode, createShadowImage(direction));
+        updateMaterialOpacity(shadowNode, shadowOpacity);
+    }
+
+    protected Node renderShadow() {
+        List<Transform> transforms = getTransforms(CharacterSet.TRAINER_HEIGHT);
+
+        shadowNode = createRectangleScaled(createShadowImage(), -90);
+        shadowNode.getTransforms().addAll(transforms);
+        shadowNode.setVisible(false);
+        return shadowNode;
+    }
+
+    @Override
+    protected void updateOpacity(MeshView node, float opacity) {
+        updateMaterialOpacity(node, opacity);
+    }
+
+    protected BufferedImage createShadowImage() {
+        return createShadowImage(Direction.from(trainerProvider.getTrainer()));
+    }
+
+    private BufferedImage createShadowImage(Direction direction) {
+        return ImageUtils.blackOutImage(characterSet.getPreview(direction), SHADOW_OPACITY);
     }
 
     @Override
@@ -64,12 +105,14 @@ public abstract class EntityView extends WorldViewable {
                 WorldView.WORLD_ANGLE);
         character.setId("entity");
         entityNode = character;
+        Node shadow = renderShadow();
+        entityGroup = new Group(entityNode, shadow);
         Trainer trainer = trainerProvider.getTrainer();
-        entityNode.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
-        entityNode.setTranslateZ(-trainer.y() * WorldView.WORLD_UNIT -
-                WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
+        entityGroup.setTranslateX(trainer.x() * WorldView.WORLD_UNIT);
+        entityGroup.setTranslateZ((-trainer.y() - WorldView.ENTITY_OFFSET_Y) * WorldView.WORLD_UNIT);
+        entityGroup.setTranslateY(-0.7);
         startIdleAnimation(trainer);
-        return character;
+        return entityGroup;
     }
 
     protected void applySprite(float[] data) {
@@ -93,6 +136,13 @@ public abstract class EntityView extends WorldViewable {
         mesh.getTexCoords().setAll(texCoords);
     }
 
+    private void updateTexture(CharacterSet characterSet) {
+        this.characterSet = characterSet;
+        if (entityNode != null) {
+            setScaledMaterial(entityNode, characterSet.image());
+        }
+    }
+
     private Trainer nextTrainer;
 
     protected void onMoveReceived(Trainer trainer) {
@@ -107,11 +157,7 @@ public abstract class EntityView extends WorldViewable {
         }
         boolean changedImage = false;
         if (!Objects.equals(characterSet.name(), trainer.image())) {
-            characterSet = worldService.getCharacter(trainer.image());
-            if (entityNode.getMaterial() instanceof PhongMaterial) {
-                Image newTexture = scaledImageFX(characterSet.image(), effectContext.getTextureScale());
-                entityNode.setMaterial(createMaterial(newTexture));
-            }
+            updateTexture(worldService.getCharacter(trainer.image()));
             changedImage = true;
         }
         if (Objects.equals(trainer.x(), currentTrainer.x())
@@ -151,7 +197,7 @@ public abstract class EntityView extends WorldViewable {
         }
         moveDirection = direction;
         moveTranslation = new TranslateTransition();
-        moveTranslation.setNode(entityNode);
+        moveTranslation.setNode(entityGroup);
         moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()));
         moveTranslation.setToX(trainer.x() * WorldView.WORLD_UNIT);
         moveTranslation.setToZ(-trainer.y() * WorldView.WORLD_UNIT
@@ -169,10 +215,17 @@ public abstract class EntityView extends WorldViewable {
             }
             onMoveReceived(nextTrainer);
         });
+        if (idleAnimation != null) {
+            idleAnimation.stop();
+        }
         if (moveAnimation == null
                 || newDirection) {
+            if (moveAnimation != null) {
+                moveAnimation.pause();
+            }
             moveAnimation = new SpriteAnimation(characterSet, direction.ordinal(), true);
             moveAnimation.setCycleCount(Animation.INDEFINITE);
+            applyShadowDirection(direction);
         }
         moveAnimation.play();
     }
@@ -180,6 +233,9 @@ public abstract class EntityView extends WorldViewable {
     private void startIdleAnimation(Trainer trainer) {
         if (moveAnimation != null) {
             moveAnimation.pause();
+        }
+        if (idleAnimation != null) {
+            idleAnimation.stop();
         }
         idleAnimation = new SpriteAnimation(characterSet, trainer.direction(), false);
         idleAnimation.setCycleCount(Animation.INDEFINITE);
@@ -212,6 +268,7 @@ public abstract class EntityView extends WorldViewable {
             MeshUtils.disposeMesh(entityNode);
             entityNode = null;
         }
+        entityGroup = null;
     }
 
 
@@ -221,6 +278,7 @@ public abstract class EntityView extends WorldViewable {
         private final CharacterSet characterSet;
         private final int direction;
         private final boolean isMoving;
+        private int index = -10;
 
         public SpriteAnimation(CharacterSet characterSet, int direction, boolean isMoving) {
             this.characterSet = characterSet;
@@ -237,8 +295,13 @@ public abstract class EntityView extends WorldViewable {
                 stop();
                 return;
             }
+            int currentIndex = Math.min((int) (frac * CharacterSet.SPRITES_PER_COLUMN), CharacterSet.SPRITES_PER_COLUMN - 1);
+            if (currentIndex == index) {
+                return;
+            }
+            index = currentIndex;
             characterSet.fillSpriteData(data,
-                    Math.min((int) (frac * CharacterSet.SPRITES_PER_COLUMN), CharacterSet.SPRITES_PER_COLUMN - 1),
+                    index,
                     Direction.VALUES[Math.min(Math.max(direction, 0), 3)],
                     isMoving);
             applySprite(data);

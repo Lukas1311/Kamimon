@@ -8,7 +8,7 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
 import de.uniks.stpmon.k.service.world.TextDeliveryService;
-import javafx.embed.swing.SwingFXUtils;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
@@ -68,7 +68,7 @@ public class MinimapController extends Controller {
                         if (renderedMap.isEmpty()) {
                             return;
                         }
-                        miniMap.setImage(SwingFXUtils.toFXImage(renderedMap.get(), null));
+                        miniMap.setImage(ImageUtils.toFXImage(renderedMap.get()));
                     }
             );
             subscribe(textDeliveryService.getNextMonCenter(currentArea), (monCenter) -> this.monCenter = monCenter);
@@ -88,6 +88,7 @@ public class MinimapController extends Controller {
                     if (trainer.isEmpty()) {
                         return;
                     }
+
                     Point2D playerPos = new Point2D((trainer.get().x() + 0.5f) * TILE_SIZE,
                             (trainer.get().y() + 1f) * TILE_SIZE);
                     updateMonCenterDart(playerPos, monCenterRotate, monCenterPos);

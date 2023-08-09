@@ -2,11 +2,11 @@ package de.uniks.stpmon.k.service.world;
 
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.Spawn;
+import de.uniks.stpmon.k.models.builder.TileMapBuilder;
 import de.uniks.stpmon.k.models.map.TileMapData;
 import de.uniks.stpmon.k.models.map.TilesetData;
 import de.uniks.stpmon.k.models.map.TilesetSource;
 import de.uniks.stpmon.k.models.map.layerdata.ChunkData;
-import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.TileLayerData;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.world.TileMap;
@@ -36,21 +36,17 @@ public class TextureSetServiceTest {
     TextureSetService msgService;
 
     private TileMapData createDummyMap() {
-        ChunkData chunk = new ChunkData(List.of(4L, 2L, 1L, 3L),
-                2, 2,
-                0, 0);
-        ObjectData object = new ObjectData(0, null, List.of(), null, null, false, 0, 0, 0, 0, 0);
-        TileLayerData layer = new TileLayerData(1, "Ground", List.of(chunk), List.of(), List.of(object),
-                0, 0,
-                2, 2,
-                0, 0, "tilelayer", true, List.of());
-        return new TileMapData(
-                2, 2,
-                false, List.of(layer),
-                List.of(),
-                1, 1,
-                List.of(new TilesetSource(1, "grass.json")),
-                "map");
+        TileMapData emptyMap = TileMapBuilder.builder().create();
+        ChunkData chunk = new ChunkData(List.of(4L, 2L, 1L, 3L), 2, 2, 0, 0);
+        return TileMapBuilder.builder(emptyMap)
+                .startTileLayer()
+                .setName(TileLayerData.GROUND_TYPE)
+                .setWidth(2).setHeight(2)
+                .addChunk(chunk)
+                .endLayer()
+                .addTileSet(1, "grass.json")
+                .setTileHeight(1).setTileWidth(1)
+                .create();
     }
 
     @Test

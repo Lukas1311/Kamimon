@@ -25,38 +25,38 @@ public class TextDeliveryService {
     }
 
     public Observable<List<RouteData>> getRouteData(IMapProvider mapProvider) {
-        if (mapProvider.map() != null) {
-            TileMapData mapData = mapProvider.map();
-            List<RouteData> routeDataList = new ArrayList<>();
-            for (TileLayerData routeLayerData : mapData.layers()) {
-                if (!routeLayerData.type().equals(TileMapConstants.OBJECT_LAYER)) {
-                    continue;
-                }
-                for (ObjectData obj : routeLayerData.objects()) {
-                    RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
-                    RouteData routeData = routeDataBuilder.build();
-                    routeDataList.add(routeData);
-                }
-            }
-            return Observable.just(routeDataList);
+        TileMapData mapData = mapProvider.map();
+        if (mapData == null) {
+            return Observable.just(Collections.emptyList());
         }
-        return Observable.just(Collections.emptyList());
+        List<RouteData> routeDataList = new ArrayList<>();
+        for (TileLayerData routeLayerData : mapData.layers()) {
+            if (!routeLayerData.type().equals(TileMapConstants.OBJECT_LAYER)) {
+                continue;
+            }
+            for (ObjectData obj : routeLayerData.objects()) {
+                RouteData.Builder routeDataBuilder = RouteData.builder().setData(obj);
+                RouteData routeData = routeDataBuilder.build();
+                routeDataList.add(routeData);
+            }
+        }
+        return Observable.just(routeDataList);
     }
 
     public Observable<Point2D> getNextMonCenter(IMapProvider mapProvider) {
-        if (mapProvider.map() == null) {
+        TileMapData mapData = mapProvider.map();
+        if (mapData == null) {
             return Observable.just(Point2D.ZERO);
         }
-        TileMapData mapData = mapProvider.map();
         for (TileLayerData layerData : mapData.layers()) {
             if (!layerData.type().equals(TileMapConstants.OBJECT_LAYER)) {
                 continue;
             }
             for (ObjectData obj : layerData.objects()) {
-                if (!obj.type().equals("Portal")) {
+                if (obj.type() == null || !obj.type().equals("Portal")) {
                     continue;
                 }
-                if (obj.name().contains("Moncenter")) {
+                if (obj.name() != null && obj.name().contains("Moncenter")) {
                     return Observable.just(new Point2D(obj.x() + obj.width() / 2f
                             , obj.y() + obj.height() / 2f));
                 }

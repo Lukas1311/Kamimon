@@ -41,10 +41,6 @@
     -fx-font-size: 36px;
 }
 
-.night-plane {
-    -fx-background-color: rgba(25, 25, 112, 0.65);
-}
-
 /* -------------------- Backpack Menu -------------------- */
 .backpack-menu {
     -fx-padding: 13 0 0 0;

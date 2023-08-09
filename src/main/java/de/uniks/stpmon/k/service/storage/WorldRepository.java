@@ -11,17 +11,30 @@ import java.util.List;
 @Singleton
 public class WorldRepository {
 
-    private final SingleCache<BufferedImage> floorImage = new SingleCache<>();
     private final SingleCache<BufferedImage> minimapImage = new SingleCache<>();
     private final SingleCache<BufferedImage> regionMap = new SingleCache<>();
     private final SingleCache<List<TileProp>> props = new SingleCache<>();
+    private BufferedImage[][] chunks = new BufferedImage[0][];
+    private boolean isIndoor = false;
 
     @Inject
     public WorldRepository() {
     }
 
-    public SingleCache<BufferedImage> floorImage() {
-        return floorImage;
+    public void setIndoor(boolean indoor) {
+        isIndoor = indoor;
+    }
+
+    public boolean isIndoor() {
+        return isIndoor;
+    }
+
+    public BufferedImage[][] getChunks() {
+        return chunks;
+    }
+
+    public void setChunks(BufferedImage[][] chunks) {
+        this.chunks = chunks;
     }
 
     public SingleCache<BufferedImage> minimapImage() {
@@ -41,23 +54,20 @@ public class WorldRepository {
             flushIfNotNull(regionMap);
         }
 
-        BufferedImage image = this.floorImage.asNullable();
-        if (image != null) {
-            image.flush();
-        }
-        flushIfNotNull(floorImage);
         flushIfNotNull(minimapImage);
         for (TileProp prop : props.asOptional().orElse(List.of())) {
-            image = prop.image();
+            BufferedImage image = prop.image();
             if (image != null) {
                 image.flush();
             }
         }
         props.reset();
+        chunks = new BufferedImage[0][];
+        isIndoor = false;
     }
 
     private void flushIfNotNull(SingleCache<BufferedImage> cache) {
-        BufferedImage image = this.floorImage.asNullable();
+        BufferedImage image = cache.asNullable();
         if (image != null) {
             image.flush();
         }
@@ -65,10 +75,8 @@ public class WorldRepository {
     }
 
     public boolean isEmpty() {
-        return floorImage.isEmpty()
-                && minimapImage.isEmpty()
+        return minimapImage.isEmpty()
                 && props.isEmpty()
                 && regionMap.isEmpty();
     }
-
 }
