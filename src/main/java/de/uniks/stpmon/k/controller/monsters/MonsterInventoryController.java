@@ -49,7 +49,7 @@ public class MonsterInventoryController extends Controller {
     ItemService itemService;
 
     private Monster activeMonster;
-    private List<String> monTeamList = new ArrayList<>();
+    private List<String> monTeamList;
     private int monsterIndexStorage = 0;
     private String selectedMonster;
 
@@ -70,7 +70,7 @@ public class MonsterInventoryController extends Controller {
         subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
         subscribe(monsterService.getTeam(), monsters -> {
             showTeamMonster(monsters);
-            showMonsterList(monsterService.getMonsters().blockingFirst());
+            showMonsterList(monsterService.getMonsterList());
         });
         subscribe(monsterService.getMonsters(), this::showMonsterList);
         loadBgImage(monBoxMenuHolder, getResourcePath() + "MonBox_v6.1.png");
@@ -81,14 +81,17 @@ public class MonsterInventoryController extends Controller {
     @Override
     public void destroy() {
         super.destroy();
-        // Update team if leave monbox
-        // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
-        ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        if (monTeamList != null) {
+            // Update team if leave monbox
+            // Subscribe has to be in ingame controller to not be destroyed with this controller or not be destroyed at all
+            ingameControllerProvider.get().subscribe(trainerService.setTeam(monTeamList));
+        }
         monParent = null;
         monTeam = null;
         monStorage = null;
         monBoxMenuHolder = null;
     }
+
     public void setSelectionMode(boolean isSelectionMode) {
         this.isSelectionMode = isSelectionMode;
     }
@@ -109,7 +112,7 @@ public class MonsterInventoryController extends Controller {
 
     private void showMonsterList(List<Monster> monsters) {
         List<Monster> currentMonsters = new ArrayList<>(monsters);
-        List<Monster> teamMonsters = monsterService.getTeam().blockingFirst();
+        List<Monster> teamMonsters = monsterService.getTeamList();
         currentMonsters.removeAll(teamMonsters);
         monStorage.getChildren().clear();
         monsterIndexStorage = 0;
@@ -133,7 +136,7 @@ public class MonsterInventoryController extends Controller {
         draggableMonItem(mon, monster._id());
 
         parent.setOnMouseClicked(e -> {
-            if(isSelectionMode && itemService != null) {
+            if (isSelectionMode && itemService != null) {
                 subscribe(itemService.useActiveItemIfAvailable(monster._id()), item -> {
                     ingameControllerProvider.get().removeChildren(2);
                     setSelectionMode(false);

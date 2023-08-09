@@ -20,7 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,14 +51,6 @@ class RegionServiceTest {
                 new ArrayList<>()));
     }
 
-    private Trainer getDummyTrainer() {
-        return DummyConstants.TRAINER;
-    }
-
-    private Area getDummyArea() {
-        return DummyConstants.AREA_NO_MAP;
-    }
-
     private Monster makeMonster() {
         return MonsterBuilder.builder()
                 .setId("monsterId")
@@ -75,7 +66,7 @@ class RegionServiceTest {
         //define mocks
         final ArgumentCaptor<CreateTrainerDto> captor = ArgumentCaptor.forClass(CreateTrainerDto.class);
         when(regionApiService.createTrainer(any(), any(CreateTrainerDto.class)))
-                .thenReturn(Observable.just(getDummyTrainer()));
+                .thenReturn(Observable.just(DummyConstants.TRAINER));
         //action
         final Trainer trainer = regionService
                 .createTrainer("region_0", "Test Trainer", "trainerImage")
@@ -92,10 +83,9 @@ class RegionServiceTest {
     @Test
     void getAreaTrainers() {
         initUser();
-        Trainer trainer = getDummyTrainer();
         //define mocks
         List<Trainer> trainers = new ArrayList<>();
-        trainers.add(trainer);
+        trainers.add(DummyConstants.TRAINER);
         when(regionApiService.getTrainers(any(), any()))
                 .thenReturn(Observable.just(trainers));
 
@@ -116,10 +106,9 @@ class RegionServiceTest {
     @Test
     void getRegionTrainers() {
         initUser();
-        Trainer trainer = getDummyTrainer();
         //define mocks
         List<Trainer> trainers = new ArrayList<>();
-        trainers.add(trainer);
+        trainers.add(DummyConstants.TRAINER);
         when(regionApiService.getTrainers(any())).thenReturn(Observable.just(trainers));
 
         //action
@@ -139,11 +128,10 @@ class RegionServiceTest {
     @Test
     void getTrainer() {
         initUser();
-        Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         when(regionApiService.getTrainer(any(String.class), any(String.class)))
-                .thenReturn(Observable.just(trainer));
+                .thenReturn(Observable.just(DummyConstants.TRAINER));
 
         //action
         final Trainer returnTrainer = regionService
@@ -167,11 +155,10 @@ class RegionServiceTest {
                 new Spawn("region_0", 0, 0),
                 null
         ));
-        Trainer trainer = getDummyTrainer();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         when(regionApiService.deleteTrainer(any(), any()))
-                .thenReturn(Observable.just(trainer));
+                .thenReturn(Observable.just(DummyConstants.TRAINER));
 
         //action
         final Trainer returnTrainer = regionService
@@ -239,11 +226,10 @@ class RegionServiceTest {
     //---------------- Region Areas ------------------------------
     @Test
     void getArea() {
-        Area area = getDummyArea();
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         when(regionApiService.getArea(any(), any(String.class)))
-                .thenReturn(Observable.just(area));
+                .thenReturn(Observable.just(DummyConstants.AREA_NO_MAP));
 
         //action
         final Area returnArea = regionService
@@ -260,9 +246,8 @@ class RegionServiceTest {
 
     @Test
     void getAreas() {
-        Area area = getDummyArea();
         List<Area> areas = new ArrayList<>();
-        areas.add(area);
+        areas.add(DummyConstants.AREA_NO_MAP);
         //define mocks
         final ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         when(regionApiService.getAreas(any(String.class)))

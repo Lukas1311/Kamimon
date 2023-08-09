@@ -38,6 +38,8 @@ public class ActionFieldController extends Controller {
     @Inject
     Provider<ActionFieldChooseOpponentController> chooseOpponentControllerProvider;
     @Inject
+    Provider<ActionFieldSelectMonController> selectMonControllerProvider;
+    @Inject
     Provider<EncounterService> encounterServiceProvider;
     @Inject
     SessionService sessionService;
@@ -51,6 +53,8 @@ public class ActionFieldController extends Controller {
     private EncounterSlot activeSlot;
     private Controller openController;
     private CloseEncounterTrigger closeTrigger;
+    private boolean monInfoOpen = false;
+
 
     @Inject
     public ActionFieldController() {
@@ -101,6 +105,14 @@ public class ActionFieldController extends Controller {
         return parent;
     }
 
+    public boolean isMonInfoOpen() {
+        return monInfoOpen;
+    }
+
+    public void setMonInfoOpen(boolean monInfoOpen) {
+        this.monInfoOpen = monInfoOpen;
+    }
+
     public void closeEncounter(CloseEncounterTrigger closeEncounter) {
         openBattleLog();
 
@@ -130,6 +142,10 @@ public class ActionFieldController extends Controller {
         open(chooseAbilityControllerProvider);
     }
 
+    public void openInventory() {
+        setActiveSlot();
+    }
+
     public void openChooseOpponent() {
         open(chooseOpponentControllerProvider);
     }
@@ -141,6 +157,10 @@ public class ActionFieldController extends Controller {
         }
         open(battleLogControllerProvider);
         battleLogService.showInitialText();
+    }
+
+    public void openSelectMon() {
+        open(selectMonControllerProvider);
     }
 
     private <T extends Controller> void open(Provider<T> provider) {
@@ -230,6 +250,17 @@ public class ActionFieldController extends Controller {
                 encounterService.makeChangeMonsterMove(getActiveSlot(), selectedMonster));
         setOwnMonsterDead(false);
     }
+
+    public void executeItemMove(int itemId, String myMonsterId) {
+        madeMoves.add(getActiveSlot());
+        // Check if all moves are made, or we have to wait for enemy
+        updateWaiting();
+        // Show battle log if it's not already open
+        openBattleLog();
+        subscribe(encounterServiceProvider.get()
+                .makeItemMove(getActiveSlot(), itemId, myMonsterId ));
+    }
+
 
     public void checkDeadMonster() {
         subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
