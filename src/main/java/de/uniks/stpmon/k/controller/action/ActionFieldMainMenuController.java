@@ -41,7 +41,6 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     public Parent render() {
         Parent parent = super.render();
 
-
         textContent.setText(translateString("wannaDo"));
 
         addActionOption(FIGHT);
@@ -94,7 +93,8 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openInventory() {
-        if (encounterOverviewProvider.get().monInfoParent == null) {
+        getActionField().openInventory();
+        if (encounterOverviewProvider.get().controller == null) {
             encounterOverviewProvider.get().actionFieldWrapperBox.setAlignment(Pos.BOTTOM_RIGHT);
             inventoryControllerProvider.get().setInEncounter(true);
             encounterOverviewProvider.get().openController("inventory", null);
@@ -114,14 +114,17 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openFlee() {
+        encounterOverviewProvider.get().removeController("all");
         subscribe(encounterService.fleeEncounter(), opp -> getActionField().setFleeEncounter());
     }
 
     public void openFight() {
+        encounterOverviewProvider.get().removeController("all");
         getActionField().openChooseAbility();
     }
 
     public void openChangeMon() {
+        encounterOverviewProvider.get().removeController("all");
         getActionField().openChangeMonster(false);
     }
 

@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -69,7 +70,8 @@ public class NPCCollectiveView extends WorldViewable {
         subscribe(trainerCache.getValues().take(1),
                 (npcs) -> {
                     for (Trainer npc : npcs) {
-                        if (Objects.equals(npc._id(), trainerService.getMe()._id()) || npc == NoneConstants.NONE_TRAINER) {
+                        if (Objects.equals(npc._id(), trainerService.getMe()._id())
+                                || npc == NoneConstants.NONE_TRAINER) {
                             continue;
                         }
                         addNpcView(npc);
@@ -84,6 +86,16 @@ public class NPCCollectiveView extends WorldViewable {
             }
         });
         return npcGroup;
+    }
+
+    @Override
+    public void updateShadow(ShadowTransform transform) {
+        for (Node view : npcViews.values()) {
+            if (!(view.getUserData() instanceof NPCView npcView)) {
+                continue;
+            }
+            npcView.updateShadow(transform);
+        }
     }
 
     private void addNpcView(Trainer trainer) {

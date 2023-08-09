@@ -90,6 +90,22 @@ public class MonsterService extends DestructibleElement {
                 .anyMatch(monster -> monster.currentAttributes().health() < monster.attributes().health());
     }
 
+    public List<Monster> getTeamList() {
+        init();
+        if (monsterCache == null) {
+            return List.of();
+        }
+        return getTeamCache().getCurrentValues();
+    }
+
+    public List<Monster> getMonsterList() {
+        init();
+        if (monsterCache == null) {
+            return List.of();
+        }
+        return getMonsterCache().getCurrentValues();
+    }
+
     public Observable<List<Monster>> getTeam() {
         init();
         if (monsterCache == null) {
@@ -126,5 +142,4 @@ public class MonsterService extends DestructibleElement {
         }
         return monsterCache;
     }
-
 }

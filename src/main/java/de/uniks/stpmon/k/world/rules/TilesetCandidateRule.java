@@ -4,6 +4,9 @@ import de.uniks.stpmon.k.models.map.DecorationLayer;
 
 import java.util.List;
 
+/**
+ * Rule which connects tiles which are next to each other on the tileset
+ */
 public class TilesetCandidateRule implements CandidateRule {
 
     private final String tileset;

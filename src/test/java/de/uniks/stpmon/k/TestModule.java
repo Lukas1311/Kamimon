@@ -5,6 +5,7 @@ import dagger.Module;
 import dagger.Provides;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.world.ClockService;
 
 import javax.inject.Singleton;
 import java.util.Locale;
@@ -37,6 +38,12 @@ public class TestModule {
                 .setTextureScale(1.0d)
                 .setDialogAnimationSpeed(1)
                 .setEncounterAnimationSpeed(1);
+    }
+
+    @Provides
+    @Singleton
+    static ClockService clockService() {
+        return new ClockService();
     }
 
     @Provides

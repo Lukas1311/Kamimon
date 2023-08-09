@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.service.IResourceService;
@@ -44,10 +45,14 @@ public class ItemInformationController extends Controller {
     ItemService itemService;
     @Inject
     Provider<IngameController> ingameControllerProvider;
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
 
 
     public Item item;
     public ItemTypeDto itemTypeDto;
+
+    private boolean isEncounter = false;
 
     @Inject
     public ItemInformationController() {
@@ -102,9 +107,12 @@ public class ItemInformationController extends Controller {
                     return;
                 }
                 itemService.setActiveItem(itemTypeDto.id());
-                ingameControllerProvider.get().removeChildren(2);
-                ingameControllerProvider.get().openMonsterInventory();
-
+                if(!isEncounter) {
+                    ingameControllerProvider.get().removeChildren(2);
+                    ingameControllerProvider.get().openMonsterInventory();
+                } else {
+                    encounterOverviewControllerProvider.get().openController("monsterSelection", item);
+                }
             }
         }
 
@@ -112,6 +120,10 @@ public class ItemInformationController extends Controller {
 
     public void setItem(Item item) {
         this.item = item;
+    }
+
+    public void setInEncounter(boolean isEncounter){
+        this.isEncounter = isEncounter;
     }
 
     @Override

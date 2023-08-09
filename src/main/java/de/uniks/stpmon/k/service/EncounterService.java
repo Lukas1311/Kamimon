@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
+import de.uniks.stpmon.k.dto.UseItemMove;
 import de.uniks.stpmon.k.models.Encounter;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
@@ -21,7 +22,8 @@ public class EncounterService {
     public enum Moves {
 
         CHANGE_MONSTER("change-monster"),
-        ABILITY("ability");
+        ABILITY("ability"),
+        USE_ITEM("use-item");
 
         private final String move;
 
@@ -114,6 +116,25 @@ public class EncounterService {
                 Moves.CHANGE_MONSTER.toString(),
                 nextMonster._id())
         );
+        return encounterApiService.makeMove(
+                regionStorage.getRegion()._id(),
+                encounterStorage.getEncounter()._id(),
+                sessionServiceProvider.get().getOpponent(slot)._id(),
+                dto
+        );
+    }
+
+    public Observable<Opponent> makeItemMove(EncounterSlot slot, int itemId, String myMonsterId) {
+        UpdateOpponentDto dto = new UpdateOpponentDto(null, new UseItemMove(
+                Moves.USE_ITEM.toString(),
+                itemId,
+                myMonsterId)
+        );
+
+        if (sessionServiceProvider.get().hasNoEncounter()) {
+            throw new IllegalStateException("There is no encounter o_O");
+        }
+
         return encounterApiService.makeMove(
                 regionStorage.getRegion()._id(),
                 encounterStorage.getEncounter()._id(),

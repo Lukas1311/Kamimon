@@ -39,10 +39,7 @@ public class TeamController extends Controller {
     @Override
     public void init() {
         super.init();
-
         subscribe(monsterService.getTeam(), this::updateListContent);
-
-        updateStatus();
     }
 
     @Override
@@ -51,10 +48,8 @@ public class TeamController extends Controller {
         loadImage(arrowImageView, "arrow_up.png");
         loadBgImage(monsterListVBox, getResourcePath() + "TeamBox.png");
 
-
         monsterInformation.setVisible(false);
-        // Does not block, because the cache is already initialized
-        updateListContent(monsterService.getTeam().blockingFirst());
+        updateListContent(monsterService.getTeamList());
         return render;
     }
 
@@ -62,7 +57,12 @@ public class TeamController extends Controller {
      * Updates the container text in the monster list.
      */
     public void updateListContent(List<Monster> monsters) {
-        updateStatus();
+        for (int slot = 0; slot < 6; slot++) {
+            Monster monster = slot >= monsters.size() ? null : monsters.get(slot);
+            float currentHP = monster == null ? 0 : monster.currentAttributes().health();
+            float maxHP = monster == null ? 0 : monster.attributes().health();
+            monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP, monster == null);
+        }
 
         if (monsterListVBox == null) {
             return;
@@ -100,19 +100,6 @@ public class TeamController extends Controller {
             monsterInformationController.loadMonster(monster);
             monsterInformation.getChildren().setAll(monsterInformationContent);
             monsterInformation.setVisible(true);
-        }
-    }
-
-    /**
-     * Updates the monster status in the monster list.
-     */
-    public void updateStatus() {
-        List<Monster> monsters = monsterService.getTeamCache().getCurrentValues();
-        for (int slot = 0; slot < 6; slot++) {
-            Monster monster = slot >= monsters.size() ? null : monsters.get(slot);
-            float currentHP = monster == null ? 0 : monster.currentAttributes().health();
-            float maxHP = monster == null ? 0 : monster.attributes().health();
-            monsterBarControllerProvider.get().setMonsterStatus(slot, currentHP, maxHP, monster == null);
         }
     }
 
