@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.service.world.ScalableClockService;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -24,6 +25,8 @@ import java.util.function.Function;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
+import java.time.Duration;
+import java.util.function.Function;
 
 public class SoundController extends Controller {
 
@@ -67,6 +70,7 @@ public class SoundController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        soundScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
@@ -85,6 +89,21 @@ public class SoundController extends Controller {
         nightMode.setSelected(settingsService.getNightEnabled());
         listen(nightMode.selectedProperty(),
                 (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue));
+
+        //GE & EN
+        boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
+        germanButton.setSelected(germanSelected);
+        englishButton.setSelected(!germanSelected);
+        germanButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setDe();
+            }
+        });
+        englishButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setEn();
+            }
+        });
 
         // Day time cycle
         dayCycle.setValue(settingsService.getDayTimeCycle());
@@ -125,21 +144,6 @@ public class SoundController extends Controller {
             @Override
             public Double fromString(String string) {
                 return null;
-            }
-        });
-
-        //GE & EN
-        boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
-        germanButton.setSelected(germanSelected);
-        englishButton.setSelected(!germanSelected);
-        germanButton.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                setDe();
-            }
-        });
-        englishButton.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                setEn();
             }
         });
 

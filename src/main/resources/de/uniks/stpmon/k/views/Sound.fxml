@@ -45,6 +45,9 @@
     <HBox prefHeight="100.0" prefWidth="200.0">
         <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
+        </HBox>
+        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%music" />
         </HBox>
@@ -76,6 +79,7 @@
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
         <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus"/>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%nightmode" />
             <padding>
                 <Insets left="15.0" />
