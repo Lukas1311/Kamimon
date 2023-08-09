@@ -2,9 +2,13 @@ package de.uniks.stpmon.k.views.world;
 
 import com.sun.prism.impl.Disposer;
 import de.uniks.stpmon.k.controller.Viewable;
+import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.service.storage.CameraStorage;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
+import de.uniks.stpmon.k.service.world.ClockService;
+import de.uniks.stpmon.k.service.world.WorldService;
+import de.uniks.stpmon.k.world.ShadowTransform;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -12,13 +16,14 @@ import javafx.scene.transform.Translate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.time.LocalTime;
 
 @Singleton
 public class WorldView extends Viewable {
 
     public static final int WORLD_UNIT = 16;
     public static final int ENTITY_OFFSET_Y = 1;
-    public static final int WORLD_ANGLE = -59;
+    public static final int WORLD_ANGLE = -49;
 
     @Inject
     protected RegionStorage regionStorage;
@@ -32,9 +37,16 @@ public class WorldView extends Viewable {
     protected PropView propView;
     @Inject
     protected NPCCollectiveView npcCollectiveView;
-
     @Inject
     protected CameraStorage cameraStorage;
+    @Inject
+    protected ClockService clockService;
+    @Inject
+    protected WorldService worldService;
+    @Inject
+    protected SettingsService settingsService;
+    private ShadowTransform lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
+    private AmbientLight ambient;
 
     @Inject
     public WorldView() {
@@ -61,9 +73,16 @@ public class WorldView extends Viewable {
         Node props = propView.render();
         Node npc = npcCollectiveView.render();
 
+        // Disable shadows for indoor worlds
+        if (storage.isIndoor()) {
+            propView.updateShadow(ShadowTransform.DEFAULT_DISABLED);
+            characterView.updateShadow(ShadowTransform.DEFAULT_DISABLED);
+            npcCollectiveView.updateShadow(ShadowTransform.DEFAULT_DISABLED);
+        }
+
         // Lights all objects from all sides
-        AmbientLight ambient = new AmbientLight();
-        ambient.setLightOn(true);
+        ambient = new AmbientLight();
+        ambient.setColor(Color.WHITE);
 
         return new Group(floor, ambient, props, character, npc);
     }
@@ -96,12 +115,41 @@ public class WorldView extends Viewable {
         floorView.init();
         propView.init();
         npcCollectiveView.init();
+        if (storage.isIndoor()) {
+            return;
+        }
+        subscribe(clockService.onTime(), (time) -> {
+            ShadowTransform transform = worldService.getShadowTransform(time);
+            if (transform.equals(lastShadowTransform)) {
+                return;
+            }
+            lastShadowTransform = transform;
+            propView.updateShadow(transform);
+            characterView.updateShadow(transform);
+            npcCollectiveView.updateShadow(transform);
+            if (ambient != null) {
+                ambient.setColor(worldService.getWorldColor(time));
+            }
+        });
+        subscribe(settingsService.onNightModusEnabled(), (enabled) -> {
+            if (ambient == null) {
+                return;
+            }
+            if (!enabled) {
+                ambient.setColor(Color.WHITE);
+                return;
+            }
+            LocalTime time = clockService.onTime().blockingFirst();
+            ambient.setColor(worldService.getWorldColor(time));
+        });
     }
 
     @Override
     public void destroy() {
         super.destroy();
 
+        ambient = null;
+        lastShadowTransform = ShadowTransform.DEFAULT_ENABLED;
         characterView.destroy();
         floorView.destroy();
         propView.destroy();

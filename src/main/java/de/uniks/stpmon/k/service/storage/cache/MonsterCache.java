@@ -94,6 +94,11 @@ public class MonsterCache extends ListenerCache<Monster, String> {
         }
 
         private void updateTeam(List<String> team) {
+            // Check if cache is still valid
+            if (parent.trainerCache == null
+                    || parent.trainerCache.isDestroyed()) {
+                return;
+            }
             List<String> teamIds = team;
             if (currentTeam == null) {
                 currentTeam = new LinkedList<>(teamIds);

@@ -15,6 +15,7 @@ public class SettingsService {
     private final BehaviorSubject<Boolean> nightMode = BehaviorSubject.createDefault(true);
     private final BehaviorSubject<Boolean> soundMuted = BehaviorSubject.createDefault(false);
     private final BehaviorSubject<Float> soundValue = BehaviorSubject.createDefault(100f);
+    private final BehaviorSubject<Float> dayTimeCycle = BehaviorSubject.createDefault(12f);
 
     @Inject
     public SettingsService() {
@@ -27,6 +28,7 @@ public class SettingsService {
         nightMode.onNext(preferences.getBoolean("nightMode", true));
         soundMuted.onNext(preferences.getBoolean("soundMuted", false));
         soundValue.onNext(preferences.getFloat("soundValue", 100f));
+        dayTimeCycle.onNext(preferences.getFloat("dayTimeCycle", 12f));
         initialized = true;
     }
 
@@ -48,6 +50,20 @@ public class SettingsService {
         soundMuted.onNext(value);
     }
 
+    public boolean setDayTimeCycle(float value) {
+        int hour = (int) value;
+        int minute = (int) ((value - hour) * 60);
+        int lastHour = getDayTimeCycle().intValue();
+        int lastMinute = (int) ((getDayTimeCycle() - lastHour) * 60);
+        if (hour == lastHour && minute == lastMinute) {
+            return false;
+        }
+        ensureInit();
+        preferences.putFloat("dayTimeCycle", value);
+        dayTimeCycle.onNext(value);
+        return true;
+    }
+
     public Float getSoundValue() {
         ensureInit();
         return soundValue.getValue();
@@ -63,6 +79,11 @@ public class SettingsService {
         return soundMuted.getValue();
     }
 
+    public Float getDayTimeCycle() {
+        ensureInit();
+        return dayTimeCycle.getValue();
+    }
+
     public Observable<Boolean> onNightModusEnabled() {
         ensureInit();
         return nightMode;
@@ -76,5 +97,10 @@ public class SettingsService {
     public Observable<Float> onSoundValue() {
         ensureInit();
         return soundValue;
+    }
+
+    public Observable<Float> onDayTimeCycle() {
+        ensureInit();
+        return dayTimeCycle;
     }
 }

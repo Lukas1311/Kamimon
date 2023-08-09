@@ -142,6 +142,33 @@ public interface ICache<T, K> extends ILifecycleService, ICacheListener<T> {
      */
     Status getStatus();
 
+    /**
+     * Check if the cache is destroyed.
+     *
+     * @return True if the cache is destroyed.
+     */
+    default boolean isDestroyed() {
+        return getStatus() == Status.DESTROYED;
+    }
+
+    /**
+     * Check if the cache is initialized.
+     *
+     * @return True if the cache is initialized.
+     */
+    default boolean isInitialized() {
+        return getStatus() == Status.INITIALIZED;
+    }
+
+    /**
+     * Check if the cache is uninitialized.
+     *
+     * @return True if the cache is uninitialized.
+     */
+    default boolean isUninitialized() {
+        return getStatus() == Status.UNINITIALIZED;
+    }
+
     Collection<K> getIds();
 
     enum Status {
