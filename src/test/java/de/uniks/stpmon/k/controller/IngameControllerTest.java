@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.controller.interaction.DialogueController;
 import de.uniks.stpmon.k.controller.map.MapOverviewController;
 import de.uniks.stpmon.k.controller.map.MinimapController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
-import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.InputHandler;
@@ -45,6 +44,7 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     MinimapController minimapController;
     @Mock
+    @SuppressWarnings("unused")
     MapOverviewController mapOverviewController;
     @Spy
     @InjectMocks
@@ -65,9 +65,6 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     WorldTimerController worldTimerController;
-    @Mock
-    @SuppressWarnings("unused")
-    NightOverlayController nightOverlayController;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy

@@ -372,10 +372,8 @@ public class BattleLogService {
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
-            case "item-failed", "item-success" -> {
-                addTranslatedSection("item-failed", getItem(result.item()).name());
-                addTranslatedSection("item-success", getItem(result.item()).name());
-            }
+            case "item-failed" -> addTranslatedSection("item-failed", getItem(result.item()).name());
+            case "item-success" -> addTranslatedSection("item-success", getItem(result.item()).name());
             case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
                     + result.status().toString()
                     + result.type().replace("status-", "."), monsterNames.get(slot));

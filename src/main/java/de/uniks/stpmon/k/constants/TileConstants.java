@@ -36,4 +36,13 @@ public class TileConstants {
      * Tile size in pixels.
      */
     public static final int TILE_SIZE = 16;
+    /**
+     * Chunk size in tiles.
+     */
+    public static final int CHUNK_SIZE = TILE_SIZE * 16;
+
+    /**
+     * Amount of chunks in the outer layer. These are none existing chunks that are used to fill the outer layer.
+     */
+    public static final int OUTER_CHUNKS = 1;
 }

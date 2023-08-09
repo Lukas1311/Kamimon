@@ -1,18 +1,13 @@
 package de.uniks.stpmon.k.world;
 
-import de.uniks.stpmon.k.models.Area;
 import de.uniks.stpmon.k.models.map.DecorationLayer;
 import de.uniks.stpmon.k.models.map.TileMapData;
-import de.uniks.stpmon.k.models.map.TileProp;
 import de.uniks.stpmon.k.utils.Direction;
-import de.uniks.stpmon.k.world.rules.*;
+import de.uniks.stpmon.k.world.rules.RuleRegistry;
+import de.uniks.stpmon.k.world.rules.RuleResult;
+import de.uniks.stpmon.k.world.rules.TileInfo;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.*;
-
-import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
 
 /**
  * The PropInspector is responsible for creating the props from the given tile map data and the decoration layers.
@@ -21,17 +16,14 @@ import static de.uniks.stpmon.k.constants.TileConstants.TILE_SIZE;
  * The container {@link RuleRegistry} defines the way the props are defined.
  */
 public class PropInspector {
-    private static final RuleRegistry defaultRegistry = BasicRules.registerRules();
-    private static final RuleRegistry woodRegistry = WoodRules.registerRules();
     public static final Direction[] WALK_DIRECTIONS = {Direction.RIGHT, Direction.TOP};
     public static final Direction[] WALK_DIRECTIONS_OPPOSITES = {Direction.LEFT, Direction.BOTTOM};
-    public static final String JULIAN_WOOD_ID = "64c41b63fcc75bfbe987c624";
     private final PropGrid[] grids;
     /**
      * The offset to the tile id that a different layer has.
      */
     private final int layerOffset;
-    private RuleRegistry registry = defaultRegistry;
+    private final RuleRegistry registry;
     /**
      * The current group id. This is used to group the tile together as one prop.
      */
@@ -42,19 +34,14 @@ public class PropInspector {
      */
     private final Map<Integer, HashSet<Integer>> groups;
 
-    public PropInspector(int width, int height, int layers) {
+    public PropInspector(int width, int height, int layers, RuleRegistry registry) {
         grids = new PropGrid[layers];
         for (int i = 0; i < layers; i++) {
             grids[i] = new PropGrid(width, height);
         }
         layerOffset = width * height;
         groups = new HashMap<>();
-    }
-
-    public void setup(Area area) {
-        if (area._id().equals(JULIAN_WOOD_ID)) {
-            registry = woodRegistry;
-        }
+        this.registry = registry;
     }
 
     public Set<HashSet<Integer>> uniqueGroups() {
@@ -74,7 +61,8 @@ public class PropInspector {
             PropContext context = new PropContext(layerIndex, data, buffers, decorationLayers);
             workLayer(context);
         }
-        return createProps(decorationLayers);
+        PropRenderer renderer = new PropRenderer(this);
+        return renderer.createProps(decorationLayers);
     }
 
     /**
@@ -98,6 +86,10 @@ public class PropInspector {
                 if (registry.isDecoration(current)) {
                     continue;
                 }
+                if (registry.isBlending(current)
+                        && blendInto(context, x, y)) {
+                    continue;
+                }
 
                 if (connectTo(context, grid, x, y, current)) {
                     continue;
@@ -111,6 +103,31 @@ public class PropInspector {
                 }
             }
         }
+    }
+
+    /**
+     * Tries to blend the current tile into the other layers.
+     *
+     * @param context The current context
+     * @param x       The x coordinate
+     * @param y       The y coordinate
+     */
+    private boolean blendInto(PropContext context, int x, int y) {
+        for (int otherLayer = 0; otherLayer < context.layerIndex; otherLayer++) {
+            PropGrid otherGrid = grids[otherLayer];
+            ChunkBuffer otherBuffer = context.buffers[otherLayer];
+            // Check visited
+            if (notInBounds(otherGrid, x, y)) {
+                continue;
+            }
+            int id = otherBuffer.getId(x, y);
+            if (id <= 0) {
+                continue;
+            }
+            tryMergeGroups(x, y, context.layerIndex, x, y, otherLayer);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -273,7 +290,7 @@ public class PropInspector {
         if (candidates.isEmpty()) {
             return new ConnectionResult(marked, null);
         }
-        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers);
+        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers, dir);
         return new ConnectionResult(marked, bestCandidate);
     }
 
@@ -318,143 +335,25 @@ public class PropInspector {
     }
 
     /**
-     * Converts the current unique tile groups into a list of prototypes. Each prototype is a list of tiles
-     * which are connected to each other and can be used to create a prop.
+     * Width of the tile map in tiles.
      *
-     * @return The list of all prototypes
+     * @return The width in tiles
      */
-    private Map<Integer, List<PropPrototype>> createGroupedPrototypes() {
-        int width = grids[0].getWidth();
-        Map<Integer, List<PropPrototype>> prototypes = new HashMap<>();
-        for (HashSet<Integer> group : uniqueGroups()) {
-            int minX = Integer.MAX_VALUE;
-            int minY = Integer.MAX_VALUE;
-            int maxX = Integer.MIN_VALUE;
-            int maxY = Integer.MIN_VALUE;
-            //Find min and max x and y values of the group
-            for (int i : group) {
-                int positionPart = i % layerOffset;
-                int x = positionPart % width;
-                int y = positionPart / width;
-                minX = Math.min(minX, x);
-                minY = Math.min(minY, y);
-                maxX = Math.max(maxX, x);
-                maxY = Math.max(maxY, y);
-            }
-            prototypes.computeIfAbsent(maxY, k -> new ArrayList<>()).add(new PropPrototype(minX, minY,
-                    maxX - minX + 1, maxY - minY + 1, group));
-        }
-        return prototypes;
+    public int getWidth() {
+        return grids[0].getWidth();
+    }
+
+    public int getHeight() {
+        return grids[0].getHeight();
     }
 
     /**
-     * Combines the prototypes into bigger prototypes if they are connected to each other.
+     * The offset to the tile id that a different layer has.
      *
-     * @param groupedPrototypes The prototypes to combine
+     * @return The offset to the tile id
      */
-    private List<PropPrototype> combinePrototypes(Map<Integer, List<PropPrototype>> groupedPrototypes) {
-        List<PropPrototype> prototypes = new ArrayList<>();
-        for (Map.Entry<Integer, List<PropPrototype>> entry : groupedPrototypes.entrySet()) {
-            prototypes.addAll(mergeIntersecting(entry.getValue()));
-        }
-        return prototypes;
-    }
-
-    /**
-     * Merges the given prototypes if they intersect with each other.
-     *
-     * @param prototypes The prototypes to merge
-     * @return The merged prototypes
-     */
-    private List<PropPrototype> mergeIntersecting(List<PropPrototype> prototypes) {
-        List<PropPrototype> mergedPrototypes = new ArrayList<>();
-
-        for (PropPrototype pro : prototypes) {
-            boolean merged = false;
-
-            // Check if the current prototype intersects with any previously merged prototype
-            for (int i = 0; i < mergedPrototypes.size(); i++) {
-                PropPrototype mergedRect = mergedPrototypes.get(i);
-                if (pro.intersect(mergedRect, 1)) {
-                    // Merge the intersecting prototypes and update the merged prototype in the list
-                    mergedPrototypes.set(i, pro.merge(mergedRect));
-                    merged = true;
-                    break;
-                }
-            }
-
-            // If the prototype did not intersect with any previously merged prototype, add it as a new merged prototype
-            if (!merged) {
-                mergedPrototypes.add(pro);
-            }
-        }
-
-        return mergedPrototypes;
-    }
-
-    /**
-     * Extracts the props from the image and returns them in a prop map.
-     * Each prop has its own image, position and size.
-     * The decorations image is modified to remove the props and also contained in the map.
-     *
-     * @param decorationLayers Images of all decorations
-     * @return A map that contains the props and the modified decorations image.
-     */
-    private PropMap createProps(List<DecorationLayer> decorationLayers) {
-        int width = grids[0].getWidth();
-        List<Graphics2D> graphicsList = new ArrayList<>();
-        List<BufferedImage> imagesList = new ArrayList<>();
-        for (DecorationLayer layer : decorationLayers) {
-            BufferedImage image = layer.image();
-            BufferedImage floorDecorations = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-            Graphics2D graphics = floorDecorations.createGraphics();
-            graphics.setBackground(new Color(0, 0, 0, 0));
-            graphics.drawImage(image, 0, 0, null);
-            graphicsList.add(graphics);
-            imagesList.add(floorDecorations);
-        }
-        Map<Integer, List<PropPrototype>> groupedPrototypes = createGroupedPrototypes();
-        List<PropPrototype> prototypes = combinePrototypes(groupedPrototypes);
-        List<TileProp> props = new ArrayList<>();
-        for (PropPrototype prototype : prototypes) {
-            Set<Integer> group = prototype.tiles();
-            // Calculate bounds of the prop
-            int propWidth = prototype.width();
-            int propHeight = prototype.height();
-            int sortLayer = Integer.MIN_VALUE;
-            BufferedImage img = new BufferedImage(propWidth * TILE_SIZE, propHeight * TILE_SIZE,
-                    BufferedImage.TYPE_4BYTE_ABGR);
-            Graphics2D propGraphics = img.createGraphics();
-            for (int i : group.stream().sorted(Comparator.comparingInt(a -> a / layerOffset)).toList()) {
-                int layer = i / layerOffset;
-                int positionPart = i % layerOffset;
-                Graphics2D layerGraphics = graphicsList.get(layer);
-                int x = positionPart % width;
-                int y = positionPart / width;
-                BufferedImage source = decorationLayers.get(layer).image();
-                // Copy pixels from the decoration image to the prop image
-                propGraphics.drawImage(source.getSubimage(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE),
-                        null, (x - prototype.x()) * TILE_SIZE, (y - prototype.y()) * TILE_SIZE);
-                // Remove pixels from the decoration image
-                layerGraphics.clearRect(x * TILE_SIZE, y * TILE_SIZE,
-                        TILE_SIZE, TILE_SIZE);
-                sortLayer = Math.max(sortLayer, layer);
-            }
-            propGraphics.dispose();
-
-            props.add(new TileProp(img, prototype.x(), prototype.y(), propWidth, propHeight, sortLayer));
-        }
-        props.sort(Comparator.comparingInt(TileProp::sortLayer).reversed());
-        // take first layer to draw all decoration layers bottom up
-        Graphics2D baseGraphics = graphicsList.get(0);
-        for (int i = 1; i < graphicsList.size(); i++) {
-            baseGraphics.drawImage(imagesList.get(i), 0, 0, null);
-        }
-        for (Graphics2D graphics : graphicsList) {
-            graphics.dispose();
-        }
-        // Return the props and the modified decorations image
-        return new PropMap(props, imagesList.get(0));
+    public int getLayerOffset() {
+        return layerOffset;
     }
 
     private record PropContext(int layerIndex, TileMapData data, ChunkBuffer[] buffers,
