@@ -5,9 +5,9 @@ import de.uniks.stpmon.k.controller.IngameController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.Item;
-import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -38,7 +38,7 @@ public class ItemInformationController extends Controller {
     public Button useButton;
 
     @Inject
-    IResourceService resourceService;
+    ResourceService resourceService;
     @Inject
     PresetService presetService;
     @Inject
@@ -83,7 +83,7 @@ public class ItemInformationController extends Controller {
             itemView.setImage(itemImage);
         });
 
-        amountText.setText("Amount: " + item.amount().toString());
+        amountText.setText(translateString("shop.amount", item.amount().toString()));
 
         return parent;
     }
