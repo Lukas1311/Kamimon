@@ -111,6 +111,7 @@ public class EncounterOverviewController extends Controller {
 
     private final Pane blackPane = new Pane();
     public Parent controller;
+    public Parent monInfoParent;
 
     @Inject
     public EncounterOverviewController() {
@@ -270,6 +271,22 @@ public class EncounterOverviewController extends Controller {
             monInfoController.loadLevelUp(oldMon, newMon);
             contentBox.getChildren().add(0, controller);
         }
+    }
+
+    public void showMonInfo(Monster mon) {
+        if (monInfoParent == null) {
+            MonsterInformationController monInfoController = monInfoProvider.get();
+            this.monInfoParent = monInfoController.render();
+            monInfoController.loadMonsterTypeDto(String.valueOf(mon.type()));
+            monInfoController.loadMonster(mon);
+            contentBox.getChildren().add(0, this.monInfoParent);
+        }
+    }
+
+    public void removeMonInfo() {
+        contentBox.getChildren().remove(0);
+        monInfoProvider.get().destroy();
+        this.monInfoParent = null;
     }
 
     public void openController(String child, Item item) {

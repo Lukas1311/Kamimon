@@ -3,15 +3,20 @@ package de.uniks.stpmon.k.controller.monsters;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterStatus;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
 import javax.inject.Inject;
@@ -67,6 +72,7 @@ public class MonsterInformationController extends Controller {
     IResourceService resourceService;
 
     private String monsterDescription;
+    private Monster monster;
 
     @Inject
     public MonsterInformationController() {
@@ -83,6 +89,7 @@ public class MonsterInformationController extends Controller {
                     // Retrieves the list of types and updates the type list UI
                     List<String> types = monsterTypeDto.type();
                     updateTypeList(types);
+                    loadStati();
                 }));
 
         disposables.add(resourceService.getMonsterImage(id)
@@ -110,6 +117,7 @@ public class MonsterInformationController extends Controller {
     }
 
     public void loadMonster(Monster monster) {
+        this.monster = monster;
         // Set all labels
         monsterLevelLabel.setText("Lvl. " + monster.level());
         monsterHpLabel.setText("HP: "
@@ -132,6 +140,54 @@ public class MonsterInformationController extends Controller {
                 i++;
             }
         }
+        loadStati();
+    }
+
+    private void loadStati() {
+        //check if one or two stati are set
+        if (monster != null) {
+            //load status effect
+            List<MonsterStatus> monsterStatuses = monster.status();
+            int row = getFirstFreeRowForStatus();
+            int elementInRow = 0;
+            for (int i = row; i < 5; i++) {
+                removeNodeByRowColumnIndex(i, 1, overviewGrid);
+            }
+            FlowPane flow = new FlowPane();
+            flow.setVgap(2);
+            flow.setHgap(2);
+            flow.setPrefWrapLength(65);
+            for (MonsterStatus status : monsterStatuses) {
+                MonsterStatusController statusController = new MonsterStatusController(status);
+                Parent statusParent = statusController.render();
+                GridPane.setHalignment(statusParent, HPos.LEFT);
+                flow.getChildren().add(statusParent);
+                elementInRow++;
+                if (elementInRow == 3) {
+                    elementInRow = 0;
+                    row++;
+                }
+            }
+            overviewGrid.add(flow, 1, row);
+            GridPane.setMargin(flow, new Insets(8, 0, 0, 12));
+        }
+    }
+
+    /**
+     * Iterates over overviewGrid to check if the monster has one or two stati set
+     *
+     * @return index of the first free row
+     */
+    private int getFirstFreeRowForStatus() {
+        int row = 2;
+        int col = 1;
+        for (Node node : overviewGrid.getChildren()) {
+            if (GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == row &&
+                    GridPane.getColumnIndex(node) != null && GridPane.getColumnIndex(node) == col) {
+                return 3;
+            }
+        }
+        return 2;
     }
 
     public void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
