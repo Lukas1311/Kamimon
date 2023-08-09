@@ -42,7 +42,6 @@ public class MonsterInformationControllerTest extends ApplicationTest {
     PresetService presetService;
     @Mock
     IResourceService resourceService;
-
     @Spy
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
