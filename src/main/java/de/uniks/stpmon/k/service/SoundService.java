@@ -22,8 +22,9 @@ public class SoundService {
     SettingsService settingsService;
 
     private MediaPlayer mediaPlayer;
-    private Disposable soundValueSub;
-    private Disposable soundMutedSub;
+    private List<Media> playlist = new ArrayList<>();
+    private int currentMediaIndex = 0;
+    private boolean repeat = true;
 
     private DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
     private BooleanProperty muteProperty = new SimpleBooleanProperty(false);
@@ -35,7 +36,7 @@ public class SoundService {
     }
 
     public void init() {
-        setSound();
+        startPlayer();
         mediaPlayer.volumeProperty().bind(volumeProperty);
         mediaPlayer.muteProperty().bind(muteProperty);
         
@@ -50,22 +51,37 @@ public class SoundService {
         );
     }
 
-    private void setSound() {
-        List<Media> mediaFiles = SoundUtils.loadAudioFiles();
-        Media banger = mediaFiles.get(0);
-        mediaPlayer = new MediaPlayer(banger);
+    private void startPlayer() {
+        playlist = SoundUtils.loadAudioFiles();
+        if (shuffleProperty.get()) {
+            shuffle();
+            currentMediaIndex=0;
+        }
+        playNext();
     }
 
-    public void play() {
-
+    private void playNext() {
         if (mediaPlayer != null) {
-            if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
-                return;
-            }
-            mediaPlayer.play();
+            stop();
+        }
+
+        if (currentMediaIndex < playlist.size()) {
+            Media media = playlist.get(currentMediaIndex);
+            mediaPlayer = new MediaPlayer(media);
+
+            // end of media event handler is switching to next song
+            mediaPlayer.setOnEndOfMedia(() -> {
+                currentMediaIndex++;
+                playNext();
+            });
+
+            play();
         } else {
-            setSound();
-            mediaPlayer.play();
+            // playlist is finished
+            if (repeat) {
+                currentMediaIndex = 0;
+                playNext();
+            }
         }
     }
 
