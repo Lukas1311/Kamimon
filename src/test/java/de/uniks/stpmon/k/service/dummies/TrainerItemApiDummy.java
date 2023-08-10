@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.service.dummies;
 
+
 import de.uniks.stpmon.k.dto.UpdateItemDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.rest.TrainerItemApiService;
@@ -29,7 +30,12 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
 
         int amount = 8;
         for (int i = 0; i < amount; i++) {
-            items.add(new Item(String.valueOf(i), null, 1, 1));
+            Item item = new Item(String.valueOf(i), null, 1, 1);
+            if (i == 4) {
+                //Add MonBall
+                item = new Item(String.valueOf(i), null, 4, 1);
+            }
+            items.add(item);
         }
     }
 
