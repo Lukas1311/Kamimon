@@ -319,6 +319,10 @@ public class IngameController extends PortalController {
         }
     }
 
+    public boolean isMapOpen() {
+        return mapOverview != null;
+    }
+
     public void openMap() {
         if (mapOverviewController == null) {
             return;

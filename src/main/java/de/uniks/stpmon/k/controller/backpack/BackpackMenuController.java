@@ -78,6 +78,7 @@ public class BackpackMenuController extends Controller {
 
 
     public void openOption(BackpackMenuOption option) {
+        IngameController ingameController = ingameControllerProvider.get();
         if (Objects.requireNonNull(option) == MAP) {
             //close all other controllers
             for (BackpackMenuOption op : controllers.keySet()) {
@@ -85,8 +86,11 @@ public class BackpackMenuController extends Controller {
                     triggerOption(op);
                 }
             }
-            ingameControllerProvider.get().openOrCloseMap();
+            ingameController.openOrCloseMap();
         } else {
+            if (ingameController.isMapOpen()) {
+                ingameController.closeMap();
+            }
             triggerOption(option);
         }
     }
