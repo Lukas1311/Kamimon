@@ -10,6 +10,7 @@ import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.InputHandler;
+import de.uniks.stpmon.k.service.SoundService;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -65,6 +66,8 @@ public class IngameControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     WorldTimerController worldTimerController;
+    @Mock
+    SoundService soundService;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
