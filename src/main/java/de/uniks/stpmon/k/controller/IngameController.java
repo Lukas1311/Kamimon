@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.backpack.BackpackController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
@@ -110,6 +111,8 @@ public class IngameController extends PortalController {
     ItemInformationController itemInformationController;
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
+    @Inject
+    Provider<BackpackMenuController> backpackMenuControllerProvider;
     @Inject
     WorldController worldController;
     @Inject
@@ -314,15 +317,21 @@ public class IngameController extends PortalController {
     public void openOrCloseMap() {
         if (mapOverview == null) {
             openMap();
+            backpackMenuControllerProvider.get().closeAll();
         } else {
             closeMap();
         }
+    }
+
+    public boolean isMapOpen() {
+        return mapOverview != null;
     }
 
     public void openMap() {
         if (mapOverviewController == null) {
             return;
         }
+
         mapOverviewController.init();
         mapOverview = this.mapOverviewController.render();
         ingameStack.getChildren().add(mapOverview);
