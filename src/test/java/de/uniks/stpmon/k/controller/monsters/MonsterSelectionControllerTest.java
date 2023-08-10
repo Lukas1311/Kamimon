@@ -39,7 +39,7 @@ public class MonsterSelectionControllerTest extends ApplicationTest {
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
 
     @Mock
-    ResourceService resourceService;
+    IResourceService resourceService;
     @Mock
     MonsterService monsterService;
     @Mock
