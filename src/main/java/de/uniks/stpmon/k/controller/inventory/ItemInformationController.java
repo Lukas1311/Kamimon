@@ -96,7 +96,7 @@ public class ItemInformationController extends Controller {
         return parent;
     }
 
-    private void useItem() {
+    public void useItem() {
         if (itemTypeDto == null) {
             return;
         }
