@@ -149,7 +149,6 @@ public class BattleLogService {
                     encounterOverviewControllerProvider.get().showLevelUp(levelUp.getOldMon(), levelUp.getNewMon());
                 }
                 if (levelUp.playEvolutionAnimation()) {
-                    //TODO: play animation
                     ImageView node;
                     if(slot.get().partyIndex() == 1) {
                         node = encounterOverviewControllerProvider.get().userMonster1;
