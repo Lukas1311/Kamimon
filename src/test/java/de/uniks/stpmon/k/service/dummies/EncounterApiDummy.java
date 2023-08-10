@@ -1,9 +1,6 @@
 package de.uniks.stpmon.k.service.dummies;
 
-import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.dto.AbilityMove;
-import de.uniks.stpmon.k.dto.ChangeMonsterMove;
-import de.uniks.stpmon.k.dto.UpdateOpponentDto;
+import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.OpponentBuilder;
@@ -176,6 +173,9 @@ public class EncounterApiDummy implements EncounterApiService {
         } else if (opponentDto.move() instanceof ChangeMonsterMove abilityMove) {
             updated = switchMonster(opponent, abilityMove, opponentDto);
             //this is for the server move
+        } else if (opponentDto.move() instanceof UseItemMove useItemMove) {
+            catchMon(useItemMove);
+            updated = opponent;
         } else if (opponentDto.monster() != null) {
             return Observable.just(forceMonster(opponent, opponentDto));
         }
@@ -211,6 +211,33 @@ public class EncounterApiDummy implements EncounterApiService {
                 .create();
         sendOpponentEvent(opp, "updated");
         return opp;
+    }
+
+    private void catchMon(UseItemMove useItemMove) {
+        int itemId = useItemMove.item();
+        String targetId = useItemMove.target();
+        List<Result> results = new ArrayList<>();
+        Result itemSucces = ResultBuilder.builder()
+                .setType("item-success")
+                .setItem(itemId).create();
+        results.add(itemSucces);
+        Result monsterCaught = ResultBuilder.builder()
+                .setType("monster-caught").create();
+        results.add(monsterCaught);
+
+        Opponent me = encounterWrapper.getOpponent("0");
+
+        Opponent moveOp = OpponentBuilder.builder(me).setMove(useItemMove).create();
+
+        Opponent opponent = OpponentBuilder.builder(me)
+                .setResults(results)
+                .create();
+        Platform.runLater(() -> {
+            sendOpponentEvent(moveOp, "updated");
+            sendOpponentEvent(opponent, "updated");
+            deleteEncounter();
+        });
+
     }
 
     private void attack(Opponent target, AbilityMove move, UpdateOpponentDto opponentDto) {

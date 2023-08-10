@@ -9,8 +9,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -19,6 +22,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.time.Duration;
 import java.util.function.Function;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class SoundController extends Controller {
 
@@ -47,6 +53,15 @@ public class SoundController extends Controller {
     @FXML
     public Button shuffleButton;
     @FXML
+    public Label volumeValueLabel;
+    @FXML
+    public RadioButton germanButton;
+    @FXML
+    public RadioButton englishButton;
+    @FXML
+    public ToggleGroup lang;
+
+    @FXML
     public Slider dayCycle;
     @FXML
     public Text dayCycleLabel;
@@ -58,6 +73,8 @@ public class SoundController extends Controller {
     SettingsService settingsService;
     @Inject
     SoundService soundService;
+    @Inject
+    Preferences preferences;
 
     @Inject
     public SoundController() {
@@ -67,6 +84,7 @@ public class SoundController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        soundScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
         mediaControlText.setText(translateString("mediaCtrl"));
         muteSoundLabel.setText(translateString("muteSound"));
@@ -77,7 +95,10 @@ public class SoundController extends Controller {
         musicSlider.setValue(settingsService.getSoundValue());
         //save the value with preferences
         listen(musicSlider.valueProperty(),
-                (observable, oldValue, newValue) -> settingsService.setSoundValue(newValue.floatValue())
+                (observable, oldValue, newValue) -> {
+                    settingsService.setSoundValue(newValue.floatValue());
+                    volumeValueLabel.setText(String.valueOf((int) musicSlider.getValue()));
+                }
         );
 
         muteSound.setSelected(settingsService.getSoundMuted());
@@ -95,6 +116,21 @@ public class SoundController extends Controller {
         listen(nightMode.selectedProperty(),
                 (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue)
         );
+
+        //GE & EN
+        boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
+        germanButton.setSelected(germanSelected);
+        englishButton.setSelected(!germanSelected);
+        germanButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setDe();
+            }
+        });
+        englishButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setEn();
+            }
+        });
 
         // Day time cycle
         dayCycle.setValue(settingsService.getDayTimeCycle());
@@ -148,4 +184,20 @@ public class SoundController extends Controller {
     public void backToSettings() {
         hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
     }
+
+    @FXML
+    public void setDe() {
+        setLanguage(Locale.GERMAN);
+    }
+
+    @FXML
+    public void setEn() {
+        setLanguage(Locale.ENGLISH);
+    }
+
+    private void setLanguage(Locale locale) {
+        preferences.put("locale", locale.toLanguageTag());
+        hybridControllerProvider.get().pushTab(SidebarTab.SOUND); //reloaded
+    }
+
 }

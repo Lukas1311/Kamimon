@@ -10,10 +10,8 @@ import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.SoundService;
-import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
-import de.uniks.stpmon.k.service.dummies.EventDummy;
-import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
-import de.uniks.stpmon.k.service.dummies.RegionApiDummy;
+import de.uniks.stpmon.k.service.dummies.*;
+
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -57,6 +55,8 @@ public interface TestComponent extends MainComponent {
     SessionService sessionService();
 
     SoundService soundService();
+    
+    PresetApiDummy presetApi();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {

@@ -883,7 +883,7 @@ Load fonts
 
 /*--------------------- Sound -----------------------------*/
 .slider {
-    -fx-pref-width: 175px;
+    -fx-pref-width: 150px;
 }
 
 .slider .track {
@@ -922,6 +922,12 @@ Load fonts
     -fx-border-color: black;
     -fx-border-radius: 3;
     -fx-border-width: 2;
+}
+
+
+.sound-label {
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
 }
 
 
