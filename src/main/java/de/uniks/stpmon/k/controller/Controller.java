@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.SVGUtils;
+import de.uniks.stpmon.k.utils.SoundUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Scheduler;
@@ -251,6 +252,13 @@ public abstract class Controller extends Viewable {
             spriteContainer.getChildren().add(sprite);
             return Completable.complete();
         }).ignoreElements();
+    }
+
+    public void loadAudioFiles() {
+        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
+            return;
+        }
+        SoundUtils.loadAudioFiles();
     }
 
 }

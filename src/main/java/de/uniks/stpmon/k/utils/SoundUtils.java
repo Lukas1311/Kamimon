@@ -19,6 +19,7 @@ public class SoundUtils {
     private static final URL basePathURL = Main.class.getResource("sound/");
 
     public static List<Media> loadAudioFiles() {
+
         List<Media> mediaFiles = new ArrayList<>();
         Path basePath = null;
         try {
