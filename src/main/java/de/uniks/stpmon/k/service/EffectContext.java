@@ -7,9 +7,9 @@ package de.uniks.stpmon.k.service;
 @SuppressWarnings("unused")
 public class EffectContext {
 
-    public static final int MOVEMENT_PERIOD = 180;
+    public static final int MOVEMENT_PERIOD = 150;
     public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
-    private float sprintingFactor = 0.5f;
+    private float sprintingFactor = 0.65f;
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;

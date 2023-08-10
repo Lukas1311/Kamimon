@@ -208,8 +208,13 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         moveDirection = direction;
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityGroup);
-        moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()
-                * (isSprinting() ? effectContext.getSprintingFactor() : isSneaking() ? 1 / effectContext.getSprintingFactor() : 1)));
+        float speed = effectContext.getWalkingSpeed();
+        if (isSprinting()) {
+            speed *= effectContext.getSprintingFactor();
+        } else if (isSneaking()) {
+            speed /= effectContext.getSprintingFactor();
+        }
+        moveTranslation.setDuration(Duration.millis((int) speed));
         moveTranslation.setToX(trainer.x() * WorldView.WORLD_UNIT);
         moveTranslation.setToZ(-trainer.y() * WorldView.WORLD_UNIT
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
@@ -302,10 +307,14 @@ public abstract class EntityView extends OpaqueView<MeshView> {
             this.isMoving = isMoving;
             this.isSprinting = isSprinting;
             this.isSneaking = isSneaking;
+            float speed = effectContext.getWalkingAnimationSpeed();
+            if (isSprinting) {
+                speed *= effectContext.getSprintingFactor();
+            } else if (isSneaking) {
+                speed /= effectContext.getSprintingFactor();
+            }
             setInterpolator(Interpolator.LINEAR);
-            setCycleDuration(Duration.millis(effectContext.getWalkingAnimationSpeed()
-                    * (isMoving ? (isSprinting ? effectContext.getSprintingFactor() :
-                    1 / effectContext.getSprintingFactor()) : 2)));
+            setCycleDuration(Duration.millis((int) speed));
 
         }
 

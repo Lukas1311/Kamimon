@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 
@@ -22,6 +23,8 @@ public class MovementDispatcher extends MovementHandler {
 
     @Inject
     protected EffectContext effectContext;
+    @Inject
+    protected EncounterStorage encounterStorage;
 
     @Inject
     public MovementDispatcher() {
@@ -72,9 +75,20 @@ public class MovementDispatcher extends MovementHandler {
         }
     }
 
+    private void stopMoving() {
+        movementStack.clear();
+        pressedDirs.clear();
+        sprinting = false;
+        sneaking = false;
+        unscheduleMove();
+    }
+
     public Runnable init() {
         movementTimer = new Timer();
-        return movementTimer::cancel;
+        return () -> {
+            stopMoving();
+            movementTimer.cancel();
+        };
     }
 
     private void unscheduleMove() {
@@ -91,7 +105,7 @@ public class MovementDispatcher extends MovementHandler {
         currentTask = new TimerTask() {
             @Override
             public void run() {
-                if (movementStack.isEmpty()) {
+                if (movementStack.isEmpty() || !encounterStorage.isEmpty()) {
                     return;
                 }
                 Direction dir = movementStack.lastElement();
