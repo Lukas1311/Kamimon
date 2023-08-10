@@ -56,6 +56,9 @@ public class SoundService {
 
     public void init() {
         startPlayer();
+        if (mediaPlayer == null) {
+            return;
+        }
         mediaPlayer.volumeProperty().bind(volumeProperty);
         mediaPlayer.muteProperty().bind(muteProperty);
         
@@ -76,8 +79,14 @@ public class SoundService {
     }
 
     private void playNext() {
-        if (mediaPlayer != null) {
+        if (mediaPlayer == null) {
+            return;
+        } else {
             stop();
+        }
+
+        if (playlist == null) {
+            return;
         }
 
         if (currentMediaIndex < playlist.size()) {
@@ -169,9 +178,11 @@ public class SoundService {
     public void destroy() {
         disposables.dispose();
         disposables = new CompositeDisposable();
-        mediaPlayer.dispose();
-        if (mediaPlayer.getStatus() == Status.DISPOSED) {
-            mediaPlayer = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.dispose();
+            if (mediaPlayer.getStatus() == Status.DISPOSED) {
+                mediaPlayer = null;
+            }
         }
     }
 

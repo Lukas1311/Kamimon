@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
@@ -54,6 +55,8 @@ public interface TestComponent extends MainComponent {
     RegionApiDummy regionApi();
 
     SessionService sessionService();
+
+    SoundService soundService();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {
