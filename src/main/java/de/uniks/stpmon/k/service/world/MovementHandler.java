@@ -27,7 +27,6 @@ public class MovementHandler {
 
     @Inject
     public MovementHandler() {
-
     }
 
     public void setInitialTrainer(TrainerProvider trainerProvider) {
