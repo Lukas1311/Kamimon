@@ -31,18 +31,29 @@
         </VBox>
     </HBox>
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Music"/>
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%music" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
             <Slider fx:id="music">
+                <HBox.margin>
+                    <Insets right="10.0" />
+                </HBox.margin>
+            </Slider>
+            <Label fx:id="value" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="33" style="-fx-border-color: black;" text="5" textAlignment="CENTER">
+                <padding>
+                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                </padding>
+                <HBox.margin>
+                    <Insets bottom="3.0" right="15.0" />
+                </HBox.margin>
                 <styleClass>
-                    <String fx:value="slider"/>
+                    <String fx:value="sound-label" />
                 </styleClass>
                 <HBox.margin>
                     <Insets/>
                 </HBox.margin>
-            </Slider>
+            </Label>
         </HBox>
         <VBox.margin>
             <Insets left="15.0" right="15.0"/>
@@ -50,7 +61,10 @@
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
         <HBox alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="100.0">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nachtmodus"/>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%nightmode" />
+            <padding>
+                <Insets left="15.0" />
+            </padding>
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" HBox.hgrow="ALWAYS">
             <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" styleClass="login-check-box"/>
@@ -58,6 +72,26 @@
         <VBox.margin>
             <Insets left="15.0" right="15.0"/>
         </VBox.margin>
+    </HBox>
+    <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
+        <VBox.margin>
+            <Insets left="20.0" right="20.0" top="20"/>
+        </VBox.margin>
+        <RadioButton fx:id="germanButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setDe"
+                     styleClass="login-radio-button" text="%german">
+            <toggleGroup>
+                <ToggleGroup fx:id="lang"/>
+            </toggleGroup>
+            <padding>
+                <Insets right="5.0"/>
+            </padding>
+        </RadioButton>
+        <RadioButton fx:id="englishButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#setEn"
+                     styleClass="login-radio-button" text="%english" toggleGroup="$lang">
+            <padding>
+                <Insets left="5.0"/>
+            </padding>
+        </RadioButton>
     </HBox>
     <VBox>
         <VBox.margin>
