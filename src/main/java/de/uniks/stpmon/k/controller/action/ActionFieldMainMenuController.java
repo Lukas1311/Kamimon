@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -43,6 +45,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
         addActionOption(FIGHT);
         addActionOption(CHANGE_MON);
+        addActionOption(SHOW_INFO);
         addActionOption(ITEMS);
 
         if (encounterStorage.getEncounter().isWild()) {
@@ -57,6 +60,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
         String optionText = switch (option) {
             case FIGHT -> "fight";
             case CHANGE_MON -> "changeMon";
+            case SHOW_INFO -> "showInfo";
             case ITEMS -> "inventory";
             case FLEE -> "flee";
         };
@@ -67,7 +71,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
         optionContainer.setId("main_menu_" + optionText);
 
-        if (optionText.equals("fight") || optionText.equals("changeMon")) {
+        if (optionText.equals("fight") || optionText.equals("changeMon") || optionText.equals("flee")) {
             leftContainer.getChildren().add(optionContainer);
         } else {
             rightContainer.getChildren().add(optionContainer);
@@ -75,9 +79,14 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openAction(OptionType option) {
+        if (getActionField().isMonInfoOpen()) {
+            encounterOverviewProvider.get().removeMonInfo();
+            getActionField().setMonInfoOpen(false);
+        }
         switch (option) {
             case CHANGE_MON -> openChangeMon();
             case FIGHT -> openFight();
+            case SHOW_INFO -> openInfo();
             case ITEMS -> openInventory();
             case FLEE -> openFlee();
         }
@@ -93,6 +102,15 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
             inventoryControllerProvider.get().setInEncounter(false);
             encounterOverviewProvider.get().removeController("inventory");
         }
+    }
+
+    public void openInfo() {
+        getActionField().setActiveSlot();
+        EncounterSlot activeSlot = getActionField().getActiveSlot();
+        Monster activeMon = sessionService.getMonster(activeSlot);
+        encounterOverviewProvider.get().showMonInfo(activeMon);
+        getActionField().setMonInfoOpen(true);
+        getActionField().openSelectMon();
     }
 
     public void openFlee() {
@@ -118,6 +136,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     public enum OptionType {
         FIGHT,
         CHANGE_MON,
+        SHOW_INFO,
         ITEMS,
         FLEE
     }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldSelectMonController">
+    <HBox fx:id="backBox"/>
+    <HBox fx:id="selectMonBox">
+        <VBox fx:id="leftContainer" prefWidth="100.0" HBox.hgrow="ALWAYS"/>
+        <VBox fx:id="rightContainer" prefWidth="100.0" HBox.hgrow="ALWAYS"/>
+        <VBox.margin>
+            <Insets top="10.0"/>
+        </VBox.margin>
+    </HBox>
+</VBox>
