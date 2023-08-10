@@ -17,11 +17,7 @@ import javafx.scene.layout.HBox;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static de.uniks.stpmon.k.controller.backpack.BackpackMenuOption.*;
 
@@ -83,6 +79,12 @@ public class BackpackMenuController extends Controller {
 
     public void openOption(BackpackMenuOption option) {
         if (Objects.requireNonNull(option) == MAP) {
+            //close all other controllers
+            for (BackpackMenuOption op : controllers.keySet()) {
+                if (controllers.get(op) != null) {
+                    triggerOption(op);
+                }
+            }
             ingameControllerProvider.get().openOrCloseMap();
         } else {
             triggerOption(option);
