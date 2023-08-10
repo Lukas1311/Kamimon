@@ -13,8 +13,8 @@
     <styleClass>
         <String fx:value="ingame"/>
     </styleClass>
-    <ListView fx:id="backpackMenuListView" fixedCellSize="22.0" maxHeight="130.0" maxWidth="144.0" minHeight="130.0"
-              minWidth="144.0" prefHeight="130.0" prefWidth="144.0" styleClass="backpack-menu-list" HBox.hgrow="ALWAYS">
+    <ListView fx:id="backpackMenuListView" fixedCellSize="22.0" maxHeight="108.0" maxWidth="144.0" minHeight="108.0"
+              minWidth="144.0" prefHeight="108.0" prefWidth="144.0" styleClass="backpack-menu-list" HBox.hgrow="ALWAYS">
         <padding>
             <Insets bottom="7.0" top="7.0"/>
         </padding>

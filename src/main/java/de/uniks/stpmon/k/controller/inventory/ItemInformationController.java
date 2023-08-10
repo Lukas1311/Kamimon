@@ -11,8 +11,6 @@ import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.service.ResourceService;
-import de.uniks.stpmon.k.service.ItemService;
-import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;

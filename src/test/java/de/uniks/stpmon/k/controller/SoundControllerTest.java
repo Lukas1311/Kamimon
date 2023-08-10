@@ -19,6 +19,7 @@ import org.testfx.framework.junit5.ApplicationTest;
 import javax.inject.Provider;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +43,9 @@ public class SoundControllerTest extends ApplicationTest {
     SoundController soundController;
     @Mock
     SettingsService settingsService;
+    @Mock
+    Preferences preferences;
+
 
     @Override
     public void start(Stage stage) {
@@ -100,4 +104,5 @@ public class SoundControllerTest extends ApplicationTest {
         // check if value is saved
         verify(settingsService).setNightEnabled(true);
     }
+
 }

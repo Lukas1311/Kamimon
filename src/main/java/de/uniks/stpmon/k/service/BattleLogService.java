@@ -4,15 +4,33 @@ import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
-import de.uniks.stpmon.k.dto.*;
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
+import de.uniks.stpmon.k.dto.AbilityDto;
+import de.uniks.stpmon.k.dto.AbilityMove;
+import de.uniks.stpmon.k.dto.ChangeMonsterMove;
+import de.uniks.stpmon.k.dto.ItemTypeDto;
+import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.Opponent;
+import de.uniks.stpmon.k.models.OpponentUpdate;
+import de.uniks.stpmon.k.models.Result;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Singleton
 public class BattleLogService {
@@ -24,8 +42,15 @@ public class BattleLogService {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
+    @Inject
+    Provider<MonsterInformationController> monInfoProvider;
+
+    @Inject
+    protected EffectContext effectContext;
+
 
     VBox textBox;
+    HashMap<EncounterSlot, String> monsterNames = new HashMap<>(4);
 
 
     private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
@@ -124,13 +149,33 @@ public class BattleLogService {
                     encounterOverviewControllerProvider.get().showLevelUp(levelUp.getOldMon(), levelUp.getNewMon());
                 }
                 if (levelUp.playEvolutionAnimation()) {
-                    //TODO: play animation
+                    ImageView node;
+                    if(slot.get().partyIndex() == 1) {
+                        node = encounterOverviewControllerProvider.get().userMonster1;
+                    }else {
+                        node = encounterOverviewControllerProvider.get().userMonster0;
+                    }
+                    //transition for monster evolution
+                    TranslateTransition translation =
+                            new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), node);
+                    translation.setByY(0);
+                    translation.setByX(-1000);
+                    translation.setAutoReverse(true);
+                    translation.setCycleCount(2);
+                    translation.play();
+
+
+                    //change Image to new Monster
+                    encounterOverviewControllerProvider.get().loadMonsterImage(levelUp.getNewMon().type().toString(), node, false);
+                    battleLogControllerProvider.get().addTranslatedSection("monster-evolved", levelUp.getOldMonName(), levelUp.getNewMonName());
+
                     levelUp.setPlayEvolutionAnimation(false);
                 }
                 return;
             } else {
                 //no more actions
                 monsBeforeLevelUp.put(slot.get(), levelUp.getNewMon());
+                monsterNames.put(slot.get(), levelUp.getNewMonName());
                 levelUps.remove(slot.get());
             }
         }
@@ -252,11 +297,11 @@ public class BattleLogService {
                 Result result = abilityResult.get();
                 AbilityDto ability = getAbility(move.ability());
                 if (result.status() != null && monster != null) {
-                    addTranslatedSection("monsterAttacks.self", monster.name(), ability.name());
+                    addTranslatedSection("monsterAttacks.self", monsterNames.get(slot), ability.name());
                 } else {
                     MonsterTypeDto eneMon = attackedMonsters.get(slot);
-                    if (eneMon != null && monster != null) {
-                        addTranslatedSection("monsterAttacks", monster.name(), eneMon.name(), ability.name());
+                    if (eneMon != null && monster != null && monsterNames.get(slot) != null) {
+                        addTranslatedSection("monsterAttacks", monsterNames.get(slot), eneMon.name(), ability.name());
                     }
                     target = move.target();
                 }
@@ -361,6 +406,7 @@ public class BattleLogService {
         //monster at start of encounter gets safed
         if (!monsBeforeLevelUp.containsKey(slot)) {
             monsBeforeLevelUp.put(slot, mon);
+            monsterNames.put(slot, getMonsterType(mon.type()).name());
         } else {
             //level up
             monsAfterLevelUp.put(slot, mon);
