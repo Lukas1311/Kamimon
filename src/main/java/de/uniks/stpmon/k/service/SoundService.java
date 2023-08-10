@@ -75,13 +75,15 @@ public class SoundService {
 
     private void startPlayer() {
         playlist = loadAudioFiles();
+        if (playlist == null) {
+            return;
+        }
+        mediaPlayer = new MediaPlayer(playlist.get(0));
         playNext();
     }
 
     private void playNext() {
-        if (mediaPlayer == null) {
-            return;
-        } else {
+        if (mediaPlayer != null) {
             stop();
         }
 
