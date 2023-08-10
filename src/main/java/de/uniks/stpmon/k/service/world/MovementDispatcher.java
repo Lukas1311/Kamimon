@@ -79,10 +79,14 @@ public class MovementDispatcher extends MovementHandler {
                 if (movementStack.isEmpty()) {
                     return;
                 }
-                Direction dir = movementStack.iterator().next();
+                Direction dir = movementStack.lastElement();
                 moveDirection(dir);
             }
         };
+        if (effectContext.getWalkingSpeed() * 0.25f < 1) {
+            currentTask.run();
+            return;
+        }
         movementTimer.schedule(currentTask, (int) (effectContext.getWalkingSpeed() * 0.25f),
                 (int) (effectContext.getWalkingSpeed() * effectContext.getSprintingFactor()));
     }

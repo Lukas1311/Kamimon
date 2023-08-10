@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.service.storage.TrainerProvider;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.world.MovementDispatcher;
 import de.uniks.stpmon.k.utils.Direction;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.KeyEvent;
@@ -61,8 +62,14 @@ public class CharacterView extends EntityView {
             case LEFT -> dispatcher.lookDirection(Direction.LEFT);
             case RIGHT -> dispatcher.lookDirection(Direction.RIGHT);
             default -> {
+                return;
             }
         }
+        // Focus the main window, to prevent the sidebar button from consuming the arrow key events
+        if (!entityNode.isFocused()) {
+            Platform.runLater(() -> entityNode.requestFocus());
+        }
+        event.consume();
     }
 
     private void keyRelease(KeyEvent event) {
@@ -73,8 +80,10 @@ public class CharacterView extends EntityView {
             case D -> dispatcher.releaseKey(Direction.RIGHT);
             case SHIFT -> dispatcher.setSprinting(false);
             default -> {
+                return;
             }
         }
+        event.consume();
     }
 
     @Override

@@ -72,29 +72,29 @@ public class WorldViewTest extends ApplicationTest {
         // -16 because character is rendered from the center
         assertEquals(-16, character.getTranslateZ());
         // test move up
-        type(KeyCode.W, 2);
-        waitForFxEvents(10);
+        type(KeyCode.W, 1);
+        waitForFxEvents();
 
         // check if char moved up by -16
         assertEquals(0, character.getTranslateZ());
-        waitForFxEvents(10);
+        waitForFxEvents();
 
         // test move down
-        type(KeyCode.S, 2);
+        type(KeyCode.S, 1);
         waitForFxEvents();
 
         // check if char moved down by 16
         assertEquals(-16, character.getTranslateZ());
 
         // test move left
-        type(KeyCode.A, 2);
+        type(KeyCode.A, 1);
         waitForFxEvents();
 
         // check if char moved left by 16
         assertEquals(-16, character.getTranslateX());
 
         // test move right
-        type(KeyCode.D, 2);
+        type(KeyCode.D, 1);
         waitForFxEvents();
 
         // check if char moved right by -16
