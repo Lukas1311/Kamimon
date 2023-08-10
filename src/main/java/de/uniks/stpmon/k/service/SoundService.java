@@ -1,6 +1,6 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.utils.SoundUtils;
+import de.uniks.stpmon.k.controller.Controller;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 import java.util.ArrayList;
@@ -25,6 +25,8 @@ public class SoundService {
 
     @Inject
     SettingsService settingsService;
+    @Inject
+    Controller controller;
 
     protected CompositeDisposable disposables = new CompositeDisposable();
 
@@ -59,7 +61,7 @@ public class SoundService {
     }
 
     private void startPlayer() {
-        playlist = SoundUtils.loadAudioFiles();
+        playlist = controller.loadAudioFiles();
         playNext();
     }
 

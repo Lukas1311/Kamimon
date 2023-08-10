@@ -15,11 +15,13 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -254,11 +256,11 @@ public abstract class Controller extends Viewable {
         }).ignoreElements();
     }
 
-    public void loadAudioFiles() {
-        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
-            return;
+    public List<Media> loadAudioFiles() {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
         }
-        SoundUtils.loadAudioFiles();
+        return SoundUtils.loadAudioFiles();
     }
 
 }
