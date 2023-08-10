@@ -626,6 +626,22 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
         clickOn("#battleLog");
 
+        //test effect item in encounter
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        waitForFxEvents();
+        clickOn("#main_menu_inventory");
+        waitForFxEvents();
+        clickOn("#item_Item_1");
+        waitForFxEvents();
+        clickOn("#useButton");
+        waitForFxEvents();
+        FlowPane flowPane = lookup("#monsterSelectionFlow").queryAs(FlowPane.class);
+        clickOn(flowPane.getChildren().get(0));
+        waitForFxEvents();
+        clickOn("#battleLog");
+
         //start wild encounter where monBall is used
         component.presetApi().getMonBall();
         waitForFxEvents();
@@ -636,13 +652,12 @@ class AppTest extends ApplicationTest {
         waitForFxEvents();
         clickOn("#main_menu_inventory");
         waitForFxEvents();
-        //in the test case, item7 is the MonBall
+        //in the test case, item4 is the MonBall
         clickOn("#item_Item_4");
         waitForFxEvents();
         clickOn("#useButton");
         waitForFxEvents();
         clickOn("#battleLog");
-
 
     }
 
