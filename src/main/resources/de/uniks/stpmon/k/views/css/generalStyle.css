@@ -915,6 +915,15 @@ Load fonts
     -fx-padding: 0.0 10.0 0.0 0.0;
 }
 
+.sound-button {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-radius: 3;
+    -fx-border-width: 2;
+}
+
 
 /* -------------------- Create Trainer -------------------- */
 .create-trainer-background {

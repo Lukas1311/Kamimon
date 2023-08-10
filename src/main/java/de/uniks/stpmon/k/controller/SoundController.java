@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.service.SettingsService;
 import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.world.ScalableClockService;
+import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -36,9 +37,20 @@ public class SoundController extends Controller {
     @FXML
     public Label muteSoundLabel;
     @FXML
+    public Text mediaControlText;
+    @FXML
+    public Button previousButton;
+    @FXML
+    public Button nextButton;
+    @FXML
+    public Button playPauseButton;
+    @FXML
+    public Button shuffleButton;
+    @FXML
     public Slider dayCycle;
     @FXML
     public Text dayCycleLabel;
+
     
     @Inject
     Provider<HybridController> hybridControllerProvider;
@@ -56,6 +68,7 @@ public class SoundController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
 
+        mediaControlText.setText(translateString("mediaCtrl"));
         muteSoundLabel.setText(translateString("muteSound"));
 
         //back to Settings
@@ -64,13 +77,18 @@ public class SoundController extends Controller {
         musicSlider.setValue(settingsService.getSoundValue());
         //save the value with preferences
         listen(musicSlider.valueProperty(),
-                (observable, oldValue, newValue) -> {
-                    settingsService.setSoundValue(newValue.floatValue());
-                });
+                (observable, oldValue, newValue) -> settingsService.setSoundValue(newValue.floatValue())
+        );
+
         muteSound.setSelected(settingsService.getSoundMuted());
         listen(muteSound.selectedProperty(),
                 (observable, oldValue, newValue) -> settingsService.setSoundMuted(newValue)
         );
+
+        previousButton.setOnAction(click -> soundService.previous());
+        playPauseButton.setOnAction(click -> soundService.playOrPause());
+        nextButton.setOnAction(click -> soundService.next());
+        shuffleButton.setOnAction(click -> soundService.shuffle());
 
         //night mode
         nightMode.setSelected(settingsService.getNightEnabled());
@@ -128,8 +146,6 @@ public class SoundController extends Controller {
     }
 
     public void backToSettings() {
-        soundService.init();
-        soundService.play();
-        //hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
+        hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
     }
 }

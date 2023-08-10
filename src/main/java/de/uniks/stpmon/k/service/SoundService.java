@@ -34,11 +34,8 @@ public class SoundService {
     private int currentMediaIndex = 0;
     private boolean repeat = true;
 
-
     private DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
     private BooleanProperty muteProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty shuffleProperty = new SimpleBooleanProperty(false);
-
 
     @Inject
     public SoundService() {
@@ -63,10 +60,6 @@ public class SoundService {
 
     private void startPlayer() {
         playlist = SoundUtils.loadAudioFiles();
-        if (shuffleProperty.get()) {
-            shuffle();
-            currentMediaIndex=0;
-        }
         playNext();
     }
 
@@ -78,6 +71,8 @@ public class SoundService {
         if (currentMediaIndex < playlist.size()) {
             Media media = playlist.get(currentMediaIndex);
             mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.volumeProperty().bind(volumeProperty);
+            mediaPlayer.muteProperty().bind(muteProperty);
 
             // end of media event handler is switching to next song
             mediaPlayer.setOnEndOfMedia(() -> {
@@ -95,7 +90,19 @@ public class SoundService {
         }
     }
 
-    public void play() {
+    public void playOrPause() {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (mediaPlayer.getStatus() == Status.PLAYING) {
+            pause();
+        }
+        if (mediaPlayer.getStatus() == Status.PAUSED) {
+            play();
+        }
+    }
+
+    private void play() {
         if (mediaPlayer == null) {
             return;
         }
@@ -105,7 +112,7 @@ public class SoundService {
         mediaPlayer.play();
     }
 
-    public void pause() {
+    private void pause() {
         if (mediaPlayer == null) {
             return;
         }
@@ -115,7 +122,29 @@ public class SoundService {
         mediaPlayer.pause();
     }
 
-    public void stop() {
+    public void next() {
+        currentMediaIndex++;
+        playNext();
+    }
+
+    public void previous() {
+        currentMediaIndex--;
+        if (currentMediaIndex < 0) {
+            currentMediaIndex = playlist.size() - 1;
+        }
+        playNext();
+    }
+
+    public void shuffle() {
+        if (playlist == null || playlist.isEmpty()) {
+            return;
+        }
+        Collections.shuffle(playlist, new Random());
+        currentMediaIndex=0;
+        playNext();
+    }
+
+    private void stop() {
         if (mediaPlayer == null) {
             return;
         }
@@ -123,13 +152,6 @@ public class SoundService {
             return;
         }
         mediaPlayer.stop();
-    }
-
-    private void shuffle() {
-        if (playlist == null || playlist.isEmpty()) {
-            return;
-        }
-        Collections.shuffle(playlist, new Random());
     }
 
     public void destroy() {
