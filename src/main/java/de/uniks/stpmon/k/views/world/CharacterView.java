@@ -51,10 +51,27 @@ public class CharacterView extends EntityView {
 
     private void keyPressed(KeyEvent event) {
         switch (event.getCode()) {
-            case W, UP -> dispatcher.moveDirection(Direction.TOP);
-            case S, DOWN -> dispatcher.moveDirection(Direction.BOTTOM);
-            case A, LEFT -> dispatcher.moveDirection(Direction.LEFT);
-            case D, RIGHT -> dispatcher.moveDirection(Direction.RIGHT);
+            case W -> dispatcher.pushKey(Direction.TOP);
+            case S -> dispatcher.pushKey(Direction.BOTTOM);
+            case A -> dispatcher.pushKey(Direction.LEFT);
+            case D -> dispatcher.pushKey(Direction.RIGHT);
+            case SHIFT -> dispatcher.setSprinting(true);
+            case UP -> dispatcher.lookDirection(Direction.TOP);
+            case DOWN -> dispatcher.lookDirection(Direction.BOTTOM);
+            case LEFT -> dispatcher.lookDirection(Direction.LEFT);
+            case RIGHT -> dispatcher.lookDirection(Direction.RIGHT);
+            default -> {
+            }
+        }
+    }
+
+    private void keyRelease(KeyEvent event) {
+        switch (event.getCode()) {
+            case W -> dispatcher.releaseKey(Direction.TOP);
+            case S -> dispatcher.releaseKey(Direction.BOTTOM);
+            case A -> dispatcher.releaseKey(Direction.LEFT);
+            case D -> dispatcher.releaseKey(Direction.RIGHT);
+            case SHIFT -> dispatcher.setSprinting(false);
             default -> {
             }
         }
@@ -64,6 +81,13 @@ public class CharacterView extends EntityView {
     public void init() {
         super.init();
         onDestroy(inputHandler.addPressedKeyHandler(this::keyPressed));
+        onDestroy(inputHandler.addReleasedKeyHandler(this::keyRelease));
+        onDestroy(dispatcher.init());
+    }
+
+    @Override
+    protected boolean isSprinting() {
+        return dispatcher != null && dispatcher.isSprinting();
     }
 
     @Override

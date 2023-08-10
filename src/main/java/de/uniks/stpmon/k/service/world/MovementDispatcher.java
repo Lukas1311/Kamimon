@@ -3,18 +3,88 @@ package de.uniks.stpmon.k.service.world;
 import de.uniks.stpmon.k.dto.MoveTrainerDto;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.net.Socket;
+import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.core.Observable;
 
 import javax.inject.Inject;
-import java.util.Objects;
+import java.util.*;
 
 public class MovementDispatcher extends MovementHandler {
     private MoveTrainerDto lastMovement;
     private boolean movementBlocked = false;
+    private boolean sprinting = false;
+    private final Set<Direction> pressedDirs = new HashSet<>();
+    private final Stack<Direction> movementStack = new Stack<>();
+    private Timer movementTimer;
+    private TimerTask currentTask;
+
+    @Inject
+    protected EffectContext effectContext;
 
     @Inject
     public MovementDispatcher() {
+    }
+
+    public void setSprinting(boolean sprinting) {
+        if (sprinting == this.sprinting) {
+            return;
+        }
+        this.sprinting = sprinting;
+        unscheduleMove();
+        scheduleMove();
+    }
+
+    public boolean isSprinting() {
+        return sprinting;
+    }
+
+    public void pushKey(Direction dir) {
+        if (!pressedDirs.add(dir)) {
+            return;
+        }
+        movementStack.push(dir);
+        scheduleMove();
+    }
+
+    public void releaseKey(Direction dir) {
+        if (!pressedDirs.remove(dir)) {
+            return;
+        }
+        movementStack.remove(dir);
+        if (movementStack.isEmpty()) {
+            unscheduleMove();
+        }
+    }
+
+    public Runnable init() {
+        movementTimer = new Timer();
+        return movementTimer::cancel;
+    }
+
+    private void unscheduleMove() {
+        if (currentTask != null) {
+            currentTask.cancel();
+            currentTask = null;
+        }
+    }
+
+    private void scheduleMove() {
+        if (currentTask != null) {
+            return;
+        }
+        currentTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (movementStack.isEmpty()) {
+                    return;
+                }
+                Direction dir = movementStack.iterator().next();
+                moveDirection(dir);
+            }
+        };
+        movementTimer.schedule(currentTask, (int) (effectContext.getWalkingSpeed() * 0.25f),
+                (int) (effectContext.getWalkingSpeed() * effectContext.getSprintingFactor()));
     }
 
     protected Observable<Trainer> onMoveReceived(Trainer newTrainer) {
@@ -53,7 +123,7 @@ public class MovementDispatcher extends MovementHandler {
         }
     }
 
-    public void moveDirection(Direction direction) {
+    public void lookDirection(Direction direction) {
         if (direction == null) {
             throw new IllegalArgumentException("Direction cannot be null");
         }
@@ -65,11 +135,22 @@ public class MovementDispatcher extends MovementHandler {
         }
         Trainer trainer = trainerProvider.getTrainer();
         int lastDir = lastMovement != null ? lastMovement.direction() : trainer.direction();
-        // First change look direction
-        if (lastDir != direction.ordinal()) {
-            MoveTrainerDto dto = createMoveDto(0, 0, direction.ordinal());
-            move(dto);
+        if (lastDir == direction.ordinal()) {
             return;
+        }
+        MoveTrainerDto dto = createMoveDto(0, 0, direction.ordinal());
+        move(dto);
+    }
+
+    public void moveDirection(Direction direction) {
+        if (direction == null) {
+            throw new IllegalArgumentException("Direction cannot be null");
+        }
+        if (trainerProvider == null) {
+            throw new IllegalStateException("Trainer provider not set");
+        }
+        if (eventName == null) {
+            throw new IllegalStateException("Event name not set");
         }
         int diffX = 0;
         int diffY = 0;

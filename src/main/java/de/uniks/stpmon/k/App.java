@@ -91,6 +91,7 @@ public class App extends Application {
 
     public void addInputHandler(InputHandler inputHandler) {
         stage.addEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
+        stage.addEventHandler(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedHandler());
         stage.addEventFilter(KeyEvent.KEY_PRESSED, inputHandler.keyPressedFilter());
         stage.addEventFilter(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedFilter());
     }
@@ -104,6 +105,7 @@ public class App extends Application {
 
     public void removeInputHandler(InputHandler inputHandler) {
         stage.removeEventHandler(KeyEvent.KEY_PRESSED, inputHandler.keyPressedHandler());
+        stage.removeEventHandler(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedHandler());
         stage.removeEventFilter(KeyEvent.KEY_PRESSED, inputHandler.keyPressedFilter());
         stage.removeEventFilter(KeyEvent.KEY_RELEASED, inputHandler.keyReleasedFilter());
     }
