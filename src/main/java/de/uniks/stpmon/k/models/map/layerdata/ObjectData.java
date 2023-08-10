@@ -10,8 +10,6 @@ public record ObjectData(
         List<PolygonPoint> polygon,
         List<Property> properties,
         String type,
-        boolean visible,
-        int rotation,
         int width,
         int height,
         int x,

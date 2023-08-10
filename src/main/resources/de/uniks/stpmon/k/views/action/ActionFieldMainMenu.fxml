@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.action.ActionFieldMainMenuController">
     <TextFlow>
         <Text fx:id="textContent" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
     </TextFlow>
     <HBox fx:id="mainMenuBox">
-        <VBox fx:id="leftContainer" alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS" />
-        <VBox fx:id="rightContainer" alignment="CENTER_LEFT" prefWidth="100.0" HBox.hgrow="ALWAYS" />
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin>
+        <VBox fx:id="leftContainer" prefWidth="100.0" HBox.hgrow="ALWAYS"/>
+        <VBox fx:id="rightContainer" prefWidth="100.0" HBox.hgrow="ALWAYS"/>
+        <VBox.margin>
+            <Insets top="10.0"/>
+        </VBox.margin>
     </HBox>
 </VBox>

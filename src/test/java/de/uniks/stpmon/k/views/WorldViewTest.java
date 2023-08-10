@@ -10,10 +10,10 @@ import de.uniks.stpmon.k.service.dummies.TestHelper;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.shape.MeshView;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -67,11 +67,10 @@ public class WorldViewTest extends ApplicationTest {
     public void moveCharacter() {
         SubScene node = lookup("#worldScene").queryAs(SubScene.class);
         Parent root = node.getRoot();
-        MeshView character = (MeshView) root.lookup("#character");
+        Group character = (Group) root.lookup("#character");
         assertEquals(0, character.getTranslateX());
         // -16 because character is rendered from the center
         assertEquals(-16, character.getTranslateZ());
-
         // test move up
         type(KeyCode.W, 2);
         waitForFxEvents(10);

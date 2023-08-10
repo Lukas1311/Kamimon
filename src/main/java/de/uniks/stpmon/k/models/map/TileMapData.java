@@ -37,4 +37,9 @@ public record TileMapData(
                 .orElse(null);
     }
 
+    public boolean isIndoor() {
+        return properties() != null &&
+                properties().stream().anyMatch(property ->
+                        property.name().equals("Terrain") && property.value().equals("Building"));
+    }
 }

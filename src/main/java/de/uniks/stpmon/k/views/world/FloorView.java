@@ -1,9 +1,7 @@
 package de.uniks.stpmon.k.views.world;
 
 import de.uniks.stpmon.k.service.storage.WorldRepository;
-import de.uniks.stpmon.k.service.storage.cache.SingleCache;
 import de.uniks.stpmon.k.utils.MeshUtils;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
@@ -12,12 +10,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
 
+import static de.uniks.stpmon.k.constants.TileConstants.CHUNK_SIZE;
+
 @Singleton
 public class FloorView extends WorldViewable {
 
     @Inject
     protected WorldRepository repository;
-    private MeshView floor;
+    private Group chunks;
 
     @Inject
     public FloorView() {
@@ -25,25 +25,31 @@ public class FloorView extends WorldViewable {
 
     @Override
     public Node render() {
-        SingleCache<BufferedImage> floorCache = repository.floorImage();
-        if (floorCache.isEmpty()) {
-            return new Group();
+        chunks = new Group();
+        BufferedImage[][] images = repository.getChunks();
+        for (int x = 0; x < images.length; x++) {
+            for (int y = 0; y < images[x].length; y++) {
+                BufferedImage image = images[x][y];
+                if (image != null) {
+                    MeshView mesh = createPlaneScaled(image);
+                    mesh.setTranslateX((x + 0.5f) * CHUNK_SIZE);
+                    mesh.setTranslateZ(-(y + 0.5f) * CHUNK_SIZE);
+                    chunks.getChildren().add(mesh);
+                }
+            }
         }
-        BufferedImage mapImage = floorCache.asNullable();
-        floor = createPlaneScaled(mapImage);
-        floor.setId("floor");
-        Bounds bounds = floor.getBoundsInLocal();
-        floor.setTranslateX(bounds.getWidth() / 2);
-        floor.setTranslateZ(-bounds.getDepth() / 2);
-        return floor;
+        return chunks;
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        if (floor != null) {
-            MeshUtils.disposeMesh(floor);
-            floor = null;
+        if (chunks != null) {
+            for (Node node : chunks.getChildren()) {
+                MeshUtils.disposeMesh(node);
+            }
+            chunks.getChildren().clear();
+            chunks = null;
         }
     }
 }

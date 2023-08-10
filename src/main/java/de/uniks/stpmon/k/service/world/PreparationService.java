@@ -15,6 +15,9 @@ import de.uniks.stpmon.k.service.storage.cache.TrainerAreaCache;
 import de.uniks.stpmon.k.world.PropInspector;
 import de.uniks.stpmon.k.world.PropMap;
 import de.uniks.stpmon.k.world.TileMap;
+import de.uniks.stpmon.k.world.rules.BasicRules;
+import de.uniks.stpmon.k.world.rules.RuleRegistry;
+import de.uniks.stpmon.k.world.rules.WoodRules;
 import io.reactivex.rxjava3.core.Completable;
 import retrofit2.HttpException;
 
@@ -27,9 +30,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static de.uniks.stpmon.k.constants.TileConstants.CHUNK_SIZE;
+
 @Singleton
 public class PreparationService {
-
+    private static final RuleRegistry defaultRegistry = BasicRules.registerRules();
+    private static final RuleRegistry woodRegistry = WoodRules.registerRules();
+    public static final String JULIAN_WOOD_ID = "64c41b63fcc75bfbe987c624";
     public static final int RATE_LIMIT_TIMEOUT = 1;
 
     @Inject
@@ -134,11 +141,23 @@ public class PreparationService {
             return new PropMap(List.of(), new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
         }
         TileMapData data = tileMap.getData();
-        PropInspector inspector = new PropInspector(tileMap.getWidth(), tileMap.getHeight(), decorationLayers.size());
-        inspector.setup(area);
+        RuleRegistry registry = defaultRegistry;
+        if (area._id().equals(JULIAN_WOOD_ID)) {
+            registry = woodRegistry;
+        }
+        PropInspector inspector = new PropInspector(tileMap.getWidth(), tileMap.getHeight(),
+                decorationLayers.size(), registry);
         return inspector.work(decorationLayers, data);
     }
 
+    /**
+     * Renders the floor and the decorations on top of it.
+     *
+     * @param image   The floor image
+     * @param tileMap The tile map
+     * @param propMap The prop map
+     * @return The merged image
+     */
     private BufferedImage mergeFloor(BufferedImage image, TileMap tileMap, PropMap propMap) {
         BufferedImage realFloorImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = realFloorImage.createGraphics();
@@ -159,11 +178,31 @@ public class PreparationService {
                     PropMap propMap = createPropMap(tileMap, area);
                     List<TileProp> props = propMap.props();
                     BufferedImage floorImage = mergeFloor(allLayersImage, tileMap, propMap);
-                    worldRepository.floorImage().setValue(floorImage);
+                    worldRepository.setChunks(splitFloorIntoChunks(floorImage));
+                    worldRepository.setIndoor(tileMap.isIndoor());
                     worldRepository.minimapImage().setValue(allLayersImage);
                     worldRepository.props().setValue(props);
                     return Completable.complete();
                 });
     }
+
+    /**
+     * Splits the floor image into chunks of 256x256 pixels.
+     *
+     * @param image Image to split
+     * @return Array of chunks
+     */
+    private BufferedImage[][] splitFloorIntoChunks(BufferedImage image) {
+        int widthChunks = (int) Math.ceil((double) image.getWidth() / CHUNK_SIZE);
+        int heightChunks = (int) Math.ceil((double) image.getHeight() / CHUNK_SIZE);
+        BufferedImage[][] chunks = new BufferedImage[widthChunks][heightChunks];
+        for (int x = 0; x < widthChunks; x++) {
+            for (int y = 0; y < heightChunks; y++) {
+                chunks[x][y] = image.getSubimage(x * CHUNK_SIZE, y * CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE);
+            }
+        }
+        return chunks;
+    }
+
 
 }

@@ -293,8 +293,7 @@ public class InteractionService implements ILifecycleService {
 
             }
             interactionStorage.setDialogue(dialogue);
-        })
-                .ignoreElements();
+        }).ignoreElements();
     }
 
     private void applyOverlayEffect() {

@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
+import de.uniks.stpmon.k.controller.monsters.MonsterSelectionController;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
@@ -102,11 +103,15 @@ public class EncounterOverviewController extends Controller {
     Provider<InventoryController> inventoryControllerProvider;
     @Inject
     Provider<ItemInformationController> itemInformationControllerProvider;
+
+    @Inject
+    Provider<MonsterSelectionController> monsterSelectionControllerProvider;
     @Inject
     ItemService itemService;
 
     private final Pane blackPane = new Pane();
     public Parent controller;
+    public Parent monInfoParent;
 
     @Inject
     public EncounterOverviewController() {
@@ -259,29 +264,6 @@ public class EncounterOverviewController extends Controller {
         return parent;
     }
 
-    private void useItem(EncounterSlot slot) {
-        System.out.println("Item use registered");
-
-        if (itemService == null) {
-            return;
-        }
-
-        String id = slotMonsters.get(slot);
-        if (id == null || id.isEmpty()) {
-            return;
-        }
-        System.out.println("Use Item");
-
-        subscribe(itemService.useActiveItemIfAvailable(id), item -> {
-            removeController("itemInfo");
-            removeController("inventory");
-        }, error -> {
-            if (error instanceof HttpException) {
-                System.out.println("cannot use the item on this monster");
-            }
-        });
-    }
-
     public void showLevelUp(Monster oldMon, Monster newMon) {
         if (controller == null) {
             MonsterInformationController monInfoController = monInfoProvider.get();
@@ -289,6 +271,22 @@ public class EncounterOverviewController extends Controller {
             monInfoController.loadLevelUp(oldMon, newMon);
             contentBox.getChildren().add(0, controller);
         }
+    }
+
+    public void showMonInfo(Monster mon) {
+        if (monInfoParent == null) {
+            MonsterInformationController monInfoController = monInfoProvider.get();
+            this.monInfoParent = monInfoController.render();
+            monInfoController.loadMonsterTypeDto(String.valueOf(mon.type()));
+            monInfoController.loadMonster(mon);
+            contentBox.getChildren().add(0, this.monInfoParent);
+        }
+    }
+
+    public void removeMonInfo() {
+        contentBox.getChildren().remove(0);
+        monInfoProvider.get().destroy();
+        this.monInfoParent = null;
     }
 
     public void openController(String child, Item item) {
@@ -301,13 +299,20 @@ public class EncounterOverviewController extends Controller {
             }
         } else {
             if (child.equals("itemInfo")) {
-                if (contentBox.getChildren().size() > 1) {
+                while (contentBox.getChildren().size() > 1) {
                     contentBox.getChildren().remove(0);
                 }
                 ItemInformationController itemInformationController = itemInformationControllerProvider.get();
                 itemInformationController.setInEncounter(true);
                 itemInformationController.setItem(item);
                 controller = itemInformationController.render();
+            } else if (child.equals("monsterSelection")) {
+                while (contentBox.getChildren().size() > 2) {
+                    contentBox.getChildren().remove(0);
+                }
+                MonsterSelectionController monsterSelectionController = monsterSelectionControllerProvider.get();
+                monsterSelectionController.setItem(item.type());
+                controller = monsterSelectionController.render();
             }
         }
         contentBox.getChildren().add(0, controller);
@@ -320,9 +325,20 @@ public class EncounterOverviewController extends Controller {
                 case "inventory" -> {
                     inventoryControllerProvider.get().destroy();
                     itemInformationControllerProvider.get().destroy();
+                    monsterSelectionControllerProvider.get().destroy();
                 }
-                case "itemInfo" -> itemInformationControllerProvider.get().destroy();
+                case "itemInfo" -> {
+                    itemInformationControllerProvider.get().destroy();
+                    monsterSelectionControllerProvider.get().destroy();
+                }
+                case "monsterSelection" -> monsterSelectionControllerProvider.get().destroy();
                 case "monInfo" -> monInfoProvider.get().destroy();
+                case "all" -> {
+                    inventoryControllerProvider.get().destroy();
+                    itemInformationControllerProvider.get().destroy();
+                    monsterSelectionControllerProvider.get().destroy();
+                    monInfoProvider.get().destroy();
+                }
                 default -> {
                     return;
                 }
@@ -392,9 +408,6 @@ public class EncounterOverviewController extends Controller {
                     renderMonsters(userMonsters, userMonster1, slot);
                 }
             }
-        }
-        for (EncounterSlot slot : sessionService.getOwnSlots()) {
-            monsterImages.get(slot).setOnMouseClicked(e -> useItem(slot));
         }
     }
 

@@ -12,7 +12,6 @@ import de.uniks.stpmon.k.controller.mondex.MonDexDetailController;
 import de.uniks.stpmon.k.controller.monsters.MonsterBarController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
-import de.uniks.stpmon.k.controller.overworld.NightOverlayController;
 import de.uniks.stpmon.k.controller.overworld.WorldTimerController;
 import de.uniks.stpmon.k.controller.shop.ShopOptionController;
 import de.uniks.stpmon.k.controller.shop.ShopOverviewController;
@@ -104,8 +103,6 @@ public class IngameController extends PortalController {
     @Inject
     WorldTimerController worldTimerController;
     @Inject
-    NightOverlayController nightOverlayController;
-    @Inject
     MonsterInformationController monsterInformationController;
     @Inject
     MonsterInventoryController monsterInventoryController;
@@ -145,7 +142,6 @@ public class IngameController extends PortalController {
         backpackController.init();
         dialogueController.init();
         worldTimerController.init();
-        nightOverlayController.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             // Block user input if he is in an encounter
@@ -225,9 +221,7 @@ public class IngameController extends PortalController {
                 ingameStack.getChildren().remove(overlayPane);
                 app.show(loadingEncounterControllerProvider.get());
             });
-
         }
-
     }
 
     @Override
@@ -243,7 +237,6 @@ public class IngameController extends PortalController {
         dialogueController.destroy();
         starterController.destroy();
         worldTimerController.destroy();
-        nightOverlayController.destroy();
         shopOptionController.destroy();
         shopOverviewController.destroy();
         ingameStack.getChildren().clear();
@@ -276,32 +269,31 @@ public class IngameController extends PortalController {
         shopHBox.setPickOnBounds(false);
         shopBorderPane.setPickOnBounds(false);
 
-        renderAndInsert(ingameStack, 0, worldController);
-        renderAndInsert(pane, 0, monsterBarController);
-        renderAndInsert(miniMapVBox, 0, minimapController,
+        renderAndInsert(ingameStack, worldController);
+        renderAndInsert(pane, monsterBarController);
+        renderAndInsert(miniMapVBox, minimapController,
                 (_parent, child) -> child.setOnMouseClicked(this::openOrCloseMap));
-        renderAndInsert(miniMapVBox, 0, worldTimerController);
-        renderAndInsert(ingameStack, 1, nightOverlayController);
+        renderAndInsert(miniMapVBox, worldTimerController);
 
-        renderAndInsert(ingameWrappingHBox, 0, backpackController,
+        renderAndInsert(ingameWrappingHBox, backpackController,
                 (_parent, _child) -> ingameStack.setAlignment(Pos.TOP_RIGHT));
 
         dialogueBox.getChildren().clear();
-        renderAndInsert(dialogueBox, 0, dialogueController,
+        renderAndInsert(dialogueBox, dialogueController,
                 (_parent, child) -> child.setVisible(false));
 
         starterBox.getChildren().clear();
-        renderAndInsert(starterBox, 0, starterController,
+        renderAndInsert(starterBox, starterController,
                 (_parent, child) -> child.setVisible(false));
 
         return parent;
     }
 
-    private void renderAndInsert(Pane parent, int index, Controller controller) {
-        renderAndInsert(parent, index, controller, null);
+    private void renderAndInsert(Pane parent, Controller controller) {
+        renderAndInsert(parent, controller, null);
     }
 
-    private void renderAndInsert(Pane parent, int index, Controller controller,
+    private void renderAndInsert(Pane parent, Controller controller,
                                  @Nullable BiConsumer<Parent, Parent> setup) {
         if (controller == null) {
             return;
@@ -310,7 +302,7 @@ public class IngameController extends PortalController {
         if (child == null || parent == null) {
             return;
         }
-        parent.getChildren().add(index, child);
+        parent.getChildren().add(0, child);
         if (setup != null) {
             setup.accept(parent, child);
         }

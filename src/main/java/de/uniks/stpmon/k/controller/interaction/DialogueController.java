@@ -146,7 +146,9 @@ public class DialogueController extends ToastController {
         if (dialogue == null) {
             return;
         }
-        this.nameLabel.setText(dialogue.getTrainerName());
+        if (!dialogue.getTrainerName().isEmpty()) {
+            this.nameLabel.setText(dialogue.getTrainerName());
+        }
         setItemIndex(0);
     }
 

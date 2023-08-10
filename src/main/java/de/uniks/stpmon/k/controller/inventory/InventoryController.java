@@ -56,7 +56,7 @@ public class InventoryController extends ToastedController {
     public boolean isInEncounter = false;
 
     public Item currentItem;
-
+    
     @Inject
     public InventoryController() {
     }
