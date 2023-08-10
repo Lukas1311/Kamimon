@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.*;
 import io.reactivex.rxjava3.core.Observable;
+import javafx.application.Platform;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -74,13 +75,15 @@ public class MonsterSelectionControllerTest extends ApplicationTest {
 
     @Test
     void testRender() {
-        FlowPane monsterSelctionFlow = lookup("#monsterSelectionFlow").queryAs(FlowPane.class);
-        assertEquals(3, monsterSelctionFlow.getChildren().size());
+        FlowPane monsterSelectionFlow = lookup("#monsterSelectionFlow").queryAs(FlowPane.class);
+        assertEquals(3, monsterSelectionFlow.getChildren().size());
 
-        clickOn("#MonsterItem_1");
+        clickOn(monsterSelectionFlow.getChildren().get(1));
         waitForFxEvents();
 
         verify(actionFieldController).executeItemMove(1234, "1");
+
+        Platform.runLater(() -> monsterSelectionController.destroy());
     }
 
 
