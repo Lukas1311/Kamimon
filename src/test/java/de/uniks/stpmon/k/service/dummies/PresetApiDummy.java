@@ -3,8 +3,11 @@ package de.uniks.stpmon.k.service.dummies;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
+import de.uniks.stpmon.k.models.Event;
+import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.rest.PresetApiService;
+import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ResponseBody;
 
@@ -18,10 +21,15 @@ import java.util.Optional;
 
 @Singleton
 public class PresetApiDummy implements PresetApiService {
+    @Inject
+    EventDummy eventDummy;
+    @Inject
+    TrainerStorage trainerStorage;
     final List<String> characters = new ArrayList<>();
     final List<MonsterTypeDto> monsters = new ArrayList<>();
     final List<AbilityDto> abilities = new ArrayList<>();
     final List<ItemTypeDto> items = new ArrayList<>();
+    final String MONBALL_ID = "0";
     final String[] types = {"fire", "water", "grass", "electro", "physics", "ground",
             "dragon", "poison", "ice", "normal", "dark", "flying", "fighting", "rock", "steel", "bug"};
 
@@ -208,5 +216,11 @@ public class PresetApiDummy implements PresetApiService {
 
         return returnAbility.map(r -> Observable.just(returnAbility.get())).orElseGet(()
                 -> Observable.error(new Throwable("404 Not found")));
+    }
+
+    public void getMonBall() {
+        String trainerId = trainerStorage.getTrainer()._id();
+        Item monBall = new Item(MONBALL_ID, trainerId, Integer.parseInt(MONBALL_ID), 1);
+        eventDummy.sendEvent(new Event<>("trainers.%s.items.%s.updated".formatted(trainerId, MONBALL_ID), monBall));
     }
 }

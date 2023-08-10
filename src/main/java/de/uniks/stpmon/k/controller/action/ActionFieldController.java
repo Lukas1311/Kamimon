@@ -245,6 +245,7 @@ public class ActionFieldController extends Controller {
         openBattleLog();
         subscribe(encounterServiceProvider.get()
                 .makeItemMove(getActiveSlot(), itemId, monsterId));
+
     }
 
 

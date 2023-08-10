@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.dto.UpdateOpponentDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
-import de.uniks.stpmon.k.models.builder.TrainerBuilder;
 import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
 import de.uniks.stpmon.k.service.dummies.EventDummy;
 import de.uniks.stpmon.k.service.dummies.MessageApiDummy;
@@ -30,7 +29,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import java.security.Key;
 import java.util.ArrayList;
 
 import static java.util.function.Predicate.not;
@@ -524,6 +522,7 @@ class AppTest extends ApplicationTest {
         TestHelper.addTestNpcsV4(component);
         TestHelper.addMonster(component.trainerStorage(), component);
 
+
         //test monDex
         clickOn("#backpackImage");
         waitForFxEvents();
@@ -632,6 +631,24 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
         clickOn("#battleLog");
         clickOn("#battleLog");
+
+        //start wild encounter where monBall is used
+        component.presetApi().getMonBall();
+        waitForFxEvents();
+        type(KeyCode.S);
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        waitForFxEvents();
+        clickOn("#main_menu_inventory");
+        waitForFxEvents();
+        //in the test case, item7 is the MonBall
+        clickOn("#item_Item_4");
+        waitForFxEvents();
+        clickOn("#useButton");
+        waitForFxEvents();
+        clickOn("#battleLog");
+
 
     }
 

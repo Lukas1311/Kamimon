@@ -33,7 +33,7 @@ public class EventDummy {
     public EventDummy() {
     }
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked", "rawtypes"})
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked", "rawtypes", "UnusedPublisher"})
     public void ensureMock() {
         if (initialized) {
             return;
