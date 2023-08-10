@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -75,12 +76,17 @@ public class ItemInformationController extends Controller {
         subscribe(presetService.getItem(item.type()), item -> {
             itemTypeDto = item;
             if (item.use() != null) {
+                //can not use MonBall outside of encounter
+                if (item.use().equals(ItemUse.BALL) && !isEncounter) {
+                    useButton.setDisable(true);
+                }
                 useButton.setVisible(true);
                 useButton.setText(translateString("useItemButton"));
                 useButton.setOnAction(e -> useItem());
             } else {
                 useButton.setVisible(false);
             }
+
 
             nameLabel.setText(item.name());
             itemInformation.setText(item.description());
