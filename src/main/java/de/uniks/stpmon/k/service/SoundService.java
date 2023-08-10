@@ -1,11 +1,18 @@
 package de.uniks.stpmon.k.service;
 
-import de.uniks.stpmon.k.controller.Controller;
+import de.uniks.stpmon.k.Main;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -26,7 +33,10 @@ public class SoundService {
     @Inject
     SettingsService settingsService;
     @Inject
-    Controller controller;
+    EffectContext effectContext;
+
+    // is of form "file:/.../de/uniks/stpmon/k/sound/"
+    private static final URL basePathURL = Main.class.getResource("sound/");
 
     protected CompositeDisposable disposables = new CompositeDisposable();
 
@@ -61,7 +71,7 @@ public class SoundService {
     }
 
     private void startPlayer() {
-        playlist = controller.loadAudioFiles();
+        playlist = loadAudioFiles();
         playNext();
     }
 
@@ -163,5 +173,64 @@ public class SoundService {
         if (mediaPlayer.getStatus() == Status.DISPOSED) {
             mediaPlayer = null;
         }
+    }
+
+    private List<Media> loadAudioFiles() {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
+        }
+
+        List<Media> mediaFiles = new ArrayList<>();
+        Path basePath = null;
+        try {
+            assert basePathURL != null;
+            basePath = Paths.get(basePathURL.toURI());
+        } catch (URISyntaxException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        assert basePath != null;
+        File folder = new File(basePath.toString());
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    Media media = loadAudioFile(file);
+                    mediaFiles.add(media);
+                }
+            }
+        }
+
+        return mediaFiles;
+    }
+
+    private Media loadAudioFile(File file) {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
+        }
+        if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
+            return loadAudioFile(file.toURI().toString());
+        }
+        return null;
+    }
+
+    private Media loadAudioFile(String filename) {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
+        }
+        try {
+            URI uri = new URI(filename);
+            if (uri.isAbsolute()
+                    && uri.toString().startsWith(Objects.requireNonNull(basePathURL).toURI().toString())
+                    && uri.toString().toLowerCase().endsWith(".mp3")
+            ) {
+                return new Media(Objects.requireNonNull(filename));
+            } else {
+                return new Media(Objects.requireNonNull(Main.class.getResource(basePathURL + filename + ".mp3")).toExternalForm());
+            }
+        } catch (URISyntaxException e) {
+            System.err.println("Invalid URI: " + e.getMessage());
+        }
+        return null;
     }
 }

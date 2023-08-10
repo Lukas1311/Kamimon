@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.service.world.TextureSetService;
 import de.uniks.stpmon.k.utils.Direction;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import de.uniks.stpmon.k.utils.SVGUtils;
-import de.uniks.stpmon.k.utils.SoundUtils;
 import de.uniks.stpmon.k.world.CharacterSet;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Scheduler;
@@ -15,13 +14,11 @@ import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.media.Media;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -255,12 +252,4 @@ public abstract class Controller extends Viewable {
             return Completable.complete();
         }).ignoreElements();
     }
-
-    public List<Media> loadAudioFiles() {
-        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
-            return null;
-        }
-        return SoundUtils.loadAudioFiles();
-    }
-
 }
