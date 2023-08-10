@@ -14,6 +14,7 @@ public class MovementDispatcher extends MovementHandler {
     private MoveTrainerDto lastMovement;
     private boolean movementBlocked = false;
     private boolean sprinting = false;
+    private boolean sneaking = false;
     private final Set<Direction> pressedDirs = new HashSet<>();
     private final Stack<Direction> movementStack = new Stack<>();
     private Timer movementTimer;
@@ -33,6 +34,20 @@ public class MovementDispatcher extends MovementHandler {
         this.sprinting = sprinting;
         unscheduleMove();
         scheduleMove();
+    }
+
+    public void setSneaking(boolean sneaking) {
+        if (sneaking == this.sneaking) {
+            return;
+        }
+        this.sneaking = sneaking;
+        unscheduleMove();
+        scheduleMove();
+    }
+
+
+    public boolean isSneaking() {
+        return sneaking;
     }
 
     public boolean isSprinting() {
@@ -87,8 +102,13 @@ public class MovementDispatcher extends MovementHandler {
             currentTask.run();
             return;
         }
-        movementTimer.schedule(currentTask, (int) (effectContext.getWalkingSpeed() * 0.25f),
-                (int) (effectContext.getWalkingSpeed() * effectContext.getSprintingFactor()));
+        float period = effectContext.getWalkingSpeed();
+        if (sprinting) {
+            period *= effectContext.getSprintingFactor();
+        } else if (sneaking) {
+            period /= effectContext.getSprintingFactor();
+        }
+        movementTimer.schedule(currentTask, (int) (effectContext.getWalkingSpeed() * 0.25f), (int) period);
     }
 
     protected Observable<Trainer> onMoveReceived(Trainer newTrainer) {

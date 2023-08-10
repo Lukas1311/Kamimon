@@ -57,6 +57,7 @@ public class CharacterView extends EntityView {
             case A -> dispatcher.pushKey(Direction.LEFT);
             case D -> dispatcher.pushKey(Direction.RIGHT);
             case SHIFT -> dispatcher.setSprinting(true);
+            case CONTROL -> dispatcher.setSneaking(true);
             case UP -> dispatcher.lookDirection(Direction.TOP);
             case DOWN -> dispatcher.lookDirection(Direction.BOTTOM);
             case LEFT -> dispatcher.lookDirection(Direction.LEFT);
@@ -78,6 +79,7 @@ public class CharacterView extends EntityView {
             case S -> dispatcher.releaseKey(Direction.BOTTOM);
             case A -> dispatcher.releaseKey(Direction.LEFT);
             case D -> dispatcher.releaseKey(Direction.RIGHT);
+            case CONTROL -> dispatcher.setSneaking(false);
             case SHIFT -> dispatcher.setSprinting(false);
             default -> {
                 return;
@@ -97,6 +99,11 @@ public class CharacterView extends EntityView {
     @Override
     protected boolean isSprinting() {
         return dispatcher != null && dispatcher.isSprinting();
+    }
+
+    @Override
+    protected boolean isSneaking() {
+        return dispatcher != null && dispatcher.isSneaking();
     }
 
     @Override

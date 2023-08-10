@@ -93,6 +93,10 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         return false;
     }
 
+    protected boolean isSneaking() {
+        return false;
+    }
+
     protected BufferedImage createShadowImage() {
         return createShadowImage(Direction.from(trainerProvider.getTrainer()));
     }
@@ -190,7 +194,8 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         }
         boolean newDirection = !Objects.equals(moveDirection, dir);
         boolean newSprinting = moveAnimation != null && (moveAnimation.isSprinting != isSprinting());
-        applyMove(trainer, newDirection || newSprinting, dir);
+        boolean newSneaking = moveAnimation != null && (moveAnimation.isSneaking != isSneaking());
+        applyMove(trainer, newDirection || newSprinting || newSneaking, dir);
     }
 
     protected void applyMove(Trainer trainer, boolean updateMovement, Direction direction) {
@@ -204,7 +209,7 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         moveTranslation = new TranslateTransition();
         moveTranslation.setNode(entityGroup);
         moveTranslation.setDuration(Duration.millis(effectContext.getWalkingSpeed()
-                * (isSprinting() ? effectContext.getSprintingFactor() : 1)));
+                * (isSprinting() ? effectContext.getSprintingFactor() : isSneaking() ? 1 / effectContext.getSprintingFactor() : 1)));
         moveTranslation.setToX(trainer.x() * WorldView.WORLD_UNIT);
         moveTranslation.setToZ(-trainer.y() * WorldView.WORLD_UNIT
                 - WorldView.ENTITY_OFFSET_Y * WorldView.WORLD_UNIT);
@@ -229,7 +234,8 @@ public abstract class EntityView extends OpaqueView<MeshView> {
             if (moveAnimation != null) {
                 moveAnimation.pause();
             }
-            moveAnimation = new SpriteAnimation(characterSet, direction.ordinal(), true, isSprinting());
+            moveAnimation = new SpriteAnimation(characterSet, direction.ordinal(), true,
+                    isSprinting(), isSneaking());
             moveAnimation.setCycleCount(Animation.INDEFINITE);
             applyShadowDirection(direction);
         }
@@ -243,7 +249,8 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         if (idleAnimation != null) {
             idleAnimation.stop();
         }
-        idleAnimation = new SpriteAnimation(characterSet, trainer.direction(), false, false);
+        idleAnimation = new SpriteAnimation(characterSet, trainer.direction(),
+                false, false, false);
         idleAnimation.setCycleCount(Animation.INDEFINITE);
         idleAnimation.play();
     }
@@ -285,16 +292,20 @@ public abstract class EntityView extends OpaqueView<MeshView> {
         private final int direction;
         private final boolean isMoving;
         private final boolean isSprinting;
+        private final boolean isSneaking;
         private int index = -10;
 
-        public SpriteAnimation(CharacterSet characterSet, int direction, boolean isMoving, boolean isSprinting) {
+        public SpriteAnimation(CharacterSet characterSet, int direction,
+                               boolean isMoving, boolean isSprinting, boolean isSneaking) {
             this.characterSet = characterSet;
             this.direction = direction;
             this.isMoving = isMoving;
             this.isSprinting = isSprinting;
+            this.isSneaking = isSneaking;
             setInterpolator(Interpolator.LINEAR);
             setCycleDuration(Duration.millis(effectContext.getWalkingAnimationSpeed()
-                    * (isMoving ? (isSprinting ? effectContext.getSprintingFactor() : 1) : 2)));
+                    * (isMoving ? (isSprinting ? effectContext.getSprintingFactor() :
+                    1 / effectContext.getSprintingFactor()) : 2)));
 
         }
 
