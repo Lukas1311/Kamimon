@@ -2,6 +2,8 @@ package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
+import de.uniks.stpmon.k.controller.inventory.InventoryController;
+import de.uniks.stpmon.k.controller.mondex.MonDexController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInventoryController;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -31,8 +33,12 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     Provider<ResourceBundle> resourceBundleProvider;
     @Spy
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
-    @Spy
+    @Mock
     Provider<MonsterInventoryController> monBoxControllerProvider;
+    @Mock
+    Provider<InventoryController> inventoryControllerProvider;
+    @Mock
+    Provider<MonDexController> monDexControllerProvider;
     @Mock
     Provider<IngameController> ingameControllerProvider;
 
@@ -61,6 +67,11 @@ public class BackpackMenuControllerTest extends ApplicationTest {
     void clickOnMonster_List() {
         MonsterInventoryController monsterInventoryController = Mockito.mock(MonsterInventoryController.class);
         when(monBoxControllerProvider.get()).thenReturn(monsterInventoryController);
+        MonDexController monsterDexController = Mockito.mock(MonDexController.class);
+        when(monDexControllerProvider.get()).thenReturn(monsterDexController);
+        InventoryController inventoryController = Mockito.mock(InventoryController.class);
+        when(inventoryControllerProvider.get()).thenReturn(inventoryController);
+
         IngameController ingameController = Mockito.mock(IngameController.class);
         when(ingameControllerProvider.get()).thenReturn(ingameController);
 
@@ -75,5 +86,12 @@ public class BackpackMenuControllerTest extends ApplicationTest {
         waitForFxEvents();
 
         verify(ingameController).removeChildren(anyInt());
+
+        clickOn("#backpackMenuLabel_1");
+        waitForFxEvents();
+        clickOn("#backpackMenuLabel_3");
+        clickOn("#backpackMenuLabel_3");
+        when(ingameController.isMapOpen()).thenReturn(true);
+        clickOn("#backpackMenuLabel_2");
     }
 }
