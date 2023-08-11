@@ -5,12 +5,14 @@ import de.uniks.stpmon.k.controller.StarterController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -44,6 +46,8 @@ public class InteractionService implements ILifecycleService {
     MonsterService monsterService;
     @Inject
     UserService userService;
+    @Inject
+    EncounterService encounterService;
     @Inject
     Provider<IngameController> ingameControllerProvider;
 
@@ -270,6 +274,19 @@ public class InteractionService implements ILifecycleService {
                 if (!anyAlive) {
                     return getRejectionDialogue(trainer, "player.dead");
                 }
+                disposables.add(encounterService.getTrainerOpponents(trainer._id()).subscribe(opponent -> {
+                    disposables.add(encounterService.getEncounterOpponents(
+                            opponent.get(0).encounter())
+                            .subscribe(opponents -> {
+                                List<Opponent> filteredOpponents = opponents.stream()
+                                        .filter(opp -> !opp.trainer().equals(trainer._id()))
+                                        .toList();
+                                if (filteredOpponents.size() > 1) {
+                                    getEncounterDialogue(trainer, me, "join");
+                                }
+                            }));
+                }));
+
                 return getEncounterDialogue(trainer, me, "player");
             });
         }).onErrorResumeNext((error) -> {
