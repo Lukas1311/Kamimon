@@ -70,11 +70,6 @@ public class SettingsService {
         return true;
     }
 
-    public Integer getCurrentSong() {
-        ensureInit();
-        return currentSong.getValue();
-    }
-
     public Float getSoundValue() {
         ensureInit();
         return soundValue.getValue();
@@ -108,11 +103,6 @@ public class SettingsService {
     public Observable<Float> onSoundValue() {
         ensureInit();
         return soundValue;
-    }
-
-    public Observable<Integer> onCurrentSongChanged() {
-        ensureInit();
-        return currentSong;
     }
 
     public Observable<Float> onDayTimeCycle() {

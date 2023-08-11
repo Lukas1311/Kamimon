@@ -290,7 +290,7 @@ public class PropInspector {
         if (candidates.isEmpty()) {
             return new ConnectionResult(marked, null);
         }
-        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers, dir);
+        TileInfo bestCandidate = registry.getPropInfo(current, candidates, context.decorationLayers);
         return new ConnectionResult(marked, bestCandidate);
     }
 
@@ -341,10 +341,6 @@ public class PropInspector {
      */
     public int getWidth() {
         return grids[0].getWidth();
-    }
-
-    public int getHeight() {
-        return grids[0].getHeight();
     }
 
     /**

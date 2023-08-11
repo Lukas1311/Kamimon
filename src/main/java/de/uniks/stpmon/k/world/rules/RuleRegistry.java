@@ -135,7 +135,7 @@ public class RuleRegistry {
         return RuleResult.NO_MATCH;
     }
 
-    public TileInfo getPropInfo(TileInfo info, List<TileInfo> candidates, List<DecorationLayer> decorationLayers, Direction dir) {
+    public TileInfo getPropInfo(TileInfo info, List<TileInfo> candidates, List<DecorationLayer> decorationLayers) {
         if (candidates.size() <= 1) {
             return candidates.get(0);
         }

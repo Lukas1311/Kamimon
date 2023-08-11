@@ -5,16 +5,8 @@ import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
-import de.uniks.stpmon.k.dto.AbilityDto;
-import de.uniks.stpmon.k.dto.AbilityMove;
-import de.uniks.stpmon.k.dto.ChangeMonsterMove;
-import de.uniks.stpmon.k.dto.ItemTypeDto;
-import de.uniks.stpmon.k.dto.MonsterTypeDto;
-import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.models.Opponent;
-import de.uniks.stpmon.k.models.OpponentUpdate;
-import de.uniks.stpmon.k.models.Result;
+import de.uniks.stpmon.k.dto.*;
+import de.uniks.stpmon.k.models.*;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
@@ -24,13 +16,7 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Singleton
 public class BattleLogService {
@@ -50,8 +36,7 @@ public class BattleLogService {
 
 
     VBox textBox;
-    HashMap<EncounterSlot, String> monsterNames = new HashMap<>(4);
-
+    final HashMap<EncounterSlot, String> monsterNames = new HashMap<>(4);
 
     private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();

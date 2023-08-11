@@ -13,7 +13,6 @@ import okhttp3.ResponseBody;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.Collection;
 import java.util.List;
 
 public class PresetService {
@@ -88,11 +87,6 @@ public class PresetService {
         ItemTypeCache typeCache = manager.itemTypeCache();
         return typeCache.getValues();
     }
-
-    public Observable<List<ItemTypeDto>> getItems(Collection<Integer> filter) {
-        return getItems().map(item -> item.stream().filter(itemDto -> filter.contains(itemDto.id())).toList());
-    }
-
 
     public Observable<ItemTypeDto> getItem(int id) {
         return getItem(Integer.toString(id));

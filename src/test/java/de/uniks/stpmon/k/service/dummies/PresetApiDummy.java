@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+@SuppressWarnings("unused")
 @Singleton
 public class PresetApiDummy implements PresetApiService {
     @Inject

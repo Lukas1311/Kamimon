@@ -34,14 +34,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import javax.inject.Provider;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.TextFlowMatchers.hasText;
@@ -154,14 +152,14 @@ public class MapOverviewControllerTest extends ApplicationTest {
         // Click on first route
         clickOn(MouseButton.PRIMARY);
         // Detail1 should have Whitesmoke stroke color (highlighted edges)
-        verifyThat(detail1, polygon -> ((Color) polygon.getStroke()).equals(Color.WHITESMOKE));
+        verifyThat(detail1, polygon -> polygon.getStroke().equals(Color.WHITESMOKE));
         // Route description should be visible
         assertEquals("Test Area", areaNameLabel.getText());
         verifyThat("#textFlowRegionDescription", hasText("test"));
         // Move to second route
         moveTo(detail2);
         // First route should still be fully highlighted with whitesmoke edges
-        verifyThat(detail1, polygon -> ((Color) polygon.getStroke()).equals(Color.WHITESMOKE));
+        verifyThat(detail1, polygon -> polygon.getStroke().equals(Color.WHITESMOKE));
         // Second route should be half highlighted
         verifyThat(detail2, rect -> rect.getOpacity() >= 0.75);
         // Click on second route
