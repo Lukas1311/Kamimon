@@ -43,6 +43,7 @@ public class TestModule {
 
     @Provides
     @Singleton
+    @SuppressWarnings("unused")
     static ClockService clockService() {
         return new ClockService();
     }

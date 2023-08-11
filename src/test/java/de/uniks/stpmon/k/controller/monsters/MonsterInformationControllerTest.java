@@ -93,7 +93,7 @@ public class MonsterInformationControllerTest extends ApplicationTest {
                 .setAbilities(abilities)
                 .setAttributes(attributes)
                 .setCurrentAttributes(currentAttributes)
-                .setStatus(List.of(MonsterStatus.BURN))
+                .setStatus(List.of(MonsterStatus.BURNED))
                 .create();
 
         when(presetService.getAbility(anyString())).thenReturn(Observable.just(abilityDto));
