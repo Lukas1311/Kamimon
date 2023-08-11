@@ -33,12 +33,15 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
         int amount = 8;
         for (int i = 0; i < amount; i++) {
             Item item = new Item(String.valueOf(i), null, 1, 1);
-            if (i == 4) {
-                //Add MonBall
-                item = new Item(String.valueOf(i), null, 4, 1);
-            } else if (i == 2) {
+            if (i == 2) {
                 //Add ItemBox
                 item = new Item(String.valueOf(i), "0", 2, 1);
+            } else if (i == 3) {
+                //Add MonBox
+                item = new Item(String.valueOf(i), "0", 3, 1);
+            } else if (i == 4) {
+                //Add MonBall
+                item = new Item(String.valueOf(i), null, 4, 1);
             }
             items.add(item);
         }
@@ -61,7 +64,6 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
 
         return Observable.just(item);
     }
-
 
 
     @Override
