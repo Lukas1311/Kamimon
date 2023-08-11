@@ -39,7 +39,7 @@ public class WorldViewTest extends ApplicationTest {
     public final TrainerStorage trainerStorage = component.trainerStorage();
     public final RegionStorage regionStorage = component.regionStorage();
     public final RegionService regionService = component.regionService();
-    public  final EncounterService encounterService = component.encounterService();
+    public final EncounterService encounterService = component.encounterService();
 
     @Override
     public void start(Stage stage) throws Exception {

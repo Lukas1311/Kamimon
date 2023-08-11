@@ -26,6 +26,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static de.uniks.stpmon.k.controller.StarterController.StarterOption.MON;
+
 @Singleton
 public class InteractionService implements ILifecycleService {
 
@@ -142,7 +144,7 @@ public class InteractionService implements ILifecycleService {
             itemBuilder.addOption().setText(monsterType)
                     .addSelection(() -> {
                         interactionStorage.selectedStarter().setValue(monsterName);
-                        starterController.setStarter(String.valueOf(monsterId));
+                        starterController.setStarter(String.valueOf(monsterId), MON);
                         starterController.starterPane.setVisible(true);
                     })
                     .addAction(() -> {

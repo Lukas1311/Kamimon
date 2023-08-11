@@ -48,6 +48,8 @@ import javax.inject.Singleton;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 
+import static de.uniks.stpmon.k.controller.StarterController.StarterOption.ITEM;
+import static de.uniks.stpmon.k.controller.StarterController.StarterOption.MON;
 import static de.uniks.stpmon.k.controller.sidebar.SidebarTab.NONE;
 
 @Singleton
@@ -419,6 +421,24 @@ public class IngameController extends PortalController {
 
         Parent itemInfo = controller.render();
         children.add(0, itemInfo);
+    }
+
+    public <T> void openBox(T value) {
+        ObservableList<Node> children = ingameWrappingHBox.getChildren();
+
+        itemInformationController.setOpen(true);
+
+        StarterController controller = starterController;
+        if (value instanceof Item item) {
+            controller.setStarter(item.type().toString(), ITEM);
+        } else if (value instanceof Monster monster) {
+            controller.setStarter(monster.type().toString(), MON);
+        }
+        controller.init();
+        tabStack.push(controller);
+
+        Parent starter = controller.render();
+        children.add(0, starter);
     }
 
     public void openMonsterInventory() {

@@ -283,6 +283,7 @@ public class BattleLogService {
                 } else {
                     MonsterTypeDto eneMon = attackedMonsters.get(slot);
                     if (eneMon != null && monster != null && monsterNames.get(slot) != null) {
+                        encounterOverviewControllerProvider.get().renderAttack(slot);
                         addTranslatedSection("monsterAttacks", monsterNames.get(slot), eneMon.name(), ability.name());
                     }
                     target = move.target();
