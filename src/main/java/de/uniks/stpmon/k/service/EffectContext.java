@@ -13,6 +13,7 @@ public class EffectContext {
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
+    private boolean skipAudio = false;
     private int walkingSpeed = MOVEMENT_PERIOD;
     private int walkingAnimationSpeed = WALKING_ANIMATION_PERIOD;
     private double textureScale = 3.0d;
@@ -98,6 +99,20 @@ public class EffectContext {
      */
     public boolean shouldSkipLoading() {
         return skipLoading;
+    }
+
+    public EffectContext setSkipLoadAudio(boolean skipAudio) {
+        this.skipAudio = skipAudio;
+        return this;
+    }
+
+    /**
+     * Checks if the loading of mp3 audio files should be skipped.
+     *
+     * @return true if loading should be skipped, false otherwise
+     */
+    public boolean shouldSkipLoadAudio() {
+        return skipAudio;
     }
 
     /**
