@@ -232,6 +232,7 @@ public class BattleLogService {
 
                         });
 
+
                         //transition for Monbal
                         TranslateTransition translation =
                                 new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), ball);
