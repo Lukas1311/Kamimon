@@ -115,6 +115,7 @@ public class EncounterOverviewController extends Controller {
     private final Pane blackPane = new Pane();
     public Parent controller;
     public Parent monInfoParent;
+    public Item item;
 
     @Inject
     public EncounterOverviewController() {
@@ -542,6 +543,25 @@ public class EncounterOverviewController extends Controller {
         transition.setFromX(fromRight ? 600 : -600);
         transition.setToX(0);
         return transition;
+    }
+
+    public void monBallAnimation() {
+        ImageView itemView = null;
+        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
+            //image
+            Image ball = ImageUtils.scaledImageFX(item1, 3.0);
+            itemView.setImage(ball);
+
+
+        });
+
+        //transition for Monbal
+        TranslateTransition translation =
+                new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), itemView);
+        translation.setByY(300);
+        translation.setByX(1000);
+        translation.setCycleCount(3);
+        translation.play();
     }
 
     @Override

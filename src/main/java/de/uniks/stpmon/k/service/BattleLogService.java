@@ -224,22 +224,7 @@ public class BattleLogService {
                     //show encounter result
                     ImageView itemView;
                     if (monsterCaught) {
-                        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
-                            //image
-                            Image ball = ImageUtils.scaledImageFX(item1, 3.0);
-                            itemView.setImage(ball);
-
-
-                        });
-
-
-                        //transition for Monbal
-                        TranslateTransition translation =
-                                new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), ball);
-                        translation.setByY(300);
-                        translation.setByX(1000);
-                        translation.setCycleCount(3);
-                        translation.play();
+                        encounterOverviewControllerProvider.get().monBallAnimation();
 
                         closeEncounterTrigger = CloseEncounterTrigger.END;
                     }
