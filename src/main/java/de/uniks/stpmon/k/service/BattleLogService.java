@@ -26,8 +26,6 @@ public class BattleLogService {
     @Inject
     PresetService presetService;
     @Inject
-    IResourceService resourceService;
-    @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
@@ -64,7 +62,6 @@ public class BattleLogService {
     private final Map<EncounterSlot, Monster> monsAfterLevelUp = new HashMap<>();
 
     private final Map<EncounterSlot, LevelUp> levelUps = new HashMap<>();
-    private boolean catchSuccessful = false;
     public Item item;
 
     @Inject
