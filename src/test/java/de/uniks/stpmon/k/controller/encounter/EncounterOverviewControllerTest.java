@@ -24,7 +24,6 @@ import javax.inject.Provider;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -38,6 +37,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @Mock
     SessionService sessionService;
     @Mock
+    @SuppressWarnings("unused")
     SoundService soundService;
     @Mock
     Provider<StatusController> statusControllerProvider;
