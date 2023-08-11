@@ -43,7 +43,7 @@ public class SettingsServiceTest {
     @Test
     public void testNight() {
         when(preferences.getBoolean("nightMode", true)).thenReturn(true);
-        TestObserver<Boolean> testObserver = settingsService.onNightModusEnabled().test();
+        TestObserver<Boolean> testObserver = settingsService.onNightModeEnabled().test();
         // check initial value
         assertEquals(true, settingsService.getNightEnabled());
         testObserver.assertValueAt(0, true);
