@@ -70,7 +70,7 @@ public class SoundControllerTest extends ApplicationTest {
 
     @Test
     public void onMusic() {
-        final Slider musicSlider = lookup("#music").query();
+        final Slider musicSlider = lookup("#musicSlider").query();
         //check first if value is 100
         assertThat(musicSlider.getValue()).isEqualTo(100);
 

@@ -7,12 +7,13 @@ package de.uniks.stpmon.k.service;
 @SuppressWarnings("unused")
 public class EffectContext {
 
-    public static final int MOVEMENT_PERIOD = 200;
+    public static final int MOVEMENT_PERIOD = 150;
     public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
-
+    private float sprintingFactor = 0.65f;
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
+    private boolean skipAudio = false;
     private int walkingSpeed = MOVEMENT_PERIOD;
     private int walkingAnimationSpeed = WALKING_ANIMATION_PERIOD;
     private double textureScale = 3.0d;
@@ -20,6 +21,23 @@ public class EffectContext {
 
     private double encounterAnimationSpeed = 1000;
 
+    /**
+     * Gets the sprinting factor.
+     *
+     * @return The dialog animation speed
+     */
+    public float getSprintingFactor() {
+        return sprintingFactor;
+    }
+
+    /**
+     * Sets the sprinting factor.
+     *
+     * @param sprintingFactor The sprinting factor
+     */
+    public void setSprintingFactor(float sprintingFactor) {
+        this.sprintingFactor = sprintingFactor;
+    }
 
     /**
      * Tells the controllers to skip loading images.
@@ -81,6 +99,20 @@ public class EffectContext {
      */
     public boolean shouldSkipLoading() {
         return skipLoading;
+    }
+
+    public EffectContext setSkipLoadAudio(boolean skipAudio) {
+        this.skipAudio = skipAudio;
+        return this;
+    }
+
+    /**
+     * Checks if the loading of mp3 audio files should be skipped.
+     *
+     * @return true if loading should be skipped, false otherwise
+     */
+    public boolean shouldSkipLoadAudio() {
+        return skipAudio;
     }
 
     /**

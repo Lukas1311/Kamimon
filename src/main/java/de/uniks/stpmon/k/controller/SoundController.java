@@ -1,10 +1,10 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.world.ScalableClockService;
-import javafx.event.ActionEvent;
+import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -25,8 +25,6 @@ import java.util.function.Function;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.prefs.Preferences;
-import java.time.Duration;
-import java.util.function.Function;
 
 public class SoundController extends Controller {
 
@@ -37,11 +35,25 @@ public class SoundController extends Controller {
     @FXML
     public Button backToSettingButton;
     @FXML
-    public Slider music;
+    public Slider musicSlider;
     @FXML
     public CheckBox nightMode;
     @FXML
-    public Label value;
+    public CheckBox muteSound;
+    @FXML
+    public Label muteSoundLabel;
+    @FXML
+    public Text mediaControlText;
+    @FXML
+    public Button previousButton;
+    @FXML
+    public Button nextButton;
+    @FXML
+    public Button playPauseButton;
+    @FXML
+    public Button shuffleButton;
+    @FXML
+    public Label volumeValueLabel;
     @FXML
     public RadioButton germanButton;
     @FXML
@@ -53,14 +65,16 @@ public class SoundController extends Controller {
     public Slider dayCycle;
     @FXML
     public Text dayCycleLabel;
+
+    
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SettingsService settingsService;
     @Inject
-    Preferences preferences;
+    SoundService soundService;
     @Inject
-    LoginController loginControllerProvider;
+    Preferences preferences;
 
     @Inject
     public SoundController() {
@@ -72,23 +86,37 @@ public class SoundController extends Controller {
         final Parent parent = super.render();
         soundScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
+        mediaControlText.setText(translateString("mediaCtrl"));
+        muteSoundLabel.setText(translateString("muteSound"));
+
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
 
-        music.setValue(settingsService.getSoundValue());
-        value.setText(String.valueOf((int) music.getValue()));
+        musicSlider.setValue(settingsService.getSoundValue());
         //save the value with preferences
-        listen(music.valueProperty(),
+        volumeValueLabel.setText(String.valueOf((int) musicSlider.getValue()));
+        listen(musicSlider.valueProperty(),
                 (observable, oldValue, newValue) -> {
                     settingsService.setSoundValue(newValue.floatValue());
+                    volumeValueLabel.setText(String.valueOf((int) musicSlider.getValue()));
+                }
+        );
 
-                    value.setText(String.valueOf((int) music.getValue()));
-                });
+        muteSound.setSelected(settingsService.getSoundMuted());
+        listen(muteSound.selectedProperty(),
+                (observable, oldValue, newValue) -> settingsService.setSoundMuted(newValue)
+        );
+
+        previousButton.setOnAction(click -> soundService.previous());
+        playPauseButton.setOnAction(click -> soundService.playOrPause());
+        nextButton.setOnAction(click -> soundService.next());
+        shuffleButton.setOnAction(click -> soundService.shuffle());
 
         //night mode
         nightMode.setSelected(settingsService.getNightEnabled());
         listen(nightMode.selectedProperty(),
-                (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue));
+                (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue)
+        );
 
         //GE & EN
         boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());

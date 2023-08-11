@@ -9,7 +9,9 @@ import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.dummies.*;
+
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.UserStorage;
@@ -52,6 +54,8 @@ public interface TestComponent extends MainComponent {
 
     SessionService sessionService();
 
+    SoundService soundService();
+    
     PresetApiDummy presetApi();
 
     @Component.Builder

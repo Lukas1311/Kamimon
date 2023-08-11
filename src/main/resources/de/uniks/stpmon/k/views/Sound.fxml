@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import java.lang.String?>
@@ -15,48 +17,68 @@
         <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="185.0">
             <Button fx:id="backToSettingButton" mnemonicParsing="false" prefHeight="42.0" prefWidth="42.0">
                 <VBox.margin>
-                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0"/>
+                    <Insets bottom="5.0" left="15.0" right="10.0" top="5.0" />
                 </VBox.margin>
                 <graphic>
-                    <FontIcon iconLiteral="fa-mail-forward"/>
+                    <FontIcon iconLiteral="fa-mail-forward" />
                 </graphic>
                 <tooltip>
-                    <Tooltip text="%back"/>
+                    <Tooltip text="%back" />
                 </tooltip>
                 <styleClass>
-                    <String fx:value="chat-back-button"/>
-                    <String fx:value="kgm-general-button-white"/>
+                    <String fx:value="chat-back-button" />
+                    <String fx:value="kgm-general-button-white" />
                 </styleClass>
             </Button>
         </VBox>
     </HBox>
-    <HBox prefHeight="100.0" prefWidth="200.0">
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="56.0">
+
+    <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
+        <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="56.0">
+            <Text fx:id="mediaControlText" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+        </HBox>
+        <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
+            <Button fx:id="previousButton" text="◄" textAlignment="CENTER" styleClass="sound-button" />
+            <Button fx:id="playPauseButton" text="♫" textAlignment="CENTER" styleClass="sound-button" />
+            <Button fx:id="nextButton" text="►" textAlignment="CENTER" styleClass="sound-button" />
+            <Button fx:id="shuffleButton" text="¿?" textAlignment="CENTER" styleClass="sound-button">
+                <HBox.margin>
+                   <Insets left="20.0" />
+                </HBox.margin>
+            </Button>
+        </HBox>
+        <VBox.margin>
+            <Insets left="15.0" right="15.0" />
+        </VBox.margin>
+    </HBox>
+    
+    <HBox maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="200.0">
+        <HBox alignment="BOTTOM_LEFT" prefWidth="56.0">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%music" />
         </HBox>
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" HBox.hgrow="ALWAYS">
-            <Slider fx:id="music">
+        <HBox alignment="BOTTOM_RIGHT" HBox.hgrow="ALWAYS">
+            <Slider fx:id="musicSlider" pickOnBounds="false" styleClass="slider">
                 <HBox.margin>
                     <Insets right="10.0" />
                 </HBox.margin>
             </Slider>
-            <Label fx:id="value" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="33" style="-fx-border-color: black;" text="5" textAlignment="CENTER">
+            <Label fx:id="volumeValueLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="33" style="-fx-border-color: black;" text="5" textAlignment="CENTER" styleClass="sound-label">
                 <padding>
                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                 </padding>
                 <HBox.margin>
                     <Insets bottom="3.0" right="15.0" />
                 </HBox.margin>
-                <styleClass>
-                    <String fx:value="sound-label" />
-                </styleClass>
-                <HBox.margin>
-                    <Insets/>
-                </HBox.margin>
             </Label>
         </HBox>
+        <HBox alignment="BOTTOM_RIGHT" HBox.hgrow="ALWAYS">
+            <VBox alignment="BOTTOM_RIGHT">
+                <Label fx:id="muteSoundLabel" alignment="CENTER" styleClass="sound-mute-label" text="Mute" />
+                <CheckBox fx:id="muteSound" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="sound-check-box" />
+            </VBox>
+        </HBox>
         <VBox.margin>
-            <Insets left="15.0" right="15.0"/>
+            <Insets left="15.0" right="15.0" />
         </VBox.margin>
     </HBox>
     <HBox prefHeight="42.0" prefWidth="364.0">
@@ -66,11 +88,11 @@
                 <Insets left="15.0" />
             </padding>
         </HBox>
-        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" HBox.hgrow="ALWAYS">
-            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" styleClass="login-check-box"/>
+        <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="86.0" prefWidth="228.0" HBox.hgrow="ALWAYS">
+            <CheckBox fx:id="nightMode" mnemonicParsing="false" prefHeight="26.0" prefWidth="41.0" styleClass="sound-check-box" />
         </HBox>
         <VBox.margin>
-            <Insets left="15.0" right="15.0"/>
+            <Insets left="15.0" right="15.0" />
         </VBox.margin>
     </HBox>
     <HBox alignment="CENTER" prefHeight="30.0" prefWidth="139.0">
@@ -95,21 +117,21 @@
     </HBox>
     <VBox>
         <VBox.margin>
-            <Insets left="15.0" right="15.0" top="20.0"/>
+            <Insets left="15.0" right="15.0" top="20.0" />
         </VBox.margin>
         <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefWidth="90.0">
             <padding>
-                <Insets bottom="10.0" top="10.0"/>
+                <Insets bottom="10.0" top="10.0" />
             </padding>
             <VBox.margin>
-                <Insets/>
+                <Insets />
             </VBox.margin>
-            <Text fx:id="dayCycleLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="%day-cycle"/>
+            <Text fx:id="dayCycleLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="%day-cycle" />
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="40.0" VBox.vgrow="NEVER">
             <Slider fx:id="dayCycle" majorTickUnit="3.0" max="36.0" minWidth="335.0"
                     minorTickCount="2" prefHeight="58.0" prefWidth="332.0" showTickLabels="true"
-                    showTickMarks="true" snapToTicks="true" styleClass="slider" HBox.hgrow="NEVER"/>
+                    showTickMarks="true" snapToTicks="true" styleClass="slider" HBox.hgrow="NEVER" />
         </HBox>
     </VBox>
 </VBox>
