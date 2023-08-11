@@ -135,6 +135,15 @@ public class SoundService {
         mediaPlayer.play();
     }
 
+    public void play(String filename) {
+        Media chosenSong = loadAudioFile(filename);
+        if (chosenSong == null) {
+            return;
+        }
+        mediaPlayer = new MediaPlayer(chosenSong);
+        play();
+    }
+
     private void pause() {
         if (mediaPlayer == null) {
             return;
@@ -239,7 +248,7 @@ public class SoundService {
             ) {
                 return new Media(Objects.requireNonNull(filename));
             } else {
-                return new Media(Objects.requireNonNull(Main.class.getResource(basePathURL + filename + ".mp3")).toExternalForm());
+                return new Media(Objects.requireNonNull(Main.class.getResource("sound/" + filename + ".mp3")).toExternalForm());
             }
         } catch (URISyntaxException e) {
             System.err.println("Invalid URI: " + e.getMessage());
