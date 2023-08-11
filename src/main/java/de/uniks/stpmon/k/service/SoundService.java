@@ -100,9 +100,12 @@ public class SoundService {
 
     private void startPlayer() {
         for (String song : songNames) {
-            playlist.add(loadAudioFile(song));
+            Media media = loadAudioFile(song);
+            if (media != null) {
+                playlist.add(media);
+            }   
         }
-        if (playlist == null) {
+        if (playlist == null || playlist.isEmpty()) {
             return;
         }
         playNext();
