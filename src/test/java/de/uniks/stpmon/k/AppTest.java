@@ -385,7 +385,7 @@ class AppTest extends ApplicationTest {
         HBox ingameWrappingHbox = lookup("#ingameWrappingHBox").query();
         assertEquals(1, ingameWrappingHbox.getChildren().size());
 
-        type(KeyCode.S, 3);
+        type(KeyCode.S, 2);
         // start encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
@@ -403,8 +403,8 @@ class AppTest extends ApplicationTest {
 
         // Check if won and left encounter
         verifyThat("#monsterBar", Node::isVisible);
-        type(KeyCode.D, 2);
-        type(KeyCode.S, 2);
+        type(KeyCode.D, 1);
+        type(KeyCode.S, 1);
 
         // start 2v2 encounter
         type(KeyCode.E);
@@ -453,10 +453,10 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar #slot_0_zero", Node::isVisible);
         verifyThat("#monsterBar #slot_1_zero", Node::isVisible);
         // Walk to nurse
-        type(KeyCode.D, 2);
-        type(KeyCode.S, 5);
-        type(KeyCode.A, 5);
-        type(KeyCode.W, 2);
+        type(KeyCode.D, 1);
+        type(KeyCode.S, 4);
+        type(KeyCode.A, 4);
+        type(KeyCode.W, 1);
 
         // Talk to nurse
         type(KeyCode.E, 4);
@@ -466,8 +466,8 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar #slot_0_normal", Node::isVisible);
         verifyThat("#monsterBar #slot_1_normal", Node::isVisible);
 
-        type(KeyCode.D, 4);
-        type(KeyCode.W, 2);
+        type(KeyCode.D, 3);
+        type(KeyCode.W, 1);
 
         // Start encounter wild encounter
         type(KeyCode.E);
@@ -568,27 +568,22 @@ class AppTest extends ApplicationTest {
         //test sound
         clickOn("#settings");
         clickOn("#mdmzSettings");
-        final Slider musicSlider = lookup("#music").query();
+        final Slider musicSlider = lookup("#musicSlider").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
         clickOn("#settings");
 
 
         //go to clerk
-        type(KeyCode.S);
-        type(KeyCode.S);
-        type(KeyCode.D);
-        type(KeyCode.D);
-        type(KeyCode.D);
-        type(KeyCode.D);
+        type(KeyCode.S, 2);
+        type(KeyCode.D, 3);
         type(KeyCode.W);
 
         //talk to clerk
-        type(KeyCode.E);
-        type(KeyCode.E);
+        type(KeyCode.E, 2);
 
         verifyThat("#shopOverview", Node::isVisible);
         verifyThat("#shopOption", Node::isVisible);
-        verifyThat("#itemNameLabel",hasText("Item_0"));
+        verifyThat("#itemNameLabel", hasText("Item_0"));
         verifyThat("#buyButton", Node::isDisabled);
         verifyThat("#sellButton", Node::isDisabled);
 
@@ -602,7 +597,7 @@ class AppTest extends ApplicationTest {
         verifyThat("#buyButton", not(Node::isDisabled));
         clickOn("#item_Item_1");
         waitForFxEvents();
-        verifyThat("#itemNameLabel",hasText("Item_1"));
+        verifyThat("#itemNameLabel", hasText("Item_1"));
         verifyThat("#sellButton", not(Node::isDisabled));
 
         //close shop
@@ -612,8 +607,7 @@ class AppTest extends ApplicationTest {
         //test evolution of mon
         // walk to the right and start Encounter
         type(KeyCode.A);
-        type(KeyCode.A);
-        type(KeyCode.W);
+        type(KeyCode.UP);
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
@@ -632,23 +626,38 @@ class AppTest extends ApplicationTest {
         clickOn("#battleLog");
         clickOn("#battleLog");
 
-        //start wild encounter where monBall is used
-        component.presetApi().getMonBall();
-        waitForFxEvents();
-        type(KeyCode.S);
+        //test effect item in encounter
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);
         waitForFxEvents();
         clickOn("#main_menu_inventory");
         waitForFxEvents();
-        //in the test case, item7 is the MonBall
+        clickOn("#item_Item_1");
+        waitForFxEvents();
+        clickOn("#useButton");
+        waitForFxEvents();
+        FlowPane flowPane = lookup("#monsterSelectionFlow").queryAs(FlowPane.class);
+        clickOn(flowPane.getChildren().get(0));
+        waitForFxEvents();
+        clickOn("#battleLog");
+
+        //start wild encounter where monBall is used
+        component.presetApi().getMonBall();
+        waitForFxEvents();
+        type(KeyCode.DOWN);
+        type(KeyCode.E);
+        type(KeyCode.RIGHT);
+        type(KeyCode.E);
+        waitForFxEvents();
+        clickOn("#main_menu_inventory");
+        waitForFxEvents();
+        //in the test case, item4 is the MonBall
         clickOn("#item_Item_4");
         waitForFxEvents();
         clickOn("#useButton");
         waitForFxEvents();
         clickOn("#battleLog");
-
 
     }
 

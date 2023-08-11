@@ -131,7 +131,7 @@ public class WorldView extends Viewable {
                 ambient.setColor(worldService.getWorldColor(time));
             }
         });
-        subscribe(settingsService.onNightModusEnabled(), (enabled) -> {
+        subscribe(settingsService.onNightModeEnabled(), (enabled) -> {
             if (ambient == null) {
                 return;
             }

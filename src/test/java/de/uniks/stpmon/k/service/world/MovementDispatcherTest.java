@@ -178,12 +178,12 @@ public class MovementDispatcherTest {
         assertEquals(new MoveTrainerDto("0", "area_0", 1, 0, 0), captor.getValue());
 
         // moved 8 times, 4 direction changes, 4 actual movements
-        assertEquals(8, captor.getAllValues().size());
+        assertEquals(4, captor.getAllValues().size());
 
         // move one to right again
         movementDispatcher.moveDirection(Direction.RIGHT);
         // should not move two times into same direction
-        assertEquals(8, captor.getAllValues().size());
+        assertEquals(4, captor.getAllValues().size());
 
     }
 

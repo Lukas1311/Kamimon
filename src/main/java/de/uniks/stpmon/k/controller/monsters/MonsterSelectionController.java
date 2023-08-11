@@ -3,14 +3,12 @@ package de.uniks.stpmon.k.controller.monsters;
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.MonsterService;
-import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.IResourceService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,7 +25,7 @@ public class MonsterSelectionController extends Controller {
     @Inject
     ActionFieldController actionFieldController;
     @Inject
-    ResourceService resourceService;
+    IResourceService resourceService;
     @Inject
     MonsterService monsterService;
 
