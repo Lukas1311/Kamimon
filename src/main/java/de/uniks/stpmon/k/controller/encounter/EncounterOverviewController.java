@@ -13,7 +13,6 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -107,8 +106,6 @@ public class EncounterOverviewController extends Controller {
 
     @Inject
     Provider<MonsterSelectionController> monsterSelectionControllerProvider;
-    @Inject
-    ItemService itemService;
     @Inject
     SoundService soundService;
 

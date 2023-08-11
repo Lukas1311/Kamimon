@@ -44,8 +44,8 @@ public class SoundControllerTest extends ApplicationTest {
     @Mock
     SettingsService settingsService;
     @Mock
+    @SuppressWarnings("unused")
     Preferences preferences;
-
 
     @Override
     public void start(Stage stage) {

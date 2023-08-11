@@ -71,7 +71,6 @@
         <URL value="@css/ingameStyle.css" />
     </stylesheets>
     <styleClass>
-        <String fx:value="pause" />
         <String fx:value="ingame" />
     </styleClass>
 </BorderPane>

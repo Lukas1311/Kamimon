@@ -248,7 +248,7 @@ public class MonsterInventoryController extends Controller {
                     || monTeamList.size() < TEAM_SIZE)) {
                 boolean alreadyInTeam = monTeam.getChildren().contains(monParent);
                 boolean teamIsFull = monTeamList.size() >= TEAM_SIZE;
-                if (alreadyInTeam && teamIsFull) {
+                if (teamIsFull) {
                     event.setDropCompleted(true);
                     return;
                 }

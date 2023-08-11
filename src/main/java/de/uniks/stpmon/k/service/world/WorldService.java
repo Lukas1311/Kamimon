@@ -40,12 +40,6 @@ public class WorldService {
     public WorldService() {
     }
 
-    public LocalTime scale(LocalTime time) {
-        float factor = 1.0f;
-        int seconds = (int) (time.toSecondOfDay() * factor);
-        return LocalTime.ofSecondOfDay(seconds);
-    }
-
     /**
      * Returns a factor that represents the progress of the night. From 0 to 1 and to 0 again.
      *

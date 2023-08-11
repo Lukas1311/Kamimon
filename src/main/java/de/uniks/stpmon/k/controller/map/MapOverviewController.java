@@ -34,7 +34,6 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Rotate;
-import javafx.util.Pair;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -90,7 +89,6 @@ public class MapOverviewController extends ToastedController {
     TeleportAnimation teleportAnimation;
     @Inject
     InputHandler inputHandler;
-
 
     private Shape activeShape;
     private Region currentRegion;
@@ -155,8 +153,7 @@ public class MapOverviewController extends ToastedController {
                     textDeliveryService.getRouteData(currentRegion),
                     data -> subscribe(
                             regionService.getAreas(currentRegion._id()),
-                            areas -> renderMapDetails(data, filterVisitedAreas(areas), currentPosition),
-                            this::handleError
+                            areas -> renderMapDetails(data, filterVisitedAreas(areas), currentPosition)
                     )
             );
         }
@@ -189,32 +186,34 @@ public class MapOverviewController extends ToastedController {
         playerDart = null;
     }
 
-    private HashMap<String, Pair<String, Boolean>> filterVisitedAreas(List<Area> areas) {
-        HashMap<String, Pair<String, Boolean>> visitedAreas = new HashMap<>();
+    private HashMap<String, AreaInfo> filterVisitedAreas(List<Area> areas) {
+        HashMap<String, AreaInfo> visitedAreas = new HashMap<>();
         for (Area area : areas) {
             if (area._id().equals(currentAreaId)) {
                 currentPosition = area.name();
             }
             boolean hasSpawn = false;
-            if (visitedAreaIds.contains(area._id())) {
-                if (area.map() != null) {
-                    List<Property> properties = area.map().properties();
-                    if (properties != null) {
-                        for (Property prop : properties) {
-                            if (prop.name().equals("Spawn")) {
-                                hasSpawn = true;
-                                break;
-                            }
-                        }
+            if (!visitedAreaIds.contains(area._id())) {
+                continue;
+            }
+            if (area.map() == null) {
+                continue;
+            }
+            List<Property> properties = area.map().properties();
+            if (properties != null) {
+                for (Property prop : properties) {
+                    if (prop.name().equals("Spawn")) {
+                        hasSpawn = true;
+                        break;
                     }
-                    visitedAreas.put(area.name(), new Pair<>(area._id(), hasSpawn));
                 }
             }
+            visitedAreas.put(area.name(), new AreaInfo(area, hasSpawn));
         }
         return visitedAreas;
     }
 
-    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, Pair<String, Boolean>> visitedAreas, String currentPosition) {
+    private void renderMapDetails(List<RouteData> routeListData, HashMap<String, AreaInfo> visitedAreas, String currentPosition) {
 
         double originalHeight = mapImageView.getImage().getHeight();
         double scaledHeight = mapImageView.getFitHeight();
@@ -226,21 +225,15 @@ public class MapOverviewController extends ToastedController {
 
         routeListData.forEach(routeData -> {
             boolean visited = visitedAreas.containsKey(routeData.routeText().name());
-            boolean hasSpawn = false;
+            AreaInfo info = null;
             boolean isCurrentPos = false;
-            String areaId = "";
             if (visited) {
 
                 if (routeData.routeText().name().equals(currentPosition)) {
                     isCurrentPos = true;
                 }
 
-                // getValue() returns the "right" value of the pair (in this case the bool)
-                hasSpawn = visitedAreas.get(routeData.routeText().name()).getValue();
-                if (hasSpawn) {
-                    // getKey() returns the "left" value of the pair (in this case the string)
-                    areaId = visitedAreas.get(routeData.routeText().name()).getKey();
-                }
+                info = visitedAreas.get(routeData.routeText().name());
             }
 
             if (!routeData.polygon().isEmpty()) {
@@ -258,7 +251,7 @@ public class MapOverviewController extends ToastedController {
                     setPlayerDartPosition(posX, posY);
                 }
 
-                addDetailShape(polygon, routeData, visited, hasSpawn, areaId);
+                addDetailShape(polygon, routeData, visited, info);
                 return;
             }
             if (routeData.width() == 0 || routeData.height() == 0) {
@@ -277,7 +270,7 @@ public class MapOverviewController extends ToastedController {
                 setPlayerDartPosition(posX, posY);
             }
 
-            addDetailShape(rectangle, routeData, visited, hasSpawn, areaId);
+            addDetailShape(rectangle, routeData, visited, info);
         });
     }
 
@@ -302,17 +295,16 @@ public class MapOverviewController extends ToastedController {
     }
 
     private void setPlayerDartPosition(double posX, double posY) {
-        double dartWidth = playerDart.getBoundsInLocal().getWidth() * playerDart.getScaleX();
         double dartHeight = playerDart.getBoundsInLocal().getHeight() * playerDart.getScaleY();
 
         playerDart.setTranslateX(posX - playerDart.getLayoutX());
         playerDart.setTranslateY(posY - playerDart.getLayoutY() + dartHeight / 2);
     }
 
-    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited, boolean hasSpawn, String areaId) {
+    private void addDetailShape(Shape shape, RouteData routeData, boolean isVisited, AreaInfo areaInfo) {
         shape.setId("detail_" + routeData.id());
         // set the area id as hidden user data
-        shape.setUserData(areaId);
+        shape.setUserData(areaInfo != null ? areaInfo.area()._id() : null);
 
         if (isVisited) {
             shape.setFill(Color.TRANSPARENT);
@@ -337,14 +329,18 @@ public class MapOverviewController extends ToastedController {
                 shape.setOpacity(OPACITY_SELECTED);
             }
 
-            if (isVisited) {
+            if (isVisited && areaInfo != null) {
                 areaNameLabel.setText(routeData.routeText().name());
-                if (!routeData.routeText().description().isEmpty()) {
-                    regionDescription.setText(routeData.routeText().description());
-                } else {
-                    regionDescription.setText("Here could be your advertisement.");
+                String desc = routeData.routeText().description();
+                String buildings = routeData.buildings();
+                if (!buildings.isEmpty()) {
+                    desc += "\n" + translateString("map.buildings", buildings.replace("\n", ", "));
                 }
-                fastTravelButton.setVisible(hasSpawn);
+                if (desc.isEmpty()) {
+                    desc = "Here could be your advertisement.";
+                }
+                regionDescription.setText(desc);
+                fastTravelButton.setVisible(areaInfo.hasSpawn);
                 fastTravelButton.setOnAction(click -> fastTravel((String) shape.getUserData()));
 
             } else {
@@ -382,5 +378,8 @@ public class MapOverviewController extends ToastedController {
     @Override
     public String getResourcePath() {
         return "map/";
+    }
+
+    private record AreaInfo(Area area, boolean hasSpawn) {
     }
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class TrainerItemApiDummy implements TrainerItemApiService {
 
     final List<Item> items = new ArrayList<>();
