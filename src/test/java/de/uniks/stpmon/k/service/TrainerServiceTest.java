@@ -36,7 +36,7 @@ public class TrainerServiceTest {
     @InjectMocks
     TrainerService trainerService;
 
-    Trainer trainer = DummyConstants.TRAINER;
+    final Trainer trainer = DummyConstants.TRAINER;
 
     @Test
     public void getMe() {

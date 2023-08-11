@@ -30,6 +30,7 @@ public abstract class WorldViewable extends Viewable {
     @SuppressWarnings("unused")
     public abstract Node render();
 
+    @SuppressWarnings("unused")
     public void updateShadow(ShadowTransform transform) {
     }
 

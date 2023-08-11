@@ -24,8 +24,6 @@ public class MonDexDetailController extends Controller {
     @FXML
     public Text name;
     @FXML
-    public Text type;
-    @FXML
     public Text description;
     @FXML
     public HBox typeBox;

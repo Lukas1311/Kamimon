@@ -9,7 +9,10 @@ import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.builder.TrainerBuilder;
-import de.uniks.stpmon.k.service.*;
+import de.uniks.stpmon.k.service.EffectContext;
+import de.uniks.stpmon.k.service.ItemService;
+import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.ResourceService;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
@@ -26,18 +29,16 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.framework.junit5.ApplicationTest;
 
+import javax.inject.Provider;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.util.NodeQueryUtils.hasText;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
-
-import javax.inject.Provider;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 @ExtendWith(MockitoExtension.class)
 public class ItemInformationControllerTest extends ApplicationTest {
@@ -74,7 +75,7 @@ public class ItemInformationControllerTest extends ApplicationTest {
     private Stage stage;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         app.start(stage);
         when(resourceBundleProvider.get()).thenReturn(resources);
         when(resourceService.getItemImage(anyString())).thenReturn(Observable.just(DummyConstants.EMPTY_IMAGE));

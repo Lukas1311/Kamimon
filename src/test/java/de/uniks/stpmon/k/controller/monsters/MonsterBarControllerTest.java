@@ -61,7 +61,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void testSetMonsterStatus_ZeroHP() throws InterruptedException {
+    public void testSetMonsterStatus_ZeroHP() {
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(imageMock);
 
@@ -72,7 +72,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void testSetMonsterStatus_NormalHP() throws InterruptedException {
+    public void testSetMonsterStatus_NormalHP() {
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(imageMock);
 
@@ -83,7 +83,7 @@ public class MonsterBarControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void testSetMonsterStatus_LowHP() throws InterruptedException {
+    public void testSetMonsterStatus_LowHP() {
         // Set the mock
         when(monsterSlot.getImage()).thenReturn(imageMock);
 
