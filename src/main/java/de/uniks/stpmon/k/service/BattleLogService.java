@@ -16,8 +16,10 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.models.Result;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -41,6 +43,8 @@ public class BattleLogService {
     SessionService sessionService;
     @Inject
     PresetService presetService;
+    @Inject
+    IResourceService resourceService;
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
@@ -218,21 +222,23 @@ public class BattleLogService {
                 } else {
                     //user sees result of encounter
                     //show encounter result
+                    ImageView itemView;
                     if (monsterCaught) {
-                        subscribe(presetService.getItemImage(String.valueOf(item.type())), item1 -> {
+                        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
                             //image
-                            ImageView ball = (ImageView) item1;
-                            //transition for Monbal
-                            TranslateTransition translation =
-                                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), ball);
-                            translation.setByY(300);
-                            translation.setByX(1000);
-                            translation.setCycleCount(3);
-                            translation.play();
+                            Image ball = ImageUtils.scaledImageFX(item1, 3.0);
+                            itemView.setImage(ball);
 
 
                         });
 
+                        //transition for Monbal
+                        TranslateTransition translation =
+                                new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), ball);
+                        translation.setByY(300);
+                        translation.setByX(1000);
+                        translation.setCycleCount(3);
+                        translation.play();
 
                         closeEncounterTrigger = CloseEncounterTrigger.END;
                     }
