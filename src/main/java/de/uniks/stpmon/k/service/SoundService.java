@@ -2,6 +2,7 @@ package de.uniks.stpmon.k.service;
 
 import de.uniks.stpmon.k.Main;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 import java.io.File;
 import java.net.URI;
@@ -18,10 +19,9 @@ import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -43,11 +43,12 @@ public class SoundService {
     private MediaPlayer mediaPlayer;
 
     private List<Media> playlist = new ArrayList<>();
-    private int currentMediaIndex = 0;
     private boolean repeat = true;
 
     private DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
     private BooleanProperty muteProperty = new SimpleBooleanProperty(false);
+    private IntegerProperty currentSongProperty = new SimpleIntegerProperty(0);
+
 
     @Inject
     public SoundService() {
@@ -59,8 +60,13 @@ public class SoundService {
         if (mediaPlayer == null) {
             return;
         }
+
         mediaPlayer.volumeProperty().bind(volumeProperty);
         mediaPlayer.muteProperty().bind(muteProperty);
+
+        listen(currentSongProperty, (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
+            settingsService.setCurrentSong(newValue.intValue());
+        });
         
         disposables.add(settingsService.onSoundValue().subscribe(
                 // updates whenever sound value changes
@@ -91,15 +97,16 @@ public class SoundService {
             return;
         }
 
-        if (currentMediaIndex < playlist.size()) {
-            Media media = playlist.get(currentMediaIndex);
+        if (currentSongProperty.get() < playlist.size()) {
+            Media media = playlist.get(currentSongProperty.get());
             mediaPlayer = new MediaPlayer(media);
             mediaPlayer.volumeProperty().bind(volumeProperty);
             mediaPlayer.muteProperty().bind(muteProperty);
 
             // end of media event handler is switching to next song
             mediaPlayer.setOnEndOfMedia(() -> {
-                currentMediaIndex++;
+                int currentIndex = currentSongProperty.get();
+                currentSongProperty.set(currentIndex + 1);
                 playNext();
             });
 
@@ -107,7 +114,7 @@ public class SoundService {
         } else {
             // playlist is finished
             if (repeat) {
-                currentMediaIndex = 0;
+                currentSongProperty.set(0);
                 playNext();
             }
         }
@@ -155,14 +162,16 @@ public class SoundService {
     }
 
     public void next() {
-        currentMediaIndex++;
+        int currentIndex = currentSongProperty.get();
+        currentSongProperty.set(currentIndex + 1);
         playNext();
     }
 
     public void previous() {
-        currentMediaIndex--;
-        if (currentMediaIndex < 0) {
-            currentMediaIndex = playlist.size() - 1;
+        int currentIndex = currentSongProperty.get();
+        currentSongProperty.subtract(currentIndex - 1);
+        if (currentSongProperty.get() < 0) {
+            currentSongProperty.set(playlist.size() - 1);
         }
         playNext();
     }
@@ -172,7 +181,7 @@ public class SoundService {
             return;
         }
         Collections.shuffle(playlist, new Random());
-        currentMediaIndex=0;
+        currentSongProperty.set(0);
         playNext();
     }
 
@@ -254,5 +263,14 @@ public class SoundService {
             System.err.println("Invalid URI: " + e.getMessage());
         }
         return null;
+    }
+
+    protected <T> void listen(ObservableValue<T> property, ChangeListener<? super T> listener) {
+        property.addListener(listener);
+        onDestroy(() -> property.removeListener(listener));
+    }
+
+    private void onDestroy(Runnable action) {
+        disposables.add(Disposable.fromRunnable(action));
     }
 }

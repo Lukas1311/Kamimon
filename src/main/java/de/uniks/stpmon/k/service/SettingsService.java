@@ -16,6 +16,7 @@ public class SettingsService {
     private final BehaviorSubject<Boolean> soundMuted = BehaviorSubject.createDefault(false);
     private final BehaviorSubject<Float> soundValue = BehaviorSubject.createDefault(100f);
     private final BehaviorSubject<Float> dayTimeCycle = BehaviorSubject.createDefault(12f);
+    private final BehaviorSubject<Integer> currentSong = BehaviorSubject.createDefault(0);
 
     @Inject
     public SettingsService() {
@@ -28,8 +29,13 @@ public class SettingsService {
         nightMode.onNext(preferences.getBoolean("nightMode", true));
         soundMuted.onNext(preferences.getBoolean("soundMuted", false));
         soundValue.onNext(preferences.getFloat("soundValue", 100f));
+        currentSong.onNext(preferences.getInt("currentSong", 0));
         dayTimeCycle.onNext(preferences.getFloat("dayTimeCycle", 12f));
         initialized = true;
+    }
+
+    public void setCurrentSong(int index) {
+        preferences.putInt("currentSong", index);
     }
 
     public void setSoundValue(float value) {
@@ -64,6 +70,11 @@ public class SettingsService {
         return true;
     }
 
+    public Integer getCurrentSong() {
+        ensureInit();
+        return currentSong.getValue();
+    }
+
     public Float getSoundValue() {
         ensureInit();
         return soundValue.getValue();
@@ -84,7 +95,7 @@ public class SettingsService {
         return dayTimeCycle.getValue();
     }
 
-    public Observable<Boolean> onNightModusEnabled() {
+    public Observable<Boolean> onNightModeEnabled() {
         ensureInit();
         return nightMode;
     }
@@ -97,6 +108,11 @@ public class SettingsService {
     public Observable<Float> onSoundValue() {
         ensureInit();
         return soundValue;
+    }
+
+    public Observable<Integer> onCurrentSongChanged() {
+        ensureInit();
+        return currentSong;
     }
 
     public Observable<Float> onDayTimeCycle() {
