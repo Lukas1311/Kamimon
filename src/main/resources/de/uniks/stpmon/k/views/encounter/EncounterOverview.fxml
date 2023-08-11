@@ -35,12 +35,12 @@
                 </HBox>
                 <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                     <StackPane HBox.hgrow="ALWAYS">
-                        <ImageView fx:id="opponentMonster0" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="opponentMonster0" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <StackPane.margin>
                                 <Insets bottom="300.0" right="300.0" />
                             </StackPane.margin>
                         </ImageView>
-                        <ImageView fx:id="opponentMonster1" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="opponentMonster1" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                     </StackPane>
                 </HBox>
             </HBox>

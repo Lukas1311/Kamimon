@@ -18,7 +18,6 @@ import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import de.uniks.stpmon.k.utils.Direction;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
-import java.util.Collection;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -59,6 +58,10 @@ public class TestHelper {
             }
             if (dto.target().equals("attacker1")) {
                 encounterApi.startEncounter(true, true);
+                return;
+            }
+            if (dto.target().equals("wild")) {
+                encounterApi.startEncounter(false, true);
                 return;
             }
             if (dto.target().equals("nurse")) {
@@ -162,10 +165,24 @@ public class TestHelper {
                 .setNpc(NPCInfoBuilder.builder().addSells(0).addSells(1).addSells(2).create())
                 .create();
 
+        Trainer wildEncounter = TrainerBuilder.builder()
+                .setId("wild")
+                .setX(2)
+                .setY(2)
+                .setRegion("id0")
+                .setArea("id0_0")
+                .setDirection(Direction.BOTTOM)
+                .setNpc(NPCInfoBuilder.builder()
+                        .setEncounterOnTalk(true)
+                        .create())
+                .create();
+
 
         component.regionApi().addTrainer(attacker);
         component.regionApi().addTrainer(clerk);
+        component.regionApi().addTrainer(wildEncounter);
         component.regionApi().addMonster("attacker", "1", true);
+        component.regionApi().addMonster("wild", "5", true);
     }
 
 }

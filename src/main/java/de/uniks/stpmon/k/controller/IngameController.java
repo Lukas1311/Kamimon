@@ -1,6 +1,7 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.backpack.BackpackController;
+import de.uniks.stpmon.k.controller.backpack.BackpackMenuController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LoadingEncounterController;
 import de.uniks.stpmon.k.controller.encounter.LoadingWildEncounterController;
@@ -23,6 +24,7 @@ import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import io.reactivex.rxjava3.annotations.Nullable;
 import javafx.animation.KeyFrame;
@@ -113,6 +115,8 @@ public class IngameController extends PortalController {
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
+    Provider<BackpackMenuController> backpackMenuControllerProvider;
+    @Inject
     WorldController worldController;
     @Inject
     ShopOverviewController shopOverviewController;
@@ -124,6 +128,8 @@ public class IngameController extends PortalController {
     SessionService encounterService;
     @Inject
     EncounterStorage encounterStorage;
+    @Inject
+    SoundService soundService;
 
     private Parent mapOverview;
 
@@ -142,6 +148,7 @@ public class IngameController extends PortalController {
         backpackController.init();
         dialogueController.init();
         worldTimerController.init();
+        soundService.init();
 
         onDestroy(inputHandler.addPressedKeyFilter(event -> {
             // Block user input if he is in an encounter
@@ -239,6 +246,7 @@ public class IngameController extends PortalController {
         worldTimerController.destroy();
         shopOptionController.destroy();
         shopOverviewController.destroy();
+        soundService.destroy();
         ingameStack.getChildren().clear();
         ingame.getChildren().clear();
         ingameWrappingHBox.getChildren().clear();
@@ -316,15 +324,21 @@ public class IngameController extends PortalController {
     public void openOrCloseMap() {
         if (mapOverview == null) {
             openMap();
+            backpackMenuControllerProvider.get().closeAll();
         } else {
             closeMap();
         }
+    }
+
+    public boolean isMapOpen() {
+        return mapOverview != null;
     }
 
     public void openMap() {
         if (mapOverviewController == null) {
             return;
         }
+
         mapOverviewController.init();
         mapOverview = this.mapOverviewController.render();
         ingameStack.getChildren().add(mapOverview);

@@ -46,6 +46,7 @@ public class EventDummy {
         });
         when(listener.listen(any(), any(), any())).thenAnswer((invocation) -> {
             String pattern = invocation.getArgument(1);
+            //noinspection ReactiveStreamsUnusedPublisher
             return Observable.create(emitter -> {
                 // suppresses unchecked and raw types - we know that the emitter is of type ObservableEmitter<Event<T>>
                 // suppresses observable result - is never disposed fo the test time

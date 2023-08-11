@@ -124,11 +124,11 @@ public class EncounterService {
         );
     }
 
-    public Observable<Opponent> makeItemMove(EncounterSlot slot, int itemId, String myMonsterId) {
+    public Observable<Opponent> makeItemMove(EncounterSlot slot, int itemId, String monsterId) {
         UpdateOpponentDto dto = new UpdateOpponentDto(null, new UseItemMove(
                 Moves.USE_ITEM.toString(),
                 itemId,
-                myMonsterId)
+                monsterId)
         );
 
         if (sessionServiceProvider.get().hasNoEncounter()) {

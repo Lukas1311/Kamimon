@@ -2,16 +2,18 @@ package de.uniks.stpmon.k.controller.inventory;
 
 import de.uniks.stpmon.k.controller.Controller;
 import de.uniks.stpmon.k.controller.IngameController;
+import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
+import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.models.Monster;
-import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
-import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
+import de.uniks.stpmon.k.service.ResourceService;
+import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -42,7 +44,7 @@ public class ItemInformationController extends Controller {
     public Button useButton;
 
     @Inject
-    IResourceService resourceService;
+    ResourceService resourceService;
     @Inject
     PresetService presetService;
     @Inject
@@ -52,12 +54,12 @@ public class ItemInformationController extends Controller {
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
-    EventListener eventListener;
-
+    Provider<ActionFieldController> actionControllerProvider;
+    @Inject
+    SessionService sessionService;
 
     public Item item;
     public ItemTypeDto itemTypeDto;
-    private boolean isOpen = false;
 
     private boolean isEncounter = false;
 
@@ -71,12 +73,14 @@ public class ItemInformationController extends Controller {
         parent.setId("itemInformationNode");
         loadBgImage(fullBox, getResourcePath() + "InventoryBox_v1.1.png");
         useButton.setVisible(false);
+        useButton.setText(translateString("useItemButton"));
 
         subscribe(presetService.getItem(item.type()), item -> {
             itemTypeDto = item;
             if (item.use() != null) {
                 useButton.setVisible(true);
                 useButton.setText(translateString("useItemButton"));
+                // can not use MonBall outside of encounter or a box in an encounter                if (item.use().equals(ItemUse.BALL) && !isEncounter || (
                 if (item.use().equals(ItemUse.BALL) && !isEncounter || (
                         item.use().equals(ItemUse.ITEM_BOX) || item.use().equals(ItemUse.MONSTER_BOX)) && isEncounter) {
                     useButton.setDisable(true);
@@ -94,7 +98,7 @@ public class ItemInformationController extends Controller {
             itemView.setImage(itemImage);
         });
 
-        amountText.setText("Amount: " + item.amount().toString());
+        amountText.setText(translateString("shop.amount", item.amount().toString()));
 
         return parent;
     }
@@ -143,7 +147,12 @@ public class ItemInformationController extends Controller {
                 subscribe(itemService.useItem(itemTypeDto.id(), 1, null));
             }
             case BALL -> {
-                //TODO
+                if (isEncounter) {
+                    // each wild encounter only contains 1 mon, so no selection is needed
+                    // make itemMove
+                    String id = sessionService.getMonster(EncounterSlot.ENEMY_FIRST)._id();
+                    actionControllerProvider.get().executeItemMove(itemTypeDto.id(), id);
+                }
             }
             case EFFECT -> {
                 if (itemService == null || ingameControllerProvider == null) {
@@ -181,7 +190,6 @@ public class ItemInformationController extends Controller {
     public String getResourcePath() {
         return "inventory/";
     }
-
 
     @Override
     public void destroy() {

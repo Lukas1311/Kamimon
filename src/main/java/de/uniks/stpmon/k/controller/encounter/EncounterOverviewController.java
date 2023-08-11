@@ -15,6 +15,7 @@ import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
@@ -37,7 +38,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -49,7 +49,8 @@ import java.util.Map;
 @Singleton
 public class EncounterOverviewController extends Controller {
 
-    public static final double IMAGE_SCALE = 6.0;
+    public static final double IMAGE_SCALE_ATTACKER = 6.0;
+    public static final double IMAGE_SCALE_OPPONENT = 4.0;
 
     private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
 
@@ -108,6 +109,8 @@ public class EncounterOverviewController extends Controller {
     Provider<MonsterSelectionController> monsterSelectionControllerProvider;
     @Inject
     ItemService itemService;
+    @Inject
+    SoundService soundService;
 
     private final Pane blackPane = new Pane();
     public Parent controller;
@@ -122,6 +125,7 @@ public class EncounterOverviewController extends Controller {
         super.init();
         if (actionFieldController != null) {
             actionFieldController.init();
+            soundService.play("13_Trainer_Battle");
         }
     }
 
@@ -130,6 +134,9 @@ public class EncounterOverviewController extends Controller {
         super.destroy();
         if (actionFieldController != null) {
             actionFieldController.destroy();
+        }
+        if (soundService != null) {
+            soundService.destroy();
         }
         inventoryControllerProvider.get().setInEncounter(false);
         slotMonsters.clear();
@@ -447,17 +454,19 @@ public class EncounterOverviewController extends Controller {
     public void loadMonsterImage(String monsterId, ImageView monsterImage, boolean attacker) {
         subscribe(resourceService.getMonsterImage(monsterId), imageUrl -> {
             // Scale and set the image
-            Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
+            Image image;
             if (attacker) {
+                image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE_ATTACKER);
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             } else {
+                image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE_OPPONENT);
                 monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
         });
     }
 
-    private void animateMonsterEntrance() {
+    public void animateMonsterEntrance() {
         ObservableList<Node> teamMonsters = userMonsters.getChildren();
         if (teamMonsters.size() > 1) {
             teamMonsters.get(1).setOpacity(0);

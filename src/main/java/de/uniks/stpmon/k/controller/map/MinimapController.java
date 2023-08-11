@@ -127,12 +127,14 @@ public class MinimapController extends Controller {
     @Override
     public void destroy() {
         super.destroy();
-        miniMap.getImage().cancel();
-        miniMap.setImage(null);
-        SceneHelper.setAllowPGAccess(true);
-        NodeHelper.updatePeer(miniMap);
-        SceneHelper.setAllowPGAccess(false);
-        miniMap = null;
+        if (miniMap != null) {
+            miniMap.getImage().cancel();
+            miniMap.setImage(null);
+            SceneHelper.setAllowPGAccess(true);
+            NodeHelper.updatePeer(miniMap);
+            SceneHelper.setAllowPGAccess(false);
+            miniMap = null;
+        }
         miniMapBorder.setImage(null);
         miniMapBorder = null;
     }

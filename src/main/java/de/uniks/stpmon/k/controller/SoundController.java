@@ -1,14 +1,19 @@
 package de.uniks.stpmon.k.controller;
 
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
-import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import de.uniks.stpmon.k.service.SettingsService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.world.ScalableClockService;
+import de.uniks.stpmon.k.controller.sidebar.SidebarTab;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -17,6 +22,9 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.time.Duration;
 import java.util.function.Function;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.prefs.Preferences;
 
 public class SoundController extends Controller {
 
@@ -27,17 +35,46 @@ public class SoundController extends Controller {
     @FXML
     public Button backToSettingButton;
     @FXML
-    public Slider music;
+    public Slider musicSlider;
     @FXML
     public CheckBox nightMode;
+    @FXML
+    public CheckBox muteSound;
+    @FXML
+    public Label muteSoundLabel;
+    @FXML
+    public Text mediaControlText;
+    @FXML
+    public Button previousButton;
+    @FXML
+    public Button nextButton;
+    @FXML
+    public Button playPauseButton;
+    @FXML
+    public Button shuffleButton;
+    @FXML
+    public Label volumeValueLabel;
+    @FXML
+    public RadioButton germanButton;
+    @FXML
+    public RadioButton englishButton;
+    @FXML
+    public ToggleGroup lang;
+
     @FXML
     public Slider dayCycle;
     @FXML
     public Text dayCycleLabel;
+
+    
     @Inject
     Provider<HybridController> hybridControllerProvider;
     @Inject
     SettingsService settingsService;
+    @Inject
+    SoundService soundService;
+    @Inject
+    Preferences preferences;
 
     @Inject
     public SoundController() {
@@ -47,19 +84,54 @@ public class SoundController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
+        soundScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
+
+        mediaControlText.setText(translateString("mediaCtrl"));
+        muteSoundLabel.setText(translateString("muteSound"));
 
         //back to Settings
         backToSettingButton.setOnAction(click -> backToSettings());
 
-        music.setValue(settingsService.getSoundValue());
+        musicSlider.setValue(settingsService.getSoundValue());
         //save the value with preferences
-        listen(music.valueProperty(),
-                (observable, oldValue, newValue) -> settingsService.setSoundValue(newValue.floatValue()));
+        volumeValueLabel.setText(String.valueOf((int) musicSlider.getValue()));
+        listen(musicSlider.valueProperty(),
+                (observable, oldValue, newValue) -> {
+                    settingsService.setSoundValue(newValue.floatValue());
+                    volumeValueLabel.setText(String.valueOf((int) musicSlider.getValue()));
+                }
+        );
+
+        muteSound.setSelected(settingsService.getSoundMuted());
+        listen(muteSound.selectedProperty(),
+                (observable, oldValue, newValue) -> settingsService.setSoundMuted(newValue)
+        );
+
+        previousButton.setOnAction(click -> soundService.previous());
+        playPauseButton.setOnAction(click -> soundService.playOrPause());
+        nextButton.setOnAction(click -> soundService.next());
+        shuffleButton.setOnAction(click -> soundService.shuffle());
 
         //night mode
         nightMode.setSelected(settingsService.getNightEnabled());
         listen(nightMode.selectedProperty(),
-                (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue));
+                (observable, oldValue, newValue) -> settingsService.setNightEnabled(newValue)
+        );
+
+        //GE & EN
+        boolean germanSelected = Objects.equals(preferences.get("locale", ""), Locale.GERMAN.toLanguageTag());
+        germanButton.setSelected(germanSelected);
+        englishButton.setSelected(!germanSelected);
+        germanButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setDe();
+            }
+        });
+        englishButton.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                setEn();
+            }
+        });
 
         // Day time cycle
         dayCycle.setValue(settingsService.getDayTimeCycle());
@@ -113,4 +185,20 @@ public class SoundController extends Controller {
     public void backToSettings() {
         hybridControllerProvider.get().pushTab(SidebarTab.SETTINGS);
     }
+
+    @FXML
+    public void setDe() {
+        setLanguage(Locale.GERMAN);
+    }
+
+    @FXML
+    public void setEn() {
+        setLanguage(Locale.ENGLISH);
+    }
+
+    private void setLanguage(Locale locale) {
+        preferences.put("locale", locale.toLanguageTag());
+        hybridControllerProvider.get().pushTab(SidebarTab.SOUND); //reloaded
+    }
+
 }

@@ -252,5 +252,4 @@ public abstract class Controller extends Viewable {
             return Completable.complete();
         }).ignoreElements();
     }
-
 }
