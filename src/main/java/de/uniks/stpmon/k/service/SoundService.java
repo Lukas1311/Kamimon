@@ -228,45 +228,6 @@ public class SoundService {
         }
     }
 
-    private List<Media> loadAudioFiles() {
-        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
-            return null;
-        }
-
-        List<Media> mediaFiles = new ArrayList<>();
-        Path basePath = null;
-        try {
-            assert basePathURL != null;
-            basePath = Paths.get(basePathURL.toURI());
-        } catch (URISyntaxException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-
-        assert basePath != null;
-        File folder = new File(basePath.toString());
-        if (folder.exists() && folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    Media media = loadAudioFile(file);
-                    mediaFiles.add(media);
-                }
-            }
-        }
-
-        return mediaFiles;
-    }
-
-    private Media loadAudioFile(File file) {
-        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
-            return null;
-        }
-        if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
-            return loadAudioFile(file.toURI().toString());
-        }
-        return null;
-    }
-
     private Media loadAudioFile(String filename) {
         if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
             return null;
