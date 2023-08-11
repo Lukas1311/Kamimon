@@ -35,6 +35,25 @@ public class SoundService {
     @Inject
     EffectContext effectContext;
 
+    String[] songNames = {
+        "01_Pokémon_Gym",
+        "02_Route_3",
+        "03_Azalea_Town",
+        "04_Hauoli_City",
+        "05_Ecruteak_City",
+        "06_Route_30",
+        "07_National_Park",
+        "08_Pokémon_League",
+        "09_Anistar_City",
+        "10_Relic_Song",
+        "11_Sacred_Beasts",
+        "12_Route_113",
+        "13_Trainer_Battle",
+        "14_Lavender_Town",
+        "15_Ending_Theme",
+        "16_Title_Screen"
+    };
+
     // is of form "file:/.../de/uniks/stpmon/k/sound/"
     private static final URL basePathURL = Main.class.getResource("sound/");
 
@@ -80,11 +99,12 @@ public class SoundService {
     }
 
     private void startPlayer() {
-        playlist = loadAudioFiles();
+        for (String song : songNames) {
+            playlist.add(loadAudioFile(song));
+        }
         if (playlist == null) {
             return;
         }
-        mediaPlayer = new MediaPlayer(playlist.get(0));
         playNext();
     }
 
@@ -148,6 +168,8 @@ public class SoundService {
             return;
         }
         mediaPlayer = new MediaPlayer(chosenSong);
+        mediaPlayer.volumeProperty().bind(volumeProperty);
+        mediaPlayer.muteProperty().bind(muteProperty);
         play();
     }
 
