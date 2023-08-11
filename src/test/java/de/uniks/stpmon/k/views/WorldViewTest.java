@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.constants.DummyConstants;
 import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.dummies.TestHelper;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
@@ -38,6 +39,7 @@ public class WorldViewTest extends ApplicationTest {
     public final TrainerStorage trainerStorage = component.trainerStorage();
     public final RegionStorage regionStorage = component.regionStorage();
     public final RegionService regionService = component.regionService();
+    public  final EncounterService encounterService = component.encounterService();
 
     @Override
     public void start(Stage stage) throws Exception {
