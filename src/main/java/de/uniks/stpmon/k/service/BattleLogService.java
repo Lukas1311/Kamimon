@@ -11,12 +11,17 @@ import de.uniks.stpmon.k.dto.ChangeMonsterMove;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.models.Result;
+import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -31,6 +36,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static io.reactivex.rxjava3.internal.jdk8.FlowableFlatMapStream.subscribe;
 
 @Singleton
 public class BattleLogService {
@@ -76,6 +83,7 @@ public class BattleLogService {
 
     private final Map<EncounterSlot, LevelUp> levelUps = new HashMap<>();
     private boolean monsterCaught = false;
+    public Item item;
 
     @Inject
     public BattleLogService() {
@@ -215,6 +223,19 @@ public class BattleLogService {
                     //user sees result of encounter
                     //show encounter result
                     if (monsterCaught) {
+                        subscribe(presetService.getItemImage(String.valueOf(item.type())), item1 -> {
+                            //image
+                            ImageView ball = (ImageView) item1;
+                            //transition for Monbal
+                            TranslateTransition translation =
+                                    new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), ball);
+                            translation.setByY(300);
+                            translation.setByX(1000);
+                            translation.setCycleCount(3);
+                            translation.play();
+                        });
+
+
                         closeEncounterTrigger = CloseEncounterTrigger.END;
                     }
                     addTranslatedSection(closeEncounterTrigger.toString());
