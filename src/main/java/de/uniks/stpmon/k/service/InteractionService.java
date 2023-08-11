@@ -270,18 +270,23 @@ public class InteractionService implements ILifecycleService {
             if (!isOnline) {
                 return Observable.just(getRejectionDialogue(trainer, "player.offline", trainer.name()));
             }
-            return encounterService.getTrainerOpponents(trainer._id()).flatMap(opponent -> {
-                return encounterService.getEncounterOpponents(opponent.get(0).encounter()).map(opponents -> {
-                    List<Opponent> filteredOpponents = opponents.stream()
-                            .filter(opp -> !opp.trainer().equals(trainer._id()))
-                            .toList();
-                    if (filteredOpponents.size() > 1) {
-                        return getEncounterDialogue(trainer, me, "join");
-                    } else {
-                        return getEncounterDialogue(trainer, me, "player");
-                    }
+            return monsterService.anyMonsterAlive(trainer._id()).flatMap((anyAlive) -> {
+                if (!anyAlive) {
+                    return Observable.just(getRejectionDialogue(trainer, "player.dead"));
+                }
+                return encounterService.getTrainerOpponents(trainer._id()).flatMap(opponent -> {
+                    return encounterService.getEncounterOpponents(opponent.get(0).encounter()).map(opponents -> {
+                        List<Opponent> filteredOpponents = opponents.stream()
+                                .filter(opp -> !opp.trainer().equals(trainer._id()))
+                                .toList();
+                        if (filteredOpponents.size() > 1) {
+                            return getEncounterDialogue(trainer, me, "join");
+                        } else {
+                            return getEncounterDialogue(trainer, me, "player");
+                        }
+                    });
                 });
-            });
+            }).switchIfEmpty(Observable.just(getEncounterDialogue(trainer, me, "player")));
         }).onErrorResumeNext((error) -> {
             if (error instanceof HttpException http && http.code() == 429) {
                 return Observable.just(getRejectionDialogue(trainer, "player.rateLimit"));

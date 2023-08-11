@@ -192,5 +192,5 @@ public class DummyConstants {
     public static final BufferedImage EMPTY_IMAGE = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
     public static final RegionImage IMAGE = new RegionImage("0", EMPTY_IMAGE, EMPTY_IMAGE);
 
-    public static final Opponent OPPONENT = OpponentBuilder.builder().create();
+    public static final Opponent OPPONENT = OpponentBuilder.builder().setTrainer(DummyConstants.TRAINER._id()).setMonster(DummyConstants.MONSTER._id()).create();
 }
