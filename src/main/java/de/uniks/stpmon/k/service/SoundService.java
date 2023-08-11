@@ -21,6 +21,7 @@ import java.util.*;
 
 import static javafx.scene.media.MediaPlayer.Status;
 
+@SuppressWarnings("unused")
 @Singleton
 public class SoundService {
     private final static boolean REPEAT = true;

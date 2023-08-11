@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
-import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
 import javafx.animation.TranslateTransition;
@@ -28,8 +27,6 @@ public class BattleLogService {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
-    @Inject
-    Provider<MonsterInformationController> monInfoProvider;
 
     @Inject
     protected EffectContext effectContext;
@@ -135,9 +132,9 @@ public class BattleLogService {
                 }
                 if (levelUp.playEvolutionAnimation()) {
                     ImageView node;
-                    if(slot.get().partyIndex() == 1) {
+                    if (slot.get().partyIndex() == 1) {
                         node = encounterOverviewControllerProvider.get().userMonster1;
-                    }else {
+                    } else {
                         node = encounterOverviewControllerProvider.get().userMonster0;
                     }
                     //transition for monster evolution
