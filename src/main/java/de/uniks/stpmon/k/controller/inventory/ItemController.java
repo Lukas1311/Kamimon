@@ -35,7 +35,7 @@ public class ItemController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        parent.setId("itemNode");
+        parent.setId("item_" + item._id());
 
         subscribe(resourceService.getItemImage(String.valueOf(item.type())), imageUrl ->
                 subscribe(presetService.getItem(item.type()), item1 -> {
@@ -45,7 +45,6 @@ public class ItemController extends Controller {
 
                     //text
                     itemName.setText(item1.name());
-                    parent.setId("item_" + item1.name());
                     if (item.amount() != -1) {
                         itemAmount.setText(" x " + item.amount());
                     }

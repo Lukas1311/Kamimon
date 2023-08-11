@@ -9,6 +9,7 @@ import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
@@ -46,6 +47,8 @@ public class ItemInformationController extends Controller {
     @Inject
     ResourceService resourceService;
     @Inject
+    EventListener eventListener;
+    @Inject
     PresetService presetService;
     @Inject
     ItemService itemService;
@@ -62,6 +65,7 @@ public class ItemInformationController extends Controller {
     public ItemTypeDto itemTypeDto;
 
     private boolean isEncounter = false;
+    private boolean isOpen = false;
 
     @Inject
     public ItemInformationController() {
@@ -167,7 +171,6 @@ public class ItemInformationController extends Controller {
                 }
             }
         }
-
     }
 
     public boolean isOpenBox() {

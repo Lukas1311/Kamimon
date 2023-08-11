@@ -1,6 +1,5 @@
 package de.uniks.stpmon.k.service.dummies;
 
-
 import de.uniks.stpmon.k.dto.UpdateItemDto;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.rest.TrainerItemApiService;
@@ -25,7 +24,7 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
 
     private void initDummyItems() {
         if (!items.isEmpty()) {
-            throw new IllegalStateException("Monsters already initialized");
+            throw new IllegalStateException("Items already initialized");
         }
 
         int amount = 8;
@@ -34,6 +33,9 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
             if (i == 4) {
                 //Add MonBall
                 item = new Item(String.valueOf(i), null, 4, 1);
+            } else if (i == 2) {
+                //Add ItemBox
+                item = new Item(String.valueOf(i), null, 2, 1);
             }
             items.add(item);
         }

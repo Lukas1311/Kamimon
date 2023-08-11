@@ -65,6 +65,7 @@ public class StarterController extends ToastedController {
     @Override
     public Parent render() {
         Parent parent = super.render();
+        parent.setId("starterNode");
         loadBgImage(starterPane, "starter-choice-box.png");
         return parent;
     }
