@@ -7,7 +7,6 @@ import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.RegionService;
-import de.uniks.stpmon.k.service.TrainerService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
 import de.uniks.stpmon.k.service.storage.WorldRepository;
@@ -59,8 +58,6 @@ public class MapOverviewControllerTest extends ApplicationTest {
     @Mock
     RegionStorage regionStorage;
     @Mock
-    TrainerService trainerService;
-    @Mock
     TrainerStorage trainerStorage;
     @Mock
     TextDeliveryService textDeliveryService;
@@ -94,11 +91,15 @@ public class MapOverviewControllerTest extends ApplicationTest {
         when(trainerStorage.getTrainer()).thenReturn(DummyConstants.TRAINER_W_VISITED_AREAS);
         when(regionService.getAreas(any())).thenReturn(Observable.just(List.of(DummyConstants.AREA)));
 
-        RouteData dummyData1 = new RouteData(1, new RouteText("Test Area", "test", "Route"), 0, 0, 0, 0,
-                List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(15, 15), new PolygonPoint(0, 15)));
-        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"), 1, 1, 0, 0, List.of());
-        RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"), 10, 10, 0, 34, List.of());
-        
+        RouteData dummyData1 = new RouteData(1, new RouteText("Test Area", "test", "Route"),
+                0, 0, 0, 0,
+                List.of(new PolygonPoint(0, 0), new PolygonPoint(20, 0), new PolygonPoint(15, 15),
+                        new PolygonPoint(0, 15)), "");
+        RouteData dummyData2 = new RouteData(2, new RouteText("Route 101", "HiWay2", "Route"),
+                1, 1, 0, 0, List.of(), "");
+        RouteData dummyData3 = new RouteData(3, new RouteText("Route 102", "HiWay3", "Route"),
+                10, 10, 0, 34, List.of(), "");
+
         when(textDeliveryService.getRouteData(any())).thenReturn(Observable.just(List.of(dummyData1, dummyData2, dummyData3)));
         //when(trainerService.fastTravel(any())).thenReturn(Observable.just(DummyConstants.TRAINER_W_VISITED_AREAS));
         worldRepository.regionMap().setValue(DummyConstants.EMPTY_IMAGE);
@@ -178,7 +179,7 @@ public class MapOverviewControllerTest extends ApplicationTest {
         verifyThat("#fastTravelButton", Node::isVisible);
         clickOn("#fastTravelButton");
         verify(ingameMock).closeMap();
-        verify(mapOverviewController.teleportAnimation).playFastTravelAnimation(any());
+        verify(teleportAnimation).playFastTravelAnimation(any());
 
         app.removeInputHandler(inputHandler);
     }
