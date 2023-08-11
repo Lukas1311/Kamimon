@@ -4,9 +4,6 @@ import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
-import de.uniks.stpmon.k.dto.*;
-import de.uniks.stpmon.k.models.*;
-import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.AbilityDto;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.ChangeMonsterMove;
@@ -18,10 +15,8 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.OpponentUpdate;
 import de.uniks.stpmon.k.models.Result;
-import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -29,7 +24,13 @@ import javafx.util.Duration;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 
@@ -39,8 +40,6 @@ public class BattleLogService {
     SessionService sessionService;
     @Inject
     PresetService presetService;
-    @Inject
-    IResourceService resourceService;
     @Inject
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
@@ -215,7 +214,6 @@ public class BattleLogService {
                 } else {
                     //user sees result of encounter
                     //show encounter result
-                    ImageView itemView;
                     if (monsterCaught) {
                         encounterOverviewControllerProvider.get().monBallAnimation();
 
