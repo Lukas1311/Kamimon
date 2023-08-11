@@ -24,8 +24,8 @@ public class AnimationService {
 
     public Transition createEncounterAnimation(Circle blackPoint) {
         ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(3), blackPoint);
-        scaleTransition.setToX(40);
-        scaleTransition.setToY(40);
+        scaleTransition.setToX(55);
+        scaleTransition.setToY(55);
 
 
         ParallelTransition parallelTransition = new ParallelTransition(hybridControllerProvider.get().removeSidebarTransition(), scaleTransition);
