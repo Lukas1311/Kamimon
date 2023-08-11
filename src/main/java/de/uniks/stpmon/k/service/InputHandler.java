@@ -34,6 +34,7 @@ import java.util.function.Consumer;
 public class InputHandler implements ILifecycleService {
 
     private final MultiHandler<KeyEvent> keyPressedHandlers = new MultiHandler<>();
+    private final MultiHandler<KeyEvent> keyReleasedHandlers = new MultiHandler<>();
     private final MultiHandler<KeyEvent> keyPressedFilters = new MultiHandler<>();
     private final MultiHandler<KeyEvent> keyReleasedFilters = new MultiHandler<>();
 
@@ -89,11 +90,34 @@ public class InputHandler implements ILifecycleService {
     }
 
     /**
+     * Registers a new handler for the "key released" event.
+     * The handler will be called if the focused node does not consume the event by itself.
+     * If any handler consumes the event, the remaining handlers will not be called.
+     * <p>
+     * The returned runnable can be used to remove the handler from the list of registered handlers.
+     *
+     * @param handler A handler that will be called when a key is pressed.
+     * @return A runnable that can be used to remove the handler from the list of registered handlers.
+     */
+    public Runnable addReleasedKeyHandler(Consumer<? super KeyEvent> handler) {
+        keyReleasedHandlers.add(handler);
+        return () -> keyReleasedHandlers.remove(handler);
+    }
+
+    /**
      * Creates an event handler that will call all registered handlers for the "key pressed" event.
      * If a handler consumes the event, the remaining handlers will not be called.
      */
     public EventHandler<KeyEvent> keyPressedHandler() {
         return keyPressedHandlers;
+    }
+
+    /**
+     * Creates an event handler that will call all registered handlers for the "key released" event.
+     * If a handler consumes the event, the remaining handlers will not be called.
+     */
+    public EventHandler<KeyEvent> keyReleasedHandler() {
+        return keyReleasedHandlers;
     }
 
     /**

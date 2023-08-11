@@ -7,9 +7,9 @@ package de.uniks.stpmon.k.service;
 @SuppressWarnings("unused")
 public class EffectContext {
 
-    public static final int MOVEMENT_PERIOD = 200;
+    public static final int MOVEMENT_PERIOD = 150;
     public static final int WALKING_ANIMATION_PERIOD = MOVEMENT_PERIOD * 5;
-
+    private float sprintingFactor = 0.65f;
     private boolean skipLoadImages = false;
     private boolean skipAnimations = false;
     private boolean skipLoading = false;
@@ -21,6 +21,23 @@ public class EffectContext {
 
     private double encounterAnimationSpeed = 1000;
 
+    /**
+     * Gets the sprinting factor.
+     *
+     * @return The dialog animation speed
+     */
+    public float getSprintingFactor() {
+        return sprintingFactor;
+    }
+
+    /**
+     * Sets the sprinting factor.
+     *
+     * @param sprintingFactor The sprinting factor
+     */
+    public void setSprintingFactor(float sprintingFactor) {
+        this.sprintingFactor = sprintingFactor;
+    }
 
     /**
      * Tells the controllers to skip loading images.
