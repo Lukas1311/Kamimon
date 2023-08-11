@@ -35,7 +35,7 @@
 
     <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
         <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="56.0">
-            <Text fx:id="mediaControlText" strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Media" />
         </HBox>
         <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
             <Button fx:id="previousButton" text="◄" textAlignment="CENTER" styleClass="sound-button" />
