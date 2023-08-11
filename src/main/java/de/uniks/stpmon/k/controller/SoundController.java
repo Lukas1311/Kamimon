@@ -94,6 +94,7 @@ public class SoundController extends Controller {
 
         musicSlider.setValue(settingsService.getSoundValue());
         //save the value with preferences
+        volumeValueLabel.setText(String.valueOf((int) musicSlider.getValue()));
         listen(musicSlider.valueProperty(),
                 (observable, oldValue, newValue) -> {
                     settingsService.setSoundValue(newValue.floatValue());
