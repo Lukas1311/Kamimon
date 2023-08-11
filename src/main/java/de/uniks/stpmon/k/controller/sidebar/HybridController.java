@@ -120,8 +120,8 @@ public class HybridController extends Controller {
     }
 
     public Transition removeSidebarTransition() {
-        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pane);
+        PauseTransition pause = new PauseTransition(Duration.seconds(2.0));
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(2.0), pane);
         transition.setToX(-75);
 
         return new SequentialTransition(pause, transition);

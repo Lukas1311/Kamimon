@@ -4,7 +4,6 @@ import de.uniks.stpmon.k.di.DaggerTestComponent;
 import de.uniks.stpmon.k.di.TestComponent;
 import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.dto.UpdateOpponentDto;
-import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.User;
 import de.uniks.stpmon.k.service.dummies.EncounterApiDummy;
@@ -452,10 +451,10 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar #slot_0_zero", Node::isVisible);
         verifyThat("#monsterBar #slot_1_zero", Node::isVisible);
         // Walk to nurse
-        type(KeyCode.D, 1);
-        type(KeyCode.S, 4);
-        type(KeyCode.A, 4);
-        type(KeyCode.W, 1);
+        type(KeyCode.D, 2);
+        type(KeyCode.S, 5);
+        type(KeyCode.A, 5);
+        type(KeyCode.W, 2);
 
         // Talk to nurse
         type(KeyCode.E, 4);
@@ -465,8 +464,9 @@ class AppTest extends ApplicationTest {
         verifyThat("#monsterBar #slot_0_normal", Node::isVisible);
         verifyThat("#monsterBar #slot_1_normal", Node::isVisible);
 
-        type(KeyCode.D, 3);
-        type(KeyCode.W, 1);
+        type(KeyCode.D, 5);
+        type(KeyCode.W, 2);
+        type(KeyCode.A);
 
         // Start encounter wild encounter
         type(KeyCode.E);
@@ -521,7 +521,6 @@ class AppTest extends ApplicationTest {
         TestHelper.addTestNpcsV4(component);
         TestHelper.addMonster(component.trainerStorage(), component);
 
-
         //test monDex
         clickOn("#backpackImage");
         waitForFxEvents();
@@ -552,8 +551,7 @@ class AppTest extends ApplicationTest {
         clickOn("#backpackMenuLabel_1");
         waitForFxEvents();
         verifyThat("#inventoryPane", Node::isVisible);
-        ListView<Item> inventoryList = lookup("#itemListView").query();
-        clickOn(inventoryList.getChildrenUnmodifiable().get(0));
+        clickOn("#inventoryPane #item_Item_1");
         waitForFxEvents();
         verifyThat("#itemInformationNode", Node::isVisible);
         clickOn("#useButton");
@@ -563,6 +561,32 @@ class AppTest extends ApplicationTest {
         clickOn("#team_0");
         clickOn("#backpackImage");
 
+        //test itemBox
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_1");
+        waitForFxEvents();
+        verifyThat("#inventoryPane", Node::isVisible);
+        clickOn("#inventoryPane #item_Item_2");
+        waitForFxEvents();
+        verifyThat("#itemInformationNode", Node::isVisible);
+        clickOn("#useButton");
+        waitForFxEvents();
+        verifyThat("#monsterNameLabel", Node::isVisible);
+        clickOn("#backpackImage");
+
+
+        //test monBox
+        clickOn("#backpackImage");
+        clickOn("#backpackMenuLabel_1");
+        waitForFxEvents();
+        verifyThat("#inventoryPane", Node::isVisible);
+        clickOn("#inventoryPane #item_Item_3");
+        waitForFxEvents();
+        verifyThat("#itemInformationNode", Node::isVisible);
+        clickOn("#useButton");
+        waitForFxEvents();
+        verifyThat("#descriptionText", Node::isVisible);
+        clickOn("#backpackImage");
 
         //test sound
         clickOn("#settings");
@@ -570,7 +594,6 @@ class AppTest extends ApplicationTest {
         final Slider musicSlider = lookup("#musicSlider").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
         clickOn("#settings");
-
 
         //go to clerk
         type(KeyCode.S, 2);
@@ -644,7 +667,7 @@ class AppTest extends ApplicationTest {
         //start wild encounter where monBall is used
         component.presetApi().getMonBall();
         waitForFxEvents();
-        type(KeyCode.DOWN);
+        type(KeyCode.S);
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);

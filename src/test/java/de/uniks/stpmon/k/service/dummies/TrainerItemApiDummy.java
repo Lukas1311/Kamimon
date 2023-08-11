@@ -1,7 +1,7 @@
 package de.uniks.stpmon.k.service.dummies;
 
-
 import de.uniks.stpmon.k.dto.UpdateItemDto;
+import de.uniks.stpmon.k.models.Event;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.rest.TrainerItemApiService;
 import io.reactivex.rxjava3.core.Observable;
@@ -18,6 +18,8 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
 
     @Inject
     RegionApiDummy regionApiDummy;
+    @Inject
+    EventDummy eventDummy;
 
     @Inject
     public TrainerItemApiDummy() {
@@ -26,13 +28,19 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
 
     private void initDummyItems() {
         if (!items.isEmpty()) {
-            throw new IllegalStateException("Monsters already initialized");
+            throw new IllegalStateException("Items already initialized");
         }
 
         int amount = 8;
         for (int i = 0; i < amount; i++) {
             Item item = new Item(String.valueOf(i), null, 1, 1);
-            if (i == 4) {
+            if (i == 2) {
+                //Add ItemBox
+                item = new Item(String.valueOf(i), "0", 2, 1);
+            } else if (i == 3) {
+                //Add MonBox
+                item = new Item(String.valueOf(i), "0", 3, 1);
+            } else if (i == 4) {
                 //Add MonBall
                 item = new Item(String.valueOf(i), null, 4, 1);
             }
@@ -45,9 +53,18 @@ public class TrainerItemApiDummy implements TrainerItemApiService {
         if (regionId.isEmpty() || trainerId.isEmpty() || regionApiDummy == null) {
             return Observable.error(new Throwable(regionId + " or " + trainerId + " is empty"));
         }
-        return Observable.just(new Item("","",  0, 0));
-    }
+        Item item = new Item("", "", 0, 0);
+        if (dto.type().equals(2)) {
+            item = new Item("2", "0", 2, 0);
+            eventDummy.sendEvent(new Event<>("trainers.%s.items.%s.updated".formatted(trainerId, "2"), item));
+        }
+        if (dto.type().equals(3)) {
+            item = new Item("3", "0", 3, 0);
+            eventDummy.sendEvent(new Event<>("trainers.%s.items.%s.updated".formatted(trainerId, "3"), item));
+        }
 
+        return Observable.just(item);
+    }
 
 
     @Override
