@@ -7,11 +7,15 @@ import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.dto.ItemTypeDto;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
+import de.uniks.stpmon.k.models.ItemUse;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
-import de.uniks.stpmon.k.models.ItemUse;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -44,6 +48,8 @@ public class ItemInformationController extends Controller {
     @Inject
     ResourceService resourceService;
     @Inject
+    EventListener eventListener;
+    @Inject
     PresetService presetService;
     @Inject
     ItemService itemService;
@@ -55,11 +61,14 @@ public class ItemInformationController extends Controller {
     Provider<ActionFieldController> actionControllerProvider;
     @Inject
     SessionService sessionService;
+    @Inject
+    EncounterStorage encounterStorage;
 
     public Item item;
     public ItemTypeDto itemTypeDto;
 
     private boolean isEncounter = false;
+    private boolean isOpen = false;
 
     @Inject
     public ItemInformationController() {
@@ -76,11 +85,14 @@ public class ItemInformationController extends Controller {
         subscribe(presetService.getItem(item.type()), item -> {
             itemTypeDto = item;
             if (item.use() != null) {
-                // can not use MonBall outside of encounter
-                if (item.use().equals(ItemUse.BALL) && !isEncounter) {
+                useButton.setVisible(true);
+                useButton.setText(translateString("useItemButton"));
+                // disable button if Ball and no Encounter, Ball and TrainerEncounter, Box and any Encounter
+                if (item.use().equals(ItemUse.BALL) && !isEncounter || (item.use().equals(ItemUse.ITEM_BOX) ||
+                        item.use().equals(ItemUse.MONSTER_BOX)) && isEncounter ||
+                        item.use().equals(ItemUse.BALL) && !encounterStorage.getEncounter().isWild()) {
                     useButton.setDisable(true);
                 }
-                useButton.setVisible(true);
                 useButton.setOnAction(e -> useItem());
             } else {
                 useButton.setVisible(false);
@@ -99,16 +111,48 @@ public class ItemInformationController extends Controller {
         return parent;
     }
 
-    private void useItem() {
+    public void useItem() {
         if (itemTypeDto == null) {
             return;
         }
         switch (itemTypeDto.use()) {
             case ITEM_BOX -> {
-                // TODO
+                if (itemService == null || ingameControllerProvider == null) {
+                    return;
+                }
+
+                subscribe(eventListener.listen(Socket.WS, "%s.%s.items.*.*".formatted("trainers", item.trainer()), Item.class), itemEvent -> {
+                    switch (itemEvent.suffix()) {
+                        case "deleted" -> {
+                        }
+                        case "created", "updated" ->
+                                subscribe(presetService.getItem(itemEvent.data().type()), itemTypeDto1 -> {
+                                    if (!itemTypeDto1.name().contains("Mystery box") && isOpenBox()) {
+                                        ingameControllerProvider.get().openBox(itemEvent.data());
+                                    }
+                                });
+                    }
+                });
+                subscribe(itemService.useItem(itemTypeDto.id(), 1, null));
             }
             case MONSTER_BOX -> {
-                // TODO
+                if (itemService == null || ingameControllerProvider == null) {
+                    return;
+                }
+
+                subscribe(eventListener.listen(Socket.WS, "%s.%s.monsters.*.*".formatted("trainers", item.trainer()), Monster.class), monsterEvent -> {
+                    switch (monsterEvent.suffix()) {
+                        case "deleted" -> {
+                        }
+                        case "created", "updated" ->
+                                subscribe(presetService.getMonster(monsterEvent.data().type()), monsterTypeDto -> {
+                                    if (!monsterTypeDto.name().contains("Monbox") && isOpenBox()) {
+                                        ingameControllerProvider.get().openBox(monsterEvent.data());
+                                    }
+                                });
+                    }
+                });
+                subscribe(itemService.useItem(itemTypeDto.id(), 1, null));
             }
             case BALL -> {
                 if (isEncounter) {
@@ -132,7 +176,14 @@ public class ItemInformationController extends Controller {
                 }
             }
         }
+    }
 
+    public boolean isOpenBox() {
+        return !isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        this.isOpen = open;
     }
 
     public void setItem(Item item) {
@@ -158,5 +209,6 @@ public class ItemInformationController extends Controller {
         amountText = null;
         nameLabel = null;
         useButton = null;
+        setOpen(false);
     }
 }

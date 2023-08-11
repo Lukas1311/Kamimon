@@ -94,6 +94,7 @@ public class InventoryController extends ToastedController {
     public void destroy() {
         super.destroy();
         itemInformationControllerProvider.get().setItem(null);
+        itemInformationControllerProvider.get().setOpen(false);
         itemListView.setItems(null);
         inventoryPane = null;
         itemListView = null;

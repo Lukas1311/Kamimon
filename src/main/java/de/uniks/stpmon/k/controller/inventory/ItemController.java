@@ -35,7 +35,6 @@ public class ItemController extends Controller {
     @Override
     public Parent render() {
         final Parent parent = super.render();
-        parent.setId("itemNode");
 
         subscribe(resourceService.getItemImage(String.valueOf(item.type())), imageUrl ->
                 subscribe(presetService.getItem(item.type()), item1 -> {
