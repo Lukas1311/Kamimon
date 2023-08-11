@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -266,27 +267,34 @@ public class InteractionService implements ILifecycleService {
         }
 
         return userService.isOnline(trainer.user()).flatMap((isOnline) -> {
-            if (!isOnline) {
-                return Observable.just(getRejectionDialogue(trainer, "player.offline", trainer.name()));
-            }
-            return encounterService.getTrainerOpponents(trainer._id()).flatMap(opponent -> {
-                return encounterService.getEncounterOpponents(opponent.get(0).encounter()).map(opponents -> {
-                    List<Opponent> filteredOpponents = opponents.stream()
-                            .filter(opp -> !opp.trainer().equals(trainer._id()))
-                            .toList();
-                    if (filteredOpponents.size() > 1) {
-                        return getEncounterDialogue(trainer, me, "join");
+                if (!isOnline) {
+                    return Observable.just(getRejectionDialogue(trainer, "player.offline", trainer.name()));
+                }
+                return encounterService.getTrainerOpponents(trainer._id()).flatMap(opponent -> {
+                    if (opponent != null) {
+                        return encounterService.getEncounterOpponents(opponent.get(0).encounter()).map(opponents -> {
+                            if (opponents != null) {
+                                List<Opponent> filteredOpponents = opponents.stream()
+                                        .filter(opp -> !opp.trainer().equals(trainer._id()))
+                                        .toList();
+                                if (filteredOpponents.size() > 1) {
+                                    return getEncounterDialogue(trainer, me, "join");
+                                }
+                                return null;
+                            }
+                            return null;
+                        });
                     } else {
-                        return getEncounterDialogue(trainer, me, "player");
+                        return Observable.just(getEncounterDialogue(trainer, me, "player"));
                     }
                 });
+            }).filter(Objects::nonNull)
+            .onErrorResumeNext((error) -> {
+                if (error instanceof HttpException http && http.code() == 429) {
+                    return Observable.just(getRejectionDialogue(trainer, "player.rateLimit"));
+                }
+                return Observable.error(error);
             });
-        }).onErrorResumeNext((error) -> {
-            if (error instanceof HttpException http && http.code() == 429) {
-                return Observable.just(getRejectionDialogue(trainer, "player.rateLimit"));
-            }
-            return Observable.error(error);
-        });
     }
 
     /**
