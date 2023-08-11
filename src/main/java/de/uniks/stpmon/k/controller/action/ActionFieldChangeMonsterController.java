@@ -3,6 +3,7 @@ package de.uniks.stpmon.k.controller.action;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.service.MonsterService;
+import de.uniks.stpmon.k.service.RegionService;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.HBox;
@@ -24,6 +25,8 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
 
     @Inject
     MonsterService monsterService;
+    @Inject
+    RegionService regionService;
 
     private Monster selectedUserMonster;
     private int count = 0;
@@ -70,10 +73,7 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
                 if (activeMonsters.contains(monster._id())) {
                     continue;
                 }
-                subscribe(presetService.getMonster(monster.type()), type -> {
-                    selectedUserMonster = monster;
-                    addActionOption(monster._id() + " " + type.name(), false);
-                });
+                subscribe(presetService.getMonster(monster.type()), type -> addActionOption(monster._id() + " " + type.name(), false));
             }
         }
     }
@@ -87,8 +87,13 @@ public class ActionFieldChangeMonsterController extends BaseActionFieldControlle
             optionContainer = ActionFieldController.getOptionContainer(option);
             optionContainer.setOnMouseClicked(event -> openAction(option));
         } else {
+            //set selected Monster
+
             optionContainer = ActionFieldController.getOptionContainer(idAndName[1]);
-            optionContainer.setOnMouseClicked(event -> openAction(idAndName[0]));
+            optionContainer.setOnMouseClicked(event -> {
+                selectedUserMonster = getActionField().sessionService.getMonsterById(idAndName[0]);
+                openAction(idAndName[0]);
+            });
         }
 
         // each column containing a maximum of 2 options

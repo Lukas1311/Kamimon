@@ -668,7 +668,7 @@ class AppTest extends ApplicationTest {
         //start wild encounter where monBall is used
         component.presetApi().getMonBall();
         waitForFxEvents();
-        type(KeyCode.DOWN);
+        type(KeyCode.S);
         type(KeyCode.E);
         type(KeyCode.RIGHT);
         type(KeyCode.E);

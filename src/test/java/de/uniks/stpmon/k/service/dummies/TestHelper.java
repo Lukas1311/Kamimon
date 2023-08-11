@@ -168,7 +168,7 @@ public class TestHelper {
         Trainer wildEncounter = TrainerBuilder.builder()
                 .setId("wild")
                 .setX(2)
-                .setY(2)
+                .setY(3)
                 .setRegion("id0")
                 .setArea("id0_0")
                 .setDirection(Direction.BOTTOM)
