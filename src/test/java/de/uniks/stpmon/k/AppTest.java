@@ -31,7 +31,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 
 import static java.util.function.Predicate.not;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;

@@ -3,32 +3,28 @@ package de.uniks.stpmon.k.service;
 import de.uniks.stpmon.k.Main;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
-
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+
 import static javafx.scene.media.MediaPlayer.Status;
 
+@SuppressWarnings("unused")
 @Singleton
 public class SoundService {
+    private final static boolean REPEAT = true;
 
     @Inject
     SettingsService settingsService;
@@ -43,11 +39,10 @@ public class SoundService {
     private MediaPlayer mediaPlayer;
 
     private List<Media> playlist = new ArrayList<>();
-    private boolean repeat = true;
 
-    private DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
-    private BooleanProperty muteProperty = new SimpleBooleanProperty(false);
-    private IntegerProperty currentSongProperty = new SimpleIntegerProperty(0);
+    private final DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
+    private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
+    private final IntegerProperty currentSongProperty = new SimpleIntegerProperty(0);
 
 
     @Inject
@@ -64,10 +59,9 @@ public class SoundService {
         mediaPlayer.volumeProperty().bind(volumeProperty);
         mediaPlayer.muteProperty().bind(muteProperty);
 
-        listen(currentSongProperty, (ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
-            settingsService.setCurrentSong(newValue.intValue());
-        });
-        
+        listen(currentSongProperty,
+                (observable, oldValue, newValue) -> settingsService.setCurrentSong(newValue.intValue()));
+
         disposables.add(settingsService.onSoundValue().subscribe(
                 // updates whenever sound value changes
                 val -> volumeProperty.set(val / 100),
@@ -113,7 +107,7 @@ public class SoundService {
             play();
         } else {
             // playlist is finished
-            if (repeat) {
+            if (REPEAT) {
                 currentSongProperty.set(0);
                 playNext();
             }

@@ -67,6 +67,7 @@ public class IngameControllerTest extends ApplicationTest {
     @SuppressWarnings("unused")
     WorldTimerController worldTimerController;
     @Mock
+    @SuppressWarnings("unused")
     SoundService soundService;
     @Mock
     Provider<ResourceBundle> resourceBundleProvider;

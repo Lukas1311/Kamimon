@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
-import java.util.Optional;
 
 @Singleton
 public class ItemService {
@@ -45,10 +44,6 @@ public class ItemService {
 
     public Observable<List<Item>> getItems() {
         return itemCache.getValues();
-    }
-
-    public Observable<Optional<Item>> getItem(String id) {
-        return itemCache.listenValue(id);
     }
 
     public Observable<Item> tradeItem(int itemType, int tradeAmount, String targetId, boolean sellItem) {

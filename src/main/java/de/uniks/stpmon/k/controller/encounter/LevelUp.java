@@ -7,7 +7,7 @@ import de.uniks.stpmon.k.service.BattleLogService;
 
 public class LevelUp {
 
-    BattleLogService battleLogService;
+    final BattleLogService battleLogService;
     private final Monster oldMon;
     private final Monster newMon;
     private final String oldMonName;
