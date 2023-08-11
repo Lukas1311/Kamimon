@@ -49,7 +49,8 @@ import java.util.Map;
 @Singleton
 public class EncounterOverviewController extends Controller {
 
-    public static final double IMAGE_SCALE = 6.0;
+    public static final double IMAGE_SCALE_ATTACKER = 6.0;
+    public static final double IMAGE_SCALE_OPPONENT = 4.0;
 
     private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
 
@@ -453,10 +454,12 @@ public class EncounterOverviewController extends Controller {
     public void loadMonsterImage(String monsterId, ImageView monsterImage, boolean attacker) {
         subscribe(resourceService.getMonsterImage(monsterId), imageUrl -> {
             // Scale and set the image
-            Image image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE);
+            Image image;
             if (attacker) {
+                image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE_ATTACKER);
                 monsterImage.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
             } else {
+                image = ImageUtils.scaledImageFX(imageUrl, IMAGE_SCALE_OPPONENT);
                 monsterImage.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
             }
             monsterImage.setImage(image);
