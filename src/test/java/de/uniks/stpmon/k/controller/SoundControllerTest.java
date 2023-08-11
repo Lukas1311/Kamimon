@@ -44,8 +44,8 @@ public class SoundControllerTest extends ApplicationTest {
     @Mock
     SettingsService settingsService;
     @Mock
+    @SuppressWarnings("unused")
     Preferences preferences;
-
 
     @Override
     public void start(Stage stage) {
@@ -70,7 +70,7 @@ public class SoundControllerTest extends ApplicationTest {
 
     @Test
     public void onMusic() {
-        final Slider musicSlider = lookup("#music").query();
+        final Slider musicSlider = lookup("#musicSlider").query();
         //check first if value is 100
         assertThat(musicSlider.getValue()).isEqualTo(100);
 

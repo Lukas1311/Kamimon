@@ -159,23 +159,6 @@ public abstract class Controller extends Viewable {
     }
 
     /**
-     * Sets a javafx image object into the given Region.
-     * Every Region allows the placement of a background.
-     * If loadImages is false, this method does nothing.
-     * This flag is used to disable image loading for tests.
-     *
-     * @param image   A javafx image object
-     * @param element Any element, that extends region class
-     */
-    protected void loadBgImage(Region element, Image image) {
-        if (effectContext != null && effectContext.shouldSkipLoadImages()) {
-            return;
-        }
-        BackgroundImage bg = createBackgroundImage(image);
-        element.setBackground(new Background(bg));
-    }
-
-    /**
      * Method to load vector files (.svg) created with Adobe Illustrator and put
      * them into an ImageView object.
      *
@@ -252,5 +235,4 @@ public abstract class Controller extends Viewable {
             return Completable.complete();
         }).ignoreElements();
     }
-
 }

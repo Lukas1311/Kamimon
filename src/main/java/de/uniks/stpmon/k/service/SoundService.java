@@ -1,0 +1,270 @@
+package de.uniks.stpmon.k.service;
+
+import de.uniks.stpmon.k.Main;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+
+import static javafx.scene.media.MediaPlayer.Status;
+
+@SuppressWarnings("unused")
+@Singleton
+public class SoundService {
+    private final static boolean REPEAT = true;
+
+    @Inject
+    SettingsService settingsService;
+    @Inject
+    EffectContext effectContext;
+
+    // is of form "file:/.../de/uniks/stpmon/k/sound/"
+    private static final URL basePathURL = Main.class.getResource("sound/");
+
+    protected CompositeDisposable disposables = new CompositeDisposable();
+
+    private MediaPlayer mediaPlayer;
+
+    private List<Media> playlist = new ArrayList<>();
+
+    private final DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
+    private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
+    private final IntegerProperty currentSongProperty = new SimpleIntegerProperty(0);
+
+
+    @Inject
+    public SoundService() {
+
+    }
+
+    public void init() {
+        startPlayer();
+        if (mediaPlayer == null) {
+            return;
+        }
+
+        mediaPlayer.volumeProperty().bind(volumeProperty);
+        mediaPlayer.muteProperty().bind(muteProperty);
+
+        listen(currentSongProperty,
+                (observable, oldValue, newValue) -> settingsService.setCurrentSong(newValue.intValue()));
+
+        disposables.add(settingsService.onSoundValue().subscribe(
+                // updates whenever sound value changes
+                val -> volumeProperty.set(val / 100),
+                err -> System.err.println("Error in sound value subscription: " + err.getMessage())
+        ));
+        disposables.add(settingsService.onSoundMuted().subscribe(
+                muteProperty::set,
+                err -> System.err.println("Error in sound muted subscription: " + err.getMessage())
+        ));
+    }
+
+    private void startPlayer() {
+        playlist = loadAudioFiles();
+        if (playlist == null) {
+            return;
+        }
+        mediaPlayer = new MediaPlayer(playlist.get(0));
+        playNext();
+    }
+
+    private void playNext() {
+        if (mediaPlayer != null) {
+            stop();
+        }
+
+        if (playlist == null) {
+            return;
+        }
+
+        if (currentSongProperty.get() < playlist.size()) {
+            Media media = playlist.get(currentSongProperty.get());
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.volumeProperty().bind(volumeProperty);
+            mediaPlayer.muteProperty().bind(muteProperty);
+
+            // end of media event handler is switching to next song
+            mediaPlayer.setOnEndOfMedia(() -> {
+                int currentIndex = currentSongProperty.get();
+                currentSongProperty.set(currentIndex + 1);
+                playNext();
+            });
+
+            play();
+        } else {
+            // playlist is finished
+            if (REPEAT) {
+                currentSongProperty.set(0);
+                playNext();
+            }
+        }
+    }
+
+    public void playOrPause() {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (mediaPlayer.getStatus() == Status.PLAYING) {
+            pause();
+        }
+        if (mediaPlayer.getStatus() == Status.PAUSED) {
+            play();
+        }
+    }
+
+    private void play() {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (mediaPlayer.getStatus() == Status.PLAYING) {
+            return;
+        }
+        mediaPlayer.play();
+    }
+
+    public void play(String filename) {
+        Media chosenSong = loadAudioFile(filename);
+        if (chosenSong == null) {
+            return;
+        }
+        mediaPlayer = new MediaPlayer(chosenSong);
+        play();
+    }
+
+    private void pause() {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (mediaPlayer.getStatus() == Status.PAUSED) {
+            return;
+        }
+        mediaPlayer.pause();
+    }
+
+    public void next() {
+        int currentIndex = currentSongProperty.get();
+        currentSongProperty.set(currentIndex + 1);
+        playNext();
+    }
+
+    public void previous() {
+        int currentIndex = currentSongProperty.get();
+        currentSongProperty.subtract(currentIndex - 1);
+        if (currentSongProperty.get() < 0) {
+            currentSongProperty.set(playlist.size() - 1);
+        }
+        playNext();
+    }
+
+    public void shuffle() {
+        if (playlist == null || playlist.isEmpty()) {
+            return;
+        }
+        Collections.shuffle(playlist, new Random());
+        currentSongProperty.set(0);
+        playNext();
+    }
+
+    private void stop() {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (mediaPlayer.getStatus() == Status.STOPPED) {
+            return;
+        }
+        mediaPlayer.stop();
+    }
+
+    public void destroy() {
+        disposables.dispose();
+        disposables = new CompositeDisposable();
+        if (mediaPlayer != null) {
+            mediaPlayer.dispose();
+            if (mediaPlayer.getStatus() == Status.DISPOSED) {
+                mediaPlayer = null;
+            }
+        }
+    }
+
+    private List<Media> loadAudioFiles() {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
+        }
+
+        List<Media> mediaFiles = new ArrayList<>();
+        Path basePath = null;
+        try {
+            assert basePathURL != null;
+            basePath = Paths.get(basePathURL.toURI());
+        } catch (URISyntaxException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+
+        assert basePath != null;
+        File folder = new File(basePath.toString());
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    Media media = loadAudioFile(file);
+                    mediaFiles.add(media);
+                }
+            }
+        }
+
+        return mediaFiles;
+    }
+
+    private Media loadAudioFile(File file) {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
+        }
+        if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
+            return loadAudioFile(file.toURI().toString());
+        }
+        return null;
+    }
+
+    private Media loadAudioFile(String filename) {
+        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
+            return null;
+        }
+        try {
+            URI uri = new URI(filename);
+            if (uri.isAbsolute()
+                    && uri.toString().startsWith(Objects.requireNonNull(basePathURL).toURI().toString())
+                    && uri.toString().toLowerCase().endsWith(".mp3")
+            ) {
+                return new Media(Objects.requireNonNull(filename));
+            } else {
+                return new Media(Objects.requireNonNull(Main.class.getResource("sound/" + filename + ".mp3")).toExternalForm());
+            }
+        } catch (URISyntaxException e) {
+            System.err.println("Invalid URI: " + e.getMessage());
+        }
+        return null;
+    }
+
+    protected <T> void listen(ObservableValue<T> property, ChangeListener<? super T> listener) {
+        property.addListener(listener);
+        onDestroy(() -> property.removeListener(listener));
+    }
+
+    private void onDestroy(Runnable action) {
+        disposables.add(Disposable.fromRunnable(action));
+    }
+}

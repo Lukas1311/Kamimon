@@ -51,7 +51,7 @@ public interface TestComponent extends MainComponent {
     RegionApiDummy regionApi();
 
     SessionService sessionService();
-
+    
     PresetApiDummy presetApi();
 
     @Component.Builder

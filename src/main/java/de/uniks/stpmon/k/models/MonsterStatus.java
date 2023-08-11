@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * A possible status effect on a monster.
  * A monster can have multiple status effects at once.
  */
+@SuppressWarnings("unused")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum MonsterStatus {
     @JsonProperty("paralysed")
@@ -15,18 +16,12 @@ public enum MonsterStatus {
     ASLEEP("asleep"),
     @JsonProperty("poisoned")
     POISONED("poisoned"),
-    //TODO: Remove, if server status is fixed
-    @JsonProperty("burn")
-    BURNED("burned"),
     @JsonProperty("burned")
-    BURN("burned"),
+    BURNED("burned"),
     @JsonProperty("frozen")
     FROZEN("frozen"),
     @JsonProperty("confused")
     CONFUSED("confused"),
-    //TODO: Remove, if server status is fixed
-    @JsonProperty("confusion")
-    CONFUSION("confused"),
     @JsonProperty("stunned")
     STUNNED("stunned");
 

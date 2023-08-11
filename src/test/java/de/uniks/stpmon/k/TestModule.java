@@ -34,6 +34,7 @@ public class TestModule {
                 .setSkipLoading(true)
                 .setSkipLoadImages(true)
                 .setSkipAnimations(true)
+                .setSkipLoadAudio(true)
                 .setWalkingSpeed(1)
                 .setTextureScale(1.0d)
                 .setDialogAnimationSpeed(1)
@@ -42,6 +43,7 @@ public class TestModule {
 
     @Provides
     @Singleton
+    @SuppressWarnings("unused")
     static ClockService clockService() {
         return new ClockService();
     }

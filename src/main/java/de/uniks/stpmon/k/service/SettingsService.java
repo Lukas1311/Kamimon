@@ -12,9 +12,11 @@ public class SettingsService {
     @Inject
     Preferences preferences;
     boolean initialized = false;
-    private final BehaviorSubject<Boolean> nightModus = BehaviorSubject.createDefault(true);
+    private final BehaviorSubject<Boolean> nightMode = BehaviorSubject.createDefault(true);
+    private final BehaviorSubject<Boolean> soundMuted = BehaviorSubject.createDefault(false);
     private final BehaviorSubject<Float> soundValue = BehaviorSubject.createDefault(100f);
     private final BehaviorSubject<Float> dayTimeCycle = BehaviorSubject.createDefault(12f);
+    private final BehaviorSubject<Integer> currentSong = BehaviorSubject.createDefault(0);
 
     @Inject
     public SettingsService() {
@@ -24,10 +26,16 @@ public class SettingsService {
         if (initialized) {
             return;
         }
-        nightModus.onNext(preferences.getBoolean("nightModus", true));
+        nightMode.onNext(preferences.getBoolean("nightMode", true));
+        soundMuted.onNext(preferences.getBoolean("soundMuted", false));
         soundValue.onNext(preferences.getFloat("soundValue", 100f));
+        currentSong.onNext(preferences.getInt("currentSong", 0));
         dayTimeCycle.onNext(preferences.getFloat("dayTimeCycle", 12f));
         initialized = true;
+    }
+
+    public void setCurrentSong(int index) {
+        preferences.putInt("currentSong", index);
     }
 
     public void setSoundValue(float value) {
@@ -38,8 +46,14 @@ public class SettingsService {
 
     public void setNightEnabled(boolean value) {
         ensureInit();
-        preferences.putBoolean("nightModus", value);
-        nightModus.onNext(value);
+        preferences.putBoolean("nightMode", value);
+        nightMode.onNext(value);
+    }
+
+    public void setSoundMuted(boolean value) {
+        ensureInit();
+        preferences.putBoolean("soundMuted", value);
+        soundMuted.onNext(value);
     }
 
     public boolean setDayTimeCycle(float value) {
@@ -63,7 +77,12 @@ public class SettingsService {
 
     public Boolean getNightEnabled() {
         ensureInit();
-        return nightModus.getValue();
+        return nightMode.getValue();
+    }
+
+    public Boolean getSoundMuted() {
+        ensureInit();
+        return soundMuted.getValue();
     }
 
     public Float getDayTimeCycle() {
@@ -71,9 +90,14 @@ public class SettingsService {
         return dayTimeCycle.getValue();
     }
 
-    public Observable<Boolean> onNightModusEnabled() {
+    public Observable<Boolean> onNightModeEnabled() {
         ensureInit();
-        return nightModus;
+        return nightMode;
+    }
+
+    public Observable<Boolean> onSoundMuted() {
+        ensureInit();
+        return soundMuted;
     }
 
     public Observable<Float> onSoundValue() {

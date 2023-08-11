@@ -93,18 +93,6 @@ public abstract class Viewable {
      * This method is only a utility method to avoid boilerplate code.
      *
      * @param observable the observable to subscribe to
-     * @param onComplete the consumer to call on each event
-     * @param <T>        the type of the items emitted by the Observable
-     */
-    protected <@NonNull T> void subscribe(Observable<T> observable, Action onComplete) {
-        subscribe(observable.ignoreElements(), onComplete);
-    }
-
-    /**
-     * Subscribes to an observable on the FX thread.
-     * This method is only a utility method to avoid boilerplate code.
-     *
-     * @param observable the observable to subscribe to
      * @param onNext     the action to call on completion
      * @param <T>        the type of the items emitted by the Observable
      */

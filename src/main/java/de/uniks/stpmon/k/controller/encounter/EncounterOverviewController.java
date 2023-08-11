@@ -13,8 +13,8 @@ import de.uniks.stpmon.k.models.Monster;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.service.IResourceService;
-import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
@@ -37,7 +37,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import retrofit2.HttpException;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -108,7 +107,7 @@ public class EncounterOverviewController extends Controller {
     @Inject
     Provider<MonsterSelectionController> monsterSelectionControllerProvider;
     @Inject
-    ItemService itemService;
+    SoundService soundService;
 
     private final Pane blackPane = new Pane();
     public Parent controller;
@@ -123,6 +122,7 @@ public class EncounterOverviewController extends Controller {
         super.init();
         if (actionFieldController != null) {
             actionFieldController.init();
+            soundService.play("13_Trainer_Battle");
         }
     }
 
@@ -131,6 +131,9 @@ public class EncounterOverviewController extends Controller {
         super.destroy();
         if (actionFieldController != null) {
             actionFieldController.destroy();
+        }
+        if (soundService != null) {
+            soundService.destroy();
         }
         inventoryControllerProvider.get().setInEncounter(false);
         slotMonsters.clear();

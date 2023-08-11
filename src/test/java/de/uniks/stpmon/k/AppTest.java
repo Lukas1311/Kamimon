@@ -32,7 +32,6 @@ import org.testfx.framework.junit5.ApplicationTest;
 import java.util.ArrayList;
 
 import static java.util.function.Predicate.not;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.assertions.api.Assertions.assertThat;
@@ -568,7 +567,7 @@ class AppTest extends ApplicationTest {
         //test sound
         clickOn("#settings");
         clickOn("#mdmzSettings");
-        final Slider musicSlider = lookup("#music").query();
+        final Slider musicSlider = lookup("#musicSlider").query();
         assertThat(musicSlider.getValue()).isEqualTo(0);
         clickOn("#settings");
 

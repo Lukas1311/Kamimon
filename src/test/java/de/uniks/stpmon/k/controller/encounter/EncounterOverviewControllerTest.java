@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Region;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.SoundService;
 import de.uniks.stpmon.k.service.storage.RegionStorage;
 import io.reactivex.rxjava3.core.Observable;
 import javafx.scene.layout.VBox;
@@ -23,7 +24,6 @@ import javax.inject.Provider;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -36,6 +36,9 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
 
     @Mock
     SessionService sessionService;
+    @Mock
+    @SuppressWarnings("unused")
+    SoundService soundService;
     @Mock
     Provider<StatusController> statusControllerProvider;
     @Mock
