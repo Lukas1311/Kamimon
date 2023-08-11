@@ -1,5 +1,6 @@
 package de.uniks.stpmon.k.world;
 
+import de.uniks.stpmon.k.models.map.Property;
 import de.uniks.stpmon.k.models.map.layerdata.ObjectData;
 import de.uniks.stpmon.k.models.map.layerdata.PolygonPoint;
 
@@ -12,7 +13,8 @@ public record RouteData(
         int width,
         int x,
         int y,
-        List<PolygonPoint> polygon
+        List<PolygonPoint> polygon,
+        String buildings
 ) {
 
     public static RouteData.Builder builder() {
@@ -34,7 +36,6 @@ public record RouteData(
         }
 
         public RouteData build() {
-            // RouteData routeData = new RouteData(data);
             int id = data.id();
             int height = data.height();
             int width = data.width();
@@ -42,7 +43,14 @@ public record RouteData(
             int y = data.y();
             List<PolygonPoint> polygon = data.polygon();
             RouteText routeText = routeTextBuilder.setData(data).build();
-            return new RouteData(id, routeText, height, width, x, y, polygon == null ? List.of() : polygon);
+            String buildings = data.properties().stream()
+                    .filter(property -> property.name().equals("Buildings"))
+                    .findFirst()
+                    .map(Property::value)
+                    .orElse("");
+            return new RouteData(id, routeText, height, width, x, y,
+                    polygon == null ? List.of() : polygon,
+                    buildings);
         }
 
     }
