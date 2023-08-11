@@ -31,6 +31,25 @@ public class SoundService {
     @Inject
     EffectContext effectContext;
 
+    String[] songNames = {
+        "01_Pokémon_Gym",
+        "02_Route_3",
+        "03_Azalea_Town",
+        "04_Hauoli_City",
+        "05_Ecruteak_City",
+        "06_Route_30",
+        "07_National_Park",
+        "08_Pokémon_League",
+        "09_Anistar_City",
+        "10_Relic_Song",
+        "11_Sacred_Beasts",
+        "12_Route_113",
+        "13_Trainer_Battle",
+        "14_Lavender_Town",
+        "15_Ending_Theme",
+        "16_Title_Screen"
+    };
+
     // is of form "file:/.../de/uniks/stpmon/k/sound/"
     private static final URL basePathURL = Main.class.getResource("sound/");
 
@@ -74,11 +93,15 @@ public class SoundService {
     }
 
     private void startPlayer() {
-        playlist = loadAudioFiles();
-        if (playlist == null) {
+        for (String song : songNames) {
+            Media media = loadAudioFile(song);
+            if (media != null) {
+                playlist.add(media);
+            }   
+        }
+        if (playlist == null || playlist.isEmpty()) {
             return;
         }
-        mediaPlayer = new MediaPlayer(playlist.get(0));
         playNext();
     }
 
@@ -142,6 +165,8 @@ public class SoundService {
             return;
         }
         mediaPlayer = new MediaPlayer(chosenSong);
+        mediaPlayer.volumeProperty().bind(volumeProperty);
+        mediaPlayer.muteProperty().bind(muteProperty);
         play();
     }
 
@@ -198,45 +223,6 @@ public class SoundService {
                 mediaPlayer = null;
             }
         }
-    }
-
-    private List<Media> loadAudioFiles() {
-        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
-            return null;
-        }
-
-        List<Media> mediaFiles = new ArrayList<>();
-        Path basePath = null;
-        try {
-            assert basePathURL != null;
-            basePath = Paths.get(basePathURL.toURI());
-        } catch (URISyntaxException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
-
-        assert basePath != null;
-        File folder = new File(basePath.toString());
-        if (folder.exists() && folder.isDirectory()) {
-            File[] files = folder.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    Media media = loadAudioFile(file);
-                    mediaFiles.add(media);
-                }
-            }
-        }
-
-        return mediaFiles;
-    }
-
-    private Media loadAudioFile(File file) {
-        if (effectContext != null && effectContext.shouldSkipLoadAudio()) {
-            return null;
-        }
-        if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
-            return loadAudioFile(file.toURI().toString());
-        }
-        return null;
     }
 
     private Media loadAudioFile(String filename) {
