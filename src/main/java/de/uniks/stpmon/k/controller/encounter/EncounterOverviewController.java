@@ -6,7 +6,6 @@ import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.controller.inventory.ItemInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.controller.monsters.MonsterSelectionController;
-import de.uniks.stpmon.k.dto.AbilityMove;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Monster;
@@ -248,8 +247,6 @@ public class EncounterOverviewController extends Controller {
             return parent;
         }
 
-        subscribeFight();
-
         actionFieldWrapperBox.setOpacity(0);
 
         Transition openingTransition = playOpeningAnimation();
@@ -378,22 +375,11 @@ public class EncounterOverviewController extends Controller {
         return new ParallelTransition(rTopTransition, rDownTransition);
     }
 
-    private void subscribeFight() {
-        for (EncounterSlot slot : sessionService.getSlots()) {
-            subscribe(sessionService.listenOpponent(slot), next -> {
-                //using IMove to animate attack
-                if (next.move() instanceof AbilityMove) {
-                    renderAttack(slot);
-                }
-            });
-        }
-    }
-
     private void renderChange(EncounterSlot slot) {
         changeAnimations.get(slot).play();
     }
 
-    private void renderAttack(EncounterSlot slot) {
+    public void renderAttack(EncounterSlot slot) {
         attackAnimations.get(slot).play();
     }
 
