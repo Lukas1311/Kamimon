@@ -82,12 +82,6 @@ public class PresetService {
         );
     }
 
-    public Observable<List<ItemTypeDto>> getItems() {
-        CacheManager manager = cacheManagerProvider.get();
-        ItemTypeCache typeCache = manager.itemTypeCache();
-        return typeCache.getValues();
-    }
-
     public Observable<ItemTypeDto> getItem(int id) {
         return getItem(Integer.toString(id));
     }
