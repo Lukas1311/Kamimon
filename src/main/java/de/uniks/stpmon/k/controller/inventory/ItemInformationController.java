@@ -15,6 +15,7 @@ import de.uniks.stpmon.k.service.ItemService;
 import de.uniks.stpmon.k.service.PresetService;
 import de.uniks.stpmon.k.service.ResourceService;
 import de.uniks.stpmon.k.service.SessionService;
+import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import de.uniks.stpmon.k.utils.ImageUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -60,6 +61,8 @@ public class ItemInformationController extends Controller {
     Provider<ActionFieldController> actionControllerProvider;
     @Inject
     SessionService sessionService;
+    @Inject
+    EncounterStorage encounterStorage;
 
     public Item item;
     public ItemTypeDto itemTypeDto;
@@ -84,9 +87,10 @@ public class ItemInformationController extends Controller {
             if (item.use() != null) {
                 useButton.setVisible(true);
                 useButton.setText(translateString("useItemButton"));
-                // can not use MonBall outside of encounter or a box in an encounter                if (item.use().equals(ItemUse.BALL) && !isEncounter || (
-                if (item.use().equals(ItemUse.BALL) && !isEncounter || (
-                        item.use().equals(ItemUse.ITEM_BOX) || item.use().equals(ItemUse.MONSTER_BOX)) && isEncounter) {
+                // disable button if Ball and no Encounter, Ball and TrainerEncounter, Box and any Encounter
+                if (item.use().equals(ItemUse.BALL) && !isEncounter || (item.use().equals(ItemUse.ITEM_BOX) ||
+                        item.use().equals(ItemUse.MONSTER_BOX)) && isEncounter ||
+                        item.use().equals(ItemUse.BALL) && !encounterStorage.getEncounter().isWild()) {
                     useButton.setDisable(true);
                 }
                 useButton.setOnAction(e -> useItem());
