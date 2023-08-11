@@ -24,6 +24,7 @@ public class DummyResourceService implements IResourceService {
     }
 
     @Override
+    @SuppressWarnings("BlockingMethodInNonBlockingContext")
     public Observable<BufferedImage> getCharacterImage(String name) {
         if (characterImage == null) {
             return Observable.create(emitter -> {
@@ -40,6 +41,7 @@ public class DummyResourceService implements IResourceService {
     }
 
     @Override
+    @SuppressWarnings("BlockingMethodInNonBlockingContext")
     public Observable<BufferedImage> getTilesetImage(String fileName) {
         if (tileSetImage == null) {
             return Observable.create(emitter -> {
