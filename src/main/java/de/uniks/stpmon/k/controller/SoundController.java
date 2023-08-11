@@ -43,8 +43,6 @@ public class SoundController extends Controller {
     @FXML
     public Label muteSoundLabel;
     @FXML
-    public Text mediaControlText;
-    @FXML
     public Button previousButton;
     @FXML
     public Button nextButton;
@@ -86,7 +84,6 @@ public class SoundController extends Controller {
         final Parent parent = super.render();
         soundScreen.prefHeightProperty().bind(app.getStage().heightProperty().subtract(35));
 
-        mediaControlText.setText(translateString("mediaCtrl"));
         muteSoundLabel.setText(translateString("muteSound"));
 
         //back to Settings
