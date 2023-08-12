@@ -18,10 +18,7 @@ import de.uniks.stpmon.k.service.storage.RegionStorage;
 import de.uniks.stpmon.k.service.world.ClockService;
 import de.uniks.stpmon.k.service.world.WorldService;
 import de.uniks.stpmon.k.utils.ImageUtils;
-import javafx.animation.ParallelTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -81,6 +78,8 @@ public class EncounterOverviewController extends Controller {
     public HBox contentBox;
     @FXML
     public VBox menuHolderVBox;
+    @FXML
+    public ImageView ballView;
 
     @Inject
     IResourceService resourceService;
@@ -111,6 +110,8 @@ public class EncounterOverviewController extends Controller {
     private final Pane blackPane = new Pane();
     public Parent controller;
     public Parent monInfoParent;
+    public Item item;
+    private boolean caught = false;
 
     @Inject
     public EncounterOverviewController() {
@@ -525,6 +526,91 @@ public class EncounterOverviewController extends Controller {
         transition.setFromX(fromRight ? 600 : -600);
         transition.setToX(0);
         return transition;
+    }
+
+    public void monBallAnimation(Item item) {
+        if (item == null) {
+            return;
+        }
+        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
+            //image
+            Image ball = ImageUtils.scaledImageFX(item1, 3.0);
+            ballView.setImage(ball);
+        });
+        //transition for MonBall
+        SequentialTransition sequentialTransition = getSequentialTransition();
+
+        SequentialTransition sequentialRotation = new SequentialTransition(); // To control rotation sequence
+
+        int totalRotations = 3; // Total number of rotations
+        for (int i = 0; i < totalRotations; i++) {
+            RotateTransition rotateBallTransition = getRotateTransition(i);
+
+            sequentialRotation.getChildren().add(rotateBallTransition);
+        }
+        sequentialRotation.setCycleCount(3);
+
+        SequentialTransition finalAnimation = new SequentialTransition(sequentialTransition, sequentialRotation);
+        finalAnimation.play();
+        finalAnimation.setOnFinished(event -> {
+            if (!successfullyCaught()) {
+                revertCatchAnimation();
+            }
+            setCaught(false);
+        });
+    }
+
+    public void setCaught(boolean caught) {
+        this.caught = caught;
+    }
+
+    public boolean successfullyCaught() {
+        return caught;
+    }
+
+    private SequentialTransition getSequentialTransition() {
+        TranslateTransition translation =
+                new TranslateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed()), ballView);
+        translation.setFromY(1000);
+        translation.setFromX(-2000);
+        translation.setToX(0);
+        translation.setToY(0);
+
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() / 2), opponentMonster0);
+        fadeTransition.setFromValue(100);
+        fadeTransition.setToValue(0);
+        return new SequentialTransition(translation, fadeTransition);
+    }
+
+    private RotateTransition getRotateTransition(int i) {
+        RotateTransition rotateBallTransition = new RotateTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() / 4), ballView);
+        if (i == 0) {
+            rotateBallTransition.setByAngle(0); // Negative 45 degrees
+            rotateBallTransition.setToAngle(45); // Positive 45 degrees
+        } else if (i == 1) {
+            rotateBallTransition.setByAngle(45);
+            rotateBallTransition.setToAngle(-45); // Negative 45 degrees
+        } else {
+            rotateBallTransition.setByAngle(-45);
+            rotateBallTransition.setToAngle(0); // Negative 45 degrees
+        }
+        return rotateBallTransition;
+    }
+
+    public void revertCatchAnimation() {
+        FadeTransition ballFadeOut = new FadeTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() / 2), ballView);
+        ballFadeOut.setFromValue(100);
+        ballFadeOut.setToValue(0);
+
+        FadeTransition monsterFadeIn = new FadeTransition(Duration.millis(effectContext.getEncounterAnimationSpeed() / 2), opponentMonster0);
+        monsterFadeIn.setFromValue(0);
+        monsterFadeIn.setToValue(100);
+
+        ParallelTransition parallelTransition = new ParallelTransition(ballFadeOut, monsterFadeIn);
+        parallelTransition.play();
+        parallelTransition.setOnFinished(e -> {
+            ballView.setOpacity(1.0f);
+        });
     }
 
     @Override

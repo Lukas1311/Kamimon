@@ -160,6 +160,7 @@ public class ItemInformationController extends Controller {
                     // make itemMove
                     String id = sessionService.getMonster(EncounterSlot.ENEMY_FIRST)._id();
                     actionControllerProvider.get().executeItemMove(itemTypeDto.id(), id);
+                    encounterOverviewControllerProvider.get().monBallAnimation(item);
                 }
             }
             case EFFECT -> {

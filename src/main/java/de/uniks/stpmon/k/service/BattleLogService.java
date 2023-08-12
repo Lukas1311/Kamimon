@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.controller.action.ActionFieldBattleLogController;
 import de.uniks.stpmon.k.controller.encounter.CloseEncounterTrigger;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.encounter.LevelUp;
+import de.uniks.stpmon.k.controller.monsters.MonsterInformationController;
 import de.uniks.stpmon.k.dto.*;
 import de.uniks.stpmon.k.models.*;
 import javafx.animation.TranslateTransition;
@@ -17,6 +18,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.*;
 
+
 @Singleton
 public class BattleLogService {
     @Inject
@@ -27,13 +29,16 @@ public class BattleLogService {
     Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     Provider<ActionFieldBattleLogController> battleLogControllerProvider;
+    @Inject
+    Provider<MonsterInformationController> monInfoProvider;
 
     @Inject
     protected EffectContext effectContext;
 
 
     VBox textBox;
-    final HashMap<EncounterSlot, String> monsterNames = new HashMap<>(4);
+    HashMap<EncounterSlot, String> monsterNames = new HashMap<>(4);
+
 
     private final Map<EncounterSlot, Opponent> lastOpponents = new HashMap<>();
     private final Map<EncounterSlot, MonsterTypeDto> attackedMonsters = new HashMap<>();
@@ -57,7 +62,7 @@ public class BattleLogService {
     private final Map<EncounterSlot, Monster> monsAfterLevelUp = new HashMap<>();
 
     private final Map<EncounterSlot, LevelUp> levelUps = new HashMap<>();
-    private boolean monsterCaught = false;
+    public Item item;
 
     @Inject
     public BattleLogService() {
@@ -196,9 +201,8 @@ public class BattleLogService {
                 } else {
                     //user sees result of encounter
                     //show encounter result
-                    if (monsterCaught) {
-                        closeEncounterTrigger = CloseEncounterTrigger.END;
-                    }
+                    closeEncounterTrigger = CloseEncounterTrigger.END;
+
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
                     closeTimer = new Timer();
@@ -359,7 +363,8 @@ public class BattleLogService {
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
             case "item-failed" -> addTranslatedSection("item-failed", getItem(result.item()).name());
-            case "item-success" -> //item success is in result, if the call to use the item was successfull
+            case "item-success" ->
+                //item success is in result, if the call to use the item was successful
                 //there will also be item-success if the monBall was used, but the mon was NOT caught
                 //if the mon is caught, there is also a monster-caught result
                     addTranslatedSection("item-success", getItem(result.item()).name());
@@ -369,7 +374,7 @@ public class BattleLogService {
             case "monster-caught" -> {
                 Monster mon = monsBeforeLevelUp.get(EncounterSlot.ENEMY_FIRST);
                 MonsterTypeDto typeDto = getMonsterType(mon.type());
-                monsterCaught = true;
+                encounterOverviewControllerProvider.get().setCaught(true);
                 addTranslatedSection("monster-caught", typeDto.name());
             }
             default -> System.out.println("unknown result type");
@@ -386,7 +391,7 @@ public class BattleLogService {
     }
 
     public void setMonster(EncounterSlot slot, Monster mon) {
-        //monster at start of encounter gets safed
+        //monster at start of encounter gets saved
         if (!monsBeforeLevelUp.containsKey(slot)) {
             monsBeforeLevelUp.put(slot, mon);
             monsterNames.put(slot, getMonsterType(mon.type()).name());
