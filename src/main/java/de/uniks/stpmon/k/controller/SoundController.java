@@ -99,6 +99,7 @@ public class SoundController extends Controller {
                 }
         );
 
+
         muteSound.setSelected(settingsService.getSoundMuted());
         listen(muteSound.selectedProperty(),
                 (observable, oldValue, newValue) -> settingsService.setSoundMuted(newValue)

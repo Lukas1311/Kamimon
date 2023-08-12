@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="fullBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" styleClass="encounter-background" stylesheets="@../css/ingameStyle.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.EncounterOverviewController">
+<StackPane fx:id="fullBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="720.0" prefWidth="1280.0" styleClass="encounter-background" stylesheets="@../css/ingameStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniks.stpmon.k.controller.encounter.EncounterOverviewController">
     <ImageView fx:id="background" fitHeight="729.0" fitWidth="1287.0" StackPane.alignment="CENTER" />
     <VBox fx:id="wrappingVBox">
         <StackPane VBox.vgrow="ALWAYS">
@@ -35,11 +37,21 @@
                 </HBox>
                 <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                     <StackPane HBox.hgrow="ALWAYS">
-                        <ImageView fx:id="opponentMonster0" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <StackPane>
                             <StackPane.margin>
-                                <Insets bottom="300.0" right="300.0" />
+                                <Insets bottom="300.0" right="300.0"/>
                             </StackPane.margin>
-                        </ImageView>
+                            <ImageView fx:id="opponentMonster0" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true"
+                                       preserveRatio="true"/>
+                            <VBox alignment="BOTTOM_CENTER">
+                                <ImageView fx:id="ballView" fitHeight="75.0" fitWidth="75.0" pickOnBounds="true"
+                                           preserveRatio="true">
+                                    <VBox.margin>
+                                        <Insets/>
+                                    </VBox.margin>
+                                </ImageView>
+                            </VBox>
+                        </StackPane>
                         <ImageView fx:id="opponentMonster1" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                     </StackPane>
                 </HBox>
