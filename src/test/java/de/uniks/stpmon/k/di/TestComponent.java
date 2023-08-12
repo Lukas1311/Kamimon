@@ -7,6 +7,7 @@ import de.uniks.stpmon.k.controller.WorldController;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.net.EventListener;
+import de.uniks.stpmon.k.service.EncounterService;
 import de.uniks.stpmon.k.service.RegionService;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.dummies.*;
@@ -53,6 +54,8 @@ public interface TestComponent extends MainComponent {
     SessionService sessionService();
     
     PresetApiDummy presetApi();
+
+    EncounterService encounterService();
 
     @Component.Builder
     interface Builder extends MainComponent.Builder {

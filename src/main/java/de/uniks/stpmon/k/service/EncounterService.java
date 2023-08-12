@@ -84,6 +84,13 @@ public class EncounterService {
         );
     }
 
+    public Observable<List<Opponent>> getEncounterOpponents(String encounterId) {
+        return encounterApiService.getEncounterOpponents(
+                regionStorage.getRegion()._id(),
+                encounterId
+        );
+    }
+
     public Observable<Opponent> getEncounterOpponent() {
         return encounterApiService.getEncounterOpponent(
                 regionStorage.getRegion()._id(),

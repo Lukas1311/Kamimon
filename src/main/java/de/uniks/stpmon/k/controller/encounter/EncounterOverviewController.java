@@ -122,7 +122,7 @@ public class EncounterOverviewController extends Controller {
         super.init();
         if (actionFieldController != null) {
             actionFieldController.init();
-            soundService.play("13_Trainer_Battle");
+            soundService.loopSong("13_Trainer_Battle");
         }
     }
 

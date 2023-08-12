@@ -8,9 +8,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javafx.util.Duration;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -159,7 +161,7 @@ public class SoundService {
         mediaPlayer.play();
     }
 
-    public void play(String filename) {
+    public void loopSong(String filename) {
         Media chosenSong = loadAudioFile(filename);
         if (chosenSong == null) {
             return;
@@ -167,6 +169,12 @@ public class SoundService {
         mediaPlayer = new MediaPlayer(chosenSong);
         mediaPlayer.volumeProperty().bind(volumeProperty);
         mediaPlayer.muteProperty().bind(muteProperty);
+
+        mediaPlayer.setOnEndOfMedia(() -> {
+            mediaPlayer.seek(Duration.ZERO);
+            mediaPlayer.play();
+        });
+
         play();
     }
 

@@ -4,6 +4,7 @@ import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.models.*;
 import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.models.builder.NPCInfoBuilder;
+import de.uniks.stpmon.k.models.builder.OpponentBuilder;
 import de.uniks.stpmon.k.models.builder.TileMapBuilder;
 import de.uniks.stpmon.k.models.map.RegionImage;
 import de.uniks.stpmon.k.models.map.TileMapData;
@@ -190,4 +191,6 @@ public class DummyConstants {
     public static final NPCInfo NPC_INFO = NPCInfoBuilder.builder().create();
     public static final BufferedImage EMPTY_IMAGE = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
     public static final RegionImage IMAGE = new RegionImage("0", EMPTY_IMAGE, EMPTY_IMAGE);
+
+    public static final Opponent OPPONENT = OpponentBuilder.builder().setTrainer(DummyConstants.TRAINER._id()).setMonster(DummyConstants.MONSTER._id()).create();
 }

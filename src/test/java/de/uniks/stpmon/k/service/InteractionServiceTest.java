@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -38,6 +39,8 @@ public class InteractionServiceTest {
     MonsterService monsterService;
     @Mock
     UserService userService;
+    @Mock
+    EncounterService encounterService;
     @Spy
     final ResourceBundle resources = ResourceBundle.getBundle("de/uniks/stpmon/k/lang/lang", Locale.ROOT);
     @Mock
@@ -80,6 +83,9 @@ public class InteractionServiceTest {
 
         // Setup mocked values
         when(resourceBundleProvider.get()).thenReturn(resources);
+        when(encounterService.getTrainerOpponents(anyString())).thenReturn(Observable.just(List.of(DummyConstants.OPPONENT)));
+        when(encounterService.getTrainerOpponents(anyString())).thenReturn(Observable.just(List.of(DummyConstants.OPPONENT)));
+        when(encounterService.getEncounterOpponents(any())).thenReturn(Observable.empty());
         when(trainerService.getFacingTrainer(1)).thenReturn(Optional.of(DummyConstants.TRAINER));
         when(userService.isOnline(anyString())).thenReturn(Observable.just(true));
         when(monsterService.anyMonsterAlive(anyString())).thenReturn(Observable.just(true));
