@@ -1,11 +1,13 @@
 package de.uniks.stpmon.k.service.storage;
 
-import de.uniks.stpmon.k.models.*;
+import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Monster;
+import de.uniks.stpmon.k.models.MonsterState;
+import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.service.DestructibleElement;
 import de.uniks.stpmon.k.service.storage.cache.EncounterMember;
 import de.uniks.stpmon.k.service.storage.cache.EncounterMonsters;
 import de.uniks.stpmon.k.service.storage.cache.OpponentCache;
-import de.uniks.stpmon.k.service.storage.cache.TrainerCache;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.CompletableSource;
 import io.reactivex.rxjava3.core.Observable;
@@ -25,6 +27,11 @@ public class EncounterSession extends DestructibleElement {
     private final Map<EncounterSlot, EncounterMember> cacheByOpponent = new HashMap<>();
     private EncounterMonsters allMonsterCache;
     private final Set<EncounterSlot> slots = new LinkedHashSet<>();
+    /**
+     * The id of the opponent that is currently joining the encounter.
+     * This is used to switch the deleted with the newly created encounter.
+     */
+    private OpponentSwitch ongoingJoin = null;
 
     public EncounterSession(OpponentCache opponentCache) {
         this.opponentCache = opponentCache;
@@ -36,7 +43,6 @@ public class EncounterSession extends DestructibleElement {
 
     public void setup(Provider<EncounterMember> cacheProvider,
                       Provider<EncounterMonsters> monstersProvider,
-                      TrainerCache trainerCache,
                       String selfTrainer) {
         int teamIndex = 1;
         int attackerIndex = 0;
@@ -51,7 +57,6 @@ public class EncounterSession extends DestructibleElement {
         }
 
         allMonsterCache = monstersProvider.get();
-        Set<String> allMonsters = new HashSet<>();
         Set<String> allTrainers = new HashSet<>();
         // does not block because it is initialized with the initial values
         for (Opponent op : opponentCache.getCurrentValues()) {
@@ -71,19 +76,31 @@ public class EncounterSession extends DestructibleElement {
                 enemyTeam.add(op._id());
                 member = new EncounterSlot(attackerIndex++, true);
             }
-            allMonsters.add(op.monster());
             allTrainers.add(op.trainer());
             slots.add(member);
             cacheByOpponent.put(member, monsterCache);
             listenToOpponentMonster(op._id(), member);
         }
-        for (String trainer : allTrainers) {
-            Optional<Trainer> maybeTrainer = trainerCache.getValue(trainer);
-            maybeTrainer.ifPresent(value -> allMonsters.addAll(value.team()));
-        }
-        allMonsterCache.setup(allTrainers, allMonsters);
+        allMonsterCache.setup(allTrainers);
         allMonsterCache.init();
         onDestroy(opponentCache::destroy);
+        onDestroy(opponentCache.onCreation().subscribe(opponent -> {
+            if (allTrainers.contains(opponent.trainer())) {
+                return;
+            }
+            if (ongoingJoin == null) {
+                ongoingJoin = new OpponentSwitch();
+            }
+            ongoingJoin.createdOpponent = opponent;
+            tryJoin();
+        }));
+        onDestroy(opponentCache.onDeletion().subscribe(opponent -> {
+            if (ongoingJoin == null) {
+                ongoingJoin = new OpponentSwitch();
+            }
+            ongoingJoin.deletedOpponent = opponent;
+            tryJoin();
+        }));
     }
 
     private void listenToOpponentMonster(String opId, EncounterSlot slot) {
@@ -101,6 +118,33 @@ public class EncounterSession extends DestructibleElement {
                 cache.init();
             }
         }));
+    }
+
+    private void tryJoin() {
+        if (ongoingJoin == null) {
+            return;
+        }
+        if (ongoingJoin.deletedOpponent == null || ongoingJoin.createdOpponent == null) {
+            return;
+        }
+        if (Objects.equals(ongoingJoin.deletedOpponent, ongoingJoin.createdOpponent)) {
+            return;
+        }
+        performJoin();
+    }
+
+    private void performJoin() {
+        Opponent newOpponent = ongoingJoin.createdOpponent;
+        EncounterMember member = cacheByOpponent.get(EncounterSlot.PARTY_SECOND);
+        if (member == null) {
+            return;
+        }
+        allMonsterCache.addTrainer(newOpponent.trainer());
+        ownTeam.remove(ongoingJoin.deletedOpponent._id());
+        ownTeam.add(newOpponent._id());
+        member.setup(newOpponent.trainer(), newOpponent.monster(), allMonsterCache);
+        member.init();
+        ongoingJoin = null;
     }
 
     public boolean hasSlot(EncounterSlot slot) {
@@ -225,5 +269,10 @@ public class EncounterSession extends DestructibleElement {
 
     public Collection<EncounterSlot> getSlots() {
         return slots;
+    }
+
+    private static class OpponentSwitch {
+        Opponent deletedOpponent;
+        Opponent createdOpponent;
     }
 }

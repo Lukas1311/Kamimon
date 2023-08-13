@@ -47,7 +47,7 @@ public class EncounterOverviewController extends Controller {
     private final HashMap<EncounterSlot, Transition> attackAnimations = new HashMap<>(4);
     private final HashMap<EncounterSlot, Transition> changeAnimations = new HashMap<>(4);
     private final HashMap<EncounterSlot, ImageView> monsterImages = new HashMap<>(4);
-    private final Map<EncounterSlot, String> slotMonsters = new HashMap<>(4);
+    private final Map<EncounterSlot, Monster> slotMonsters = new HashMap<>(4);
 
     @FXML
     public StackPane fullBox;
@@ -96,6 +96,7 @@ public class EncounterOverviewController extends Controller {
     Provider<InventoryController> inventoryControllerProvider;
     @Inject
     Provider<ItemInformationController> itemInformationControllerProvider;
+
     @Inject
     Provider<MonsterSelectionController> monsterSelectionControllerProvider;
     @Inject
@@ -380,19 +381,27 @@ public class EncounterOverviewController extends Controller {
         StatusController statusController = statusControllerProvider.get();
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
+        int index = monstersContainer.getChildren().size() - 1;
+
 
         subscribe(sessionService.listenMonster(slot), (newMonster) -> {
                     if (newMonster == null) {
                         return;
                     }
-                    String oldMonsterId = slotMonsters.get(slot);
-                    if (oldMonsterId == null) {
+            Monster newMonsterId = slotMonsters.get(slot);
+            if (newMonsterId == null) {
                         loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
-                    } else if (!oldMonsterId.equals(newMonster._id())) {
+            } else if (!newMonsterId._id().equals(newMonster._id())) {
                         loadMonsterImage(String.valueOf(newMonster.type()), monsterImageView, slot.enemy());
                         renderChange(slot);
+                // Rerender status if opponent joins, needed to change status background
+                if (!Objects.equals(newMonster.trainer(), newMonsterId.trainer())) {
+                    // Destroy the old status controller and create a new one
+                    statusController.destroy();
+                    monstersContainer.getChildren().set(index, statusController.render());
+                }
                     }
-                    slotMonsters.put(slot, newMonster._id());
+            slotMonsters.put(slot, newMonster);
                 }
         );
 
@@ -428,7 +437,7 @@ public class EncounterOverviewController extends Controller {
         if (item == 0) {
             return;
         }
-        subscribe(resourceService.getItemImage(String.valueOf(item)), item1 -> {
+        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
             //image
             Image ball = ImageUtils.scaledImageFX(item1, 3.0);
             ballView.setImage(ball);
