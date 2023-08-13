@@ -26,7 +26,7 @@ public class EncounterSession extends DestructibleElement {
     private final List<String> enemyTeam;
     private final Map<EncounterSlot, EncounterMember> cacheByOpponent = new HashMap<>();
     private EncounterMonsters allMonsterCache;
-    private final Set<EncounterSlot> slots = new LinkedHashSet<>();
+    private final List<EncounterSlot> slots = new ArrayList<>();
     /**
      * The id of the opponent that is currently joining the encounter.
      * This is used to switch the deleted with the newly created encounter.
@@ -199,14 +199,6 @@ public class EncounterSession extends DestructibleElement {
         return opponentCache.listenValue(opponent).flatMap(op ->
                 op.map(Observable::just).orElse(Observable.empty())
         );
-    }
-
-    public Completable onEncounterCompleted() {
-        String opponent = getOpponentId(EncounterSlot.PARTY_FIRST);
-        if (opponent == null) {
-            return Completable.error(createOpponentNotFound(EncounterSlot.PARTY_FIRST));
-        }
-        return opponentCache.listenValue(opponent).filter(Optional::isEmpty).take(1).ignoreElements();
     }
 
     public EncounterSlot getSlotForTrainer(String trainerId) {

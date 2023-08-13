@@ -268,7 +268,12 @@ public class SessionService extends DestructibleElement {
     }
 
     public Completable onEncounterCompleted() {
-        return encounterStorage.getSession().onEncounterCompleted();
+        if (encounterStorage.getEncounter() == null) {
+            return Completable.complete();
+        }
+        return eventListener.listen(Socket.WS, "regions.*.encounters.%s.deleted"
+                        .formatted(encounterStorage.getEncounter()._id()), Encounter.class)
+                .map(Event::data).take(1).ignoreElements();
     }
 
     public void clearEncounter() {
