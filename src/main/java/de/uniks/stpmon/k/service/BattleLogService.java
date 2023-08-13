@@ -56,6 +56,7 @@ public class BattleLogService {
      * for example.
      */
     private boolean currentlyWaiting = false;
+    private boolean monsterCaught = false;
     private CloseEncounterTrigger closeEncounterTrigger = null;
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
@@ -199,9 +200,9 @@ public class BattleLogService {
                     closeTimer.cancel();
                     shutDownEncounter();
                 } else {
-                    //user sees result of encounter
-                    //show encounter result
-                    closeEncounterTrigger = CloseEncounterTrigger.END;
+                    if (monsterCaught) {
+                        closeEncounterTrigger = CloseEncounterTrigger.END;
+                    }
 
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
@@ -293,17 +294,14 @@ public class BattleLogService {
                     target = move.target();
                 }
             }
-
         }
 
         for (Result result : results) {
             handleResult(monster, result, target, slot, opp);
         }
-
     }
 
     private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot, Opponent opp) {
-
         final Integer ability = result.ability();
         switch (result.type()) {
             case "ability-success" -> {
@@ -360,22 +358,25 @@ public class BattleLogService {
             case "ability-unknown" ->
                     addTranslatedSection("ability-unknown", getAbility(ability).name(), monster.name());
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
+            case "ability-failed" -> addTranslatedSection("ability-failed", monster.name(), getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
             case "item-failed" -> addTranslatedSection("item-failed", getItem(result.item()).name());
-            case "item-success" ->
+            case "item-success" -> {
                 //item success is in result, if the call to use the item was successful
                 //there will also be item-success if the monBall was used, but the mon was NOT caught
                 //if the mon is caught, there is also a monster-caught result
-                    addTranslatedSection("item-success", getItem(result.item()).name());
+                addTranslatedSection("item-success", getItem(result.item()).name());
+                encounterOverviewControllerProvider.get().monBallAnimation(result.item());
+            }
             case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
                     + result.status().toString()
                     + result.type().replace("status-", "."), monster.name());
             case "monster-caught" -> {
                 Monster mon = monsBeforeLevelUp.get(EncounterSlot.ENEMY_FIRST);
                 MonsterTypeDto typeDto = getMonsterType(mon.type());
-                encounterOverviewControllerProvider.get().setCaught(true);
                 addTranslatedSection("monster-caught", typeDto.name());
+                monsterCaught = true;
             }
             default -> System.out.println("unknown result type");
         }
@@ -444,5 +445,7 @@ public class BattleLogService {
         attackedMonsters.clear();
         monsBeforeLevelUp.clear();
         monsAfterLevelUp.clear();
+        monsterCaught = false;
+        monsterNames.clear();
     }
 }
