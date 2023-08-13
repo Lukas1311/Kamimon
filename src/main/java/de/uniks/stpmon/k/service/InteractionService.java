@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.controller.StarterController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
-import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
@@ -109,6 +108,7 @@ public class InteractionService implements ILifecycleService {
         if (!monsterService.anyMonsterAlive()) {
             return getRejectionDialogue(trainer, infix);
         }
+
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
@@ -266,6 +266,10 @@ public class InteractionService implements ILifecycleService {
             return Observable.empty();
         }
 
+        if (!monsterService.anyMonsterAlive()) {
+            return Observable.just(getRejectionDialogue(trainer, "npc"));
+        }
+
         return userService.isOnline(trainer.user()).flatMap((isOnline) -> {
             if (!isOnline) {
                 return Observable.just(getRejectionDialogue(trainer, "player.offline", trainer.name()));
@@ -274,17 +278,17 @@ public class InteractionService implements ILifecycleService {
                 if (!anyAlive) {
                     return Observable.just(getRejectionDialogue(trainer, "player.dead"));
                 }
-                return encounterService.getTrainerOpponents(trainer._id()).flatMap(opponent -> {
-                    return encounterService.getEncounterOpponents(opponent.get(0).encounter()).map(opponents -> {
-                        List<Opponent> filteredOpponents = opponents.stream()
-                                .filter(opp -> !opp.trainer().equals(trainer._id()))
-                                .toList();
-                        if (filteredOpponents.size() > 1) {
-                            return getEncounterDialogue(trainer, me, "join");
-                        } else {
-                            return getEncounterDialogue(trainer, me, "player");
-                        }
-                    });
+                return encounterService.getTrainerOpponents(trainer._id()).map(opponent -> {
+                    if (opponent.isEmpty()) {
+                        // The other trainer has no opponents = start 1v1
+                        return getEncounterDialogue(trainer, me, "player");
+                    }
+                    if (opponent.size() == 2) {
+                        // The other trainer has two opponents = join 2v2
+                        return getEncounterDialogue(trainer, me, "join");
+                    }
+                    //The other trainer is already in a 1v1 fight
+                    return getRejectionDialogue(trainer, "player");
                 });
             }).switchIfEmpty(Observable.just(getEncounterDialogue(trainer, me, "player")));
         }).onErrorResumeNext((error) -> {

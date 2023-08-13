@@ -66,9 +66,9 @@ public class MonsterService extends DestructibleElement {
     public boolean anyMonsterAlive() {
         init();
         if (monsterCache == null) {
-            return true;
+            return false;
         }
-        return anyMonsterAlive(monsterCache.getCurrentValues());
+        return anyMonsterAlive(monsterCache.getTeam().getCurrentValues());
     }
 
     private boolean anyMonsterAlive(List<Monster> monsters) {
