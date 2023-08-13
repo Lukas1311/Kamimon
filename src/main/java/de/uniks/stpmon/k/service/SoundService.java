@@ -9,19 +9,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
+import javafx.util.Duration;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javafx.util.Duration;
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-
-import static javafx.scene.media.MediaPlayer.Status;
 
 @SuppressWarnings("unused")
 @Singleton
@@ -59,7 +54,7 @@ public class SoundService {
 
     private MediaPlayer mediaPlayer;
 
-    private List<Media> playlist = new ArrayList<>();
+    private final List<Media> playlist = new ArrayList<>();
 
     private final DoubleProperty volumeProperty = new SimpleDoubleProperty(1.0); // 1.0 = 100% volume
     private final BooleanProperty muteProperty = new SimpleBooleanProperty(false);
@@ -101,7 +96,7 @@ public class SoundService {
                 playlist.add(media);
             }   
         }
-        if (playlist == null || playlist.isEmpty()) {
+        if (playlist.isEmpty()) {
             return;
         }
         playNext();
@@ -110,10 +105,6 @@ public class SoundService {
     private void playNext() {
         if (mediaPlayer != null) {
             stop();
-        }
-
-        if (playlist == null) {
-            return;
         }
 
         if (currentSongProperty.get() < playlist.size()) {
@@ -204,7 +195,7 @@ public class SoundService {
     }
 
     public void shuffle() {
-        if (playlist == null || playlist.isEmpty()) {
+        if (playlist.isEmpty()) {
             return;
         }
         Collections.shuffle(playlist, new Random());
