@@ -263,8 +263,8 @@ public class InteractionService implements ILifecycleService {
         Trainer me = trainerService.getMe();
         Trainer trainer = frontTrainer.get();
 
-        // Only create a dialogue if the trainer is not an NPC
-        if (trainer.npc() != null) {
+        // Only create a dialogue if the trainer is not an NPC or the trainer id is not the same
+        if (trainer.npc() != null || trainer._id().equals(me._id())) {
             return Observable.empty();
         }
 
