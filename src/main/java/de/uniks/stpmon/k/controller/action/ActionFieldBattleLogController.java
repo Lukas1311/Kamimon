@@ -1,8 +1,10 @@
 package de.uniks.stpmon.k.controller.action;
 
+import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.sidebar.HybridController;
 import de.uniks.stpmon.k.controller.sidebar.MainWindow;
 import de.uniks.stpmon.k.models.EncounterSlot;
+import de.uniks.stpmon.k.models.Result;
 import de.uniks.stpmon.k.service.BattleLogService;
 import de.uniks.stpmon.k.service.InputHandler;
 import de.uniks.stpmon.k.service.SessionService;
@@ -29,7 +31,8 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
 
     @Inject
     Provider<HybridController> hybridControllerProvider;
-
+    @Inject
+    Provider<EncounterOverviewController> encounterOverviewControllerProvider;
     @Inject
     SessionService sessionService;
     @Inject
@@ -72,7 +75,14 @@ public class ActionFieldBattleLogController extends BaseActionFieldController {
     private void initListeners() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot),
-                    opp -> battleLogService.queueUpdate(slot, opp));
+                    opp -> {
+                        for (Result result : opp.results()) {
+                            if (result.type().equals("monster-caught")) {
+                                encounterOverviewControllerProvider.get().setCaught(true);
+                            }
+                        }
+                        battleLogService.queueUpdate(slot, opp);
+                    } );
             subscribe(sessionService.listenMonster(slot),
                     mon -> battleLogService.setMonster(slot, mon));
         }

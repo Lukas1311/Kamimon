@@ -6,6 +6,7 @@ import de.uniks.stpmon.k.models.Item;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.rest.TrainerItemApiService;
 import de.uniks.stpmon.k.service.storage.TrainerStorage;
+import de.uniks.stpmon.k.service.storage.cache.CacheManager;
 import de.uniks.stpmon.k.service.storage.cache.CacheProxy;
 import de.uniks.stpmon.k.service.storage.cache.ItemCache;
 import io.reactivex.rxjava3.core.Observable;
@@ -14,12 +15,15 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class ItemService {
 
     @Inject
     Provider<ItemCache> itemCacheProvider;
+    @Inject
+    Provider<CacheManager> cacheManagerProvider;
     @Inject
     TrainerStorage trainerStorage;
     @Inject
@@ -42,8 +46,22 @@ public class ItemService {
         c.setTrainerId(trainer._id());
     });
 
+    /**
+     * Is used to get all items
+     *
+     * @return All items of a trainer
+     */
     public Observable<List<Item>> getItems() {
         return itemCache.getValues();
+    }
+
+    /**
+     * Is used to get a specific item
+     *
+     * @return An optional for the item
+     */
+    public Observable<Optional<Item>> getItem(int itemType) {
+        return getItems().map(items -> items.stream().filter(item -> item.type().equals(itemType)).findFirst());
     }
 
     public Observable<Item> tradeItem(int itemType, int tradeAmount, String targetId, boolean sellItem) {

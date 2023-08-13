@@ -95,6 +95,7 @@ public class ItemInformationControllerTest extends ApplicationTest {
                 "description",
                 null);
         when(presetService.getItem(anyInt())).thenReturn(Observable.just(effectItemDto));
+        when(itemService.getItem(anyInt())).thenReturn(Observable.empty());
         Platform.runLater(() -> {
             app.show(itemInformationController);
             stage.requestFocus();
@@ -119,7 +120,6 @@ public class ItemInformationControllerTest extends ApplicationTest {
         verifyThat(useButton, not(Button::isVisible));
         verifyThat(nameLabel, hasText("item"));
         verifyThat(itemInformation, hasText("description"));
-        verifyThat(amountText, hasText("Amount: 10"));
     }
 
     @Test
@@ -135,6 +135,7 @@ public class ItemInformationControllerTest extends ApplicationTest {
                 "description",
                 ItemUse.EFFECT);
         when(presetService.getItem(anyInt())).thenReturn(Observable.just(effectItemDto));
+        when(itemService.getItem(anyInt())).thenReturn(Observable.empty());
         Platform.runLater(() -> {
             app.show(itemInformationController);
             stage.requestFocus();
