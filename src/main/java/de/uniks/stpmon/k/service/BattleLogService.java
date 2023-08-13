@@ -56,6 +56,7 @@ public class BattleLogService {
      * for example.
      */
     private boolean currentlyWaiting = false;
+    private boolean monsterCaught = false;
     private CloseEncounterTrigger closeEncounterTrigger = null;
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
@@ -199,9 +200,9 @@ public class BattleLogService {
                     closeTimer.cancel();
                     shutDownEncounter();
                 } else {
-                    //user sees result of encounter
-                    //show encounter result
-                    closeEncounterTrigger = CloseEncounterTrigger.END;
+                    if (monsterCaught) {
+                        closeEncounterTrigger = CloseEncounterTrigger.END;
+                    }
 
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
@@ -303,7 +304,6 @@ public class BattleLogService {
     }
 
     private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot, Opponent opp) {
-
         final Integer ability = result.ability();
         switch (result.type()) {
             case "ability-success" -> {
@@ -376,6 +376,7 @@ public class BattleLogService {
                 MonsterTypeDto typeDto = getMonsterType(mon.type());
                 encounterOverviewControllerProvider.get().setCaught(true);
                 addTranslatedSection("monster-caught", typeDto.name());
+                monsterCaught = true;
             }
             default -> System.out.println("unknown result type");
         }
@@ -444,5 +445,7 @@ public class BattleLogService {
         attackedMonsters.clear();
         monsBeforeLevelUp.clear();
         monsAfterLevelUp.clear();
+        monsterCaught = false;
+        monsterNames.clear();
     }
 }
