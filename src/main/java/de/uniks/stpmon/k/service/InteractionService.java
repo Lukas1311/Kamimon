@@ -12,7 +12,6 @@ import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
-
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -22,7 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -264,8 +262,8 @@ public class InteractionService implements ILifecycleService {
         Trainer me = trainerService.getMe();
         Trainer trainer = frontTrainer.get();
 
-        // Only create a dialogue if the trainer is not an NPC
-        if (trainer.npc() != null) {
+        // Only create a dialogue if the trainer is not an NPC or the trainer id is not the same
+        if (trainer.npc() != null || trainer._id().equals(me._id())) {
             return Observable.empty();
         }
 
