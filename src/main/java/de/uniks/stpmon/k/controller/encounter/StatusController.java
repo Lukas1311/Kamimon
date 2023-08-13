@@ -74,10 +74,21 @@ public class StatusController extends Controller {
     }
 
     public void loadMonsterInformation() {
+        Monster monster = sessionService.getMonster(slot);
+        subscribe(sessionService.listenOpponentDeletion(slot),
+                (opp) -> fullBox.setVisible(false));
+        if (monster == null) {
+            fullBox.setVisible(false);
+            // used to get the monster information for the monster of the trainer in the active region
+            subscribe(sessionService.listenMonster(slot),
+                    this::updateState);
+            return;
+        }
         // Initial state
         updateState(sessionService.getMonster(slot));
         // used to get the monster information for the monster of the trainer in the active region
-        subscribe(sessionService.listenMonster(slot).skip(1), this::updateState);
+        subscribe(sessionService.listenMonster(slot).skip(1),
+                this::updateState);
     }
 
     private void updateState(Monster monster) {

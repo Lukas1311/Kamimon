@@ -263,6 +263,19 @@ public class EncounterSession extends DestructibleElement {
         return slots;
     }
 
+    public Observable<Opponent> listenDeadOpponent(EncounterSlot slot) {
+        return opponentCache.onDeletion().flatMap((opponent) -> {
+            String id = getOpponentId(slot);
+            if (ongoingJoin != null && ongoingJoin.createdOpponent != null) {
+                return Observable.empty();
+            }
+            if (opponent._id().equals(id)) {
+                return Observable.just(opponent);
+            }
+            return Observable.empty();
+        });
+    }
+
     private static class OpponentSwitch {
         Opponent deletedOpponent;
         Opponent createdOpponent;

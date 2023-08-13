@@ -119,7 +119,11 @@ public class PreparationService {
                                 cacheManager.characterSetCache().getLazyValues(
                                         trainers.stream().map(Trainer::image)
                                                 .collect(Collectors.toSet()))
-                        ));
+                        )).onErrorResumeNext((error) -> {
+                    // Clear awaited values, to don't fall into an infinite loop
+                    cacheManager.characterSetCache().clearAwaited();
+                    return Completable.error(error);
+                });
     }
 
     public Completable loadRegionMap() {

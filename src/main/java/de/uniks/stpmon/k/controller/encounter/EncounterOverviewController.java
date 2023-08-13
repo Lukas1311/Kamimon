@@ -378,6 +378,7 @@ public class EncounterOverviewController extends Controller {
     }
 
     private void renderChange(EncounterSlot slot) {
+        monsterImages.get(slot).setOpacity(1.0f);
         changeAnimations.get(slot).play();
     }
 
@@ -408,8 +409,8 @@ public class EncounterOverviewController extends Controller {
         statusController.setSlot(slot);
         monstersContainer.getChildren().add(statusController.render());
         int index = monstersContainer.getChildren().size() - 1;
-
-
+        subscribe(sessionService.listenOpponentDeletion(slot),
+                (deleted) -> monsterImageView.setOpacity(0.0f));
         subscribe(sessionService.listenMonster(slot), (newMonster) -> {
                     if (newMonster == null) {
                         return;
