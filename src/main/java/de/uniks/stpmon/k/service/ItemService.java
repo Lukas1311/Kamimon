@@ -18,11 +18,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Singleton
-public class ItemService {
+public class ItemService extends DestructibleElement {
 
     @Inject
     Provider<ItemCache> itemCacheProvider;
     @Inject
+    @SuppressWarnings("unused")
     Provider<CacheManager> cacheManagerProvider;
     @Inject
     TrainerStorage trainerStorage;
@@ -33,9 +34,26 @@ public class ItemService {
 
     private int effectItemType = 0;
 
+    private boolean isInitialized = false;
+
     @Inject
     public ItemService() {
 
+    }
+
+    private void init() {
+        if(isInitialized) {
+            return;
+        }
+        onDestroy(trainerStorage.onTrainer().subscribe(trainer -> {
+
+            if (trainer.isEmpty()) {
+                itemCache.invalidateCache();
+                resetActiveItem();
+            }
+        }));
+
+        isInitialized = true;
     }
 
     private final CacheProxy<ItemCache, Item, String> itemCache = new CacheProxy<>(() -> itemCacheProvider, (c) -> {
@@ -52,6 +70,7 @@ public class ItemService {
      * @return All items of a trainer
      */
     public Observable<List<Item>> getItems() {
+        init();
         return itemCache.getValues();
     }
 

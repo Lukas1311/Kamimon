@@ -51,6 +51,13 @@ public class CacheProxy<C extends ICache<V, K>, V, K> implements ICache<V, K> {
         callback.accept(cache);
     }
 
+    public void invalidateCache(){
+        if (cache != null) {
+            cache.destroy();
+            cache = null;
+        }
+    }
+
     @Override
     public void destroy() {
         applyIfExists(ICache::destroy);
