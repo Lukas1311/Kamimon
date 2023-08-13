@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 @Singleton
-public class ItemService {
+public class ItemService extends DestructibleElement {
 
     @Inject
     Provider<ItemCache> itemCacheProvider;
@@ -29,9 +29,31 @@ public class ItemService {
 
     private int effectItemType = 0;
 
+    private boolean isInitialized = false;
+
+    private String trainerId = "";
+
+
+
     @Inject
     public ItemService() {
 
+    }
+
+    private void init() {
+        if(isInitialized) {
+            return;
+        }
+        onDestroy(trainerService.onTrainer().subscribe(trainer -> {
+
+            if (trainer.isEmpty() || !trainer.get()._id().equals(trainerId)) {
+                trainer.ifPresent(trainer1 -> trainerId = trainer1._id());
+                itemCache.invalidateCache();
+                resetActiveItem();
+            }
+        }));
+
+        isInitialized = true;
     }
 
     private final CacheProxy<ItemCache, Item, String> itemCache = new CacheProxy<>(() -> itemCacheProvider, (c) -> {
@@ -43,6 +65,7 @@ public class ItemService {
     });
 
     public Observable<List<Item>> getItems() {
+        init();
         return itemCache.getValues();
     }
 
