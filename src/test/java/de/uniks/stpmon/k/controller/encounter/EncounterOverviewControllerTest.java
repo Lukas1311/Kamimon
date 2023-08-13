@@ -5,6 +5,7 @@ import de.uniks.stpmon.k.controller.action.ActionFieldController;
 import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Region;
+import de.uniks.stpmon.k.service.AnimationService;
 import de.uniks.stpmon.k.service.EffectContext;
 import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.SoundService;
@@ -44,6 +45,9 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
     @Mock
     @SuppressWarnings("unused")
     ActionFieldController actionFieldController;
+    @SuppressWarnings("unused")
+    @Mock
+    AnimationService animationService;
 
     @InjectMocks
     EncounterOverviewController encounterOverviewController;
