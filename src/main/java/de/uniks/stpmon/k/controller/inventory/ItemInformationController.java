@@ -105,8 +105,12 @@ public class ItemInformationController extends Controller {
             Image itemImage = ImageUtils.scaledImageFX(imageUrl, 4.0);
             itemView.setImage(itemImage);
         });
-
-        amountText.setText(translateString("shop.amount", item.amount().toString()));
+        subscribe(itemService.getItem(item.type()), currentItem -> currentItem.ifPresent(value -> {
+            if (value.amount() == 0) {
+                useButton.setDisable(true);
+            }
+            amountText.setText(translateString("shop.amount", value.amount().toString()));
+        }));
 
         return parent;
     }
