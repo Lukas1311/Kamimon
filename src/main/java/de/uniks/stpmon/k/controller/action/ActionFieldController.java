@@ -47,6 +47,7 @@ public class ActionFieldController extends Controller {
     BattleLogService battleLogService;
 
     private final Set<EncounterSlot> madeMoves = new HashSet<>();
+    private final Set<EncounterSlot> deadOpponents = new HashSet<>();
     private String enemyTrainerId;
     private int abilityId;
     private boolean ownMonsterDead;
@@ -80,8 +81,6 @@ public class ActionFieldController extends Controller {
             openBattleLog();
         }
 
-        checkDeadMonster();
-
         subscribe(sessionService.onEncounterCompleted(), () -> {
             // If user won or lost
             if (closeTrigger == null) {
@@ -91,6 +90,7 @@ public class ActionFieldController extends Controller {
             closeEncounter(closeTrigger);
             closeTrigger = null;
         });
+        String trainer = sessionService.getTrainer(EncounterSlot.PARTY_FIRST);
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), opponent -> {
                 if (opponent == null) {
@@ -98,6 +98,24 @@ public class ActionFieldController extends Controller {
                 }
                 if (opponent.results() != null && !opponent.results().isEmpty()) {
                     madeMoves.clear();
+                }
+                if (slot.enemy() || !opponent.trainer().equals(trainer)) {
+                    return;
+                }
+                if (sessionService.isMonsterDead(slot)) {
+                    deadOpponents.add(slot);
+                    updateActiveSlot();
+                    if (slot.equals(getActiveSlot())) {
+                        openChangeMonster(true, false);
+                    }
+                } else {
+                    if (deadOpponents.remove(slot)
+                            && activeSlot.equals(slot)
+                            && openController instanceof ActionFieldChangeMonsterController) {
+                        setOwnMonsterDead(false);
+                        // Update menu if it's open
+                        openMainMenu();
+                    }
                 }
             });
         }
@@ -120,30 +138,31 @@ public class ActionFieldController extends Controller {
     }
 
     public void openMainMenu() {
-        if (ownMonsterDead) {
-            open(changeMonsterControllerProvider);
+        updateActiveSlot();
+        if (deadOpponents.contains(getActiveSlot())) {
+            openChangeMonster(true, true);
             return;
         }
         open(mainMenuControllerProvider);
     }
 
-    public void openChangeMonster(boolean dead) {
+    public void openChangeMonster(boolean dead, boolean forced) {
         setOwnMonsterDead(dead);
         // If battle log is open, don't open change monster, will be opened after battle log
-        if (openController instanceof ActionFieldBattleLogController) {
+        if (!forced && openController instanceof ActionFieldBattleLogController) {
             return;
         }
-        setActiveSlot();
+        updateActiveSlot();
         open(changeMonsterControllerProvider);
     }
 
     public void openChooseAbility() {
-        setActiveSlot();
+        updateActiveSlot();
         open(chooseAbilityControllerProvider);
     }
 
     public void openInventory() {
-        setActiveSlot();
+        updateActiveSlot();
     }
 
     public void openChooseOpponent() {
@@ -181,6 +200,10 @@ public class ActionFieldController extends Controller {
             openController = null;
         }
         ownMonsterDead = false;
+        madeMoves.clear();
+        deadOpponents.clear();
+        enemyTrainerId = null;
+        activeSlot = null;
     }
 
     public static HBox getOptionContainer(String option) {
@@ -252,7 +275,7 @@ public class ActionFieldController extends Controller {
     }
 
     public void executeItemMove(int itemId, String monsterId) {
-        setActiveSlot();
+        updateActiveSlot();
         EncounterSlot slot = getActiveSlot();
         madeMoves.add(slot);
         // Check if all moves are made, or we have to wait for enemy
@@ -262,15 +285,6 @@ public class ActionFieldController extends Controller {
         subscribe(encounterServiceProvider.get()
                 .makeItemMove(getActiveSlot(), itemId, monsterId));
 
-    }
-
-
-    public void checkDeadMonster() {
-        subscribe(sessionService.listenOpponent(EncounterSlot.PARTY_FIRST), opponent -> {
-            if (sessionService.isMonsterDead(EncounterSlot.PARTY_FIRST)) {
-                openChangeMonster(true);
-            }
-        });
     }
 
     public void setOwnMonsterDead(boolean ownMonsterDead) {
@@ -289,7 +303,7 @@ public class ActionFieldController extends Controller {
     }
 
 
-    private void updateActiveSlot() {
+    private void retrieveActiveSlot() {
         for (EncounterSlot slot : sessionService.getSlots()) {
             if (slot.enemy()) {
                 continue;
@@ -302,12 +316,19 @@ public class ActionFieldController extends Controller {
         }
     }
 
-    public void setActiveSlot() {
+    public void updateActiveSlot() {
         if (sessionService.hasTwoActiveMonster()) {
-            updateActiveSlot();
+            retrieveActiveSlot();
         } else {
             this.activeSlot = EncounterSlot.PARTY_FIRST;
         }
+    }
+
+    public Monster getActiveMonster(boolean updateSlot) {
+        if (updateSlot) {
+            updateActiveSlot();
+        }
+        return sessionService.getMonster(getActiveSlot());
     }
 
     public EncounterSlot getActiveSlot() {

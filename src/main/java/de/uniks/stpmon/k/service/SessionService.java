@@ -208,6 +208,10 @@ public class SessionService extends DestructibleElement {
         return applyIfEncounter(EncounterSession::listenOpponent, slot);
     }
 
+    public Observable<Opponent> listenOpponentDeletion(EncounterSlot slot) {
+        return applyIfEncounter(EncounterSession::listenDeadOpponent, slot);
+    }
+
     public Opponent getOpponent(EncounterSlot slot) {
         return applyIfEncounter(EncounterSession::getOpponent, slot);
     }

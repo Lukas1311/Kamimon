@@ -61,6 +61,7 @@ public class StatusControllerTest extends ApplicationTest {
 
         MonsterTypeDto monsterTypeDto = new MonsterTypeDto(1, "monster", null, null, null);
         when(presetService.getMonster(anyString())).thenReturn(Observable.just(monsterTypeDto));
+        when(sessionService.listenOpponentDeletion(any())).thenReturn(Observable.empty());
 
         // No monster updates
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());

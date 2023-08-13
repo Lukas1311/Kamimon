@@ -2,7 +2,6 @@ package de.uniks.stpmon.k.controller.action;
 
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
-import de.uniks.stpmon.k.models.EncounterSlot;
 import de.uniks.stpmon.k.models.Monster;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -105,9 +104,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
     }
 
     public void openInfo() {
-        getActionField().setActiveSlot();
-        EncounterSlot activeSlot = getActionField().getActiveSlot();
-        Monster activeMon = sessionService.getMonster(activeSlot);
+        Monster activeMon = getActionField().getActiveMonster(true);
         encounterOverviewProvider.get().showMonInfo(activeMon);
         getActionField().setMonInfoOpen(true);
         getActionField().openSelectMon();
@@ -125,7 +122,7 @@ public class ActionFieldMainMenuController extends BaseActionFieldController {
 
     public void openChangeMon() {
         encounterOverviewProvider.get().removeController("all");
-        getActionField().openChangeMonster(false);
+        getActionField().openChangeMonster(false, false);
     }
 
     @Override

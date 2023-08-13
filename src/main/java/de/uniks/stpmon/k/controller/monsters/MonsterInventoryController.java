@@ -243,25 +243,25 @@ public class MonsterInventoryController extends Controller {
             if (monsterItem.getId().startsWith("storage_")) {
                 shiftToStorage();
             }
-            if (monsterItem.getId().startsWith("team_")
-                    && (!monTeam.getChildren().contains(monParent)
-                    || monTeamList.size() < TEAM_SIZE)) {
+            if (monsterItem.getId().startsWith("team_")) {
                 boolean alreadyInTeam = monTeam.getChildren().contains(monParent);
                 boolean teamIsFull = monTeamList.size() >= TEAM_SIZE;
-                if (teamIsFull) {
-                    event.setDropCompleted(true);
-                    return;
+                if (teamIsFull && !alreadyInTeam) {
+                    int monsterIndex = monTeam.getChildren().indexOf(monsterItem);
+                    monTeamList.set(monsterIndex, selectedMonster);
+                    monTeam.getChildren().remove(monsterIndex);
+                } else {
+                    // Remove first to avoid duplicates
+                    if (alreadyInTeam) {
+                        monTeamList.remove(selectedMonster);
+                    }
+                    int monsterIndex = monTeam.getChildren().indexOf(monsterItem);
+                    monStorage.getChildren().remove(monParent);
+                    if (!alreadyInTeam) {
+                        monsterIndexStorage--;
+                    }
+                    monTeamList.add(monsterIndex, selectedMonster);
                 }
-                // Remove first to avoid duplicates
-                if (alreadyInTeam) {
-                    monTeamList.remove(selectedMonster);
-                }
-                int monsterIndex = monTeam.getChildren().indexOf(monsterItem);
-                monStorage.getChildren().remove(monParent);
-                if (!alreadyInTeam) {
-                    monsterIndexStorage--;
-                }
-                monTeamList.add(monsterIndex, selectedMonster);
                 trainerService.temporaryApplyTeam(monTeamList);
             }
             event.setDropCompleted(true);

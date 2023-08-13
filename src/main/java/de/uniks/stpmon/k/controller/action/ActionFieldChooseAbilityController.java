@@ -28,13 +28,16 @@ public class ActionFieldChooseAbilityController extends BaseActionFieldControlle
     public Parent render() {
         Parent parent = super.render();
 
-        activeMonster = sessionService.getMonster(actionFieldControllerProvider.get().getActiveSlot());
+        activeMonster = getActionField().getActiveMonster(true);
 
         addBackOption(translateString("back"));
-        for (String id : activeMonster.abilities().keySet()) {
-            addAbility(id, activeMonster.abilities().get(id));
+        if (activeMonster != null) {
+            for (String id : activeMonster.abilities().keySet()) {
+                addAbility(id, activeMonster.abilities().get(id));
+            }
         }
         count = 0;
+
         return parent;
     }
 
