@@ -69,13 +69,13 @@ public class MonsterInventoryController extends Controller {
 
         monStorage.setOnScroll(event -> {
             int oldOffset = rowOffset;
-            if (event.getDeltaY() > 0) {
+            if (event.getDeltaY() < 0) {
                 rowOffset += 1;
             } else {
                 rowOffset -= 1;
             }
             List<Monster> monsters = monsterService.getMonsterList();
-            rowOffset = Math.max(0, Math.min(rowOffset, 5));
+            rowOffset = Math.max(0, Math.min(rowOffset, (monsters.size() / 6) - 4));
             if (oldOffset != rowOffset) {
                 showMonsterList(monsters);
             }
