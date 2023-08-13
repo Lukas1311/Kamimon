@@ -90,6 +90,7 @@ public class ActionFieldController extends Controller {
             closeEncounter(closeTrigger);
             closeTrigger = null;
         });
+        String trainer = sessionService.getTrainer(EncounterSlot.PARTY_FIRST);
         for (EncounterSlot slot : sessionService.getSlots()) {
             subscribe(sessionService.listenOpponent(slot), opponent -> {
                 if (opponent == null) {
@@ -98,7 +99,7 @@ public class ActionFieldController extends Controller {
                 if (opponent.results() != null && !opponent.results().isEmpty()) {
                     madeMoves.clear();
                 }
-                if (slot.enemy()) {
+                if (slot.enemy() || !opponent.trainer().equals(trainer)) {
                     return;
                 }
                 if (sessionService.isMonsterDead(slot)) {
