@@ -281,11 +281,16 @@ public class InteractionService implements ILifecycleService {
                     return Observable.just(getRejectionDialogue(trainer, "player.dead"));
                 }
                 return encounterService.getTrainerOpponents(trainer._id()).map(opponent -> {
-                        if (!opponent.isEmpty()) {
-                            return getEncounterDialogue(trainer, me, "join");
-                        } else {
-                            return getEncounterDialogue(trainer, me, "player");
-                        }
+                    if (opponent.isEmpty()) {
+                        // The other trainer has no opponents = start 1v1
+                        return getEncounterDialogue(trainer, me, "player");
+                    }
+                    if (opponent.size() == 2) {
+                        // The other trainer has two opponents = join 2v2
+                        return getEncounterDialogue(trainer, me, "join");
+                    }
+                    //The other trainer is already in a 1v1 fight
+                    return getRejectionDialogue(trainer, "player");
                 });
             }).switchIfEmpty(Observable.just(getEncounterDialogue(trainer, me, "player")));
         }).onErrorResumeNext((error) -> {
