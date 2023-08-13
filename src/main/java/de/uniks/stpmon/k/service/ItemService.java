@@ -46,10 +46,20 @@ public class ItemService {
         c.setTrainerId(trainer._id());
     });
 
+    /**
+     * Is used to get all items
+     *
+     * @return All items of a trainer
+     */
     public Observable<List<Item>> getItems() {
         return itemCache.getValues();
     }
 
+    /**
+     * Is used to get a specific item
+     *
+     * @return An optional for the item
+     */
     public Observable<Optional<Item>> getItem(int itemType) {
         return getItems().map(items -> items.stream().filter(item -> item.type().equals(itemType)).findFirst());
     }
