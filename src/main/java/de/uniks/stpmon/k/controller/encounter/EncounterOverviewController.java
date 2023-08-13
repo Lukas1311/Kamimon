@@ -30,7 +30,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javax.inject.Inject;
@@ -425,11 +424,11 @@ public class EncounterOverviewController extends Controller {
         });
     }
 
-    public void monBallAnimation(Item item) {
-        if (item == null) {
+    public void monBallAnimation(int item) {
+        if (item == 0) {
             return;
         }
-        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
+        subscribe(resourceService.getItemImage(String.valueOf(item)), item1 -> {
             //image
             Image ball = ImageUtils.scaledImageFX(item1, 3.0);
             ballView.setImage(ball);

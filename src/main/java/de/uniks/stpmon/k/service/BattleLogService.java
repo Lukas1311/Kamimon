@@ -360,18 +360,19 @@ public class BattleLogService {
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
             case "item-failed" -> addTranslatedSection("item-failed", getItem(result.item()).name());
-            case "item-success" ->
+            case "item-success" -> {
                 //item success is in result, if the call to use the item was successful
                 //there will also be item-success if the monBall was used, but the mon was NOT caught
                 //if the mon is caught, there is also a monster-caught result
-                    addTranslatedSection("item-success", getItem(result.item()).name());
+                addTranslatedSection("item-success", getItem(result.item()).name());
+                encounterOverviewControllerProvider.get().monBallAnimation(result.item());
+            }
             case "status-added", "status-removed", "status-damage" -> addTranslatedSection("status."
                     + result.status().toString()
                     + result.type().replace("status-", "."), monster.name());
             case "monster-caught" -> {
                 Monster mon = monsBeforeLevelUp.get(EncounterSlot.ENEMY_FIRST);
                 MonsterTypeDto typeDto = getMonsterType(mon.type());
-                encounterOverviewControllerProvider.get().setCaught(true);
                 addTranslatedSection("monster-caught", typeDto.name());
             }
             default -> System.out.println("unknown result type");
