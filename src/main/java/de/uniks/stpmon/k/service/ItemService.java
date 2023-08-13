@@ -23,6 +23,7 @@ public class ItemService extends DestructibleElement {
     @Inject
     Provider<ItemCache> itemCacheProvider;
     @Inject
+    @SuppressWarnings("unused")
     Provider<CacheManager> cacheManagerProvider;
     @Inject
     TrainerStorage trainerStorage;
