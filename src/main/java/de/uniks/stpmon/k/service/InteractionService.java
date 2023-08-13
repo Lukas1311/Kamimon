@@ -5,7 +5,6 @@ import de.uniks.stpmon.k.controller.StarterController;
 import de.uniks.stpmon.k.dto.MonsterTypeDto;
 import de.uniks.stpmon.k.dto.TalkTrainerDto;
 import de.uniks.stpmon.k.models.NPCInfo;
-import de.uniks.stpmon.k.models.Opponent;
 import de.uniks.stpmon.k.models.Trainer;
 import de.uniks.stpmon.k.models.dialogue.Dialogue;
 import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
