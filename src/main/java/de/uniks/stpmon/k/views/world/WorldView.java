@@ -123,10 +123,7 @@ public class WorldView extends Viewable {
             if (transform.equals(lastShadowTransform)) {
                 return;
             }
-            lastShadowTransform = transform;
-            propView.updateShadow(transform);
-            characterView.updateShadow(transform);
-            npcCollectiveView.updateShadow(transform);
+            updateShadows(transform);
             if (ambient != null) {
                 ambient.setColor(worldService.getWorldColor(time));
             }
@@ -137,11 +134,23 @@ public class WorldView extends Viewable {
             }
             if (!enabled) {
                 ambient.setColor(Color.WHITE);
+                updateShadows(ShadowTransform.DEFAULT_DISABLED);
                 return;
             }
             LocalTime time = clockService.onTime().blockingFirst();
+            updateShadows(worldService.getShadowTransform(time));
             ambient.setColor(worldService.getWorldColor(time));
         });
+    }
+
+    private void updateShadows(ShadowTransform transform) {
+        if (transform.equals(lastShadowTransform)) {
+            return;
+        }
+        lastShadowTransform = transform;
+        propView.updateShadow(transform);
+        characterView.updateShadow(transform);
+        npcCollectiveView.updateShadow(transform);
     }
 
     @Override
