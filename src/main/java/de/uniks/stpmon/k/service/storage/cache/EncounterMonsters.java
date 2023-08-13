@@ -19,16 +19,14 @@ public class EncounterMonsters extends SimpleCache<Monster, String> {
     protected RegionService regionService;
     @Inject
     protected RegionStorage regionStorage;
-    private Set<String> monsterIds;
     private Set<String> trainerIds;
 
     @Inject
     public EncounterMonsters() {
     }
 
-    public void setup(Set<String> trainerIds, Set<String> monsterIds) {
+    public void setup(Set<String> trainerIds) {
         this.trainerIds = trainerIds;
-        this.monsterIds = monsterIds;
     }
 
     @Override
@@ -57,13 +55,24 @@ public class EncounterMonsters extends SimpleCache<Monster, String> {
         return this;
     }
 
+    public void addTrainer(String trainerId) {
+        String regionId = regionStorage.getRegion()._id();
+        disposables.add(regionService.getMonsters(regionId, trainerId).subscribe(this::addValues));
+        disposables.add(listener.listen(Socket.WS,
+                "trainers.%s.monsters.*.updated".formatted(trainerId),
+                Monster.class).subscribe(event -> {
+                    final Monster value = event.data();
+                    if (!isCacheable(value)) {
+                        return;
+                    }
+                    updateValue(value);
+                }
+        ));
+    }
+
     @Override
     public String getId(Monster value) {
         return value._id();
     }
 
-    @Override
-    protected boolean isCacheable(Monster value) {
-        return monsterIds.contains(value._id());
-    }
 }
