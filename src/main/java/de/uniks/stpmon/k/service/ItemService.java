@@ -31,10 +31,6 @@ public class ItemService extends DestructibleElement {
 
     private boolean isInitialized = false;
 
-    private String trainerId = "";
-
-
-
     @Inject
     public ItemService() {
 
@@ -44,10 +40,9 @@ public class ItemService extends DestructibleElement {
         if(isInitialized) {
             return;
         }
-        onDestroy(trainerService.onTrainer().subscribe(trainer -> {
+        onDestroy(trainerStorage.onTrainer().subscribe(trainer -> {
 
-            if (trainer.isEmpty() || !trainer.get()._id().equals(trainerId)) {
-                trainer.ifPresent(trainer1 -> trainerId = trainer1._id());
+            if (trainer.isEmpty()) {
                 itemCache.invalidateCache();
                 resetActiveItem();
             }
