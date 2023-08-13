@@ -56,6 +56,7 @@ public class BattleLogService {
      * for example.
      */
     private boolean currentlyWaiting = false;
+    private boolean monsterCaught = false;
     private CloseEncounterTrigger closeEncounterTrigger = null;
     private Timer closeTimer;
     private final Map<EncounterSlot, Monster> monsBeforeLevelUp = new HashMap<>();
@@ -199,9 +200,9 @@ public class BattleLogService {
                     closeTimer.cancel();
                     shutDownEncounter();
                 } else {
-                    //user sees result of encounter
-                    //show encounter result
-                    closeEncounterTrigger = CloseEncounterTrigger.END;
+                    if (monsterCaught) {
+                        closeEncounterTrigger = CloseEncounterTrigger.END;
+                    }
 
                     addTranslatedSection(closeEncounterTrigger.toString());
                     encounterIsOver = true;
@@ -357,6 +358,7 @@ public class BattleLogService {
             case "ability-unknown" ->
                     addTranslatedSection("ability-unknown", getAbility(ability).name(), monster.name());
             case "ability-no-uses" -> addTranslatedSection("ability-no-uses", getAbility(ability).name());
+            case "ability-failed" -> addTranslatedSection("ability-failed", monster.name(), getAbility(ability).name());
             case "target-unknown" -> addTranslatedSection("target-unknown");
             case "target-dead" -> addTranslatedSection("target-dead");
             case "item-failed" -> addTranslatedSection("item-failed", getItem(result.item()).name());
@@ -374,6 +376,7 @@ public class BattleLogService {
                 Monster mon = monsBeforeLevelUp.get(EncounterSlot.ENEMY_FIRST);
                 MonsterTypeDto typeDto = getMonsterType(mon.type());
                 addTranslatedSection("monster-caught", typeDto.name());
+                monsterCaught = true;
             }
             default -> System.out.println("unknown result type");
         }
@@ -442,5 +445,7 @@ public class BattleLogService {
         attackedMonsters.clear();
         monsBeforeLevelUp.clear();
         monsAfterLevelUp.clear();
+        monsterCaught = false;
+        monsterNames.clear();
     }
 }
