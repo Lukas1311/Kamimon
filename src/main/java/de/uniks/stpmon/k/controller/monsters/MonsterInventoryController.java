@@ -75,7 +75,7 @@ public class MonsterInventoryController extends Controller {
                 rowOffset -= 1;
             }
             List<Monster> monsters = monsterService.getMonsterList();
-            rowOffset = Math.max(0, Math.min(rowOffset, (monsters.size() / 6) - 4));
+            rowOffset = Math.max(0, Math.min(rowOffset, (int) Math.ceil(monsters.size() / 6f) - 4));
             if (oldOffset != rowOffset) {
                 showMonsterList(monsters);
             }
