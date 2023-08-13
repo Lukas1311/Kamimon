@@ -60,6 +60,12 @@ public abstract class BoundModule {
     @SuppressWarnings("unused")
     public abstract ILifecycleService monsterService(MonsterService handler);
 
+    @Binds
+    @IntoSet
+    @Singleton
+    @SuppressWarnings("unused")
+    public abstract ILifecycleService itemService(ItemService handler);
+
 
     @Binds
     @IntoSet
