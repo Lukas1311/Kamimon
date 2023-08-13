@@ -67,6 +67,7 @@ public class EncounterOverviewControllerTest extends ApplicationTest {
                 EncounterSlot.ENEMY_FIRST, EncounterSlot.ENEMY_SECOND));
 
         when(sessionService.listenMonster(any())).thenReturn(Observable.empty());
+        when(sessionService.listenOpponentDeletion(any())).thenReturn(Observable.empty());
 
         lenient().when(sessionService.listenOpponent(any())).thenReturn(Observable.just(new Opponent(
                 "o_1",

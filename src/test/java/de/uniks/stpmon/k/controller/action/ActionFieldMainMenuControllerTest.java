@@ -4,10 +4,7 @@ import de.uniks.stpmon.k.App;
 import de.uniks.stpmon.k.controller.encounter.EncounterOverviewController;
 import de.uniks.stpmon.k.controller.inventory.InventoryController;
 import de.uniks.stpmon.k.models.Encounter;
-import de.uniks.stpmon.k.models.EncounterSlot;
-import de.uniks.stpmon.k.models.builder.MonsterBuilder;
 import de.uniks.stpmon.k.service.EffectContext;
-import de.uniks.stpmon.k.service.SessionService;
 import de.uniks.stpmon.k.service.storage.EncounterStorage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,7 +22,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,8 +44,6 @@ class ActionFieldMainMenuControllerTest extends ApplicationTest {
     EncounterStorage encounterStorage;
     @Mock
     Provider<ActionFieldController> actionFieldControllerProvider;
-    @Mock
-    SessionService sessionService;
     @InjectMocks
     ActionFieldMainMenuController actionFieldMainMenuController;
 
@@ -103,8 +97,6 @@ class ActionFieldMainMenuControllerTest extends ApplicationTest {
     void openMonInfo() {
         ActionFieldController actionFieldController = mock(ActionFieldController.class);
         when(actionFieldControllerProvider.get()).thenReturn(actionFieldController);
-        when(actionFieldController.getActiveSlot()).thenReturn(EncounterSlot.PARTY_FIRST);
-        when(sessionService.getMonster(any())).thenReturn(MonsterBuilder.builder().create());
         EncounterOverviewController encounterOverviewController = mock(EncounterOverviewController.class);
         when(encounterOverviewControllerProvider.get()).thenReturn(encounterOverviewController);
 
