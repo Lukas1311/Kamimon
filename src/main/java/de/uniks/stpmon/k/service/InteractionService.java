@@ -281,7 +281,7 @@ public class InteractionService implements ILifecycleService {
                         List<Opponent> filteredOpponents = opponents.stream()
                                 .filter(opp -> !opp.trainer().equals(trainer._id()))
                                 .toList();
-                        if (filteredOpponents.size() > 1) {
+                        if (filteredOpponents != null && filteredOpponents.size() > 1) {
                             return getEncounterDialogue(trainer, me, "join");
                         } else {
                             return getEncounterDialogue(trainer, me, "player");
