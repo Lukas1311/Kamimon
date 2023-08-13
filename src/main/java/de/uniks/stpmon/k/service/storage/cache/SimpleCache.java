@@ -166,6 +166,9 @@ public abstract class SimpleCache<T, K> implements ICache<T, K> {
      * @param value The value to update.
      */
     public void updateValue(T value) {
+        if (isDestroyed()) {
+            return;
+        }
         if (value == null) {
             throw new IllegalArgumentException("value must not be null");
         }
