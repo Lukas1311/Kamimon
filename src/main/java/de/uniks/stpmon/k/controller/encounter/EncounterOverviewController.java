@@ -38,6 +38,7 @@ import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Singleton
 public class EncounterOverviewController extends Controller {
@@ -437,7 +438,7 @@ public class EncounterOverviewController extends Controller {
         if (item == 0) {
             return;
         }
-        subscribe(resourceService.getItemImage(String.valueOf(item.type())), item1 -> {
+        subscribe(resourceService.getItemImage(String.valueOf(item)), item1 -> {
             //image
             Image ball = ImageUtils.scaledImageFX(item1, 3.0);
             ballView.setImage(ball);
