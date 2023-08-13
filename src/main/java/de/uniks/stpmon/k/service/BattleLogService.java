@@ -293,17 +293,14 @@ public class BattleLogService {
                     target = move.target();
                 }
             }
-
         }
 
         for (Result result : results) {
             handleResult(monster, result, target, slot, opp);
         }
-
     }
 
     private void handleResult(MonsterTypeDto monster, Result result, String target, EncounterSlot slot, Opponent opp) {
-
         final Integer ability = result.ability();
         switch (result.type()) {
             case "ability-success" -> {
