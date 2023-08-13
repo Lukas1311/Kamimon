@@ -57,6 +57,21 @@ public class EncounterMonsters extends SimpleCache<Monster, String> {
         return this;
     }
 
+    public void addTrainer(String trainerId) {
+        String regionId = regionStorage.getRegion()._id();
+        disposables.add(regionService.getMonsters(regionId, trainerId).subscribe(this::addValues));
+        disposables.add(listener.listen(Socket.WS,
+                "trainers.%s.monsters.*.updated".formatted(trainerId),
+                Monster.class).subscribe(event -> {
+                    final Monster value = event.data();
+                    if (!isCacheable(value)) {
+                        return;
+                    }
+                    updateValue(value);
+                }
+        ));
+    }
+
     @Override
     public String getId(Monster value) {
         return value._id();

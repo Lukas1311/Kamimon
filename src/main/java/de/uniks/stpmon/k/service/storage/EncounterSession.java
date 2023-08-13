@@ -25,6 +25,11 @@ public class EncounterSession extends DestructibleElement {
     private final Map<EncounterSlot, EncounterMember> cacheByOpponent = new HashMap<>();
     private EncounterMonsters allMonsterCache;
     private final Set<EncounterSlot> slots = new LinkedHashSet<>();
+    /**
+     * The id of the opponent that is currently joining the encounter.
+     * This is used to switch the deleted with the newly created encounter.
+     */
+    private OpponentSwitch ongoingJoin = null;
 
     public EncounterSession(OpponentCache opponentCache) {
         this.opponentCache = opponentCache;
@@ -84,6 +89,20 @@ public class EncounterSession extends DestructibleElement {
         allMonsterCache.setup(allTrainers, allMonsters);
         allMonsterCache.init();
         onDestroy(opponentCache::destroy);
+        onDestroy(opponentCache.onCreation().subscribe(opponent -> {
+            if (ongoingJoin == null) {
+                ongoingJoin = new OpponentSwitch();
+            }
+            ongoingJoin.createdOpponent = opponent;
+            tryJoin();
+        }));
+        onDestroy(opponentCache.onDeletion().subscribe(opponent -> {
+            if (ongoingJoin == null) {
+                ongoingJoin = new OpponentSwitch();
+            }
+            ongoingJoin.deletedOpponent = opponent;
+            tryJoin();
+        }));
     }
 
     private void listenToOpponentMonster(String opId, EncounterSlot slot) {
@@ -101,6 +120,30 @@ public class EncounterSession extends DestructibleElement {
                 cache.init();
             }
         }));
+    }
+
+    private void tryJoin() {
+        if (ongoingJoin == null) {
+            return;
+        }
+        if (ongoingJoin.deletedOpponent == null || ongoingJoin.createdOpponent == null) {
+            return;
+        }
+        if (Objects.equals(ongoingJoin.deletedOpponent, ongoingJoin.createdOpponent)) {
+            return;
+        }
+        performJoin();
+    }
+
+    private void performJoin() {
+        Opponent newOpponent = ongoingJoin.createdOpponent;
+        allMonsterCache.addTrainer(newOpponent.trainer());
+        ownTeam.remove(ongoingJoin.deletedOpponent._id());
+        ownTeam.add(newOpponent._id());
+        EncounterMember member = cacheByOpponent.get(EncounterSlot.PARTY_SECOND);
+        member.setup(newOpponent.trainer(), newOpponent.monster(), allMonsterCache);
+        member.init();
+        ongoingJoin = null;
     }
 
     public boolean hasSlot(EncounterSlot slot) {
@@ -225,5 +268,10 @@ public class EncounterSession extends DestructibleElement {
 
     public Collection<EncounterSlot> getSlots() {
         return slots;
+    }
+
+    private static class OpponentSwitch {
+        Opponent deletedOpponent;
+        Opponent createdOpponent;
     }
 }
