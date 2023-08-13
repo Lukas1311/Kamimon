@@ -56,6 +56,8 @@ class SessionServiceTest {
         when(cache.getCurrentValues()).thenReturn(opponents);
         when(cache.onInitialized()).thenReturn(Completable.complete());
         when(cache.listenValue(any())).thenReturn(Observable.empty());
+        when(cache.onDeletion()).thenReturn(Observable.empty());
+        when(cache.onCreation()).thenReturn(Observable.empty());
         when(opponentCacheProvider.get()).thenReturn(cache);
         EncounterMonsters monsters = Mockito.mock(EncounterMonsters.class);
         when(monsters.onInitialized()).thenReturn(Completable.complete());
