@@ -12,7 +12,6 @@ import de.uniks.stpmon.k.models.dialogue.DialogueBuilder;
 import de.uniks.stpmon.k.net.EventListener;
 import de.uniks.stpmon.k.net.Socket;
 import de.uniks.stpmon.k.service.storage.InteractionStorage;
-
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -22,7 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -281,7 +279,7 @@ public class InteractionService implements ILifecycleService {
                         List<Opponent> filteredOpponents = opponents.stream()
                                 .filter(opp -> !opp.trainer().equals(trainer._id()))
                                 .toList();
-                        if (filteredOpponents != null && filteredOpponents.size() > 1) {
+                        if (filteredOpponents.size() > 1) {
                             return getEncounterDialogue(trainer, me, "join");
                         } else {
                             return getEncounterDialogue(trainer, me, "player");
