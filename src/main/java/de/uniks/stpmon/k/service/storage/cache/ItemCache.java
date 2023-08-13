@@ -52,6 +52,6 @@ public class ItemCache extends ListenerCache<Item, String> {
 
     @Override
     public String getId(Item value) {
-        return value._id();
+        return String.valueOf(value.type());
     }
 }

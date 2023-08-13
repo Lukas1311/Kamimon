@@ -80,7 +80,7 @@ public class ItemService extends DestructibleElement {
      * @return An optional for the item
      */
     public Observable<Optional<Item>> getItem(int itemType) {
-        return getItems().map(items -> items.stream().filter(item -> item.type().equals(itemType)).findFirst());
+        return itemCache.listenValue(String.valueOf(itemType));
     }
 
     public Observable<Item> tradeItem(int itemType, int tradeAmount, String targetId, boolean sellItem) {
