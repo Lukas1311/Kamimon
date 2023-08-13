@@ -51,6 +51,7 @@ public class MonsterInventoryController extends Controller {
     private Monster activeMonster;
     private List<String> monTeamList;
     private int monsterIndexStorage = 0;
+    private int rowOffset = 0;
     private String selectedMonster;
 
     private Parent monParent;
@@ -65,6 +66,20 @@ public class MonsterInventoryController extends Controller {
     public Parent render() {
         final Parent parent = super.render();
         parent.setId("monsterInventory");
+
+        monStorage.setOnScroll(event -> {
+            int oldOffset = rowOffset;
+            if (event.getDeltaY() > 0) {
+                rowOffset += 1;
+            } else {
+                rowOffset -= 1;
+            }
+            List<Monster> monsters = monsterService.getMonsterList();
+            rowOffset = Math.max(0, Math.min(rowOffset, 5));
+            if (oldOffset != rowOffset) {
+                showMonsterList(monsters);
+            }
+        });
         handleDrag(monStorage, this::dragIntoStorageGrid);
         handleDrag(monTeam, this::dragIntoTeamGrid);
         subscribe(monsterService.getTeam().take(1), this::showTeamMonster);
@@ -115,7 +130,7 @@ public class MonsterInventoryController extends Controller {
         List<Monster> teamMonsters = monsterService.getTeamList();
         currentMonsters.removeAll(teamMonsters);
         monStorage.getChildren().clear();
-        monsterIndexStorage = 0;
+        monsterIndexStorage = rowOffset * TEAM_SIZE;
 
         for (int row = 0; row < ROW_COUNT; row++) {
             for (int column = 0; column < TEAM_SIZE; column++) {
