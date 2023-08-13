@@ -112,11 +112,6 @@ public class InteractionService implements ILifecycleService {
             return getRejectionDialogue(trainer, infix);
         }
 
-        List<Opponent> opponents = encounterService.getTrainerOpponents(trainer._id()).blockingFirst();
-         if (opponents.size() == 1) {
-            return getRejectionDialogue(trainer, infix);
-         }
-
         DialogueBuilder itemBuilder = Dialogue.builder()
                 .setTrainerName(trainer.name())
                 .setTrainerId(trainer._id())
