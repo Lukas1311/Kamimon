@@ -117,7 +117,7 @@ public class SessionService extends DestructibleElement {
         }).flatMapCompletable(cache -> {
             EncounterSession session = new EncounterSession(cache);
             session.setup(monsterCacheProvider, monstersProvider,
-                    cacheManager.trainerCache(), trainerStorage.getTrainer()._id());
+                    trainerStorage.getTrainer()._id());
             encounterStorage.setSession(session);
 
             return session.waitForLoad();

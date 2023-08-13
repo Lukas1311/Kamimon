@@ -19,16 +19,14 @@ public class EncounterMonsters extends SimpleCache<Monster, String> {
     protected RegionService regionService;
     @Inject
     protected RegionStorage regionStorage;
-    private Set<String> monsterIds;
     private Set<String> trainerIds;
 
     @Inject
     public EncounterMonsters() {
     }
 
-    public void setup(Set<String> trainerIds, Set<String> monsterIds) {
+    public void setup(Set<String> trainerIds) {
         this.trainerIds = trainerIds;
-        this.monsterIds = monsterIds;
     }
 
     @Override
@@ -77,8 +75,4 @@ public class EncounterMonsters extends SimpleCache<Monster, String> {
         return value._id();
     }
 
-    @Override
-    protected boolean isCacheable(Monster value) {
-        return monsterIds.contains(value._id());
-    }
 }
